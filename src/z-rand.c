@@ -280,9 +280,10 @@ static s16b Rand_normal_table[RANDNOR_NUM] = {
  *
  * Note that the binary search takes up to 16 quick iterations.
  */
-s16b Rand_normal(int mean, int stand)
+s32b Rand_normal(int mean, int stand)
 {
-	s16b tmp, offset;
+	s16b tmp;
+	s32b offset;
 
 	s16b low = 0;
 	s16b high = RANDNOR_NUM;
@@ -306,7 +307,7 @@ s16b Rand_normal(int mean, int stand)
 	}
 
 	/* Convert the index into an offset */
-	offset = (s16b)((long)stand * (long)low / RANDNOR_STD);
+	offset = (s32b)((long)stand * (long)low / RANDNOR_STD);
 
 	/* One half should be negative */
 	if (one_in_(2)) return (mean - offset);

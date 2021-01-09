@@ -130,7 +130,7 @@ u32b Rand_div(u32b m);
  * Generate a signed random integer within `stand` standard deviations of
  * `mean`, following a normal distribution.
  */
-s16b Rand_normal(int mean, int stand);
+s32b Rand_normal(int mean, int stand);
 
 /**
  * Generate a signed random integer following a normal distribution, where
