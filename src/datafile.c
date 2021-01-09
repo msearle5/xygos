@@ -42,7 +42,7 @@ static void print_error(struct file_parser *fp, struct parser *p) {
 	msg("Parse error in %s line %d column %d: %s: %s", fp->name,
 	           s.line, s.col, s.msg, parser_error_str[s.error]);
 	event_signal(EVENT_MESSAGE_FLUSH);
-	quit_fmt("Parse error in %s line %d column %d.", fp->name, s.line, s.col);
+	quit_fmt("Parse error in %s line %d column %d: %s: %s.", fp->name, s.line, s.col, s.msg, parser_error_str[s.error]);
 }
 
 errr run_parser(struct file_parser *fp) {
