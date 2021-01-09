@@ -535,7 +535,11 @@ static void player_outfit(struct player *p)
 	/* Give the player starting equipment */
 	for (si = p->class->start_items; si; si = si->next) {
 		int num = rand_range(si->min, si->max);
-		struct object_kind *kind = lookup_kind(si->tval, si->sval);
+		struct object_kind *kind;
+		if (si->sval)
+			kind = lookup_kind(si->tval, si->sval);
+		else
+			kind = get_obj_num(0, false, si->tval);
 		assert(kind);
 
 		/* Without start_kit, only start with 1 food and 1 light */

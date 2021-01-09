@@ -3121,13 +3121,23 @@ static enum parser_error parse_class_equip(struct parser *p) {
 	if (!c)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
-	tval = tval_find_idx(parser_getsym(p, "tval"));
-	if (tval < 0)
-		return PARSE_ERROR_UNRECOGNISED_TVAL;
+	const char *tvalsym = parser_getsym(p, "tval");
+	if (streq(tvalsym, "random"))
+		tval = SV_UNKNOWN;
+	else {
+		tval = tval_find_idx(parser_getsym(p, "tval"));
+		if (tval < 0)
+			return PARSE_ERROR_UNRECOGNISED_TVAL;
+	}
 
-	sval = lookup_sval(tval, parser_getsym(p, "sval"));
-	if (sval < 0)
-		return PARSE_ERROR_UNRECOGNISED_SVAL;
+	const char *svalsym = parser_getsym(p, "sval");
+	if (streq(svalsym, "random"))
+		sval = SV_UNKNOWN;
+	else {
+		sval = lookup_sval(tval, svalsym);
+		if (sval < 0)
+			return PARSE_ERROR_UNRECOGNISED_SVAL;
+	}
 
 	si = mem_zalloc(sizeof *si);
 	si->tval = tval;
