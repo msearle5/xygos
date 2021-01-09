@@ -8,6 +8,11 @@
 # flavor:<index>:<attr>:<text>
 # fixed:<index>:<sval>:<attr>:<text>
 
+#### Food
+kind:food:,
+
+fixed:303:choke-apple:Yellow:& apple~
+
 
 ##### Rings #####
 # These are precious or semi-precious stones

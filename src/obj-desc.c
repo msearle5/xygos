@@ -302,6 +302,8 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 	
 	/* Actual name for flavoured objects if aware, or in store, or spoiled */
 	bool aware = object_flavor_is_aware(obj) || store || spoil;
+	bool mimic = (obj->kind->flavor && kf_has(obj->kind->kind_flags, KF_MIMIC_KNOW) );
+
 	/* Pluralize if (not forced singular) and
 	 * (not a known/visible artifact) and
 	 * (not one in stack or forced plural) */
@@ -309,6 +311,8 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 		!obj->artifact &&
 		(obj->number != 1 || (mode & ODESC_PLURAL));
 	const char *basename = obj_desc_get_basename(obj, aware, terse, mode);
+	if (mimic && !aware)
+		basename = obj->kind->flavor->text;
 	const char *modstr = obj_desc_get_modstr(obj->kind);
 
 	/* Quantity prefix */
@@ -325,10 +329,12 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 		strnfcat(buf, max, &end, " %s", obj->ego->name);
 	else if (aware && !obj->artifact &&
 			 (obj->kind->flavor || obj->kind->tval == TV_SCROLL)) {
-		if (terse)
-			strnfcat(buf, max, &end, " '%s'", obj->kind->name);
-		else
-			strnfcat(buf, max, &end, " of %s", obj->kind->name);
+		if (!mimic) {
+			if (terse)
+				strnfcat(buf, max, &end, " '%s'", obj->kind->name);
+			else
+				strnfcat(buf, max, &end, " of %s", obj->kind->name);
+		}
 	}
 
 	return end;
@@ -590,7 +596,7 @@ size_t object_desc(char *buf, size_t max, const struct object *obj, int mode)
 	if (!obj || !obj->known)
 		return strnfmt(buf, max, "(nothing)");
 
-	/* Unknown itema and cash get straightforward descriptions */
+	/* Unknown items and cash get straightforward descriptions */
 	if (obj->known && obj->kind != obj->known->kind) {
 		if (prefix)
 			return strnfmt(buf, max, "an unknown item");

@@ -15,7 +15,7 @@
 # cost : cost
 # attack : base damage : plus to-hit : plus to-dam
 # armor: base armor class : plus to-armor class
-# alloc: commonness : min " to " max
+# alloc: commonness : min to max level
 # charges: charges
 # pile: chance of being generated in a pile : dice for number of items
 # power: power of the effect for object power eveluations
@@ -204,57 +204,179 @@ desc: damage (which occurs even against creatures resistant to fire).
 ##### Food #####
 
 ### Normal Food ###
+# Aisle 1, Produce.
+# These are usually found in stacks, and have lowish food value
+# per gram (still not much overall), and non-special ones are fairly common.
+# Some have special effects, which may be associated with a 'lookalike' name.
+# Effect when thrown?
 
-name:& Hard Biscuit~
+name:& apple~
 type:food
-graphics:,:U
+graphics:,:G
 level:0
-weight:2
-cost:1
+weight:98g
+cost:3
+alloc:10:0 to 20
+pile:30:1d2
 power:0
+msg:That tastes good.
 effect:NOURISH:INC_BY
 dice:10
-effect:CRUNCH
-desc:A filling if tooth-breaking biscuit made mostly of rye.
+desc:A fresh shiny green apple.
 
-name:& Apple~
+#A fruit resembling an apple, but you don't want to eat it.
+# ID should work (or you could eat ID it), but as it has the same name as the apple it won't stack.
+# This looks cheesy, so maybe this and any other mimic item carried at once should auto-ID (on the basis that it is easier to identify
+# it when there is a real apple next to it to compare it to? Could have red and green apples, but that wouldn't help much.
+name:& choke-apple~
 type:food
-graphics:,:R
-level:0
-weight:4
+graphics:,:G
+level:6
+weight:98g
 cost:3
-alloc:40:0 to 20
+alloc:1:5 to 20
+pile:5:1d2
+power:0
+msg:Blech! You choke and spit it out!
+effect:NOURISH:SET_TO
+dice:1+d5
+flags:MIMIC_KNOW
+desc:A fruit closely resembling an apple, but you now recognize it as something nastier than even a Red Delicious. Yuck!
+
+name:& pear~
+type:food
+graphics:,:G
+level:0
+weight:150g
+cost:3
+alloc:10:0 to 20
 pile:10:1d2
 power:0
 msg:That tastes good.
 effect:NOURISH:INC_BY
-dice:10
-desc:Wrinkled, but sound and sweet.
+dice:15
+desc:A fresh green pear.
 
-name:& Handful~ of Dried Fruits
+name:& orange~
 type:food
-graphics:,:u
+graphics:,:o
 level:0
-weight:3
-cost:3
-alloc:40:0 to 50
+weight:350g
+cost:5
+alloc:10:0 to 20
+pile:30:1d2
 power:0
 msg:That tastes good.
 effect:NOURISH:INC_BY
 dice:15
-desc:Fruit roughly chopped and sun-dried, prepared as marching rations for the
-desc: rangers of Ithilien.
+desc:A large orange.
 
-name:& Slime Mold~
+name:& satsuma~
+type:food
+graphics:,:o
+level:0
+weight:90g
+cost:4
+alloc:6:0 to 20
+pile:30:1d3
+power:0
+msg:That tastes good.
+effect:NOURISH:INC_BY
+dice:10
+desc:A small satsuma.
+
+name:& banana~
+type:food
+graphics:,:y
+level:0
+weight:250g
+cost:6
+alloc:6:0 to 20
+pile:90:1d5
+power:0
+msg:That tastes good.
+effect:NOURISH:INC_BY
+dice:10
+desc:A bendy banana.
+
+name:& pineapple~
+type:food
+graphics:,:y
+level:0
+weight:900g
+cost:9
+alloc:5:0 to 20
+power:0
+msg:That tastes good.
+effect:NOURISH:INC_BY
+dice:25
+desc:A spiky pineapple.
+
+name:& melon~
+type:food
+graphics:,:g
+level:0
+weight:1200g
+cost:12
+alloc:5:0 to 20
+power:0
+msg:That tastes good.
+effect:NOURISH:INC_BY
+dice:25
+desc:A round, warty, green melon.
+
+name:& pepper~
+type:food
+graphics:,:R
+level:0
+weight:75g
+cost:8
+alloc:5:0 to 20
+power:0
+msg:That tastes good.
+effect:NOURISH:INC_BY
+dice:8
+desc:A red bell pepper.
+
+name:& cucumber~
+type:food
+graphics:,:g
+level:0
+weight:400g
+cost:4
+alloc:5:0 to 20
+power:0
+msg:That tastes good.
+effect:NOURISH:INC_BY
+dice:6
+desc:A long dark green cucumber.
+
+
+############################
+
+name:& handful~ of dried fruit
+type:food
+graphics:,:u
+level:0
+weight:40g
+cost:3
+alloc:10:0 to 50
+power:0
+msg:That tastes good.
+effect:NOURISH:INC_BY
+dice:15
+desc:Fruit roughly chopped and sun-dried.
+
+name:& slime mold~
 type:food
 graphics:,:g
 level:1
 weight:2
 cost:2
-alloc:40:30 to 100
+alloc:40:1 to 100
 pile:100:2d3
 power:0
-msg:That tastes better than nothing.
+msg:That tastes... slimy.
 effect:NOURISH:INC_BY
 dice:15
 desc:A strange fungal growth, prone to moving if not observed.  Not very tasty
@@ -276,13 +398,13 @@ desc:This nutritious but fairly bland food, called cram by the Lake-men who
 desc: make it is familiar to anyone contemplating long journeys.  It is
 desc: sustaining, but very uninteresting except as a chewing exercise.
 
-name:& Scrap~ of Flesh
+name:& scrap~ of flesh
 type:food
 graphics:,:s
 level:0
 weight:5
 cost:0
-alloc:30:50 to 100
+alloc:30:5 to 100
 pile:50:1d3
 power:0
 msg:That tastes disgusting.
@@ -308,7 +430,7 @@ graphics:,:W
 level:0
 weight:10
 cost:3
-alloc:30:10 to 50
+alloc:30:3 to 50
 pile:50:1d3
 power:0
 msg:That tastes good.
