@@ -116,3 +116,4 @@ EFFECT(MELEE_BLOWS,					true,	"blows",	0,		EFINFO_NONE,	"strikes %d blows agains
 EFFECT(SWEEP,						false,	"blows",	1,		EFINFO_NONE,	"strikes %d blows against all adjacent monsters")
 EFFECT(BIZARRE,						true,	NULL,		0,		EFINFO_NONE,	"does bizarre things")
 EFFECT(WONDER,						true,	NULL,		0,		EFINFO_NONE,	"creates random and unpredictable effects")
+EFFECT(HABANERO,					false, "dam",		3,		EFINFO_NONE,	"may make you resist cold for a while, and maybe even breathe fire")

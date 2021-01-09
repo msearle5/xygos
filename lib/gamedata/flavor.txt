@@ -11,7 +11,8 @@
 #### Food
 kind:food:,
 
-fixed:303:choke-apple:Yellow:& apple~
+fixed:303:choke-apple:Light Green:& apple~
+fixed:304:habanero:Red:& pepper~
 
 
 ##### Rings #####

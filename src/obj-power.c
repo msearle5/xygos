@@ -20,6 +20,7 @@
 #include "obj-curse.h"
 #include "obj-gear.h"
 #include "obj-knowledge.h"
+#include "obj-info.h"
 #include "obj-power.h"
 #include "obj-slays.h"
 #include "obj-tval.h"
@@ -899,12 +900,18 @@ int object_value_real(const struct object *obj, int qty)
 		total_value = value * qty;
 		if (total_value < 0) total_value = 0;
 	} else {
+		struct object_kind *kind = obj->kind;
+
+		/* Mimic items */
+		if (kf_has(obj->kind->kind_flags, KF_MIMIC_KNOW) && (!obj->kind->aware)) {
+			kind = obj_mimic_kind(obj);
+		}
 
 		/* Worthless items */
-		if (!obj->kind->cost) return (0L);
+		if (!kind->cost) return (0L);
 
 		/* Base cost */
-		value = obj->kind->cost;
+		value = kind->cost;
 
 		/* Analyze the item type and quantity */
 		if (tval_can_have_charges(obj)) {

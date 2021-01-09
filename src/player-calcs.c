@@ -1608,6 +1608,8 @@ void calc_digging_chances(struct player_state *state, int chances[DIGGING_MAX])
 		chances[i] = MAX(0, chances[i]);
 }
 
+
+
 /**
  * Calculate the blows a player would get.
  *

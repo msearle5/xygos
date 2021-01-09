@@ -233,7 +233,7 @@ type:food
 graphics:,:G
 level:6
 weight:98g
-cost:3
+cost:0
 alloc:1:5 to 20
 pile:5:1d2
 power:0
@@ -337,6 +337,18 @@ msg:That tastes good.
 effect:NOURISH:INC_BY
 dice:8
 desc:A red bell pepper.
+
+name:& habanero~
+type:food
+graphics:,:R
+level:3
+weight:75g
+cost:120
+alloc:2:1 to 30
+power:0
+effect:HABANERO
+flags:MIMIC_KNOW
+desc:An extremely HOT red pepper.
 
 name:& cucumber~
 type:food

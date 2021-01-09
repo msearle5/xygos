@@ -284,6 +284,30 @@ int energy_per_move(struct player *p)
 	return (energy * (1 + ABS(num) - num)) / (1 + ABS(num));
 }
 
+/** Randomly return true or false. When the given stat is at the value give, the chance is 50%, when it is higher the chance gets higher
+ * following a normal distribution.
+ */
+bool stat_check(int stat, int mid)
+{
+	// Get the 'internal' value (3..18, then 18/10 = 18+10 etc.)
+	int val = player->stat_cur[stat];
+	
+	// Translate it to a linear form
+	if (val < 18) val = ((val - 18) * 10) + 18;
+	
+	// Translate the midpoint
+	if (mid < 18) mid = ((mid - 18) * 10) + 18;
+	
+	// Generate a random value
+	int check = Rand_normal(val, val / 2);
+	
+	// Return true if it's at least equal to mid
+	if (check >= mid)
+		return true;
+	else
+		return false;
+}
+
 /**
  * Modify a stat value by a "modifier", return new value
  *
