@@ -53,7 +53,6 @@
 #include "target.h"
 #include "trap.h"
 
-
 /**
  * ------------------------------------------------------------------------
  * Structures and helper functions for effects
@@ -85,6 +84,8 @@ struct effect_kind {
 	effect_handler_f handler;    /* Function to perform the effect */
 	const char *desc;    /* Effect description */
 };
+
+bool effect_handler_BREATH(effect_handler_context_t *context);
 
 
 /**
@@ -905,6 +906,35 @@ bool effect_handler_NOURISH(effect_handler_context_t *context)
 		}
 	} else {
 		return false;
+	}
+	context->ident = true;
+	return true;
+}
+
+bool target_set_interactive(int mode, int x, int y);
+/* Check WIS, and if it passes you swallowed it.
+ * In that case, feed you (same as a normal pepper) and if you pass a CON check and are not already opposing cold,
+ * do so. If you pass a more difficult check, also breathe fire.
+ */
+bool effect_handler_HABANERO(effect_handler_context_t *context)
+{
+	if (stat_check(STAT_WIS, 15)) {
+		msg("It's seriously HOT! But you manage to swallow the fiery pepper.");
+		player_inc_timed(player, TMD_FOOD, 8 * z_info->food_value, false, false);
+		if ((player->timed[TMD_OPP_COLD] == 0) && stat_check(STAT_CON, 12)) {
+			player_inc_timed(player, TMD_OPP_COLD, damroll(3, 6), false, false);
+			if (stat_check(STAT_CON, 18)) {
+				msg("You burp fire!");
+				event_signal(EVENT_MESSAGE_FLUSH);
+				struct loc target = player->grid;
+					target_set_interactive(TARGET_KILL, -1, -1);
+					target_get(&target);
+				project(context->origin, 20, target, 5 + damroll(1, 10) + player->lev, ELEM_FIRE,  PROJECT_ARC | PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL, 40, 10, context->obj);
+			}
+		}
+	} else  {
+		/* No effect */
+		msg("It's seriously HOT, and you spit it out.");
 	}
 	context->ident = true;
 	return true;

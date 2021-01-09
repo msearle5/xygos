@@ -96,27 +96,7 @@ static const char *obj_desc_get_basename(const struct object *obj, bool aware,
 	/* Analyze the object */
 	switch (obj->tval)
 	{
-		case TV_FLASK:
-		case TV_CHEST:
-		case TV_SHOT:
-		case TV_BOLT:
-		case TV_ARROW:
-		case TV_BOW:
-		case TV_HAFTED:
-		case TV_POLEARM:
-		case TV_SWORD:
-		case TV_DIGGING:
-		case TV_BOOTS:
-		case TV_GLOVES:
-		case TV_CLOAK:
-		case TV_CROWN:
-		case TV_HELM:
-		case TV_SHIELD:
-		case TV_SOFT_ARMOR:
-		case TV_HARD_ARMOR:
-		case TV_DRAG_ARMOR:
-		case TV_LIGHT:
-		case TV_FOOD:
+		default:
 			return obj->kind->name;
 
 		case TV_AMULET:
