@@ -132,6 +132,26 @@ wchar_t object_char(const struct object *obj)
 }
 
 /**
+ * Print weight into a given (or if NULL, static) buffer, which is returned
+ * Format is rounded down and suffixed with g, kg as needed.
+ * Maximum length "x.yz kg" - 7 ch (vs. 8 ch of "xyz.q lb")
+ */
+char *fmt_weight(int grams, char *buf)
+{
+	static char sbuf[32];
+	if (!buf) buf = sbuf;
+	if (grams < 1000)
+		sprintf(buf, "%d g", grams);
+	else if (grams < 10000)
+		sprintf(buf, "%d.%02d kg", grams / 1000, (grams % 1000) / 10);
+	else if (grams < 100000)
+		sprintf(buf, "%d.%d kg", grams / 1000, (grams % 1000) / 100);
+	else
+		sprintf(buf, "%d kg", grams / 1000);
+	return buf;
+}
+
+/**
  * Display an object.  Each object may be prefixed with a label.
  * Used by show_inven(), show_equip(), show_quiver() and show_floor().
  * Mode flags are documented in object.h
@@ -234,7 +254,7 @@ static void show_obj(int obj_num, int row, int col, bool cursor,
 	/* Weight */
 	if (mode & OLIST_WEIGHT) {
 		int weight = obj->weight * obj->number;
-		strnfmt(buf, sizeof(buf), "%4d.%1d lb", weight / 10, weight % 10);
+		fmt_weight(weight, buf);
 		put_str(buf, row + obj_num, col + ex_offset_ctr);
 	}
 }

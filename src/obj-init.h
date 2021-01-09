@@ -38,4 +38,6 @@ extern struct file_parser artifact_parser;
 extern struct file_parser randart_parser;
 extern struct file_parser object_property_parser;
 
+enum parser_error parse_getweight(struct parser *p, const char *field, int *grams) ;
+
 #endif /* OBJECT_INIT_H_ */

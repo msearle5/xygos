@@ -66,6 +66,7 @@
 #include "trap.h"
 #include "ui-entry.h"
 #include "ui-entry-init.h"
+#include "ui-player.h"
 #include "ui-visuals.h"
 
 bool play_again = false;
@@ -258,7 +259,7 @@ static enum parser_error write_book_kind(struct class_book *book,
 	kind->d_attr = COLOUR_RED;
 	kind->dd = 1;
 	kind->ds = 1;
-	kind->weight = 30;
+	kind->weight = 1500;
 
 	/* Dungeon books get extra properties */
 	if (book->dungeon) {
@@ -2328,9 +2329,16 @@ static enum parser_error parse_p_race_weight(struct parser *p) {
 	struct player_race *r = parser_priv(p);
 	if (!r)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
-	r->base_wgt = parser_getint(p, "base_wgt");
-	r->mod_wgt = parser_getint(p, "mod_wgt");
-	return PARSE_ERROR_NONE;
+
+	return parse_getweight(p, "base_wgt", &r->base_wgt);
+}
+
+static enum parser_error parse_p_race_weightmod(struct parser *p) {
+	struct player_race *r = parser_priv(p);
+	if (!r)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
+	return parse_getweight(p, "mod_wgt", &r->mod_wgt);
 }
 
 static enum parser_error parse_p_race_obj_flags(struct parser *p) {
@@ -2422,7 +2430,8 @@ struct parser *init_parse_p_race(void) {
 	parser_reg(p, "history uint hist", parse_p_race_history);
 	parser_reg(p, "age int base_age int mod_age", parse_p_race_age);
 	parser_reg(p, "height int base_hgt int mod_hgt", parse_p_race_height);
-	parser_reg(p, "weight int base_wgt int mod_wgt", parse_p_race_weight);
+	parser_reg(p, "weight str base_wgt", parse_p_race_weight);
+	parser_reg(p, "weightmod str mod_wgt", parse_p_race_weightmod);
 	parser_reg(p, "obj-flags ?str flags", parse_p_race_obj_flags);
 	parser_reg(p, "player-flags ?str flags", parse_p_race_play_flags);
 	parser_reg(p, "values str values", parse_p_race_values);

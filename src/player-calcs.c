@@ -1661,7 +1661,7 @@ static int weight_limit(struct player_state *state)
 	int i;
 
 	/* Weight limit based only on strength */
-	i = adj_str_wgt[state->stat_ind[STAT_STR]] * 100;
+	i = adj_str_wgt[state->stat_ind[STAT_STR]] * 4500;
 
 	/* Return the result */
 	return (i);

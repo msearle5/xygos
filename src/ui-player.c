@@ -712,9 +712,8 @@ static struct panel *get_panel_midleft(void) {
 	panel_line(p, COLOUR_L_GREEN, "Adv Exp", "%s", show_adv_exp());
 	panel_space(p);
 	panel_line(p, COLOUR_L_GREEN, "Gold", "%d", player->au);
-	panel_line(p, attr, "Burden", "%.1f lb",
-			   player->upkeep->total_weight / 10.0F);
-	panel_line(p, attr, "Overweight", "%d.%d lb", -diff / 10, abs(diff) % 10);
+	panel_line(p, attr, "Burden", fmt_weight(player->upkeep->total_weight, NULL));
+	panel_line(p, attr, "Overweight", fmt_weight(diff, NULL));
 	panel_line(p, COLOUR_L_GREEN, "Max Depth", "%s", show_depth());
 
 	return p;
@@ -817,7 +816,7 @@ static struct panel *get_panel_misc(void) {
 
 	panel_line(p, attr, "Age", "%d", player->age);
 	panel_line(p, attr, "Height", "%d'%d\"", player->ht / 12, player->ht % 12);
-	panel_line(p, attr, "Weight", "%dst %dlb", player->wt / 14, player->wt % 14);
+	panel_line(p, attr, "Weight", fmt_weight(player->wt, NULL));
 	panel_line(p, attr, "Turns used:", "");
 	panel_line(p, attr, "Game", "%d", turn);
 	panel_line(p, attr, "Standard", "%d", player->total_energy / 100);

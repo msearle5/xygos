@@ -239,6 +239,7 @@ enum parser_error parser_parse(struct parser *p, const char *line) {
 	if (!h) {
 		my_strcpy(p->errmsg, tok, sizeof(p->errmsg));
 		p->error = PARSE_ERROR_UNDEFINED_DIRECTIVE;
+		abort();
 		mem_free(cline);
 		return PARSE_ERROR_UNDEFINED_DIRECTIVE;
 	}

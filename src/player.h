@@ -511,7 +511,7 @@ struct player {
 
 	s16b age;		/* Characters age */
 	s16b ht;		/* Height */
-	s16b wt;		/* Weight */
+	s32b wt;		/* Weight */
 
 	s32b au;		/* Current Gold */
 
@@ -572,7 +572,7 @@ struct player {
 	s32b au_birth;						/* Birth gold when option birth_money is false */
 	s16b stat_birth[STAT_MAX];			/* Birth "natural" stat values */
 	s16b ht_birth;						/* Birth Height */
-	s16b wt_birth;						/* Birth Weight */
+	s32b wt_birth;						/* Birth Weight */
 
 	struct player_options opts;			/* Player options */
 	struct player_history hist;			/* Player history (see player-history.c) */

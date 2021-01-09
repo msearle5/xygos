@@ -8,6 +8,7 @@
 
 extern bool arg_force_name;
 
+char *fmt_weight(int grams, char *buf);
 void display_player_stat_info(void);
 void display_player_xtra_info(void);
 void display_player(int mode);

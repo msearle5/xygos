@@ -35,6 +35,7 @@
 #include "ui-knowledge.h"
 #include "ui-menu.h"
 #include "ui-mon-lore.h"
+#include "ui-player.h"
 #include "wizard.h"
 #include "z-file.h"
 
@@ -173,7 +174,7 @@ static void kind_info(char *buf, size_t buf_len, char *dam, size_t dam_len,
 
 	/* Weight */
 	if (wgt)
-		strnfmt(wgt, wgt_len, "%3d.%d", obj->weight / 10, obj->weight % 10);
+		strnfmt(wgt, wgt_len, fmt_weight(obj->weight, NULL));
 
 	/* Hack */
 	if (!dam) {
@@ -451,10 +452,10 @@ static void spoil_artifact(const char *fname)
 			 * artifact can appear, its rarity, its weight, and
 			 * its power rating.
 			 */
-			text_out("\nMin Level %u, Max Level %u, Generation chance %u, Power %d, %d.%d lbs\n",
+			text_out("\nMin Level %u, Max Level %u, Generation chance %u, Power %d, %s\n",
 					 art->alloc_min, art->alloc_max, art->alloc_prob,
 					 object_power(obj, false, NULL), (art->weight / 10),
-					 (art->weight % 10));
+					fmt_weight(art->weight, NULL));
 
 			if (OPT(player, birth_randarts)) text_out("%s.\n", art->text);
 

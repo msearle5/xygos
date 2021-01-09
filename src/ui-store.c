@@ -294,8 +294,7 @@ static void store_display_entry(struct menu *menu, int oid, bool cursor, int row
 
 	/* Show weights */
 	colour = curs_attrs[CURS_KNOWN][(int)cursor];
-	strnfmt(out_val, sizeof out_val, "%3d.%d lb", obj->weight / 10,
-			obj->weight % 10);
+	strnfmt(out_val, sizeof out_val, fmt_weight(obj->weight, NULL));
 	c_put_str(colour, out_val, row, ctx->scr_places_x[LOC_WEIGHT]);
 
 	/* Describe an object (fully) in a store */

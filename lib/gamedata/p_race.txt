@@ -82,7 +82,8 @@ infravision:0
 history:1
 age:14:6
 height:69:10
-weight:165:35
+weight:1650
+weightmod:350
 
 name:Half-Elf
 stats:0:1:-1:1:-1
@@ -102,7 +103,8 @@ infravision:2
 history:4
 age:24:16
 height:71:8
-weight:115:25
+weight:1150
+weightmod:250
 obj-flags:SUST_DEX
 
 name:Elf
@@ -123,7 +125,8 @@ infravision:3
 history:5
 age:75:75
 height:73:7
-weight:90:10
+weight:900
+weightmod:100
 obj-flags:SUST_DEX
 values:RES_LIGHT[1]
 
@@ -145,7 +148,8 @@ infravision:4
 history:10
 age:21:12
 height:34:4
-weight:55:5
+weight:550
+weightmod:50
 obj-flags:HOLD_LIFE
 player-flags:KNOW_MUSHROOM
 
@@ -167,7 +171,8 @@ infravision:4
 history:13
 age:50:40
 height:40:5
-weight:80:5
+weight:800
+weightmod:50
 obj-flags:FREE_ACT
 player-flags:KNOW_ZAPPER
 
@@ -189,7 +194,8 @@ infravision:5
 history:16
 age:35:15
 height:47:4
-weight:135:20
+weight:1350
+weightmod:200
 obj-flags:PROT_BLIND
 player-flags:SEE_ORE
 
@@ -211,7 +217,8 @@ infravision:3
 history:19
 age:11:4
 height:64:2
-weight:135:15
+weight:1350
+weightmod:150
 values:RES_DARK[1]
 
 name:Half-Troll
@@ -232,7 +239,8 @@ infravision:3
 history:21
 age:20:10
 height:90:16
-weight:240:60
+weight:2400
+weightmod:600
 obj-flags:SUST_STR | REGEN
 
 name:Dunadan
@@ -253,7 +261,8 @@ infravision:0
 history:1
 age:50:20
 height:80:6
-weight:190:20
+weight:1900
+weightmod:200
 obj-flags:SUST_CON
 
 name:High-Elf
@@ -274,7 +283,8 @@ infravision:4
 history:7
 age:100:30
 height:77:6
-weight:190:20
+weight:1900
+weightmod:200
 obj-flags:SEE_INVIS
 values:RES_LIGHT[1]
 
@@ -296,5 +306,6 @@ infravision:5
 history:23
 age:15:10
 height:37:4
-weight:65:5
+weight:650
+weightmod:50
 values:RES_POIS[1]

@@ -436,7 +436,7 @@ void wr_player(void)
 
 	wr_s16b(player->age);
 	wr_s16b(player->ht);
-	wr_s16b(player->wt);
+	wr_s32b(player->wt);
 
 	/* Dump the stats (maximum and current and birth and swap-mapping) */
 	wr_byte(STAT_MAX);
@@ -446,8 +446,7 @@ void wr_player(void)
 	for (i = 0; i < STAT_MAX; ++i) wr_s16b(player->stat_birth[i]);
 
 	wr_s16b(player->ht_birth);
-	wr_s16b(player->wt_birth);
-	wr_s16b(0);
+	wr_s32b(player->wt_birth);
 	wr_u32b(player->au_birth);
 
 	/* Player body */

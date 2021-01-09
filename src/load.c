@@ -720,7 +720,7 @@ int rd_player(void)
 	/* Age/Height/Weight */
 	rd_s16b(&player->age);
 	rd_s16b(&player->ht);
-	rd_s16b(&player->wt);
+	rd_s32b(&player->wt);
 
 	/* Read the stat info */
 	rd_byte(&stat_max);
@@ -735,8 +735,7 @@ int rd_player(void)
 	for (i = 0; i < stat_max; i++) rd_s16b(&player->stat_birth[i]);
 
 	rd_s16b(&player->ht_birth);
-	rd_s16b(&player->wt_birth);
-	strip_bytes(2);
+	rd_s32b(&player->wt_birth);
 	rd_s32b(&player->au_birth);
 
 	/* Player body */

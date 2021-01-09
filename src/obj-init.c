@@ -1607,12 +1607,48 @@ static enum parser_error parse_object_level(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+/* Read a weight in grams.
+ * If there is no suffix, the weight is given in tenth pounds.
+ * If there is a 'g', it is in grams.
+ * If there is a 'k; or 'kg', kilograms.
+ * If 't', tonnes.
+ */
+enum parser_error parse_getweight(struct parser *p, const char *field, int *grams) {
+	const char *s = parser_getstr(p, field);
+	char *end;
+	long weight = strtol(s, &end, 10);
+
+	*grams = 0;
+	if ((weight == LONG_MIN) || (weight == LONG_MAX) || (end == s)) {
+		/* Underflow, overflow, or no digits */
+		return PARSE_ERROR_INVALID_WEIGHT;
+	}
+	switch(*end) {
+		case 'g':
+			break;
+		case 'k':
+			weight *= 1000;
+			break;
+		case 't':
+			weight *= 1000000;
+			break;
+		case 0:
+			weight *= 4536;
+			weight += 99;
+			weight /= 100;
+			break;
+		default:
+			return PARSE_ERROR_INVALID_WEIGHT;
+	}
+	*grams = weight;
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_object_weight(struct parser *p) {
 	struct object_kind *k = parser_priv(p);
 	assert(k);
 
-	k->weight = parser_getint(p, "weight");
-	return PARSE_ERROR_NONE;
+	return parse_getweight(p, "weight", &k->weight);
 }
 
 static enum parser_error parse_object_cost(struct parser *p) {
@@ -1952,7 +1988,7 @@ struct parser *init_parse_object(void) {
 	parser_reg(p, "type sym tval", parse_object_type);
 	parser_reg(p, "graphics char glyph sym color", parse_object_graphics);
 	parser_reg(p, "level int level", parse_object_level);
-	parser_reg(p, "weight int weight", parse_object_weight);
+	parser_reg(p, "weight str weight", parse_object_weight);
 	parser_reg(p, "cost int cost", parse_object_cost);
 	parser_reg(p, "alloc int common str minmax", parse_object_alloc);
 	parser_reg(p, "attack rand hd rand to-h rand to-d", parse_object_attack);
@@ -2570,14 +2606,15 @@ static enum parser_error parse_artifact_weight(struct parser *p) {
 	assert(a);
 	assert(k);
 
-	a->weight = parser_getint(p, "weight");
-
-	/* Set kind weight for special artifacts */
-	if (k->kidx >= z_info->ordinary_kind_max) {
-		k->weight = a->weight;
+	errr err = parse_getweight(p, "weight", &a->weight);
+	if (err ==  PARSE_ERROR_NONE) {
+		/* Set kind weight for special artifacts */
+		if (k->kidx >= z_info->ordinary_kind_max) {
+			k->weight = a->weight;
+		}
 	}
 
-	return PARSE_ERROR_NONE;
+	return err;
 }
 
 static enum parser_error parse_artifact_cost(struct parser *p) {
@@ -2794,7 +2831,7 @@ struct parser *init_parse_artifact(void) {
 	parser_reg(p, "base-object sym tval sym sval", parse_artifact_base_object);
 	parser_reg(p, "graphics char glyph sym color", parse_artifact_graphics);
 	parser_reg(p, "level int level", parse_artifact_level);
-	parser_reg(p, "weight int weight", parse_artifact_weight);
+	parser_reg(p, "weight str weight", parse_artifact_weight);
 	parser_reg(p, "cost int cost", parse_artifact_cost);
 	parser_reg(p, "alloc int common str minmax", parse_artifact_alloc);
 	parser_reg(p, "attack rand hd int to-h int to-d", parse_artifact_attack);
