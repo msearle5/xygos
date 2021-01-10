@@ -198,12 +198,6 @@ int color_text_to_attr(const char *name)
 	{
 		if (my_stricmp(name, color_table[a].name) == 0) return (a);
 	}
-	
-	fprintf(stderr,"Fail: %s\n", name);
-	for (a = 0; a < MAX_COLORS; a++)
-	{
-		fprintf(stderr,"%d is '%s'\n", a, color_table[a].name);
-	}
 
 	/* Default to white */
 	return (COLOUR_WHITE);
