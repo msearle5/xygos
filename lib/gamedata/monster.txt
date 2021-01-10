@@ -211,7 +211,6 @@
 # TODO: Explain the other monster and spell flags. But maybe in another file.
 
 
-
 ##### Non-race (contains the "player" picture) #####
 
 name:<player>
@@ -221,11 +220,238 @@ color:w
 
 ##### Monster races proper #####
 
+
+name:green lemming
+base:lemming
+color:Green
+speed:110
+hit-points:2
+hearing:4
+smell:4
+armor-class:1
+sleepiness:80
+depth:1
+rarity:4
+experience:1
+blow:BITE:HURT:1d2
+flags:MALE | FEMALE | COLD_BLOOD | WEIRD_MIND
+flags:RAND_25
+flags:NO_FEAR
+desc:It looks something like an oversized hamster, white with bouncing green hair.
+
+name:blue lemming
+base:lemming
+color:Blue
+speed:110
+hit-points:4
+hearing:4
+smell:4
+armor-class:1
+sleepiness:80
+depth:2
+rarity:4
+experience:2
+blow:BITE:HURT:1d4
+flags:MALE | FEMALE | COLD_BLOOD | WEIRD_MIND
+flags:RAND_50
+flags:NO_FEAR
+desc:It looks something like an oversized hamster, white with bouncing blue hair.
+
+name:gully lemming
+base:lemming
+color:Gray25
+speed:110
+hit-points:6
+hearing:4
+smell:4
+armor-class:10
+sleepiness:1
+depth:3
+rarity:4
+experience:4
+blow:HIT:HURT:1d2
+blow:TOUCH:EAT_GOLD:1d10
+flags:MALE | FEMALE | COLD_BLOOD | WEIRD_MIND
+flags:RAND_25
+flags:NO_FEAR
+desc:The small, secretive shadow-grey gully lemming is shunned by lemmingdom for wearing armour. These nimble creatures easily blend into dark corners and are said to be able to steal the boots from your feet as you pass by. 
+
+name:plains lemming
+base:lemming
+color:Orange
+speed:110
+hit-points:8
+hearing:4
+smell:4
+armor-class:1
+sleepiness:1
+depth:5
+rarity:5
+experience:10
+blow:HIT:HURT:1d3
+flags:MALE | FEMALE | COLD_BLOOD | WEIRD_MIND
+flags:NO_FEAR
+desc:The desperate lemmings of the cliffless plains must make their own pits.
+
+name:lemming shaman
+base:lemming
+color:Goldenrod
+speed:110
+hit-points:5
+hearing:4
+smell:4
+armor-class:1
+sleepiness:80
+depth:6
+rarity:6
+experience:13
+blow:BITE:HURT:1d2
+flags:MALE | FEMALE | COLD_BLOOD | SMART
+flags:RAND_25 | RAND_50
+flags:NO_SLEEP | NO_CONF | NO_FEAR
+spell-freq:3
+spell-power:0
+spells:S_KIN | SHRIEK
+desc:A lemming painted in gaudy designs, waving a carved staff. Where it leads hordes follow.
+
+name:bungee lemming
+base:lemming
+color:LightSlateGray
+speed:115
+hit-points:10
+hearing:4
+smell:4
+armor-class:25
+sleepiness:40
+depth:7
+rarity:9
+experience:18
+blow:BITE:HURT:1d9
+flags:MALE | FEMALE | COLD_BLOOD | WEIRD_MIND
+flags:RAND_25 | RAND_50
+flags:NO_FEAR
+desc:A fat round lemming, hairless and shiny grey, bouncing like a rubber ball. 
+
+name:horde lemming
+base:lemming
+color:Teal
+speed:110
+hit-points:5
+hearing:4
+smell:4
+armor-class:6
+sleepiness:40
+depth:9
+rarity:6
+experience:30
+blow:BITE:HURT:1d8
+flags:MALE | FEMALE | COLD_BLOOD | WEIRD_MIND
+flags:NO_FEAR
+desc:A blue-green furry critter that might even be cute, if there weren't so many of them that you can't even see the ground. 
+
+name:highland lemming
+base:lemming
+color:BurntUmber
+speed:110
+hit-points:16
+hearing:4
+smell:4
+armor-class:40
+sleepiness:1
+depth:10
+rarity:5
+experience:38
+blow:BITE:HURT:2d9
+flags:MALE | FEMALE | COLD_BLOOD | WEIRD_MIND
+flags:RAND_50
+flags:NO_FEAR
+desc:It shrieks 'There can be only one!' as it hurls itself over cliffs in its endless pursuit.
+
+name:lemming aviator
+base:lemming
+color:CadetBlue
+speed:120
+hit-points:16
+hearing:40
+smell:40
+armor-class:40
+sleepiness:1
+depth:11
+rarity:5
+experience:46
+blow:BITE:HURT:1d8
+flags:MALE | FEMALE | COLD_BLOOD | EMPTY_MIND
+flags:FLYING
+flags:NO_FEAR
+desc:A lemming that has learned to miss the ground, and now falls forever.
+
+name:shadow lemming
+base:lemming
+color:Gray25
+speed:110
+hit-points:20
+hearing:10
+smell:10
+armor-class:20
+sleepiness:40
+depth:12
+rarity:5
+experience:57
+blow:BITE:HURT:1d9
+blow:CLAW:HURT:1d4
+blow:CLAW:HURT:1d4
+flags:MALE | FEMALE | COLD_BLOOD | SMART
+flags:NO_FEAR | HURT_LIGHT
+spell-freq:2
+spell-power:10
+spells:BOULDER
+desc:A shadowy black lemming that seeks the deepest pits to ambush you from.
+
+name:pit lemming
+base:lemming
+color:Beige
+speed:110
+hit-points:25
+hearing:4
+smell:4
+armor-class:30
+sleepiness:40
+depth:13
+rarity:3
+experience:68
+blow:BITE:HURT:1d9
+blow:CLAW:HURT:1d11
+blow:CLAW:HURT:1d11
+flags:MALE | FEMALE | COLD_BLOOD | WEIRD_MIND
+flags:RAND_25
+flags:NO_FEAR
+desc:A golden-brown rodent famous for plummeting into holes, the deeper the better.
+
+name:aquatic lemming
+base:lemming
+color:RoyalBlue
+speed:115
+hit-points:35
+hearing:4
+smell:4
+armor-class:50
+sleepiness:20
+depth:14
+rarity:3
+experience:81
+blow:BITE:HURT:2d7
+blow:CLAW:HURT:2d9
+blow:CLAW:HURT:2d9
+flags:MALE | FEMALE | COLD_BLOOD | WEIRD_MIND
+flags:RAND_25
+flags:NO_FEAR
+desc:Lemmings hung with weights for their dive from the cliff tops.
+
 ### Dungeon level 0 ###
 
 name:filthy street urchin
 base:townsfolk
-color:D
+color:Brass
 speed:110
 hit-points:3
 hearing:4
@@ -1582,7 +1808,7 @@ experience:9
 blow:HIT:HURT:1d4
 blow:TOUCH:POISON:2d4
 desc:It appears to be a pile of copper coins.
-mimic:gold:copper
+mimic:cash:copper
 
 name:giant white rat
 base:rodent
@@ -1986,7 +2212,7 @@ experience:18
 blow:HIT:HURT:1d6
 blow:TOUCH:POISON:2d6
 desc:It appears to be a pile of silver coins.
-mimic:gold:silver
+mimic:cash:silver
 
 name:snaga
 base:orc
@@ -3056,7 +3282,7 @@ blow:TOUCH:POISON:3d5
 flags:IM_ACID
 desc:It appears to be a pile of gold coins, until it starts crawling towards
 desc: you on tiny legs.
-mimic:gold:gold
+mimic:cash:gold
 
 name:wolf
 plural:wolves
@@ -3674,7 +3900,7 @@ blow:TOUCH:POISON:3d5
 flags:IM_ACID
 desc:It appears to be a pile of sentient mithril coins that doesn't like being
 desc: picked up.
-mimic:gold:mithril
+mimic:cash:mithril
 
 name:illusionist
 base:person
@@ -6307,7 +6533,7 @@ blow:HIT:HURT:1d12
 flags:IM_ACID
 desc:It appears to be a pile of coins made of precious adamant, slithering
 desc: toward you on lots of tiny legs.
-mimic:gold:adamantite
+mimic:cash:adamantite
 
 name:troll scavenger
 base:troll

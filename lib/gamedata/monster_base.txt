@@ -409,9 +409,17 @@ pain:4
 flags:SPIRIT | CLEAR_WEB
 desc:Townsfolk
 
+# Lemmings - essentially humanoid rodents.
+name:lemming
+glyph:l
+pain:4
+flags:ANIMAL | CLEAR_WEB | OPEN_DOOR | BASH_DOOR | CLEAR_WEB | SPIRIT
+flags:NO_FEAR
+desc:Lemming
+
 # High hitpoints and armor class
 name:tree
-glyph:l
+glyph:#
 pain:9
 flags:CLEAR_WEB | COLD_BLOOD | REGENERATE
 flags:NO_FEAR | NO_CONF | HURT_FIRE | IM_WATER
