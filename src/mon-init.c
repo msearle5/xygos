@@ -1123,6 +1123,7 @@ static enum parser_error parse_monster_color(struct parser *p) {
 		attr = color_text_to_attr(color);
 	else
 		attr = color_char_to_attr(color[0]);
+
 	if (attr < 0)
 		return PARSE_ERROR_INVALID_COLOR;
 	r->d_attr = attr;

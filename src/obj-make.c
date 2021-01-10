@@ -188,10 +188,11 @@ static void init_money_svals(void)
 	int i;
 
 	/* Count the money types and make a list */
-	num_money_types = tval_sval_count("gold");
+	num_money_types = tval_sval_count("cash");
 	money_type = mem_zalloc(num_money_types * sizeof(struct money));
 	money_svals = mem_zalloc(num_money_types * sizeof(struct money));
-	tval_sval_list("gold", money_svals, num_money_types);
+	assert(num_money_types);
+	tval_sval_list("cash", money_svals, num_money_types);
 
 	/* List the money types */
 	for (i = 0; i < num_money_types; i++) {
