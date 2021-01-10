@@ -201,6 +201,62 @@ desc: a maximum of 15000 turns of light.
 desc:  When thrown, it is considered lit, so it does more than nominal
 desc: damage (which occurs even against creatures resistant to fire).
 
+##### Chunks #####
+# Chunks (blocks) are raw materials in 1 kg blocks, used for item creation.
+name:& plastic block~
+type:block
+graphics:%:W
+level:3
+weight:1kg
+cost:150
+alloc:10:1 to 100
+desc: A block of tough, whitish plastic - raw material to build items with.
+
+name:& aluminum block~
+type:block
+graphics:%:w
+level:15
+weight:1kg
+cost:550
+alloc:8:1 to 100
+desc: A block of shiny aluminum - raw material to build items with.
+
+name:& steel block~
+type:block
+graphics:%:s
+level:27
+weight:1kg
+cost:1850
+alloc:6:10 to 100
+desc: A block of stainless steel - raw material to build items with.
+
+name:& titanium block~
+type:block
+graphics:%:s
+level:44
+weight:1kg
+cost:7500
+alloc:5:18 to 100
+desc: A block of titanium - raw material to build items with.
+
+name:& gold block~
+type:block
+graphics:%:y
+level:61
+weight:1kg
+cost:75000
+alloc:1:1 to 100
+desc: A block of pure gold - raw material to build items with.
+
+name:& unobtainium block~
+type:block
+graphics:%:B
+level:87
+weight:1kg
+cost:95000
+alloc:1:65 to 127
+desc: A block of unobtainium, a blue-gleaming metal - so scarce that some still think that it's just a joke, unobtainium is incredibly light, incredibly strong, invulnerable to corrosion... the ideal material.
+
 ##### Food #####
 
 ### Normal Food ###
@@ -269,7 +325,9 @@ power:0
 msg:That tastes good.
 effect:NOURISH:INC_BY
 dice:15
-desc:A large orange.
+desc:The ill-formed orange
+desc: Sadly fails to please the eye:
+desc: Segmentation fault.
 
 name:& satsuma~
 type:food
@@ -5322,47 +5380,47 @@ desc: elemental and ethereal.
 ##### Gold/gems #####
 
 name:copper
-type:gold
+type:cash
 graphics:$:u
 
 name:silver
-type:gold
+type:cash
 graphics:$:s
 
 name:garnets
-type:gold
+type:cash
 graphics:$:r
 
 name:gold
-type:gold
+type:cash
 graphics:$:y
 
 name:opals
-type:gold
+type:cash
 graphics:$:W
 
 name:sapphires
-type:gold
+type:cash
 graphics:$:b
 
 name:rubies
-type:gold
+type:cash
 graphics:$:r
 
 name:diamonds
-type:gold
+type:cash
 graphics:$:w
 
 name:emeralds
-type:gold
+type:cash
 graphics:$:g
 
 name:mithril
-type:gold
+type:cash
 graphics:$:B
 
 name:adamantite
-type:gold
+type:cash
 graphics:$:G
 
 

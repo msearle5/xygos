@@ -13,12 +13,17 @@
 # flags: default flags
 
 default:break-chance:10
-default:max-stack:40
+default:max-stack:99
 
 name:chest:Chest~
 graphics:slate
 # max-stack:1
 flags:HATES_ACID | HATES_FIRE
+
+name:block:block~
+graphics:slate
+break:0
+# max-stack:1
 
 name:shot:Shot~
 graphics:light umber
@@ -194,5 +199,5 @@ graphics:light purple
 # max-stack:5
 flags:HATES_FIRE | EASY_KNOW
 
-name:gold
+name:cash
 graphics:light yellow
