@@ -298,6 +298,7 @@ void set_pit_type(int depth, int type);
 bool build_nest(struct chunk *c, struct loc centre, int rating);
 bool build_pit(struct chunk *c, struct loc centre, int rating);
 bool build_template(struct chunk *c, struct loc centre, int rating);
+bool build_shaped(struct chunk *c, struct loc centre, int rating);
 bool build_interesting(struct chunk *c, struct loc centre, int rating);
 bool build_lesser_vault(struct chunk *c, struct loc centre, int rating);
 bool build_medium_vault(struct chunk *c, struct loc centre, int rating);
