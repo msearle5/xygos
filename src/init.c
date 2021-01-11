@@ -60,6 +60,7 @@
 #include "player-quest.h"
 #include "player-spell.h"
 #include "player-timed.h"
+#include "player-util.h"
 #include "project.h"
 #include "randname.h"
 #include "store.h"
@@ -3666,6 +3667,59 @@ struct file_parser flavor_parser = {
 	cleanup_flavor
 };
 
+/**
+ * ------------------------------------------------------------------------
+ * Initialize death messages
+ * ------------------------------------------------------------------------ */
+
+static enum parser_error parse_death(struct parser *p) {
+	struct death_msg *d = parser_priv(p);
+	struct death_msg *new = mem_zalloc(sizeof *new);
+
+	new->death_msg = string_make(parser_getstr(p, "text"));
+	new->next = d;
+
+	parser_setpriv(p, new);
+	return PARSE_ERROR_NONE;
+}
+
+struct parser *init_parse_death(void) {
+	struct parser *p = parser_new();
+	parser_reg(p, "D str text", parse_death);
+	return p;
+}
+
+static errr run_parse_death(struct parser *p) {
+	return parse_file_quit_not_found(p, "death");
+}
+
+static errr finish_parse_death(struct parser *p) {
+	death = parser_priv(p);
+	parser_destroy(p);
+	return 0;
+}
+
+static void cleanup_death(void)
+{
+	struct death_msg *d, *next;
+
+	d = death;
+	while(d) {
+		next = d->next;
+		string_free(d->death_msg);
+		mem_free(d);
+		d = next;
+	}
+}
+
+static struct file_parser death_parser = {
+	"death",
+	init_parse_death,
+	run_parse_death,
+	finish_parse_death,
+	cleanup_death
+};
+
 
 /**
  * ------------------------------------------------------------------------
@@ -3769,6 +3823,7 @@ static struct {
 	{ "quests", &quests_parser },
 	{ "flavours", &flavor_parser },
 	{ "hints", &hints_parser },
+	{ "death", &death_parser },
 	{ "random names", &names_parser }
 };
 

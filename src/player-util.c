@@ -41,6 +41,20 @@
 #include "target.h"
 #include "trap.h"
 
+/* List of death messages */
+struct death_msg *death;
+
+/** Return a random message from the death message list */
+static const char *random_death_msg(void)
+{
+	struct death_msg *v, *r = NULL;
+	int n;
+	for (v = death, n = 1; v; v = v->next, n++)
+		if (one_in_(n))
+			r = v;
+	return r->death_msg;
+}
+
 /**
  * Increment to the next or decrement to the preceeding level
    accounting for the stair skip value in constants
@@ -204,6 +218,8 @@ void take_hit(struct player *p, int dam, const char *kb_str)
 		} else {
 			/* Hack -- Note death */
 			msgt(MSG_DEATH, "You die.");
+			event_signal(EVENT_MESSAGE_FLUSH);
+			msgt(MSG_DEATH, random_death_msg());
 			event_signal(EVENT_MESSAGE_FLUSH);
 
 			/* Note cause of death */
