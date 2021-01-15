@@ -469,7 +469,7 @@ static int ranged_damage(struct player *p, const struct monster *mon,
 		/* Adjust damage for throwing weapons.
 		 * This is not the prettiest equation, but it does at least try to
 		 * keep throwing weapons competitive. */
-		dmg *= 2 + missile->weight / 12;
+		dmg *= 2 + missile->weight / 540;
 	}
 	dmg *= mult;
 
@@ -535,7 +535,7 @@ static int o_ranged_damage(struct player *p, const struct monster *mon,
 		/* Multiply the number of damage dice by the throwing weapon
 		 * multiplier.  This is not the prettiest equation,
 		 * but it does at least try to keep throwing weapons competitive. */
-		dice *= 2 + missile->weight / 12;
+		dice *= 2 + missile->weight / 540;
 	}
 
 	/* Roll out the damage. */
@@ -815,8 +815,8 @@ bool attempt_shield_bash(struct player *p, struct monster *mon, bool *fear)
 	}
 
 	/* Calculate attack quality, a mix of momentum and accuracy. */
-	bash_quality = p->state.skills[SKILL_TO_HIT_MELEE] / 4 + p->wt / 8 +
-		p->upkeep->total_weight / 80 + shield->weight / 2;
+	bash_quality = p->state.skills[SKILL_TO_HIT_MELEE] / 4 + p->wt / 360 +
+		p->upkeep->total_weight / 3600 + shield->weight / 90;
 
 	/* Calculate damage.  Big shields are deadly. */
 	bash_dam = damroll(shield->dd, shield->ds);

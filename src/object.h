@@ -200,7 +200,7 @@ struct object_kind {
 
 	int dd;					/**< Damage dice */
 	int ds;					/**< Damage sides */
-	int weight;				/**< Weight, in 1/10lbs */
+	int weight;				/**< Weight, in grams */
 
 	int cost;					/**< Object base cost */
 
@@ -280,7 +280,7 @@ struct artifact {
 	int dd;		/**< Base damage dice */
 	int ds;		/**< Base damage sides */
 
-	int weight;	/**< Weight in 1/10lbs */
+	int weight;	/**< Weight in grams */
 
 	int cost;		/**< Artifact (pseudo-)worth */
 

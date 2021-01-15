@@ -666,7 +666,7 @@ struct object *player_best_digger(struct player *p, bool forbid_stack)
 		/* Convert tunnel modifier to digging skill as in player-calcs.c */
 		score *= 20;
 		/* Add in weapon weight (does not account for heavy wield) */
-		score += obj->weight / 10;
+		score += obj->weight / 454;
 		if (score > best_score) {
 			best = obj;
 			best_score = score;
