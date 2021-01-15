@@ -713,7 +713,7 @@ static struct panel *get_panel_midleft(void) {
 	panel_space(p);
 	panel_line(p, COLOUR_L_GREEN, "Gold", "%d", player->au);
 	panel_line(p, attr, "Burden", fmt_weight(player->upkeep->total_weight, NULL));
-	panel_line(p, attr, "Overweight", fmt_weight(diff, NULL));
+	panel_line(p, attr, "Overweight", fmt_weight(-diff, NULL));
 	panel_line(p, COLOUR_L_GREEN, "Max Depth", "%s", show_depth());
 
 	return p;

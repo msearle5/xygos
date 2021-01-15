@@ -226,10 +226,12 @@ static void context_menu_player_display_floor(void)
 	screen_save();
 
 	/* Prompt for a command */
-	prt(format("(Inventory) Burden %d.%d lb (%d.%d lb %s). Item for command: ",
-			   player->upkeep->total_weight / 10,
-			   player->upkeep->total_weight % 10,
-			   abs(diff) / 10, abs(diff) % 10,
+	char burden[128];
+	char diffb[128];
+	fmt_weight(player->upkeep->total_weight, burden);
+	fmt_weight(abs(diff), diffb);
+	prt(format("(Inventory) Burden %s (%s %s). Item for command: ",
+			   burden, diffb,
 			   (diff < 0 ? "overweight" : "remaining")), 0, 0);
 
 

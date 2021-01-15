@@ -449,6 +449,7 @@ static bool describe_brands(textblock *tb, const struct object *obj)
 static void calculate_melee_crits(struct player_state *state, int weight,
 		int plus, int *mult, int *add, int *div)
 {
+	weight = (weight * 10) / 454;
 	int k, to_crit = weight + 5 * (state->to_h + plus) +
 		3 * state->skills[SKILL_TO_HIT_MELEE] - 60;
 	to_crit = MIN(5000, MAX(0, to_crit));
@@ -493,6 +494,7 @@ static int o_calculate_melee_crits(struct player_state state,
 static void calculate_missile_crits(struct player_state *state, int weight,
 		int plus, int *mult, int *add, int *div)
 {
+	weight = (weight * 10) / 454;
 	int k, to_crit = weight + 4 * (state->to_h + plus) + 2 * player->lev;
 	to_crit = MIN(5000, MAX(0, to_crit));
 
@@ -818,7 +820,7 @@ static bool obj_known_damage(const struct object *obj, int *normal_damage,
 								&crit_add, &crit_div);
 
 		dam += (obj->known->to_d * 10);
-		dam *= 2 + obj->weight / 12;
+		dam *= 2 + obj->weight / 540;
 	}
 
 	if (ammo) multiplier = player->state.ammo_mult;
@@ -989,7 +991,7 @@ static bool o_obj_known_damage(const struct object *obj, int *normal_damage,
 		dice += o_calculate_missile_crits(player->state, obj, bow);
 	} else {
 		dice += o_calculate_missile_crits(player->state, obj, NULL);
-		dice *= 2 + obj->weight / 12;
+		dice *= 2 + obj->weight / 540;
 	}
 
 	if (ammo) multiplier = player->state.ammo_mult;

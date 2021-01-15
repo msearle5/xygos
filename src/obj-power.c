@@ -464,7 +464,7 @@ static int ac_power(const struct object *obj, int p)
 
 		/* Add power for AC per unit weight */
 		if (obj->weight > 0) {
-			int i = 750 * (obj->ac + obj->to_a) / obj->weight;
+			int i = 16 * (obj->ac + obj->to_a) / obj->weight;
 
 			/* Avoid overpricing Elven Cloaks */
 			if (i > 450) i = 450;

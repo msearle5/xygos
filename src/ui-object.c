@@ -134,20 +134,26 @@ wchar_t object_char(const struct object *obj)
 /**
  * Print weight into a given (or if NULL, static) buffer, which is returned
  * Format is rounded down and suffixed with g, kg as needed.
- * Maximum length "x.yz kg" - 7 ch (vs. 8 ch of "xyz.q lb")
+ * May be negative (used on the character sheet)
+ * Maximum length (if positive) "x.yz kg" - 7 ch (vs. 8 ch of "xyz.q lb")
  */
 char *fmt_weight(int grams, char *buf)
 {
+	char *minus = "";
 	static char sbuf[32];
 	if (!buf) buf = sbuf;
+	if (grams < 0) {
+		minus = "-";
+		grams = -grams;
+	}
 	if (grams < 1000)
-		sprintf(buf, "%d g", grams);
+		sprintf(buf, "%s%d g", minus, grams);
 	else if (grams < 10000)
-		sprintf(buf, "%d.%02d kg", grams / 1000, (grams % 1000) / 10);
+		sprintf(buf, "%s%d.%02d kg", minus, grams / 1000, (grams % 1000) / 10);
 	else if (grams < 100000)
-		sprintf(buf, "%d.%d kg", grams / 1000, (grams % 1000) / 100);
+		sprintf(buf, "%s%d.%d kg", minus, grams / 1000, (grams % 1000) / 100);
 	else
-		sprintf(buf, "%d kg", grams / 1000);
+		sprintf(buf, "%s%d kg", minus, grams / 1000);
 	return buf;
 }
 

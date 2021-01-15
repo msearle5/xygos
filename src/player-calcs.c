@@ -1678,7 +1678,7 @@ int weight_remaining(struct player *p)
 	int i;
 
 	/* Weight limit based only on strength */
-	i = 60 * adj_str_wgt[p->state.stat_ind[STAT_STR]]
+	i = 2700 * adj_str_wgt[p->state.stat_ind[STAT_STR]]
 		- p->upkeep->total_weight - 1;
 
 	/* Return the result */
@@ -2168,8 +2168,8 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	/* Analyze launcher */
 	state->heavy_shoot = false;
 	if (launcher) {
-		if (hold < launcher->weight / 10) {
-			state->to_h += 2 * (hold - launcher->weight / 10);
+		if (hold < launcher->weight / 454) {
+			state->to_h += 2 * (hold - launcher->weight / 454);
 			state->heavy_shoot = true;
 		}
 
@@ -2205,15 +2205,15 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	state->bless_wield = false;
 	if (weapon) {
 		/* It is hard to hold a heavy weapon */
-		if (hold < weapon->weight / 10) {
-			state->to_h += 2 * (hold - weapon->weight / 10);
+		if (hold < weapon->weight / 454) {
+			state->to_h += 2 * (hold - weapon->weight / 454);
 			state->heavy_wield = true;
 		}
 
 		/* Normal weapons */
 		if (!state->heavy_wield) {
 			state->num_blows = calc_blows(p, weapon, state, extra_blows);
-			state->skills[SKILL_DIGGING] += (weapon->weight / 10);
+			state->skills[SKILL_DIGGING] += (weapon->weight / 454);
 		}
 
 		/* Divine weapon bonus for blessed weapons */
