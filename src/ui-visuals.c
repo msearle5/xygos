@@ -668,6 +668,7 @@ struct visuals_parse_context {
 
 	struct visuals_color_cycle **group_cycles; /**< References to cycles in the group. */
 	size_t max_group_cycles;
+	size_t entry;
 };
 
 /**
@@ -715,6 +716,7 @@ static struct visuals_parse_context *visuals_parse_context_new(void)
 	context->cycle_step_index = 0;
 	context->flicker_color_index = 0;
 	context->flicker_cycle_index = 0;
+	context->entry = BASIC_COLORS;
 	return context;
 }
 
@@ -834,8 +836,8 @@ static enum parser_error visuals_parse_rgb(struct parser *parser)
 	}
 
 	u32b r = parser_getint(parser, "red");
-	u32b  g = parser_getint(parser, "green");
-	u32b  b = parser_getint(parser, "blue");
+	u32b g = parser_getint(parser, "green");
+	u32b b = parser_getint(parser, "blue");
 
 	const char *name = parser_getsym(parser, "name");
 	if (name == NULL) {
@@ -853,7 +855,7 @@ static enum parser_error visuals_parse_rgb(struct parser *parser)
 	}
 	
 	/* Add a new entry to the angband_color_table */
-	static u32b entry = BASIC_COLORS;
+	u32b entry = context->entry;
 	
 	/* MAX_COLORS may be >128 but 0x80 is magic (used in the map display) */
 	if (entry == 128) {
@@ -893,7 +895,7 @@ static enum parser_error visuals_parse_rgb(struct parser *parser)
 	
 	color_table[entry].color_translate[ATTR_FULL] = entry;
 	
-	entry++;
+	context->entry++;
 	
 	return PARSE_ERROR_NONE;
 }
