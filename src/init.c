@@ -3724,6 +3724,58 @@ static struct file_parser death_parser = {
 	cleanup_death
 };
 
+/**
+ * ------------------------------------------------------------------------
+ * Initialize lies
+ * ------------------------------------------------------------------------ */
+
+static enum parser_error parse_lie(struct parser *p) {
+	struct hint *h = parser_priv(p);
+	struct hint *new = mem_zalloc(sizeof *new);
+
+	new->hint = string_make(parser_getstr(p, "text"));
+	new->next = h;
+
+	parser_setpriv(p, new);
+	return PARSE_ERROR_NONE;
+}
+
+struct parser *init_parse_lies(void) {
+	struct parser *p = parser_new();
+	parser_reg(p, "R str text", parse_lie);
+	return p;
+}
+
+static errr run_parse_lies(struct parser *p) {
+	return parse_file_quit_not_found(p, "hints");
+}
+
+static errr finish_parse_lies(struct parser *p) {
+	hints = parser_priv(p);
+	parser_destroy(p);
+	return 0;
+}
+
+static void cleanup_lies(void)
+{
+	struct hint *h, *next;
+
+	h = lies;
+	while(h) {
+		next = h->next;
+		string_free(h->hint);
+		mem_free(h);
+		h = next;
+	}
+}
+
+static struct file_parser lies_parser = {
+	"lies",
+	init_parse_lies,
+	run_parse_lies,
+	finish_parse_lies,
+	cleanup_lies
+};
 
 /**
  * ------------------------------------------------------------------------
@@ -3827,6 +3879,7 @@ static struct {
 	{ "quests", &quests_parser },
 	{ "flavours", &flavor_parser },
 	{ "hints", &hints_parser },
+	{ "lies", &lies_parser },
 	{ "death", &death_parser },
 	{ "random names", &names_parser }
 };

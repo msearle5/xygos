@@ -167,6 +167,7 @@ extern struct parser *init_parse_constants(void);
 extern struct parser *init_parse_flavor(void);
 extern struct parser *init_parse_names(void);
 extern struct parser *init_parse_hints(void);
+extern struct parser *init_parse_lies(void);
 extern struct parser *init_parse_trap(void);
 extern struct parser *init_parse_chest_trap(void);
 extern struct parser *init_parse_quest(void);

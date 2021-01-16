@@ -122,8 +122,8 @@ struct store_context {
 	unsigned int scr_places_y[LOC_MAX];
 };
 
-/* Return a random hint from the global hints list */
-static const char *random_hint(void)
+/* Return a random hint from the given hints list */
+static const char *random_line(struct hint *hints)
 {
 	struct hint *v, *r = NULL;
 	int n;
@@ -131,6 +131,40 @@ static const char *random_hint(void)
 		if (one_in_(n))
 			r = v;
 	return r->hint;
+}
+
+/* Return a random hint from the global hints or lies lists
+ * <real>% of ths time, it's a hint.
+ **/
+static const char *random_rumor(s32b real)
+{
+	struct hint *h = lies;
+	if (randint0(100) < real)
+		h = hints;
+	return random_line(h);
+}
+
+/* Return a random hint from the global hints list */
+static const char *random_hint(void)
+{
+	return random_rumor(100);
+}
+
+/* Return a random hint from the global hints or lies list,
+ * with a minimum and maximum length. It is also checked for being
+ * "saying like" - that is, the first character is alphanumeric.
+ * (The minimum length is for the same reason, while the max is to
+ * ensure it fits on screen.)
+ **/
+static const char *random_saying(s32b real, s32b min, s32b max)
+{
+	const char *ret;
+	int length;
+	do {
+		ret = random_rumor(real);
+		length = strlen(ret);
+	} while (!(isalnum(*ret) && (length >= min) && (length <= max)));
+	return ret;
 }
 
 /**

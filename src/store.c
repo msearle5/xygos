@@ -59,6 +59,11 @@ struct store *stores;
  */
 struct hint *hints;
 
+/**
+ * The lies array
+ */
+struct hint *lies;
+
 
 static const char *obj_flags[] = {
 	"NONE",
