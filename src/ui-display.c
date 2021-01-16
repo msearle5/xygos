@@ -44,6 +44,7 @@
 #include "trap.h"
 #include "ui-birth.h"
 #include "ui-display.h"
+#include "ui-entry.h"
 #include "ui-game.h"
 #include "ui-input.h"
 #include "ui-map.h"
@@ -94,19 +95,11 @@ static game_event_type statusline_events[] =
 };
 
 /**
- * Abbreviations of healthy stats
- */
-const char *stat_names[STAT_MAX] =
-{
-	"STR: ", "INT: ", "WIS: ", "DEX: ", "CON: "
-};
-
-/**
  * Abbreviations of damaged stats
  */
 const char *stat_names_reduced[STAT_MAX] =
 {
-	"Str: ", "Int: ", "Wis: ", "Dex: ", "Con: "
+	"Str: ", "Int: ", "Wis: ", "Dex: ", "Con: ", "Chr: ", "Spd: "
 };
 
 /**

@@ -21,6 +21,7 @@
 struct player_ability;
 struct object;
 struct player;
+extern const char *stat_names[STAT_MAX];
 
 struct ui_entry;
 typedef bool (*ui_entry_predicate)(const struct ui_entry *entry, void *closure);

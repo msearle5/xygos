@@ -84,10 +84,10 @@ code:CHR
 power:1
 mult:5
 adjective:confident
-neg-adjective:ug
+neg-adjective:ugly
 bindui:stat_mod_ui_compact_0<CHR>:0
 
-name:speed
+name:speediness
 type:stat
 code:SPD
 power:20
@@ -279,6 +279,24 @@ code:SUST_CON
 power:8
 msg:Your {name} glows.
 bindui:stat_mod_ui_compact_0<CON>:1
+
+name:sustain charisma
+type:flag
+subtype:sustain
+id-type:on effect
+code:SUST_CHR
+power:8
+msg:Your {name} glows.
+bindui:stat_mod_ui_compact_0<CHR>:1
+
+name:sustain speed
+type:flag
+subtype:sustain
+id-type:on effect
+code:SUST_SPD
+power:8
+msg:Your {name} glows.
+bindui:stat_mod_ui_compact_0<SPD>:1
 
 name:protection from fear
 type:flag

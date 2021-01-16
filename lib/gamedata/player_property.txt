@@ -169,6 +169,18 @@ name:Sustain Constitution
 desc:Your constitution is sustained.
 
 type:object
+code:SUST_CHR
+bindui:stat_mod_ui_compact_0<CHR>:1:1
+name:Sustain Charisma
+desc:Your charisma is sustained.
+
+type:object
+code:SUST_SPD
+bindui:stat_mod_ui_compact_0<SPD>:1:1
+name:Sustain Speed
+desc:Your speed is sustained.
+
+type:object
 code:PROT_FEAR
 bindui:pfear_ui_compact_0:0:1
 name:Fear Immunity

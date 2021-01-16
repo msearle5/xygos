@@ -2416,7 +2416,7 @@ struct parser *init_parse_p_race(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
 	parser_reg(p, "name str name", parse_p_race_name);
-	parser_reg(p, "stats int str int int int wis int dex int con", parse_p_race_stats);
+	parser_reg(p, "stats int str int int int wis int dex int con int chr int spd", parse_p_race_stats);
 	parser_reg(p, "skill-disarm-phys int disarm", parse_p_race_skill_disarm_phys);
 	parser_reg(p, "skill-disarm-magic int disarm", parse_p_race_skill_disarm_magic);
 	parser_reg(p, "skill-device int device", parse_p_race_skill_device);
@@ -3471,7 +3471,7 @@ struct parser *init_parse_class(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
 	parser_reg(p, "name str name", parse_class_name);
-	parser_reg(p, "stats int str int int int wis int dex int con",
+	parser_reg(p, "stats int str int int int wis int dex int con int chr int spd",
 			   parse_class_stats);
 	parser_reg(p, "skill-disarm-phys int base int incr",
 			   parse_class_skill_disarm_phys);
@@ -3747,11 +3747,11 @@ struct parser *init_parse_lies(void) {
 }
 
 static errr run_parse_lies(struct parser *p) {
-	return parse_file_quit_not_found(p, "hints");
+	return parse_file_quit_not_found(p, "lies");
 }
 
 static errr finish_parse_lies(struct parser *p) {
-	hints = parser_priv(p);
+	lies = parser_priv(p);
 	parser_destroy(p);
 	return 0;
 }

@@ -1501,7 +1501,7 @@ static const char *get_element_name(int i)
 
 
 /* These are for handling of entries parameterized by the stat name. */
-static const char *stat_names[] = {
+const char *stat_names[STAT_MAX] = {
 	#define STAT(x) #x,
 	#include "list-stats.h"
 	#undef STAT
