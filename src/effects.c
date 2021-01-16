@@ -5300,11 +5300,8 @@ bool effect_handler_BIZARRE(effect_handler_context_t *context)
 			msg("You are surrounded by a malignant aura.");
 
 			/* Decrease all stats (permanently) */
-			player_stat_dec(player, STAT_STR, true);
-			player_stat_dec(player, STAT_INT, true);
-			player_stat_dec(player, STAT_WIS, true);
-			player_stat_dec(player, STAT_DEX, true);
-			player_stat_dec(player, STAT_CON, true);
+			for(int i=0;i<STAT_MAX;i++)
+				player_stat_dec(player, i, true);
 
 			/* Lose some experience (permanently) */
 			player_exp_lose(player, player->exp / 4, true);

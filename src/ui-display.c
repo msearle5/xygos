@@ -170,6 +170,11 @@ static void prt_stat(int stat, int row, int col)
 		put_str("!", row, col + 3);
 }
 
+const char *player_title(void)
+{
+	return player->class->title[(player->lev - 1) / 5];
+}
+
 static int fmt_title(char buf[], int max, bool short_mode)
 {
 	buf[0] = 0;
@@ -183,7 +188,7 @@ static int fmt_title(char buf[], int max, bool short_mode)
 		my_strcpy(buf, player->shape->name, max);
 		my_strcap(buf);		
 	} else if (!short_mode) {
-		my_strcpy(buf, player->class->title[(player->lev - 1) / 5], max);
+		my_strcpy(buf, player_title(), max);
 	}
 
 	return strlen(buf);
@@ -749,12 +754,9 @@ static void update_topbar(game_event_type type, game_event_data *data,
 	col += prt_level_short(row, col);
 
 	col += prt_exp_short(row, col);
-	
-	col += prt_stat_short(STAT_STR, row, col);
-	col += prt_stat_short(STAT_INT, row, col);
-	col += prt_stat_short(STAT_WIS, row, col);
-	col += prt_stat_short(STAT_DEX, row, col);
-	col += prt_stat_short(STAT_CON, row, col);
+
+	for(int i=0;i<STAT_MAX;i++)
+		col += prt_stat_short(STAT_SPD, row, col);
 
 	col += prt_ac_short(row, col);
 

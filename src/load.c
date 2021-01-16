@@ -1228,6 +1228,18 @@ static int rd_stores_aux(rd_item_t rd_item_version)
 					store_carry(store, obj);
 			}
 		}
+
+		/* Read the ban days and reason */
+		rd_u32b(&store->bandays);
+		{
+			char buf[128];
+			rd_string(buf, sizeof(buf));
+			store->banreason = buf[0] ? strdup(buf) : NULL;
+		}
+
+		/* Read the layaway index and day */
+		rd_s32b(&store->layaway_idx);
+		rd_s32b(&store->layaway_day);
 	}
 
 	return 0;

@@ -14,6 +14,7 @@
 
 # General store
 store:1:General Store
+owner:2147483647:-
 owner:5000:Bilbo the Friendly (Hobbit)
 owner:10000:Rincewind the Chicken (Human)
 owner:20000:Snafu the Midget (Gnome)
@@ -21,7 +22,7 @@ owner:30000:Lyar-el the Comely (Elf)
 slots:0:4
 turnover:2
 always:cloak:Cloak
-always:food:Ration of Food
+always:food:Apple
 always:light:Wooden Torch
 always:flask:Flask of Oil
 always:digger:Shovel
@@ -32,7 +33,6 @@ always:bolt:Bolt
 normal:food:Pint of Fine Wine
 normal:food:Slime Mold
 normal:food:Flask of Whisky
-normal:food:Hard Biscuit
 normal:mushroom:Stoneskin
 normal:mushroom:Purging
 buy:light
@@ -47,6 +47,7 @@ buy:arrow
 
 # Armoury
 store:2:Armoury
+owner:2147483647:-
 owner:5000:Kon-Dar the Ugly (Half-Orc)
 owner:10000:Darg-Low the Grim (Human)
 owner:25000:Decado the Handsome (Dunadan)
@@ -83,6 +84,7 @@ buy:dragon armor
 
 # Weaponsmith
 store:3:Weapon Smiths
+owner:2147483647:-
 owner:5000:Ithyl-Mak the Beastly (Half-Troll)
 owner:10000:Arndal Beast-Slayer (Half-Elf)
 owner:25000:Tarl Beast-Master (Hobbit)
@@ -129,6 +131,7 @@ buy:hafted
 
 # Bookseller
 store:4:Bookseller
+owner:2147483647:-
 owner:15000:Ludwig the Humble (Human)
 owner:20000:Gunnar the Paladin (Human)
 owner:25000:Delilah the Pure (Elf)
@@ -146,6 +149,7 @@ buy:shadow book
 
 # Alchemist
 store:5:Alchemy Shop
+owner:2147483647:-
 owner:10000:Mauser the Chemist (Half-Elf)
 owner:10000:Wizzle the Chaotic (Hobbit)
 owner:15000:Ga-nat the Greedy (Gnome)
@@ -176,6 +180,7 @@ buy:potion
 
 # Magic-user's
 store:6:Magic Shop
+owner:2147483647:-
 owner:15000:Ariel the Sorceress (Half-Elf)
 owner:20000:Buggerby the Great (Gnome)
 owner:25000:Inglorian the Mage (Human)
@@ -208,6 +213,7 @@ buy:rod
 
 # Black Market - no stock given but we still need slot/turnover info
 store:7:Black Market
+owner:2147483647:-
 owner:15000:Lo-Hak the Awful (Half-Troll)
 owner:20000:Histor the Goblin (Kobold)
 owner:25000:Durwin the Shifty (Half-Orc)

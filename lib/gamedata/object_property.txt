@@ -78,6 +78,24 @@ adjective:healthy
 neg-adjective:sickly
 bindui:stat_mod_ui_compact_0<CON>:0
 
+name:charisma
+type:stat
+code:CHR
+power:1
+mult:5
+adjective:confident
+neg-adjective:ug
+bindui:stat_mod_ui_compact_0<CHR>:0
+
+name:speed
+type:stat
+code:SPD
+power:20
+mult:20
+adjective:quick
+neg-adjective:sluggish
+bindui:stat_mod_ui_compact_0<SPD>:0
+
 name:stealth
 type:mod
 code:STEALTH
@@ -542,6 +560,14 @@ type-mult:helm:0
 type-mult:crown:0
 type-mult:gloves:0
 type-mult:boots:0
+
+name:stolen
+type:flag
+subtype:bad
+id-type:on effect
+code:STOLEN
+power:-1
+desc:Stolen from a store
 
 name:impaired hitpoint recovery
 type:flag

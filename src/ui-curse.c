@@ -50,7 +50,7 @@ void get_curse_display(struct menu *menu, int oid, bool cursor, int row,
 /**
  * Deal with events on the get_item menu
  */
-bool get_curse_action(struct menu *menu, const ui_event *event, int oid)
+bool get_curse_action(struct menu *menu, const ui_event *event, int oid, bool *exit)
 {
 	struct curse_menu_data *choice = menu_priv(menu);
 	if (event->type == EVT_SELECT) {

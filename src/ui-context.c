@@ -1170,7 +1170,7 @@ static bool cmd_menu(struct command_list *list, void *selection_p)
 
 
 
-static bool cmd_list_action(struct menu *m, const ui_event *event, int oid)
+static bool cmd_list_action(struct menu *m, const ui_event *event, int oid, bool *exit)
 {
 	if (event->type == EVT_SELECT)
 		return cmd_menu(&cmds_all[oid], menu_priv(m));

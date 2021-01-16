@@ -1793,12 +1793,8 @@ static void add_sustain(struct artifact *art)
 			return;
 
 	while (!success) {
-		r = randint0(5);
-		if (r == 0) success = add_flag(art, OF_SUST_STR);
-		else if (r == 1) success = add_flag(art, OF_SUST_INT);
-		else if (r == 2) success = add_flag(art, OF_SUST_WIS);
-		else if (r == 3) success = add_flag(art, OF_SUST_DEX);
-		else if (r == 4) success = add_flag(art, OF_SUST_CON);
+		r = randint0(STAT_MAX);
+		success = add_flag(art, OF_SUST_STR + r);
 	}
 }
 

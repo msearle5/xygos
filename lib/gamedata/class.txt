@@ -109,7 +109,7 @@
 
 ############### WARRIOR ###############
 name:Warrior
-stats:3:-2:-2:2:2
+stats:3:-2:-2:2:2:0:0
 skill-disarm-phys:25:15
 skill-disarm-magic:20:10
 skill-device:18:7
@@ -124,7 +124,17 @@ hitdie:9
 max-attacks:6
 min-weight:30
 strength-multiplier:5
-equip:food:Ration of Food:1:3
+equip:food:random:1:3
+equip:food:random:1:3
+equip:food:random:1:3
+equip:food:random:1:3
+equip:food:random:1:3
+equip:food:random:1:3
+equip:food:random:1:3
+equip:food:random:1:3
+equip:food:random:1:3
+equip:food:random:1:3
+equip:random:random:1:3
 equip:light:Wooden Torch:1:3
 equip:potion:Berserk Strength:1:1
 equip:sword:Dagger:1:1
@@ -145,7 +155,7 @@ title:Lord
 
 ############### MAGE ###############
 name:Mage
-stats:-3:3:0:0:-2
+stats:-3:3:0:0:-2:0:0
 skill-disarm-phys:30:10
 skill-disarm-magic:35:12
 skill-device:36:13
@@ -160,7 +170,7 @@ hitdie:0
 max-attacks:4
 min-weight:40
 strength-multiplier:2
-equip:food:Ration of Food:1:3
+equip:food:random:1:3
 equip:light:Wooden Torch:1:3
 equip:sword:Rapier:1:1
 equip:scroll:Word of Recall:1:1
@@ -420,7 +430,7 @@ desc: damage to each monster in its area of effect.
 
 ############### DRUID ###############
 name:Druid
-stats:-2:0:3:-2:0
+stats:-2:0:3:-2:0:0:0
 skill-disarm-phys:30:10
 skill-disarm-magic:30:10
 skill-device:24:10
@@ -435,7 +445,7 @@ hitdie:2
 max-attacks:4
 min-weight:35
 strength-multiplier:3
-equip:food:Ration of Food:1:3
+equip:food:random:1:3
 equip:hafted:Whip:1:1
 equip:light:Wooden Torch:1:3
 equip:scroll:Word of Recall:1:1
@@ -655,7 +665,7 @@ desc:Spews plasma in a long narrow cone from the player.
 
 ############### PRIEST ###############
 name:Priest
-stats:-1:-3:3:-1:1
+stats:-1:-3:3:-1:1:0:0
 skill-disarm-phys:25:12
 skill-disarm-magic:25:12
 skill-device:30:10
@@ -670,7 +680,7 @@ hitdie:2
 max-attacks:4
 min-weight:35
 strength-multiplier:3
-equip:food:Ration of Food:1:3
+equip:food:random:1:3
 equip:light:Wooden Torch:1:3
 equip:hafted:Mace:1:1
 equip:potion:Cure Serious Wounds:2:2
@@ -924,7 +934,7 @@ desc: in light doing 100 damage to every light-sensitive creature.
 
 ############### NECROMANCER ###############
 name:Necromancer
-stats:-3:3:0:0:-2
+stats:-3:3:0:0:-2:0:0
 skill-disarm-phys:30:10
 skill-disarm-magic:35:12
 skill-device:36:13
@@ -939,7 +949,7 @@ hitdie:2
 max-attacks:4
 min-weight:35
 strength-multiplier:3
-equip:food:Ration of Food:1:3
+equip:food:random:1:3
 equip:sword:Main Gauche:1:1
 equip:scroll:Word of Recall:1:1
 player-flags:ZERO_FAIL | CHOOSE_SPELLS | UNLIGHT | EVIL
@@ -1179,7 +1189,7 @@ desc:Allows you to take control of a monster, and move it instead of yourself.
 
 ############### PALADIN ###############
 name:Paladin
-stats:1:-3:1:-1:2
+stats:1:-3:1:-1:2:0:0
 skill-disarm-phys:20:15
 skill-disarm-magic:20:10
 skill-device:24:10
@@ -1194,7 +1204,7 @@ hitdie:6
 max-attacks:5
 min-weight:30
 strength-multiplier:5
-equip:food:Ration of Food:1:3
+equip:food:random:1:3
 equip:light:Wooden Torch:1:3
 equip:sword:Main Gauche:1:1
 equip:scroll:Protection from Evil:1:1
@@ -1340,7 +1350,7 @@ desc: winner can emerge.
 
 ############### ROGUE ###############
 name:Rogue
-stats:0:1:-3:3:-1
+stats:0:1:-3:3:-1:0:0
 skill-disarm-phys:45:20
 skill-disarm-magic:45:20
 skill-device:32:10
@@ -1355,7 +1365,7 @@ hitdie:4
 max-attacks:5
 min-weight:20
 strength-multiplier:4
-equip:food:Ration of Food:1:3
+equip:food:random:1:3
 equip:light:Wooden Torch:1:3
 equip:sword:Dagger:1:1
 equip:soft armour:Soft Leather Armour:1:1
@@ -1444,7 +1454,7 @@ desc:  This spell may have no effect when the forced descent option is set.
 
 ############### RANGER ###############
 name:Ranger
-stats:0:0:2:1:-1
+stats:0:0:2:1:-1:0:0
 skill-disarm-phys:40:15
 skill-disarm-magic:30:10
 skill-device:28:10
@@ -1459,7 +1469,7 @@ hitdie:5
 max-attacks:5
 min-weight:35
 strength-multiplier:4
-equip:food:Ration of Food:1:3
+equip:food:random:1:3
 equip:light:Wooden Torch:1:3
 equip:sword:Main Gauche:1:1
 equip:bow:Short Bow:1:1
@@ -1550,7 +1560,7 @@ desc:Cures all cuts, poison, stunning and black breath.
 
 ############### BLACKGUARD ###############
 name:Blackguard
-stats:2:0:-3:0:2
+stats:2:0:-3:0:2:0:0
 skill-disarm-phys:20:15
 skill-disarm-magic:20:10
 skill-device:24:10
@@ -1566,7 +1576,7 @@ max-attacks:5
 min-weight:100
 strength-multiplier:5
 equip:shadow book:[Into the Shadows]:1:1
-equip:food:Ration of Food:1:3
+equip:food:random:1:3
 equip:light:Wooden Torch:1:3
 equip:sword:Tulwar:1:1
 equip:shield:Leather Shield:1:1

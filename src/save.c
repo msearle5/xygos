@@ -754,6 +754,14 @@ void wr_stores(void)
 			wr_item(obj->known);
 			wr_item(obj);
 		}
+
+		/* Save the ban days and reason */
+		wr_u32b(store->bandays);
+		wr_string(store->banreason ? store->banreason : "");
+
+		/* Save the layaway index and day */
+		wr_s32b(store->layaway_idx);
+		wr_s32b(store->layaway_day);
 	}
 }
 

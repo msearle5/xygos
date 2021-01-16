@@ -2193,6 +2193,8 @@ static enum parser_error parse_p_race_stats(struct parser *p) {
 	r->r_adj[STAT_CON] = parser_getint(p, "con");
 	r->r_adj[STAT_INT] = parser_getint(p, "int");
 	r->r_adj[STAT_WIS] = parser_getint(p, "wis");
+	r->r_adj[STAT_CHR] = parser_getint(p, "chr");
+	r->r_adj[STAT_SPD] = parser_getint(p, "spd");
 	return PARSE_ERROR_NONE;
 }
 
@@ -2976,6 +2978,8 @@ static enum parser_error parse_class_stats(struct parser *p) {
 	c->c_adj[STAT_WIS] = parser_getint(p, "wis");
 	c->c_adj[STAT_DEX] = parser_getint(p, "dex");
 	c->c_adj[STAT_CON] = parser_getint(p, "con");
+	c->c_adj[STAT_CHR] = parser_getint(p, "chr");
+	c->c_adj[STAT_SPD] = parser_getint(p, "spd");
 	return PARSE_ERROR_NONE;
 }
 

@@ -43,9 +43,6 @@
 #include "target.h"
 #include "debug.h"
 
-
-static void store_maint(struct store *s);
-
 /**
  * ------------------------------------------------------------------------
  * Constants and definitions
@@ -158,8 +155,20 @@ static enum parser_error parse_store(struct parser *p) {
 
 static enum parser_error parse_slots(struct parser *p) {
 	struct store *s = parser_priv(p);
+	if (!s)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
 	s->normal_stock_min = parser_getuint(p, "min");
 	s->normal_stock_max = parser_getuint(p, "max");
+
+	/* Dummy owner (for player owner) */
+	/*struct owner *o = mem_zalloc(sizeof *o);
+	o->oidx = 0;
+	o->next = s->owners;
+	o->name = string_make("");
+	o->max_cost = INT_MAX;
+	s->owners = o;
+*/
 	return PARSE_ERROR_NONE;
 }
 
@@ -253,7 +262,7 @@ static enum parser_error parse_owner(struct parser *p) {
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
 	o = mem_zalloc(sizeof *o);
-	o->oidx = (s->owners ? s->owners->oidx + 1 : 0);
+	o->oidx = (s->owners ? s->owners->oidx + 1 : 1);
 	o->next = s->owners;
 	o->name = name;
 	o->max_cost = maxcost;
@@ -370,6 +379,10 @@ void store_reset(void) {
 
 	for (i = 0; i < MAX_STORES; i++) {
 		s = &stores[i];
+		s->bandays = 0;
+		s->banreason = "";
+		s->layaway_idx = -1;
+		s->layaway_day = 0;
 		s->stock_num = 0;
 		store_shuffle(s);
 		object_pile_free(s->stock);
@@ -1281,7 +1294,7 @@ static struct object *store_create_item(struct store *store,
 /**
  * Maintain the inventory at the stores.
  */
-static void store_maint(struct store *s)
+void store_maint(struct store *s)
 {
 	/* Ignore home */
 	if (s->sidx == STORE_HOME)
@@ -1410,6 +1423,14 @@ void store_update(void)
 			/* Skip the home */
 			if (n == STORE_HOME) continue;
 
+			if (stores[n].bandays > 0) {
+				stores[n].bandays--;
+				if (stores[n].bandays == 0) {
+					free((void *)stores[n].banreason);
+					stores[n].banreason = NULL;
+				}
+			}
+
 			/* Maintain */
 			store_maint(&stores[n]);
 		}
@@ -1454,7 +1475,7 @@ static struct owner *store_choose_owner(struct store *s) {
 		n++;
 	}
 
-	n = randint0(n);
+	n = randint1(n);
 	return store_ownerbyidx(s, n);
 }
 
@@ -1469,6 +1490,7 @@ void store_shuffle(struct store *store)
 	    o = store_choose_owner(store);
 
 	store->owner = o;
+	store->bandays = 0;
 }
 
 
@@ -1478,7 +1500,6 @@ void store_shuffle(struct store *store)
  * ------------------------------------------------------------------------
  * Higher-level code
  * ------------------------------------------------------------------------ */
-
 
 /**
  * Return the quantity of a given item in the pack (include quiver).
