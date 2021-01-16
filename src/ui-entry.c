@@ -1249,7 +1249,7 @@ static int get_timed_modifier_effect(const struct player *p, int ind)
 		result = (p->timed[TMD_SINFRA]) ? 5 : 0;
 		break;
 
-	case OBJ_MOD_SPEED:
+	case OBJ_MOD_SPD:
 		result = (p->timed[TMD_FAST] || p->timed[TMD_SPRINT]) ? 10 : 0;
 		if (p->timed[TMD_STONESKIN]) {
 			result -= 5;

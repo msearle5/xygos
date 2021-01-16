@@ -1721,7 +1721,6 @@ static void calc_shapechange(struct player_state *state,
 	state->skills[SKILL_SEARCH] += (shape->modifiers[OBJ_MOD_SEARCH] * 5);
 	state->see_infra += shape->modifiers[OBJ_MOD_INFRA];
 	state->skills[SKILL_DIGGING] += (shape->modifiers[OBJ_MOD_TUNNEL] * 20);
-	state->speed += shape->modifiers[OBJ_MOD_SPEED];
 	state->dam_red += shape->modifiers[OBJ_MOD_DAM_RED];
 	*blows += shape->modifiers[OBJ_MOD_BLOWS];
 	*shots += shape->modifiers[OBJ_MOD_SHOTS];
@@ -1841,16 +1840,9 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 			of_union(collect_f, f);
 
 			/* Apply modifiers */
-			state->stat_add[STAT_STR] += obj->modifiers[OBJ_MOD_STR]
-				* p->obj_k->modifiers[OBJ_MOD_STR];
-			state->stat_add[STAT_INT] += obj->modifiers[OBJ_MOD_INT]
-				* p->obj_k->modifiers[OBJ_MOD_INT];
-			state->stat_add[STAT_WIS] += obj->modifiers[OBJ_MOD_WIS]
-				* p->obj_k->modifiers[OBJ_MOD_WIS];
-			state->stat_add[STAT_DEX] += obj->modifiers[OBJ_MOD_DEX]
-				* p->obj_k->modifiers[OBJ_MOD_DEX];
-			state->stat_add[STAT_CON] += obj->modifiers[OBJ_MOD_CON]
-				* p->obj_k->modifiers[OBJ_MOD_CON];
+			for(int i=0;i<STAT_MAX;i++)
+				state->stat_add[i] += obj->modifiers[OBJ_MOD_STR + i]
+					* p->obj_k->modifiers[OBJ_MOD_STR + i];
 			state->skills[SKILL_STEALTH] += obj->modifiers[OBJ_MOD_STEALTH]
 				* p->obj_k->modifiers[OBJ_MOD_STEALTH];
 			state->skills[SKILL_SEARCH] += (obj->modifiers[OBJ_MOD_SEARCH] * 5)
@@ -1869,8 +1861,6 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 			dig += obj->modifiers[OBJ_MOD_TUNNEL]
 				* p->obj_k->modifiers[OBJ_MOD_TUNNEL];
 			state->skills[SKILL_DIGGING] += (dig * 20);
-			state->speed += obj->modifiers[OBJ_MOD_SPEED]
-				* p->obj_k->modifiers[OBJ_MOD_SPEED];
 			state->dam_red += obj->modifiers[OBJ_MOD_DAM_RED]
 				* p->obj_k->modifiers[OBJ_MOD_DAM_RED];
 			extra_blows += obj->modifiers[OBJ_MOD_BLOWS]
@@ -2036,6 +2026,8 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 			}
 		}
 	}
+
+	state->speed += (state->stat_ind[STAT_SPD] - 7);
 
 	/* Other timed effects */
 	player_flags_timed(p, state->flags);

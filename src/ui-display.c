@@ -541,6 +541,8 @@ static void prt_dex(int row, int col) { prt_stat(STAT_DEX, row, col); }
 static void prt_wis(int row, int col) { prt_stat(STAT_WIS, row, col); }
 static void prt_int(int row, int col) { prt_stat(STAT_INT, row, col); }
 static void prt_con(int row, int col) { prt_stat(STAT_CON, row, col); }
+static void prt_chr(int row, int col) { prt_stat(STAT_CHR, row, col); }
+static void prt_spd(int row, int col) { prt_stat(STAT_SPD, row, col); }
 static void prt_race(int row, int col) {
 	if (player_is_shapechanged(player)) {
 		prt_field("", row, col);
@@ -785,11 +787,13 @@ static const struct side_handler_t
 	{ prt_exp,     16, EVENT_EXPERIENCE },
 	{ prt_gold,    11, EVENT_GOLD },
 	{ prt_equippy, 17, EVENT_EQUIPMENT },
-	{ prt_str,      6, EVENT_STATS },
-	{ prt_int,      5, EVENT_STATS },
-	{ prt_wis,      4, EVENT_STATS },
-	{ prt_dex,      3, EVENT_STATS },
-	{ prt_con,      2, EVENT_STATS },
+	{ prt_str,      8, EVENT_STATS },
+	{ prt_int,      7, EVENT_STATS },
+	{ prt_wis,      6, EVENT_STATS },
+	{ prt_dex,      5, EVENT_STATS },
+	{ prt_con,      4, EVENT_STATS },
+	{ prt_chr,      3, EVENT_STATS },
+	{ prt_spd,      2, EVENT_STATS },
 	{ NULL,        15, 0 },
 	{ prt_ac,       7, EVENT_AC },
 	{ prt_hp,       8, EVENT_HP },

@@ -87,7 +87,7 @@ adjective:confident
 neg-adjective:ugly
 bindui:stat_mod_ui_compact_0<CHR>:0
 
-name:speediness
+name:speed
 type:stat
 code:SPD
 power:20
@@ -123,13 +123,6 @@ code:TUNNEL
 power:3
 mult:8
 bindui:tunneling_ui_compact_0:0
-
-name:speed
-type:mod
-code:SPEED
-power:20
-mult:6
-bindui:speed_ui_compact_0:0
 
 name:damage reduction
 type:mod

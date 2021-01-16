@@ -221,7 +221,7 @@ weight:1350
 weightmod:150
 values:RES_DARK[1]
 
-name:Half-Troll:0:0
+name:Half-Troll
 stats:4:-4:-2:-4:3:0:0
 skill-disarm-phys:-5
 skill-disarm-magic:-5

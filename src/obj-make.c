@@ -998,7 +998,7 @@ int apply_magic(struct object *obj, int lev, bool allow_artifacts, bool good,
 		if (obj->sval == lookup_sval(obj->tval, "Speed")) {
 			/* Super-charge the ring */
 			while (one_in_(2))
-				obj->modifiers[OBJ_MOD_SPEED]++;
+				obj->modifiers[OBJ_MOD_SPD]++;
 		}
 	} else if (tval_is_chest(obj)) {
 		/* Get a random, level-dependent set of chest traps */

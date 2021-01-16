@@ -1112,6 +1112,8 @@ melee_effect_handler_f melee_handler_for_blow_effect(const char *name)
 		{ "LOSE_WIS", melee_effect_handler_LOSE_WIS },
 		{ "LOSE_DEX", melee_effect_handler_LOSE_DEX },
 		{ "LOSE_CON", melee_effect_handler_LOSE_CON },
+		{ "LOSE_CHR", melee_effect_handler_LOSE_CHR },
+		{ "LOSE_SPD", melee_effect_handler_LOSE_SPD },
 		{ "LOSE_ALL", melee_effect_handler_LOSE_ALL },
 		{ "SHATTER", melee_effect_handler_SHATTER },
 		{ "EXP_10", melee_effect_handler_EXP_10 },

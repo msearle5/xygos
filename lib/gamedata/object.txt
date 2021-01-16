@@ -1969,7 +1969,7 @@ cost:2000
 alloc:8:40 to 100
 attack:0d0:0:0
 armor:6:0
-values:STEALTH[1] | SPEED[1]
+values:STEALTH[1] | SPD[1]
 desc:A mantle made of curious silken material by the Galadrim that wondrously 
 desc:takes on the hues and shapes of its surroundings.
 
@@ -2191,7 +2191,7 @@ weight:2
 cost:100000
 alloc:40:75 to 100
 flags:GOOD
-values:SPEED[4+M6]
+values:SPD[4+M6]
 
 name:Searching
 type:ring
@@ -2211,7 +2211,7 @@ level:30
 weight:2
 cost:750
 alloc:20:30 to 100
-flags:SUST_STR | SUST_DEX | SUST_CON | EASY_KNOW
+flags:SUST_STR | SUST_DEX | SUST_CON | SUST_SPD | EASY_KNOW
 
 name:Soulkeeping
 type:ring
@@ -2220,7 +2220,7 @@ level:30
 weight:2
 cost:600
 alloc:20:30 to 100
-flags:SUST_STR | SUST_INT | SUST_WIS | EASY_KNOW
+flags:SUST_STR | SUST_INT | SUST_WIS | SUST_CHR | EASY_KNOW
 
 
 ### Resistance rings ###
@@ -2386,7 +2386,7 @@ cost:1000
 alloc:20:10 to 50
 flags:EASY_KNOW
 curse:teleportation:100
-values:SPEED[2]
+values:SPD[2]
 
 name:Reckless Attacks
 type:ring
@@ -2422,7 +2422,7 @@ weight:2
 cost:4000
 alloc:50:15 to 80
 flags:AFRAID | EASY_KNOW
-values:SPEED[2]
+values:SPD[2]
 
 name:the Mouse
 type:ring
@@ -2611,7 +2611,7 @@ weight:3
 cost:30000
 alloc:10:70 to 100
 flags:SUST_DEX | GOOD
-values:DEX[1+M4] | SPEED[1+M2] | STEALTH[1+M2] | SEARCH[1+d3M3] | INFRA[1+d3M3]
+values:DEX[1+M4] | SPD[1+M2] | STEALTH[1+M2] | SEARCH[1+d3M3] | INFRA[1+d3M3]
 values:RES_NEXUS[1] | RES_POIS[1]
 
 ### Ability boosts ###
@@ -2684,7 +2684,7 @@ weight:3
 cost:10
 alloc:20:15 to 40
 flags:FREE_ACT
-values:SPEED[-3+1d2]
+values:SPD[-3+1d2]
 
 
 
