@@ -4929,7 +4929,7 @@ mimic:potion:*Healing*
 mimic:potion:Life
 mimic:potion:Experience
 mimic:potion:Augmentation
-mimic:potion:Speed
+mimic:potion:whizz
 
 name:blink dog
 base:canine

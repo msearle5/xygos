@@ -3242,6 +3242,29 @@ power:20000
 effect:RESTORE_STAT:CON
 effect:GAIN_STAT:CON
 
+name:Charisma
+type:potion
+graphics:!:d
+level:24
+weight:4
+cost:1500
+alloc:30:24 to 100
+pile:10:2
+power:4000
+effect:RESTORE_STAT:CHR
+effect:GAIN_STAT:CHR
+
+name:speed nano-
+type:potion
+graphics:!:d
+level:38
+weight:4
+cost:28000
+alloc:20:38 to 100
+power:20000
+effect:RESTORE_STAT:SPD
+effect:GAIN_STAT:SPD
+
 name:Augmentation
 type:potion
 graphics:!:d
@@ -3262,6 +3285,8 @@ effect:RESTORE_STAT:DEX
 effect:GAIN_STAT:DEX
 effect:RESTORE_STAT:CON
 effect:GAIN_STAT:CON
+effect:RESTORE_STAT:CHR
+effect:GAIN_STAT:CHR
 
 name:Experience
 type:potion
@@ -3547,7 +3572,7 @@ effect-yx:500:500
 
 ### Buffs ###
 
-name:Speed
+name:whizz
 type:potion
 graphics:!:d
 level:1
