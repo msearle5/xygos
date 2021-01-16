@@ -457,22 +457,20 @@ static int ac_power(const struct object *obj, int p)
 {
 	int q = 0;
 
-	if (obj->ac) {
+	if ((obj->ac) || (obj->ac + obj->to_a)) {
 		p += BASE_ARMOUR_POWER;
-		q += (obj->ac * BASE_AC_POWER / 2);
+		q += ((obj->ac + obj->to_a) * BASE_AC_POWER / 2);
 		log_obj(format("Adding %d power for base AC value\n", q));
 
 		/* Add power for AC per unit weight */
 		if (obj->weight > 0) {
-			int i = 16 * (obj->ac + obj->to_a) / obj->weight;
+			int i = (55000 * (obj->ac + obj->to_a)) / obj->weight;
 
-			/* Avoid overpricing Elven Cloaks */
+			log_obj(format("Weight %dg, AC %d, multiplier %d%%\n", obj->weight, obj->ac + obj->to_a, i));
+			/* Avoid overpricing very light items */
 			if (i > 450) i = 450;
 
-			q *= i;
-			q /= 100;
-
-			/* Weightless (ethereal) armour items get fixed boost */
+			/* Weightless armour items get fixed boost */
 		} else
 			q *= 5;
 		p += q;
