@@ -166,14 +166,6 @@ static enum parser_error parse_slots(struct parser *p) {
 	s->normal_stock_min = parser_getuint(p, "min");
 	s->normal_stock_max = parser_getuint(p, "max");
 
-	/* Dummy owner (for player owner) */
-	/*struct owner *o = mem_zalloc(sizeof *o);
-	o->oidx = 0;
-	o->next = s->owners;
-	o->name = string_make("");
-	o->max_cost = INT_MAX;
-	s->owners = o;
-*/
 	return PARSE_ERROR_NONE;
 }
 
@@ -388,6 +380,7 @@ void store_reset(void) {
 		s->banreason = "";
 		s->layaway_idx = -1;
 		s->layaway_day = 0;
+		s->income = 0;
 		s->stock_num = 0;
 		store_shuffle(s);
 		object_pile_free(s->stock);
@@ -594,6 +587,12 @@ static bool store_will_buy(struct store *store, const struct object *obj)
  * Basics: pricing, generation, etc.
  * ------------------------------------------------------------------------ */
 
+/* Returns true if you own the store (= owner is the first in the list) */
+bool you_own(struct store *store)
+{
+	return (store->owner == store->owners);
+}
+
 
 /**
  * Determine the price of an object (qty one) in a store.
@@ -633,9 +632,10 @@ int price_item(struct store *store, const struct object *obj,
 		return 0;
 	}
 
-	/* The black market is always a worse deal */
-	if (store->sidx == STORE_B_MARKET)
-		adjust = 150;
+	/* The black market is always a worse deal (for the rest of them) */
+	if (!you_own(store))
+		if (store->sidx == STORE_B_MARKET)
+			adjust = 150;
 
 	/* Shop is buying */
 	if (store_buying) {
@@ -645,17 +645,21 @@ int price_item(struct store *store, const struct object *obj,
 			adjust = 100;
 		}
 
-		/* Shops now pay 2/3 of true value */
-		price = price * 2 / 3;
+		/* Owner gets the real price */
+		if (!you_own(store))
+		{
+			/* Shops now pay 2/3 of true value */
+			price = price * 2 / 3;
 
-		/* Black market sucks */
-		if (store->sidx == STORE_B_MARKET) {
-			price = price / 2;
-		}
+			/* Black market sucks */
+			if (store->sidx == STORE_B_MARKET) {
+				price = price / 2;
+			}
 
-		/* Check for no_selling option */
-		if (OPT(player, birth_no_selling)) {
-			return 0;
+			/* Check for no_selling option */
+			if (OPT(player, birth_no_selling)) {
+				return 0;
+			}
 		}
 	} else {
 		/* Re-evaluate if we're selling */
@@ -665,9 +669,13 @@ int price_item(struct store *store, const struct object *obj,
 			price = object_value_real(obj, 1);
 		}
 
-		/* Black market sucks */
-		if (store->sidx == STORE_B_MARKET) {
-			price = price * 2;
+		/* Owner gets the real price */
+		if (!you_own(store))
+		{
+			/* Black market sucks */
+			if (store->sidx == STORE_B_MARKET) {
+				price = price * 2;
+			}
 		}
 	}
 
@@ -680,7 +688,7 @@ int price_item(struct store *store, const struct object *obj,
 	}
 
 	/* Now limit the price to the purse limit */
-	if (store_buying && (price > proprietor->max_cost * qty)) {
+	if (store_buying && proprietor->max_cost && (price > proprietor->max_cost * qty)) {
 		price = proprietor->max_cost * qty;
 	}
 
@@ -1109,6 +1117,14 @@ static void store_delete_random(struct store *store)
 		history_lose_artifact(player, obj->artifact);
 	}
 
+	/* If you own the store, ka-ching.
+	 * This at first sight is an infinite money source - but in fact it is limited by
+	 * the limited amount of time you have with the town available.
+	 **/
+	if (you_own(store)) {
+		store->income += 1 + (price_item(store, obj, false, num) / 4);
+	}
+
 	/* Delete the item, wholly or in part */
 	store_delete(store, obj, num);
 }
@@ -1480,7 +1496,7 @@ static struct owner *store_choose_owner(struct store *s) {
 		n++;
 	}
 
-	n = randint1(n);
+	n = randint1(n-1);
 	return store_ownerbyidx(s, n);
 }
 

@@ -26,4 +26,5 @@ void enter_store(game_event_type type, game_event_data *data, void *user);
 void use_store(game_event_type type, game_event_data *data, void *user);
 void leave_store(game_event_type type, game_event_data *data, void *user);
 
+
 #endif /* INCLUDED_UI_STORE_H */

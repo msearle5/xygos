@@ -168,6 +168,18 @@ static const char *random_saying(s32b real, s32b min, s32b max)
 }
 
 /**
+ * Collect from a store you own 
+ */
+static void collect_from_store(struct store *store)
+{
+	if (store->income) {
+		msg("You collect $%d in takings.", store->income);
+		player->au += store->income;
+		store->income = 0;
+	}
+}
+
+/**
  * The greeting a shopkeeper gives the character says a lot about his
  * general attitude.
  *
@@ -286,9 +298,9 @@ static void store_display_recalc(struct store_context *ctx)
 
 	/* If we're displaying the help, then put it with a line of padding */
 	if (ctx->flags & (STORE_SHOW_HELP)) {
-		ctx->scr_places_y[LOC_HELP_CLEAR] = hgt - 1;
-		ctx->scr_places_y[LOC_HELP_PROMPT] = hgt;
-		loc.page_rows = -5;
+		ctx->scr_places_y[LOC_HELP_CLEAR] = hgt - 10;
+		ctx->scr_places_y[LOC_HELP_PROMPT] = hgt - 6;
+		loc.page_rows = -10;
 	} else {
 		ctx->scr_places_y[LOC_HELP_CLEAR] = hgt - 2;
 		ctx->scr_places_y[LOC_HELP_PROMPT] = hgt - 1;
@@ -378,7 +390,7 @@ static void store_display_frame(struct store_context *ctx)
 
 		/* Show weight header */
 		put_str("Weight", ctx->scr_places_y[LOC_HEADER],
-				ctx->scr_places_x[LOC_WEIGHT] + 2);
+				ctx->scr_places_x[LOC_WEIGHT]);
 	} else {
 		/* Normal stores */
 		const char *store_name = store->name;
@@ -388,7 +400,7 @@ static void store_display_frame(struct store_context *ctx)
 		put_str(owner_name, ctx->scr_places_y[LOC_OWNER], 1);
 
 		/* Show the max price in the store (above prices) */
-		strnfmt(buf, sizeof(buf), "%s (%d)", store_name,
+		strnfmt(buf, sizeof(buf), proprietor->max_cost ? "%s (%d)" : "%s", store_name,
 				proprietor->max_cost);
 		prt(buf, ctx->scr_places_y[LOC_OWNER],
 			ctx->scr_places_x[LOC_OWNER] - strlen(buf));
@@ -398,7 +410,7 @@ static void store_display_frame(struct store_context *ctx)
 
 		/* Showing weight label */
 		put_str("Weight", ctx->scr_places_y[LOC_HEADER],
-				ctx->scr_places_x[LOC_WEIGHT] + 2);
+				ctx->scr_places_x[LOC_WEIGHT]);
 
 		/* Label the asking price (in stores) */
 		put_str("Price", ctx->scr_places_y[LOC_HEADER], ctx->scr_places_x[LOC_PRICE] + 4);
@@ -441,7 +453,7 @@ static void store_display_help(struct store_context *ctx)
 	if (!ctx->inspect_only) {
 		if (OPT(player, birth_no_selling)) {
 			text_out_c(COLOUR_L_GREEN, "d");
-			text_out(" gives an item to the store in return for its identification. Some wands and staves will also be recharged. ");
+			text_out(" gives an item to the store in return for its identification. Some items will also be recharged. ");
 		} else {
 			text_out_c(COLOUR_L_GREEN, "d");
 			if (is_home) text_out(" drops");
@@ -454,19 +466,19 @@ static void store_display_help(struct store_context *ctx)
 	}
 
 	if (!is_home) {
-		text_out_c(COLOUR_L_GREEN, "h");
-		text_out(" holds an item (you pay 10% now to keep it in stock. If you buy it the same day, you'll only pay the remaining 90% - but each extra day will add 10% more.) ");
-		text_out_c(COLOUR_L_GREEN, "r");
+		text_out_c(COLOUR_L_GREEN, "H");
+		text_out(" holds an item (you pay 10%% now to keep it in stock. If you buy it the same day, you'll only pay the remaining 90%% - but each extra day will add 10%% more.) ");
+		text_out_c(COLOUR_L_GREEN, "S");
 		text_out(" attempts to steal an item (this is risky!), while ");
-		text_out_c(COLOUR_L_GREEN, "f");
-		text_out(" picks a fight with the owner (even more risky!) ");
+		text_out_c(COLOUR_L_GREEN, "F");
+		text_out(" picks a fight with the owner (even more risky!). ");
 		text_out_c(COLOUR_L_GREEN, "N");
 		text_out(" asks the owner to obtain new stock (this is expensive), while ");
 		text_out_c(COLOUR_L_GREEN, "O");
-		text_out(" asks the owner to leave, to be replaced by a different shopkeeper (this is very expensive).  ");
+		text_out(" asks the owner to leave, to be replaced by a different shopkeeper (this is very expensive). ");
 		text_out_c(COLOUR_L_GREEN, "B");
 		text_out(" buys the store for yourself (this is extremely expensive). ");
-		text_out_c(COLOUR_L_GREEN, "q");
+		text_out_c(COLOUR_L_GREEN, "Q");
 		text_out(" asks the owner if there is anything they want doing for them. ");
 	}
 
@@ -497,7 +509,8 @@ static void store_redraw(struct store_context *ctx)
 	}
 
 	if (ctx->flags & (STORE_GOLD_CHANGE)) {
-		prt(format("Cash Remaining: %9d", player->au),
+		if (!(ctx->flags & STORE_SHOW_HELP))
+			prt(format("Cash Remaining: %9d", player->au),
 				ctx->scr_places_y[LOC_AU], ctx->scr_places_x[LOC_AU]);
 		ctx->flags &= ~(STORE_GOLD_CHANGE);
 	}
@@ -631,6 +644,17 @@ static bool store_sell(struct store_context *ctx)
 	return true;
 }
 
+/* Set a store's owner and name to you */
+static void store_your_name(struct store *store)
+{
+	char buf[256];
+	store->owner = store->owners;
+	string_free(store->owner->name);
+	const char *shape = (player_is_shapechanged(player) ? player->shape->name : player->race->name);
+	snprintf(buf, sizeof(buf), "%s the %s (%s)", player->full_name, player_title(), shape);	// should be updated when you enter
+	buf[sizeof(buf)-1] = 0;
+	store->owner->name = string_make(buf);
+}
 
 
 /**
@@ -1054,7 +1078,7 @@ static void store_steal(struct store_context *ctx, bool *exit)
 /* pick a fight with the owner */
 static void store_fight(struct store_context *ctx, bool *exit)
 {
-	if (ctx->store->sidx == STORE_HOME) {
+	if ((ctx->store->sidx == STORE_HOME) || (you_own(ctx->store))) {
 		msg("You decide against punching yourself in the face.");
 		return;
 	}
@@ -1151,8 +1175,10 @@ static void store_newstock(struct store_context *ctx)
 static void store_replace(struct store_context *ctx, bool *exit)
 {
 	char buf[256];
-	int price = store_roundup((store_price_all(ctx->store) / 3) + ctx->store->owner->max_cost + 2000);
-	if (ctx->store->sidx == STORE_HOME) {
+	struct store *store = ctx->store;
+
+	int price = store_roundup((store_price_all(store) / 3) + store->owner->max_cost + 2000);
+	if ((store->sidx == STORE_HOME) || (you_own(store))) {
 		msg("It's all yours, and it's staying that way.");
 		return;
 	}
@@ -1191,11 +1217,21 @@ static void store_replace(struct store_context *ctx, bool *exit)
 
 static void store_do_buy(struct store *store)
 {
-	char buf[256];
-	store->owner = &store->owners[0];
-	string_free(store->owner->name);
-	snprintf(buf, sizeof(buf), "%s the %s (%s)", player->full_name, player_title(), player->shape->name);	// should be updated when you enter
-	store->owner->name = string_make(buf);
+	store_your_name(store);
+
+	store->bandays = 0;
+	store->layaway_idx = -1;
+	store->income = 0;
+
+	/* Update the display */
+	event_signal(EVENT_STORECHANGED);
+}
+
+static void store_do_sell(struct store *store)
+{
+	store->bandays = 0;
+	store->layaway_idx = -1;
+	store->income = 0;
 
 	/* Update the display */
 	event_signal(EVENT_STORECHANGED);
@@ -1204,10 +1240,11 @@ static void store_do_buy(struct store *store)
 /* buys the store for yourself */
 static void store_buy(struct store_context *ctx, bool *exit)
 {
-	if (ctx->store->sidx == STORE_HOME) {
+	struct store *store = ctx->store;
+	if (store->sidx == STORE_HOME) {
 		msg("It's all yours, and it's staying that way.");
 		return;
-	} else if (ctx->store->owner == &ctx->store->owners[0]) {
+	} else if (you_own(store)) {
 		/* Already own it.
 		 * Sell?
 		 * To avoid being able to make money from speculating here - the price of stock (which can change) is ignored.
@@ -1225,7 +1262,7 @@ static void store_buy(struct store_context *ctx, bool *exit)
 		rng_state state;
 		Rand_extract_state(&state);
 		int day = turn / (10L * z_info->day_length);
-		Rand_state_init((day * 53) + ctx->store->sidx);
+		Rand_state_init((day * 53) + store->sidx);
 		int price = 100 * Rand_normal(650, 80);	/* 4 s.d.s - the max - will give 97000 - below the 100K limit */
 		Rand_restore_state(&state);
 
@@ -1240,16 +1277,17 @@ static void store_buy(struct store_context *ctx, bool *exit)
 		player->au += price;
 
 		/* Buy it */
-		store_shuffle(ctx->store);
-		store_maint(ctx->store);
-		msg("%s agrees to buy the store from you.", store_shortname(ctx));
-		store_do_buy(ctx->store);
+		store_shuffle(store);
+		store_maint(store);
+		msg("%s agrees to buy the store from you.\n\n", store_shortname(ctx));
+		store_do_sell(store);
 
+		*exit = true;
 		return;
 	}
 
 	/* Buy price. See selling discussion above before changing */
-	int price = store_roundup((store_price_all(ctx->store) / 3) + (ctx->store->owner->max_cost * 3) + 100000);
+	int price = store_roundup((store_price_all(store) / 3) + (store->owner->max_cost * 3) + 100000);
 	
 	/* Confirm if they really wanted it */
 	screen_save();
@@ -1271,12 +1309,14 @@ static void store_buy(struct store_context *ctx, bool *exit)
 	/* Buy it */
 	msg("%s agrees to sell the store to you.", store_shortname(ctx));
 	store_do_buy(ctx->store);
+	*exit = true;
 }
 
 /* asks the owner if there is anything they want doing */
 static void store_quest(struct store_context *ctx)
 {
-	if ((ctx->store->sidx == STORE_HOME) || (ctx->store->owner == &ctx->store->owners[0])) {
+	struct store *store = ctx->store;
+	if ((store->sidx == STORE_HOME) || (you_own(store))) {
 		msg("You question yourself extensively, but see no gain in WIS.");
 		return;
 	}
@@ -1340,7 +1380,7 @@ static void store_hold(struct store_context *ctx)
 	s32b price = (int)price_item(store, obj, false, obj->number);	/* assume that all are wanted */
 	price = (price + 9) / 10;
 	if (price <= 0) {
-		msg("It's free, and you want it cheaper?!");
+		msg("It's already free, and you want it cheaper?!");
 		return;
 	}
 
@@ -1398,21 +1438,21 @@ static void store_menu_set_selections(struct menu *menu, bool knowledge_menu)
 	if (knowledge_menu) {
 		if (OPT(player, rogue_like_commands)) {
 			/* These two can't intersect! */
-			menu->cmd_keys = "?|IeilxFSNOB";
+			menu->cmd_keys = "?|IeilxFQSNOB";
 			menu->selections = "abcdfghjkmnopqrstuvwyz134567";
 		} else {
 			/* These two can't intersect! */
-			menu->cmd_keys = "?|IeilFSNOB";
+			menu->cmd_keys = "?|IeilFQSNOB";
 			menu->selections = "abcdfghjkmnopqrstuvwxyz13456";
 		}
 	} else {
 		if (OPT(player, rogue_like_commands)) {
 			/* These two can't intersect! */
-			menu->cmd_keys = "\x04\x05\x10?={|}~CEIPTdegilpswxFSNOB"; /* \x10 = ^p , \x04 = ^D, \x05 = ^E */
+			menu->cmd_keys = "\x04\x05\x10?={|}~CEIPTdegilpswxFQSNOB"; /* \x10 = ^p , \x04 = ^D, \x05 = ^E */
 			menu->selections = "abcfmnoqrtuvyz13456790ABDFGH";
 		} else {
 			/* These two can't intersect! */
-			menu->cmd_keys = "\x05\x010?={|}~CEIbdegiklpstwxFSNOB"; /* \x05 = ^E, \x10 = ^p */
+			menu->cmd_keys = "\x05\x010?={|}~CEIbdegiklpstwxFQSNOB"; /* \x05 = ^E, \x10 = ^p */
 			menu->selections = "acfhjmnoqruvyz13456790ABDFGH";
 		}
 	}
@@ -1672,9 +1712,9 @@ static bool store_menu_handle(struct menu *m, const ui_event *event, int oid, bo
 
 			case 'B': store_buy(ctx, exit); break;
 
-			case 'h': store_hold(ctx); break;
+			case 'H': store_hold(ctx); break;
 
-			case 'q': store_quest(ctx); break;
+			case 'Q': store_quest(ctx); break;
 
 			case 'p':
 			case 'g':
@@ -1866,11 +1906,22 @@ void use_store(game_event_type type, game_event_data *data, void *user)
 
 	/* Get a array version of the store stock, register handler for changes */
 	event_add_handler(EVENT_STORECHANGED, refresh_stock, &ctx);
+
+	/* Before initializing the menu, set up your name if you own it. */
+	if (store->sidx != STORE_HOME)
+		if (you_own(store))
+			store_your_name(store);
+
 	store_menu_init(&ctx, store, false);
 
-	/* Say a friendly hello. */
-	if (store->sidx != STORE_HOME)
-		prt_welcome(store->owner);
+	/* Say a friendly hello - or collect some loot. */
+	if (store->sidx != STORE_HOME) {
+		if (you_own(store)) {
+			collect_from_store(store);
+		} else {
+			prt_welcome(store->owner);
+		}
+	}
 
 	/* Shopping */
 	menu_select(&ctx.menu, 0, false);
