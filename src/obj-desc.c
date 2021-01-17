@@ -115,7 +115,7 @@ static const char *obj_desc_get_basename(const struct object *obj, bool aware,
 			return (show_flavor ? "& # Rod~" : "& Rod~");
 
 		case TV_POTION:
-			return (show_flavor ? "& # Potion~" : "& Potion~");
+			return (show_flavor ? "& # pill~" : "& pill~");
 
 		case TV_SCROLL:
 			return (show_flavor ? "& Scroll~ titled #" : "& Scroll~");
@@ -297,12 +297,17 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 
 	/* Quantity prefix */
 	if (prefix)
-		end = obj_desc_name_prefix(buf, max, end, obj, basename, modstr, terse);
+		end = obj_desc_name_prefix(buf, max , end, obj, basename, modstr, terse);
+
+	if (aware && obj->kind->flavor) {
+		strnfcat(buf, max, &end, "%s ", obj->kind->name);
+	}
 
 	/* Base name */
 	end = obj_desc_name_format(buf, max, end, basename, modstr, plural);
 
 	/* Append extra names of various kinds */
+	/*
 	if (object_is_known_artifact(obj))
 		strnfcat(buf, max, &end, " %s", obj->artifact->name);
 	else if ((obj->known->ego && !(mode & ODESC_NOEGO)) || (obj->ego && store))
@@ -315,7 +320,7 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 			else
 				strnfcat(buf, max, &end, " of %s", obj->kind->name);
 		}
-	}
+	}*/
 
 	return end;
 }
@@ -502,7 +507,7 @@ static size_t obj_desc_inscrip(const struct object *obj, char *buf,
 
 	/* Note curses */
 	if (obj->known->curses)
-		u[n++] = "cursed";
+		u[n++] = "trapped";
 
 	/* Note ignore */
 	if (ignore_item_ok(obj))
@@ -541,7 +546,7 @@ static size_t obj_desc_aware(const struct object *obj, char *buf, size_t max,
 	} else if (!object_runes_known(obj)) {
 		strnfcat(buf, max, &end, " {??}");
 	} else if (obj->known->curses) {
-		strnfcat(buf, max, &end, " {cursed}");
+		strnfcat(buf, max, &end, " {trapped}");
 	}
 
 	return end;
@@ -584,7 +589,7 @@ size_t object_desc(char *buf, size_t max, const struct object *obj, int mode)
 	}
 
 	if (tval_is_money(obj))
-		return strnfmt(buf, max, "%d gold pieces worth of %s%s",
+		return strnfmt(buf, max, "$%d worth of %s%s",
 				obj->pval, obj->kind->name,
 				ignore_item_ok(obj) ? " {ignore}" : "");
 
