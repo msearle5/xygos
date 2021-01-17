@@ -1519,7 +1519,7 @@ static tval_desc sval_dependent[] =
 	{ TV_WAND,			"Wands" },
 	{ TV_ROD,			"Rods" },
 	{ TV_SCROLL,		"Scrolls" },
-	{ TV_POTION,		"Potions" },
+	{ TV_PILL,		"Pills" },
 	{ TV_RING,			"Rings" },
 	{ TV_AMULET,		"Amulets" },
 	{ TV_FOOD,			"Food" },

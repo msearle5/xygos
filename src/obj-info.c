@@ -1319,8 +1319,8 @@ static void obj_known_misc_combat(const struct object *obj, bool *thrown_effect,
 	*range = *break_chance = 0;
 
 	if (!weapon && !ammo) {
-		/* Potions can have special text */
-		if (tval_is_potion(obj) && obj->dd != 0 && obj->ds != 0 &&
+		/* Pills can have special text */
+		if (tval_is_pill(obj) && obj->dd != 0 && obj->ds != 0 &&
 			object_flavor_is_aware(obj))
 			*thrown_effect = true;
 	}
@@ -1652,7 +1652,7 @@ static bool obj_known_effect(const struct object *obj, struct effect **effect,
 		*max_recharge = randcalc(timeout, 0, MAXIMISE);
 	}
 
-	if (tval_is_edible(obj) || tval_is_potion(obj) || tval_is_scroll(obj)) {
+	if (tval_is_edible(obj) || tval_is_pill(obj) || tval_is_scroll(obj)) {
 		*failure_chance = 0;
 	} else {
 		*failure_chance = get_use_device_chance(obj);
@@ -1689,7 +1689,7 @@ static bool describe_effect(textblock *tb, const struct object *obj,
 	if (!effect && object_effect(obj)) {
 		if (tval_is_edible(obj)) {
 			textblock_append(tb, "It can be eaten.\n");
-		} else if (tval_is_potion(obj)) {
+		} else if (tval_is_pill(obj)) {
 			textblock_append(tb, "It can be drunk.\n");
 		} else if (tval_is_scroll(obj)) {
 			textblock_append(tb, "It can be read.\n");
@@ -1717,7 +1717,7 @@ static bool describe_effect(textblock *tb, const struct object *obj,
 			prefix = "When aimed, it ";
 		else if (tval_is_edible(obj))
 			prefix = "When eaten, it ";
-		else if (tval_is_potion(obj))
+		else if (tval_is_pill(obj))
 			prefix = "When quaffed, it ";
 		else if (tval_is_scroll(obj))
 			prefix = "When read, it ";

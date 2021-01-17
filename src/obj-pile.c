@@ -375,7 +375,7 @@ void object_pile_free(struct object *obj)
  * Missiles will combine if both stacks have the same "known" status.
  * This is done to make unidentified stacks of missiles useful.
  *
- * Food, potions, scrolls, and "easy know" items always stack.
+ * Food, pills, scrolls, and "easy know" items always stack.
  *
  * Chests, and activatable items, except rods, never stack (for various
  * reasons).
@@ -421,9 +421,9 @@ bool object_stackable(const struct object *obj1, const struct object *obj2,
 		/* Chests never stack */
 		return false;
 	}
-	else if (tval_is_edible(obj1) || tval_is_potion(obj1) ||
+	else if (tval_is_edible(obj1) || tval_is_pill(obj1) ||
 		tval_is_scroll(obj1) || tval_is_rod(obj1)) {
-		/* Food, potions, scrolls and rods all stack nicely,
+		/* Food, pills, scrolls and rods all stack nicely,
 		   since the kinds are identical, either both will be
 		   aware or both will be unaware */
 	} else if (tval_can_have_charges(obj1) || tval_is_money(obj1)) {

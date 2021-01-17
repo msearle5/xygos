@@ -714,7 +714,7 @@ static void mass_produce(struct object *obj)
 			break;
 		}
 
-		case TV_POTION:
+		case TV_PILL:
 		case TV_SCROLL:
 		{
 			if (cost <= 60L) size += mass_roll(3, 5);
@@ -1509,10 +1509,10 @@ int find_inven(const struct object *obj)
 				return 0;
 			}
 
-			/* Food and Potions and Scrolls */
+			/* Food and Pills and Scrolls */
 			case TV_FOOD:
 			case TV_MUSHROOM:
-			case TV_POTION:
+			case TV_PILL:
 			case TV_SCROLL:
 			{
 				/* Assume okay */

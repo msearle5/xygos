@@ -1372,7 +1372,7 @@ static const grouper object_text_order[] =
 {
 	{TV_RING,			"Ring"			},
 	{TV_AMULET,			"Amulet"		},
-	{TV_POTION,			"Potion"		},
+	{TV_PILL,			"Pill"		},
 	{TV_SCROLL,			"Scroll"		},
 	{TV_WAND,			"Wand"			},
 	{TV_STAFF,			"Staff"			},

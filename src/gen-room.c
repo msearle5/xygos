@@ -1368,9 +1368,9 @@ bool build_vault(struct chunk *c, struct loc centre, struct vault *v)
 					/* Amulet. */
 				case '"': place_object(c, grid, c->depth + 3, one_in_(4), false,
 									   ORIGIN_VAULT, TV_AMULET); break;
-					/* Potion. */
+					/* Pill. */
 				case '!': place_object(c, grid, c->depth + 3, one_in_(4), false,
-									   ORIGIN_VAULT, TV_POTION); break;
+									   ORIGIN_VAULT, TV_PILL); break;
 					/* Scroll. */
 				case '?': place_object(c, grid, c->depth + 3, one_in_(4), false,
 									   ORIGIN_VAULT, TV_SCROLL); break;

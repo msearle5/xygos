@@ -3651,8 +3651,8 @@ static void cleanup_flavor(void)
 	f = flavors;
 	while(f) {
 		next = f->next;
-		/* Hack - scrolls get randomly-generated names */
-		if (f->tval != TV_SCROLL)
+		/* Hack - some items get randomly-generated names */
+		if ((f->tval != TV_SCROLL) && (f->tval != TV_PILL))
 			mem_free(f->text);
 		mem_free(f);
 		f = next;

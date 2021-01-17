@@ -154,7 +154,7 @@ turnover:9
 always:scroll:Word of Recall
 always:scroll:Phase Door
 always:scroll:Remove Curse
-always:potion:Cure Light Wounds
+always:pill:Cure Light Wounds
 normal:scroll:Monster Confusion
 normal:scroll:Magic Mapping
 normal:scroll:Detect Invisible
@@ -162,16 +162,16 @@ normal:scroll:Recharging
 normal:scroll:Remove Hunger
 normal:scroll:Blessing
 normal:scroll:Holy Chant
-normal:potion:Boldness
-normal:potion:Berserk Strength
-normal:potion:Resist Heat
-normal:potion:Resist Cold
-normal:potion:Restore Life Levels
-normal:potion:Neutralize Poison
-normal:potion:Cure Serious Wounds
-normal:potion:Cure Critical Wounds
+normal:pill:Boldness
+normal:pill:Berserk Strength
+normal:pill:Resist Heat
+normal:pill:Resist Cold
+normal:pill:Restore Life Levels
+normal:pill:Neutralize Poison
+normal:pill:Cure Serious Wounds
+normal:pill:Cure Critical Wounds
 buy:scroll
-buy:potion
+buy:pill
 
 # Magic-user's
 store:6:Magic Shop

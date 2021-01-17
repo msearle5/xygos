@@ -54,6 +54,11 @@ struct flavor *flavors;
  */
 static char scroll_adj[MAX_TITLES][18];
 
+/**
+ * Hold the titles of pills, 6 to 14 characters each, plus quotes.
+ */
+static char pill_adj[MAX_TITLES][18];
+
 static void flavor_assign_fixed(void)
 {
 	int i;
@@ -100,6 +105,8 @@ static void flavor_assign_random(byte tval)
 			if (choice == 0) {
 				k_info[i].flavor = f;
 				f->sval = k_info[i].sval;
+				if (tval == TV_PILL)
+					f->text = pill_adj[k_info[i].sval];
 				if (tval == TV_SCROLL)
 					f->text = scroll_adj[k_info[i].sval];
 				flavor_count--;
@@ -136,7 +143,7 @@ void flavor_reset_fixed(void)
  * For the most part, flavors are assigned randomly each game.
  *
  * Initialize descriptions for the "colored" objects, including:
- * Rings, Amulets, Staffs, Wands, Rods, Mushrooms, Potions, Scrolls.
+ * Rings, Amulets, Staffs, Wands, Rods, Mushrooms, Pills, Scrolls.
  *
  * Scroll titles are always between 6 and 14 letters long.  This is
  * ensured because every title is composed of whole words, where every
@@ -185,7 +192,46 @@ void flavor_init(void)
 	flavor_assign_random(TV_WAND);
 	flavor_assign_random(TV_ROD);
 	flavor_assign_random(TV_MUSHROOM);
-	flavor_assign_random(TV_POTION);
+
+	/* Pills (random titles, always magenta)
+	 * The pills will be randomized again by flavor_assign_random.
+	 * So this doesn't have to change the base names ("yadar" of "yadarine"), only the suffix.
+	 * It also doesn't matter (much) whether all suffixes are used or some used more than once.
+	 * so:
+	 * For each output name:
+	 * 		Copy from a sequential input basename
+	 * 		+ a randomly chosen input suffix.
+	 * 		FIX doesnt randomize
+	 */
+	char suff[MAX_TITLES][8];
+	
+	/* Pull out suffixes into an array */
+	int pills = 0;
+	for (struct flavor *f = flavors; f; f = f->next) {
+		if (f->tval == TV_PILL && f->sval == SV_UNKNOWN) {
+			char *suffix = strchr(f->text, '|');
+			assert(suffix);
+			suffix++;
+			strncpy(suff[pills++], suffix, sizeof(suff[0]));
+		}
+	}
+
+	/* And combine them */
+	i = 0;
+	for (struct flavor *f = flavors; f; f = f->next) {
+		if (f->tval == TV_PILL && f->sval == SV_UNKNOWN) {
+			char base[11];
+			strncpy(base, f->text, sizeof(base));
+			base[sizeof(base)-1] = 0;
+			char *suffix = strchr(base, '|');
+			assert(suffix);
+			*suffix = 0;
+			snprintf(pill_adj[i], sizeof(pill_adj[i]), "%s%s", base, suff[randint0(pills)]);
+			pill_adj[i][sizeof(pill_adj[i])-1] = 0;
+			i++;
+		}
+	}
+	flavor_assign_random(TV_PILL);
 
 	/* Scrolls (random titles, always white) */
 	for (i = 0; i < MAX_TITLES; i++) {

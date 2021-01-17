@@ -36,9 +36,9 @@ bool tval_is_rod(const struct object *obj)
 	return obj->tval == TV_ROD;
 }
 
-bool tval_is_potion(const struct object *obj)
+bool tval_is_pill(const struct object *obj)
 {
-	return obj->tval == TV_POTION;
+	return obj->tval == TV_PILL;
 }
 
 bool tval_is_scroll(const struct object *obj)
@@ -108,7 +108,7 @@ bool tval_is_digger(const struct object *obj)
 
 bool tval_can_have_nourishment(const struct object *obj)
 {
-	return obj->tval == TV_FOOD || obj->tval == TV_POTION ||
+	return obj->tval == TV_FOOD || obj->tval == TV_PILL ||
 			obj->tval == TV_MUSHROOM;
 }
 
@@ -174,7 +174,7 @@ bool tval_is_useable(const struct object *obj)
 		case TV_WAND:
 		case TV_STAFF:
 		case TV_SCROLL:
-		case TV_POTION:
+		case TV_PILL:
 		case TV_FOOD:
 		case TV_MUSHROOM:
 			return true;
@@ -322,7 +322,7 @@ bool tval_can_have_flavor_k(const struct object_kind *kind)
 		case TV_STAFF:
 		case TV_WAND:
 		case TV_ROD:
-		case TV_POTION:
+		case TV_PILL:
 		case TV_MUSHROOM:
 		case TV_SCROLL:
 			return true;

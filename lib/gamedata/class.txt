@@ -126,7 +126,7 @@ min-weight:30
 strength-multiplier:5
 equip:food:Ration of Food:1:3
 equip:light:Wooden Torch:1:3
-equip:potion:Berserk Strength:1:1
+equip:pill:Berserk Strength:1:1
 equip:sword:Dagger:1:1
 equip:soft armour:Soft Leather Armour:1:1
 equip:scroll:Word of Recall:1:1
@@ -673,7 +673,7 @@ strength-multiplier:3
 equip:food:Ration of Food:1:3
 equip:light:Wooden Torch:1:3
 equip:hafted:Mace:1:1
-equip:potion:Cure Serious Wounds:2:2
+equip:pill:Cure Serious Wounds:2:2
 equip:scroll:Word of Recall:1:1
 player-flags:BLESS_WEAPON | ZERO_FAIL
 title:Believer
@@ -1571,7 +1571,7 @@ equip:light:Wooden Torch:1:3
 equip:sword:Tulwar:1:1
 equip:shield:Leather Shield:1:1
 equip:scroll:Word of Recall:1:1
-equip:potion:Cure Light Wounds:1:1
+equip:pill:Cure Light Wounds:1:1
 obj-flags:IMPAIR_HP
 player-flags:CHOOSE_SPELLS | SHIELD_BASH | COMBAT_REGEN
 title:Rat

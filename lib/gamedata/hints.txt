@@ -159,7 +159,7 @@ H:Overeating can be bad for your health if there are others nearby.
 H:Pay attention to how your enemies move - some are erratic, some can blink.
 H:Blinking is a good escape if the terrain is appropriate.
 H:Poison will kill you slowly.
-H:Potions of Heroism or Berserk Strength will protect you from being scared. 
+H:pills of Heroism or Berserk Strength will protect you from being scared. 
 H:Probing an enemy to learn its abilities is always useful.
 H:Quivers can hold different types of ammo in one inventory slot (max. 40).
 H:Recall will send you to and from the depths.

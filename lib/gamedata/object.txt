@@ -3178,15 +3178,15 @@ effect:TOUCH:MAKE_TRAP:3
 
 
 
-##### Potions #####
+##### Pills #####
 
 ### Statgain ###
 
 name:Strength
-type:potion
+type:pill
 graphics:!:d
 level:30
-weight:4
+weight:1g
 cost:8000
 alloc:30:30 to 100
 pile:10:2
@@ -3195,10 +3195,10 @@ effect:RESTORE_STAT:STR
 effect:GAIN_STAT:STR
 
 name:Intelligence
-type:potion
+type:pill
 graphics:!:d
 level:30
-weight:4
+weight:1g
 cost:8000
 alloc:30:30 to 100
 pile:10:2
@@ -3207,10 +3207,10 @@ effect:RESTORE_STAT:INT
 effect:GAIN_STAT:INT
 
 name:Wisdom
-type:potion
+type:pill
 graphics:!:d
 level:30
-weight:4
+weight:1g
 cost:8000
 alloc:30:30 to 100
 pile:10:2
@@ -3219,10 +3219,10 @@ effect:RESTORE_STAT:WIS
 effect:GAIN_STAT:WIS
 
 name:Dexterity
-type:potion
+type:pill
 graphics:!:d
 level:30
-weight:4
+weight:1g
 cost:8000
 alloc:30:30 to 100
 pile:10:2
@@ -3231,10 +3231,10 @@ effect:RESTORE_STAT:DEX
 effect:GAIN_STAT:DEX
 
 name:Constitution
-type:potion
+type:pill
 graphics:!:d
 level:30
-weight:4
+weight:1g
 cost:8000
 alloc:30:30 to 100
 pile:10:2
@@ -3243,10 +3243,10 @@ effect:RESTORE_STAT:CON
 effect:GAIN_STAT:CON
 
 name:Augmentation
-type:potion
+type:pill
 graphics:!:d
 level:40
-weight:4
+weight:1g
 cost:50000
 alloc:20:40 to 100
 attack:1d1:0:0
@@ -3264,10 +3264,10 @@ effect:RESTORE_STAT:CON
 effect:GAIN_STAT:CON
 
 name:Experience
-type:potion
+type:pill
 graphics:!:d
 level:65
-weight:4
+weight:1g
 cost:25000
 alloc:50:65 to 100
 power:20000
@@ -3277,10 +3277,10 @@ dice:200000
 ### Healings ###
 
 name:Cure Light Wounds
-type:potion
+type:pill
 graphics:!:d
 level:0
-weight:4
+weight:1g
 cost:20
 alloc:80:1 to 15
 pile:90:2d3
@@ -3296,10 +3296,10 @@ effect:NOURISH:INC_BY
 dice:1
 
 name:Cure Serious Wounds
-type:potion
+type:pill
 graphics:!:d
 level:3
-weight:4
+weight:1g
 cost:70
 alloc:80:5 to 40
 pile:80:2d3
@@ -3313,10 +3313,10 @@ effect:NOURISH:INC_BY
 dice:1
 
 name:Cure Critical Wounds
-type:potion
+type:pill
 graphics:!:d
 level:5
-weight:4
+weight:1g
 cost:200
 alloc:80:12 to 100
 pile:70:2d3
@@ -3333,10 +3333,10 @@ effect:NOURISH:INC_BY
 dice:1
 
 name:Healing
-type:potion
+type:pill
 graphics:!:d
 level:15
-weight:4
+weight:1g
 cost:800
 alloc:64:30 to 100
 pile:25:2
@@ -3353,10 +3353,10 @@ effect:NOURISH:INC_BY
 dice:1
 
 name:*Healing*
-type:potion
+type:pill
 graphics:!:d
 level:40
-weight:4
+weight:1g
 cost:1500
 alloc:40:40 to 100
 attack:1d1:0:0
@@ -3372,10 +3372,10 @@ effect:CURE:AMNESIA
 effect:CURE:CONFUSED
 
 name:Life
-type:potion
+type:pill
 graphics:!:d
 level:60
-weight:4
+weight:1g
 cost:5000
 alloc:20:60 to 100
 attack:1d1:0:0
@@ -3399,10 +3399,10 @@ effect:HEAL_HP
 dice:5000
 
 name:Neutralize Poison
-type:potion
+type:pill
 graphics:!:d
 level:5
-weight:4
+weight:1g
 cost:75
 alloc:60:1 to 35
 pile:25:2
@@ -3410,10 +3410,10 @@ power:1
 effect:CURE:POISONED
 
 name:Restore Mana
-type:potion
+type:pill
 graphics:!:d
 level:25
-weight:4
+weight:1g
 cost:350
 alloc:64:15 to 100
 pile:25:2
@@ -3426,10 +3426,10 @@ effect:RESTORE_MANA
 # removed: old stat restoration
 
 name:Restore Life Levels
-type:potion
+type:pill
 graphics:!:d
 level:40
-weight:4
+weight:1g
 cost:400
 alloc:40:30 to 100
 pile:25:2
@@ -3437,13 +3437,13 @@ power:8
 effect:RESTORE_EXP
 
 
-### Gain one/lose one potions ###
+### Gain one/lose one pills ###
 
 name:Brawn
-type:potion
+type:pill
 graphics:!:d
 level:3
-weight:4
+weight:1g
 cost:1000
 alloc:30:20 to 40
 pile:10:2
@@ -3453,10 +3453,10 @@ effect:GAIN_STAT:STR
 effect:LOSE_RANDOM_STAT:STR
 
 name:Intellect
-type:potion
+type:pill
 graphics:!:d
 level:20
-weight:4
+weight:1g
 cost:1000
 alloc:30:20 to 40
 pile:10:2
@@ -3466,10 +3466,10 @@ effect:GAIN_STAT:INT
 effect:LOSE_RANDOM_STAT:INT
 
 name:Contemplation
-type:potion
+type:pill
 graphics:!:d
 level:20
-weight:4
+weight:1g
 cost:1000
 alloc:30:20 to 40
 pile:10:2
@@ -3479,10 +3479,10 @@ effect:GAIN_STAT:WIS
 effect:LOSE_RANDOM_STAT:WIS
 
 name:Nimbleness
-type:potion
+type:pill
 graphics:!:d
 level:5
-weight:4
+weight:1g
 cost:1000
 alloc:30:20 to 40
 pile:10:2
@@ -3492,10 +3492,10 @@ effect:GAIN_STAT:DEX
 effect:LOSE_RANDOM_STAT:DEX
 
 name:Toughness
-type:potion
+type:pill
 graphics:!:d
 level:10
-weight:4
+weight:1g
 cost:1000
 alloc:30:20 to 40
 pile:10:2
@@ -3508,10 +3508,10 @@ effect:LOSE_RANDOM_STAT:CON
 ### Knowledge ###
 
 name:Enlightenment
-type:potion
+type:pill
 graphics:!:d
 level:25
-weight:4
+weight:1g
 cost:800
 alloc:40:25 to 100
 pile:25:2
@@ -3520,10 +3520,10 @@ effect:LIGHT_LEVEL
 dice:1
 
 name:*Enlightenment*
-type:potion
+type:pill
 graphics:!:d
 level:70
-weight:4
+weight:1g
 cost:12000
 alloc:8:70 to 100
 attack:1d1:0:0
@@ -3548,10 +3548,10 @@ effect-yx:500:500
 ### Buffs ###
 
 name:Speed
-type:potion
+type:pill
 graphics:!:d
 level:1
-weight:4
+weight:1g
 cost:75
 alloc:40:1 to 100
 pile:25:2
@@ -3560,10 +3560,10 @@ effect:TIMED_INC:FAST:0:5
 dice:20+2d10
 
 name:Heroism
-type:potion
+type:pill
 graphics:!:d
 level:1
-weight:4
+weight:1g
 cost:25
 alloc:40:1 to 100
 pile:25:2
@@ -3575,10 +3575,10 @@ effect:TIMED_INC:HERO
 dice:25+1d25
 
 name:Berserk Strength
-type:potion
+type:pill
 graphics:!:d
 level:3
-weight:4
+weight:1g
 cost:80
 alloc:40:3 to 100
 pile:25:2
@@ -3590,10 +3590,10 @@ effect:TIMED_INC:SHERO
 dice:25+1d25
 
 name:Boldness
-type:potion
+type:pill
 graphics:!:d
 level:1
-weight:4
+weight:1g
 cost:8
 alloc:40:1 to 90
 pile:25:2
@@ -3601,10 +3601,10 @@ power:2
 effect:CURE:AFRAID
 
 name:Resist Heat
-type:potion
+type:pill
 graphics:!:d
 level:30
-weight:4
+weight:1g
 cost:30
 alloc:40:30 to 100
 pile:25:2
@@ -3613,10 +3613,10 @@ effect:TIMED_INC:OPP_FIRE
 dice:50+1d10
 
 name:Resist Cold
-type:potion
+type:pill
 graphics:!:d
 level:30
-weight:4
+weight:1g
 cost:30
 alloc:40:30 to 100
 pile:25:2
@@ -3625,10 +3625,10 @@ effect:TIMED_INC:OPP_COLD
 dice:50+1d10
 
 name:Resist Poison
-type:potion
+type:pill
 graphics:!:d
 level:20
-weight:4
+weight:1g
 cost:30
 alloc:40:20 to 100
 pile:25:2
@@ -3638,10 +3638,10 @@ dice:50+1d10
 effect:CURE:POISONED
 
 name:True Seeing
-type:potion
+type:pill
 graphics:!:d
 level:3
-weight:4
+weight:1g
 cost:50
 alloc:40:3 to 40
 pile:25:2
@@ -3651,10 +3651,10 @@ effect:TIMED_INC:SINVIS
 dice:50+2d6
 
 name:Infravision
-type:potion
+type:pill
 graphics:!:d
 level:3
-weight:4
+weight:1g
 cost:20
 alloc:40:3 to 40
 pile:25:2
@@ -3665,23 +3665,23 @@ dice:100+4d25
 
 ### Useless buggers ###
 
-name:Slime Mold Juice
-type:potion
+name:sugar
+type:pill
 graphics:!:d
 level:0
-weight:4
+weight:1g
 cost:2
 alloc:10:1 to 10
 pile:70:2d3
 power:0
 effect:NOURISH:INC_BY
-dice:10
+dice:1
 
 name:Sleep
-type:potion
+type:pill
 graphics:!:d
 level:0
-weight:4
+weight:1g
 cost:0
 alloc:10:0 to 10
 pile:70:2d3
@@ -3694,10 +3694,10 @@ effect:NOURISH:INC_BY
 dice:1
 
 name:Blindness
-type:potion
+type:pill
 graphics:!:d
 level:0
-weight:4
+weight:1g
 cost:0
 alloc:10:0 to 10
 pile:70:2d3
@@ -3708,10 +3708,10 @@ effect:TIMED_INC:BLIND
 dice:75+4d25
 
 name:Confusion
-type:potion
+type:pill
 graphics:!:d
 level:0
-weight:4
+weight:1g
 cost:0
 alloc:10:0 to 10
 pile:70:2d3
@@ -3724,10 +3724,10 @@ effect:NOURISH:INC_BY
 dice:1
 
 name:Poison
-type:potion
+type:pill
 graphics:!:d
 level:3
-weight:4
+weight:1g
 cost:0
 alloc:10:0 to 10
 pile:70:2d3
@@ -3738,10 +3738,10 @@ effect:TIMED_INC:POISONED
 dice:10+2d7
 
 name:Slowness
-type:potion
+type:pill
 graphics:!:d
 level:1
-weight:4
+weight:1g
 cost:0
 alloc:10:0 to 10
 pile:70:2d3
@@ -3754,10 +3754,10 @@ effect:NOURISH:INC_BY
 dice:1
 
 name:Surprise
-type:potion
+type:pill
 graphics:!:d
 level:10
-weight:4
+weight:1g
 cost:0
 alloc:10:10 to 15
 pile:25:2
@@ -3772,16 +3772,16 @@ effect:DRAIN_STAT:WIS
 effect:TIMED_INC:STONESKIN
 dice:20+1d20
 
-name:Salt Water
-type:potion
+name:emetic
+type:pill
 graphics:!:d
 level:0
-weight:4
+weight:1g
 cost:0
 alloc:10:3 to 15
 pile:100:1d2
 power:0
-msg:The potion makes you queasy.
+msg:The pill makes you queasy.
 effect:NOURISH:SET_TO
 dice:2
 effect:CURE:POISONED
@@ -3792,10 +3792,10 @@ dice:4
 ### Weird one ###
 
 name:Dragon Breath
-type:potion
+type:pill
 graphics:!:d
 level:0
-weight:4
+weight:1g
 cost:100
 pile:100:1d2
 alloc:20:40 to 100

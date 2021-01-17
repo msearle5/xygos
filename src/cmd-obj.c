@@ -817,9 +817,9 @@ void do_cmd_eat_food(struct command *cmd)
 }
 
 /**
- * Quaff a potion 
+ * Quaff a pill 
  */
-void do_cmd_quaff_potion(struct command *cmd)
+void do_cmd_quaff_pill(struct command *cmd)
 {
 	struct object *obj;
 
@@ -834,9 +834,9 @@ void do_cmd_quaff_potion(struct command *cmd)
 
 	/* Get an item */
 	if (cmd_get_item(cmd, "item", &obj,
-			"Quaff which potion? ",
-			"You have no potions from which to quaff.",
-			tval_is_potion,
+			"Quaff which pill? ",
+			"You have no pills from which to quaff.",
+			tval_is_pill,
 			USE_INVEN | USE_FLOOR) != CMD_OK) return;
 
 	use_aux(cmd, obj, USE_SINGLE, MSG_QUAFF);
@@ -867,7 +867,7 @@ void do_cmd_use(struct command *cmd)
 		return;
 
 	if (tval_is_ammo(obj))				do_cmd_fire(cmd);
-	else if (tval_is_potion(obj))		do_cmd_quaff_potion(cmd);
+	else if (tval_is_pill(obj))		do_cmd_quaff_pill(cmd);
 	else if (tval_is_edible(obj))		do_cmd_eat_food(cmd);
 	else if (tval_is_rod(obj))			do_cmd_zap_rod(cmd);
 	else if (tval_is_wand(obj))			do_cmd_aim_wand(cmd);

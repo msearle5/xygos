@@ -142,11 +142,11 @@ typedef enum stat_code
 	ST_BUCKLAND_BOWS,
 	ST_TELEP_BOWS,
 	ST_CURSED_BOWS,
-	ST_POTIONS,
-	ST_GAINSTAT_POTIONS,
-	ST_HEALING_POTIONS,
-	ST_BIGHEAL_POTIONS,
-	ST_RESTOREMANA_POTIONS,
+	ST_PILLS,
+	ST_GAINSTAT_PILLS,
+	ST_HEALING_PILLS,
+	ST_BIGHEAL_PILLS,
+	ST_RESTOREMANA_PILLS,
 	ST_SCROLLS,
 	ST_ENDGAME_SCROLLS,
 	ST_ACQUIRE_SCROLLS,
@@ -258,11 +258,11 @@ static const struct stat_data stat_message[] =
 	{ST_BUCKLAND_BOWS, " Buckland    "},
 	{ST_TELEP_BOWS, " Telepathy   "},
 	{ST_CURSED_BOWS, " Cursed      "},
-	{ST_POTIONS, "\n ***POTIONS***   \n All:        "},
-	{ST_GAINSTAT_POTIONS, " Gain stat   "},//includes *enlight*
-	{ST_HEALING_POTIONS, " Healing     "},
-	{ST_BIGHEAL_POTIONS, " Big heal    "},//*heal* and life
-	{ST_RESTOREMANA_POTIONS, " Rest. Mana  "},
+	{ST_PILLS, "\n ***PILLS***   \n All:        "},
+	{ST_GAINSTAT_PILLS, " Gain stat   "},//includes *enlight*
+	{ST_HEALING_PILLS, " Healing     "},
+	{ST_BIGHEAL_PILLS, " Big heal    "},//*heal* and life
+	{ST_RESTOREMANA_PILLS, " Rest. Mana  "},
 	{ST_SCROLLS, "\n ***SCROLLS***   \n All:        "},
 	{ST_ENDGAME_SCROLLS, " Endgame     "},// destruction, banish, mass banish, rune
 	{ST_ACQUIRE_SCROLLS, " Acquire.    "},
@@ -731,11 +731,11 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 			break;
 		}
 
-		/* potion */
-		case TV_POTION:{
+		/* pill */
+		case TV_PILL:{
 
 			/* Add total amounts */
-			add_stats(ST_POTIONS, vault, mon, number);
+			add_stats(ST_PILLS, vault, mon, number);
 
 			/* Stat gain */
 			if (strstr(obj->kind->name, "Strength") ||
@@ -743,20 +743,20 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 				strstr(obj->kind->name, "Wisdom") ||
 				strstr(obj->kind->name, "Dexterity") ||
 				strstr(obj->kind->name, "Constitution")) {
-				add_stats(ST_GAINSTAT_POTIONS, vault, mon, number);
+				add_stats(ST_GAINSTAT_PILLS, vault, mon, number);
 			} else if (strstr(obj->kind->name, "Augmentation")) {
 				/* Augmentation counts as 5 stat gain pots */
-				add_stats(ST_GAINSTAT_POTIONS, vault, mon, number * 5);
+				add_stats(ST_GAINSTAT_PILLS, vault, mon, number * 5);
 			} else if (strstr(obj->kind->name, "*Enlightenment*")) {
 				/* *Enlight* counts as 2 stat pots */
-				add_stats(ST_GAINSTAT_POTIONS, vault, mon, number * 2);
+				add_stats(ST_GAINSTAT_PILLS, vault, mon, number * 2);
 			} else if (strstr(obj->kind->name, "Restore Mana")) {
-				add_stats(ST_RESTOREMANA_POTIONS, vault, mon, number);
+				add_stats(ST_RESTOREMANA_PILLS, vault, mon, number);
 			} else if ((strstr(obj->kind->name, "Life")) ||
 					   (strstr(obj->kind->name, "*Healing*"))) {
 				add_stats(ST_ELVEN_RINGS, vault, mon, number);
 			} else if (strstr(obj->kind->name, "Healing")) {
-				add_stats(ST_HEALING_POTIONS, vault, mon, number);
+				add_stats(ST_HEALING_PILLS, vault, mon, number);
 			}
 			break;
 		}
@@ -1204,7 +1204,7 @@ static void print_heading(void)
 	file_putf(stats_log," Armor:     Low resist armor may have more than one basic resist (acid, \n");
 	file_putf(stats_log,"		     elec, fire, cold) but not all. \n");
 	file_putf(stats_log," Books:     Prayer and Magic books have the same probability. \n");
-	file_putf(stats_log," Potions:   Aug counts as 5 potions, *enlight* as 2.  Healing potions are \n");
+	file_putf(stats_log," Pills:   Aug counts as 5 pills, *enlight* as 2.  Healing pills are \n");
 	file_putf(stats_log,"			 only *Healing* and Life\n");
 	file_putf(stats_log," Scrolls:   Endgame scrolls include *Dest*, Rune, MBan and Ban \n");
 	file_putf(stats_log,"    		 *Acq* counts as two Acq scrolls");

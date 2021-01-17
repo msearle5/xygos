@@ -4880,34 +4880,6 @@ friends:100:2d7:Same
 desc:Saint Elmo's Fire forms a ghostly halo around this hound, and sparks sting
 desc: your fingers as energy builds up in the air around you.
 
-name:potion mimic
-base:mimic
-glyph:!
-color:w
-speed:110
-hit-points:55
-hearing:25
-armor-class:36
-sleepiness:0
-depth:18
-rarity:3
-experience:60
-blow:HIT:POISON:3d4
-blow:HIT:HURT:2d3
-blow:HIT:HURT:2d3
-flags:HURT_COLD
-spell-freq:6
-spells:BO_COLD
-spells:BLIND | WOUND | CONF | SCARE
-desc:A strange creature that disguises itself as a discarded potion bottle to
-desc: lure unsuspecting adventurers within reach of its venomous claws.
-mimic:potion:Healing
-mimic:potion:*Healing*
-mimic:potion:Life
-mimic:potion:Experience
-mimic:potion:Augmentation
-mimic:potion:Speed
-
 name:blink dog
 base:canine
 color:B

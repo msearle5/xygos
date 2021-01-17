@@ -8962,7 +8962,7 @@ rating:3
 rows:9
 columns:11
 doors:1
-tval:potion
+tval:pill
 D:###########
 D:##[[.#.[[##
 D:####+#+####
@@ -9130,13 +9130,13 @@ D:%....x..x..%%%..%%
 D:%%%.x%%..%%% %%%% 
 D:  %%%%%%%%        
 
-name:Potion cupboard
+name:pill cupboard
 type:1
 rating:3
 rows:11
 columns:19
 doors:4
-tval:potion
+tval:pill
 D:    #%%%%%%%%%#    
 D:  ###.........###  
 D: ##...#######...## 

@@ -223,7 +223,7 @@ static void project_object_handler_FIRE(project_object_handler_context_t *contex
 	project_object_elemental(context, ELEM_FIRE, "burns up", "burn up");
 }
 
-/* Cold -- potions and flasks */
+/* Cold -- pills and flasks */
 static void project_object_handler_COLD(project_object_handler_context_t *context)
 {
 	project_object_elemental(context, ELEM_COLD, "shatters", "shatter");
@@ -241,13 +241,13 @@ static void project_object_handler_DARK(project_object_handler_context_t *contex
 {
 }
 
-/* Sound -- potions and flasks */
+/* Sound -- pills and flasks */
 static void project_object_handler_SOUND(project_object_handler_context_t *context)
 {
 	project_object_elemental(context, ELEM_SOUND, "shatters", "shatter");
 }
 
-/* Shards -- potions and flasks */
+/* Shards -- pills and flasks */
 static void project_object_handler_SHARD(project_object_handler_context_t *context)
 {
 	project_object_elemental(context, ELEM_SHARD, "shatters", "shatter");
@@ -273,7 +273,7 @@ static void project_object_handler_WATER(project_object_handler_context_t *conte
 {
 }
 
-/* Ice -- potions and flasks */
+/* Ice -- pills and flasks */
 static void project_object_handler_ICE(project_object_handler_context_t *context)
 {
 	project_object_elemental(context, ELEM_ICE, "shatters", "shatter");
@@ -287,7 +287,7 @@ static void project_object_handler_INERTIA(project_object_handler_context_t *con
 {
 }
 
-/* Force -- potions and flasks */
+/* Force -- pills and flasks */
 static void project_object_handler_FORCE(project_object_handler_context_t *context)
 {
 	project_object_elemental(context, ELEM_FORCE, "shatters", "shatter");

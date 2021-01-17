@@ -153,11 +153,11 @@ graphics:white
 # max-stack:20
 flags:HATES_ACID | HATES_FIRE | EASY_KNOW
 
-name:potion:Potion~
-graphics:light blue
-break:100
+name:pill:Pill~
+graphics:magenta-pink
+break:10
 # max-stack:20
-flags:HATES_COLD | HATES_SOUND | HATES_SHARD | HATES_ICE | HATES_FORCE
+flags:HATES_ACID | HATES_FIRE
 flags:EASY_KNOW
 
 name:flask:Flask~
