@@ -165,7 +165,6 @@ bool mon_restrict(const char *monster_type, int depth, bool unique_ok)
     } else {
 		/* Use a pit profile */
 		struct pit_profile *profile = lookup_pit_profile(monster_type);
-
 		/* Accept the profile or leave area empty if none found */
 		if (profile)
 			dun->pit_type = profile;

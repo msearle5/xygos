@@ -1838,7 +1838,7 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 
 	/* First time */
 	if (!c_old) {
-		c_new->depth = p->depth;
+		c_new->depth = danger_depth(player);
 
 		/* Build stuff */
 		town_gen_layout(c_new, p);
@@ -1863,14 +1863,62 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 
 		/* Place the player */
 		player_place(c_new, p, grid);
+		c_new->depth = danger_depth(player);
 	}
 
 	/* Apply illumination */
 	cave_illuminate(c_new, is_daytime());
 
 	/* Make some residents */
-	for (i = 0; i < residents; i++)
-		pick_and_place_distant_monster(c_new, p, 3, true, c_new->depth);
+	int depth = c_new->depth;
+
+	/* More if higher danger (day like night, but not more than that) */
+	if (is_daytime()) {
+		if (depth > 0) {
+			if (depth >= z_info->town_allmons_level)
+				residents = z_info->town_monsters_night;
+			else
+				residents += ((z_info->town_monsters_night - z_info->town_monsters_day) * depth) / z_info->town_allmons_level;
+		}
+	}
+
+	/* Produce residents according to danger level.
+	 * As the danger level increases, the original residents quickly disappear, replaced by bandits etc - at first, they hang back.
+	 * Later, they appear close by, the townees have gone completely and random monsters start appearing - at long range because of breaths etc.
+	 * The thieves then fade out, until random monsters are all you get. At this point they can generate close.
+	 */
+	for (i = 0; i < residents; i++) {
+		if (depth < z_info->town_allmons_level) {
+			/* Early on, mix townees and low-level human[oids] */
+			if (!depth || one_in_(depth+1)) {
+				/* Townee */
+				pick_and_place_distant_monster(c_new, p, 3, true, 0);
+			} else {
+				/* Humanoid - set monster generation restrictions */
+				(void) mon_restrict("Thieves", depth, true);
+				pick_and_place_distant_monster(c_new, p, 8, true, depth);
+
+				/* Remove our restrictions. */
+				(void) mon_restrict(NULL, depth, false);
+			}
+		} else if (depth < z_info->town_equalmons_level) {
+			/* Mid game, mix mid-level humanoids and low-level other monsters */
+			if (randint0(z_info->town_equalmons_level - z_info->town_allmons_level) <= (depth - z_info->town_allmons_level)) {
+				/* Reduced level, any nontown monster (nonunique?) */
+				pick_and_place_distant_monster(c_new, p, 15, true, randint1(depth));
+			} else {
+				/* In level humanoid - set monster generation restrictions */
+				(void) mon_restrict("Thieves", depth, true);
+				pick_and_place_distant_monster(c_new, p, 3, true, depth);
+
+				/* Remove our restrictions. */
+				(void) mon_restrict(NULL, depth, false);
+			}
+		} else {
+			/* Late, allow all monsters */
+			pick_and_place_distant_monster(c_new, p, 3, true, depth);
+		}
+	}
 
 	return c_new;
 }
