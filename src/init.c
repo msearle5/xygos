@@ -479,6 +479,18 @@ static enum parser_error parse_constants_mon_gen(struct parser *p) {
 		z->monster_group_max = value;
 	else if (streq(label, "group-dist"))
 		z->monster_group_dist = value;
+	else if (streq(label, "turns-easy"))
+		z->town_easy_turns = value;
+	else if (streq(label, "turns-level"))
+		z->town_levelup_turns = value;
+	else if (streq(label, "town-all-mons"))
+		z->town_allmons_level = value;
+	else if (streq(label, "town-equal-mons"))
+		z->town_equalmons_level = value;
+	else if (streq(label, "town-destroy-first"))
+		z->town_delfirst_level = value;
+	else if (streq(label, "town-destroy-all"))
+		z->town_delall_level = value;
 	else
 		return PARSE_ERROR_UNDEFINED_DIRECTIVE;
 

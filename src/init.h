@@ -65,7 +65,13 @@ struct angband_constants
 	u16b ood_monster_amount;	/**< Max number of levels OoD */
 	u16b monster_group_max;		/**< Maximum size of a group */
 	u16b monster_group_dist;	/**< Max dist of a group from a related group */
-
+	u16b town_easy_turns;		/**< Number of turns before difficulty increases */
+	u16b town_levelup_turns;	/**< Number of turns between difficulty increases */
+	u16b town_allmons_level;	/**< Level when level-1 non-p/h can show in the town */
+	u16b town_equalmons_level;	/**< Level when all in-level mons can show in the town */
+	u16b town_delfirst_level;	/**< Level when the first shop disappears */
+	u16b town_delall_level;		/**< Level when all shops disappear */
+	
 	/* Monster gameplay constants, read from constants.txt */
 	u16b glyph_hardness;		/**< How hard for a monster to break a glyph */
 	u16b repro_monster_rate;	/**< Monster reproduction rate-slower */

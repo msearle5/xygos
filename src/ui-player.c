@@ -648,7 +648,7 @@ static const char *show_depth(void)
 
 	if (player->max_depth == 0) return "Town";
 
-	strnfmt(buffer, sizeof(buffer), "%d' (L%d)",
+	strnfmt(buffer, sizeof(buffer), "%dm (L%d)",
 	        player->max_depth * 50, player->max_depth);
 	return buffer;
 }
