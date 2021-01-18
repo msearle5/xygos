@@ -610,7 +610,7 @@ bool you_own(struct store *store)
 int price_item(struct store *store, const struct object *obj,
 			   bool store_buying, int qty)
 {
-	int adjust = 100;
+	int adjust = 110;
 	int price;
 	struct owner *proprietor;
 
@@ -632,50 +632,35 @@ int price_item(struct store *store, const struct object *obj,
 		return 0;
 	}
 
-	/* The black market is always a worse deal (for the rest of them) */
-	if (!you_own(store))
+	if (!you_own(store)) {
+		/* This adjusts the price (in either direction) based on CHA
+		 * and level, with CHA being more important at low level and
+		 * the proportion that is dependent on level increasing at high
+		 * level (that is, at level 25 less than half of the advantage
+		 * of high level has occurred).
+		 */
+		adjust += (3000 - (player->lev * player->lev)) /
+			((3 + player->state.stat_ind[STAT_CHR]) * 10);
+q
+		/* The black market is always a worse deal (for the rest of them) */
 		if (store->sidx == STORE_B_MARKET)
-			adjust = 150;
+			adjust = (adjust * 2) + 50;
+	}
 
 	/* Shop is buying */
 	if (store_buying) {
 		/* Set the factor */
-		adjust = 100 + (100 - adjust);
-		if (adjust > 100) {
-			adjust = 100;
-		}
+		adjust = 10000 / adjust;
 
-		/* Owner gets the real price */
-		if (!you_own(store))
-		{
-			/* Shops now pay 2/3 of true value */
-			price = price * 2 / 3;
-
-			/* Black market sucks */
-			if (store->sidx == STORE_B_MARKET) {
-				price = price / 2;
-			}
-
-			/* Check for no_selling option */
-			if (OPT(player, birth_no_selling)) {
-				return 0;
-			}
-		}
+		/* Check for no_selling option */
+		if (OPT(player, birth_no_selling))
+			return 0;
 	} else {
 		/* Re-evaluate if we're selling */
 		if (tval_can_have_charges(obj)) {
 			price = object_value_real(obj, qty);
 		} else {
 			price = object_value_real(obj, 1);
-		}
-
-		/* Owner gets the real price */
-		if (!you_own(store))
-		{
-			/* Black market sucks */
-			if (store->sidx == STORE_B_MARKET) {
-				price = price * 2;
-			}
 		}
 	}
 
