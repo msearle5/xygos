@@ -3876,12 +3876,22 @@ static struct {
 	{ "monster lore" , &lore_parser },
 	{ "traps", &trap_parser },
 	{ "chest_traps", &chest_trap_parser },
-	{ "quests", &quests_parser },
 	{ "flavours", &flavor_parser },
 	{ "hints", &hints_parser },
 	{ "lies", &lies_parser },
 	{ "death", &death_parser },
 	{ "random names", &names_parser }
+};
+
+/**
+ * A list of parsers for arrays that must be initialized later than most modules
+ * (e.g. because they rely on store names)
+ */
+static struct {
+	const char *name;
+	struct file_parser *parser;
+} lpl[] = {
+	{ "quests", &quests_parser }
 };
 
 /**
@@ -3904,6 +3914,20 @@ void init_arrays(void)
 	}
 }
 
+/* Initialize late arrays */
+void init_late_arrays(void)
+{
+	unsigned int i;
+
+	for (i = 0; i < N_ELEMENTS(lpl); i++) {
+		char *msg = string_make(format("Initializing %s...", lpl[i].name));
+		event_signal_message(EVENT_INITSTATUS, 0, msg);
+		string_free(msg);
+		if (run_parser(lpl[i].parser))
+			quit_fmt("Cannot initialize %s.", lpl[i].name);
+	}
+}
+
 /**
  * Free all the internal arrays
  */
@@ -3917,10 +3941,26 @@ static void cleanup_arrays(void)
 	cleanup_parser(pl[0].parser);
 }
 
+static void cleanup_late_arrays(void)
+{
+	unsigned int i;
+
+	for (i = 1; i < N_ELEMENTS(lpl); i++)
+		cleanup_parser(lpl[i].parser);
+
+	cleanup_parser(lpl[0].parser);
+}
+
 static struct init_module arrays_module = {
 	.name = "arrays",
 	.init = init_arrays,
 	.cleanup = cleanup_arrays
+};
+
+static struct init_module late_arrays_module = {
+	.name = "late arrays",
+	.init = init_late_arrays,
+	.cleanup = cleanup_late_arrays
 };
 
 
@@ -3949,6 +3989,7 @@ static struct init_module *modules[] = {
 	&ignore_module,
 	&mon_make_module,
 	&store_module,
+	&late_arrays_module,
 	&options_module,
 	&ui_player_module,
 	&ui_equip_cmp_module,
@@ -3962,7 +4003,7 @@ static struct init_module *modules[] = {
  * The only input/output in this file should be via event_signal_string().
  * We cannot rely on any particular UI as this part should be UI-agnostic.
  * We also cannot rely on anything else having being initialised into any
- * particlar state.  Which is why you'd be calling this function in the 
+ * particular state.  Which is why you'd be calling this function in the 
  * first place.
  *
  * Old comment, not sure if still accurate:

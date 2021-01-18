@@ -7,6 +7,28 @@
 # to this file).  It would also only require fairly small game code changes to
 # allow other quests to be added as a result of game events.
 
+name:Rats
+level:1
+race:giant grey rat
+number:10
+store:General Store
+intro:There's a cellar out back. It's full of rats. Are you up for cleaning them out?
+desc:Deal with the rats in the cellar
+succeed:Well done. Isn't the thrill of exploration its own reward? No? Well, OK.
+failure:Defeated by a mouse. How heroic!
+unlock:Cave
+
+name:Cave
+level:2
+race:giant grey rat
+number:10
+store:General Store
+intro:There's a cellar out back. It's full of rats. Are you up for cleaning them out?
+desc:Get rid of the rats in the cellar
+succeed:Well done. Isn't the thrill of exploration its own reward? No? Well, OK.
+failure:Defeated by a mouse. How heroic!
+flags:locked
+
 name:Sauron
 level:99
 race:Sauron, the Sorcerer

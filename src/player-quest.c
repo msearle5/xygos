@@ -24,6 +24,7 @@
 #include "obj-util.h"
 #include "player-calcs.h"
 #include "player-quest.h"
+#include "store.h"
 
 /**
  * Array of quests
@@ -41,6 +42,7 @@ static enum parser_error parse_quest_name(struct parser *p) {
 	q->next = h;
 	parser_setpriv(p, q);
 	q->name = string_make(name);
+	q->store = STORE_NONE;
 
 	return PARSE_ERROR_NONE;
 }
@@ -50,6 +52,56 @@ static enum parser_error parse_quest_level(struct parser *p) {
 	assert(q);
 
 	q->level = parser_getuint(p, "level");
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_quest_intro(struct parser *p) {
+	struct quest *q = parser_priv(p);
+	assert(q);
+
+	q->intro = string_make(parser_getstr(p, "text"));
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_quest_desc(struct parser *p) {
+	struct quest *q = parser_priv(p);
+	assert(q);
+
+	q->desc = string_make(parser_getstr(p, "text"));
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_quest_succeed(struct parser *p) {
+	struct quest *q = parser_priv(p);
+	assert(q);
+
+	q->succeed = string_make(parser_getstr(p, "text"));
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_quest_failure(struct parser *p) {
+	struct quest *q = parser_priv(p);
+	assert(q);
+
+	q->failure = string_make(parser_getstr(p, "text"));
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_quest_unlock(struct parser *p) {
+	struct quest *q = parser_priv(p);
+	assert(q);
+
+	q->unlock = string_make(parser_getstr(p, "text"));
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_quest_flags(struct parser *p) {
+	struct quest *q = parser_priv(p);
+	assert(q);
+
+	const char *in = parser_getstr(p, "flags");
+	if (strstr(in, "locked"))
+		q->flags |= QF_LOCKED;
 	return PARSE_ERROR_NONE;
 }
 
@@ -63,6 +115,28 @@ static enum parser_error parse_quest_race(struct parser *p) {
 		return PARSE_ERROR_INVALID_MONSTER;
 
 	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_quest_store(struct parser *p) {
+	struct quest *q = parser_priv(p);
+	assert(q);
+
+	const char *name = parser_getstr(p, "store");
+	assert(name);
+
+	/* Find the store */
+	assert(stores);
+	for (int i = 0; i < MAX_STORES; i++) {
+		/* Get the store */
+		struct store *store = &stores[i];
+		assert(store->name);
+		if (!strcmp(store->name, name)) {
+			q->store = i;
+			return PARSE_ERROR_NONE;
+		}
+	}
+
+	return PARSE_ERROR_INVALID_VALUE;
 }
 
 static enum parser_error parse_quest_number(struct parser *p) {
@@ -80,6 +154,13 @@ struct parser *init_parse_quest(void) {
 	parser_reg(p, "level uint level", parse_quest_level);
 	parser_reg(p, "race str race", parse_quest_race);
 	parser_reg(p, "number uint number", parse_quest_number);
+	parser_reg(p, "store str store", parse_quest_store);
+	parser_reg(p, "intro str text", parse_quest_intro);
+	parser_reg(p, "desc str text", parse_quest_desc);
+	parser_reg(p, "succeed str text", parse_quest_succeed);
+	parser_reg(p, "failure str text", parse_quest_failure);
+	parser_reg(p, "unlock str text", parse_quest_unlock);
+	parser_reg(p, "flags str flags", parse_quest_flags);
 	return p;
 }
 

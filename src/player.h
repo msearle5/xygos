@@ -139,6 +139,20 @@ struct quest
 	struct monster_race *race;	/* Monster race */
 	int cur_num;				/* Number killed (unused) */
 	int max_num;				/* Number required (unused) */
+	int store;					/* Store the quest is given from; can be STORE_NONE (-1) */
+	u32b flags;
+	char *intro;				/* Description given when you choose whether to take it */
+	char *desc;					/* Description given in a list of known quests */
+	char *succeed;				/* Message given on success */
+	char *failure;				/* Message given on failure */
+	char *unlock;				/* The name of a quest unlocked on success */
+};
+
+/**
+ * Quest flags
+ */
+enum {
+	QF_LOCKED = 	0x01,
 };
 
 /**
