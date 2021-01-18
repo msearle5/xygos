@@ -641,7 +641,7 @@ int price_item(struct store *store, const struct object *obj,
 		 */
 		adjust += (3000 - (player->lev * player->lev)) /
 			((3 + player->state.stat_ind[STAT_CHR]) * 10);
-q
+
 		/* The black market is always a worse deal (for the rest of them) */
 		if (store->sidx == STORE_B_MARKET)
 			adjust = (adjust * 2) + 50;

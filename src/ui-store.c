@@ -1320,6 +1320,9 @@ static void store_quest(struct store_context *ctx)
 		msg("You question yourself extensively, but see no gain in WIS.");
 		return;
 	}
+
+	// Scan the quests looking for a quest which is 'available' and based from this store.
+
 	// not if it's you? May depend on the quest - some may make sense if differently worded, or should move to another store.
 	msg("%s doesn't have anything that needs to be done right now.", store_shortname(ctx));
 }
