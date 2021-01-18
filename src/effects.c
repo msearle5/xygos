@@ -940,6 +940,24 @@ bool effect_handler_HABANERO(effect_handler_context_t *context)
 	return true;
 }
 
+/* Check WIS, and if it passes you swallowed it.
+ * In that case, feed you (to max, including slowing) and transform into a giant!
+ */
+static void shapechange(const char *shapename, bool verbose);
+bool effect_handler_SNOZZCUMBER(effect_handler_context_t *context)
+{
+	if (stat_check(STAT_WIS, 17)) {
+		msg("It's extremely bitter, but you manage to swallow the disgusting vegetable.");
+		player_set_timed(player, TMD_FOOD, 99 * z_info->food_value, false);
+		shapechange("giant", true);
+	} else  {
+		/* No effect */
+		msg("It's extremely bitter and you spit it out in disgust.");
+	}
+	context->ident = true;
+	return true;
+}
+
 bool effect_handler_CRUNCH(effect_handler_context_t *context)
 {
 	if (one_in_(2))
@@ -4919,32 +4937,39 @@ bool effect_handler_TAP_UNLIFE(effect_handler_context_t *context)
 	return true;
 }
 
+/* Change player shape */
+static void shapechange(const char *shapename, bool verbose)
+{
+
+	/* Change shape */
+	player->shape = lookup_player_shape(shapename);
+	if (verbose) {
+		msg("You assume the shape of a %s!", shapename);
+		msg("Your gear merges into your body.");
+	}
+
+	/* Update */
+	shape_learn_on_assume(player, shapename);
+	player->upkeep->update |= (PU_BONUS);
+	player->upkeep->redraw |= (PR_TITLE | PR_MISC);
+	handle_stuff(player);
+}
+
 /**
  * Perform a player shapechange
  */
 bool effect_handler_SHAPECHANGE(effect_handler_context_t *context)
 {
-	struct player_shape *shape = player_shape_by_idx(context->subtype);
 	bool ident = false;
-
+	struct player_shape *shape = player_shape_by_idx(context->subtype);
 	assert(shape);
-
-	/* Change shape */
-	player->shape = lookup_player_shape(shape->name);
-	msg("You assume the shape of a %s!", shape->name);
-	msg("Your gear merges into your body.");
+	shapechange(shape->name, true);
 
 	/* Do effect */
 	if (shape->effect) {
 		(void) effect_do(shape->effect, source_player(), NULL, &ident, true,
 						 0, 0, 0, NULL);
 	}
-
-	/* Update */
-	shape_learn_on_assume(player, shape->name);
-	player->upkeep->update |= (PU_BONUS);
-	player->upkeep->redraw |= (PR_TITLE | PR_MISC);
-	handle_stuff(player);
 
 	return true;
 }

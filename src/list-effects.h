@@ -117,3 +117,4 @@ EFFECT(SWEEP,						false,	"blows",	1,		EFINFO_NONE,	"strikes %d blows against al
 EFFECT(BIZARRE,						true,	NULL,		0,		EFINFO_NONE,	"does bizarre things")
 EFFECT(WONDER,						true,	NULL,		0,		EFINFO_NONE,	"creates random and unpredictable effects")
 EFFECT(HABANERO,					false, "dam",		3,		EFINFO_NONE,	"may make you resist cold for a while, and maybe even breathe fire")
+EFFECT(SNOZZCUMBER,					false, NULL,		0,		EFINFO_NONE,	"may turn you into a giant")

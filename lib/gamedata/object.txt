@@ -421,21 +421,34 @@ effect:NOURISH:INC_BY
 dice:6
 desc:A long dark green cucumber.
 
+# Gigantism (and a lot of food)
+# It also tastes foul - so there is a WIS check
+name:& snozzcumber~
+type:food
+graphics:,:Green
+level:0
+weight:400g
+cost:650
+alloc:2:1 to 100
+power:0
+effect:SNOZZCUMBER
+desc:A vegetable resembling a long dark green cucumber. But if you can get past 
+desc:the truly foul taste, it does much more for you than your average salad!
 
-############################
-
-name:& handful~ of dried fruit
+name:& packet~ of dried fruit
 type:food
 graphics:,:u
 level:0
 weight:40g
 cost:3
-alloc:10:0 to 50
+alloc:5:0 to 50
 power:0
 msg:That tastes good.
 effect:NOURISH:INC_BY
 dice:15
 desc:Fruit roughly chopped and sun-dried.
+
+
 
 name:& slime mold~
 type:food
@@ -443,7 +456,7 @@ graphics:,:g
 level:1
 weight:2
 cost:2
-alloc:40:1 to 100
+alloc:2:1 to 100
 pile:100:2d3
 power:0
 msg:That tastes... slimy.

@@ -299,7 +299,7 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 	if (prefix)
 		end = obj_desc_name_prefix(buf, max , end, obj, basename, modstr, terse);
 
-	if (aware && obj->kind->flavor) {
+	if (aware && obj->kind->flavor && obj->tval != TV_FOOD) {
 		strnfcat(buf, max, &end, "%s ", obj->kind->name);
 	}
 

@@ -13,6 +13,7 @@ kind:food:,
 
 fixed:303:choke-apple:Light Green:& apple~
 fixed:304:habanero:Red:& pepper~
+fixed:305:snozzcumber:Green:& cucumber~
 
 
 ##### Rings #####
