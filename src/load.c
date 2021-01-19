@@ -625,7 +625,6 @@ int rd_object_memory(void)
 
 int rd_quests(void)
 {
-	int i;
 	u16b tmp16u;
 
 	/* Load the Quests */
@@ -637,12 +636,7 @@ int rd_quests(void)
 
 	/* Load the Quests */
 	player_quests_reset(player);
-	for (i = 0; i < tmp16u; i++) {
-		u16b cur_num;
-		rd_byte(&player->quests[i].level);
-		rd_u16b(&cur_num);
-		player->quests[i].cur_num = cur_num;
-	}
+	rdwr_quests();
 
 	return 0;
 }

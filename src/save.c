@@ -401,19 +401,21 @@ void wr_object_memory(void)
 	}
 }
 
-
-void wr_quests(void)
+void rdwr_quests(void)
 {
-	int i;
-
 	/* Dump the quests */
-	wr_u16b(z_info->quest_max);
-	for (i = 0; i < z_info->quest_max; i++) {
-		wr_byte(player->quests[i].level);
-		wr_u16b(player->quests[i].cur_num);
+	for (int i = 0; i < z_info->quest_max; i++) {
+		rdwr_byte(&player->quests[i].level);
+		rdwr_s32b(&player->quests[i].cur_num);
 	}
 }
 
+void wr_quests(void)
+{
+	/* Dump the quests */
+	rdwr_u16b(&z_info->quest_max);
+	rdwr_quests();
+}
 
 void wr_player(void)
 {

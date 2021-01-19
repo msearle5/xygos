@@ -117,6 +117,7 @@ void wr_options(void);
 void wr_messages(void);
 void wr_monster_memory(void);
 void wr_object_memory(void);
+void rdwr_quests(void);
 void wr_quests(void);
 void wr_artifacts(void);
 void wr_player(void);
