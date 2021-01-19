@@ -47,6 +47,7 @@ bool savefile_load(const char *path, bool cheat_death);
  */
 const char *savefile_get_description(const char *path);
 
+extern bool saving;
 
 /**
  * ------------------------------------------------------------------------
@@ -56,6 +57,14 @@ const char *savefile_get_description(const char *path);
 
 /* Utility */
 void note(const char *msg);
+
+/* Read/Writing bits */
+void rdwr_byte(byte *v);
+void rdwr_u16b(u16b *v);
+void rdwr_s16b(s16b *v);
+void rdwr_u32b(u32b *v);
+void rdwr_s32b(s32b *v);
+void rdwr_string(char **str);
 
 /* Writing bits */
 void wr_byte(byte v);
