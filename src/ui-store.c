@@ -39,6 +39,7 @@
 #include "obj-util.h"
 #include "player-calcs.h"
 #include "player-history.h"
+#include "player-quest.h"
 #include "player-util.h"
 #include "store.h"
 #include "target.h"
@@ -1317,13 +1318,44 @@ static void store_quest(struct store_context *ctx)
 {
 	struct store *store = ctx->store;
 	if ((store->sidx == STORE_HOME) || (you_own(store))) {
+		// not if it's you? May depend on the quest - some may make sense if differently worded, or should move to another store.
 		msg("You question yourself extensively, but see no gain in WIS.");
 		return;
 	}
 
 	// Scan the quests looking for a quest which is 'available' and based from this store.
+	for(int i=0;i<z_info->quest_max;i++)
+	{
+		struct quest *q = &quests[i];
+		if (q->store == (int)store->sidx) {
+			if (!(q->flags & (QF_ACTIVE | QF_FAILED | QF_SUCCEEDED | QF_UNREWARDED))) {
+				/* Take new quest - ask first */
+				screen_save();
+				int response = store_get_check(q->intro);
+				screen_load();
+				if (response) {
+					/* Accepted */
+					q->flags |= QF_ACTIVE;
+				}
+				return;
+			} else if (q->flags & QF_UNREWARDED) {
+				/* Debrief */
+				if (q->flags & QF_SUCCEEDED) {
+					msg(q->succeed);
+				} else {
+					msg(q->failure);
+				}
+				q->flags &= ~(QF_UNREWARDED | QF_ACTIVE);
+				if (!(q->flags & QF_SUCCEEDED))
+					q->flags |= QF_FAILED;
+				return;
+			} else if (q->flags & QF_ACTIVE) {
+				/* Still in progress */
+				msg("Your task '%s' is still in progress.", q->name);
+			}
+		}
+	}
 
-	// not if it's you? May depend on the quest - some may make sense if differently worded, or should move to another store.
 	msg("%s doesn't have anything that needs to be done right now.", store_shortname(ctx));
 }
 

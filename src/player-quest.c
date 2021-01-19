@@ -100,8 +100,8 @@ static enum parser_error parse_quest_flags(struct parser *p) {
 	assert(q);
 
 	const char *in = parser_getstr(p, "flags");
-	if (strstr(in, "locked"))
-		q->flags |= QF_LOCKED;
+	if (strstr(in, "active"))
+		q->flags |= QF_ACTIVE;
 	return PARSE_ERROR_NONE;
 }
 

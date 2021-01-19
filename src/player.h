@@ -152,7 +152,10 @@ struct quest
  * Quest flags
  */
 enum {
-	QF_LOCKED = 	0x01,
+	QF_ACTIVE = 		0x01,
+	QF_SUCCEEDED = 		0x02,
+	QF_FAILED = 		0x04,
+	QF_UNREWARDED = 	0x08,
 };
 
 /**

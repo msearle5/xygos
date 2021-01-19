@@ -32,9 +32,13 @@ flags:locked
 name:Sauron
 level:99
 race:Sauron, the Sorcerer
+desc:Get rid of the big bad p
 number:1
+flags:active
 
 name:Morgoth
 level:100
 race:Morgoth, Lord of Darkness
+desc:Get rid of the big bad P
 number:1
+flags:active

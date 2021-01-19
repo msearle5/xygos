@@ -407,6 +407,7 @@ void rdwr_quests(void)
 	for (int i = 0; i < z_info->quest_max; i++) {
 		rdwr_byte(&player->quests[i].level);
 		rdwr_s32b(&player->quests[i].cur_num);
+		rdwr_u32b(&player->quests[i].flags);
 	}
 }
 
