@@ -336,7 +336,6 @@ static struct file_parser store_parser = {
 	NULL
 };
 
-
 /**
  * ------------------------------------------------------------------------
  * Other init stuff
@@ -655,6 +654,7 @@ int price_item(struct store *store, const struct object *obj,
 		/* Check for no_selling option */
 		if (OPT(player, birth_no_selling))
 			return 0;
+
 	} else {
 		/* Re-evaluate if we're selling */
 		if (tval_can_have_charges(obj)) {
@@ -670,6 +670,14 @@ int price_item(struct store *store, const struct object *obj,
 	/* Now convert price to total price for non-wands */
 	if (!tval_can_have_charges(obj)) {
 		price *= qty;
+	}
+
+	/* Layaway - later, to avoid rounding errors. 90% same day, +25% per day */
+	if (obj == &store->stock[store->layaway_idx]) {
+		int base = price- (price/10);
+		int today = turn / (10L * z_info->day_length);
+		int days = today - store->layaway_day;
+		price = base + (days * (price/4));
 	}
 
 	/* Now limit the price to the purse limit */
