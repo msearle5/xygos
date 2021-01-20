@@ -155,6 +155,62 @@ void dungeon_change_level(struct player *p, int dlev)
 	p->upkeep->autosave = true;
 }
 
+/* You are below 0 HP, either after taking damage or after a turn has passed
+ * while below 0.
+ * You may die, in which case this function will return true.
+ * Otherwise (if the CON check succeeded) you will probably suffer - drained stats, etc.
+ */
+static bool death_check(struct player *p, const char *kb_str)
+{
+	/* At HP < x, death is guaranteed
+	 * At HP = x/2, there is a 50% chance
+	 * Intermediate points follow a normal distribution
+	 * x is a function of CON
+	 */
+	int x = player->state.stat_ind[STAT_CON] + 5;
+	
+	// Generate a random value
+	int check = Rand_normal(x, x / 2);
+	
+	// Return true if it's at least equal to mid
+	if (check <= -p->chp) {
+		/* too bad, so sad */
+		/* Hack -- Note death */
+		msgt(MSG_DEATH, "You die.");
+		event_signal(EVENT_MESSAGE_FLUSH);
+		msgt(MSG_DEATH, random_death_msg());
+		event_signal(EVENT_MESSAGE_FLUSH);
+
+		/* Note cause of death */
+		my_strcpy(p->died_from, kb_str, sizeof(p->died_from));
+
+		/* No longer a winner */
+		p->total_winner = false;
+
+		/* Note death */
+		p->is_dead = true;
+		return true;
+	} else {
+		bool nasty = false;
+		/* Mess up your stats */
+		for(int stat=0;stat<STAT_MAX;stat++) {
+			/* The first time is temporary, though */
+			if (Rand_normal(x, x / 2) <= -player->chp) {
+				player_stat_dec(p, stat, (p->stat_cur[stat] != p->stat_max[stat]));
+				nasty = true;
+			}
+		}
+		/* and exp similarly */
+		if (Rand_normal(x, x / 2) <= -p->chp) {
+			player_exp_lose(p, (p->exp + 19) / 20, (p->exp != p->max_exp));
+		}
+		if (nasty)
+			msgt(MSG_DEATH, "You feel your life slipping away!");
+	}
+
+	return false;
+}
+
 
 /**
  * Decreases players hit points and sets death flag if necessary
@@ -207,32 +263,13 @@ void take_hit(struct player *p, int dam, const char *kb_str)
 		/* From hell's heart I stab at thee */
 		if (p->timed[TMD_BLOODLUST]
 			&& (p->chp + p->timed[TMD_BLOODLUST] + p->lev >= 0)) {
-			if (randint0(10)) {
-				msg("Your lust for blood keeps you alive!");
-			} else {
-				msg("So great was his prowess and skill in warfare, the Elves said: ");
-				msg("'The Mormegil cannot be slain, save by mischance.'");
-			}
+			msg("Your lust for blood keeps you alive!");
 		} else if ((p->wizard || OPT(p, cheat_live)) && !get_check("Die? ")) {
 			event_signal(EVENT_CHEAT_DEATH);
 		} else {
-			/* Hack -- Note death */
-			msgt(MSG_DEATH, "You die.");
-			event_signal(EVENT_MESSAGE_FLUSH);
-			msgt(MSG_DEATH, random_death_msg());
-			event_signal(EVENT_MESSAGE_FLUSH);
-
-			/* Note cause of death */
-			my_strcpy(p->died_from, kb_str, sizeof(p->died_from));
-
-			/* No longer a winner */
-			p->total_winner = false;
-
-			/* Note death */
-			p->is_dead = true;
-
-			/* Dead */
-			return;
+			if (death_check(p, kb_str))
+				/* Dead */
+				return;
 		}
 	}
 
