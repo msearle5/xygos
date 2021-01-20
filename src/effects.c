@@ -5390,6 +5390,31 @@ bool effect_handler_BIZARRE(effect_handler_context_t *context)
 	return false;
 }
 
+/** The effect of a printer
+ * Requires INT and device skill for success
+ * Higher level printers help, higher level items hurt.
+ * If you want extras, that hurts.
+ * 
+ * If it fails, it may use all or some of the chunks.
+ * 
+ * It takes two paramters - the first is the max number of chunks needed.
+ * The second is the class:
+ * 	0 = plastic, and possibly wax, wood. 
+ * 	1 = " + light alloy: aluminium
+ *  2 = ", hard metals: steel, titanium
+ *  3 = ", unobtainium, exotics
+ * 
+ * Use item knowledge screen?
+ * First step is to select an item - limited by it having a material that the printer can use & having chunks for it
+ */
+bool effect_handler_PRINT(effect_handler_context_t *context)
+{
+	int skill = player->state.skills[SKILL_DEVICE];
+	int maxchunks = context->subtype;
+	int maxmetal = context->radius;
+	return true;
+}
+
 /**
  * The "wonder" effect.
  *

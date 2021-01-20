@@ -12,7 +12,7 @@ ifneq (${VERSION},)
 	CFLAGS += -DBUILD_ID=${VERSION}
 endif
 
-CFLAGS += -I. -fPIC -std=c99 -O0
+CFLAGS += -I. -fPIC -std=c99 -O0 -g2
 # Replace above line with the two below and then look at gmon.out
 # to do performance monitoring
 # CFLAGS += -g -pg -I. -fPIC -std=c99 -O0

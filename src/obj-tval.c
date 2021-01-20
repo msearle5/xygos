@@ -167,6 +167,11 @@ bool tval_is_launcher(const struct object *obj)
 	return obj->tval == TV_BOW;
 }
 
+bool tval_is_printer(const struct object *obj)
+{
+	return obj->tval == TV_PRINTER;
+}
+
 bool tval_is_useable(const struct object *obj)
 {
 	switch (obj->tval) {
@@ -177,6 +182,7 @@ bool tval_is_useable(const struct object *obj)
 		case TV_PILL:
 		case TV_FOOD:
 		case TV_MUSHROOM:
+		case TV_PRINTER:
 			return true;
 		default:
 			return false;

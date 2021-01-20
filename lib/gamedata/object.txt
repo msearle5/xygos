@@ -5088,6 +5088,7 @@ level:5
 alloc:10:1 to 100
 cost:370
 weight:1800g
+effect:PRINT:2:0
 desc:The famous self-replicable hobbyist's printer - it's not big and can't handle metals, but it is reliable and effective for what it can do - and the price can't be beat!
 material:plastic
 
@@ -5098,6 +5099,7 @@ level:8
 alloc:7:1 to 100
 cost:780
 weight:7200g
+effect:PRINT:20:0
 desc:A commercial scaled-up version of the self-replicable P-2, capable of handling most plastic items.
 material:plastic
 
@@ -5108,6 +5110,7 @@ level:10
 alloc:5:1 to 100
 cost:600
 weight:1200g
+effect:PRINT:2:1
 desc:A printer designed to be especially compact and lightweight, suitable for plastic and light metal work.
 material:aluminium
 
@@ -5118,6 +5121,7 @@ level:24
 alloc:3:5 to 100
 cost:5500
 weight:13.5kg
+effect:PRINT:250:1
 desc:A large, heavy printer, but capable of producing any plastic item and most aluminium ones, too.
 material:aluminium
 
@@ -5128,6 +5132,7 @@ level:28
 alloc:3:6 to 100
 cost:7200
 weight:8500g
+effect:PRINT:5:2
 desc:A medium-sized printer capable of handling all common metals - steel, titanium, aluminium - as well as plastics.
 material:steel
 
@@ -5138,6 +5143,7 @@ level:48
 alloc:2:15 to 100
 cost:12000
 weight:45kg
+effect:PRINT:250:2
 desc:A very large and heavy printer, not intended to be portable, but capable of producing the largest items in any common material (steel, titanium, aluminium, plastic)
 material:steel
 
@@ -5148,6 +5154,7 @@ level:65
 alloc:2:30 to 100
 cost:18000
 weight:18.7kg
+effect:PRINT:5:3
 desc:A printer intended for use with exotic materials such as unobtainium.  Apart from its modest size, it's as good as it gets.
 material:titanium
 
@@ -5158,6 +5165,7 @@ level:85
 alloc:2:40 to 100
 cost:35000
 weight:32kg
+effect:PRINT:250:3
 desc:A top-of-the-line printer, capable of handling exotic materials such as unobtainium and producing even the largest items. The only real disadvantage is the weight.
 material:titanium
 
@@ -5168,6 +5176,7 @@ level:95
 alloc:1:86 to 127
 cost:90000
 weight:9.2kg
+effect:PRINT:250:3
 desc:The only printer known to use unobtainium construction - as a result while it can do everything that the X-50 can do (producing even the largest items, in any material) it is a fraction of the weight.
 material:unobtainium
 

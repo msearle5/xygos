@@ -50,6 +50,7 @@ bool tval_is_launcher(const struct object *obj);
 bool tval_is_light(const struct object *obj);
 bool tval_is_light_k(const struct object_kind *kind);
 bool tval_is_melee_weapon(const struct object *obj);
+bool tval_is_printer(const struct object *obj);
 bool tval_is_money(const struct object *obj);
 bool tval_is_money_k(const struct object_kind *kind);
 bool tval_is_digger(const struct object *obj);

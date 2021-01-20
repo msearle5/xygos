@@ -860,6 +860,14 @@ int get_use_device_chance(const struct object *obj)
 	int diff_min  = 1;
 	int diff_max  = 100;
 
+	/* Depends on what kind of object in it */
+	if (tval_is_printer(obj)) {
+		/* Printers are limited by chunk supplies and fail after using chunks,
+		 * so don't need any further limiting
+		 */
+		return 0;
+	}
+
 	/* Extract the item level, which is the difficulty rating */
 	if (obj->artifact)
 		lev = obj->artifact->level;

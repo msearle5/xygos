@@ -816,6 +816,19 @@ void do_cmd_eat_food(struct command *cmd)
 	use_aux(cmd, obj, USE_SINGLE, MSG_EAT);
 }
 
+static bool check_shapechanged(void)
+{
+	if (player_is_shapechanged(player)) {
+		msg("You cannot do this while in %s form.",	player->shape->name);
+		if (get_check("Do you want to change back? " )) {
+			player_resume_normal_shape(player);
+		} else {
+			return true;
+		}
+	}
+	return false;
+}
+
 /**
  * Quaff a pill 
  */
@@ -823,14 +836,8 @@ void do_cmd_quaff_pill(struct command *cmd)
 {
 	struct object *obj;
 
-	if (player_is_shapechanged(player)) {
-		msg("You cannot do this while in %s form.",	player->shape->name);
-		if (get_check("Do you want to change back? " )) {
-			player_resume_normal_shape(player);
-		} else {
-			return;
-		}
-	}
+	if (check_shapechanged())
+		return;
 
 	/* Get an item */
 	if (cmd_get_item(cmd, "item", &obj,
@@ -843,20 +850,37 @@ void do_cmd_quaff_pill(struct command *cmd)
 }
 
 /**
+ * Use a printer
+ */
+void do_cmd_use_printer(struct command *cmd)
+{
+	struct object *obj;
+
+	if (check_shapechanged())
+		return;
+
+	/* Get an item */
+	if (cmd_get_item(cmd, "item", &obj,
+			"Use which printer? ",
+			"You have no printers to use.",
+			tval_is_printer,
+			USE_INVEN | USE_FLOOR) != CMD_OK) return;
+
+	/* Hack */
+	obj->pval = 1;
+	use_aux(cmd, obj, USE_CHARGE, MSG_PRINT);
+	obj->pval = 0;
+}
+
+/**
  * Use any usable item
  */
 void do_cmd_use(struct command *cmd)
 {
 	struct object *obj;
 
-	if (player_is_shapechanged(player)) {
-		msg("You cannot do this while in %s form.",	player->shape->name);
-		if (get_check("Do you want to change back? " )) {
-			player_resume_normal_shape(player);
-		} else {
-			return;
-		}
-	}
+	if (check_shapechanged())
+		return;
 
 	/* Get an item */
 	if (cmd_get_item(cmd, "item", &obj,
@@ -867,12 +891,13 @@ void do_cmd_use(struct command *cmd)
 		return;
 
 	if (tval_is_ammo(obj))				do_cmd_fire(cmd);
-	else if (tval_is_pill(obj))		do_cmd_quaff_pill(cmd);
+	else if (tval_is_pill(obj))			do_cmd_quaff_pill(cmd);
 	else if (tval_is_edible(obj))		do_cmd_eat_food(cmd);
 	else if (tval_is_rod(obj))			do_cmd_zap_rod(cmd);
 	else if (tval_is_wand(obj))			do_cmd_aim_wand(cmd);
 	else if (tval_is_staff(obj))		do_cmd_use_staff(cmd);
 	else if (tval_is_scroll(obj))		do_cmd_read_scroll(cmd);
+	else if (tval_is_printer(obj))		do_cmd_use_printer(cmd);
 	else if (obj_can_refill(obj))		do_cmd_refill(cmd);
 	else if (obj_is_activatable(obj)) {
 		if (object_is_equipped(player->body, obj)) {
