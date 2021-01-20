@@ -1616,7 +1616,7 @@ static enum parser_error parse_object_level(struct parser *p) {
 enum parser_error parse_getweight(struct parser *p, const char *field, int *grams) {
 	const char *s = parser_getstr(p, field);
 	char *end;
-	long weight = strtol(s, &end, 10);
+	double weight = strtod(s, &end);
 
 	*grams = 0;
 	if ((weight == LONG_MIN) || (weight == LONG_MAX) || (end == s)) {
@@ -1625,7 +1625,11 @@ enum parser_error parse_getweight(struct parser *p, const char *field, int *gram
 	}
 	switch(*end) {
 		case 'g':
+		if ((end != s) && (*(end-1))) {
+			// fall thru
+		} else {
 			break;
+		}
 		case 'k':
 			weight *= 1000;
 			break;
@@ -1633,9 +1637,7 @@ enum parser_error parse_getweight(struct parser *p, const char *field, int *gram
 			weight *= 1000000;
 			break;
 		case 0:
-			weight *= 4536;
-			weight += 99;
-			weight /= 100;
+			weight *= 45.36;
 			break;
 		default:
 			return PARSE_ERROR_INVALID_WEIGHT;
@@ -1980,6 +1982,50 @@ static enum parser_error parse_object_curse(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+/* If this struct gets much more than a name, read it from a config file */ 
+const struct object_material material[] = {
+	{ "generic" },	// for objects without a specified material
+	{ "plastic" },
+	{ "aluminium" },
+	{ "steel" },
+	{ "lead" },
+	{ "gold" },
+	{ "silver" },
+	{ "titanium" },
+	{ "unobtainium" },
+	{ "leather" },
+	{ "wood" },
+	{ "organic" },
+	{ "metal" },
+	{ "mineral" },
+	{ NULL },
+};
+
+/* Looks up a material by name - returns the material struct, or NULL if not recognized */
+const struct object_material *get_material_by_name(const char *name)
+{
+	const struct object_material *m = &material[0];
+	do {
+		if (!strcmp(m->name, name))
+			return m;
+		m++;
+	} while (m->name);
+	return NULL;
+}
+
+static enum parser_error parse_object_material(struct parser *p) {
+	struct object_kind *k = parser_priv(p);
+	const char *s = parser_getsym(p, "name");
+	const struct object_material *m = get_material_by_name(s);
+	assert(k);
+
+	if (!m) {
+		return PARSE_ERROR_UNRECOGNISED_MATERIAL;
+	}
+	k->material = m-material;
+
+	return PARSE_ERROR_NONE;
+}
 
 struct parser *init_parse_object(void) {
 	struct parser *p = parser_new();
@@ -2010,6 +2056,7 @@ struct parser *init_parse_object(void) {
 	parser_reg(p, "slay str code", parse_object_slay);
 	parser_reg(p, "brand str code", parse_object_brand);
 	parser_reg(p, "curse sym name int power", parse_object_curse);
+	parser_reg(p, "material sym name", parse_object_material);
 	return p;
 }
 

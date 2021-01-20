@@ -210,7 +210,9 @@ level:3
 weight:1kg
 cost:150
 alloc:10:1 to 100
+pile:70:5
 desc: A block of tough, whitish plastic - raw material to build items with.
+material:plastic
 
 name:& aluminum block~
 type:block
@@ -218,44 +220,52 @@ graphics:%:w
 level:15
 weight:1kg
 cost:550
-alloc:8:1 to 100
+alloc:8:5 to 100
+pile:50:4
 desc: A block of shiny aluminum - raw material to build items with.
+material:aluminium
 
 name:& steel block~
 type:block
 graphics:%:s
 level:27
 weight:1kg
-cost:1850
+cost:1150
 alloc:6:10 to 100
+pile:40:4
 desc: A block of stainless steel - raw material to build items with.
+material:steel
 
 name:& titanium block~
 type:block
 graphics:%:s
 level:44
 weight:1kg
-cost:7500
+cost:3500
 alloc:5:18 to 100
+pile:30:3
 desc: A block of titanium - raw material to build items with.
+material:titanium
 
 name:& gold block~
 type:block
-graphics:%:y
+graphics:%:Gold
 level:61
 weight:1kg
 cost:75000
-alloc:1:1 to 100
+alloc:1:30 to 100
 desc: A block of pure gold - raw material to build items with.
+material:gold
 
 name:& unobtainium block~
 type:block
-graphics:%:B
+graphics:%:AliceBlue
 level:87
 weight:1kg
 cost:95000
 alloc:1:65 to 127
 desc: A block of unobtainium, a blue-gleaming metal - so scarce that some still think that it's just a joke, unobtainium is incredibly light, incredibly strong, invulnerable to corrosion... the ideal material.
+material:unobtainium
 
 ##### Food #####
 
@@ -5068,6 +5078,98 @@ effect:TIMED_INC:FAST:0:5
 dice:20+2d10
 time:100
 
+
+##### Printers #####
+
+name:& P-2 printer~
+type:printer
+graphics:%:Cream
+level:5
+alloc:10:1 to 100
+cost:370
+weight:1800g
+desc:The famous self-replicable hobbyist's printer - it's not big and can't handle metals, but it is reliable and effective for what it can do - and the price can't be beat!
+material:plastic
+
+name:& P-5 printer~
+type:printer
+graphics:%:Blue
+level:8
+alloc:7:1 to 100
+cost:780
+weight:7200g
+desc:A commercial scaled-up version of the self-replicable P-2, capable of handling most plastic items.
+material:plastic
+
+name:& A-1 printer~
+type:printer
+graphics:%:Gray90
+level:10
+alloc:5:1 to 100
+cost:600
+weight:1200g
+desc:A printer designed to be especially compact and lightweight, suitable for plastic and light metal work.
+material:aluminium
+
+name:& A-20 printer~
+type:printer
+graphics:%:Green
+level:24
+alloc:3:5 to 100
+cost:5500
+weight:13.5kg
+desc:A large, heavy printer, but capable of producing any plastic item and most aluminium ones, too.
+material:aluminium
+
+name:& H-5 printer~
+type:printer
+graphics:%:SlateGray
+level:28
+alloc:3:6 to 100
+cost:7200
+weight:8500g
+desc:A medium-sized printer capable of handling all common metals - steel, titanium, aluminium - as well as plastics.
+material:steel
+
+name:& H-40 printer~
+type:printer
+graphics:%:Red
+level:48
+alloc:2:15 to 100
+cost:12000
+weight:45kg
+desc:A very large and heavy printer, not intended to be portable, but capable of producing the largest items in any common material (steel, titanium, aluminium, plastic)
+material:steel
+
+name:& X-15 printer~
+type:printer
+graphics:%:AliceBlue
+level:65
+alloc:2:30 to 100
+cost:18000
+weight:18.7kg
+desc:A printer intended for use with exotic materials such as unobtainium.  Apart from its modest size, it's as good as it gets.
+material:titanium
+
+name:& X-50 printer~
+type:printer
+graphics:%:Violet
+level:85
+alloc:2:40 to 100
+cost:35000
+weight:32kg
+desc:A top-of-the-line printer, capable of handling exotic materials such as unobtainium and producing even the largest items. The only real disadvantage is the weight.
+material:titanium
+
+name:& X-99 printer~
+type:printer
+graphics:%:Violet
+level:95
+alloc:1:86 to 127
+cost:90000
+weight:9.2kg
+desc:The only printer known to use unobtainium construction - as a result while it can do everything that the X-50 can do (producing even the largest items, in any material) it is a fraction of the weight.
+material:unobtainium
 
 
 

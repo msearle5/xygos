@@ -173,6 +173,27 @@ struct object_base {
 
 extern struct object_base *kb_info;
 
+enum {
+	MAT_GENERIC = 0,
+	MAT_PLASTIC,
+	MAT_ALUMINIUM,
+	MAT_STEEL,
+	MAT_LEAD,
+	MAT_GOLD,
+	MAT_SILVER,
+	MAT_TITANIUM,
+	MAT_UNOBTAINIUM,
+	MAT_LEATHER,
+	MAT_WOOD,
+	MAT_ORGANIC,
+	MAT_METAL,
+	MAT_MINERAL,
+};
+
+struct object_material {
+	char *name;
+};
+
 /**
  * Information about object kinds, including player knowledge.
  *
@@ -245,6 +266,7 @@ struct object_kind {
 
 	byte ignore;  	/**< Ignore settings */
 	bool everseen; 	/**< Kind has been seen (to despoilify ignore menus) */
+	byte material;	/** Material */
 };
 
 extern struct object_kind *k_info;
