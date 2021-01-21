@@ -17,6 +17,7 @@ slot:AMULET:neck
 slot:LIGHT:light
 slot:BODY_ARMOR:body
 slot:CLOAK:back
+slot:BELT:belt
 slot:SHIELD:arm
 slot:HAT:head
 slot:GLOVES:hands
