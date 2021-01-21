@@ -1625,7 +1625,7 @@ enum parser_error parse_getweight(struct parser *p, const char *field, int *gram
 	}
 	switch(*end) {
 		case 'g':
-		if ((end != s) && (*(end-1))) {
+		if ((end != s) && ((*(end-1)) == 'k')) {
 			// fall thru
 		} else {
 			break;

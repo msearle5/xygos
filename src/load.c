@@ -132,7 +132,7 @@ static struct object *rd_item(void)
 	rd_s16b(&obj->pval);
 
 	rd_byte(&obj->number);
-	rd_s16b(&obj->weight);
+	rd_s32b(&obj->weight);
 
 	rd_string(buf, sizeof(buf));
 	if (buf[0]) {

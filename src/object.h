@@ -221,7 +221,7 @@ struct object_kind {
 
 	int dd;					/**< Damage dice */
 	int ds;					/**< Damage sides */
-	int weight;				/**< Weight, in grams */
+	s32b weight;				/**< Weight, in grams */
 
 	int cost;					/**< Object base cost */
 
@@ -302,7 +302,7 @@ struct artifact {
 	int dd;		/**< Base damage dice */
 	int ds;		/**< Base damage sides */
 
-	int weight;	/**< Weight in grams */
+	s32b weight;	/**< Weight in grams */
 
 	int cost;		/**< Artifact (pseudo-)worth */
 
@@ -447,23 +447,26 @@ struct object {
 	struct object *next;	/**< Next object in a pile */
 	struct object *known;	/**< Known version of this object */
 
-	u16b oidx;				/**< Item list index, if any */
-
 	struct loc grid;		/**< position on map, or (0, 0) */
-
+	
+	u16b oidx;				/**< Item list index, if any */
 	byte tval;				/**< Item type (from kind) */
 	byte sval;				/**< Item sub-type (from kind) */
 
+	s32b weight;			/**< Item weight, grams */
+
 	s16b pval;				/**< Item extra-parameter */
-
-	s16b weight;			/**< Item weight */
-
 	byte dd;				/**< Number of damage dice */
 	byte ds;				/**< Number of sides on each damage die */
+	
 	s16b ac;				/**< Normal AC */
 	s16b to_a;				/**< Plusses to AC */
+	
 	s16b to_h;				/**< Plusses to hit */
 	s16b to_d;				/**< Plusses to damage */
+
+	s16b held_m_idx;		/**< Monster holding us (if any) */
+	s16b mimicking_m_idx;	/**< Monster mimicking us (if any) */
 
 	bitflag flags[OF_SIZE];	/**< Object flags */
 	s16b modifiers[OBJ_MOD_MAX];	/**< Object modifiers*/
@@ -480,9 +483,6 @@ struct object {
 
 	byte number;			/**< Number of items */
 	bitflag notice;			/**< Attention paid to the object */
-
-	s16b held_m_idx;		/**< Monster holding us (if any) */
-	s16b mimicking_m_idx;	/**< Monster mimicking us (if any) */
 
 	byte origin;			/**< How this item was found */
 	byte origin_depth;		/**< What depth the item was found at */

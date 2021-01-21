@@ -96,7 +96,7 @@ static void wr_item(const struct object *obj)
 	wr_s16b(obj->pval);
 
 	wr_byte(obj->number);
-	wr_s16b(obj->weight);
+	wr_s32b(obj->weight);
 
 	if (obj->artifact) {
 		wr_string(obj->artifact->name);
