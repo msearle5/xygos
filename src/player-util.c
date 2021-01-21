@@ -167,11 +167,15 @@ static bool death_check(struct player *p, const char *kb_str)
 	 * Intermediate points follow a normal distribution
 	 * x is a function of CON
 	 */
-	int x = player->state.stat_ind[STAT_CON] + 5;
+	int x = ((player->state.stat_ind[STAT_CON] + 5) * (player->mhp)) / 100;
 	
 	// Generate a random value
 	int check = Rand_normal(x, x / 2);
 	
+	/* Note cause of death */
+	if (kb_str)
+		my_strcpy(p->died_from, kb_str, sizeof(p->died_from));
+
 	// Return true if it's at least equal to mid
 	if (check <= -p->chp) {
 		/* too bad, so sad */
@@ -181,9 +185,6 @@ static bool death_check(struct player *p, const char *kb_str)
 		msgt(MSG_DEATH, random_death_msg());
 		event_signal(EVENT_MESSAGE_FLUSH);
 
-		/* Note cause of death */
-		my_strcpy(p->died_from, kb_str, sizeof(p->died_from));
-
 		/* No longer a winner */
 		p->total_winner = false;
 
@@ -191,21 +192,18 @@ static bool death_check(struct player *p, const char *kb_str)
 		p->is_dead = true;
 		return true;
 	} else {
-		bool nasty = false;
 		/* Mess up your stats */
 		for(int stat=0;stat<STAT_MAX;stat++) {
 			/* The first time is temporary, though */
 			if (Rand_normal(x, x / 2) <= -player->chp) {
 				player_stat_dec(p, stat, (p->stat_cur[stat] != p->stat_max[stat]));
-				nasty = true;
 			}
 		}
 		/* and exp similarly */
 		if (Rand_normal(x, x / 2) <= -p->chp) {
 			player_exp_lose(p, (p->exp + 19) / 20, (p->exp != p->max_exp));
 		}
-		if (nasty)
-			msgt(MSG_DEATH, "You feel your life slipping away!");
+		msgt(MSG_DEATH, "*** FATAL HITPOINT WARNING! ***");
 	}
 
 	return false;

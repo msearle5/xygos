@@ -742,6 +742,15 @@ bool effect_handler_HEAL_HP(effect_handler_context_t *context)
 	/* Enforce minimum */
 	if (num < context->value.base) num = context->value.base;
 
+	/* Reduce if below 0 */
+	if (player->chp < 0) {
+		if (num > -player->chp) {
+			num += player->chp;
+			num /= 5;
+			num -= player->chp;
+		}
+	}
+
 	/* Gain hitpoints */
 	player->chp += num;
 

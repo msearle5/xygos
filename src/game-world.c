@@ -288,6 +288,11 @@ static void decrease_timeouts(void)
 		if (!player->timed[i])
 			continue;
 
+		/* If an unwanted effect and below 0, skip */
+		if (player->chp < 0)
+			if (timed_effects[TMD_MAX].flag_general & PG_NASTY)
+				continue;
+
 		/* Special cases */
 		switch (i) {
             case TMD_FOOD:
@@ -593,6 +598,11 @@ void process_world(struct chunk *c)
 	if (player->timed[TMD_POISONED])
 		take_hit(player, 1, "poison");
 
+	/* Damage from being below 0 HP */
+	if (player->chp < 0) {
+		take_hit(player, 1, NULL);
+	}
+
 	/* Take damage from cuts, worse from serious cuts */
 	if (player->timed[TMD_CUT]) {
 		if (player_has(player, PF_ROCK)) {
@@ -619,9 +629,11 @@ void process_world(struct chunk *c)
 	}
 
 	/* Timed healing */
-	if (player->timed[TMD_HEAL]) {
-		bool ident = false;
-		effect_simple(EF_HEAL_HP, source_player(), "30", 0, 0, 0, 0, 0, &ident);
+	if (player->chp >= 0) {
+		if (player->timed[TMD_HEAL]) {
+			bool ident = false;
+			effect_simple(EF_HEAL_HP, source_player(), "30", 0, 0, 0, 0, 0, &ident);
+		}
 	}
 
 	/* Effects of Black Breath */
@@ -701,7 +713,7 @@ void process_world(struct chunk *c)
 	}
 
 	/* Regenerate Hit Points if needed */
-	if (player->chp < player->mhp)
+	if ((player->chp < player->mhp) && (player->chp >= 0))
 		player_regen_hp(player);
 
 	/* Regenerate or lose mana */
