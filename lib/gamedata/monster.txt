@@ -1808,7 +1808,7 @@ experience:9
 blow:HIT:HURT:1d4
 blow:TOUCH:POISON:2d4
 desc:It appears to be a pile of copper coins.
-mimic:cash:copper
+mimic:cash:small change
 
 name:giant white rat
 base:rodent
@@ -2197,8 +2197,8 @@ blow:BITE:HURT:1d3
 flags:RAND_50
 desc:It screeches as it attacks.
 
-name:creeping silver coins
-plural:piles of creeping silver coins
+name:creeping silver
+plural:piles of creeping silver
 base:creeping coins
 color:s
 speed:100
@@ -2211,8 +2211,8 @@ rarity:3
 experience:18
 blow:HIT:HURT:1d6
 blow:TOUCH:POISON:2d6
-desc:It appears to be a pile of silver coins.
-mimic:cash:silver
+desc:It appears to be a pile of silver nuggets.
+mimic:cash:silver nuggets
 
 name:snaga
 base:orc
@@ -3282,7 +3282,7 @@ blow:TOUCH:POISON:3d5
 flags:IM_ACID
 desc:It appears to be a pile of gold coins, until it starts crawling towards
 desc: you on tiny legs.
-mimic:cash:gold
+mimic:cash:rare coins
 
 name:wolf
 plural:wolves
@@ -3883,8 +3883,8 @@ friends-base:100:2d4:orc
 friends:100:2d4:Same
 desc:A hideous, smallish giant that is often found near or with orcs.
 
-name:creeping mithril coins
-plural:piles of creeping mithril coins
+name:creeping platinum
+plural:piles of creeping platinum
 base:creeping coins
 color:B
 speed:110
@@ -3898,9 +3898,9 @@ experience:45
 blow:HIT:HURT:2d5
 blow:TOUCH:POISON:3d5
 flags:IM_ACID
-desc:It appears to be a pile of sentient mithril coins that doesn't like being
+desc:It appears to be a pile of sentient platinum bars that doesn't like being
 desc: picked up.
-mimic:cash:mithril
+mimic:cash:platinum bars
 
 name:illusionist
 base:person
@@ -6486,8 +6486,8 @@ innate-freq:5
 spells:SPIT
 desc:It is a giant beetle wreathed in flames.
 
-name:creeping adamantite coins
-plural:piles of creeping adamantite coins
+name:creeping unobtainium wafers
+plural:piles of creeping unobtainium
 base:creeping coins
 color:G
 speed:120
@@ -6503,9 +6503,9 @@ blow:TOUCH:POISON:3d5
 blow:HIT:HURT:1d12
 blow:HIT:HURT:1d12
 flags:IM_ACID
-desc:It appears to be a pile of coins made of precious adamant, slithering
+desc:It appears to be a pile of unobtainium wafers, slithering
 desc: toward you on lots of tiny legs.
-mimic:cash:adamantite
+mimic:cash:unobtainium wafers
 
 name:troll scavenger
 base:troll

@@ -1959,6 +1959,32 @@ armor:80:0
 flags:IGNORE_ACID
 desc:An exquisite suit of nearly impenetrable adamantite.
 
+################ forcefield generators - see "Armor" above.
+## These are worn on the belt and you can only have one at once - including force-type
+## armors worn in other slots, although not including normal force enhancement.
+## These can be of different strengths but probably can't be enhanced in the same way,
+## and while there will be egos ("mods") most of them are specific to genneys.
+## As this means there is less progression, and as there a lot of base types, they are
+## fairly rare.
+
+#name: & personal forcefield generator~
+#type:belt
+#graphics:(:White
+
+#desc:A small device that clips to your belt and radiates a force field that turns away blows, or at least reduces their impact.", ac4(0, 0, 5, 9, weight(150, level(5, rarity(400, forcefield("personal forcefield generator")))))),
+
+#desc("A small device that clips to your belt and radiates a protective force field.  It's Reflex's take on the standard personal forcefield generator, and is considerably more effective than the basic model.", ac4(0, 0, 12, 20, weight(120, level(12, rarity(600, forcefield("Reflex forcefield generator")))))),
+
+#desc("A small(ish) device that clips to your belt and radiates a protective force field.  It's Rebound's alternative to the Reflex generator - based on previous-generation technology, which shows in the weight and in the annoying buzz it makes.  Despite these disadvantages, it does provide a lot of protection and is as popular as the Reflex.", ac4(0, 0, 24, 35, weight(900, level(15, rarity(600, forcefield("Rebound forcefield generator")))))),
+
+#desc("A small device that clips to your belt and radiates a protective force field. It's Reflex's most advanced model, hard to find but very effective.", ac4(0, 0, 28, 38, weight(280, level(33, rarity(800, forcefield("Triplex forcefield generator")))))),
+
+#desc("A small device that clips to your belt and radiates a powerful protective force field. It's related to the common personal forcefield generators, but far more effective.", ac4(0, 0, 40, 55, weight(250, level(45, rarity(600, forcefield("military forcefield generator")))))),
+
+#desc("A small device that clips to your belt and radiates a very powerful protective force field. This is the latest generation of military spec equipment - just about as good as it gets.", ac4(0, 0, 65, 75, weight(330, level(68, rarity(1200, forcefield("special forcefield generator")))))),
+
+#desc("A chunky, awkward device that clips to your belt and radiates an extremely powerful protective force field. Never made in any quantity, you are very lucky to have found one of the few prototypes!", scarcity(5, ac4(0, 0, 82, 95, weight(1250, level(90, rarity(3000, forcefield("prototype forcefield generator"))))))),
+
 ### Cloaks ###
 
 name:& Cloak~
@@ -5503,21 +5529,89 @@ desc: elemental and ethereal.
 
 ##### Gold/gems #####
 
-name:copper
+name:bottle caps
 type:cash
-graphics:$:u
+graphics:$:SteelBlue
 
-name:silver
+name:mountain money
 type:cash
-graphics:$:s
+graphics:$:I
 
-name:garnets
+name:wooden nickels
 type:cash
-graphics:$:r
+graphics:$:Burlywood
 
-name:gold
+name:chocolate coins
+type:cash
+graphics:$:Gold
+
+name:monopoly money
+type:cash
+graphics:$:i
+
+name:sequins
+type:cash
+graphics:$:i
+
+name:lottery tickets
+type:cash
+graphics:$:i
+
+name:arcade tokens
+type:cash
+graphics:$:Brass
+
+name:swarovskite
 type:cash
 graphics:$:y
+
+name:postage stamps
+type:cash
+graphics:$:i
+
+name:small change
+type:cash
+graphics:$:Copper
+
+name:book tokens
+type:cash
+graphics:$:T
+
+name:cubic zirconia
+type:cash
+graphics:$:w
+
+name:gift cards
+type:cash
+graphics:$:y
+
+name:ethelcoins
+type:cash
+graphics:$:Brass
+
+name:used bills
+type:cash
+graphics:$:ForestGreen
+
+name:santo gold
+type:cash
+graphics:$:Goldenrod
+
+name:liquor certificates
+type:cash
+graphics:$:Tan
+
+name:silver nuggets
+type:cash
+graphics:$:w
+
+name:pearls
+type:cash
+graphics:$:W
+
+name:space-miles
+type:cash
+graphics:$:SkyBlue
 
 name:opals
 type:cash
@@ -5527,25 +5621,45 @@ name:sapphires
 type:cash
 graphics:$:b
 
-name:rubies
+name:gold dust
 type:cash
-graphics:$:r
-
-name:diamonds
-type:cash
-graphics:$:w
+graphics:$:Gold
 
 name:emeralds
 type:cash
 graphics:$:g
 
-name:mithril
+name:rare coins
 type:cash
-graphics:$:B
+graphics:$:Gold
 
-name:adamantite
+name:tiberium
 type:cash
 graphics:$:G
+
+name:rubies
+type:cash
+graphics:$:r
+
+name:platinum bars
+type:cash
+graphics:$:Grey75
+
+name:diamonds
+type:cash
+graphics:$:w
+
+name:gold-pressed latinum
+type:cash
+graphics:$:Gold
+
+name:dilithium crystals
+type:cash
+graphics:$:w
+
+name:unobtainium wafers
+type:cash
+graphics:$:AliceBlue
 
 
 ##### "Morgoth Artifacts" #####

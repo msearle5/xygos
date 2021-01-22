@@ -31,6 +31,7 @@
 #include "obj-slays.h"
 #include "obj-tval.h"
 #include "obj-util.h"
+#include <math.h>
 
 /**
  * Stores cumulative probability distribution for objects at each level.  The
@@ -1260,10 +1261,7 @@ void acquirement(struct loc grid, int level, int num, bool great)
 struct object_kind *money_kind(const char *name, int value)
 {
 	int rank;
-	/* (Roughly) the largest possible gold drop at max depth - the precise
-	 * value is derivable from the calculations in make_gold(), but this is
-	 * near enough */
-	int max_gold_drop = 3 * z_info->max_depth + 30;
+	int max_gold_drop = (3 + z_info->max_depth + ((z_info->max_depth * z_info->max_depth) / 25)) * 10;
 
 	/* Check for specified treasure variety */
 	for (rank = 0; rank < num_money_types; rank++)
@@ -1271,12 +1269,23 @@ struct object_kind *money_kind(const char *name, int value)
 			break;
 
 	/* Pick a treasure variety scaled by level */
-	if (rank == num_money_types)
-		rank = (((value * 100) / max_gold_drop) * num_money_types) / 100;
+	if (rank == num_money_types) {
+		double lv = log(value);
+		double lm = log(max_gold_drop);
+		double maxrrank = ((lv / lm) * (num_money_types + 8.0)) - 8.0;
+		int maxrank = maxrrank;
 
-	/* Do not create illegal treasure types */
-	if (rank >= num_money_types) rank = num_money_types - 1;
+		/* Do not create illegal treasure types */
+		if (maxrank >= num_money_types) maxrank = num_money_types - 1;
+		if (maxrank < 0) maxrank = 0;
 
+		int minrank = maxrank - (maxrank / 4);
+
+		rank = minrank + randint0(1 + maxrank - minrank);
+
+		while ((randint0(rank+4) <= 2) && (rank < num_money_types - 1))
+			rank++;
+	}
 	return lookup_kind(TV_GOLD, money_type[rank].type);
 }
 
@@ -1289,28 +1298,36 @@ struct object_kind *money_kind(const char *name, int value)
  */
 struct object *make_gold(int lev, char *coin_type)
 {
-	/* This average is 16 at dlev0, 80 at dlev40, 176 at dlev100. */
-	int avg = (16 * lev)/10 + 16;
-	int spread = lev + 10;
-	int value = rand_spread(avg, spread);
-	struct object *new_gold = mem_zalloc(sizeof(*new_gold)); 
+	struct object *new_gold = mem_zalloc(sizeof(*new_gold));
+	int value;
 
-	/* Increase the range to infinite, moving the average to 110% */
-	while (one_in_(100) && value * 10 <= SHRT_MAX)
-		value *= 10;
+	/* Repeat until a value below SHRT_MAX is found (as the roll is open ended, and pvals are 16 bit) */
+	do {
+		int avg = 3 + lev + ((lev * lev) / 25);
+		int spread = avg;
+		do {
+			value = rand_spread(avg, spread);
+		} while (value <= 0);
 
+		/* Increase the range to infinite.
+		 * Don't do this in the town.
+		 * Be more generous if no-selling
+		 **/
+		int exploder = 25000 / (lev + 3);
+
+		if (OPT(player, birth_no_selling))
+			exploder = (5000 / (lev + 7))+150;
+		
+		if (exploder < 20)
+			exploder = 20;
+
+		if (player->depth) {
+			while ((randint0(exploder) < 100) && value <= (INT_MAX / 10))
+				value *= 10;
+		}
+	} while (value >= SHRT_MAX);
 	/* Prepare a gold object */
 	object_prep(new_gold, money_kind(coin_type, value), lev, RANDOMISE);
-
-	/* If we're playing with no_selling, increase the value */
-	if (OPT(player, birth_no_selling) && player->depth)	{
-		value *= 5;
-	}
-
-	/* Cap gold at max short (or alternatively make pvals s32b) */
-	if (value >= SHRT_MAX) {
-		value = SHRT_MAX - randint0(200);
-	}
 
 	new_gold->pval = value;
 
