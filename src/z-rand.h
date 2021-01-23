@@ -108,6 +108,26 @@ extern u32b z0;
 extern u32b z1;
 extern u32b z2;
 
+/**
+ * A structure holding stored state from the complex RNG
+ */
+typedef struct rng_state {
+	u32b state[RAND_DEG];
+	u32b z0;
+	u32b z1;
+	u32b z2;
+	u32b state_i;
+} rng_state;
+
+/**
+ * Keep a copy of the RNG's state
+ */
+void Rand_extract_state(rng_state *state);
+
+/**
+ * Restore RNG's state from an external copy
+ */
+void Rand_restore_state(rng_state *state);
 
 /**
  * Initialise the RNG state with the given seed.

@@ -630,6 +630,31 @@ void count_modifiers(const struct artifact *art, struct artifact_set_data *data)
 	if (art->modifiers[OBJ_MOD_WIS] > 0) num++;
 	if (art->modifiers[OBJ_MOD_DEX] > 0) num++;
 	if (art->modifiers[OBJ_MOD_CON] > 0) num++;
+	if (art->modifiers[OBJ_MOD_CHR] > 0) num++;
+
+	/* Speed - boots handled separately.
+	 * This is something of a special case in that we use the same
+	 * frequency for the supercharged value and the normal value.
+	 * We get away with this by using a somewhat lower average value
+	 * for the supercharged ability than in the basic set (around
+	 * +7 or +8 - c.f. Ringil and the others at +10 and upwards).
+	 * This then allows us to add an equal number of
+	 * small bonuses around +3 or so without unbalancing things.
+	 */
+	if (art->modifiers[OBJ_MOD_SPD] > 0) {
+		if (art->modifiers[OBJ_MOD_SPD] > 7) {
+			/* Supercharge case */
+			file_putf(log_file, "Adding 1 for supercharged speed bonus!\n");
+			(data->art_probs[ART_IDX_GEN_SPEED_SUPER])++;
+		} else if (art->tval == TV_BOOTS) {
+			/* Handle boots separately */
+			file_putf(log_file, "Adding 1 for normal speed bonus on boots.\n");
+			(data->art_probs[ART_IDX_BOOT_SPEED])++;
+		} else {
+			file_putf(log_file, "Adding 1 for normal speed bonus - general.\n");
+			(data->art_probs[ART_IDX_GEN_SPEED])++;
+		}
+	}
 
 	/* Handle a few special cases separately. */
 	if ((art->tval == TV_HELM || art->tval == TV_CROWN) &&
@@ -713,30 +738,6 @@ void count_modifiers(const struct artifact *art, struct artifact_set_data *data)
 	if (art->modifiers[OBJ_MOD_MOVES] > 0) {
 		file_putf(log_file, "Adding 1 for moves bonus - general.\n");
 		(data->art_probs[ART_IDX_GEN_MOVES])++;
-	}
-
-	/* Speed - boots handled separately.
-	 * This is something of a special case in that we use the same
-	 * frequency for the supercharged value and the normal value.
-	 * We get away with this by using a somewhat lower average value
-	 * for the supercharged ability than in the basic set (around
-	 * +7 or +8 - c.f. Ringil and the others at +10 and upwards).
-	 * This then allows us to add an equal number of
-	 * small bonuses around +3 or so without unbalancing things.
-	 */
-	if (art->modifiers[OBJ_MOD_SPEED] > 0) {
-		if (art->modifiers[OBJ_MOD_SPEED] > 7) {
-			/* Supercharge case */
-			file_putf(log_file, "Adding 1 for supercharged speed bonus!\n");
-			(data->art_probs[ART_IDX_GEN_SPEED_SUPER])++;
-		} else if (art->tval == TV_BOOTS) {
-			/* Handle boots separately */
-			file_putf(log_file, "Adding 1 for normal speed bonus on boots.\n");
-			(data->art_probs[ART_IDX_BOOT_SPEED])++;
-		} else {
-			file_putf(log_file, "Adding 1 for normal speed bonus - general.\n");
-			(data->art_probs[ART_IDX_GEN_SPEED])++;
-		}
 	}
 
 	/* Handle permanent light */
@@ -1618,12 +1619,12 @@ static void try_supercharge(struct artifact *art, s32b target_power,
 	if (randint0(z_info->a_max) < data->art_probs[ART_IDX_GEN_SPEED_SUPER] ||
 		(art->tval == TV_BOOTS && randint0(z_info->a_max) <
 		data->art_probs[ART_IDX_BOOT_SPEED])) {
-		art->modifiers[OBJ_MOD_SPEED] = 5 + randint0(6);
+		art->modifiers[OBJ_MOD_SPD] = 5 + randint0(6);
 		if (INHIBIT_WEAK)
-			art->modifiers[OBJ_MOD_SPEED] += randint1(3);
+			art->modifiers[OBJ_MOD_SPD] += randint1(3);
 		if (INHIBIT_STRONG)
-			art->modifiers[OBJ_MOD_SPEED] += 1 + randint1(6);
-		file_putf(log_file, "Supercharging speed for this item!  (New speed bonus is %d)\n", art->modifiers[OBJ_MOD_SPEED]);
+			art->modifiers[OBJ_MOD_SPD] += 1 + randint1(6);
+		file_putf(log_file, "Supercharging speed for this item!  (New speed bonus is %d)\n", art->modifiers[OBJ_MOD_SPD]);
 	}
 
 	/* Big AC bonus */
@@ -1745,7 +1746,7 @@ static bool add_mod(struct artifact *art, int mod)
 		}
 	} else {
 		/* Hard cap of 6 on non-speed mods */
-		if ((mod != OBJ_MOD_SPEED) && (art->modifiers[mod] >= 6)) {
+		if ((mod != OBJ_MOD_SPD) && (art->modifiers[mod] >= 6)) {
 			return false;
 		}
 
@@ -1763,7 +1764,7 @@ static bool add_mod(struct artifact *art, int mod)
 		}
 
 		/* Enforce cap */
-		if ((mod != OBJ_MOD_SPEED) && (art->modifiers[mod] >= 6)) {
+		if ((mod != OBJ_MOD_SPD) && (art->modifiers[mod] >= 6)) {
 			art->modifiers[mod] = 6;
 		}
 	}
@@ -1793,12 +1794,8 @@ static void add_sustain(struct artifact *art)
 			return;
 
 	while (!success) {
-		r = randint0(5);
-		if (r == 0) success = add_flag(art, OF_SUST_STR);
-		else if (r == 1) success = add_flag(art, OF_SUST_INT);
-		else if (r == 2) success = add_flag(art, OF_SUST_WIS);
-		else if (r == 3) success = add_flag(art, OF_SUST_DEX);
-		else if (r == 4) success = add_flag(art, OF_SUST_CON);
+		r = randint0(STAT_MAX);
+		success = add_flag(art, OF_SUST_STR + r);
 	}
 }
 
@@ -2200,7 +2197,7 @@ static void add_ability_aux(struct artifact *art, int r, s32b target_power,
 
 		case ART_IDX_BOOT_SPEED:
 		case ART_IDX_GEN_SPEED:
-			add_mod(art, OBJ_MOD_SPEED);
+			add_mod(art, OBJ_MOD_SPD);
 			break;
 
 		case ART_IDX_GLOVE_FA:
@@ -2366,16 +2363,10 @@ static void remove_contradictory(struct artifact *art)
 	if (of_has(art->flags, OF_AGGRAVATE))
 		art->modifiers[OBJ_MOD_STEALTH] = 0;
 
-	if (art->modifiers[OBJ_MOD_STR] < 0)
-		of_off(art->flags, OF_SUST_STR);
-	if (art->modifiers[OBJ_MOD_INT] < 0)
-		of_off(art->flags, OF_SUST_INT);
-	if (art->modifiers[OBJ_MOD_WIS] < 0)
-		of_off(art->flags, OF_SUST_WIS);
-	if (art->modifiers[OBJ_MOD_DEX] < 0)
-		of_off(art->flags, OF_SUST_DEX);
-	if (art->modifiers[OBJ_MOD_CON] < 0)
-		of_off(art->flags, OF_SUST_CON);
+	for(int i=0;i<STAT_MAX;i++) {
+		if (art->modifiers[OBJ_MOD_STR + i] < 0)
+			of_off(art->flags, OF_SUST_STR + i);
+	}
 
 	if (of_has(art->flags, OF_DRAIN_EXP))
 		of_off(art->flags, OF_HOLD_LIFE);

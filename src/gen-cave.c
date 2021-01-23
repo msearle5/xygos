@@ -1615,6 +1615,11 @@ static void build_store(struct chunk *c, int n, struct loc xroads,
 
 	/* Build an invulnerable rectangular building */
 	fill_rectangle(c, build_n, build_w, build_s, build_e, FEAT_PERM, SQUARE_NONE);
+	
+	/* Tagged with the store number (+1, because 0 is a valid store ID) */
+	for(int x=build_w; x<=build_e; x++)
+		for(int y=build_n; y<=build_s; y++)
+			square_set_tag(c, loc(x, y), n+1);
 
 	/* Clear previous contents, add a store door */
 	for (feat = 0; feat < z_info->f_max; feat++)
@@ -1816,6 +1821,29 @@ static void town_gen_layout(struct chunk *c, struct player *p)
 	player_place(c, p, pgrid);
 }
 
+/**
+ * Destroy a store
+ * Permanently change the stored town
+ * Booooom!
+ */
+void destroy_store(struct chunk *c, int store)
+{
+	struct loc grid;
+	/* Turn the store into a ruin */
+	for (grid.y = 0; grid.y < c->height; grid.y++) {
+		for (grid.x = 0; grid.x < c->width; grid.x++) {
+			if (square_tag(c, grid) == store+1) {
+				static byte features[4];
+				features[0] = FEAT_RUBBLE;
+				features[1] = FEAT_GRANITE;
+				features[2] = FEAT_PASS_RUBBLE;
+				features[3] = FEAT_FLOOR;
+				byte feature = features[randint0(4)];
+				square_set_feat(c, grid, feature);
+			}
+		}
+	}
+}
 
 /**
  * Town logic flow for generation of new town.
@@ -1843,6 +1871,14 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 		/* Build stuff */
 		town_gen_layout(c_new, p);
 	} else {
+		/* If any stores are scheduled to be destroyed, do it now */
+		for(int i=0;i<MAX_STORES;i++) {
+			if (stores[i].destroy) {
+				destroy_store(c_old, i);
+				stores[i].destroy = false;
+			}
+		}
+
 		/* Copy from the chunk list, remove the old one */
 		if (!chunk_copy(c_new, c_old, 0, 0, 0, 0))
 			quit_fmt("chunk_copy() level bounds failed!");
@@ -1860,7 +1896,6 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 			}
 			if (found) break;
 		}
-
 		/* Place the player */
 		player_place(c_new, p, grid);
 		c_new->depth = danger_depth(player);

@@ -39,6 +39,7 @@
 #include "object.h"
 #include "player-calcs.h"
 #include "player-history.h"
+#include "player-quest.h"
 #include "player-util.h"
 #include "project.h"
 #include "store.h"
@@ -2177,7 +2178,75 @@ static void rune_xtra_act(struct keypress ch, int oid)
 	}
 }
 
+enum {
+	QV_ACTIVE = 0,
+	QV_UNREWARDED = 1,
+	QV_SUCCEEDED = 2,
+	QV_FAILED = 3,
+};
 
+static const char *quest_name(int gid) { 
+	static const char *name[] = {
+		"Active",
+		"Unrewarded",
+		"Succeeded",
+		"Failed",
+	};
+	return name[gid];
+}
+
+static int quest_var(int oid) {
+	struct quest *q = &quests[oid];
+	if (q->flags & QF_UNREWARDED)
+		return QV_UNREWARDED;
+	if (q->flags & QF_SUCCEEDED)
+		return QV_SUCCEEDED;
+	if (q->flags & QF_FAILED)
+		return QV_FAILED;
+	return QV_ACTIVE;
+}
+
+static bool quest_is_aware(int oid) {
+	return (quests[oid].flags & (QF_SUCCEEDED|QF_FAILED|QF_ACTIVE));
+}
+
+static void display_quest(int col, int row, bool cursor, int oid )
+{ 
+	char buf[64];
+	snprintf(buf, sizeof(buf), "%s (%d)", quests[oid].name, quests[oid].level);
+	buf[sizeof(buf)-1] = 0;
+	c_put_str(COLOUR_YELLOW, buf, row, 11);
+	c_put_str(COLOUR_GREEN, quests[oid].desc, row, 25);
+}
+
+/**
+ * Display quests knowledge.
+ */
+static void do_cmd_knowledge_quests(const char *name, int row)
+{
+	group_funcs task_var_f = {quest_name, NULL, quest_var, 0, 0, false};
+
+	member_funcs task_f = {display_quest, NULL, NULL, NULL,
+						   NULL, NULL, 0};
+
+	int *tasks;
+	int task_max = z_info->quest_max;
+	int count = 0;
+	int i;
+
+	tasks = mem_zalloc(task_max * sizeof(int));
+
+	for (i = 0; i < task_max; i++) {
+		/* Ignore inactive quests */
+		if (!quest_is_aware(i))
+			continue;
+
+		tasks[count++] = i;
+	}
+
+	display_knowledge("Tasks", tasks, count, task_var_f, task_f, "Description");
+	mem_free(tasks);
+}
 
 /**
  * Display rune knowledge.
@@ -3240,6 +3309,7 @@ static menu_action knowledge_actions[] =
 { 0, 0, "Display hall of fame",       	   do_cmd_knowledge_scores    },
 { 0, 0, "Display character history",  	   do_cmd_knowledge_history   },
 { 0, 0, "Display equipable comparison",    do_cmd_knowledge_equip_cmp },
+{ 0, 0, "Display active tasks",    do_cmd_knowledge_quests },
 };
 
 static struct menu knowledge_menu;

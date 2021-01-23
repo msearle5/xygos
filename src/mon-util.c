@@ -1308,6 +1308,13 @@ void kill_arena_monster(struct monster *mon)
 	update_mon(old_mon, cave, true);
 	old_mon->hp = -1;
 	player_kill_monster(old_mon, " is defeated!");
+	if (!((cave)->depth)) {
+		delete_monster(old_mon->grid);
+	} else {
+		update_mon(old_mon, cave, true);
+		old_mon->hp = -1;
+		player_kill_monster(old_mon, " is defeated!");
+	}
 }
 
 /**

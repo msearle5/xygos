@@ -54,6 +54,7 @@ struct chunk *chunk_write(struct chunk *c)
 		for (x = 0; x < new->width; x++) {
 			/* Terrain */
 			new->squares[y][x].feat = square(c, loc(x, y))->feat;
+			new->squares[y][x].tag = square(c, loc(x, y))->tag;
 			sqinfo_copy(square(new, loc(x, y))->info, square(c, loc(x, y))->info);
 		}
 	}
@@ -227,6 +228,9 @@ bool chunk_copy(struct chunk *dest, struct chunk *source, int y0, int x0,
 			/* Terrain */
 			dest->squares[dest_grid.y][dest_grid.x].feat =
 				square(source, grid)->feat;
+			dest->squares[dest_grid.y][dest_grid.x].tag =
+				square(source, grid)->tag;
+
 			sqinfo_copy(square(dest, dest_grid)->info,
 						square(source, grid)->info);
 

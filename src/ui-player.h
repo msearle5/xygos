@@ -15,5 +15,6 @@ void display_player(int mode);
 void write_character_dump(ang_file *fff);
 bool dump_save(const char *path);
 void do_cmd_change_name(void);
+const char *player_title(void);
 
 #endif /* !UI_PLAYER_H */

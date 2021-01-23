@@ -699,7 +699,7 @@ static void wiz_create_item_subdisplay(struct menu *m, int oid, bool cursor,
 	c_prt(curs_attrs[CURS_KNOWN][0 != cursor], buf, row, col);
 }
 
-static bool wiz_create_item_subaction(struct menu *m, const ui_event *e, int oid)
+static bool wiz_create_item_subaction(struct menu *m, const ui_event *e, int oid, bool *exit)
 {
 	int *choices = menu_priv(m);
 	int selected = choices[oid];
@@ -771,7 +771,7 @@ static void wiz_create_item_display(struct menu *m, int oid, bool cursor,
 	c_prt(curs_attrs[CURS_KNOWN][0 != cursor], buf, row, col);
 }
 
-static bool wiz_create_item_action(struct menu *m, const ui_event *e, int oid)
+static bool wiz_create_item_action(struct menu *m, const ui_event *e, int oid, bool *exit)
 {
 	ui_event ret;
 	struct menu *menu;
@@ -1521,11 +1521,8 @@ static void do_cmd_wiz_cure_all(void)
 	}
 
 	/* Restore stats */
-	effect_simple(EF_RESTORE_STAT, source_player(), "0", STAT_STR, 0, 0, 0, 0, NULL);
-	effect_simple(EF_RESTORE_STAT, source_player(), "0", STAT_INT, 0, 0, 0, 0, NULL);
-	effect_simple(EF_RESTORE_STAT, source_player(), "0", STAT_WIS, 0, 0, 0, 0, NULL);
-	effect_simple(EF_RESTORE_STAT, source_player(), "0", STAT_DEX, 0, 0, 0, 0, NULL);
-	effect_simple(EF_RESTORE_STAT, source_player(), "0", STAT_CON, 0, 0, 0, 0, NULL);
+	for(int i=0;i<STAT_MAX;i++)
+		effect_simple(EF_RESTORE_STAT, source_player(), "0", STAT_STR+i, 0, 0, 0, 0, NULL);
 
 	/* Restore the level */
 	effect_simple(EF_RESTORE_EXP, source_none(), "0", 0, 0, 0, 0, 0, NULL);

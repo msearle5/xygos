@@ -93,7 +93,7 @@ static void menu_action_display(struct menu *m, int oid, bool cursor, int row, i
 	display_action_aux(&acts[oid], color, row, col, width);
 }
 
-static bool menu_action_handle(struct menu *m, const ui_event *event, int oid)
+static bool menu_action_handle(struct menu *m, const ui_event *event, int oid, bool *exit)
 {
 	menu_action *acts = menu_priv(m);
 
@@ -138,7 +138,7 @@ static void display_string(struct menu *m, int oid, bool cursor,
 	Term_putstr(col, row, width, color, items[oid]);
 }
 
-static bool handle_string(struct menu *m, const ui_event *event, int oid)
+static bool handle_string(struct menu *m, const ui_event *event, int oid, bool *exit)
 {
 	if (m->keys_hook && event->type == EVT_KBRD) {
 		return m->keys_hook(m, event, oid);
@@ -662,14 +662,20 @@ bool menu_handle_mouse(struct menu *menu, const ui_event *in,
  * Returns true if the key was handled at all (including if it's not handled
  * and just ignored).
  */
-static bool menu_handle_action(struct menu *m, const ui_event *in)
+static bool menu_handle_action(struct menu *m, const ui_event *in, bool *exit)
 {
+	bool dummy;
+	if (!exit) {
+		exit = &dummy;
+	}
+	*exit = false;
+
 	if (m->row_funcs->row_handler) {
 		int oid = m->cursor;
 		if (m->filter_list)
 			oid = m->filter_list[m->cursor];
 
-		return m->row_funcs->row_handler(m, in, oid);
+		return m->row_funcs->row_handler(m, in, oid, exit);
 	}
 
 	return false;
@@ -776,21 +782,25 @@ ui_event menu_select(struct menu *menu, int notify, bool popup)
 
 		/* Handle mouse & keyboard commands */
 		if (in.type == EVT_MOUSE) {
-			if (!no_act && menu_handle_action(menu, &in)) {
+			if (!no_act && menu_handle_action(menu, &in, NULL)) {
 				continue;
 			}
 			menu_handle_mouse(menu, &in, &out);
 		} else if (in.type == EVT_KBRD) {
 			/* Command key */
+			bool exit = false;
 			if (!no_act && menu->cmd_keys &&
 				strchr(menu->cmd_keys, (char)in.key.code) &&
-				menu_handle_action(menu, &in))
+				menu_handle_action(menu, &in, &exit)) {
+				if (exit)
+					return in;
 				continue;
+			}
 
 			/* Switch key */
 			if (!no_act && menu->switch_keys &&
 				strchr(menu->switch_keys, (char)in.key.code)) {
-				menu_handle_action(menu, &in);
+				menu_handle_action(menu, &in, NULL);
 				if (popup)
 					screen_load();
 				return in;
@@ -809,7 +819,7 @@ ui_event menu_select(struct menu *menu, int notify, bool popup)
 		}
 
 		/* If we've selected an item, then send that event out */
-		if (out.type == EVT_SELECT && !no_act && menu_handle_action(menu, &out))
+		if (out.type == EVT_SELECT && !no_act && menu_handle_action(menu, &out, NULL))
 			continue;
 
 		/* Notify about the outgoing type */

@@ -21,8 +21,12 @@
 #include "cmds.h"
 #include "game-event.h"
 #include "game-input.h"
+#include "game-world.h"
 #include "hint.h"
 #include "init.h"
+#include "mon-make.h"
+#include "mon-spell.h"
+#include "mon-util.h"
 #include "monster.h"
 #include "obj-desc.h"
 #include "obj-gear.h"
@@ -35,6 +39,7 @@
 #include "obj-util.h"
 #include "player-calcs.h"
 #include "player-history.h"
+#include "player-quest.h"
 #include "player-util.h"
 #include "store.h"
 #include "target.h"
@@ -50,6 +55,7 @@
 #include "ui-command.h"
 #include "ui-store.h"
 #include "z-debug.h"
+#include "z-rand.h"
 
 
 /**
@@ -117,8 +123,8 @@ struct store_context {
 	unsigned int scr_places_y[LOC_MAX];
 };
 
-/* Return a random hint from the global hints list */
-static const char *random_hint(void)
+/* Return a random hint from the given hints list */
+static const char *random_line(struct hint *hints)
 {
 	struct hint *v, *r = NULL;
 	int n;
@@ -126,6 +132,52 @@ static const char *random_hint(void)
 		if (one_in_(n))
 			r = v;
 	return r->hint;
+}
+
+/* Return a random hint from the global hints or lies lists
+ * <real>% of ths time, it's a hint.
+ **/
+static const char *random_rumor(s32b real)
+{
+	struct hint *h = lies;
+	if (randint0(100) < real)
+		h = hints;
+	return random_line(h);
+}
+
+/* Return a random hint from the global hints list */
+static const char *random_hint(void)
+{
+	return random_rumor(100);
+}
+
+/* Return a random hint from the global hints or lies list,
+ * with a minimum and maximum length. It is also checked for being
+ * "saying like" - that is, the first character is alphanumeric.
+ * (The minimum length is for the same reason, while the max is to
+ * ensure it fits on screen.)
+ **/
+static const char *random_saying(s32b real, s32b min, s32b max)
+{
+	const char *ret;
+	int length;
+	do {
+		ret = random_rumor(real);
+		length = strlen(ret);
+	} while (!(isalnum(*ret) && (length >= min) && (length <= max)));
+	return ret;
+}
+
+/**
+ * Collect from a store you own 
+ */
+static void collect_from_store(struct store *store)
+{
+	if (store->income) {
+		msg("You collect $%d in takings.", store->income);
+		player->au += store->income;
+		store->income = 0;
+	}
 }
 
 /**
@@ -165,7 +217,7 @@ static void prt_welcome(const struct owner *proprietor)
 
 		/* Get a title for the character */
 		if ((i % 2) && randint0(2))
-			player_name = player->class->title[(player->lev - 1) / 5];
+			player_name = player_title();
 		else if (randint0(2))
 			player_name = player->full_name;
 		else
@@ -247,9 +299,9 @@ static void store_display_recalc(struct store_context *ctx)
 
 	/* If we're displaying the help, then put it with a line of padding */
 	if (ctx->flags & (STORE_SHOW_HELP)) {
-		ctx->scr_places_y[LOC_HELP_CLEAR] = hgt - 1;
-		ctx->scr_places_y[LOC_HELP_PROMPT] = hgt;
-		loc.page_rows = -5;
+		ctx->scr_places_y[LOC_HELP_CLEAR] = hgt - 10;
+		ctx->scr_places_y[LOC_HELP_PROMPT] = hgt - 6;
+		loc.page_rows = -10;
 	} else {
 		ctx->scr_places_y[LOC_HELP_CLEAR] = hgt - 2;
 		ctx->scr_places_y[LOC_HELP_PROMPT] = hgt - 1;
@@ -339,7 +391,7 @@ static void store_display_frame(struct store_context *ctx)
 
 		/* Show weight header */
 		put_str("Weight", ctx->scr_places_y[LOC_HEADER],
-				ctx->scr_places_x[LOC_WEIGHT] + 2);
+				ctx->scr_places_x[LOC_WEIGHT]);
 	} else {
 		/* Normal stores */
 		const char *store_name = store->name;
@@ -349,7 +401,7 @@ static void store_display_frame(struct store_context *ctx)
 		put_str(owner_name, ctx->scr_places_y[LOC_OWNER], 1);
 
 		/* Show the max price in the store (above prices) */
-		strnfmt(buf, sizeof(buf), "%s (%d)", store_name,
+		strnfmt(buf, sizeof(buf), proprietor->max_cost ? "%s (%d)" : "%s", store_name,
 				proprietor->max_cost);
 		prt(buf, ctx->scr_places_y[LOC_OWNER],
 			ctx->scr_places_x[LOC_OWNER] - strlen(buf));
@@ -359,7 +411,7 @@ static void store_display_frame(struct store_context *ctx)
 
 		/* Showing weight label */
 		put_str("Weight", ctx->scr_places_y[LOC_HEADER],
-				ctx->scr_places_x[LOC_WEIGHT] + 2);
+				ctx->scr_places_x[LOC_WEIGHT]);
 
 		/* Label the asking price (in stores) */
 		put_str("Price", ctx->scr_places_y[LOC_HEADER], ctx->scr_places_x[LOC_PRICE] + 4);
@@ -402,7 +454,7 @@ static void store_display_help(struct store_context *ctx)
 	if (!ctx->inspect_only) {
 		if (OPT(player, birth_no_selling)) {
 			text_out_c(COLOUR_L_GREEN, "d");
-			text_out(" gives an item to the store in return for its identification. Some wands and staves will also be recharged. ");
+			text_out(" gives an item to the store in return for its identification. Some items will also be recharged. ");
 		} else {
 			text_out_c(COLOUR_L_GREEN, "d");
 			if (is_home) text_out(" drops");
@@ -412,6 +464,23 @@ static void store_display_help(struct store_context *ctx)
 	} else {
 		text_out_c(COLOUR_L_GREEN, "I");
 		text_out(" inspects an item from your inventory. ");
+	}
+
+	if (!is_home) {
+		text_out_c(COLOUR_L_GREEN, "H");
+		text_out(" holds an item (you pay 10%% now to keep it in stock. If you buy it the same day, you'll only pay the remaining 90%% - but each extra day will add 10%% more.) ");
+		text_out_c(COLOUR_L_GREEN, "S");
+		text_out(" attempts to steal an item (this is risky!), while ");
+		text_out_c(COLOUR_L_GREEN, "F");
+		text_out(" picks a fight with the owner (even more risky!). ");
+		text_out_c(COLOUR_L_GREEN, "N");
+		text_out(" asks the owner to obtain new stock (this is expensive), while ");
+		text_out_c(COLOUR_L_GREEN, "O");
+		text_out(" asks the owner to leave, to be replaced by a different shopkeeper (this is very expensive). ");
+		text_out_c(COLOUR_L_GREEN, "B");
+		text_out(" buys the store for yourself (this is extremely expensive). ");
+		text_out_c(COLOUR_L_GREEN, "Q");
+		text_out(" asks the owner if there is anything they want doing for them. ");
 	}
 
 	text_out_c(COLOUR_L_GREEN, "ESC");
@@ -441,7 +510,8 @@ static void store_redraw(struct store_context *ctx)
 	}
 
 	if (ctx->flags & (STORE_GOLD_CHANGE)) {
-		prt(format("Gold Remaining: %9d", player->au),
+		if (!(ctx->flags & STORE_SHOW_HELP))
+			prt(format("Cash Remaining: %9d", player->au),
 				ctx->scr_places_y[LOC_AU], ctx->scr_places_x[LOC_AU]);
 		ctx->flags &= ~(STORE_GOLD_CHANGE);
 	}
@@ -530,7 +600,7 @@ static bool store_sell(struct store_context *ctx)
 		if (store->sidx == STORE_HOME)
 			msg("Your home is full.");
 		else
-			msg("I have not the room in my store to keep it.");
+			msg("I have no room in my store to keep it.");
 
 		return false;
 	}
@@ -575,6 +645,17 @@ static bool store_sell(struct store_context *ctx)
 	return true;
 }
 
+/* Set a store's owner and name to you */
+static void store_your_name(struct store *store)
+{
+	char buf[256];
+	store->owner = store->owners;
+	string_free(store->owner->name);
+	const char *shape = (player_is_shapechanged(player) ? player->shape->name : player->race->name);
+	snprintf(buf, sizeof(buf), "%s the %s (%s)", player->full_name, player_title(), shape);	// should be updated when you enter
+	buf[sizeof(buf)-1] = 0;
+	store->owner->name = string_make(buf);
+}
 
 
 /**
@@ -607,7 +688,7 @@ static bool store_purchase(struct store_context *ctx, int item, bool single)
 		/* Check if the player can afford any at all */
 		if (store->sidx != STORE_HOME &&
 				(int)player->au < (int)price_item(store, obj, false, 1)) {
-			msg("You do not have enough gold for this item.");
+			msg("You do not have enough money for this item.");
 			return false;
 		}
 	} else {
@@ -619,7 +700,7 @@ static bool store_purchase(struct store_context *ctx, int item, bool single)
 
 			/* Check if the player can afford any at all */
 			if ((u32b)player->au < (u32b)price) {
-				msg("You do not have enough gold for this item.");
+				msg("You do not have enough money for this item.");
 				return false;
 			}
 
@@ -716,6 +797,638 @@ static bool store_purchase(struct store_context *ctx, int item, bool single)
 	return true;
 }
 
+/* Return the store owner's first name */
+static char *store_shortname(struct store_context *ctx)
+{
+	static char buf[256];
+	strncpy(buf,  ctx->store->owner->name, sizeof(buf));
+	buf[sizeof(buf)-1] = 0;
+	char *space = strchr(buf, ' ');
+	if (space) {
+		*space = 0;
+	}
+	return buf;
+}
+
+/* Return the store owner's full name */
+static char *store_fullname(struct store_context *ctx)
+{
+	static char buf[256];
+	strncpy(buf,  ctx->store->owner->name, sizeof(buf));
+	buf[sizeof(buf)-1] = 0;
+	char *space = strchr(buf, '(');
+	if (space) {
+		*(space-1) = 0;
+	}
+	return buf;
+}
+
+/* fight the owner
+ * Returns true if successful (this doesn't imply that the fight was successful - that starts after this has returned)
+ * Based on Single Combat (and maybe should be combined?)
+ **/
+static bool store_do_fight(struct store_context *ctx)
+{
+	/* Pick the randomizable monster race */
+	struct monster_race *race = lookup_monster("Randy, the Random With A Longer Name Than Anyone");
+	assert(race);
+
+	/* Build a random unique based on your level and the store owner's name, race etc. */
+	int level = ((player->lev * 3) / 2) + 15;
+	if (level < 20) {
+		level = 20;
+	}
+
+	/* Basic stats */
+	string_free(race->name);
+	race->name = string_make(store_fullname(ctx));
+	race->level = level;
+	race->speed = 110;
+	race->avg_hp = 100;
+	race->ac = 20;
+	race->freq_spell = 12;
+	race->freq_innate = 12;
+	rf_off(race->flags, RF_IM_ACID);
+	
+	/* Evil (BM) and male/female from description? */
+	rf_off(race->flags, RF_FEMALE);
+	rf_on(race->flags, RF_MALE);
+	
+	int i = level;
+	int spells = 0;
+	int innate = 0;
+	
+	/* Increase them */
+	do {
+		switch(randint0(8)) {
+			case 0:
+				if (race->speed < 140) {
+					race->speed++;
+					i--;
+					if (race->speed > 120)
+						i--;
+					if (race->speed > 130)
+						i--;
+				}
+				break;
+			case 1:
+				race->avg_hp = (race->avg_hp * 12) / 10;
+				i--;
+				break;
+			case 2:
+				race->ac += 5;
+				i--;
+				break;
+			case 3:
+				if (spells > 0) {
+					if (race->freq_spell > 1) {
+						race->freq_spell--;
+						i -= 12/race->freq_spell;
+					}
+				}
+				break;
+			case 4:
+				if (innate > 0) {
+					if (race->freq_innate > 1) {
+						race->freq_innate--;
+						i -= 12/race->freq_innate;
+					}
+				}
+				break;
+			case 5: {
+					u32b flag[] = {
+						RF_IM_ACID, RF_IM_ELEC, RF_IM_FIRE, RF_IM_COLD,
+						RF_IM_POIS
+					};
+					u32b f = flag[randint0(sizeof(flag)/sizeof(flag[0]))];
+					if (!rf_has(race->flags, f)) {
+						rf_on(race->flags, RF_IM_ACID);
+						i--;
+					}
+					break;
+				}
+			case 6: {
+					u32b sflag[] = {
+						RSF_BOULDER, RSF_BOLT
+					};
+					u32b f = sflag[randint0(sizeof(sflag)/sizeof(sflag[0]))];
+					if (!rsf_has(race->spell_flags, f)) {
+						rsf_on(race->spell_flags, f);
+						i--;
+						innate++;
+					}
+					break;
+				}
+			case 7: {
+					u32b sflag[] = {
+						RSF_BA_ACID, RSF_BO_POIS, RSF_STORM, RSF_BLIND, RSF_CONF
+					};
+					u32b f = sflag[randint0(sizeof(sflag)/sizeof(sflag[0]))];
+					if (!rsf_has(race->spell_flags, f)) {
+						rsf_on(race->spell_flags, f);
+						i--;
+						spells++;
+					}
+					break;
+				}
+			default:
+				quit_fmt("bug in random unique");
+		}
+	} while (i > 0);
+	
+
+	/* Pick a location */
+	struct loc grid;
+	struct monster_group_info info = { 0, 0 };
+	do {
+		scatter(cave, &grid, player->grid, 100, true);
+	} while (!square_in_bounds(cave, grid) || !square_isempty(cave, grid));
+
+	/* Place it */
+	place_new_monster(cave, grid, race, true, false, info, ORIGIN_DROP_SHK);
+	struct monster *mon = square_monster(cave, grid);
+	assert(mon);
+
+	/* Swap the targeted monster with the first in the monster list */
+	int old_idx = mon->midx;
+	if (old_idx == 1) {
+		/* Do nothing */
+		;
+	} else if (cave_monster(cave, 1)->race) {
+		monster_index_move(old_idx, cave_monster_max(cave));
+		monster_index_move(1, old_idx);
+		monster_index_move(cave_monster_max(cave), 1);
+	} else {
+		monster_index_move(old_idx, 1);
+	}
+	target_set_monster(cave_monster(cave, 1));
+
+	/* Head to the arena */
+	player->upkeep->health_who = square_monster(cave, grid);
+	player->upkeep->arena_level = true;
+	dungeon_change_level(player, player->depth);
+
+	return true;
+}
+
+/* attempt to steal an item */
+static void store_steal(struct store_context *ctx, bool *exit)
+{
+	struct store *store = ctx->store;
+	assert(store);
+
+	if (ctx->store->sidx == STORE_HOME) {
+		msg("You daringly steal from your own home!");
+		return;
+	}
+
+	/* Confirm as it is risky */
+	screen_save();
+	int response = store_get_check(format("Sure you want to try to steal something? [ESC, any other key to accept]"));
+	screen_load();
+
+	/* Negative response, so give up */
+	if (!response) return;
+
+	/* DEX check for success, biased by amount of suspicious activity so far.
+	 * Item weight and cost should figure in, and rogueish classes should have a better chance.
+	 * If you fail, CHR check (also biased) to not be noticed.
+	 * If this fails, another CHR check to be kickbanned rather than fought.
+	 */
+	
+	int price = 0;
+	int difficulty = 7;
+	int num = 0;
+	int amt = 0;
+
+	struct object *obj = NULL; // FIXME
+	struct object *dummy = NULL;
+
+	char o_name[80];
+
+	/* Get an amount if we weren't given one */
+	
+	{
+		/* Price of one */
+		price = price_item(ctx->store, obj, false, 1);
+
+		/* Limit to the number that can be carried */
+		int amt = MIN(obj->number, inven_carry_num(obj, false));
+
+		/* Fail if there is no room */
+		if ((amt <= 0) || (!object_flavor_is_aware(obj) && pack_is_full())) {
+			msg("You cannot carry that many items.");
+			return;
+		}
+
+		/* Find the number of this item in the inventory */
+		if (object_flavor_is_aware(obj))
+			num = find_inven(obj);
+
+		strnfmt(o_name, sizeof o_name, "Steal how many%s? (max %d) ", num ? format(" (you have %d)", num) : "", amt);
+
+		/* Get a quantity */
+		amt = get_quantity(o_name, amt);
+
+		/* Allow user abort */
+		if (amt <= 0) return;
+	}
+
+	/* Get desired object */
+	dummy = object_new();
+	object_copy_amt(dummy, obj, amt);
+
+	/* Ensure we have room */
+	if (!inven_carry_okay(dummy)) {
+		msg("You cannot carry that many items.");
+		object_delete(&dummy);
+		return;
+	}
+
+	/* Describe the object (fully) */
+	object_desc(o_name, sizeof(o_name), dummy, ODESC_PREFIX | ODESC_FULL |
+		ODESC_STORE);
+
+	/* Extract the price for the entire stack */
+	price = price_item(store, dummy, false, dummy->number);
+
+	screen_save();
+
+	/* Show price */
+	prt(format("Price: %d, Diff %d", price, difficulty), 1, 0);
+
+	/* Confirm purchase */
+	response = store_get_check(format("Steal %s? [ESC, any other key to accept]", o_name));
+	screen_load();
+
+	/* Negative response, so give up */
+	if (!response) return;
+
+	// make item '100% off'
+	of_on(obj->flags, OF_STOLEN);
+	obj->origin = ORIGIN_STOLEN;
+
+	// and buy it for 0
+	cmdq_push(CMD_BUY);
+	cmd_set_arg_item(cmdq_peek(), "item", obj);
+	cmd_set_arg_number(cmdq_peek(), "quantity", amt);
+
+	object_delete(&dummy);
+}
+
+/* pick a fight with the owner */
+static void store_fight(struct store_context *ctx, bool *exit)
+{
+	if ((ctx->store->sidx == STORE_HOME) || (you_own(ctx->store))) {
+		msg("You decide against punching yourself in the face.");
+		return;
+	}
+
+	/* Confirm as it is risky */
+	screen_save();
+	int response = store_get_check(format("Sure you want to attack %s? [ESC, any other key to accept]", store_shortname(ctx)));
+	screen_load();
+
+	/* Negative response, so give up */
+	if (!response) return;
+
+	/* Fight! */
+	*exit = true;
+	store_do_fight(ctx);
+}
+
+/* Sum of sale prices of all items */
+static int store_price_all(struct store *s)
+{
+	int cost = 0;
+	struct object *o = s->stock;
+	while (o) {
+		cost += price_item(s, o, false, o->number);
+		o = o->next;
+	}
+	return cost;
+}
+
+/* Round up, to 2 decimals if < 1000, 3 decimals if >= 1000, < 1000000, to 1000 if >= 1000000. */
+static int store_roundup(int exact)
+{
+	if (exact < 100) {
+		return exact;
+	} else if (exact < 10000) {
+		exact += 9;
+		exact /= 10;
+		exact *= 10;
+	} else if (exact < 100000) {
+		exact += 99;
+		exact /= 100;
+		exact *= 100;
+	} else {
+		exact += 999;
+		exact /= 1000;
+		exact *= 1000;
+	}
+	return exact;
+}
+
+/* obtain new stock */
+static void store_newstock(struct store_context *ctx)
+{
+	if (ctx->store->sidx == STORE_HOME) {
+		msg("Unfortunately it's not that easy.");
+		return;
+	}
+
+	int price = store_roundup((store_price_all(ctx->store) / 4) + (ctx->store->owner->max_cost / 20) + 200);
+
+	/* Confirm if they really wanted it */
+	screen_save();
+	int response = store_get_check(format("Re-stocking will cost you $%d. Go ahead? [ESC, any other key to accept]", price));
+	screen_load();
+
+	/* Negative response, so give up */
+	if (!response) return;
+
+	/* Check if the player can afford it */
+	if ((int)player->au < price) {
+		msg("You do not have enough money.");
+		return;
+	}
+
+	/* Pay */
+	player->au -= price;
+	msg("%s gets out new stock.", store_shortname(ctx));
+
+	/* Remove old stock */
+	struct store *s = ctx->store;
+	s->stock_num = 0;
+	object_pile_free(s->stock);
+	s->stock = NULL;
+	
+	/* Get new stock */
+	for (int j = 0; j < 10; j++)
+		store_maint(s);
+
+	/* Update the display */
+	event_signal(EVENT_STORECHANGED);
+}
+
+/* replace by a different shopkeeper */
+static void store_replace(struct store_context *ctx, bool *exit)
+{
+	char buf[256];
+	struct store *store = ctx->store;
+
+	int price = store_roundup((store_price_all(store) / 3) + store->owner->max_cost + 2000);
+	if ((store->sidx == STORE_HOME) || (you_own(store))) {
+		msg("It's all yours, and it's staying that way.");
+		return;
+	}
+
+	/* Confirm if they really wanted it */
+	screen_save();
+	int response = store_get_check(format("Retiring will cost you $%d. Go ahead? [ESC, any other key to accept]", price));
+	screen_load();
+
+	/* Negative response, so give up */
+	if (!response) return;
+
+	/* Check if the player can afford it */
+	if ((int)player->au < price) {
+		msg("You do not have enough money.");
+		return;
+	}
+
+	/* Pay */
+	player->au -= price;
+	strcpy(buf, store_shortname(ctx));
+
+	/* Shuffle it */
+	store_shuffle(ctx->store);
+	store_maint(ctx->store);
+	msg("%s agrees to sell the store to %s.", buf, store_shortname(ctx));
+
+	/* Close and kick you */
+	*exit = true;
+	ctx->store->bandays = 1;
+	ctx->store->banreason = strdup("This store is under new management. It will re-open tomorrow at dawn.");
+
+	/* Update the display */
+	event_signal(EVENT_STORECHANGED);
+}
+
+static void store_do_buy(struct store *store)
+{
+	store_your_name(store);
+
+	store->bandays = 0;
+	store->layaway_idx = -1;
+	store->income = 0;
+
+	/* Update the display */
+	event_signal(EVENT_STORECHANGED);
+}
+
+static void store_do_sell(struct store *store)
+{
+	store->bandays = 0;
+	store->layaway_idx = -1;
+	store->income = 0;
+
+	/* Update the display */
+	event_signal(EVENT_STORECHANGED);
+}
+
+/* buys the store for yourself */
+static void store_buy(struct store_context *ctx, bool *exit)
+{
+	struct store *store = ctx->store;
+	if (store->sidx == STORE_HOME) {
+		msg("It's all yours, and it's staying that way.");
+		return;
+	} else if (you_own(store)) {
+		/* Already own it.
+		 * Sell?
+		 * To avoid being able to make money from speculating here - the price of stock (which can change) is ignored.
+		 * The previous owner's max_cost isn't known so must also be ignored.
+		 * This gives a flat price which if always below $100k will always be less than the price bought for.
+		 * It could change with CHR, level, etc. though.
+		 * It could also be entirely random (as it is now, below), so long as it only changes daily not on every request.
+		 * 
+		 * It should also always be more expensive to buy and then sell, than it would be to ask for a reshuffle (unless the previous
+		 * owner was stored) - for this to be always the case:
+		 * 		The maximum value (4 s.d.s above the mean) of the Rand_normal below must be above the constant in the buy price.
+		 * 		The multiplier in the owner->max_cost term of the buy price must be at least as high as the one in store_replace.
+		 * 		The divisor in the store_price_all() term of the buy price must be at least as low as the one in store_replace.
+		 **/
+		rng_state state;
+		Rand_extract_state(&state);
+		int day = turn / (10L * z_info->day_length);
+		Rand_state_init((day * 53) + store->sidx);
+		int price = 100 * Rand_normal(650, 80);	/* 4 s.d.s - the max - will give 97000 - below the 100K limit */
+		Rand_restore_state(&state);
+
+		/* Confirm if they really wanted it */
+		screen_save();
+		int response = store_get_check(format("Selling the store will get you $%d. Go ahead? [ESC, any other key to accept]", price));
+		screen_load();
+
+		/* Negative response, so give up */
+		if (!response) return;
+
+		player->au += price;
+
+		/* Buy it */
+		store_shuffle(store);
+		store_maint(store);
+		msg("%s agrees to buy the store from you.\n\n", store_shortname(ctx));
+		store_do_sell(store);
+
+		*exit = true;
+		return;
+	}
+
+	/* Buy price. See selling discussion above before changing */
+	int price = store_roundup((store_price_all(store) / 3) + (store->owner->max_cost * 3) + 100000);
+	
+	/* Confirm if they really wanted it */
+	screen_save();
+	int response = store_get_check(format("Buying the store will cost you $%d. Go ahead? [ESC, any other key to accept]", price));
+	screen_load();
+
+	/* Negative response, so give up */
+	if (!response) return;
+
+	/* Check if the player can afford it */
+	if ((int)player->au < price) {
+		msg("You do not have enough money.");
+		return;
+	}
+
+	/* Pay */
+	player->au -= price;
+
+	/* Buy it */
+	msg("%s agrees to sell the store to you.", store_shortname(ctx));
+	store_do_buy(ctx->store);
+	*exit = true;
+}
+
+/* asks the owner if there is anything they want doing */
+static void store_quest(struct store_context *ctx)
+{
+	struct store *store = ctx->store;
+	if ((store->sidx == STORE_HOME) || (you_own(store))) {
+		// not if it's you? May depend on the quest - some may make sense if differently worded, or should move to another store.
+		msg("You question yourself extensively, but see no gain in WIS.");
+		return;
+	}
+
+	// Scan the quests looking for a quest which is 'available' and based from this store.
+	for(int i=0;i<z_info->quest_max;i++)
+	{
+		struct quest *q = &quests[i];
+		if (q->store == (int)store->sidx) {
+			if (!(q->flags & (QF_ACTIVE | QF_FAILED | QF_SUCCEEDED | QF_UNREWARDED))) {
+				/* Take new quest - ask first */
+				screen_save();
+				int response = store_get_check(q->intro);
+				screen_load();
+				if (response) {
+					/* Accepted */
+					q->flags |= QF_ACTIVE;
+				}
+				return;
+			} else if (q->flags & QF_UNREWARDED) {
+				/* Debrief */
+				if (q->flags & QF_SUCCEEDED) {
+					msg(q->succeed);
+				} else {
+					msg(q->failure);
+				}
+				q->flags &= ~(QF_UNREWARDED | QF_ACTIVE);
+				if (!(q->flags & QF_SUCCEEDED))
+					q->flags |= QF_FAILED;
+				return;
+			} else if (q->flags & QF_ACTIVE) {
+				/* Still in progress */
+				msg("Your task '%s' is still in progress.", q->name);
+			}
+		}
+	}
+
+	msg("%s doesn't have anything that needs to be done right now.", store_shortname(ctx));
+}
+
+/* Select an item from a store's stock.
+ * Returns -1 if cancelled or a non-negative index into the store's stock array if an item is selected.
+ * Items available are filterd through the predicate if this is non-NULL.
+ */
+static int store_select_item(bool (*pred)(struct store *, struct object *))
+{
+	return -1;
+}
+
+/* Returns true if an item is suitable for layaway */
+static bool select_layaway(struct store *store, struct object *obj)
+{
+	return true;
+}
+
+/* Put an item on layaway. Pay 10% now */
+static void store_hold(struct store_context *ctx)
+{
+	/* Clear all current messages */
+	msg_flag = false;
+	prt("", 0, 0);
+
+	/* Check it's not the home or an owned store */
+	struct store *store = ctx->store;
+	if (store->sidx == STORE_HOME || (store->owner == &store->owners[0])) {
+		msg("You pay 10% of the price of an item in your home from your left pocket into your right pocket. A real bargain!");
+		return;
+	}
+	
+	/* Confirm that they really wanted to lose the previous one */
+	if (store->layaway_idx >= 0) {
+		screen_save();
+		msg("You already have a held item. Switching will lose your 10% deposit.");
+		int response = store_get_check(format("Select a new item to hold? [ESC, any other key to accept]"));
+		screen_load();
+
+		/* Negative response, so give up */
+		if (!response) return;
+		
+		/* as it is possible to not select a new item */
+		store->layaway_idx = -1;
+	}
+
+	/* Select an item */
+	msg("Please select an item to hold for you (costing 10% of the item's price)");
+	int o_idx = store_select_item(select_layaway);
+	if (o_idx < 0) {
+		// no valid selection was made
+		return;
+	}
+
+	/* Selected this item from stock */
+	struct object *obj = &store->stock[o_idx];
+	s32b price = (int)price_item(store, obj, false, obj->number);	/* assume that all are wanted */
+	price = (price + 9) / 10;
+	if (price <= 0) {
+		msg("It's already free, and you want it cheaper?!");
+		return;
+	}
+
+	/* And hold the item */
+	store->layaway_idx = o_idx;
+	store->layaway_day = turn / (10L * z_info->day_length);		/* yay */
+
+	/* Pay and update the display */
+	player->au -= price;
+	ctx->flags |= STORE_GOLD_CHANGE;
+	event_signal(EVENT_STORECHANGED);
+}
+
 
 /**
  * Examine an item in a store
@@ -755,27 +1468,26 @@ static void store_examine(struct store_context *ctx, int item)
 		textui_book_browse(obj);
 }
 
-
 static void store_menu_set_selections(struct menu *menu, bool knowledge_menu)
 {
 	if (knowledge_menu) {
 		if (OPT(player, rogue_like_commands)) {
 			/* These two can't intersect! */
-			menu->cmd_keys = "?|Ieilx";
+			menu->cmd_keys = "?|IeilxFQSNOB";
 			menu->selections = "abcdfghjkmnopqrstuvwyz134567";
 		} else {
 			/* These two can't intersect! */
-			menu->cmd_keys = "?|Ieil";
+			menu->cmd_keys = "?|IeilFQSNOB";
 			menu->selections = "abcdfghjkmnopqrstuvwxyz13456";
 		}
 	} else {
 		if (OPT(player, rogue_like_commands)) {
 			/* These two can't intersect! */
-			menu->cmd_keys = "\x04\x05\x10?={|}~CEIPTdegilpswx"; /* \x10 = ^p , \x04 = ^D, \x05 = ^E */
+			menu->cmd_keys = "\x04\x05\x10?={|}~CEIPTdegilpswxFQSNOB"; /* \x10 = ^p , \x04 = ^D, \x05 = ^E */
 			menu->selections = "abcfmnoqrtuvyz13456790ABDFGH";
 		} else {
 			/* These two can't intersect! */
-			menu->cmd_keys = "\x05\x010?={|}~CEIbdegiklpstwx"; /* \x05 = ^E, \x10 = ^p */
+			menu->cmd_keys = "\x05\x010?={|}~CEIbdegiklpstwxFQSNOB"; /* \x05 = ^E, \x10 = ^p */
 			menu->selections = "acfhjmnoqruvyz13456790ABDFGH";
 		}
 	}
@@ -972,7 +1684,7 @@ static void context_menu_store_item(struct store_context *ctx, const int oid, in
 /**
  * Handle store menu input
  */
-static bool store_menu_handle(struct menu *m, const ui_event *event, int oid)
+static bool store_menu_handle(struct menu *m, const ui_event *event, int oid, bool *exit)
 {
 	bool processed = true;
 	struct store_context *ctx = menu_priv(m);
@@ -1024,6 +1736,20 @@ static bool store_menu_handle(struct menu *m, const ui_event *event, int oid)
 		switch (event->key.code) {
 			case 's':
 			case 'd': store_sell(ctx); break;
+
+			case 'S': store_steal(ctx, exit); break;
+
+			case 'F': store_fight(ctx, exit); break;
+
+			case 'N': store_newstock(ctx); break;
+
+			case 'O': store_replace(ctx, exit); break;
+
+			case 'B': store_buy(ctx, exit); break;
+
+			case 'H': store_hold(ctx); break;
+
+			case 'Q': store_quest(ctx); break;
 
 			case 'p':
 			case 'g':
@@ -1200,6 +1926,12 @@ void use_store(game_event_type type, game_event_data *data, void *user)
 
 	/* Check that we're on a store */
 	if (!store) return;
+	
+	/* Check that we aren't banned */
+	if (store->bandays) {
+		msg("%s", store->banreason);
+		return;
+	}
 
 	/*** Display ***/
 
@@ -1209,11 +1941,22 @@ void use_store(game_event_type type, game_event_data *data, void *user)
 
 	/* Get a array version of the store stock, register handler for changes */
 	event_add_handler(EVENT_STORECHANGED, refresh_stock, &ctx);
+
+	/* Before initializing the menu, set up your name if you own it. */
+	if (store->sidx != STORE_HOME)
+		if (you_own(store))
+			store_your_name(store);
+
 	store_menu_init(&ctx, store, false);
 
-	/* Say a friendly hello. */
-	if (store->sidx != STORE_HOME)
-		prt_welcome(store->owner);
+	/* Say a friendly hello - or collect some loot. */
+	if (store->sidx != STORE_HOME) {
+		if (you_own(store)) {
+			collect_from_store(store);
+		} else {
+			prt_welcome(store->owner);
+		}
+	}
 
 	/* Shopping */
 	menu_select(&ctx.menu, 0, false);

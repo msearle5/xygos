@@ -587,10 +587,18 @@ static void player_outfit(struct player *p)
 /**
  * Cost of each "point" of a stat.
  */
-static const int birth_stat_costs[18 + 1] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 4 };
+static const unsigned char birth_stat_costs[STAT_MAX][18 + 1] = {
+	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 5, 6, 7,10,15,20 },
+	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 5, 6, 7,10,15,20 },
+	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 5, 6, 7,10,15,20 },
+	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 5, 6, 7,10,15,20 },
+	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 5, 6, 7,10,15,20 },
+	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1 },
+	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,10,15,25,40,60,100,100,100 },
+};
 
 /* It was feasible to get base 17 in 3 stats with the autoroller */
-#define MAX_BIRTH_POINTS 20 /* 3 * (1+1+1+1+1+1+2) */
+#define MAX_BIRTH_POINTS 150 /* major stats are 50 for 17 */
 
 static void recalculate_stats(int *stats_local_local, int points_left_local)
 {
@@ -647,7 +655,7 @@ static bool buy_stat(int choice, int stats_local[STAT_MAX],
 	if (!(choice >= STAT_MAX || choice < 0) &&	(stats_local[choice] < 18)) {
 		/* Get the cost of buying the extra point (beyond what
 		   it has already cost to get this far). */
-		int stat_cost = birth_stat_costs[stats_local[choice] + 1];
+		int stat_cost = birth_stat_costs[choice][stats_local[choice] + 1];
 
 		if (stat_cost <= *points_left_local) {
 			stats_local[choice]++;
@@ -677,7 +685,7 @@ static bool sell_stat(int choice, int stats_local[STAT_MAX], int points_spent_lo
 {
 	/* Must be a valid stat, and we can't "sell" stats below the base of 10. */
 	if (!(choice >= STAT_MAX || choice < 0) && (stats_local[choice] > 10)) {
-		int stat_cost = birth_stat_costs[stats_local[choice]];
+		int stat_cost = birth_stat_costs[choice][stats_local[choice]];
 
 		stats_local[choice]--;
 		points_spent_local[choice] -= stat_cost;

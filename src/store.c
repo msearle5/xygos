@@ -43,9 +43,6 @@
 #include "target.h"
 #include "debug.h"
 
-
-static void store_maint(struct store *s);
-
 /**
  * ------------------------------------------------------------------------
  * Constants and definitions
@@ -61,6 +58,11 @@ struct store *stores;
  * The hints array
  */
 struct hint *hints;
+
+/**
+ * The lies array
+ */
+struct hint *lies;
 
 
 static const char *obj_flags[] = {
@@ -158,8 +160,12 @@ static enum parser_error parse_store(struct parser *p) {
 
 static enum parser_error parse_slots(struct parser *p) {
 	struct store *s = parser_priv(p);
+	if (!s)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
 	s->normal_stock_min = parser_getuint(p, "min");
 	s->normal_stock_max = parser_getuint(p, "max");
+
 	return PARSE_ERROR_NONE;
 }
 
@@ -253,7 +259,7 @@ static enum parser_error parse_owner(struct parser *p) {
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
 	o = mem_zalloc(sizeof *o);
-	o->oidx = (s->owners ? s->owners->oidx + 1 : 0);
+	o->oidx = (s->owners ? s->owners->oidx + 1 : 1);
 	o->next = s->owners;
 	o->name = name;
 	o->max_cost = maxcost;
@@ -330,7 +336,6 @@ static struct file_parser store_parser = {
 	NULL
 };
 
-
 /**
  * ------------------------------------------------------------------------
  * Other init stuff
@@ -370,6 +375,12 @@ void store_reset(void) {
 
 	for (i = 0; i < MAX_STORES; i++) {
 		s = &stores[i];
+		s->bandays = 0;
+		s->banreason = "";
+		s->layaway_idx = -1;
+		s->layaway_day = 0;
+		s->destroy = false;
+		s->income = 0;
 		s->stock_num = 0;
 		store_shuffle(s);
 		object_pile_free(s->stock);
@@ -576,6 +587,12 @@ static bool store_will_buy(struct store *store, const struct object *obj)
  * Basics: pricing, generation, etc.
  * ------------------------------------------------------------------------ */
 
+/* Returns true if you own the store (= owner is the first in the list) */
+bool you_own(struct store *store)
+{
+	return (store->owner == store->owners);
+}
+
 
 /**
  * Determine the price of an object (qty one) in a store.
@@ -593,7 +610,7 @@ static bool store_will_buy(struct store *store, const struct object *obj)
 int price_item(struct store *store, const struct object *obj,
 			   bool store_buying, int qty)
 {
-	int adjust = 100;
+	int adjust = 110;
 	int price;
 	struct owner *proprietor;
 
@@ -615,41 +632,36 @@ int price_item(struct store *store, const struct object *obj,
 		return 0;
 	}
 
-	/* The black market is always a worse deal */
-	if (store->sidx == STORE_B_MARKET)
-		adjust = 150;
+	if (!you_own(store)) {
+		/* This adjusts the price (in either direction) based on CHA
+		 * and level, with CHA being more important at low level and
+		 * the proportion that is dependent on level increasing at high
+		 * level (that is, at level 25 less than half of the advantage
+		 * of high level has occurred).
+		 */
+		adjust += (3000 - (player->lev * player->lev)) /
+			((3 + player->state.stat_ind[STAT_CHR]) * 10);
+
+		/* The black market is always a worse deal (for the rest of them) */
+		if (store->sidx == STORE_B_MARKET)
+			adjust = (adjust * 2) + 50;
+	}
 
 	/* Shop is buying */
 	if (store_buying) {
 		/* Set the factor */
-		adjust = 100 + (100 - adjust);
-		if (adjust > 100) {
-			adjust = 100;
-		}
-
-		/* Shops now pay 2/3 of true value */
-		price = price * 2 / 3;
-
-		/* Black market sucks */
-		if (store->sidx == STORE_B_MARKET) {
-			price = price / 2;
-		}
+		adjust = 10000 / adjust;
 
 		/* Check for no_selling option */
-		if (OPT(player, birth_no_selling)) {
+		if (OPT(player, birth_no_selling))
 			return 0;
-		}
+
 	} else {
 		/* Re-evaluate if we're selling */
 		if (tval_can_have_charges(obj)) {
 			price = object_value_real(obj, qty);
 		} else {
 			price = object_value_real(obj, 1);
-		}
-
-		/* Black market sucks */
-		if (store->sidx == STORE_B_MARKET) {
-			price = price * 2;
 		}
 	}
 
@@ -661,8 +673,16 @@ int price_item(struct store *store, const struct object *obj,
 		price *= qty;
 	}
 
+	/* Layaway - later, to avoid rounding errors. 90% same day, +25% per day */
+	if (obj == &store->stock[store->layaway_idx]) {
+		int base = price- (price/10);
+		int today = turn / (10L * z_info->day_length);
+		int days = today - store->layaway_day;
+		price = base + (days * (price/4));
+	}
+
 	/* Now limit the price to the purse limit */
-	if (store_buying && (price > proprietor->max_cost * qty)) {
+	if (store_buying && proprietor->max_cost && (price > proprietor->max_cost * qty)) {
 		price = proprietor->max_cost * qty;
 	}
 
@@ -1091,6 +1111,14 @@ static void store_delete_random(struct store *store)
 		history_lose_artifact(player, obj->artifact);
 	}
 
+	/* If you own the store, ka-ching.
+	 * This at first sight is an infinite money source - but in fact it is limited by
+	 * the limited amount of time you have with the town available.
+	 **/
+	if (you_own(store)) {
+		store->income += 1 + (price_item(store, obj, false, num) / 4);
+	}
+
 	/* Delete the item, wholly or in part */
 	store_delete(store, obj, num);
 }
@@ -1281,7 +1309,7 @@ static struct object *store_create_item(struct store *store,
 /**
  * Maintain the inventory at the stores.
  */
-static void store_maint(struct store *s)
+void store_maint(struct store *s)
 {
 	/* Ignore home */
 	if (s->sidx == STORE_HOME)
@@ -1410,6 +1438,14 @@ void store_update(void)
 			/* Skip the home */
 			if (n == STORE_HOME) continue;
 
+			if (stores[n].bandays > 0) {
+				stores[n].bandays--;
+				if (stores[n].bandays == 0) {
+					free((void *)stores[n].banreason);
+					stores[n].banreason = NULL;
+				}
+			}
+
 			/* Maintain */
 			store_maint(&stores[n]);
 		}
@@ -1454,7 +1490,7 @@ static struct owner *store_choose_owner(struct store *s) {
 		n++;
 	}
 
-	n = randint0(n);
+	n = randint1(n-1);
 	return store_ownerbyidx(s, n);
 }
 
@@ -1469,6 +1505,7 @@ void store_shuffle(struct store *store)
 	    o = store_choose_owner(store);
 
 	store->owner = o;
+	store->bandays = 0;
 }
 
 
@@ -1478,7 +1515,6 @@ void store_shuffle(struct store *store)
  * ------------------------------------------------------------------------
  * Higher-level code
  * ------------------------------------------------------------------------ */
-
 
 /**
  * Return the quantity of a given item in the pack (include quiver).

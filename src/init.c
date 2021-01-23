@@ -2205,6 +2205,8 @@ static enum parser_error parse_p_race_stats(struct parser *p) {
 	r->r_adj[STAT_CON] = parser_getint(p, "con");
 	r->r_adj[STAT_INT] = parser_getint(p, "int");
 	r->r_adj[STAT_WIS] = parser_getint(p, "wis");
+	r->r_adj[STAT_CHR] = parser_getint(p, "chr");
+	r->r_adj[STAT_SPD] = parser_getint(p, "spd");
 	return PARSE_ERROR_NONE;
 }
 
@@ -2426,7 +2428,7 @@ struct parser *init_parse_p_race(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
 	parser_reg(p, "name str name", parse_p_race_name);
-	parser_reg(p, "stats int str int int int wis int dex int con", parse_p_race_stats);
+	parser_reg(p, "stats int str int int int wis int dex int con int chr int spd", parse_p_race_stats);
 	parser_reg(p, "skill-disarm-phys int disarm", parse_p_race_skill_disarm_phys);
 	parser_reg(p, "skill-disarm-magic int disarm", parse_p_race_skill_disarm_magic);
 	parser_reg(p, "skill-device int device", parse_p_race_skill_device);
@@ -2988,6 +2990,8 @@ static enum parser_error parse_class_stats(struct parser *p) {
 	c->c_adj[STAT_WIS] = parser_getint(p, "wis");
 	c->c_adj[STAT_DEX] = parser_getint(p, "dex");
 	c->c_adj[STAT_CON] = parser_getint(p, "con");
+	c->c_adj[STAT_CHR] = parser_getint(p, "chr");
+	c->c_adj[STAT_SPD] = parser_getint(p, "spd");
 	return PARSE_ERROR_NONE;
 }
 
@@ -3479,7 +3483,7 @@ struct parser *init_parse_class(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
 	parser_reg(p, "name str name", parse_class_name);
-	parser_reg(p, "stats int str int int int wis int dex int con",
+	parser_reg(p, "stats int str int int int wis int dex int con int chr int spd",
 			   parse_class_stats);
 	parser_reg(p, "skill-disarm-phys int base int incr",
 			   parse_class_skill_disarm_phys);
@@ -3732,6 +3736,58 @@ static struct file_parser death_parser = {
 	cleanup_death
 };
 
+/**
+ * ------------------------------------------------------------------------
+ * Initialize lies
+ * ------------------------------------------------------------------------ */
+
+static enum parser_error parse_lie(struct parser *p) {
+	struct hint *h = parser_priv(p);
+	struct hint *new = mem_zalloc(sizeof *new);
+
+	new->hint = string_make(parser_getstr(p, "text"));
+	new->next = h;
+
+	parser_setpriv(p, new);
+	return PARSE_ERROR_NONE;
+}
+
+struct parser *init_parse_lies(void) {
+	struct parser *p = parser_new();
+	parser_reg(p, "R str text", parse_lie);
+	return p;
+}
+
+static errr run_parse_lies(struct parser *p) {
+	return parse_file_quit_not_found(p, "lies");
+}
+
+static errr finish_parse_lies(struct parser *p) {
+	lies = parser_priv(p);
+	parser_destroy(p);
+	return 0;
+}
+
+static void cleanup_lies(void)
+{
+	struct hint *h, *next;
+
+	h = lies;
+	while(h) {
+		next = h->next;
+		string_free(h->hint);
+		mem_free(h);
+		h = next;
+	}
+}
+
+static struct file_parser lies_parser = {
+	"lies",
+	init_parse_lies,
+	run_parse_lies,
+	finish_parse_lies,
+	cleanup_lies
+};
 
 /**
  * ------------------------------------------------------------------------
@@ -3832,11 +3888,22 @@ static struct {
 	{ "monster lore" , &lore_parser },
 	{ "traps", &trap_parser },
 	{ "chest_traps", &chest_trap_parser },
-	{ "quests", &quests_parser },
 	{ "flavours", &flavor_parser },
 	{ "hints", &hints_parser },
+	{ "lies", &lies_parser },
 	{ "death", &death_parser },
 	{ "random names", &names_parser }
+};
+
+/**
+ * A list of parsers for arrays that must be initialized later than most modules
+ * (e.g. because they rely on store names)
+ */
+static struct {
+	const char *name;
+	struct file_parser *parser;
+} lpl[] = {
+	{ "quests", &quests_parser }
 };
 
 /**
@@ -3859,6 +3926,20 @@ void init_arrays(void)
 	}
 }
 
+/* Initialize late arrays */
+void init_late_arrays(void)
+{
+	unsigned int i;
+
+	for (i = 0; i < N_ELEMENTS(lpl); i++) {
+		char *msg = string_make(format("Initializing %s...", lpl[i].name));
+		event_signal_message(EVENT_INITSTATUS, 0, msg);
+		string_free(msg);
+		if (run_parser(lpl[i].parser))
+			quit_fmt("Cannot initialize %s.", lpl[i].name);
+	}
+}
+
 /**
  * Free all the internal arrays
  */
@@ -3872,10 +3953,26 @@ static void cleanup_arrays(void)
 	cleanup_parser(pl[0].parser);
 }
 
+static void cleanup_late_arrays(void)
+{
+	unsigned int i;
+
+	for (i = 1; i < N_ELEMENTS(lpl); i++)
+		cleanup_parser(lpl[i].parser);
+
+	cleanup_parser(lpl[0].parser);
+}
+
 static struct init_module arrays_module = {
 	.name = "arrays",
 	.init = init_arrays,
 	.cleanup = cleanup_arrays
+};
+
+static struct init_module late_arrays_module = {
+	.name = "late arrays",
+	.init = init_late_arrays,
+	.cleanup = cleanup_late_arrays
 };
 
 
@@ -3904,6 +4001,7 @@ static struct init_module *modules[] = {
 	&ignore_module,
 	&mon_make_module,
 	&store_module,
+	&late_arrays_module,
 	&options_module,
 	&ui_player_module,
 	&ui_equip_cmp_module,
@@ -3917,7 +4015,7 @@ static struct init_module *modules[] = {
  * The only input/output in this file should be via event_signal_string().
  * We cannot rely on any particular UI as this part should be UI-agnostic.
  * We also cannot rely on anything else having being initialised into any
- * particlar state.  Which is why you'd be calling this function in the 
+ * particular state.  Which is why you'd be calling this function in the 
  * first place.
  *
  * Old comment, not sure if still accurate:

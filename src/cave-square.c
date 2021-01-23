@@ -945,6 +945,12 @@ const struct square *square(struct chunk *c, struct loc grid)
 	return &c->squares[grid.y][grid.x];
 }
 
+byte square_tag(struct chunk *c, struct loc grid)
+{
+	assert(square_in_bounds(c, grid));
+	return square(c, grid)->tag;
+}
+
 struct feature *square_feat(struct chunk *c, struct loc grid)
 {
 	assert(square_in_bounds(c, grid));
@@ -1192,6 +1198,14 @@ static void square_set_known_feat(struct chunk *c, struct loc grid, int feat)
 void square_set_mon(struct chunk *c, struct loc grid, int midx)
 {
 	c->squares[grid.y][grid.x].mon = midx;
+}
+
+/**
+ * Set the tag square.
+ */
+void square_set_tag(struct chunk *c, struct loc grid, byte tag)
+{
+	c->squares[grid.y][grid.x].tag = tag;
 }
 
 /**

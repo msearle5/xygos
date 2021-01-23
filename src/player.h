@@ -137,8 +137,25 @@ struct quest
 	char *name;
 	byte level;					/* Dungeon level */
 	struct monster_race *race;	/* Monster race */
-	int cur_num;				/* Number killed (unused) */
-	int max_num;				/* Number required (unused) */
+	s32b cur_num;				/* Number killed (unused) */
+	s32b max_num;				/* Number required (unused) */
+	s32b store;					/* Store the quest is given from; can be STORE_NONE (-1) */
+	u32b flags;
+	char *intro;				/* Description given when you choose whether to take it */
+	char *desc;					/* Description given in a list of known quests */
+	char *succeed;				/* Message given on success */
+	char *failure;				/* Message given on failure */
+	char *unlock;				/* The name of a quest unlocked on success */
+};
+
+/**
+ * Quest flags
+ */
+enum {
+	QF_ACTIVE = 		0x01,
+	QF_SUCCEEDED = 		0x02,
+	QF_FAILED = 		0x04,
+	QF_UNREWARDED = 	0x08,
 };
 
 /**

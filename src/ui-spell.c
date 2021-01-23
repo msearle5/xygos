@@ -107,7 +107,7 @@ static void spell_menu_display(struct menu *m, int oid, bool cursor,
 /**
  * Handle an event on a menu row.
  */
-static bool spell_menu_handler(struct menu *m, const ui_event *e, int oid)
+static bool spell_menu_handler(struct menu *m, const ui_event *e, int oid, bool *exit)
 {
 	struct spell_menu_data *d = menu_priv(m);
 

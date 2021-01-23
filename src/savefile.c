@@ -70,6 +70,11 @@
  */
 
 /**
+ * Global "currently saving, not loading"
+ */
+bool saving;
+
+/**
  * Global "we've just saved" variable
  */
 bool character_saved;
@@ -219,6 +224,11 @@ static byte sf_get(void)
  * Accessor functions
  * ------------------------------------------------------------------------ */
 
+void wr_bool(bool v)
+{
+	sf_put(v);
+}
+
 void wr_byte(byte v)
 {
 	sf_put(v);
@@ -258,6 +268,10 @@ void wr_string(const char *str)
 	wr_byte(*str);
 }
 
+void rd_bool(bool *ip)
+{
+	*ip = sf_get();
+}
 
 void rd_byte(byte *ip)
 {
@@ -314,6 +328,65 @@ void pad_bytes(int n)
 	while (n--) wr_byte(0);
 }
 
+void rdwr_bool(bool *v)
+{
+	if (saving)
+		wr_bool(*v);
+	else
+		rd_bool(v);
+}
+
+void rdwr_byte(byte *v)
+{
+	if (saving)
+		wr_byte(*v);
+	else
+		rd_byte(v);
+}
+
+void rdwr_u16b(u16b *v)
+{
+	if (saving)
+		wr_u16b(*v);
+	else
+		rd_u16b(v);
+}
+
+void rdwr_s16b(s16b *v)
+{
+	if (saving)
+		wr_s16b(*v);
+	else
+		rd_s16b(v);
+}
+
+void rdwr_u32b(u32b *v)
+{
+	if (saving)
+		wr_u32b(*v);
+	else
+		rd_u32b(v);
+}
+
+void rdwr_s32b(s32b *v)
+{
+	if (saving)
+		wr_s32b(*v);
+	else
+		rd_s32b(v);
+}
+
+void rdwr_string(char **str)
+{
+	char buf[4096];
+	if (saving)
+		wr_string(*str);
+	else {
+		rd_string(buf, sizeof(buf));
+		buf[sizeof(buf)-1] = 0;
+		*str = string_make(buf);
+	}
+}
 
 /**
  * ------------------------------------------------------------------------
@@ -377,6 +450,9 @@ bool savefile_save(const char *path)
 	int count = 0;
 	char new_savefile[1024];
 	char old_savefile[1024];
+
+	/* Now saving */
+	saving = true;
 
 	/* Generate a CharOutput.txt, mainly for angband.live, when saving. */
 	(void) save_charoutput();
@@ -551,6 +627,9 @@ static bool try_load(ang_file *f, const struct blockinfo *local_loaders)
 {
 	struct blockheader b;
 	errr err;
+
+	/* Now loading */
+	saving = false;
 
 	if (!check_header(f)) {
 		note("Savefile is corrupted -- incorrect file header.");

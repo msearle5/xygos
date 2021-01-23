@@ -56,7 +56,6 @@ static void put_str_centred(int y, int x1, int x2, const char *fmt, ...)
 	put_str(tmp, y, x);
 }
 
-
 /**
  * Display the tombstone
  */
@@ -89,7 +88,7 @@ static void print_tomb(void)
 	if (player->total_winner)
 		put_str_centred(line++, 8, 8+31, "Magnificent");
 	else
-		put_str_centred(line++, 8, 8+31, "%s", player->class->title[(player->lev - 1) / 5]);
+		put_str_centred(line++, 8, 8+31, "%s", player_title());
 
 	line++;
 

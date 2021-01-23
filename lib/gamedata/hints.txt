@@ -159,7 +159,16 @@ H:Overeating can be bad for your health if there are others nearby.
 H:Pay attention to how your enemies move - some are erratic, some can blink.
 H:Blinking is a good escape if the terrain is appropriate.
 H:Poison will kill you slowly.
-H:pills of Heroism or Berserk Strength will protect you from being scared. 
+H:Even among the same type, some enemies will be faster or slower than others.
+H:Monsters' breath weapons grow less dangerous as they lose hitpoints.
+H:A wounded enemy's spells are as strong as a healthy one's.
+H:Don't worry about using up your consumables to stay alive.
+H:If you're in a bad situation, take a breather and "I"nspect all your gear.
+H:When a character dies, memories of monsters she has fought are passed on.
+H:Even the most powerful characters can be made useless by blindness.
+H:Even the most powerful characters can be made useless by confusion.
+H:Finding a way to resist blindness and confusion are critical to survival.
+H:Pills are available which can will protect you from being scared.
 H:Probing an enemy to learn its abilities is always useful.
 H:Quivers can hold different types of ammo in one inventory slot (max. 40).
 H:Recall will send you to and from the depths.

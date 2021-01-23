@@ -950,7 +950,7 @@ void get_item_display(struct menu *menu, int oid, bool cursor, int row,
 /**
  * Deal with events on the get_item menu
  */
-bool get_item_action(struct menu *menu, const ui_event *event, int oid)
+bool get_item_action(struct menu *menu, const ui_event *event, int oid, bool *item)
 {
 	struct object_menu_data *choice = menu_priv(menu);
 	char key = event->key.code;
@@ -1064,7 +1064,7 @@ static void item_menu_browser(int oid, void *data, const region *local_area)
 /**
  * Display list items to choose from
  */
-struct object *item_menu(cmd_code cmd, int prompt_size, int mode)
+struct object *item_menu(cmd_code cmd, int prompt_size, int mode, bool *item)
 {
 	menu_iter menu_f = { get_item_tag, get_item_validity, get_item_display,
 						 get_item_action, 0 };
@@ -1491,7 +1491,7 @@ bool textui_get_item(struct object **choice, const char *pmt, const char *str,
 			newmenu = false;
 
 			/* Get an item choice */
-			*choice = item_menu(cmd, MAX(pmt ? strlen(pmt) : 0, 15), mode);
+			*choice = item_menu(cmd, MAX(pmt ? strlen(pmt) : 0, 15), mode, NULL);
 
 			/* Fix the screen */
 			screen_load();

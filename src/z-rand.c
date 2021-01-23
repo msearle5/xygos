@@ -96,11 +96,38 @@ static bool rand_fixed = false;
 static u32b rand_fixval = 0;
 
 /**
+ * Keep a copy of the RNG's state
+ */
+void Rand_extract_state(rng_state *state)
+{
+	memcpy(state->state, STATE, sizeof(STATE));
+	state->z0 = z0;
+	state->z1 = z1;
+	state->z2 = z2;
+	state->state_i = state_i;
+}
+
+/**
+ * Restore RNG's state from an external copy
+ */
+void Rand_restore_state(rng_state *state)
+{
+	memcpy(STATE, state->state, sizeof(STATE));
+	z0 = state->z0;
+	z1 = state->z1;
+	z2 = state->z2;
+	state_i = state->state_i;
+}
+
+/**
  * Initialize the complex RNG using a new seed.
  */
 void Rand_state_init(u32b seed)
 {
 	int i, j;
+
+	/* Reset */
+	z0 = z1 = z2 = state_i = 0;
 
 	/* Seed the table */
 	STATE[0] = seed;

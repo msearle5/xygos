@@ -47,6 +47,7 @@ bool savefile_load(const char *path, bool cheat_death);
  */
 const char *savefile_get_description(const char *path);
 
+extern bool saving;
 
 /**
  * ------------------------------------------------------------------------
@@ -57,7 +58,17 @@ const char *savefile_get_description(const char *path);
 /* Utility */
 void note(const char *msg);
 
+/* Read/Writing bits */
+void rdwr_bool(bool *v);
+void rdwr_byte(byte *v);
+void rdwr_u16b(u16b *v);
+void rdwr_s16b(s16b *v);
+void rdwr_u32b(u32b *v);
+void rdwr_s32b(s32b *v);
+void rdwr_string(char **str);
+
 /* Writing bits */
+void wr_bool(bool v);
 void wr_byte(byte v);
 void wr_u16b(u16b v);
 void wr_s16b(s16b v);
@@ -67,6 +78,7 @@ void wr_string(const char *str);
 void pad_bytes(int n);
 
 /* Reading bits */
+void rd_bool(bool *ip);
 void rd_byte(byte *ip);
 void rd_u16b(u16b *ip);
 void rd_s16b(s16b *ip);
@@ -108,6 +120,7 @@ void wr_options(void);
 void wr_messages(void);
 void wr_monster_memory(void);
 void wr_object_memory(void);
+void rdwr_quests(void);
 void wr_quests(void);
 void wr_artifacts(void);
 void wr_player(void);

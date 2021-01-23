@@ -1423,17 +1423,23 @@ void mod_message(struct object *obj, int mod)
 			else if (obj->modifiers[OBJ_MOD_CON] < 0)
 				msg("You feel sicklier!");
 			break;
+		case OBJ_MOD_CHR:
+			if (obj->modifiers[OBJ_MOD_CHR] > 0)
+				msg("You feel more confident!");
+			else if (obj->modifiers[OBJ_MOD_CHR] < 0)
+				msg("You feel less confident.");
+			break;
+		case OBJ_MOD_SPD:
+			if (obj->modifiers[OBJ_MOD_SPD] > 0)
+				msg("You feel strangely quick.");
+			else if (obj->modifiers[OBJ_MOD_SPD] < 0)
+				msg("You feel strangely sluggish.");
+			break;
 		case OBJ_MOD_STEALTH:
 			if (obj->modifiers[OBJ_MOD_STEALTH] > 0)
 				msg("You feel stealthier.");
 			else if (obj->modifiers[OBJ_MOD_STEALTH] < 0)
 				msg("You feel noisier.");
-			break;
-		case OBJ_MOD_SPEED:
-			if (obj->modifiers[OBJ_MOD_SPEED] > 0)
-				msg("You feel strangely quick.");
-			else if (obj->modifiers[OBJ_MOD_SPEED] < 0)
-				msg("You feel strangely sluggish.");
 			break;
 		case OBJ_MOD_BLOWS:
 			if (obj->modifiers[OBJ_MOD_BLOWS] > 0)

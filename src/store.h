@@ -60,6 +60,12 @@ struct store {
 	struct owner *owner;
 	unsigned int sidx;
 	const char *name;
+	unsigned int bandays;
+	const char *banreason;
+	s32b layaway_idx;
+	s32b layaway_day;
+	s32b income;
+	bool destroy;				/* Destroy when next entering the town */
 
 	byte stock_num;				/* Stock -- Number of entries */
 	s16b stock_size;			/* Stock -- Total Size of Array */
@@ -85,9 +91,10 @@ struct store {
 };
 
 extern struct store *stores;
-
+bool you_own(struct store *store);
 struct store *store_at(struct chunk *c, struct loc grid);
 void store_init(void);
+void store_maint(struct store *s);
 void free_stores(void);
 void store_stock_list(struct store *store, struct object **list, int n);
 void home_carry(struct object *obj);

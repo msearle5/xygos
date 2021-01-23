@@ -18,10 +18,11 @@ owner:5000:Bilbo the Friendly (Hobbit)
 owner:10000:Rincewind the Chicken (Human)
 owner:20000:Snafu the Midget (Gnome)
 owner:30000:Lyar-el the Comely (Elf)
+owner:0:-
 slots:0:4
 turnover:2
 always:cloak:Cloak
-always:food:Ration of Food
+always:food:Apple
 always:light:Wooden Torch
 always:flask:Flask of Oil
 always:digger:Shovel
@@ -50,6 +51,7 @@ owner:5000:Kon-Dar the Ugly (Half-Orc)
 owner:10000:Darg-Low the Grim (Human)
 owner:25000:Decado the Handsome (Dunadan)
 owner:30000:Mauglin the Grumpy (Dwarf)
+owner:0:-
 slots:6:18
 turnover:9
 normal:boots:Pair of Leather Sandals
@@ -86,6 +88,7 @@ owner:5000:Ithyl-Mak the Beastly (Half-Troll)
 owner:10000:Arndal Beast-Slayer (Half-Elf)
 owner:25000:Tarl Beast-Master (Hobbit)
 owner:30000:Oglign Dragon-Slayer (Dwarf)
+owner:0:-
 slots:3:14
 turnover:9
 normal:shot:Iron Shot
@@ -132,6 +135,7 @@ owner:15000:Ludwig the Humble (Human)
 owner:20000:Gunnar the Paladin (Human)
 owner:25000:Delilah the Pure (Elf)
 owner:30000:Bosk the Wise (Dwarf)
+owner:0:-
 slots:0:2
 turnover:0
 always:prayer book
@@ -149,6 +153,7 @@ owner:10000:Mauser the Chemist (Half-Elf)
 owner:10000:Wizzle the Chaotic (Hobbit)
 owner:15000:Ga-nat the Greedy (Gnome)
 owner:15000:Vella the Slender (Human)
+owner:0:-
 slots:6:10
 turnover:9
 always:scroll:Word of Recall
@@ -179,6 +184,7 @@ owner:15000:Ariel the Sorceress (Half-Elf)
 owner:20000:Buggerby the Great (Gnome)
 owner:25000:Inglorian the Mage (Human)
 owner:30000:Luthien Starshine (High-Elf)
+owner:0:-y
 slots:4:14
 turnover:9
 normal:ring:Searching
@@ -211,6 +217,7 @@ owner:15000:Lo-Hak the Awful (Half-Troll)
 owner:20000:Histor the Goblin (Kobold)
 owner:25000:Durwin the Shifty (Half-Orc)
 owner:30000:Drago the Fair (Elf)
+owner:0:-
 slots:6:18
 turnover:9
 

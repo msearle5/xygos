@@ -40,6 +40,7 @@ struct obj_property *lookup_obj_property(int type, int index)
 		}
 	}
 
+	abort();
 	return NULL;
 }
 

@@ -540,7 +540,7 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 	}
 
 	/* has speed */
-	if (obj->modifiers[OBJ_MOD_SPEED] != 0)
+	if (obj->modifiers[OBJ_MOD_SPD] != 0)
 		add_stats(ST_SPEED_EQUIPMENT, vault, mon, number);
 
 	/* has telepathy */

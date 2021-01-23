@@ -949,6 +949,22 @@ static void melee_effect_handler_LOSE_CON(melee_effect_handler_context_t *contex
 }
 
 /**
+ * Melee effect handler: Drain the player's charisma.
+ */
+static void melee_effect_handler_LOSE_CHR(melee_effect_handler_context_t *context)
+{
+	melee_effect_stat(context, STAT_CHR);
+}
+
+/**
+ * Melee effect handler: Drain the player's speed.
+ */
+static void melee_effect_handler_LOSE_SPD(melee_effect_handler_context_t *context)
+{
+	melee_effect_stat(context, STAT_SPD);
+}
+
+/**
  * Melee effect handler: Drain all of the player's stats.
  */
 static void melee_effect_handler_LOSE_ALL(melee_effect_handler_context_t *context)
@@ -957,11 +973,8 @@ static void melee_effect_handler_LOSE_ALL(melee_effect_handler_context_t *contex
 	if (monster_damage_target(context, true)) return;
 
 	/* Damage (stats) */
-	effect_simple(EF_DRAIN_STAT, source_monster(context->mon->midx), "0", STAT_STR, 0, 0, 0, 0, &context->obvious);
-	effect_simple(EF_DRAIN_STAT, source_monster(context->mon->midx), "0", STAT_DEX, 0, 0, 0, 0, &context->obvious);
-	effect_simple(EF_DRAIN_STAT, source_monster(context->mon->midx), "0", STAT_CON, 0, 0, 0, 0, &context->obvious);
-	effect_simple(EF_DRAIN_STAT, source_monster(context->mon->midx), "0", STAT_INT, 0, 0, 0, 0, &context->obvious);
-	effect_simple(EF_DRAIN_STAT, source_monster(context->mon->midx), "0", STAT_WIS, 0, 0, 0, 0, &context->obvious);
+	for(int i=0;i<STAT_MAX;i++)
+		effect_simple(EF_DRAIN_STAT, source_monster(context->mon->midx), "0", i, 0, 0, 0, 0, &context->obvious);
 }
 
 /**
@@ -1099,6 +1112,8 @@ melee_effect_handler_f melee_handler_for_blow_effect(const char *name)
 		{ "LOSE_WIS", melee_effect_handler_LOSE_WIS },
 		{ "LOSE_DEX", melee_effect_handler_LOSE_DEX },
 		{ "LOSE_CON", melee_effect_handler_LOSE_CON },
+		{ "LOSE_CHR", melee_effect_handler_LOSE_CHR },
+		{ "LOSE_SPD", melee_effect_handler_LOSE_SPD },
 		{ "LOSE_ALL", melee_effect_handler_LOSE_ALL },
 		{ "SHATTER", melee_effect_handler_SHATTER },
 		{ "EXP_10", melee_effect_handler_EXP_10 },
