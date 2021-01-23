@@ -112,6 +112,10 @@ static s16b art_idx_cloak[] = {
 	ART_IDX_CLOAK_AC,
 	ART_IDX_CLOAK_STEALTH
 };
+static s16b art_idx_belt[] = {
+	ART_IDX_BELT_AC,
+	ART_IDX_BELT_STEALTH
+};
 static s16b art_idx_armor[] = {
 	ART_IDX_ARMOR_AC,
 	ART_IDX_ARMOR_STEALTH,
@@ -314,6 +318,8 @@ static void store_base_power(struct artifact_set_data *data)
 			data->glove_total++; break;
 		case TV_BOOTS:
 			data->boot_total++; break;
+		case TV_BELT:
+			data->belt_total++; break;
 		case TV_NULL:
 			break;
 		default:
@@ -536,6 +542,9 @@ void count_nonweapon_abilities(const struct artifact *art,
 		} else if (art->tval == TV_CLOAK) {
 			file_putf(log_file, "Adding %d for AC bonus - cloak\n", bonus);
 			(data->art_probs[ART_IDX_CLOAK_AC]) += bonus;
+		} else if (art->tval == TV_BELT) {
+			file_putf(log_file, "Adding %d for AC bonus - belt\n", bonus);
+			(data->art_probs[ART_IDX_CLOAK_AC]) += bonus;
 		} else if (art->tval == TV_SOFT_ARMOR ||
 				   art->tval == TV_HARD_ARMOR ||
 				   art->tval == TV_DRAG_ARMOR) {
@@ -705,6 +714,9 @@ void count_modifiers(const struct artifact *art, struct artifact_set_data *data)
 		} else if (art->tval == TV_CLOAK) {
 			file_putf(log_file, "Adding 1 for stealth bonus on cloak.\n");
 			(data->art_probs[ART_IDX_CLOAK_STEALTH])++;
+		} else if (art->tval == TV_BELT) {
+			file_putf(log_file, "Adding 1 for stealth bonus on cloak.\n");
+			(data->art_probs[ART_IDX_BELT_STEALTH])++;
 		} else if (art->tval == TV_SOFT_ARMOR || art->tval == TV_HARD_ARMOR ||
 				   art->tval == TV_DRAG_ARMOR) {
 			file_putf(log_file, "Adding 1 for stealth bonus on armor.\n");
@@ -1140,7 +1152,7 @@ static void rescale_freqs(struct artifact_set_data *data)
 
 	/* All general armor abilities */
 	temp = data->armor_total + data->boot_total + data->shield_total +
-		data->headgear_total + data->cloak_total + data->glove_total;
+		data->headgear_total + data->cloak_total + data->belt_total + data->glove_total;
 	for (i = 0; i < N_ELEMENTS(art_idx_allarmor); i++)
 		data->art_probs[art_idx_allarmor[i]] =
 			(data->art_probs[art_idx_allarmor[i]] *	data->total)
@@ -1175,6 +1187,12 @@ static void rescale_freqs(struct artifact_set_data *data)
 		data->art_probs[art_idx_cloak[i]] =
 			(data->art_probs[art_idx_cloak[i]] * data->total)
 			/ data->cloak_total;
+
+	/* Belts */
+	for (i = 0; i < N_ELEMENTS(art_idx_cloak); i++)
+		data->art_probs[art_idx_belt[i]] =
+			(data->art_probs[art_idx_belt[i]] * data->total)
+			/ data->belt_total;
 
 	/* Body armor */
 	for (i = 0; i < N_ELEMENTS(art_idx_armor); i++)
@@ -1420,6 +1438,7 @@ void artifact_prep(struct artifact *art, const struct object_kind *kind,
 		case TV_CROWN:
 		case TV_SHIELD:
 		case TV_CLOAK:
+		case TV_BELT:
 		case TV_SOFT_ARMOR:
 		case TV_HARD_ARMOR:
 		case TV_DRAG_ARMOR:
@@ -1505,7 +1524,7 @@ static void build_freq_table(struct artifact *art, int *freq,
 	/* General armor abilities */
 	if (art->tval == TV_BOOTS || art->tval == TV_GLOVES ||
 		art->tval == TV_HELM || art->tval == TV_CROWN ||
-		art->tval == TV_SHIELD || art->tval == TV_CLOAK ||
+		art->tval == TV_SHIELD || art->tval == TV_CLOAK || art->tval == TV_BELT ||
 		art->tval == TV_SOFT_ARMOR || art->tval == TV_HARD_ARMOR ||
 		art->tval == TV_DRAG_ARMOR) {
 		size_t n = N_ELEMENTS(art_idx_allarmor);

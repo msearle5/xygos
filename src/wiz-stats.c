@@ -559,6 +559,7 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 		case TV_CROWN:
 		case TV_SHIELD:
 		case TV_CLOAK:
+		case TV_BELT:
 		case TV_SOFT_ARMOR:
 		case TV_HARD_ARMOR:
 		case TV_DRAG_ARMOR:{

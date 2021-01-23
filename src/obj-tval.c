@@ -231,6 +231,7 @@ bool tval_is_armor(const struct object *obj)
 		case TV_SOFT_ARMOR:
 		case TV_SHIELD:
 		case TV_CLOAK:
+		case TV_BELT:
 		case TV_CROWN:
 		case TV_HELM:
 		case TV_BOOTS:
@@ -270,6 +271,7 @@ bool tval_has_variable_power(const struct object *obj)
 		case TV_HELM:
 		case TV_CROWN:
 		case TV_SHIELD:
+		case TV_BELT:
 		case TV_CLOAK:
 		case TV_SOFT_ARMOR:
 		case TV_HARD_ARMOR:
@@ -297,6 +299,7 @@ bool tval_is_wearable(const struct object *obj)
 		case TV_CROWN:
 		case TV_SHIELD:
 		case TV_CLOAK:
+		case TV_BELT:
 		case TV_SOFT_ARMOR:
 		case TV_HARD_ARMOR:
 		case TV_DRAG_ARMOR:

@@ -772,6 +772,7 @@ static void mass_produce(struct object *obj)
 		case TV_GLOVES:
 		case TV_BOOTS:
 		case TV_CLOAK:
+		case TV_BELT:
 		case TV_HELM:
 		case TV_CROWN:
 		case TV_SWORD:
@@ -1591,6 +1592,7 @@ int find_inven(const struct object *obj)
 			case TV_SWORD:
 			case TV_BOOTS:
 			case TV_GLOVES:
+			case TV_BELT:
 			case TV_HELM:
 			case TV_CROWN:
 			case TV_SHIELD:

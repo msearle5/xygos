@@ -1333,7 +1333,7 @@ bool build_vault(struct chunk *c, struct loc centre, struct vault *v)
 				case '$': place_gold(c, grid, c->depth, ORIGIN_VAULT);break;
 					/* Armour. */
 				case ']': {
-					int	tval = 0, temp = one_in_(3) ? randint1(9) : randint1(8);
+					int	tval = 0, temp = one_in_(3) ? randint1(10) : randint1(8);
 					switch (temp) {
 					case 1: tval = TV_BOOTS; break;
 					case 2: tval = TV_GLOVES; break;
@@ -1344,6 +1344,7 @@ bool build_vault(struct chunk *c, struct loc centre, struct vault *v)
 					case 7: tval = TV_SOFT_ARMOR; break;
 					case 8: tval = TV_HARD_ARMOR; break;
 					case 9: tval = TV_DRAG_ARMOR; break;
+					case 10: tval = TV_BELT; break;
 					}
 					place_object(c, grid, c->depth + 3, true, false,
 								 ORIGIN_VAULT, tval);

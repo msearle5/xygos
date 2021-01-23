@@ -1373,7 +1373,7 @@ static const grouper object_text_order[] =
 {
 	{TV_RING,			"Ring"			},
 	{TV_AMULET,			"Amulet"		},
-	{TV_PILL,			"Pill"		},
+	{TV_PILL,			"Pill"			},
 	{TV_SCROLL,			"Scroll"		},
 	{TV_WAND,			"Wand"			},
 	{TV_STAFF,			"Staff"			},
@@ -1400,6 +1400,7 @@ static const grouper object_text_order[] =
 	{TV_GLOVES,			"Gloves"		},
 	{TV_BOOTS,			"Boots"			},
 	{TV_CLOAK,			"Cloak"			},
+	{TV_BELT,			"Belt"			},
 	{TV_DRAG_ARMOR,		"Dragon Scale Mail" },
 	{TV_HARD_ARMOR,		"Hard Armor"	},
 	{TV_SOFT_ARMOR,		"Soft Armor"	},

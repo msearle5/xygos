@@ -72,6 +72,7 @@ static quality_ignore_struct quality_mapping[] =
 	{ ITYPE_BODY_ARMOR,				TV_SOFT_ARMOR,	"" },
 	{ ITYPE_ELVEN_CLOAK,			TV_CLOAK,		"Elven" },
 	{ ITYPE_CLOAK,					TV_CLOAK,		"" },
+	{ ITYPE_BELT,					TV_BELT,		"" },
 	{ ITYPE_SHIELD,					TV_SHIELD,		"" },
 	{ ITYPE_HEADGEAR,				TV_HELM,		"" },
 	{ ITYPE_HEADGEAR,				TV_CROWN,		"" },

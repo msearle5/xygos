@@ -99,6 +99,11 @@ graphics:light umber
 # max-stack:1
 flags:HATES_ACID
 
+name:belt:Belt~
+graphics:light green
+# max-stack:1
+flags:HATES_ELEC | HATES_FIRE
+
 name:shield:Shield~
 graphics:light umber
 # max-stack:1

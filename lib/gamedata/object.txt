@@ -1959,31 +1959,94 @@ armor:80:0
 flags:IGNORE_ACID
 desc:An exquisite suit of nearly impenetrable adamantite.
 
-################ forcefield generators - see "Armor" above.
+################ forcefield generators (belt armor)
 ## These are worn on the belt and you can only have one at once - including force-type
 ## armors worn in other slots, although not including normal force enhancement.
 ## These can be of different strengths but probably can't be enhanced in the same way,
 ## and while there will be egos ("mods") most of them are specific to genneys.
 ## As this means there is less progression, and as there a lot of base types, they are
 ## fairly rare.
+# TODO 'armored' - with base? & indestructible
 
-#name: & personal forcefield generator~
-#type:belt
-#graphics:(:White
+name:& personal forcefield generator~
+type:belt
+graphics:(:White
+level:5
+weight:150g
+cost:300
+alloc:8:1 to 25
+attack:0d0:0:0
+armor:0:4+d3M2
+flags:IGNORE_ACID
+desc:A small device that clips to your belt and radiates a force field that turns away blows, or at least reduces their impact.
 
-#desc:A small device that clips to your belt and radiates a force field that turns away blows, or at least reduces their impact.", ac4(0, 0, 5, 9, weight(150, level(5, rarity(400, forcefield("personal forcefield generator")))))),
+name:& Reflex forcefield generator~
+type:belt
+graphics:(:SkyBlue
+level:12
+cost:650
+alloc:4:6 to 45
+armor:0:11+d5M4
+weight:120g
+flags:IGNORE_ACID
+desc:A small device that clips to your belt and radiates a force field that turns away blows, or at least reduces their impact.
 
-#desc("A small device that clips to your belt and radiates a protective force field.  It's Reflex's take on the standard personal forcefield generator, and is considerably more effective than the basic model.", ac4(0, 0, 12, 20, weight(120, level(12, rarity(600, forcefield("Reflex forcefield generator")))))),
+name:& Rebound forcefield generator~
+type:belt
+graphics:(:LightRed
+level:15
+cost:750
+alloc:4:6 to 45
+armor:0:20+d6M5
+weight:900g
+values:STEALTH[-5+d3M1]
+flags:IGNORE_ACID
+desc:A small(ish) device that clips to your belt and radiates a protective force field.  It's Rebound's alternative to the Reflex generator - based on previous-generation technology, which shows in the weight and in the annoying buzz it makes.  Despite these disadvantages, it does provide a lot of protection and is as popular as the Reflex.
 
-#desc("A small(ish) device that clips to your belt and radiates a protective force field.  It's Rebound's alternative to the Reflex generator - based on previous-generation technology, which shows in the weight and in the annoying buzz it makes.  Despite these disadvantages, it does provide a lot of protection and is as popular as the Reflex.", ac4(0, 0, 24, 35, weight(900, level(15, rarity(600, forcefield("Rebound forcefield generator")))))),
+name:& Triplex forcefield generator~
+type:belt
+graphics:(:DeepSkyBlue
+level:33
+cost:2800
+alloc:3:16 to 56
+armor:0:27+d6M4
+weight:280g
+flags:IGNORE_ACID
+desc:A small device that clips to your belt and radiates a protective force field. It's Reflex's most advanced model, expensive and hard to find but very effective.
 
-#desc("A small device that clips to your belt and radiates a protective force field. It's Reflex's most advanced model, hard to find but very effective.", ac4(0, 0, 28, 38, weight(280, level(33, rarity(800, forcefield("Triplex forcefield generator")))))),
+name:& military forcefield generator~
+type:belt
+graphics:(:ForestGreen
+level:45
+cost:4400
+alloc:3:35 to 80
+armor:0:39+d10M6
+weight:250g
+flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD 
+desc:A small device that clips to your belt and radiates a powerful protective force field. It's related to the common personal forcefield generators, but far more effective - and also more difficult to damage.
 
-#desc("A small device that clips to your belt and radiates a powerful protective force field. It's related to the common personal forcefield generators, but far more effective.", ac4(0, 0, 40, 55, weight(250, level(45, rarity(600, forcefield("military forcefield generator")))))),
+name:& special forcefield generator~
+type:belt
+graphics:(:SapGreen
+level:68
+cost:7000
+alloc:2:46 to 100
+armor:0:62+d8M5
+weight:330g
+flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD 
+desc:A small device that clips to your belt and radiates a very powerful protective force field. This is the latest generation of military spec equipment - just about as good as it gets.
 
-#desc("A small device that clips to your belt and radiates a very powerful protective force field. This is the latest generation of military spec equipment - just about as good as it gets.", ac4(0, 0, 65, 75, weight(330, level(68, rarity(1200, forcefield("special forcefield generator")))))),
-
-#desc("A chunky, awkward device that clips to your belt and radiates an extremely powerful protective force field. Never made in any quantity, you are very lucky to have found one of the few prototypes!", scarcity(5, ac4(0, 0, 82, 95, weight(1250, level(90, rarity(3000, forcefield("prototype forcefield generator"))))))),
+#scarcity 5? 5 arts?
+name:prototype forcefield generator~
+type:belt
+graphics:(:Violet
+level:90
+cost:15000
+alloc:1:76 to 100
+armor:0:76+2d10
+weight:1250g
+flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD 
+desc:A chunky, awkward device that clips to your belt and radiates an extremely powerful protective force field. Never made in any quantity, you are very lucky to have found one of the few prototypes!"
 
 ### Cloaks ###
 

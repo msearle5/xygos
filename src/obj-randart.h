@@ -76,6 +76,7 @@ struct artifact_set_data {
 	int headgear_total;
 	int shield_total;
 	int cloak_total;
+	int belt_total;
 	int armor_total;
 	int other_total;
 	int total;

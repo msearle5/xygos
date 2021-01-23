@@ -1034,6 +1034,7 @@ bool kind_is_good(const struct object_kind *kind)
 		case TV_DRAG_ARMOR:
 		case TV_SHIELD:
 		case TV_CLOAK:
+		case TV_BELT:
 		case TV_BOOTS:
 		case TV_GLOVES:
 		case TV_HELM:

@@ -102,6 +102,7 @@ static const grouper group_item[] =
 	{ TV_DRAG_ARMOR,	  NULL },
 
 	{ TV_CLOAK,		"Armour (Misc)" },
+	{ TV_BELT,		  NULL },
 	{ TV_SHIELD,	  NULL },
 	{ TV_HELM,		  NULL },
 	{ TV_CROWN,		  NULL },
@@ -207,7 +208,7 @@ static void spoil_obj_desc(const char *fname)
 	char buf[1024];
 	char wgt[80];
 	char dam[80];
-	const char *format = "%-51s  %7s%6s%4s%9s\n";
+	const char *format = "%-51s  %7s%9s%4s%9s\n";
 
 	/* Open the file */
 	path_build(buf, sizeof(buf), ANGBAND_DIR_USER, fname);
@@ -226,9 +227,9 @@ static void spoil_obj_desc(const char *fname)
 	file_putf(fh, "Spoiler File -- Basic Items (%s)\n\n\n", buildid);
 
 	/* More Header */
-	file_putf(fh, format, "Description", "Dam/AC", "Wgt", "Lev", "Cost");
+	file_putf(fh, format, "Description", "Dam/AC", "Weight", "Lev", "Cost");
 	file_putf(fh, format, "----------------------------------------",
-	        "------", "---", "---", "----");
+	        "------", "------", "---", "----");
 
 	/* List the groups */
 	for (i = 0; true; i++) {
@@ -288,7 +289,7 @@ static void spoil_obj_desc(const char *fname)
 				} else {
 					file_putf(fh, "  %s", buf);
 				}
-				file_putf(fh, "%7s%6s%4d%9ld\n", dam, wgt, e,
+				file_putf(fh, "%7s%9s%4d%9ld\n", dam, wgt, e,
 						  (long)(v));
 			}
 
@@ -356,6 +357,7 @@ static const grouper group_artifact[] =
 	{ TV_DRAG_ARMOR,    NULL },
 
 	{ TV_CLOAK,         "Cloaks" },
+	{ TV_BELT,          "Belts" },
 	{ TV_SHIELD,        "Shields" },
 	{ TV_HELM,          "Helms/Crowns" },
 	{ TV_CROWN,         NULL },
