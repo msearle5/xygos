@@ -274,36 +274,108 @@ static void get_stats(int stat_use[STAT_MAX])
 	}
 }
 
+/* Worst (= most negative) negative deviation, as a proportion of the expected value
+ * in 10000ths
+ */
+int hp_roll_worst(int *level)
+{
+	int worst = 0;
+	int rdev = 0;
+	for(int i=1; i<PY_MAX_LEVEL-10; i++) {
+		int mean = (((i - 1) * (player->hitdie + 1)) / 2); 
+		rdev += level[i];
+		if (i >= 5) {
+			int dev = rdev - mean;
+			dev *= 10000;
+			dev /= mean;
+			if (dev < worst)
+				worst = dev;
+		}
+	}
+	return worst;
+}
 
+/* Sum of squares of of negative deviations */
+int hp_roll_score(int *level)
+{
+	int sum = 0;
+	int rdev = 0;
+	for(int i=1; i<PY_MAX_LEVEL; i++) {
+		int mean = (((i - 1) * (player->hitdie + 1)) / 2); 
+		rdev += level[i];
+		int dev = rdev - mean;
+		if (dev < 0)
+			sum += (dev * dev);
+	}
+	return sum;
+}
+
+/* Produce hitpoints which are random at all levels except the first
+ * which always gets max hit points, but which at maximum level always
+ * has the same value (the average value of 49 hitdie rolls, + 1 max).
+ * It should also not deviate too far from the average at any other
+ * level.
+ */
 static void roll_hp(void)
 {
-	int i, j, min_value, max_value;
+	/* Average expected HP - ignoring the first level */
+	int target = (((PY_MAX_LEVEL - 1) * (player->hitdie + 1)) / 2); 
 
-	/* Minimum hitpoints at highest level */
-	min_value = (PY_MAX_LEVEL * (player->hitdie - 1) * 3) / 8;
-	min_value += PY_MAX_LEVEL;
-
-	/* Maximum hitpoints at highest level */
-	max_value = (PY_MAX_LEVEL * (player->hitdie - 1) * 5) / 8;
-	max_value += PY_MAX_LEVEL;
-
-	/* Roll out the hitpoints */
-	while (true) {
-		/* Roll the hitpoint values */
-		for (i = 1; i < PY_MAX_LEVEL; i++) {
-			j = randint1(player->hitdie);
-			player->player_hp[i] = player->player_hp[i-1] + j;
-		}
-
-		/* XXX Could also require acceptable "mid-level" hitpoints */
-
-		/* Require "valid" hitpoints at highest level */
-		if (player->player_hp[PY_MAX_LEVEL-1] < min_value) continue;
-		if (player->player_hp[PY_MAX_LEVEL-1] > max_value) continue;
-
-		/* Acceptable */
-		break;
+	/* Roll all hitpoints */
+	int level[PY_MAX_LEVEL];
+	int sum = 0;
+	for(int i=1;i<PY_MAX_LEVEL;i++) {
+		level[i] = randint1(player->hitdie);
+		sum += level[i];
 	}
+
+	/* Reroll a level at random and take the maximum or minimum,
+	 * until the sum is right.
+	 */
+	while (sum != target) {
+		int l = randint1(PY_MAX_LEVEL-1);
+		int prev = level[l];
+		int reroll = randint1(player->hitdie);
+		int best;
+		if (sum < target)
+			best = MAX(prev, reroll);
+		else
+			best = MIN(prev, reroll);
+		sum -= level[l];
+		level[l] = best;
+		sum += best;
+	}
+
+	/* Reduce deviation at midlevels without affecting the sum by
+	 * swapping pairs of rolls.
+	 * Select a pair at random, and determine a score with and
+	 * without the change - keep the swap if the score has improved.
+	 * The score is the geometric mean of all negative deviations, and
+	 * the process finishes when the worst-case -ve deviation between
+	 * levels 5 and 40 has been reduced below 10%.
+	 */
+	int reps = 0;
+	do {
+		int before = hp_roll_score(level);
+		int from = randint1(PY_MAX_LEVEL-1);
+		int to = randint1(PY_MAX_LEVEL-1);
+		int tmp = level[from];
+		level[from] = level[to];
+		level[to] = tmp;
+		int after = hp_roll_score(level);
+		++reps;
+		if (before < after) {
+			// revert it - this has increased the deviation
+			tmp = level[from];
+			level[from] = level[to];
+			level[to] = tmp;
+		}
+	} while (hp_roll_worst(level) < -500); // 5%
+
+	/* Copy into the player's hitpoints */
+	player->player_hp[0] = player->hitdie;
+	for (int i = 1; i < PY_MAX_LEVEL; i++)
+		player->player_hp[i] = player->player_hp[i-1] + level[i];
 }
 
 
