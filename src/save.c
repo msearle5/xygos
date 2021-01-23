@@ -765,6 +765,9 @@ void wr_stores(void)
 		/* Save the layaway index and day */
 		wr_s32b(store->layaway_idx);
 		wr_s32b(store->layaway_day);
+
+		/* Destroyed flag */
+		wr_bool(store->destroy);
 	}
 }
 

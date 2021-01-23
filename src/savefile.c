@@ -224,6 +224,11 @@ static byte sf_get(void)
  * Accessor functions
  * ------------------------------------------------------------------------ */
 
+void wr_bool(bool v)
+{
+	sf_put(v);
+}
+
 void wr_byte(byte v)
 {
 	sf_put(v);
@@ -263,6 +268,10 @@ void wr_string(const char *str)
 	wr_byte(*str);
 }
 
+void rd_bool(bool *ip)
+{
+	*ip = sf_get();
+}
 
 void rd_byte(byte *ip)
 {
@@ -317,6 +326,14 @@ void strip_bytes(int n)
 void pad_bytes(int n)
 {
 	while (n--) wr_byte(0);
+}
+
+void rdwr_bool(bool *v)
+{
+	if (saving)
+		wr_bool(*v);
+	else
+		rd_bool(v);
 }
 
 void rdwr_byte(byte *v)

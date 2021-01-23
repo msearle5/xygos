@@ -1234,6 +1234,9 @@ static int rd_stores_aux(rd_item_t rd_item_version)
 		/* Read the layaway index and day */
 		rd_s32b(&store->layaway_idx);
 		rd_s32b(&store->layaway_day);
+
+		/* Destroyed flag */
+		rd_bool(&store->destroy);
 	}
 
 	return 0;

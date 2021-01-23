@@ -65,6 +65,7 @@ struct store {
 	s32b layaway_idx;
 	s32b layaway_day;
 	s32b income;
+	bool destroy;				/* Destroy when next entering the town */
 
 	byte stock_num;				/* Stock -- Number of entries */
 	s16b stock_size;			/* Stock -- Total Size of Array */

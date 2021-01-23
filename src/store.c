@@ -379,6 +379,7 @@ void store_reset(void) {
 		s->banreason = "";
 		s->layaway_idx = -1;
 		s->layaway_day = 0;
+		s->destroy = false;
 		s->income = 0;
 		s->stock_num = 0;
 		store_shuffle(s);
