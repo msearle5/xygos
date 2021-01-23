@@ -3292,7 +3292,7 @@ effect:RESTORE_STAT:CON
 effect:GAIN_STAT:CON
 
 name:Charisma
-type:potion
+type:pill
 graphics:!:d
 level:24
 weight:4
@@ -3304,7 +3304,7 @@ effect:RESTORE_STAT:CHR
 effect:GAIN_STAT:CHR
 
 name:speed nano-
-type:potion
+type:pill
 graphics:!:d
 level:38
 weight:4
