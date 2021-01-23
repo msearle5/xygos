@@ -35,6 +35,7 @@
 #include "player-timed.h"
 #include "player-util.h"
 #include "source.h"
+#include "store.h"
 #include "target.h"
 #include "trap.h"
 #include "z-queue.h"
@@ -978,8 +979,17 @@ void on_new_level(void)
 		if (danger >= z_info->max_depth) {
 			danger = z_info->max_depth-1;
 		}
+		/* This assumes that player->danger can't be decreased */
 		if (danger != player->danger) {
-			player->danger = danger;
+			assert(player->danger < danger);
+			while (player->danger < danger) {
+				player->danger++;
+				/* Effects of timed danger - destroy a store? */
+				for(int i=0;i<MAX_STORES;i++) {
+					if (player->danger == stores[i].max_danger)
+						stores[i].destroy = true;
+				}
+			}
 		}
 	}
 

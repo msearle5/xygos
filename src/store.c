@@ -169,6 +169,17 @@ static enum parser_error parse_slots(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_danger(struct parser *p) {
+	struct store *s = parser_priv(p);
+	if (!s)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
+	s->low_danger = parser_getuint(p, "low");
+	s->high_danger = parser_getuint(p, "high");
+
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_turnover(struct parser *p) {
 	struct store *s = parser_priv(p);
 	s->turnover = parser_getuint(p, "turnover");
@@ -315,6 +326,7 @@ struct parser *init_parse_stores(void) {
 	parser_reg(p, "always sym tval ?sym sval", parse_always);
 	parser_reg(p, "buy str base", parse_buy);
 	parser_reg(p, "buy-flag sym flag str base", parse_buy_flag);
+	parser_reg(p, "danger uint low uint high", parse_danger);
 	return p;
 }
 
@@ -382,6 +394,7 @@ void store_reset(void) {
 		s->destroy = false;
 		s->income = 0;
 		s->stock_num = 0;
+		s->max_danger = s->low_danger + randint0(1 + s->high_danger - s->low_danger);
 		store_shuffle(s);
 		object_pile_free(s->stock);
 		s->stock = NULL;

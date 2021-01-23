@@ -21,6 +21,7 @@
 #include "cmds.h"
 #include "effects.h"
 #include "game-input.h"
+#include "game-world.h"
 #include "generate.h"
 #include "grafmode.h"
 #include "init.h"
@@ -390,6 +391,21 @@ static void do_cmd_wiz_change_aux(void)
 		player_exp_gain(player, tmp_long - player->exp);
 	else
 		player_exp_lose(player, player->exp - tmp_long, false);
+
+	/* Default */
+	strnfmt(tmp_val, sizeof(tmp_val), "%ld", (long)(turn));
+
+	/* Query */
+	if (!get_string("Turn: ", tmp_val, 10)) return;
+
+	/* Extract */
+	tmp_long = atol(tmp_val);
+
+	/* Verify */
+	if (tmp_long < 0) tmp_long = 0L;
+
+	/* Save */
+	turn = tmp_long;
 }
 
 

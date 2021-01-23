@@ -767,8 +767,9 @@ void wr_stores(void)
 		wr_s32b(store->layaway_idx);
 		wr_s32b(store->layaway_day);
 
-		/* Destroyed flag */
+		/* Destroyed flag and danger */
 		wr_bool(store->destroy);
+		wr_s32b(store->max_danger);
 	}
 }
 

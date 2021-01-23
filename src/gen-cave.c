@@ -1872,18 +1872,22 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 		town_gen_layout(c_new, p);
 	} else {
 		/* If any stores are scheduled to be destroyed, do it now */
+		bool modded = false;
 		for(int i=0;i<MAX_STORES;i++) {
 			if (stores[i].destroy) {
 				destroy_store(c_old, i);
 				stores[i].destroy = false;
+				modded = true;
 			}
 		}
 
 		/* Copy from the chunk list, remove the old one */
 		if (!chunk_copy(c_new, c_old, 0, 0, 0, 0))
 			quit_fmt("chunk_copy() level bounds failed!");
-		chunk_list_remove("Town");
-		cave_free(c_old);
+		if (!modded) {
+			chunk_list_remove("Town");
+			cave_free(c_old);
+		}
 
 		/* Find the stairs (lame) */
 		for (grid.y = 0; grid.y < c_new->height; grid.y++) {

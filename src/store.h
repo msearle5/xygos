@@ -65,6 +65,9 @@ struct store {
 	s32b layaway_idx;
 	s32b layaway_day;
 	s32b income;
+	s32b max_danger;			/* Mark for destruction when danger hits this level */
+	s32b low_danger;
+	s32b high_danger;
 	bool destroy;				/* Destroy when next entering the town */
 
 	byte stock_num;				/* Stock -- Number of entries */

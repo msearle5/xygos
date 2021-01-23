@@ -49,7 +49,7 @@ struct death_msg *death;
  */
 int danger_depth(struct player *p)
 {
-	return p->depth + p->danger;
+	return MIN(z_info->max_depth - 1, p->depth + p->danger);
 }
 
 /** Return a random message from the death message list */

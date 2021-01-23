@@ -1238,6 +1238,24 @@ static void store_do_sell(struct store *store)
 	event_signal(EVENT_STORECHANGED);
 }
 
+/* A store is marked 'to destroy' with the stores[x].destroy flags at the same time
+ * player->danger increases, when the store's 'danger' field equals player->danger.
+ * But it is not actually destroyed until the next time the town is entered - at
+ * which point the destroy flag is cleared.
+ * So the number of destroyed stores is the number of "destroyed or pending destruction"
+ * stores (danger <= player->danger), minus the number which have not yet been
+ * destroyed (and so have the destroy flag set).
+ */
+static int stores_destroyed(void)
+{
+	int n = 0;
+	for(int i=0;i<MAX_STORES;i++) {
+		if ((stores[i].max_danger <= player->danger) && (!(stores[i].destroy)))
+			n++;
+	}
+	return n;
+}
+
 /* buys the store for yourself */
 static void store_buy(struct store_context *ctx, bool *exit)
 {
@@ -1266,6 +1284,7 @@ static void store_buy(struct store_context *ctx, bool *exit)
 		Rand_state_init((day * 53) + store->sidx);
 		int price = 100 * Rand_normal(650, 80);	/* 4 s.d.s - the max - will give 97000 - below the 100K limit */
 		Rand_restore_state(&state);
+		price >>= stores_destroyed();
 
 		/* Confirm if they really wanted it */
 		screen_save();

@@ -1236,8 +1236,9 @@ static int rd_stores_aux(rd_item_t rd_item_version)
 		rd_s32b(&store->layaway_idx);
 		rd_s32b(&store->layaway_day);
 
-		/* Destroyed flag */
+		/* Destroyed flag and danger */
 		rd_bool(&store->destroy);
+		rd_s32b(&store->max_danger);
 	}
 
 	return 0;
