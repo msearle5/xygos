@@ -158,7 +158,6 @@ void get_mon_num_prep(bool (*get_mon_num_hook)(struct monster_race *race))
 		if (!get_mon_num_hook || (*get_mon_num_hook)(&r_info[entry->index])) {
 			/* Accept this monster */
 			entry->prob2 = entry->prob1;
-
 		} else {
 			/* Do not use this monster */
 			entry->prob2 = 0;

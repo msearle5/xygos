@@ -418,7 +418,7 @@ struct chunk *classic_gen(struct player *p, int min_height, int min_width) {
 	if (OPT(p, birth_levels_persist)) return NULL;
 
     /* This code currently does nothing - see comments below */
-    i = randint1(10) + p->depth / 24;
+    i = randint1(10) + danger_depth(player) / 24;
     if (is_quest(p->depth)) size_percent = 100;
     else if (i < 2) size_percent = 75;
     else if (i < 3) size_percent = 80;
@@ -596,7 +596,7 @@ struct chunk *classic_gen(struct player *p, int min_height, int min_width) {
 
     /* Put some monsters in the dungeon */
     for (; i > 0; i--)
-		pick_and_place_distant_monster(c, p, 0, true, c->depth);
+		pick_and_place_distant_monster(c, p, 0, true, danger_depth(player));
 
     /* Put some objects in rooms */
     alloc_objects(c, SET_ROOM, TYP_OBJECT, Rand_normal(z_info->room_item_av, 3),
@@ -806,17 +806,17 @@ struct chunk *labyrinth_gen(struct player *p, int min_height, int min_width) {
     /* NOTE: these are not the actual dungeon size, but rather the size of the
      * area we're generating a labyrinth in (which doesn't count the enclosing
      * outer walls. */
-    int h = 15 + randint0(p->depth / 10) * 2;
-    int w = 51 + randint0(p->depth / 10) * 2;
+    int h = 15 + randint0(danger_depth(player) / 10) * 2;
+    int w = 51 + randint0(danger_depth(player) / 10) * 2;
 
     /* Most labyrinths are lit */
-    bool lit = randint0(p->depth) < 25 || randint0(2) < 1;
+    bool lit = randint0(danger_depth(player)) < 25 || randint0(2) < 1;
 
     /* Many labyrinths are known */
-    bool known = lit && randint0(p->depth) < 25;
+    bool known = lit && randint0(danger_depth(player)) < 25;
 
     /* Most labyrinths have soft (diggable) walls */
-    bool soft = randint0(p->depth) < 35 || randint0(3) < 2;
+    bool soft = randint0(danger_depth(player)) < 35 || randint0(3) < 2;
 
 	/* No persistent levels of this type for now */
 	if (OPT(p, birth_levels_persist)) return NULL;
@@ -855,7 +855,7 @@ struct chunk *labyrinth_gen(struct player *p, int min_height, int min_width) {
 
     /* Put some monsters in the dungeon */
     for (i = z_info->level_monster_min + randint1(8) + k; i > 0; i--)
-		pick_and_place_distant_monster(c, p, 0, true, c->depth);
+		pick_and_place_distant_monster(c, p, 0, true, danger_depth(player));
 
     /* Put some objects/gold in the dungeon */
     alloc_objects(c, SET_BOTH, TYP_OBJECT, Rand_normal(k * 6, 2), c->depth,
@@ -1380,7 +1380,7 @@ struct chunk *cavern_gen(struct player *p, int min_height, int min_width) {
 
 	/* Put some monsters in the dungeon */
 	for (i = randint1(8) + k; i > 0; i--)
-		pick_and_place_distant_monster(c, p, 0, true, c->depth);
+		pick_and_place_distant_monster(c, p, 0, true, danger_depth(player));
 
 	/* Put some objects/gold in the dungeon */
 	alloc_objects(c, SET_BOTH, TYP_OBJECT, Rand_normal(k, 2), c->depth + 5,
@@ -1838,7 +1838,7 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 
 	/* First time */
 	if (!c_old) {
-		c_new->depth = p->depth;
+		c_new->depth = danger_depth(player);
 
 		/* Build stuff */
 		town_gen_layout(c_new, p);
@@ -1863,14 +1863,62 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 
 		/* Place the player */
 		player_place(c_new, p, grid);
+		c_new->depth = danger_depth(player);
 	}
 
 	/* Apply illumination */
 	cave_illuminate(c_new, is_daytime());
 
 	/* Make some residents */
-	for (i = 0; i < residents; i++)
-		pick_and_place_distant_monster(c_new, p, 3, true, c_new->depth);
+	int depth = c_new->depth;
+
+	/* More if higher danger (day like night, but not more than that) */
+	if (is_daytime()) {
+		if (depth > 0) {
+			if (depth >= z_info->town_allmons_level)
+				residents = z_info->town_monsters_night;
+			else
+				residents += ((z_info->town_monsters_night - z_info->town_monsters_day) * depth) / z_info->town_allmons_level;
+		}
+	}
+
+	/* Produce residents according to danger level.
+	 * As the danger level increases, the original residents quickly disappear, replaced by bandits etc - at first, they hang back.
+	 * Later, they appear close by, the townees have gone completely and random monsters start appearing - at long range because of breaths etc.
+	 * The thieves then fade out, until random monsters are all you get. At this point they can generate close.
+	 */
+	for (i = 0; i < residents; i++) {
+		if (depth < z_info->town_allmons_level) {
+			/* Early on, mix townees and low-level human[oids] */
+			if (!depth || one_in_(depth+1)) {
+				/* Townee */
+				pick_and_place_distant_monster(c_new, p, 3, true, 0);
+			} else {
+				/* Humanoid - set monster generation restrictions */
+				(void) mon_restrict("Thieves", depth, true);
+				pick_and_place_distant_monster(c_new, p, 8, true, depth);
+
+				/* Remove our restrictions. */
+				(void) mon_restrict(NULL, depth, false);
+			}
+		} else if (depth < z_info->town_equalmons_level) {
+			/* Mid game, mix mid-level humanoids and low-level other monsters */
+			if (randint0(z_info->town_equalmons_level - z_info->town_allmons_level) <= (depth - z_info->town_allmons_level)) {
+				/* Reduced level, any nontown monster (nonunique?) */
+				pick_and_place_distant_monster(c_new, p, 15, true, randint1(depth));
+			} else {
+				/* In level humanoid - set monster generation restrictions */
+				(void) mon_restrict("Thieves", depth, true);
+				pick_and_place_distant_monster(c_new, p, 3, true, depth);
+
+				/* Remove our restrictions. */
+				(void) mon_restrict(NULL, depth, false);
+			}
+		} else {
+			/* Late, allow all monsters */
+			pick_and_place_distant_monster(c_new, p, 3, true, depth);
+		}
+	}
 
 	return c_new;
 }
@@ -2093,7 +2141,7 @@ struct chunk *modified_gen(struct player *p, int min_height, int min_width) {
 	}
 
     /* General amount of rubble, traps and monsters */
-    k = MAX(MIN(c->depth / 3, 10), 2);
+    k = MAX(MIN(danger_depth(player) / 3, 10), 2);
 
     /* Put some rubble in corridors */
     alloc_objects(c, SET_CORR, TYP_RUBBLE, randint1(k), c->depth, 0);
@@ -2108,11 +2156,11 @@ struct chunk *modified_gen(struct player *p, int min_height, int min_width) {
     i = z_info->level_monster_min + randint1(8) + k;
 
 	/* Remove all monster restrictions. */
-	mon_restrict(NULL, c->depth, true);
+	mon_restrict(NULL, danger_depth(player), true);
 
     /* Put some monsters in the dungeon */
     for (; i > 0; i--)
-		pick_and_place_distant_monster(c, p, 0, true, c->depth);
+		pick_and_place_distant_monster(c, p, 0, true, danger_depth(player));
 
     /* Put some objects in rooms */
     alloc_objects(c, SET_ROOM, TYP_OBJECT, Rand_normal(z_info->room_item_av, 3),
@@ -2332,10 +2380,10 @@ struct chunk *moria_gen(struct player *p, int min_height, int min_width) {
 
     /* Put some monsters in the dungeon */
     for (; i > 0; i--)
-		pick_and_place_distant_monster(c, p, 0, true, c->depth);
+		pick_and_place_distant_monster(c, p, 0, true, danger_depth(player));
 
 	/* Remove our restrictions. */
-	(void) mon_restrict(NULL, c->depth, false);
+	(void) mon_restrict(NULL, danger_depth(player), false);
 
     /* Put some objects in rooms */
     alloc_objects(c, SET_ROOM, TYP_OBJECT, Rand_normal(z_info->room_item_av, 3),
@@ -2574,7 +2622,7 @@ struct chunk *hard_centre_gen(struct player *p, int min_height, int min_width)
 
 	/* Put some monsters in the dungeon */
 	for (i = randint1(8) + k; i > 0; i--)
-		pick_and_place_distant_monster(c, p, 0, true, c->depth);
+		pick_and_place_distant_monster(c, p, 0, true, danger_depth(player));
 
 	/* Put some objects/gold in the dungeon */
 	alloc_objects(c, SET_BOTH, TYP_OBJECT, Rand_normal(k, 2), c->depth + 5,
@@ -2638,7 +2686,7 @@ struct chunk *lair_gen(struct player *p, int min_height, int min_width) {
 	lair->depth = p->depth;
 
     /* General amount of rubble, traps and monsters */
-    k = MAX(MIN(p->depth / 3, 10), 2) / 2;
+    k = MAX(MIN(danger_depth(player) / 3, 10), 2) / 2;
 
     /* Put the character in the normal half */
     new_player_spot(normal, p);
@@ -2648,7 +2696,7 @@ struct chunk *lair_gen(struct player *p, int min_height, int min_width) {
 
     /* Put some monsters in the dungeon */
     for (; i > 0; i--)
-		pick_and_place_distant_monster(normal, p, 0, true, normal->depth);
+		pick_and_place_distant_monster(normal, p, 0, true, danger_depth(player));
 
     /* Add some magma streamers */
     for (i = 0; i < dun->profile->str.mag; i++)
@@ -2664,22 +2712,22 @@ struct chunk *lair_gen(struct player *p, int min_height, int min_width) {
 	/* Find appropriate monsters */
 	while (true) {
 		/* Choose a pit profile */
-		set_pit_type(lair->depth, 0);
+		set_pit_type(danger_depth(player), 0);
 
 		/* Set monster generation restrictions */
-		if (mon_restrict(dun->pit_type->name, lair->depth, true))
+		if (mon_restrict(dun->pit_type->name, danger_depth(player), true))
 			break;
 	}
 
 	ROOM_LOG("Monster lair - %s", dun->pit_type->name);
 
     /* Place lair monsters */
-	spread_monsters(lair, dun->pit_type->name, lair->depth, i, lair->height / 2,
+	spread_monsters(lair, dun->pit_type->name, danger_depth(player), i, lair->height / 2,
 					lair->width / 2, lair->height / 2, lair->width / 2, 
 					ORIGIN_CAVERN);
 
 	/* Remove our restrictions. */
-	(void) mon_restrict(NULL, lair->depth, false);
+	(void) mon_restrict(NULL, danger_depth(player), false);
 
 	/* Make the level */
 	c = cave_new(y_size, x_size);
@@ -2826,23 +2874,23 @@ struct chunk *gauntlet_gen(struct player *p, int min_height, int min_width) {
 	/* Find appropriate monsters */
 	while (true) {
 		/* Choose a pit profile */
-		set_pit_type(gauntlet->depth, 0);
+		set_pit_type(danger_depth(player), 0);
 
 		/* Set monster generation restrictions */
-		if (mon_restrict(dun->pit_type->name, gauntlet->depth, true))
+		if (mon_restrict(dun->pit_type->name, danger_depth(player), true))
 			break;
 	}
 
 	ROOM_LOG("Gauntlet - %s", dun->pit_type->name);
 
 	/* Place labyrinth monsters */
-	spread_monsters(gauntlet, dun->pit_type->name, gauntlet->depth, i,
+	spread_monsters(gauntlet, dun->pit_type->name, danger_depth(player), i,
 					gauntlet->height / 2, gauntlet->width / 2,
 					gauntlet->height / 2, gauntlet->width / 2,
 					ORIGIN_LABYRINTH);
 
 	/* Remove our restrictions. */
-	(void) mon_restrict(NULL, gauntlet->depth, false);
+	(void) mon_restrict(NULL, danger_depth(player), false);
 
 	/* Make the level */
 	c = cave_new(y_size, left->width + gauntlet->width + right->width);

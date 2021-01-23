@@ -782,6 +782,7 @@ int rd_player(void)
 	rd_s16b(&player->max_lev);
 	rd_s16b(&player->max_depth);
 	rd_s16b(&player->recall_depth);
+	rd_s16b(&player->danger);
 
 	/* Hack -- Repair maximum player level */
 	if (player->max_lev < player->lev) player->max_lev = player->lev;

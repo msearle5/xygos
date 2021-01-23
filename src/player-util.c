@@ -44,6 +44,14 @@
 /* List of death messages */
 struct death_msg *death;
 
+/** Return an effective depth for difficulty of monster generation, etc.
+ * based on physical depth and additional difficulty over time.
+ */
+int danger_depth(struct player *p)
+{
+	return p->depth + p->danger;
+}
+
 /** Return a random message from the death message list */
 static const char *random_death_msg(void)
 {

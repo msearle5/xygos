@@ -968,6 +968,21 @@ void process_player(void)
  */
 void on_new_level(void)
 {
+	/* Handle timed danger */
+	if (OPT(player,birth_time_limit)) {
+		int danger = 0;
+		int pturn = turn / 10;
+		if (pturn >= z_info->town_easy_turns) {
+			danger = 1 + ((pturn - z_info->town_easy_turns) / z_info->town_levelup_turns);
+		}
+		if (danger >= z_info->max_depth) {
+			danger = z_info->max_depth-1;
+		}
+		if (danger != player->danger) {
+			player->danger = danger;
+		}
+	}
+
 	/* Arena levels are not really a level change */
 	if (!player->upkeep->arena_level) {
 		/* Play ambient sound on change of level. */
