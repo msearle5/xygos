@@ -523,7 +523,7 @@ static int o_calculate_missile_crits(struct player_state state,
 		+ (launcher ? launcher->known->to_h : 0);
 	int chance = BTH_PLUS_ADJ * bonus;
 	if (launcher) {
-		chance += state.skills[SKILL_TO_HIT_BOW];
+		chance += state.skills[SKILL_TO_HIT_GUN];
 	} else {
 		chance += state.skills[SKILL_TO_HIT_THROW];
 		chance *= 3 / 2;
@@ -765,9 +765,9 @@ static bool obj_known_damage(const struct object *obj, int *normal_damage,
 	bool *total_slays;
 	bool has_brands_or_slays = false;
 
-	struct object *bow = equipped_item_by_slot_name(player, "shooting");
+	struct object *gun = equipped_item_by_slot_name(player, "shooting");
 	bool weapon = tval_is_melee_weapon(obj) && !throw;
-	bool ammo   = (player->state.ammo_tval == obj->tval) && (bow) && !throw;
+	bool ammo   = (player->state.ammo_tval == obj->tval) && (gun) && !throw;
 	int melee_adj_mult = ammo ? 0 : 1;
 	int multiplier = 1;
 
@@ -812,7 +812,7 @@ static bool obj_known_damage(const struct object *obj, int *normal_damage,
 								&crit_add, &crit_div);
 
 		dam += (obj->known->to_d * 10);
-		dam += (bow->known->to_d * 10);
+		dam += (gun->known->to_d * 10);
 	} else {
 		plus += obj->known->to_h;
 
@@ -828,14 +828,14 @@ static bool obj_known_damage(const struct object *obj, int *normal_damage,
 	/* Get the brands */
 	total_brands = mem_zalloc(z_info->brand_max * sizeof(bool));
 	copy_brands(&total_brands, obj->known->brands);
-	if (ammo && bow->known)
-		copy_brands(&total_brands, bow->known->brands);
+	if (ammo && gun->known)
+		copy_brands(&total_brands, gun->known->brands);
 
 	/* Get the slays */
 	total_slays = mem_zalloc(z_info->slay_max * sizeof(bool));
 	copy_slays(&total_slays, obj->known->slays);
-	if (ammo && bow->known)
-		copy_slays(&total_slays, bow->known->slays);
+	if (ammo && gun->known)
+		copy_slays(&total_slays, gun->known->slays);
 
 	/* Melee weapons may get slays and brands from other items */
 	*nonweap_slay = false;
@@ -956,9 +956,9 @@ static bool o_obj_known_damage(const struct object *obj, int *normal_damage,
 	bool *total_slays;
 	bool has_brands_or_slays = false;
 
-	struct object *bow = equipped_item_by_slot_name(player, "shooting");
+	struct object *gun = equipped_item_by_slot_name(player, "shooting");
 	bool weapon = tval_is_melee_weapon(obj) && !throw;
-	bool ammo   = (player->state.ammo_tval == obj->tval) && (bow) && !throw;
+	bool ammo   = (player->state.ammo_tval == obj->tval) && (gun) && !throw;
 	int multiplier = 1;
 
 	struct player_state state;
@@ -988,7 +988,7 @@ static bool o_obj_known_damage(const struct object *obj, int *normal_damage,
 		dice += o_calculate_melee_crits(state, obj);
 		old_blows = state.num_blows;
 	} else if (ammo) {
-		dice += o_calculate_missile_crits(player->state, obj, bow);
+		dice += o_calculate_missile_crits(player->state, obj, gun);
 	} else {
 		dice += o_calculate_missile_crits(player->state, obj, NULL);
 		dice *= 2 + obj->weight / 540;
@@ -1004,7 +1004,7 @@ static bool o_obj_known_damage(const struct object *obj, int *normal_damage,
 
 	/* Apply deadliness to average. (100x inflation) */
 	if (ammo) {
-		deadliness = obj->known->to_d + bow->known->to_d + state.to_d;
+		deadliness = obj->known->to_d + gun->known->to_d + state.to_d;
 	} else {
 		deadliness = obj->known->to_d + state.to_d;
 	}
@@ -1013,14 +1013,14 @@ static bool o_obj_known_damage(const struct object *obj, int *normal_damage,
 	/* Get the brands */
 	total_brands = mem_zalloc(z_info->brand_max * sizeof(bool));
 	copy_brands(&total_brands, obj->known->brands);
-	if (ammo && bow->known)
-		copy_brands(&total_brands, bow->known->brands);
+	if (ammo && gun->known)
+		copy_brands(&total_brands, gun->known->brands);
 
 	/* Get the slays */
 	total_slays = mem_zalloc(z_info->slay_max * sizeof(bool));
 	copy_slays(&total_slays, obj->known->slays);
-	if (ammo && bow->known)
-		copy_slays(&total_slays, bow->known->slays);
+	if (ammo && gun->known)
+		copy_slays(&total_slays, gun->known->slays);
 
 	/* Melee weapons may get slays and brands from other items */
 	*nonweap_slay = false;
@@ -1311,9 +1311,9 @@ static bool describe_damage(textblock *tb, const struct object *obj, bool throw)
 static void obj_known_misc_combat(const struct object *obj, bool *thrown_effect,
 								  int *range, int *break_chance, bool *heavy)
 {
-	struct object *bow = equipped_item_by_slot_name(player, "shooting");
+	struct object *gun = equipped_item_by_slot_name(player, "shooting");
 	bool weapon = tval_is_melee_weapon(obj);
-	bool ammo   = (player->state.ammo_tval == obj->tval) && (bow);
+	bool ammo   = (player->state.ammo_tval == obj->tval) && (gun);
 
 	*thrown_effect = *heavy = false;
 	*range = *break_chance = 0;
@@ -1360,9 +1360,9 @@ static void obj_known_misc_combat(const struct object *obj, bool *thrown_effect,
  */
 static bool describe_combat(textblock *tb, const struct object *obj)
 {
-	struct object *bow = equipped_item_by_slot_name(player, "shooting");
+	struct object *gun = equipped_item_by_slot_name(player, "shooting");
 	bool weapon = tval_is_melee_weapon(obj);
-	bool ammo   = (player->state.ammo_tval == obj->tval) && (bow);
+	bool ammo   = (player->state.ammo_tval == obj->tval) && (gun);
 	bool throwing_weapon = weapon && of_has(obj->flags, OF_THROWING);
 	bool rock = tval_is_ammo(obj) && of_has(obj->flags, OF_THROWING);
 

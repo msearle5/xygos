@@ -142,9 +142,9 @@ bool tval_is_head_armor(const struct object *obj)
 bool tval_is_ammo(const struct object *obj)
 {
 	switch (obj->tval) {
-		case TV_SHOT:
-		case TV_ARROW:
-		case TV_BOLT:
+		case TV_AMMO_6:
+		case TV_AMMO_9:
+		case TV_AMMO_12:
 			return true;
 		default:
 			return false;
@@ -154,8 +154,8 @@ bool tval_is_ammo(const struct object *obj)
 bool tval_is_sharp_missile(const struct object *obj)
 {
 	switch (obj->tval) {
-		case TV_ARROW:
-		case TV_BOLT:
+		case TV_AMMO_9:
+		case TV_AMMO_12:
 			return true;
 		default:
 			return false;
@@ -164,7 +164,7 @@ bool tval_is_sharp_missile(const struct object *obj)
 
 bool tval_is_launcher(const struct object *obj)
 {
-	return obj->tval == TV_BOW;
+	return obj->tval == TV_GUN;
 }
 
 bool tval_is_printer(const struct object *obj)
@@ -213,10 +213,10 @@ bool tval_is_weapon(const struct object *obj)
 		case TV_HAFTED:
 		case TV_POLEARM:
 		case TV_DIGGING:
-		case TV_BOW:
-		case TV_BOLT:
-		case TV_ARROW:
-		case TV_SHOT:
+		case TV_GUN:
+		case TV_AMMO_12:
+		case TV_AMMO_9:
+		case TV_AMMO_6:
 			return true;
 		default:
 			return false;
@@ -258,10 +258,10 @@ bool tval_is_melee_weapon(const struct object *obj)
 bool tval_has_variable_power(const struct object *obj)
 {
 	switch (obj->tval) {
-		case TV_SHOT:
-		case TV_ARROW:
-		case TV_BOLT:
-		case TV_BOW:
+		case TV_AMMO_6:
+		case TV_AMMO_9:
+		case TV_AMMO_12:
+		case TV_GUN:
 		case TV_DIGGING:
 		case TV_HAFTED:
 		case TV_POLEARM:
@@ -288,7 +288,7 @@ bool tval_has_variable_power(const struct object *obj)
 bool tval_is_wearable(const struct object *obj)
 {
 	switch (obj->tval) {
-		case TV_BOW:
+		case TV_GUN:
 		case TV_DIGGING:
 		case TV_HAFTED:
 		case TV_POLEARM:

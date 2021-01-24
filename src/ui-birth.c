@@ -219,7 +219,7 @@ static void skill_help(const int r_skills[], const int c_skills[], int mhp, int 
 		skills[i] = (r_skills ? r_skills[i] : 0 ) + (c_skills ? c_skills[i] : 0);
 
 	text_out_e("Hit/Shoot/Throw: %+d/%+d/%+d\n", skills[SKILL_TO_HIT_MELEE],
-			   skills[SKILL_TO_HIT_BOW], skills[SKILL_TO_HIT_THROW]);
+			   skills[SKILL_TO_HIT_GUN], skills[SKILL_TO_HIT_THROW]);
 	text_out_e("Hit die: %2d   XP mod: %d%%\n", mhp, exp);
 	text_out_e("Disarm: %+3d/%+3d   Devices: %+3d\n", skills[SKILL_DISARM_PHYS],
 			   skills[SKILL_DISARM_MAGIC], skills[SKILL_DEVICE]);

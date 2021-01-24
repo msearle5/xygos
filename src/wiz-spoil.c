@@ -86,11 +86,11 @@ static void spoiler_underline(const char *str, char c)
  */
 static const grouper group_item[] =
 {
-	{ TV_SHOT,		"Ammo" },
-	{ TV_ARROW,		  NULL },
-	{ TV_BOLT,		  NULL },
+	{ TV_AMMO_6,		"Ammo" },
+	{ TV_AMMO_9,		  NULL },
+	{ TV_AMMO_12,		  NULL },
 
-	{ TV_BOW,		"Bows" },
+	{ TV_GUN,		"Guns" },
 
 	{ TV_SWORD,		"Weapons" },
 	{ TV_POLEARM,	  NULL },
@@ -113,7 +113,7 @@ static const grouper group_item[] =
 	{ TV_RING,		"Rings" },
 
 	{ TV_SCROLL,	"Scrolls" },
-	{ TV_PILL,	"Pills" },
+	{ TV_PILL,		"Pills" },
 	{ TV_FOOD,		"Food" },
 	{ TV_MUSHROOM,	"Mushrooms" },
 
@@ -349,7 +349,7 @@ static const grouper group_artifact[] =
 	{ TV_SWORD,         "Edged Weapons" },
 	{ TV_POLEARM,       "Polearms" },
 	{ TV_HAFTED,        "Hafted Weapons" },
-	{ TV_BOW,           "Bows" },
+	{ TV_GUN,           "Guns" },
 	{ TV_DIGGING,       "Diggers" },
 
 	{ TV_SOFT_ARMOR,    "Body Armor" },

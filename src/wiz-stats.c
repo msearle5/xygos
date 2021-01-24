@@ -132,16 +132,16 @@ typedef enum stat_code
 	ST_HUGE_WEAPONS,
 	ST_ENDGAME_WEAPONS,
 	ST_MORGUL_WEAPONS,
-	ST_BOWS,
-	ST_BAD_BOWS,
-	ST_AVERAGE_BOWS,
-	ST_GOOD_BOWS,
-	ST_VERYGOOD_BOWS,
-	ST_XTRAMIGHT_BOWS,
-	ST_XTRASHOTS_BOWS,
-	ST_BUCKLAND_BOWS,
-	ST_TELEP_BOWS,
-	ST_CURSED_BOWS,
+	ST_GUNS,
+	ST_BAD_GUNS,
+	ST_AVERAGE_GUNS,
+	ST_GOOD_GUNS,
+	ST_VERYGOOD_GUNS,
+	ST_XTRAMIGHT_GUNS,
+	ST_XTRASHOTS_GUNS,
+	ST_BUCKLAND_GUNS,
+	ST_TELEP_GUNS,
+	ST_CURSED_GUNS,
 	ST_PILLS,
 	ST_GAINSTAT_PILLS,
 	ST_HEALING_PILLS,
@@ -248,16 +248,16 @@ static const struct stat_data stat_message[] =
 	{ST_HUGE_WEAPONS, " Huge        "},//MoD, SoS and BoC
 	{ST_ENDGAME_WEAPONS, " Endgame     "},//MoD, SoS and BoC with slay evil or x2B
 	{ST_MORGUL_WEAPONS, " Morgul      "},
-	{ST_BOWS, "\n ***LAUNCHERS*** \n All:        "},
-	{ST_BAD_BOWS, " Bad         "},
-	{ST_AVERAGE_BOWS, " Average     "},
-	{ST_GOOD_BOWS, " Good        "},
-	{ST_VERYGOOD_BOWS, " Very Good   "},//Power > 15
-	{ST_XTRAMIGHT_BOWS, " Extra might "},
-	{ST_XTRASHOTS_BOWS, " Extra shots "},
-	{ST_BUCKLAND_BOWS, " Buckland    "},
-	{ST_TELEP_BOWS, " Telepathy   "},
-	{ST_CURSED_BOWS, " Cursed      "},
+	{ST_GUNS, "\n ***LAUNCHERS*** \n All:        "},
+	{ST_BAD_GUNS, " Bad         "},
+	{ST_AVERAGE_GUNS, " Average     "},
+	{ST_GOOD_GUNS, " Good        "},
+	{ST_VERYGOOD_GUNS, " Very Good   "},//Power > 15
+	{ST_XTRAMIGHT_GUNS, " Extra might "},
+	{ST_XTRASHOTS_GUNS, " Extra shots "},
+	{ST_BUCKLAND_GUNS, " Buckland    "},
+	{ST_TELEP_GUNS, " Telepathy   "},
+	{ST_CURSED_GUNS, " Cursed      "},
 	{ST_PILLS, "\n ***PILLS***   \n All:        "},
 	{ST_GAINSTAT_PILLS, " Gain stat   "},//includes *enlight*
 	{ST_HEALING_PILLS, " Healing     "},
@@ -687,48 +687,45 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 		}
 
 		/* launchers */
-		case TV_BOW:{
+		case TV_GUN:{
 
 			/* do not include artifacts */
 			if (obj->artifact) break;
 
 			/* add to launcher total */
-			add_stats(ST_BOWS, vault, mon, number);
+			add_stats(ST_GUNS, vault, mon, number);
 
 			/* check if bad, average, good, or very good */
 			if ((obj->to_h < 0) && (obj->to_d < 0))
-				add_stats(ST_BAD_BOWS, vault, mon, number);
+				add_stats(ST_BAD_GUNS, vault, mon, number);
 			if ((obj->to_h == 0) && (obj->to_d == 0))
-				add_stats(ST_AVERAGE_BOWS, vault, mon, number);
+				add_stats(ST_AVERAGE_GUNS, vault, mon, number);
 			if ((obj->to_h > 0) && (obj->to_d > 0))
-				add_stats(ST_GOOD_BOWS, vault, mon, number);
+				add_stats(ST_GOOD_GUNS, vault, mon, number);
 			if ((obj->to_h > 15) || (obj->to_d > 15))
-				add_stats(ST_VERYGOOD_BOWS, vault, mon, number);
+				add_stats(ST_VERYGOOD_GUNS, vault, mon, number);
 
-			/* check long bows and xbows for xtra might and/or shots */
-			if (obj->pval > 2)
-			{
-				if (obj->modifiers[OBJ_MOD_SHOTS] > 0)
-					add_stats(ST_XTRASHOTS_BOWS, vault, mon, number);
+			/* check for xtra might and/or shots */
+			if (obj->modifiers[OBJ_MOD_SHOTS] > 0)
+				add_stats(ST_XTRASHOTS_GUNS, vault, mon, number);
 
-				if (obj->modifiers[OBJ_MOD_MIGHT] > 0)
-					add_stats(ST_XTRAMIGHT_BOWS, vault, mon, number);
-			}
+			if (obj->modifiers[OBJ_MOD_MIGHT] > 0)
+				add_stats(ST_XTRAMIGHT_GUNS, vault, mon, number);
 
 			/* check for buckland */
 			if ((obj->pval == 2) &&
 				kf_has(obj->kind->kind_flags, KF_SHOOTS_SHOTS) &&
 				(obj->modifiers[OBJ_MOD_MIGHT] > 0) &&
 				(obj->modifiers[OBJ_MOD_SHOTS] > 0))
-					add_stats(ST_BUCKLAND_BOWS, vault, mon, number);
+					add_stats(ST_BUCKLAND_GUNS, vault, mon, number);
 
 			/* has telep */
 			if (of_has(obj->flags, OF_TELEPATHY))
-				add_stats(ST_TELEP_BOWS, vault, mon, number);
+				add_stats(ST_TELEP_GUNS, vault, mon, number);
 
 			/* is cursed */
 			if (obj->curses)
-				add_stats(ST_CURSED_BOWS, vault, mon, number);
+				add_stats(ST_CURSED_GUNS, vault, mon, number);
 			break;
 		}
 
@@ -894,9 +891,9 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 			break;
 		}
 
-		case TV_SHOT:
-		case TV_ARROW:
-		case TV_BOLT:{
+		case TV_AMMO_6:
+		case TV_AMMO_9:
+		case TV_AMMO_12:{
 
 			add_stats(ST_AMMO, vault, mon, number);
 

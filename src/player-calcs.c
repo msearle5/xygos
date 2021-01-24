@@ -1453,7 +1453,7 @@ static void calc_mana(struct player *p, struct player_state *state, bool update)
 
 		/* Ignore non-armor */
 		if (slot_type_is(i, EQUIP_WEAPON)) continue;
-		if (slot_type_is(i, EQUIP_BOW)) continue;
+		if (slot_type_is(i, EQUIP_GUN)) continue;
 		if (slot_type_is(i, EQUIP_RING)) continue;
 		if (slot_type_is(i, EQUIP_AMULET)) continue;
 		if (slot_type_is(i, EQUIP_LIGHT)) continue;
@@ -1767,7 +1767,7 @@ static void calc_shapechange(struct player_state *state,
  * because in the old days a player could just avoid 300 pounds,
  * and helps because now carrying 300 pounds is not very painful.
  *
- * The "weapon" and "bow" do *not* add to the bonuses to hit or to
+ * The "weapon" and "gun" do *not* add to the bonuses to hit or to
  * damage, since that would affect non-combat things.  These values
  * are actually added in later, at the appropriate place.
  *
@@ -1888,7 +1888,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 			state->ac += obj->ac;
 			if (!known_only || obj->known->to_a)
 				state->to_a += obj->to_a;
-			if (!slot_type_is(i, EQUIP_WEAPON) && !slot_type_is(i, EQUIP_BOW)) {
+			if (!slot_type_is(i, EQUIP_WEAPON) && !slot_type_is(i, EQUIP_GUN)) {
 				if (!known_only || obj->known->to_h) {
 					state->to_h += obj->to_h;
 				}
@@ -2169,11 +2169,11 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 
 		/* Type of ammo */
 		if (kf_has(launcher->kind->kind_flags, KF_SHOOTS_SHOTS))
-			state->ammo_tval = TV_SHOT;
+			state->ammo_tval = TV_AMMO_6;
 		else if (kf_has(launcher->kind->kind_flags, KF_SHOOTS_ARROWS))
-			state->ammo_tval = TV_ARROW;
+			state->ammo_tval = TV_AMMO_9;
 		else if (kf_has(launcher->kind->kind_flags, KF_SHOOTS_BOLTS))
-			state->ammo_tval = TV_BOLT;
+			state->ammo_tval = TV_AMMO_12;
 
 		/* Multiplier */
 		state->ammo_mult = launcher->pval;
@@ -2182,7 +2182,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		if (!state->heavy_shoot) {
 			state->num_shots += extra_shots;
 			state->ammo_mult += extra_might;
-			if (player_has(p, PF_FAST_SHOT) && (state->ammo_tval == TV_ARROW)) {
+			if (player_has(p, PF_FAST_SHOT) {
 				state->num_shots += p->lev / 3;
 			}
 		}
@@ -2209,7 +2209,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		}
 
 		/* Divine weapon bonus for blessed weapons */
-		if (player_has(p, PF_BLESS_WEAPON) && of_has(state->flags, OF_BLESSED)){
+		if (player_has(p, PF_BLESS_WEAPON) && of_has(state->flags, OF_BLESSED)) {
 			state->to_h += 2;
 			state->to_d += 2;
 			state->bless_wield = true;
@@ -2306,15 +2306,15 @@ static void update_bonuses(struct player *p)
 
 	/* Hack -- handle partial mode */
 	if (!p->upkeep->only_partial) {
-		/* Take note when "heavy bow" changes */
+		/* Take note when "heavy gun" changes */
 		if (p->state.heavy_shoot != state.heavy_shoot) {
 			/* Message */
 			if (state.heavy_shoot)
-				msg("You have trouble wielding such a heavy bow.");
+				msg("You have trouble handling such a heavy gun.");
 			else if (equipped_item_by_slot_name(p, "shooting"))
-				msg("You have no trouble wielding your bow.");
+				msg("You have no trouble handling your gun.");
 			else
-				msg("You feel relieved to put down your heavy bow.");
+				msg("You feel relieved to put down your heavy gun.");
 		}
 
 		/* Take note when "heavy weapon" changes */

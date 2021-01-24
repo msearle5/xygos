@@ -69,7 +69,7 @@ struct artifact_set_data {
 	int *art_probs;
 	int *tv_probs;
 	int *tv_num;
-	int bow_total;
+	int gun_total;
 	int melee_total;
 	int boot_total;
 	int glove_total;

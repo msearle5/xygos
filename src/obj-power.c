@@ -41,7 +41,7 @@
  * - the assumed bonus on launchers (for rating ego ammo)
  * - twice the assumed multiplier (for rating any ammo)
  * N.B. Ammo tvals are assumed to be consecutive! We access this array using
- * (obj->tval - TV_SHOT) for ammo, and
+ * (obj->tval - TV_AMMO_6) for ammo, and
  * (obj->sval / 10) for launchers
  */
 static struct archery {
@@ -50,9 +50,9 @@ static struct archery {
 	int launch_dam;
 	int launch_mult;
 } archery[] = {
-	{TV_SHOT, 10, 9, 4},
-	{TV_ARROW, 12, 9, 5},
-	{TV_BOLT, 14, 9, 7}
+	{TV_AMMO_6, 10, 9, 4},
+	{TV_AMMO_9, 12, 9, 5},
+	{TV_AMMO_12, 14, 9, 7}
 };
 
 /**
@@ -150,13 +150,13 @@ void log_obj(char *message)
  * ------------------------------------------------------------------------ */
 
 /**
- * Calculate the multiplier we'll get with a given bow type.
+ * Calculate the multiplier we'll get with a given gun type.
  */
-static int bow_multiplier(const struct object *obj)
+static int gun_multiplier(const struct object *obj)
 {
 	int mult = 1;
 
-	if (obj->tval != TV_BOW)
+	if (obj->tval != TV_GUN)
 		return mult;
 	else
 		mult = obj->pval;
@@ -245,8 +245,8 @@ static int launcher_ammo_damage_power(const struct object *obj, int p)
 	int ammo_type = 0;
 
 	if (tval_is_ammo(obj)) {
-		if (obj->tval == TV_ARROW) ammo_type = 1;
-		if (obj->tval == TV_BOLT) ammo_type = 2;
+		if (obj->tval == TV_AMMO_9) ammo_type = 1;
+		if (obj->tval == TV_AMMO_12) ammo_type = 2;
 		if (obj->ego)
 			p += (archery[ammo_type].launch_dam * DAMAGE_POWER / 2);
 		p = p * archery[ammo_type].launch_mult / (2 * MAX_BLOWS);
@@ -429,11 +429,11 @@ static s32b slay_power(const struct object *obj, int p, int verbose,
  * Melee weapons assume MAX_BLOWS per turn, so we must divide by MAX_BLOWS
  * to get equal ratings for launchers.
  */
-static int rescale_bow_power(const struct object *obj, int p)
+static int rescale_gun_power(const struct object *obj, int p)
 {
 	if (wield_slot(obj) == slot_by_name(player, "shooting")) {
 		p /= MAX_BLOWS;
-		log_obj(format("Rescaling bow power, total is %d\n", p));
+		log_obj(format("Rescaling gun power, total is %d\n", p));
 	}
 	return p;
 }
@@ -761,7 +761,7 @@ s32b object_power(const struct object* obj, bool verbose, ang_file *log_file)
 	p += dice_pwr;
 	if (dice_pwr) log_obj(format("total is %d\n", p));
 	p += ammo_damage_power(obj, p);
-	mult = bow_multiplier(obj);
+	mult = gun_multiplier(obj);
 	p = launcher_ammo_damage_power(obj, p);
 	p = extra_blows_power(obj, p);
 	if (p > INHIBIT_POWER) return p;
@@ -770,7 +770,7 @@ s32b object_power(const struct object* obj, bool verbose, ang_file *log_file)
 	p = extra_might_power(obj, p, mult);
 	if (p > INHIBIT_POWER) return p;
 	p = slay_power(obj, p, verbose, dice_pwr);
-	p = rescale_bow_power(obj, p);
+	p = rescale_gun_power(obj, p);
 	p = to_hit_power(obj, p);
 
 	/* Armour class power */

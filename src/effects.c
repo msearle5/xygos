@@ -618,7 +618,7 @@ static bool item_tester_hook_ammo(const struct object *obj)
  */
 static bool item_tester_hook_bolt(const struct object *obj)
 {
-	return obj->tval == TV_BOLT;
+	return obj->tval == TV_AMMO_12;
 }
 
 /**
@@ -2411,7 +2411,7 @@ bool effect_handler_DISENCHANT(effect_handler_context_t *context)
 	}
 
 	/* Apply disenchantment, depending on which kind of equipment */
-	if (slot_type_is(i, EQUIP_WEAPON) || slot_type_is(i, EQUIP_BOW)) {
+	if (slot_type_is(i, EQUIP_WEAPON) || slot_type_is(i, EQUIP_GUN)) {
 		/* Disenchant to-hit */
 		if (obj->to_h > 0) obj->to_h--;
 		if ((obj->to_h > 5) && (randint0(100) < 20)) obj->to_h--;
@@ -4820,7 +4820,7 @@ bool effect_handler_CREATE_ARROWS(effect_handler_context_t *context)
 	object_delete(&staff);
 
 	/* Make some arrows */
-	arrows = make_object(cave, player->lev, good, great, false, NULL, TV_ARROW);
+	arrows = make_object(cave, player->lev, good, great, false, NULL, TV_AMMO_9);
 	drop_near(cave, &arrows, 0, player->grid, true, true);
 
 	return true;

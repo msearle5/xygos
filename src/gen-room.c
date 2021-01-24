@@ -1388,7 +1388,7 @@ bool build_vault(struct chunk *c, struct loc centre, struct vault *v)
 					case 1: tval = TV_SWORD; break;
 					case 2: tval = TV_POLEARM; break;
 					case 3: tval = TV_HAFTED; break;
-					case 4: tval = TV_BOW; break;
+					case 4: tval = TV_GUN; break;
 					}
 					place_object(c, grid, c->depth + 3, true, false,
 								 ORIGIN_VAULT, tval);

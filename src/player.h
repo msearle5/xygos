@@ -120,7 +120,7 @@ enum {
 	SKILL_SEARCH,			/* Searching ability */
 	SKILL_STEALTH,			/* Stealth factor */
 	SKILL_TO_HIT_MELEE,		/* To hit (normal) */
-	SKILL_TO_HIT_BOW,		/* To hit (shooting) */
+	SKILL_TO_HIT_GUN,		/* To hit (shooting) */
 	SKILL_TO_HIT_THROW,		/* To hit (throwing) */
 	SKILL_DIGGING,			/* Digging */
 

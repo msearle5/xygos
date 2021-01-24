@@ -2270,7 +2270,7 @@ static enum parser_error parse_p_race_skill_shoot(struct parser *p) {
 	struct player_race *r = parser_priv(p);
 	if (!r)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
-	r->r_skills[SKILL_TO_HIT_BOW] = parser_getint(p, "shoot");
+	r->r_skills[SKILL_TO_HIT_GUN] = parser_getint(p, "shoot");
 	return PARSE_ERROR_NONE;
 }
 
@@ -3062,8 +3062,8 @@ static enum parser_error parse_class_skill_shoot(struct parser *p) {
 	struct player_class *c = parser_priv(p);
 	if (!c)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
-	c->c_skills[SKILL_TO_HIT_BOW] = parser_getint(p, "base");
-	c->x_skills[SKILL_TO_HIT_BOW] = parser_getint(p, "incr");
+	c->c_skills[SKILL_TO_HIT_GUN] = parser_getint(p, "base");
+	c->x_skills[SKILL_TO_HIT_GUN] = parser_getint(p, "incr");
 	return PARSE_ERROR_NONE;
 }
 

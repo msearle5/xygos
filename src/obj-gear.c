@@ -248,7 +248,7 @@ int wield_slot(const struct object *obj)
 	/* Slot for equipment */
 	switch (obj->tval)
 	{
-		case TV_BOW: return slot_by_type(player, EQUIP_BOW, false);
+		case TV_GUN: return slot_by_type(player, EQUIP_GUN, false);
 		case TV_AMULET: return slot_by_type(player, EQUIP_AMULET, false);
 		case TV_CLOAK: return slot_by_type(player, EQUIP_CLOAK, false);
 		case TV_SHIELD: return slot_by_type(player, EQUIP_SHIELD, false);
@@ -291,7 +291,7 @@ bool minus_ac(struct player *p)
 	for (i = 0; i < player->body.count; i++) {
 		/* Ignore non-armor */
 		if (slot_type_is(i, EQUIP_WEAPON)) continue;
-		if (slot_type_is(i, EQUIP_BOW)) continue;
+		if (slot_type_is(i, EQUIP_GUN)) continue;
 		if (slot_type_is(i, EQUIP_RING)) continue;
 		if (slot_type_is(i, EQUIP_AMULET)) continue;
 		if (slot_type_is(i, EQUIP_LIGHT)) continue;
@@ -304,7 +304,7 @@ bool minus_ac(struct player *p)
 	for (i = player->body.count - 1; i >= 0; i--) {
 		/* Ignore non-armor */
 		if (slot_type_is(i, EQUIP_WEAPON)) continue;
-		if (slot_type_is(i, EQUIP_BOW)) continue;
+		if (slot_type_is(i, EQUIP_GUN)) continue;
 		if (slot_type_is(i, EQUIP_RING)) continue;
 		if (slot_type_is(i, EQUIP_AMULET)) continue;
 		if (slot_type_is(i, EQUIP_LIGHT)) continue;
@@ -747,7 +747,7 @@ void inven_wield(struct object *obj, int slot)
 	/* Where is the item now */
 	if (tval_is_melee_weapon(wielded))
 		fmt = "You are wielding %s (%c).";
-	else if (wielded->tval == TV_BOW)
+	else if (wielded->tval == TV_GUN)
 		fmt = "You are shooting with %s (%c).";
 	else if (tval_is_light(wielded))
 		fmt = "Your light source is %s (%c).";
@@ -806,7 +806,7 @@ void inven_takeoff(struct object *obj)
 	/* Describe removal by slot */
 	if (slot_type_is(slot, EQUIP_WEAPON))
 		act = "You were wielding";
-	else if (slot_type_is(slot, EQUIP_BOW))
+	else if (slot_type_is(slot, EQUIP_GUN))
 		act = "You were holding";
 	else if (slot_type_is(slot, EQUIP_LIGHT))
 		act = "You were holding";

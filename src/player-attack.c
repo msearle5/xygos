@@ -115,7 +115,7 @@ static int chance_of_missile_hit(const struct player *p,
 		}
 	} else {
 		bonus += p->state.to_h + launcher->to_h;
-		chance = p->state.skills[SKILL_TO_HIT_BOW] + bonus * BTH_PLUS_ADJ;
+		chance = p->state.skills[SKILL_TO_HIT_GUN] + bonus * BTH_PLUS_ADJ;
 	}
 
 	return chance - distance(p->grid, grid);
@@ -1114,9 +1114,9 @@ static struct attack_result make_ranged_shot(struct player *p,
 {
 	char *hit_verb = mem_alloc(20 * sizeof(char));
 	struct attack_result result = {false, 0, 0, hit_verb};
-	struct object *bow = equipped_item_by_slot_name(p, "shooting");
+	struct object *gun = equipped_item_by_slot_name(p, "shooting");
 	struct monster *mon = square_monster(cave, grid);
-	int chance = chance_of_missile_hit(p, ammo, bow, grid);
+	int chance = chance_of_missile_hit(p, ammo, gun, grid);
 	int b = 0, s = 0;
 
 	my_strcpy(hit_verb, "hits", 20);
@@ -1128,17 +1128,17 @@ static struct attack_result make_ranged_shot(struct player *p,
 	result.success = true;
 
 	improve_attack_modifier(ammo, mon, &b, &s, result.hit_verb, true);
-	improve_attack_modifier(bow, mon, &b, &s, result.hit_verb, true);
+	improve_attack_modifier(gun, mon, &b, &s, result.hit_verb, true);
 
 	if (!OPT(p, birth_percent_damage)) {
-		result.dmg = ranged_damage(p, mon, ammo, bow, b, s);
+		result.dmg = ranged_damage(p, mon, ammo, gun, b, s);
 		result.dmg = critical_shot(p, mon, ammo->weight, ammo->to_h,
 								   result.dmg, &result.msg_type);
 	} else {
-		result.dmg = o_ranged_damage(p, mon, ammo, bow, b, s, &result.msg_type);
+		result.dmg = o_ranged_damage(p, mon, ammo, gun, b, s, &result.msg_type);
 	}
 
-	missile_learn_on_ranged_attack(p, bow);
+	missile_learn_on_ranged_attack(p, gun);
 
 	return result;
 }
@@ -1192,7 +1192,7 @@ void do_cmd_fire(struct command *cmd) {
 
 	ranged_attack attack = make_ranged_shot;
 
-	struct object *bow = equipped_item_by_slot_name(player, "shooting");
+	struct object *gun = equipped_item_by_slot_name(player, "shooting");
 	struct object *obj;
 
 	if (player_is_shapechanged(player)) {
@@ -1219,7 +1219,7 @@ void do_cmd_fire(struct command *cmd) {
 		return;
 
 	/* Require a usable launcher */
-	if (!bow || !player->state.ammo_tval) {
+	if (!gun || !player->state.ammo_tval) {
 		msg("You have nothing to fire with.");
 		return;
 	}
@@ -1297,10 +1297,10 @@ void do_cmd_throw(struct command *cmd) {
 void do_cmd_fire_at_nearest(void) {
 	int i, dir = DIR_TARGET;
 	struct object *ammo = NULL;
-	struct object *bow = equipped_item_by_slot_name(player, "shooting");
+	struct object *gun = equipped_item_by_slot_name(player, "shooting");
 
 	/* Require a usable launcher */
-	if (!bow || !player->state.ammo_tval) {
+	if (!gun || !player->state.ammo_tval) {
 		msg("You have nothing to fire with.");
 		return;
 	}

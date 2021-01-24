@@ -1449,9 +1449,9 @@ void mod_message(struct object *obj, int mod)
 			break;
 		case OBJ_MOD_SHOTS:
 			if (obj->modifiers[OBJ_MOD_SHOTS] > 0)
-				msg("Your bow tingles in your hands.");
+				msg("Your gun tingles in your hands.");
 			else if (obj->modifiers[OBJ_MOD_SHOTS] < 0)
-				msg("Your bow aches in your hands.");
+				msg("Your gun aches in your hands.");
 			break;
 		case OBJ_MOD_INFRA:
 			msg("Your eyes tingle.");
@@ -1955,7 +1955,7 @@ void equip_learn_on_defend(struct player *p)
 
 /**
  * Learn to-hit bonus on making a ranged attack.
- * Does not apply to weapon or bow
+ * Does not apply to melee weapon or gun
  *
  * \param p is the player
  */
@@ -1991,7 +1991,7 @@ void equip_learn_on_ranged_attack(struct player *p)
 
 /**
  * Learn things which happen on making a melee attack.
- * Does not apply to bow
+ * Does not apply to gun
  *
  * \param p is the player
  */

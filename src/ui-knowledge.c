@@ -1390,10 +1390,10 @@ static const grouper object_text_order[] =
 	{TV_SWORD,			"Sword"			},
 	{TV_POLEARM,		"Polearm"		},
 	{TV_HAFTED,			"Hafted Weapon" },
-	{TV_BOW,			"Bow"			},
-	{TV_ARROW,			"Ammunition"	},
-	{TV_BOLT,			NULL			},
-	{TV_SHOT,			NULL			},
+	{TV_GUN,			"9mm"			},
+	{TV_AMMO_9,			"Ammunition"	},
+	{TV_AMMO_12,			NULL			},
+	{TV_AMMO_6,			NULL			},
 	{TV_SHIELD,			"Shield"		},
 	{TV_CROWN,			"Crown"			},
 	{TV_HELM,			"Helm"			},
@@ -2723,7 +2723,7 @@ static const char *skill_index_to_name(int i)
 		name = "melee to hit";
 		break;
 
-	case SKILL_TO_HIT_BOW:
+	case SKILL_TO_HIT_GUN:
 		name = "shooting to hit";
 		break;
 

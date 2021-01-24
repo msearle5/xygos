@@ -779,7 +779,7 @@ static void mass_produce(struct object *obj)
 		case TV_POLEARM:
 		case TV_HAFTED:
 		case TV_DIGGING:
-		case TV_BOW:
+		case TV_GUN:
 		{
 			if (obj->ego) break;
 			if (cost <= 10L) size += mass_roll(3, 5);
@@ -787,9 +787,9 @@ static void mass_produce(struct object *obj)
 			break;
 		}
 
-		case TV_SHOT:
-		case TV_ARROW:
-		case TV_BOLT:
+		case TV_AMMO_6:
+		case TV_AMMO_9:
+		case TV_AMMO_12:
 		{
 			if (cost <= 5L)
 				size = randint1(2) * 20;         /* 20-40 in 20s */
@@ -1585,7 +1585,7 @@ int find_inven(const struct object *obj)
 			}
 
 			/* Wearables */
-			case TV_BOW:
+			case TV_GUN:
 			case TV_DIGGING:
 			case TV_HAFTED:
 			case TV_POLEARM:
@@ -1603,9 +1603,9 @@ int find_inven(const struct object *obj)
 			case TV_RING:
 			case TV_AMULET:
 			case TV_LIGHT:
-			case TV_BOLT:
-			case TV_ARROW:
-			case TV_SHOT:
+			case TV_AMMO_12:
+			case TV_AMMO_9:
+			case TV_AMMO_6:
 			{
 				/* Require identical "bonuses" */
 				if (obj->to_h != gear_obj->to_h)

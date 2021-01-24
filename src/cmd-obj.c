@@ -349,8 +349,8 @@ void do_cmd_wield(struct command *cmd)
 	/* Took off weapon */
 	if (slot_type_is(slot, EQUIP_WEAPON))
 		act = "You were wielding";
-	/* Took off bow */
-	else if (slot_type_is(slot, EQUIP_BOW))
+	/* Took off gun */
+	else if (slot_type_is(slot, EQUIP_GUN))
 		act = "You were holding";
 	/* Took off light */
 	else if (slot_type_is(slot, EQUIP_LIGHT))

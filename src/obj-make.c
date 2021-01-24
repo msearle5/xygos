@@ -1045,7 +1045,7 @@ bool kind_is_good(const struct object_kind *kind)
 		}
 
 		/* Weapons -- Good unless damaged */
-		case TV_BOW:
+		case TV_GUN:
 		case TV_SWORD:
 		case TV_HAFTED:
 		case TV_POLEARM:
@@ -1057,8 +1057,8 @@ bool kind_is_good(const struct object_kind *kind)
 		}
 
 		/* Ammo -- Arrows/Bolts are good */
-		case TV_BOLT:
-		case TV_ARROW:
+		case TV_AMMO_12:
+		case TV_AMMO_9:
 		{
 			return true;
 		}
