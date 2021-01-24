@@ -1873,11 +1873,30 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 	} else {
 		/* If any stores are scheduled to be destroyed, do it now */
 		bool modded = false;
+		bool found = false;
+
 		for(int i=0;i<MAX_STORES;i++) {
 			if (stores[i].destroy) {
 				destroy_store(c_old, i);
 				stores[i].destroy = false;
 				modded = true;
+			}
+		}
+
+		/* If returning from a quest (that is, there is a quest that has
+		 * an XY but no active flag), delete it and use the XY for the 
+		 * player position
+		 **/
+		for(int i=0; i<z_info->quest_max; i++) {
+			if (!(p->quests[i].flags & QF_ACTIVE)) {
+				if (p->quests[i].x) {
+					grid.x = p->quests[i].x;
+					grid.y = p->quests[i].y;
+					square_set_feat(c_old, grid, FEAT_FLOOR);
+					found = true;
+					modded = true;
+					break;
+				}
 			}
 		}
 
@@ -1890,16 +1909,18 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 		}
 
 		/* Find the stairs (lame) */
-		for (grid.y = 0; grid.y < c_new->height; grid.y++) {
-			bool found = false;
-			for (grid.x = 0; grid.x < c_new->width; grid.x++) {
-				if (square_feat(c_new, grid)->fidx == FEAT_MORE) {
-					found = true;
-					break;
+		if (!found) {
+			for (grid.y = 0; grid.y < c_new->height; grid.y++) {
+				for (grid.x = 0; grid.x < c_new->width; grid.x++) {
+					if (square_feat(c_new, grid)->fidx == FEAT_MORE) {
+						found = true;
+						break;
+					}
 				}
+				if (found) break;
 			}
-			if (found) break;
 		}
+
 		/* Place the player */
 		player_place(c_new, p, grid);
 		c_new->depth = danger_depth(player);
@@ -2466,6 +2487,41 @@ struct chunk *vault_chunk(struct player *p)
 	return c;
 }
 
+/* ------------------ QUEST ---------------- */
+/**
+ * Make a chunk consisting only of a quest vault
+ * \param p is the player
+ * \return a pointer to the generated chunk
+ */
+struct chunk *quest_chunk(struct player *p)
+{
+	/* Find the quest */
+	struct quest *q;
+	if (player->active_quest < 0) {
+		msg("Wot, no quest?");
+		return NULL;
+	} else {
+		/* Find the quest */
+		q = &player->quests[player->active_quest];
+
+		/* Find the vault */
+		struct vault *v = named_vault(q->name, "Quest");
+
+		/* Make the chunk */
+		struct chunk *c = cave_new(v->hgt, v->wid);
+		c->depth = p->depth;
+
+		/* Fill with permarock; the vault will override for the grids it sets. */
+		fill_rectangle(c, 0, 0, v->hgt - 1, v->wid - 1, FEAT_PERM,
+			SQUARE_NONE);
+
+		/* Build the vault in it */
+		build_vault(c, loc(v->wid / 2, v->hgt / 2), v);
+
+		return c;
+	}
+}
+
 /**
  * Make sure that all the caverns surrounding the centre are connected.
  * \param c is the entire current chunk (containing the caverns)
@@ -2502,6 +2558,46 @@ void connect_caverns(struct chunk *c, struct loc floor[])
     mem_free(colors);
     mem_free(counts);
 }
+
+/**
+ * Generate a quest level - a quest vault
+ * \param p is the player
+ * \return a pointer to the generated chunk
+*/
+struct chunk *quest_gen(struct player *p, int min_height, int min_width)
+{
+	/* Make a vault  */
+	struct chunk *vault = quest_chunk(p);
+	struct chunk *c;
+
+	/* Make a cave to copy them into */
+	c = cave_new(z_info->dungeon_hgt, z_info->dungeon_wid);
+	c->depth = p->depth;
+
+	/* Encase in perma-rock */
+    draw_rectangle(c, 0, 0, c->height - 1, c->width - 1,
+				   FEAT_PERM, SQUARE_NONE);
+
+	/* Dimensions */
+	int centre_cavern_ypos = (z_info->dungeon_hgt - vault->height) / 2;
+	int left_cavern_wid = (z_info->dungeon_wid - vault->width) / 2;
+
+	/* Copy it in */
+	chunk_copy(c, vault, centre_cavern_ypos, left_cavern_wid, 0, false);
+
+	/* Find the best possible place - look for a stair */
+	struct loc grid;
+	if (!cave_find(c, &grid, square_isstairs)) {
+		/* Determine the character location (there is no stair) */
+		new_player_spot(c, p);
+	} else {
+		player_place(c, p, grid);
+	}
+
+	return c;
+}
+
+
 /**
  * Generate a hard centre level - a greater vault surrounded by caverns
  * \param p is the player

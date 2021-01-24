@@ -578,6 +578,49 @@ void wield_all(struct player *p)
 	return;
 }
 
+void add_start_items(struct player *p, const struct start_item *si, bool skip, bool pay, int origin)
+{
+	struct object *obj, *known_obj;
+	for (; si; si = si->next) {
+		int num = rand_range(si->min, si->max);
+		struct object_kind *kind;
+		if (si->sval)
+			kind = lookup_kind(si->tval, si->sval);
+		else
+			kind = get_obj_num(0, false, si->tval);
+		assert(kind);
+
+		/* Without start_kit, only start with 1 food and 1 light */
+		if (skip) {
+			if (!tval_is_food_k(kind) && !tval_is_light_k(kind))
+				continue;
+
+			num = 1;
+		}
+
+		/* Prepare a new item */
+		obj = object_new();
+		object_prep(obj, kind, 0, MINIMISE);
+		obj->number = num;
+		obj->origin = origin;
+
+		known_obj = object_new();
+		obj->known = known_obj;
+		object_set_base_known(obj);
+		object_flavor_aware(obj);
+		obj->known->pval = obj->pval;
+		obj->known->effect = obj->effect;
+		obj->known->notice |= OBJ_NOTICE_ASSESSED;
+
+		/* Deduct the cost of the item from starting cash */
+		if (pay)
+			p->au -= object_value_real(obj, obj->number);
+
+		/* Carry the item */
+		inven_carry(p, obj, true, false);
+		kind->everseen = true;
+	}
+}
 
 /**
  * Init players with some belongings
@@ -588,7 +631,6 @@ static void player_outfit(struct player *p)
 {
 	int i;
 	const struct start_item *si;
-	struct object *obj, *known_obj;
 
 	/* Currently carrying nothing */
 	p->upkeep->total_weight = 0;
@@ -605,44 +647,7 @@ static void player_outfit(struct player *p)
 	}
 
 	/* Give the player starting equipment */
-	for (si = p->class->start_items; si; si = si->next) {
-		int num = rand_range(si->min, si->max);
-		struct object_kind *kind;
-		if (si->sval)
-			kind = lookup_kind(si->tval, si->sval);
-		else
-			kind = get_obj_num(0, false, si->tval);
-		assert(kind);
-
-		/* Without start_kit, only start with 1 food and 1 light */
-		if (!OPT(p, birth_start_kit)) {
-			if (!tval_is_food_k(kind) && !tval_is_light_k(kind))
-				continue;
-
-			num = 1;
-		}
-
-		/* Prepare a new item */
-		obj = object_new();
-		object_prep(obj, kind, 0, MINIMISE);
-		obj->number = num;
-		obj->origin = ORIGIN_BIRTH;
-
-		known_obj = object_new();
-		obj->known = known_obj;
-		object_set_base_known(obj);
-		object_flavor_aware(obj);
-		obj->known->pval = obj->pval;
-		obj->known->effect = obj->effect;
-		obj->known->notice |= OBJ_NOTICE_ASSESSED;
-
-		/* Deduct the cost of the item from starting cash */
-		p->au -= object_value_real(obj, obj->number);
-
-		/* Carry the item */
-		inven_carry(p, obj, true, false);
-		kind->everseen = true;
-	}
+	add_start_items(p, p->class->start_items, (!OPT(p, birth_start_kit)), true, ORIGIN_BIRTH);
 
 	/* Sanity check */
 	if (p->au < 0)
@@ -1264,6 +1269,9 @@ void do_cmd_accept_character(struct command *cmd)
 
 	/* Outfit the player, if they can sell the stuff */
 	player_outfit(player);
+
+	/* No quest in progress */
+	player->active_quest = -1;
 
 	/* Stop the player being quite so dead */
 	player->is_dead = false;

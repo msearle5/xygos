@@ -1014,7 +1014,13 @@ static struct chunk *cave_generate(struct player *p, int height, int width)
 		}
 
 		/* Choose a profile and build the level */
-		dun->profile = choose_profile(p);
+		if (p->active_quest >= 0) {
+			dun->profile = find_cave_profile("quest");
+		} else {
+			dun->profile = choose_profile(p);
+		}
+		assert(dun->profile);
+
 		chunk = dun->profile->builder(p, height, width);
 		if (!chunk) {
 			error = "Failed to find builder";
@@ -1394,7 +1400,6 @@ void prepare_next_level(struct chunk **c, struct player *p)
 		if (persist) {
 			cave_illuminate(*c, is_daytime());
 		}
-
 	}
 
 	/* The dungeon is ready */

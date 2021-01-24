@@ -1332,6 +1332,106 @@ static void store_buy(struct store_context *ctx, bool *exit)
 	*exit = true;
 }
 
+static int locate_get(int min, int max, int feature, int xc, int yc, int *xout, int *yout, int total)
+{
+	int count = 0;
+	if (xout)
+		*xout = 0;
+	if (yout)
+		*yout = 0;
+
+	/* To allow squared distances in the loop */
+	if (min >= 0)
+		min *= min;
+	if (max >= 0)
+		max *= max;
+
+	/* Scan the level */
+	for(int y=1; y<cave->height-1; y++) {
+		for(int x=1; x<cave->width-1; x++) {
+			/* Is it floor? */
+			if (square(cave, loc(x, y))->feat != FEAT_FLOOR)
+				continue;
+			/* Is it in bounds? */
+			int distance = ((x-xc)*(x-xc)) + ((y-yc) * (y-yc));
+			if (((min >= 0) && (distance < min)) || ((max >= 0) && (distance > max)))
+				continue;
+			/* Is there a nearby feature? */
+			if (feature != FEAT_NONE) {
+				if ((square(cave, loc(x-1, y-1))->feat != feature) &&
+					(square(cave, loc(x+1, y-1))->feat != feature) &&
+					(square(cave, loc(x-1, y))->feat != feature) &&
+					(square(cave, loc(x+1, y))->feat != feature) &&
+					(square(cave, loc(x-1, y+1))->feat != feature) &&
+					(square(cave, loc(x+1, y+1))->feat != feature) &&
+					(square(cave, loc(x, y-1))->feat != feature) &&
+					(square(cave, loc(x, y+1))->feat != feature))
+						continue;
+			}
+			/* It's OK - increase the count, and return if this is asked for */
+			if (xout) {
+				if (count == total) {
+					*xout = x;
+					*yout = y;
+					return total;
+				}
+			}
+			count++;
+		}
+	}
+	return count;
+}
+
+/** Find a place to put a town quest.
+ * It should be
+ * - on floor
+ * - near a given tile (granite for the edge, lava, permanite for a shop - FEAT_NONE if you dont care)
+ * - possibly close to the store (give a min and max distance, either can be -1 if unwanted)
+ * - selected at random from grids matching
+ * - placed in an emergency position if none match?
+ */
+static void locate_quest(struct quest *q)
+{
+	int xout, yout;
+	
+	/* Center position is the current player postion */
+	int x = player->grid.x;
+	int y = player->grid.y;
+
+	/* Min/max and feature from the quest */
+	int min = q->entry_min;
+	int max = q->entry_max;
+	int feature = q->entry_feature;
+
+	/* Try as asked for */
+	int grids = locate_get(min, max, feature, x, y, NULL, NULL, 0);
+	/* If not, ignore the min/max distance */
+	if (!grids) {
+		max = -1;
+		min = -1;
+		grids = locate_get(min, max, feature, x, y, NULL, NULL, 0);
+	}
+	/* If not, ignore the feature */
+	if (!grids) {
+		feature = FEAT_NONE;
+		grids = locate_get(min, max, feature, x, y, NULL, NULL, 0);
+	}
+	/* Shouldn't happen - just put it next to the questgiver. */
+	if (!grids) {
+		q->x = x;
+		if (y > cave->height / 2)
+			y--;
+		else
+			y++;
+		q->y = y;
+		return;
+	}
+	/* Select at random */ 
+	locate_get(min, max, feature, x, y, &xout, &yout, randint0(grids));
+	q->x = xout;
+	q->y = yout;
+}
+
 /* asks the owner if there is anything they want doing */
 static void store_quest(struct store_context *ctx)
 {
@@ -1345,24 +1445,38 @@ static void store_quest(struct store_context *ctx)
 	// Scan the quests looking for a quest which is 'available' and based from this store.
 	for(int i=0;i<z_info->quest_max;i++)
 	{
-		struct quest *q = &quests[i];
-		if (q->store == (int)store->sidx) {
+		struct quest *q = &player->quests[i];
+		if ((q->store == (int)store->sidx) && (!(q->flags & QF_LOCKED))) {
 			if (!(q->flags & (QF_ACTIVE | QF_FAILED | QF_SUCCEEDED | QF_UNREWARDED))) {
 				/* Take new quest - ask first */
 				screen_save();
 				int response = store_get_check(q->intro);
 				screen_load();
 				if (response) {
-					/* Accepted */
+					/* Accepted TODO message */
 					q->flags |= QF_ACTIVE;
+					locate_quest(q);
+
+					/* Create a stairway */
+					square_set_feat(cave, loc(q->x,q->y), FEAT_ENTRY);
 				}
 				return;
 			} else if (q->flags & QF_UNREWARDED) {
 				/* Debrief */
 				if (q->flags & QF_SUCCEEDED) {
 					msg(q->succeed);
+					quest_reward(q, true);
+					/* Unlock quests depending on this */
+					if (q->unlock) {
+						for(int j=0;j<z_info->quest_max;j++)
+						{
+							if (streq(player->quests[j].name, q->unlock))
+								player->quests[j].flags &= ~QF_LOCKED;
+						}
+					}
 				} else {
 					msg(q->failure);
+					quest_reward(q, false);
 				}
 				q->flags &= ~(QF_UNREWARDED | QF_ACTIVE);
 				if (!(q->flags & QF_SUCCEEDED))
@@ -1371,6 +1485,7 @@ static void store_quest(struct store_context *ctx)
 			} else if (q->flags & QF_ACTIVE) {
 				/* Still in progress */
 				msg("Your task '%s' is still in progress.", q->name);
+				return;
 			}
 		}
 	}

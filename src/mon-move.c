@@ -1046,6 +1046,13 @@ static bool monster_turn_multiply(struct chunk *c, struct monster *mon)
 			if (monster_is_visible(mon))
 				sound(MSG_MULTIPLY);
 
+			/* Quest target? If so, increase the number of targets needed */
+			if (player->active_quest >= 0) {
+				if (mon->race == player->quests[player->active_quest].race) {
+					player->quests[player->active_quest].max_num++;
+				}
+			}
+
 			/* Multiplying takes energy */
 			return true;
 		}

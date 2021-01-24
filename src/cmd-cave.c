@@ -43,6 +43,7 @@
 #include "player-calcs.h"
 #include "player-path.h"
 #include "player-timed.h"
+#include "player-quest.h"
 #include "player-util.h"
 #include "project.h"
 #include "store.h"
@@ -54,6 +55,11 @@
 void do_cmd_go_up(struct command *cmd)
 {
 	int ascend_to;
+	bool exit = (square(cave, player->grid)->feat == FEAT_EXIT);
+	const char *maze = "You enter a maze of up staircases.";
+	struct quest *quest = NULL;
+	if (player->active_quest >= 0)
+		quest = &player->quests[player->active_quest];
 
 	/* Verify stairs */
 	if (!square_isupstairs(cave, player->grid)) {
@@ -74,11 +80,36 @@ void do_cmd_go_up(struct command *cmd)
 		return;
 	}
 
+	/* Exit a quest */
+	if (exit) {
+		/* Paranoia */
+		if (!quest) {
+			msg("OOPS - Can't find quest for this exit");
+		} else {
+			/* If the quest is not complete, verify that the player really intends
+			 * to fail the quest
+			 */
+			if (!(quest->flags & QF_SUCCEEDED)) {
+				if (!get_check("Leaving now will fail your task. Sure? "))
+					return;
+				else
+					quest->flags |= QF_FAILED;
+			} else {
+				quest->flags |= QF_UNREWARDED;
+			}
+			quest->flags &= ~QF_ACTIVE;
+			maze = "You return to the town.";
+
+			/* Not generating or in a quest any more */
+			player->active_quest = -1;
+		}
+	}
+
 	/* Take a turn */
 	player->upkeep->energy_use = z_info->move_energy;
 
 	/* Success */
-	msgt(MSG_STAIRS_UP, "You enter a maze of up staircases.");
+	msgt(MSG_STAIRS_UP, maze);
 
 	/* Create a way back */
 	player->upkeep->create_up_stair = false;
@@ -95,6 +126,9 @@ void do_cmd_go_up(struct command *cmd)
 void do_cmd_go_down(struct command *cmd)
 {
 	int descend_to = dungeon_get_next_level(player->depth, 1);
+	bool entry = (square(cave, player->grid)->feat == FEAT_ENTRY);
+	struct quest *quest = NULL;
+	const char *maze = "You enter a maze of down staircases.";
 
 	/* Verify stairs */
 	if (!square_isdownstairs(cave, player->grid)) {
@@ -116,11 +150,34 @@ void do_cmd_go_down(struct command *cmd)
 			return;
 	}
 
+	/* Enter The Quest! */
+	if (entry) {
+		quest = get_quest_by_grid(player->grid);
+		/* Paranoia */
+		if (!quest) {
+			msg("OOPS - Can't find quest for this entry");
+			return;
+		}
+	}
+
+	/* Check you really meant to enter the quest */
+	if (quest) {
+		char buf[128];
+		snprintf(buf, sizeof(buf), "Are you sure you want to enter the level %d '%s' task? ",
+			quest->level, quest->name);
+		buf[sizeof(buf)-1] = 0;
+		if (!get_check(buf))
+			return;
+		maze = "You descend into the darkness.";
+		descend_to = quest->level;
+		player->active_quest = quest - player->quests;
+	}
+
 	/* Hack -- take a turn */
 	player->upkeep->energy_use = z_info->move_energy;
 
 	/* Success */
-	msgt(MSG_STAIRS_DOWN, "You enter a maze of down staircases.");
+	msgt(MSG_STAIRS_DOWN, maze);
 
 	/* Create a way back */
 	player->upkeep->create_up_stair = true;
@@ -1447,7 +1504,7 @@ void do_cmd_sleep(struct command *cmd)
 static const char *obj_feeling_text[] =
 {
 	"Looks like any other level.",
-	"you sense an item of wondrous power!",
+	"you sense an item of unique power!",
 	"there are superb treasures here.",
 	"there are excellent treasures here.",
 	"there are very good treasures here.",
@@ -1456,7 +1513,7 @@ static const char *obj_feeling_text[] =
 	"there may not be much interesting here.",
 	"there aren't many treasures here.",
 	"there are only scraps of junk here.",
-	"there is naught but cobwebs here."
+	"there is nothing but cobwebs here."
 };
 
 /**
@@ -1498,6 +1555,12 @@ void display_feeling(bool obj_only)
 	/* No useful feeling in town */
 	if (!player->depth) {
 		msg("Looks like a typical town.");
+		return;
+	}
+
+	/* Or in a quest */
+	if (player->active_quest >= 0) {
+		msg("You have no intuition about what there might be in this place.");
 		return;
 	}
 

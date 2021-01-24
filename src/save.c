@@ -407,7 +407,10 @@ void rdwr_quests(void)
 	for (int i = 0; i < z_info->quest_max; i++) {
 		rdwr_byte(&player->quests[i].level);
 		rdwr_s32b(&player->quests[i].cur_num);
+		rdwr_s32b(&player->quests[i].max_num);
 		rdwr_u32b(&player->quests[i].flags);
+		rdwr_u16b(&player->quests[i].x);
+		rdwr_u16b(&player->quests[i].y);
 	}
 }
 
@@ -507,6 +510,9 @@ void wr_player(void)
 	wr_u32b(player->total_energy);
 	/* # of turns spent resting */
 	wr_u32b(player->resting_turn);
+
+	/* Quest currently active */
+	wr_s32b(player->active_quest);
 
 	/* Future use */
 	for (i = 0; i < 8; i++) wr_u32b(0L);

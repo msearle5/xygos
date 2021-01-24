@@ -825,6 +825,9 @@ int rd_player(void)
 	/* # of turns spent resting */
 	rd_u32b(&player->resting_turn);
 
+	/* Quest currently active */
+	rd_s32b(&player->active_quest);
+
 	/* Future use */
 	strip_bytes(32);
 

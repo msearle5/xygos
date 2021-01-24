@@ -315,7 +315,7 @@ static bool find_start(struct chunk *c, struct loc *grid)
 				if (!cave_find_in_range(c, grid, loc(1, 1),
 								   loc(c->width - 2, c->height - 2),
 								   square_isempty)) continue;
-				if (square_isvault(c, *grid) || square_isno_stairs(c, *grid)) {
+				if ((square_isvault(c, *grid) && (player->active_quest < 0)) || square_isno_stairs(c, *grid)) {
 					continue;
 				}
 				total_walls = square_num_walls_adjacent(c, *grid) +
@@ -353,12 +353,19 @@ void new_player_spot(struct chunk *c, struct player *p)
 	}
 
     /* Create stairs the player came down if allowed and necessary */
-    if (!OPT(p, birth_connect_stairs))
-		;
-	else if (p->upkeep->create_down_stair)
-		square_set_feat(c, grid, FEAT_MORE);
-	else if (p->upkeep->create_up_stair)
-		square_set_feat(c, grid, FEAT_LESS);
+    if (player->active_quest >= 0) {
+		if (p->upkeep->create_down_stair)
+			square_set_feat(c, grid, FEAT_ENTRY);
+		else if (p->upkeep->create_up_stair)
+			square_set_feat(c, grid, FEAT_EXIT);
+	} else {
+		if (!OPT(p, birth_connect_stairs))
+			;
+		else if (p->upkeep->create_down_stair)
+			square_set_feat(c, grid, FEAT_MORE);
+		else if (p->upkeep->create_up_stair)
+			square_set_feat(c, grid, FEAT_LESS);
+	}
 
     player_place(c, p, grid);
 }

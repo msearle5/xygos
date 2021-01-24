@@ -658,8 +658,10 @@ static void update_one(struct chunk *c, struct loc grid, int blind)
 			/* Don't display feeling if it will display for the new level */
 			if ((c->feeling_squares == z_info->feeling_need) &&
 				!player->upkeep->only_partial) {
-				display_feeling(true);
-				player->upkeep->redraw |= PR_FEELING;
+				if (player->active_quest < 0) {
+					display_feeling(true);
+					player->upkeep->redraw |= PR_FEELING;
+				}
 			}
 		}
 

@@ -21,6 +21,7 @@ ORIGIN(ACQUIRE,		1,	"Conjured forth by magic %s")
 ORIGIN(STORE,		0,	"Bought from a store")
 ORIGIN(STOLEN,		-1,	"")
 ORIGIN(BIRTH,		0,	"An inheritance from your family")
+ORIGIN(REWARD,		0,	"A reward for completing a task")
 ORIGIN(CHEAT,		0,	"Created by debug option")
 ORIGIN(DROP_BREED,	2,	"Dropped by %s %s") /* from breeders */
 ORIGIN(DROP_SUMMON,	2,	"Dropped by %s %s") /* from combat summons */

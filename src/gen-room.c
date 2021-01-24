@@ -69,7 +69,7 @@ struct room_template *random_room_template(int typ, int rating)
 
 /**
  * Chooses a vault of a particular kind at random.
- * \param depth the current depth, for vault boun checking
+ * \param depth the current depth, for vault bound checking
  * \param typ vault type
  * \return a pointer to the vault template
  */
@@ -89,6 +89,23 @@ struct vault *random_vault(int depth, const char *typ)
 	return r;
 }
 
+/**
+ * Find a vault by name.
+ * \param typ vault type (optional)
+ * \param name vault name
+ * \return a pointer to the vault template
+ */
+struct vault *named_vault(const char *name, const char *typ)
+{
+	struct vault *v = vaults;
+	do {
+		if (typ && streq(v->typ, typ))
+			if (streq(v->name, name))
+				return v;
+		v = v->next;
+	} while(v);
+	return NULL;
+}
 
 
 /**
@@ -1219,8 +1236,12 @@ bool build_vault(struct chunk *c, struct loc centre, struct vault *v)
 			}
 				/* Stairs */
 			case '<': {
-				if (OPT(player, birth_levels_persist)) break;
-				square_set_feat(c, grid, FEAT_LESS); break;
+				if (player->active_quest >= 0) {
+					 square_set_feat(c, grid, FEAT_EXIT); break;
+				} else {
+					if (OPT(player, birth_levels_persist)) break;
+					square_set_feat(c, grid, FEAT_LESS); break;
+				}
 			}
 			case '>': {
 				if (OPT(player, birth_levels_persist)) break;
@@ -1306,18 +1327,6 @@ bool build_vault(struct chunk *c, struct loc centre, struct vault *v)
 					/* Very out of depth object. */
 				case '7': place_object(c, grid, c->depth + 15, false, false,
 									   ORIGIN_VAULT, 0); break;
-					/* Very out of depth monster. */
-				case '0': pick_and_place_monster(c, grid, c->depth + 20, true,
-												 true, ORIGIN_DROP_VAULT);
-					break;
-					/* Meaner monster, plus treasure */
-				case '9': {
-					pick_and_place_monster(c, grid, c->depth + 9, true, true,
-										   ORIGIN_DROP_VAULT);
-					place_object(c, grid, c->depth + 7, true, false,
-								 ORIGIN_VAULT, 0);
-					break;
-				}
 					/* Nasty monster and treasure */
 				case '8': {
 					pick_and_place_monster(c, grid, c->depth + 40, true, true,
@@ -1326,6 +1335,28 @@ bool build_vault(struct chunk *c, struct loc centre, struct vault *v)
 								 ORIGIN_VAULT, 0);
 					break;
 				}
+					/* Meaner monster, plus treasure */
+				case '9': {
+					pick_and_place_monster(c, grid, c->depth + 9, true, true,
+										   ORIGIN_DROP_VAULT);
+					place_object(c, grid, c->depth + 7, true, false,
+								 ORIGIN_VAULT, 0);
+					break;
+				}
+					/* Very out of depth monster. */
+				case '0': pick_and_place_monster(c, grid, c->depth + 20, true,
+												 true, ORIGIN_DROP_VAULT);
+					break;
+					/* Quest monster */
+				case '\\':
+					if (player->active_quest >= 0) {
+						struct monster_group_info info = { 0, 0 };
+						place_new_monster(c, grid, player->quests[player->active_quest].race,
+							true, false, info, ORIGIN_DROP_VAULT);
+					} else {
+						msg("Quest monster symbol, without an active quest?");
+					}
+					break;
 					/* A chest. */
 				case '~': place_object(c, grid, c->depth + 5, false, false,
 									   ORIGIN_VAULT, TV_CHEST); break;
@@ -2642,6 +2673,13 @@ bool build_greater_vault(struct chunk *c, struct loc centre, int rating)
 	return build_vault_type(c, centre, "Greater vault");
 }
 
+/**
+ * Build a quest vault - no checks.
+ */
+bool build_quest_vault(struct chunk *c, struct loc centre, int rating)
+{
+	return build_vault_type(c, centre, "Quest");
+}
 
 /**
  * Moria room (from Oangband).  Uses the "starburst room" code.

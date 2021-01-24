@@ -10,22 +10,28 @@
 name:Rats
 level:1
 race:giant grey rat
-number:10
+number:12
 store:General Store
+entrymin:2
+entrymax:5
+entryfeature:permanent wall
 intro:There's a cellar out back. It's full of rats. Are you up for cleaning them out?
 desc:Deal with the rats in the cellar
-succeed:Well done. Isn't the thrill of exploration its own reward? No? Well, OK.
-failure:Defeated by a mouse. How heroic!
+succeed:So you've cleaned them out? Great. Maybe some day Nijel - who is not exactly a little kid any more after all - will learn to muck out his own pets. But as you clearly care about animals I hope you will appreciate some rat treats along with the $200 cash.
+failure:So you were defeated by a mouse? How heroic! Brave Sir Robin would be proud.
 unlock:Cave
 
 name:Cave
 level:2
 race:giant grey rat
-number:10
+number:12
 store:General Store
-intro:There's a cellar out back. It's full of rats. Are you up for cleaning them out?
-desc:Get rid of the rats in the cellar
-succeed:Well done. Isn't the thrill of exploration its own reward? No? Well, OK.
+entrymin:2
+entrymax:12
+entryfeature:lava
+intro:Cave intro?
+desc:Cave desc
+succeed:Well done. A reward? Isn't the thrill of exploration its own reward? No? Well, OK.
 failure:Defeated by a mouse. How heroic!
 flags:locked
 
@@ -34,11 +40,11 @@ level:99
 race:Sauron, the Sorcerer
 desc:Get rid of the big bad p
 number:1
-flags:active
+flags:active | essential
 
 name:Morgoth
 level:100
 race:Morgoth, Lord of Darkness
 desc:Get rid of the big bad P
 number:1
-flags:active
+flags:active | essential

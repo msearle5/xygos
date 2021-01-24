@@ -43,6 +43,9 @@ static enum parser_error parse_quest_name(struct parser *p) {
 	parser_setpriv(p, q);
 	q->name = string_make(name);
 	q->store = STORE_NONE;
+	q->entry_min = -1;
+	q->entry_max = -1;
+	q->entry_feature = FEAT_NONE;
 
 	return PARSE_ERROR_NONE;
 }
@@ -95,6 +98,31 @@ static enum parser_error parse_quest_unlock(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_quest_entrymin(struct parser *p) {
+	struct quest *q = parser_priv(p);
+	assert(q);
+
+	q->entry_min = parser_getuint(p, "min");
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_quest_entrymax(struct parser *p) {
+	struct quest *q = parser_priv(p);
+	assert(q);
+
+	q->entry_max = parser_getuint(p, "max");
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_quest_entryfeature(struct parser *p) {
+	struct quest *q = parser_priv(p);
+	assert(q);
+
+	q->entry_feature = lookup_feat(parser_getsym(p, "feature"));
+
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_quest_flags(struct parser *p) {
 	struct quest *q = parser_priv(p);
 	assert(q);
@@ -102,6 +130,10 @@ static enum parser_error parse_quest_flags(struct parser *p) {
 	const char *in = parser_getstr(p, "flags");
 	if (strstr(in, "active"))
 		q->flags |= QF_ACTIVE;
+	if (strstr(in, "essential"))
+		q->flags |= QF_ESSENTIAL;
+	if (strstr(in, "locked"))
+		q->flags |= QF_LOCKED;
 	return PARSE_ERROR_NONE;
 }
 
@@ -155,6 +187,9 @@ struct parser *init_parse_quest(void) {
 	parser_reg(p, "race str race", parse_quest_race);
 	parser_reg(p, "number uint number", parse_quest_number);
 	parser_reg(p, "store str store", parse_quest_store);
+	parser_reg(p, "entrymin uint min", parse_quest_entrymin);
+	parser_reg(p, "entrymax uint max", parse_quest_entrymax);
+	parser_reg(p, "entryfeature sym feature", parse_quest_entryfeature);
 	parser_reg(p, "intro str text", parse_quest_intro);
 	parser_reg(p, "desc str text", parse_quest_desc);
 	parser_reg(p, "succeed str text", parse_quest_succeed);
@@ -245,9 +280,19 @@ void player_quests_reset(struct player *p)
 
 	for (i = 0; i < z_info->quest_max; i++) {
 		p->quests[i].name = string_make(quests[i].name);
+		p->quests[i].succeed = string_make(quests[i].succeed);
+		p->quests[i].failure = string_make(quests[i].failure);
+		p->quests[i].intro = string_make(quests[i].intro);
+		p->quests[i].desc = string_make(quests[i].desc);
 		p->quests[i].level = quests[i].level;
 		p->quests[i].race = quests[i].race;
 		p->quests[i].max_num = quests[i].max_num;
+		p->quests[i].flags = quests[i].flags;
+		p->quests[i].store = quests[i].store;
+		p->quests[i].unlock = quests[i].unlock;
+		p->quests[i].entry_min = quests[i].entry_min;
+		p->quests[i].entry_max= quests[i].entry_max;
+		p->quests[i].entry_feature = quests[i].entry_feature;
 	}
 }
 
@@ -258,8 +303,13 @@ void player_quests_free(struct player *p)
 {
 	size_t i;
 
-	for (i = 0; i < z_info->quest_max; i++)
+	for (i = 0; i < z_info->quest_max; i++) {
 		string_free(p->quests[i].name);
+		string_free(p->quests[i].succeed);
+		string_free(p->quests[i].failure);
+		string_free(p->quests[i].intro);
+		string_free(p->quests[i].desc);
+	}
 	mem_free(p->quests);
 }
 
@@ -285,7 +335,7 @@ static void build_quest_stairs(struct loc grid)
 	push_object(grid);
 
 	/* Explain the staircase */
-	msg("A magical staircase appears...");
+	msg("A staircase down is revealed...");
 
 	/* Create stairs down */
 	square_set_feat(cave, grid, FEAT_MORE);
@@ -295,24 +345,102 @@ static void build_quest_stairs(struct loc grid)
 }
 
 /**
+ * Return the quest entered at a given grid in the Town, or NULL if there is none.
+ * The quest must be active.
+ */
+struct quest *get_quest_by_grid(struct loc grid)
+{
+	for (int i = 0; i < z_info->quest_max; i++) {
+		struct quest *q = &player->quests[i];
+		if (q->flags & QF_ACTIVE) {
+			if ((q->x == grid.x) && (q->y == grid.y)) {
+				return q;
+			}
+		}
+	}
+	abort();
+	return NULL;
+}
+
+/* Add a start item to a list */
+static void add_item(struct start_item *si, int tval, const char *name, int min, int max)
+{
+	struct start_item *prev = NULL;
+	while (si->max != 0) {
+		prev = si;
+		si++;
+	}
+	si->tval = tval;
+	si->sval = lookup_sval(tval, name);
+	si->min = min;
+	si->max = max;
+	si->next = NULL;
+	if (prev)
+		prev->next = si;
+}
+
+/**
+ * Generate a reward for completing a quest.
+ * Passed true if the quest was completed successfully.
+ * Make sure overflowing inventory is handled reasonably.
+ */
+void quest_reward(const struct quest *q, bool success)
+{
+	const char *n = q->name;
+	int au = 0;
+	struct start_item si[2];
+	memset(si, 0, sizeof(si));
+
+	if (success) {
+		if (streq(n, "Rats")) {
+			add_item(si, TV_FOOD, "cheese", 6, 9);
+			au = 200;
+		}
+	}
+
+	if (si[0].max) {
+		add_start_items(player, si, false, false, ORIGIN_REWARD);
+	}
+	player->au += au;
+}
+
+/**
  * Check if this (now dead) monster is a quest monster, and act appropriately
  */
 bool quest_check(const struct monster *m) {
 	int i, total = 0;
 
-	/* Don't bother with non-questors */
+	/* First check for a quest level */
+	if (player->active_quest >= 0) {
+		struct quest *q = &player->quests[player->active_quest];
+		if (m->race == q->race) {
+			if (q->cur_num < q->max_num) {
+				/* You've killed a quest target */
+				q->cur_num++;
+				if (q->cur_num == q->max_num) {
+					/* You've killed the last quest target */
+					q->flags |= QF_SUCCEEDED;
+					msgt(MSG_LEVEL, "Your task is complete!");
+				}
+			}
+		}
+	}
+
+	/* Now dealing only with the win quests - so don't bother with non-questors */
 	if (!rf_has(m->race->flags, RF_QUESTOR)) return false;
 
 	/* Mark quests as complete */
 	for (i = 0; i < z_info->quest_max; i++) {
-		/* Note completed quests */
-		if (player->quests[i].level == m->race->level) {
-			player->quests[i].level = 0;
-			player->quests[i].cur_num++;
-		}
+		if (player->quests[i].flags & QF_ESSENTIAL) {
+			/* Note completed quests */
+			if (player->quests[i].level == m->race->level) {
+				player->quests[i].level = 0;
+				player->quests[i].cur_num++;
+			}
 
-		/* Count incomplete quests */
-		if (player->quests[i].level) total++;
+			/* Count incomplete quests */
+			if (player->quests[i].level) total++;
+		}
 	}
 
 	/* Build magical stairs */

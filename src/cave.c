@@ -43,6 +43,8 @@ int FEAT_OPEN;
 int FEAT_BROKEN;
 int FEAT_LESS;
 int FEAT_MORE;
+int FEAT_EXIT;
+int FEAT_ENTRY;
 int FEAT_SECRET;
 int FEAT_RUBBLE;
 int FEAT_PASS_RUBBLE;
@@ -332,6 +334,8 @@ void set_terrain(void)
 	FEAT_BROKEN = lookup_feat("broken door");
 	FEAT_LESS = lookup_feat("up staircase");
 	FEAT_MORE = lookup_feat("down staircase");
+	FEAT_EXIT = lookup_feat("upward exit");
+	FEAT_ENTRY = lookup_feat("downward entry");
 	FEAT_SECRET = lookup_feat("secret door");
 	FEAT_RUBBLE = lookup_feat("pile of rubble");
 	FEAT_PASS_RUBBLE = lookup_feat("pile of passable rubble");

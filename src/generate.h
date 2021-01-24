@@ -256,6 +256,7 @@ struct chunk *cavern_gen(struct player *p, int min_height, int min_width);
 struct chunk *modified_gen(struct player *p, int min_height, int min_width);
 struct chunk *moria_gen(struct player *p, int min_height, int min_width);
 struct chunk *hard_centre_gen(struct player *p, int min_height, int min_width);
+struct chunk *quest_gen(struct player *p, int min_height, int min_width);
 struct chunk *lair_gen(struct player *p, int min_height, int min_width);
 struct chunk *gauntlet_gen(struct player *p, int min_height, int min_width);
 struct chunk *arena_gen(struct player *p, int min_height, int min_width);
@@ -285,6 +286,7 @@ extern bool generate_starburst_room(struct chunk *c, int y1, int x1, int y2,
 									bool special_ok);
 
 struct vault *random_vault(int depth, const char *typ);
+struct vault *named_vault(const char *name, const char *typ);
 bool build_vault(struct chunk *c, struct loc centre, struct vault *v);
 
 bool build_staircase(struct chunk *c, struct loc centre, int rating);
@@ -303,6 +305,7 @@ bool build_interesting(struct chunk *c, struct loc centre, int rating);
 bool build_lesser_vault(struct chunk *c, struct loc centre, int rating);
 bool build_medium_vault(struct chunk *c, struct loc centre, int rating);
 bool build_greater_vault(struct chunk *c, struct loc centre, int rating);
+bool build_quest_vault(struct chunk *c, struct loc centre, int rating);
 bool build_moria(struct chunk *c, struct loc centre, int rating);
 bool build_room_of_chambers(struct chunk *c, struct loc centre, int rating);
 bool build_huge(struct chunk *c, struct loc centre, int rating);

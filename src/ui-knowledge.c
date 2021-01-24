@@ -2180,24 +2180,24 @@ static void rune_xtra_act(struct keypress ch, int oid)
 }
 
 enum {
-	QV_ACTIVE = 0,
-	QV_UNREWARDED = 1,
-	QV_SUCCEEDED = 2,
-	QV_FAILED = 3,
+	QV_FAILED = 0,
+	QV_SUCCEEDED = 1,
+	QV_UNREWARDED = 2,
+	QV_ACTIVE = 3,
 };
 
 static const char *quest_name(int gid) { 
 	static const char *name[] = {
-		"Active",
+		"Failed    ",
+		"Succeeded ",
 		"Unrewarded",
-		"Succeeded",
-		"Failed",
+		"Active    ",
 	};
 	return name[gid];
 }
 
 static int quest_var(int oid) {
-	struct quest *q = &quests[oid];
+	struct quest *q = &player->quests[oid];
 	if (q->flags & QF_UNREWARDED)
 		return QV_UNREWARDED;
 	if (q->flags & QF_SUCCEEDED)
@@ -2208,7 +2208,7 @@ static int quest_var(int oid) {
 }
 
 static bool quest_is_aware(int oid) {
-	return (quests[oid].flags & (QF_SUCCEEDED|QF_FAILED|QF_ACTIVE));
+	return (player->quests[oid].flags & (QF_SUCCEEDED|QF_FAILED|QF_ACTIVE));
 }
 
 static void display_quest(int col, int row, bool cursor, int oid )
@@ -2216,8 +2216,20 @@ static void display_quest(int col, int row, bool cursor, int oid )
 	char buf[64];
 	snprintf(buf, sizeof(buf), "%s (%d)", quests[oid].name, quests[oid].level);
 	buf[sizeof(buf)-1] = 0;
-	c_put_str(COLOUR_YELLOW, buf, row, 11);
-	c_put_str(COLOUR_GREEN, quests[oid].desc, row, 25);
+	c_put_str(COLOUR_YELLOW, buf, row, 13);
+	if (player->active_quest == oid) {
+		if (player->quests[oid].max_num) {
+			snprintf(buf, sizeof(buf), "%s: %d/%d killed",
+				player->quests[oid].race->name,
+				player->quests[oid].cur_num,
+				player->quests[oid].max_num);
+			c_put_str(COLOUR_RED, buf, row, 26);
+		} else {
+			c_put_str(COLOUR_RED, quests[oid].desc, row, 26);
+		}
+	} else {
+		c_put_str(COLOUR_GREEN, quests[oid].desc, row, 26);
+	}
 }
 
 /**

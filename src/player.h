@@ -133,10 +133,15 @@ enum {
 struct quest
 {
 	struct quest *next;
-	byte index;
 	char *name;
-	byte level;					/* Dungeon level */
 	struct monster_race *race;	/* Monster race */
+	byte index;
+	byte level;					/* Dungeon level */
+	u16b x;						/* Position of the entrance */
+	u16b y;
+	s16b entry_min;				/* Minimum questgiver-to-entrance distance */
+	s16b entry_max;				/* Maximum questgiver-to-entrance distance */
+	s16b entry_feature;			/* Nearby feature to the entrance */
 	s32b cur_num;				/* Number killed (unused) */
 	s32b max_num;				/* Number required (unused) */
 	s32b store;					/* Store the quest is given from; can be STORE_NONE (-1) */
@@ -156,6 +161,8 @@ enum {
 	QF_SUCCEEDED = 		0x02,
 	QF_FAILED = 		0x04,
 	QF_UNREWARDED = 	0x08,
+	QF_ESSENTIAL =		0x10,
+	QF_LOCKED =			0x20
 };
 
 /**
@@ -576,6 +583,7 @@ struct player {
 	char died_from[80];					/* Cause of death */
 	char *history;						/* Player history */
 	struct quest *quests;				/* Quest history */
+	s32b active_quest;					/* Currently active quest */
 	u16b total_winner;					/* Total winner */
 
 	u16b noscore;				/* Cheating flags */

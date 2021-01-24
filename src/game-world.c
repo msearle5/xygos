@@ -1037,7 +1037,7 @@ void on_new_level(void)
 	}
 
 	/* Announce (or repeat) the feeling */
-	if (player->depth)
+	if ((player->depth) && (player->active_quest < 0))
 		display_feeling(false);
 
 	/* Check the surroundings */

@@ -228,6 +228,8 @@ extern int FEAT_OPEN;
 extern int FEAT_BROKEN;
 extern int FEAT_LESS;
 extern int FEAT_MORE;
+extern int FEAT_EXIT;
+extern int FEAT_ENTRY;
 
 /* Secret door */
 extern int FEAT_SECRET;

@@ -26,8 +26,10 @@ extern struct quest *quests;
 bool is_quest(int level);
 void player_quests_reset(struct player *p);
 void player_quests_free(struct player *p);
+struct quest *get_quest_by_grid(struct loc grid);
 bool quest_check(const struct monster *m);
 extern struct file_parser quests_parser;
+void quest_reward(const struct quest *q, bool success);
 
 
 #endif /* QUEST_H */

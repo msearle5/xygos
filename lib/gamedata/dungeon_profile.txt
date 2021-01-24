@@ -206,3 +206,9 @@ name:hard centre
 params:1:0:200:0
 min-level:50
 alloc:1
+
+## Quest
+name:quest
+params:1:1:1:2
+min-level:1
+alloc:-1
