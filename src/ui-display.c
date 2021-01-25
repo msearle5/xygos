@@ -1036,8 +1036,8 @@ static size_t prt_level_feeling(int row, int col)
 	/* Don't show feelings for cold-hearted characters */
 	if (!OPT(player, birth_feelings)) return 0;
 
-	/* No useful feeling in town */
-	if (!player->depth) return 0;
+	/* No useful feeling in town or on a quest */
+	if ((!player->depth) || (player->active_quest >= 0)) return 0;
 
 	/* Get feelings */
 	obj_feeling = cave->feeling / 10;

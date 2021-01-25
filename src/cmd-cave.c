@@ -72,13 +72,8 @@ void do_cmd_go_up(struct command *cmd)
 		msg("Nothing happens!");
 		return;
 	}
-	
+
 	ascend_to = dungeon_get_next_level(player->depth, -1);
-	
-	if (ascend_to == player->depth) {
-		msg("You can't go up from here!");
-		return;
-	}
 
 	/* Exit a quest */
 	if (exit) {
@@ -89,19 +84,26 @@ void do_cmd_go_up(struct command *cmd)
 			/* If the quest is not complete, verify that the player really intends
 			 * to fail the quest
 			 */
-			if (!(quest->flags & QF_SUCCEEDED)) {
+			if (!(quest->flags & QF_SUCCEEDED))
 				if (!get_check("Leaving now will fail your task. Sure? "))
 					return;
-				else
+			/*	else
 					quest->flags |= QF_FAILED;
 			} else {
 				quest->flags |= QF_UNREWARDED;
 			}
 			quest->flags &= ~QF_ACTIVE;
 			maze = "You return to the town.";
-
+			ascend_to = 0;
+*/
+ascend_to = 0;
 			/* Not generating or in a quest any more */
-			player->active_quest = -1;
+			//player->active_quest = -1;
+		}
+	} else {
+		if (ascend_to == player->depth) {
+			msg("You can't go up from here!");
+			return;
 		}
 	}
 

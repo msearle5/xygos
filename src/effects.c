@@ -1540,18 +1540,20 @@ bool effect_handler_RECALL(effect_handler_context_t *context)
 	/* Activate recall */
 	if (!player->word_recall) {
 		/* Reset recall depth */
-		if (player->depth > 0) {
-			if (player->depth != player->max_depth) {
-				if (get_check("Set recall depth to current depth? ")) {
-					player->recall_depth = player->max_depth = player->depth;
+		if (player->active_quest < 0) {
+			if (player->depth > 0) {
+				if (player->depth != player->max_depth) {
+					if (get_check("Set recall depth to current depth? ")) {
+						player->recall_depth = player->max_depth = player->depth;
+					}
+				} else {
+					player->recall_depth = player->max_depth;
 				}
 			} else {
-				player->recall_depth = player->max_depth;
-			}
-		} else {
-			if (OPT(player, birth_levels_persist)) {
-				/* Persistent levels players get to choose */
-				if (!player_get_recall_depth(player)) return false;
+				if (OPT(player, birth_levels_persist)) {
+					/* Persistent levels players get to choose */
+					if (!player_get_recall_depth(player)) return false;
+				}
 			}
 		}
 
@@ -1596,7 +1598,7 @@ bool effect_handler_DEEP_DESCENT(effect_handler_context_t *context)
 		player->upkeep->redraw |= PR_STATUS;
 		handle_stuff(player);
 	} else {
-		msgt(MSG_TPLEVEL, "You sense a malevolent presence blocking passage to the levels below.");
+		msgt(MSG_TPLEVEL, "The air swirls briefly, then settles. Something's blocking your descent.");
 	}
 	context->ident = true;
 	return true;
@@ -1605,7 +1607,7 @@ bool effect_handler_DEEP_DESCENT(effect_handler_context_t *context)
 bool effect_handler_ALTER_REALITY(effect_handler_context_t *context)
 {
 	msg("The world changes!");
-	dungeon_change_level(player, player->depth);
+	dungeon_change_level(player, (player->active_quest >= 0) ? 0 : player->depth);
 	context->ident = true;
 	return true;
 }

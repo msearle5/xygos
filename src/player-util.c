@@ -73,6 +73,10 @@ int dungeon_get_next_level(int dlev, int added)
 {
 	int target_level, i;
 
+	/* Don't allow any movement from an active quest */
+	if (player->active_quest >= 0)
+		return dlev;
+
 	/* Get target level */
 	target_level = dlev + added * z_info->stair_skip;
 
@@ -161,6 +165,24 @@ void dungeon_change_level(struct player *p, int dlev)
 
 	/* Save the game when we arrive on the new level. */
 	p->upkeep->autosave = true;
+	
+	/* Handle returning to the town from a quest level */
+	if ((p->active_quest >= 0) && (!dlev)) {
+		struct quest *quest = &player->quests[player->active_quest];
+		
+		/* Fail, or reward */
+		if (!(quest->flags & QF_SUCCEEDED)) {
+			quest->flags |= QF_FAILED;
+		} else {
+			quest->flags |= QF_UNREWARDED;
+		}
+		
+		/* No longer active */
+		quest->flags &= ~QF_ACTIVE;
+		
+		/* Not generating or in a quest any more */
+		p->active_quest = -1;
+	}
 }
 
 /* You are below 0 HP, either after taking damage or after a turn has passed
@@ -173,7 +195,7 @@ static bool death_check(struct player *p, const char *kb_str)
 	/* At HP < x, death is guaranteed
 	 * At HP = x/2, there is a 50% chance
 	 * Intermediate points follow a normal distribution
-	 * x is a function of CON
+	 * x is a function of CON and max HP
 	 */
 	int x = ((player->state.stat_ind[STAT_CON] + 5) * (player->mhp)) / 100;
 	
@@ -211,7 +233,7 @@ static bool death_check(struct player *p, const char *kb_str)
 		if (Rand_normal(x, x / 2) <= -p->chp) {
 			player_exp_lose(p, (p->exp + 19) / 20, (p->exp != p->max_exp));
 		}
-		msgt(MSG_DEATH, "*** FATAL HITPOINT WARNING! ***");
+		msgt(MSG_HITPOINT_WARN, "*** FATAL HITPOINT WARNING! ***");
 	}
 
 	return false;
@@ -286,7 +308,8 @@ void take_hit(struct player *p, int dam, const char *kb_str)
 			bell("Low hitpoint warning!");
 
 		/* Message */
-		msgt(MSG_HITPOINT_WARN, "*** LOW HITPOINT WARNING! ***");
+		if (p->chp >= 0)
+			msgt(MSG_HITPOINT_WARN, "*** LOW HITPOINT WARNING! ***");
 		event_signal(EVENT_MESSAGE_FLUSH);
 	}
 }
