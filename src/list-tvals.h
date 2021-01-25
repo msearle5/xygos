@@ -5,9 +5,9 @@
 /* string		name 			min randarts */
 TV(NULL,		"none",			0)
 TV(CHEST,		"chest",		0)
-TV(AMMO_6,		"6mm ammo",			0)
+TV(AMMO_6,		"6mm ammo",		0)
 TV(AMMO_9,		"9mm ammo",		0)
-TV(AMMO_12,		"12mm ammo",			0)
+TV(AMMO_12,		"12mm ammo",	0)
 TV(GUN,			"gun",			4)
 TV(DIGGING,		"digger",		0)
 TV(HAFTED,		"hafted",		5)

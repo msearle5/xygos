@@ -361,6 +361,19 @@ struct quest *get_quest_by_grid(struct loc grid)
 	return NULL;
 }
 
+/**
+ * Return the quest with a given name.
+ */
+struct quest *get_quest_by_name(const char *name)
+{
+	for (int i = 0; i < z_info->quest_max; i++) {
+		struct quest *q = &player->quests[i];
+		if (streq(q->name, name))
+			return q;
+	}
+	return NULL;
+}
+
 /* Add a start item to a list */
 static void add_item(struct start_item *si, int tval, const char *name, int min, int max)
 {

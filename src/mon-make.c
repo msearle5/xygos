@@ -33,6 +33,7 @@
 #include "obj-util.h"
 #include "player-calcs.h"
 #include "player-timed.h"
+#include "player-quest.h"
 #include "target.h"
 
 /**
@@ -190,6 +191,23 @@ static struct monster_race *get_mon_race_aux(long total,
 	return &r_info[table[i].index];
 }
 
+/* Returns true if it is acceptable to generate a SPECIAL_GEN monster.
+ * These may be never randomly generated (the default case of returning
+ * false), or have additional restrictions.
+ */
+bool special_can_gen(struct monster_race *r)
+{
+	/* Generate Nijel only when the Rats quest has been successfully completed */
+	if (streq(r->name, "Nijel, the Rat")) {
+		struct quest *q = get_quest_by_name("Rats");
+		if (!q)
+			msg("Wot, no rats?");
+		else
+			return (q->flags & QF_SUCCEEDED);
+	}
+	return false;
+}
+
 /**
  * Chooses a monster race that seems appropriate to the given level
  *
@@ -252,6 +270,10 @@ struct monster_race *get_mon_num(int level)
 
 		/* Some monsters never appear out of depth */
 		if (rf_has(race->flags, RF_FORCE_DEPTH) && race->level > player->depth)
+			continue;
+
+		/* Some monsters have special limitations on generation */
+		if (rf_has(race->flags, RF_SPECIAL_GEN) && !special_can_gen(race))
 			continue;
 
 		/* Accept */
