@@ -8902,7 +8902,7 @@ rating:3
 rows:7
 columns:11
 doors:3
-tval:arrow
+tval:9mm ammo
 D:###########
 D:#..1[[[2..#
 D:#..##3##..#
@@ -8917,7 +8917,7 @@ rating:3
 rows:7
 columns:11
 doors:3
-tval:bolt
+tval:12mm ammo
 D:###########
 D:#..1[[[2..#
 D:#..##3##..#
@@ -8932,7 +8932,7 @@ rating:3
 rows:7
 columns:11
 doors:3
-tval:shot
+tval:6mm ammo
 D:###########
 D:#..1[[[2..#
 D:#..##3##..#

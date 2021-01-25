@@ -8,7 +8,7 @@
 # allow other quests to be added as a result of game events.
 
 name:Rats
-level:1
+level:6
 race:giant grey rat
 number:12
 store:General Store

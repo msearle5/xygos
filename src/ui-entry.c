@@ -831,8 +831,7 @@ void compute_ui_entry_values_for_player(const struct ui_entry *entry,
 				case PF_FAST_SHOT:
 					launcher = equipped_item_by_slot_name(
 						p, "shooting");
-					if (launcher && kf_has(launcher->kind->kind_flags,
-						KF_SHOOTS_ARROWS)) {
+					if (launcher) {
 						v = p->lev / 3;
 						a = 0;
 					} else {

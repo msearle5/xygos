@@ -84,7 +84,7 @@ flags:AGGRAVATE
 desc:wakes up and annoys nearby monsters, and delays your escape
 
 name:poison
-type:bow
+type:gun
 type:digger
 type:hafted
 type:polearm
@@ -107,7 +107,7 @@ time:1d500
 desc:poisons you from time to time
 
 name:siren
-type:bow
+type:gun
 type:digger
 type:hafted
 type:polearm
@@ -130,7 +130,7 @@ msg:A horn blares out!
 desc:occasionally makes a loud noise
 
 name:hallucination
-type:bow
+type:gun
 type:digger
 type:hafted
 type:polearm
@@ -153,7 +153,7 @@ time:1d500
 desc:makes you hallucinate sometimes
 
 name:paralysis
-type:bow
+type:gun
 type:digger
 type:hafted
 type:polearm

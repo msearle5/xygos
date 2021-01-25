@@ -1378,63 +1378,63 @@ armor:0:0
 desc:A long pole with a three- or four-pronged head balanced by a long spike.
 
 
-##### Bows, Crossbows, Slings #####
+##### Guns #####
 
 name:& Sling~
-type:bow
+type:gun
 graphics:}:u
 level:1
 weight:5
 cost:5
 alloc:20:1 to 100
-flags:SHOOTS_SHOTS
+flags:SHOOTS_6MM
 pval:2
 desc:A loop of leather and cords able to hurl stones or shot with
 desc: tremendous velocity.
 
 name:& Short Bow~
-type:bow
+type:gun
 graphics:}:U
 level:3
 weight:30
 cost:50
 alloc:20:3 to 100
-flags:SHOOTS_ARROWS
+flags:SHOOTS_9MM
 pval:2
 desc:The traditional hunter's weapon, this light bow is easily drawn.
 
 name:& Long Bow~
-type:bow
+type:gun
 graphics:}:U
 level:10
 weight:40
 cost:120
 alloc:20:10 to 100
-flags:SHOOTS_ARROWS
+flags:SHOOTS_9MM
 pval:3
 desc:As tall as a man, the longbow can drive an arrow through the
 desc: heaviest armour.
 
 name:& Light Crossbow~
-type:bow
+type:gun
 graphics:}:s
 level:15
 weight:110
 cost:140
 alloc:20:15 to 100
-flags:SHOOTS_BOLTS
+flags:SHOOTS_12MM
 pval:3
 desc:A mechanical bow made of wood, it is cocked to augment the strength
 desc: of its wielder.
 
 name:& Heavy Crossbow~
-type:bow
+type:gun
 graphics:}:s
 level:30
 weight:200
 cost:300
 alloc:20:30 to 100
-flags:SHOOTS_BOLTS
+flags:SHOOTS_12MM
 pval:4
 desc:This arbalest is so powerful it has to be reinforced with metal and
 desc: requires a crank to be cocked.
@@ -1443,7 +1443,7 @@ desc: requires a crank to be cocked.
 ##### Missiles #####
 
 name:& Arrow~
-type:arrow
+type:9mm ammo
 graphics:{:U
 level:3
 weight:2
@@ -1455,7 +1455,7 @@ armor:0:0
 desc:It can be shot with a bow.
 
 name:& Seeker Arrow~
-type:arrow
+type:9mm ammo
 graphics:{:G
 level:55
 weight:2
@@ -1467,7 +1467,7 @@ armor:0:0
 desc:It can be shot with a bow.
 
 name:& Mithril Arrow~
-type:arrow
+type:9mm ammo
 graphics:{:B
 level:55
 weight:2
@@ -1481,7 +1481,7 @@ desc:It can be shot with a bow.
 
 
 name:& Bolt~
-type:bolt
+type:12mm ammo
 graphics:{:s
 level:3
 weight:3
@@ -1493,7 +1493,7 @@ armor:0:0
 desc:It can be shot with a crossbow.
 
 name:& Seeker Bolt~
-type:bolt
+type:12mm ammo
 graphics:{:g
 level:65
 weight:3
@@ -1505,7 +1505,7 @@ armor:0:0
 desc:It can be shot with a crossbow.
 
 name:& Mithril Bolt~
-type:bolt
+type:12mm ammo
 graphics:{:B
 level:50
 weight:2
@@ -1519,7 +1519,7 @@ desc:It can be shot with a crossbow.
 
 
 name:& Rounded Pebble~
-type:shot
+type:6mm ammo
 graphics:{:s
 level:0
 weight:4
@@ -1533,7 +1533,7 @@ desc:It can be shot with a sling or thrown.
 
 
 name:& Iron Shot~
-type:shot
+type:6mm ammo
 graphics:{:s
 level:3
 weight:5
@@ -1546,7 +1546,7 @@ flags:THROWING
 desc:It can be shot with a sling or thrown.
 
 name:& Mithril Shot~
-type:shot
+type:6mm ammo
 graphics:{:B
 level:40
 weight:4

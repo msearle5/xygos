@@ -1472,8 +1472,8 @@ strength-multiplier:4
 equip:food:random:1:3
 equip:light:Wooden Torch:1:3
 equip:sword:Main Gauche:1:1
-equip:bow:Short Bow:1:1
-equip:arrow:Arrow:15:20
+#equip:bow:Short Bow:1:1
+#equip:arrow:Arrow:15:20
 equip:scroll:Word of Recall:1:1
 equip:nature book:[Lesser Charms]:1:1
 player-flags:FAST_SHOT | CHOOSE_SPELLS

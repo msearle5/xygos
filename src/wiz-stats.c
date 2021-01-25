@@ -713,9 +713,7 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 				add_stats(ST_XTRAMIGHT_GUNS, vault, mon, number);
 
 			/* check for buckland */
-			if ((obj->pval == 2) &&
-				kf_has(obj->kind->kind_flags, KF_SHOOTS_SHOTS) &&
-				(obj->modifiers[OBJ_MOD_MIGHT] > 0) &&
+			if ((obj->modifiers[OBJ_MOD_MIGHT] > 0) &&
 				(obj->modifiers[OBJ_MOD_SHOTS] > 0))
 					add_stats(ST_BUCKLAND_GUNS, vault, mon, number);
 

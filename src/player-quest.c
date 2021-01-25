@@ -358,7 +358,6 @@ struct quest *get_quest_by_grid(struct loc grid)
 			}
 		}
 	}
-	abort();
 	return NULL;
 }
 

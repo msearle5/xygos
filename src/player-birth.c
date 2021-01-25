@@ -630,7 +630,6 @@ void add_start_items(struct player *p, const struct start_item *si, bool skip, b
 static void player_outfit(struct player *p)
 {
 	int i;
-	const struct start_item *si;
 
 	/* Currently carrying nothing */
 	p->upkeep->total_weight = 0;

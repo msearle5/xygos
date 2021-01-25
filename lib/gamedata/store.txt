@@ -29,9 +29,9 @@ always:light:Wooden Torch
 always:flask:Flask of Oil
 always:digger:Shovel
 always:digger:Pick
-always:shot:Iron Shot
-always:arrow:Arrow
-always:bolt:Bolt
+always:6mm ammo:Iron Shot
+always:9mm ammo:Arrow
+always:12mm ammo:Bolt
 normal:food:Pint of Fine Wine
 normal:food:Slime Mold
 normal:food:Flask of Whisky
@@ -95,9 +95,9 @@ owner:0:-
 slots:3:14
 turnover:9
 danger:72:90
-normal:shot:Iron Shot
-normal:arrow:Arrow
-normal:bolt:Bolt
+normal:6mm ammo:Iron Shot
+normal:9mm ammo:Arrow
+normal:12mm ammo:Bolt
 normal:sword:Dagger
 normal:sword:Main Gauche
 normal:sword:Rapier
@@ -119,14 +119,14 @@ normal:polearm:Battle Axe
 normal:polearm:Lance
 normal:polearm:Lucerne Hammer
 normal:hafted:Whip
-normal:bow:Sling
-normal:bow:Short Bow
-normal:bow:Long Bow
-normal:bow:Light Crossbow
-buy:shot
-buy:bolt
-buy:arrow
-buy:bow
+normal:gun:Sling
+normal:gun:Short Bow
+normal:gun:Long Bow
+normal:gun:Light Crossbow
+buy:ammo_6
+buy:ammo_9
+buy:ammo_12
+buy:gun
 buy:digger
 buy:sword
 buy:polearm

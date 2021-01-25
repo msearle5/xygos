@@ -2168,11 +2168,11 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		state->num_shots = 10;
 
 		/* Type of ammo */
-		if (kf_has(launcher->kind->kind_flags, KF_SHOOTS_SHOTS))
+		if (kf_has(launcher->kind->kind_flags, KF_SHOOTS_6MM))
 			state->ammo_tval = TV_AMMO_6;
-		else if (kf_has(launcher->kind->kind_flags, KF_SHOOTS_ARROWS))
+		else if (kf_has(launcher->kind->kind_flags, KF_SHOOTS_9MM))
 			state->ammo_tval = TV_AMMO_9;
-		else if (kf_has(launcher->kind->kind_flags, KF_SHOOTS_BOLTS))
+		else if (kf_has(launcher->kind->kind_flags, KF_SHOOTS_12MM))
 			state->ammo_tval = TV_AMMO_12;
 
 		/* Multiplier */
@@ -2182,7 +2182,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		if (!state->heavy_shoot) {
 			state->num_shots += extra_shots;
 			state->ammo_mult += extra_might;
-			if (player_has(p, PF_FAST_SHOT) {
+			if (player_has(p, PF_FAST_SHOT)) {
 				state->num_shots += p->lev / 3;
 			}
 		}

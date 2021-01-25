@@ -221,11 +221,11 @@ static int ammo_damage_power(const struct object *obj, int p)
 	int launcher = -1;
 
 	if (wield_slot(obj) == slot_by_name(player, "shooting")) {
-		if (kf_has(obj->kind->kind_flags, KF_SHOOTS_SHOTS))
+		if (kf_has(obj->kind->kind_flags, KF_SHOOTS_6MM))
 			launcher = 0;
-		else if (kf_has(obj->kind->kind_flags, KF_SHOOTS_ARROWS))
+		else if (kf_has(obj->kind->kind_flags, KF_SHOOTS_9MM))
 			launcher = 1; 
-		else if (kf_has(obj->kind->kind_flags, KF_SHOOTS_BOLTS))
+		else if (kf_has(obj->kind->kind_flags, KF_SHOOTS_12MM))
 			launcher = 2;
 
 		if (launcher != -1) {

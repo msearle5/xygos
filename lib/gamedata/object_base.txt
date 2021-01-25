@@ -30,27 +30,27 @@ graphics:slate
 break:0
 # max-stack:1
 
-name:shot:Shot~
+name:6mm ammo:6mm ammo
 graphics:light umber
 break:25
 # max-stack:40
 flags:SHOW_DICE
 
-name:arrow:Arrow~
+name:9mm ammo:9mm ammo
 graphics:light umber
 break:35
 # max-stack:40
 flags:HATES_ACID | HATES_FIRE
 flags:SHOW_DICE
 
-name:bolt:Bolt~
+name:12mm ammo:12mm ammo
 graphics:light umber
 break:25
 # max-stack:40
 flags:HATES_ACID
 flags:SHOW_DICE
 
-name:bow:Bow~
+name:gun:gun~
 graphics:umber
 # max-stack:1
 flags:HATES_ACID | HATES_FIRE

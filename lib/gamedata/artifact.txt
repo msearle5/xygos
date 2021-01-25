@@ -1259,86 +1259,86 @@ desc: physical blows.
 
 ### Missile Weapons ###
 
-name:of Amrod
-base-object:bow:Short Bow
-level:25
-weight:30
-cost:9000
-alloc:10:30 to 100
-attack:0d0:12:15
-armor:0:0
-flags:REGEN
-values:STR[2] | CON[2] | MIGHT[2] | RES_FIRE[1] | RES_ELEC[1] | RES_COLD[1]
-desc:One of a pair of hunting bows once belonging to Fëanor's two youngest
-desc: sons.  The bows are like and yet unlike, much as the twin brothers were.
+#name:of Amrod
+#base-object:bow:Short Bow
+#level:25
+#weight:30
+#cost:9000
+#alloc:10:30 to 100
+#attack:0d0:12:15
+#armor:0:0
+#flags:REGEN
+#values:STR[2] | CON[2] | MIGHT[2] | RES_FIRE[1] | RES_ELEC[1] | RES_COLD[1]
+#desc:One of a pair of hunting bows once belonging to Fëanor's two youngest
+#desc: sons.  The bows are like and yet unlike, much as the twin brothers were.
 
-name:of Amras
-base-object:bow:Short Bow
-level:25
-weight:30
-cost:9000
-alloc:10:30 to 80
-attack:0d0:12:15
-armor:0:0
-flags:SLOW_DIGEST
-values:INT[2] | WIS[2] | DEX[2] | SHOTS[5] | MIGHT[1] | SPD[1]
-values:RES_FIRE[1] | RES_ELEC[1] | RES_COLD[1]
-desc:One of a pair of hunting bows once belonging to Fëanor's two youngest
-desc: sons.  The bows are like and yet unlike, much as the twin brothers were.
+#name:of Amras
+#base-object:bow:Short Bow
+#level:25
+#weight:30
+#cost:9000
+#alloc:10:30 to 80
+#attack:0d0:12:15
+#armor:0:0
+#flags:SLOW_DIGEST
+#values:INT[2] | WIS[2] | DEX[2] | SHOTS[5] | MIGHT[1] | SPD[1]
+#values:RES_FIRE[1] | RES_ELEC[1] | RES_COLD[1]
+#desc:One of a pair of hunting bows once belonging to Fëanor's two youngest
+#desc: sons.  The bows are like and yet unlike, much as the twin brothers were.
 
-name:'Belthronding'
-base-object:bow:Long Bow
-level:40
-weight:40
-cost:35000
-alloc:5:40 to 127
-attack:0d0:20:22
-armor:0:0
-values:DEX[3] | SPD[1] | STEALTH[1] | SHOTS[10] | RES_DISEN[1]
-desc:The great bow of Beleg Cúthalion, the most famous archer of the Elves. 
-desc: Its backbone of black yew holds strings of bear sinew, and of old, only
-desc: Beleg himself could draw them.
+#name:'Belthronding'
+#base-object:bow:Long Bow
+#level:40
+#weight:40
+#cost:35000
+#alloc:5:40 to 127
+#attack:0d0:20:22
+#armor:0:0
+#values:DEX[3] | SPD[1] | STEALTH[1] | SHOTS[10] | RES_DISEN[1]
+#desc:The great bow of Beleg Cúthalion, the most famous archer of the Elves. 
+#desc: Its backbone of black yew holds strings of bear sinew, and of old, only
+#desc: Beleg himself could draw them.
 
-name:of Bard
-base-object:bow:Long Bow
-level:30
-weight:40
-cost:20000
-alloc:5:40 to 127
-attack:0d0:17:19
-armor:0:0
-flags:FREE_ACT | 
-values:MIGHT[2] | DEX[1] | SPD[1]
-desc:The great yew bow of grim-faced Bard, who shot the mightiest arrow that
-desc: songs record.
+#name:of Bard
+#base-object:bow:Long Bow
+#level:30
+#weight:40
+#cost:20000
+#alloc:5:40 to 127
+#attack:0d0:17:19
+#armor:0:0
+#flags:FREE_ACT | 
+#values:MIGHT[2] | DEX[1] | SPD[1]
+#desc:The great yew bow of grim-faced Bard, who shot the mightiest arrow that
+#desc: songs record.
 
-name:'Cubragol'
-base-object:bow:Light Crossbow
-level:50
-weight:110
-cost:50000
-alloc:4:50 to 127
-attack:0d0:10:14
-armor:0:0
-values:SPD[10] | RES_FIRE[1]
-brand:FIRE_3
-desc:A crossbow that grants fiery speed to its finder, and imbues its bolts
-desc: with flame unquenchable.
+#name:'Cubragol'
+#base-object:bow:Light Crossbow
+#level:50
+#weight:110
+#cost:50000
+#alloc:4:50 to 127
+#attack:0d0:10:14
+#armor:0:0
+#values:SPD[10] | RES_FIRE[1]
+#brand:FIRE_3
+#desc:A crossbow that grants fiery speed to its finder, and imbues its bolts
+#desc: with flame unquenchable.
 
-name:of Umbar
-base-object:bow:Heavy Crossbow
-level:60
-weight:200
-cost:35000
-alloc:5:60 to 127
-attack:4d1:18:18
-armor:0:0
-flags:AGGRAVATE | PROT_BLIND
-act:ARROW
-time:20+d20
-values:MIGHT[2] | STR[1] | CON[1] | RES_LIGHT[1] | RES_DARK[1] | RES_ELEC[1]
-desc:A great brazen arbalest with arms of gleaming steel.  It shoots quarrels
-desc: with mighty power for those brave enough to risk betrayal.
+#name:of Umbar
+#base-object:bow:Heavy Crossbow
+#level:60
+#weight:200
+#cost:35000
+#alloc:5:60 to 127
+#attack:4d1:18:18
+#armor:0:0
+#flags:AGGRAVATE | PROT_BLIND
+#act:ARROW
+#time:20+d20
+#values:MIGHT[2] | STR[1] | CON[1] | RES_LIGHT[1] | RES_DARK[1] | RES_ELEC[1]
+#desc:A great brazen arbalest with arms of gleaming steel.  It shoots quarrels
+#desc: with mighty power for those brave enough to risk betrayal.
 
 
 ### Digging Tools ###

@@ -1303,7 +1303,7 @@ strength-multiplier:4
 equip:food:Ration of Food:1:3
 equip:light:Wooden Torch:1:3
 equip:sword:Dagger:1:1
-equip:bow:Short Bow:1:1
+#equip:bow:Short Bow:1:1
 equip:arrow:Arrow:15:20
 equip:scroll:Word of Recall:1:1
 player-flags:FAST_SHOT | CHOOSE_SPELLS

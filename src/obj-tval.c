@@ -394,9 +394,6 @@ int tval_find_idx(const char *name)
 	unsigned int r;
 	char *mod_name;
 
-	if (sscanf(name, "%u", &r) == 1)
-		return r;
-
 	mod_name = de_armour(name);
 
 	for (i = 0; i < N_ELEMENTS(tval_names); i++) {
@@ -407,6 +404,10 @@ int tval_find_idx(const char *name)
 	}
 
 	string_free(mod_name);
+
+	if (sscanf(name, "%u", &r) == 1)
+		return r;
+
 	return -1;
 }
 
