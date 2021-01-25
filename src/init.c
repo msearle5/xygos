@@ -56,6 +56,7 @@
 #include "object.h"
 #include "option.h"
 #include "player.h"
+#include "player-ability.h"
 #include "player-history.h"
 #include "player-quest.h"
 #include "player-spell.h"
@@ -3861,6 +3862,7 @@ static struct {
 	{ "ui entries", &ui_entry_parser },
 	{ "timed effects", &player_timed_parser },
 	{ "player properties", &player_property_parser },
+	{ "abilities", &ability_parser },
 	{ "features", &feat_parser },
 	{ "object bases", &object_base_parser },
 	{ "slays", &slay_parser },

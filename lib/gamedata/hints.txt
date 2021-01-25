@@ -87,6 +87,7 @@ H:Flaming weapons will light your way.
 H:Flasks of oil make a good throwing weapon early on.
 H:Flee while you can. Any decent adventurer has to honour the priorities.
 H:For any remedy there is a misery.
+H:Foraging for dessert in the desert is more useful than it first appears.
 H:Forget your childlike lore: mushrooms are not tasty but awholotta challenge!
 H:Guaranteed heal self - scenario: o'@, type c4c4c4c4
 H:Ha, treasures! Like all vaults it was full of depths and dangers.

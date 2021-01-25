@@ -143,6 +143,7 @@ ANGFILES = \
 	option.o \
 	parser.o \
 	randname.o \
+	player-ability.o \
 	player-attack.o \
 	player-birth.o \
 	player-calcs.o \
