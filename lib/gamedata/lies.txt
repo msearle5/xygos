@@ -108,6 +108,7 @@ R:By combining our minds with motion we can tune for the shadow we desire.
 R:Bye bye!  Bye bye! 
 R:Concise confusion: dive, dare, dice, derp, die.
 R:Connection closed by foreign host.
+R:Connection confused.
 R:DON'T OPEN IT
 R:DON'T PANIC
 R:Damn! Those alien bastards are gonna pay for shooting up my ride!
@@ -211,6 +212,7 @@ R:IF THE BLACK BLADE IS WAKENED IT MUST TAKE ITS BLACK FIEF
 R:If the lava looks blue, you're playing too fast.
 R:If you are dipped in the River Stynx then you will become intolerable.
 R:If you aren't sure what resists you have, look it up by Ctrl-C.
+R:If you can't see it, it can't hurt you!
 R:If you put salt and butter on banged grains, they taste like salty butter.
 R:If you start seeing red monsters, you have probably gained infravision.
 R:Ignore the previous rumour.
@@ -484,8 +486,10 @@ R:They say that you must collect 20 bear asses.
 R:They say that you must drop twelve *treasures* here to complete the game.
 R:They say that you must follow the Way of the Exploding Fist.
 R:They say that you should always be prepared for a final challenge.
+R:They say that you should avoid the fool's mate.
 R:They say that you should beware of fake Amulets of Yendor.
 R:They say that you should beware the undead.
+R:They sat that you should buy a hotel on Mayfair and Park Lane.
 R:They say that you should call your armor `rustproof'.
 R:They say that you should eat crap - billions of flies can't all be wrong.
 R:They say that you should fear fire and fire fear.
@@ -496,6 +500,7 @@ R:They say that you should lay off the doughnuts, fatass.
 R:They say that you should name your weapon after your first monster kill.
 R:They say that you should never be self-defecating.
 R:They say that you should water down your petrol to make it last longer.
+R:They say that you will need a bell, book, and candle. 
 R:They say that you will need a black rod with a rusty star on the end.
 R:They say that you will never defeat Morgoth, Lord of Darkness.
 R:They say that your mission, should you choose to accept it, is awesome.
@@ -594,6 +599,7 @@ R:You feel the Windows (8) on your hard disk is broken...
 R:You feel the lightsaber (v) you are carrying in your backpack is special...
 R:You feel your luck is turning...
 R:You find kitten! Way to go, robot!
+R:You find pirate! Way to go, ninja!
 R:You have 99 Hi-Potions!
 R:You have an error in objdes()
 R:You have an error in object_desc()!
