@@ -233,8 +233,8 @@ static int critical_shot(const struct player *p,
 		int dam, u32b *msg_type)
 {
 	int debuff_to_hit = is_debuffed(monster) ? DEBUFF_CRITICAL_HIT : 0;
-	int chance = weight + (p->state.to_h + plus + debuff_to_hit) * 4 + p->lev * 2;
-	int power = weight + randint1(500);
+	int chance = (weight / 20) + (p->state.to_h + plus + debuff_to_hit) * 4 + p->lev * 2;
+	int power = (weight / 20) + randint1(500);
 	int new_dam = dam;
 
 	if (randint1(5000) > chance) {
@@ -305,8 +305,8 @@ static int critical_melee(const struct player *p,
 		int dam, u32b *msg_type)
 {
 	int debuff_to_hit = is_debuffed(monster) ? DEBUFF_CRITICAL_HIT : 0;
-	int power = weight + randint1(650);
-	int chance = weight + (p->state.to_h + plus + debuff_to_hit) * 5
+	int power = (weight / 30) + randint1(650);
+	int chance = (weight / 30) + (p->state.to_h + plus + debuff_to_hit) * 5
 		+ (p->state.skills[SKILL_TO_HIT_MELEE] - 60);
 	int new_dam = dam;
 
@@ -1278,8 +1278,8 @@ void do_cmd_throw(struct command *cmd) {
 		return;
 
 
-	weight = MAX(obj->weight, 10);
-	range = MIN(((str + 20) * 10) / weight, 10);
+	weight = MAX(obj->weight, 450);
+	range = MIN(((str + 20) * 450) / weight, 10);
 
 	/* Make sure the player isn't throwing wielded items */
 	if (object_is_equipped(player->body, obj)) {
