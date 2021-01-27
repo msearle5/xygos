@@ -37,6 +37,7 @@
 #include "obj-tval.h"
 #include "obj-util.h"
 #include "object.h"
+#include "player-ability.h"
 #include "player-birth.h"
 #include "player-calcs.h"
 #include "player-history.h"
@@ -1208,11 +1209,16 @@ void do_cmd_accept_character(struct command *cmd)
 
 	roll_hp();
 
+	/* Prompt for birth talents and roll out per-level talent points */
+	int level_tp = setup_talents();
+	cmd_abilities(player, true, player->talent_points, NULL);
+	init_talent(level_tp);
+
 	ignore_birth_init();
 
 	/* Clear old messages, add new starting message */
 	history_clear(player);
-	history_add(player, "Began the quest to destroy Morgoth.", HIST_PLAYER_BIRTH);
+	history_add(player, "Began the quest to save the galaxy.", HIST_PLAYER_BIRTH);
 
 	/* Note player birth in the message recall */
 	message_add(" ", MSG_GENERIC);

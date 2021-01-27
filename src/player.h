@@ -559,6 +559,9 @@ struct player {
 	s16b csp;		/* Cur mana pts */
 	u16b csp_frac;	/* Cur mana frac (times 2^16) */
 
+	u16b talent_points;			/* Current talent points */
+	byte talent_gain[PY_MAX_LEVEL];	/* TP to gain per level */
+
 	s16b stat_max[STAT_MAX];	/* Current "maximal" stat values */
 	s16b stat_cur[STAT_MAX];	/* Current "natural" stat values */
 	s16b stat_map[STAT_MAX];	/* Tracks remapped stats from temp stat swap */

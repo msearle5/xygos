@@ -21,6 +21,9 @@
 #include "init.h"
 #include "player.h"
 #include "player-ability.h"
+#include "ui-input.h"
+#include "ui-output.h"
+#include "z-textblock.h"
 
 /** The list of abilities (indexed by player flag) */
 struct ability *ability[PF_MAX];
@@ -55,6 +58,34 @@ static enum parser_error parse_ability_name(struct parser *p) {
 
 	/* Determine which entry to accept */
 	#define PF(N) if (!my_stricmp(#N, a->name)) { ability[PF_##N] = a; return PARSE_ERROR_NONE; }
+	#include "list-player-flags.h"
+	#undef PF
+
+	return PARSE_ERROR_INVALID_PLAYER_FLAG;
+}
+
+static enum parser_error parse_ability_forbid(struct parser *p) {
+	struct ability *a = parser_priv(p);
+	assert(a);
+	const char *forbid = parser_getstr(p, "forbid");
+	int index = 0;
+
+	/* Locate by name and set the flag. It's done this way to avoid needing a second pass with the names read. */
+	#define PF(N) if (!my_stricmp(#N, forbid)) { a->forbid[index] = true; return PARSE_ERROR_NONE; } index++;
+	#include "list-player-flags.h"
+	#undef PF
+
+	return PARSE_ERROR_INVALID_PLAYER_FLAG;
+}
+
+static enum parser_error parse_ability_require(struct parser *p) {
+	struct ability *a = parser_priv(p);
+	assert(a);
+	const char *require = parser_getstr(p, "require");
+	int index = 0;
+
+	/* Locate by name and set the flag. It's done this way to avoid needing a second pass with the names read. */
+	#define PF(N) if (!my_stricmp(#N, require)) { a->require[index] = true; return PARSE_ERROR_NONE; } index++;
 	#include "list-player-flags.h"
 	#undef PF
 
@@ -156,6 +187,8 @@ struct parser *init_parse_ability(void) {
 	parser_reg(p, "gain str gain", parse_ability_gain);
 	parser_reg(p, "lose str lose", parse_ability_lose);
 	parser_reg(p, "brief str brief", parse_ability_brief);
+	parser_reg(p, "forbid str forbid", parse_ability_forbid);
+	parser_reg(p, "require str require", parse_ability_require);
 	parser_reg(p, "desc str desc", parse_ability_desc);
 	parser_reg(p, "desc_future str desc_future", parse_ability_desc_future);
 	parser_reg(p, "cost int cost", parse_ability_cost);
@@ -194,3 +227,514 @@ struct file_parser ability_parser = {
 };
 
 
+/* Forbidden and prerequisite combos */
+static bool ability_allowed(unsigned a, bool gain) {
+	assert(a < PF_MAX);
+	assert(ability[a]);
+
+	/* Is it forbidden? */
+	for(int i=0; i<PF_MAX; i++) {
+		if (ability[i]) {
+			if (ability[i]->forbid[a]) {
+				if (player_has(player, i)) {
+					return false;
+				}
+			}
+		}
+	}
+
+	/* Does it meet all requirements? */
+	for(int i=0; i<PF_MAX; i++) {
+		if (ability[i]) {
+			if (ability[a]->require[i]) {
+				if (!player_has(player, i)) {
+					return false;
+				}
+			}
+		}
+	}
+
+	return true;
+}
+
+/* Return true if it is possible to gain an ability */
+static bool can_gain_ability(unsigned a, bool birth) {
+	assert(a < PF_MAX);
+	assert(ability[a]);
+
+	if (player_has(player, a))
+		return false;
+
+	if (!ability_allowed(a, true))
+		return false;
+
+	if ((!birth) && (ability[a]->flags & AF_BIRTH))
+		return false;
+
+	return true;
+}
+
+/* Return true if it is possible to gain a talent. */
+static bool can_gain_talent(unsigned a, bool birth) {
+	assert(a < PF_MAX);
+	assert(ability[a]);
+
+	if (ability[a]->flags & AF_TALENT) {
+		if (ability[a]->cost <= player->talent_points) {
+			return can_gain_ability(a, birth);
+		}
+	}
+
+	return false;
+}
+
+/* Recalculate everything needed after an ability has been changed */
+static void changed_abilities(void) {
+	;
+}
+
+
+/* Attempt to gain an ability, returning true if successful.
+ * This does not care about talent points & so could be used for mutations, etc.
+ * Can fail if already present or blocked.
+ */
+static bool gain_ability(unsigned a, bool birth) {
+	assert(a < PF_MAX);
+	assert(ability[a]);
+
+	if (!can_gain_ability(a, birth))
+		return false;
+
+	pf_on(player->state.pflags, a);
+	if (ability[a]->gain)
+		msg(ability[a]->gain);
+	changed_abilities();
+	return true;
+}
+
+/* Attempt to remove an ability, returning true if successful.
+ * Can fail if not already present or blocked.
+ */
+static bool lose_ability(unsigned a) {
+	assert(a < PF_MAX);
+	assert(ability[a]);
+
+	if (!player_has(player, a))
+		return false;
+
+	if (!ability_allowed(a, false))
+		return false;
+
+	pf_off(player->state.pflags, a);
+	if (ability[a]->lose)
+		msg(ability[a]->lose);
+	changed_abilities();
+	return true;
+}
+
+/* Attempt to gain a talent, using TP if successful.
+ * That's talent points, not toilet paper.
+ * Returns true if successfully gained.
+ */
+static bool gain_talent(int a, bool birth) {
+	assert(a < PF_MAX);
+	assert(ability[a]);
+
+	if (!can_gain_talent(a, birth))
+		return false;
+
+	if (!gain_ability(a, birth))
+		return false;
+
+	player->talent_points -= ability[a]->cost;
+	return true;
+}
+
+/* Return an ability's printable (_ => space) name in a static buffer */
+static const char *ability_name(int a) {
+	static char buf[32];
+	assert(a < PF_MAX);
+	assert(ability[a]);
+	my_strcpy(buf, ability[a]->name, sizeof(buf));
+	for(int i=0;i<(int)strlen(buf);i++) {
+		if (buf[i] == '_')
+			buf[i] = ' ';
+	}
+	return buf;
+}
+
+/* Initialize player talents from the race/role
+ * Stores the initial talent points in player->talent_points, and returns the total per-level TP to gain (to pass
+ * to init_talent after birth talents have been selected)
+ */
+int setup_talents(void) {
+	int tp = 0;
+	return tp;
+}
+
+/* Display the abilities which you have or could gain, with more information
+ * on the 'selected' and total number of talent points.
+ * Returns whether to 'flip' into race/class ability mode in *flip.
+ * Returns the total number of abilities displayed.
+ * If 'birth' is set, also display birth-only talents.
+ * 		This also has a check on exit with birth-only talents and talent points remaining
+ * 		+ different blurb describing colour of birth-only talents...
+ *
+ * Display format is:
+ * <General guff about talents, abilities, etc, including talent points remaining>
+ * <line>
+ * <List of talents L2R T2B columnar>
+ * <line>
+ * <Selected talent's full description>
+ */
+int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
+	char ntp[64];
+	if (flip)
+		*flip = false;
+
+	/* Clear the screen, print the unchanging parts */
+	Term_clear();
+
+	/* Build the top message */
+	const char *tops = "\nThis is a list of all your abilities (including talents and abilities gained through other means, such as mutations), plus any additional talents which you can currently gain. Existing abilities are displayed in grey, gainable talents in green";
+	const char *tops_b = ", and talents which can only be gained at character creation in orange";
+	if (!birth)
+		tops_b = "";
+	const char *tops_e = ". The currently selected talent is highlighted. To browse through the list of abilities and see what each does, use the arrow keys. To gain the selected talent, select one and press Enter to gain it. To see your race and class abilities, press A. Press Space to exit. You have";
+	if (p->talent_points)
+		strnfmt(ntp, sizeof(ntp), "%d", p->talent_points);
+	else
+		my_strcpy(ntp, "no", sizeof(ntp));
+
+	/* Format and output it */
+	struct textblock *tb = textblock_new();
+	textblock_append_c(tb, COLOUR_L_YELLOW, "%s%s%s %s talent points remaining.", tops, tops_b, tops_e, ntp);
+	size_t *line_starts = NULL;
+	size_t *line_lengths = NULL;
+	int w, h;
+	Term_get_size(&w, &h);
+	int top = textblock_calculate_lines(tb, &line_starts, &line_lengths, w) + 2;
+	textui_textblock_place(tb, SCREEN_REGION, NULL);
+	textblock_free(tb);
+
+	/* Loop: print the changing parts, read the keyboard and act on it until exiting (ESC, return). */
+	bool leaving = false;
+	int avail[PF_MAX];
+	int navail;
+	bool gain[PF_MAX];
+
+	do {
+		navail = 0;
+		/* Scan for abilities */
+		for (int i = 0; i < PF_MAX; i++) {
+			if (ability[i]) {
+				/* Gainable */
+				if ((ability[i]->flags & AF_TALENT) && (ability[i]->cost <= player->talent_points) && (birth || (!ability[i]->flags & AF_BIRTH)) && (!(player_has(p, i)))) {
+					gain[navail] = true;
+					avail[navail++] = i;
+				}
+			}
+		}
+		for (int i = 0; i < PF_MAX; i++) {
+			if (ability[i]) {
+				if ((ability[i]->flags & AF_TALENT) && (ability[i]->cost <= player->talent_points) && (birth || (!ability[i]->flags & AF_BIRTH)) && (!(player_has(p, i)))) {
+					/* Don't add - it's already been gained */
+				} else if (player_has(p, i)) {
+					/* Already has */
+					gain[navail] = false;
+					avail[navail++] = i;
+				}
+			}
+		}
+
+		/* There is now an array of gainable or already present abilities in avail[]/gain[],
+		 * with avail[] having the indices into ability[] and gain[] being true if it
+		 * is gainable. Gainables are at the front of the array.
+		 * This may be empty. In which case, print a message and exit early.
+		 */
+		int columns = 1;
+		if (navail == 0) {
+			c_prt(COLOUR_ORANGE, "You currently have no abilities and can gain no talents. Press any key to exit.", 6, 0);
+		} else {
+
+			/* Find longest ability name - this (+ 1 blank) is the column size */
+			int column_width = 0;
+			for (int i = 0; i < navail; i++) {
+				if ((int)strlen(ability[avail[i]]->name) > column_width)
+					column_width = strlen(ability[avail[i]]->name);
+			}
+			column_width++;
+			columns = w / column_width;
+			if (columns > navail)
+				columns = navail;
+			int last_row_length = navail % columns;
+			if (last_row_length == 0)
+				last_row_length = columns;
+
+			/* Abilities are now arranged by row and column, the last row usually being incomplete. */
+
+			/* Display grid */
+			for (int i = 0; i < navail; i++) {
+				int col = (i % columns) * column_width;
+				int row = (i / columns) + top;
+				int colour;
+				if (!gain[i]) {
+					if (i == selected) {
+						colour = COLOUR_WHITE;
+					} else {
+						colour = COLOUR_SLATE;
+					}
+				} else {
+					if (ability[avail[i]]->flags & AF_BIRTH) {
+						if (i == selected) {
+							colour = COLOUR_YELLOW;
+						} else {
+							colour = COLOUR_ORANGE;
+						}
+					} else {
+						if (i == selected) {
+							colour = COLOUR_L_GREEN;
+						} else {
+							colour = COLOUR_GREEN;
+						}
+					}
+				}
+				c_prt(colour, ability_name(avail[i]), row, col);
+			}
+
+			/* Display info */
+			int costco = COLOUR_GREEN;
+			if (ability[avail[selected]]->cost < 0)
+				costco = COLOUR_RED;
+
+			/* Description and cost */
+			tb = textblock_new();
+			textblock_append_c(tb, COLOUR_SLATE, "%s", ability[avail[selected]]->desc_future ? ability[avail[selected]]->desc_future : ability[avail[selected]]->desc);
+			textblock_append_c(tb, costco, " Cost: %d", ability[avail[selected]]->cost);
+			line_starts = NULL;
+			line_lengths = NULL;
+			int lines = textblock_calculate_lines(tb, &line_starts, &line_lengths, w);
+			region bottom_region = SCREEN_REGION;
+			bottom_region.row = h - lines;
+			textui_textblock_place(tb, bottom_region, NULL);
+			textblock_free(tb);
+		}
+
+		/* Redraw */
+		Term_redraw();
+
+		/* Read a key */
+		struct keypress ch = inkey();
+		switch(ch.code) {
+			/* Navigate around the grid */
+			case '2':
+			case KC_PGDOWN:
+			case ARROW_DOWN:
+			selected += columns;
+			if (selected >= navail)
+				selected %= columns;
+			break;
+			case '4':
+			case ARROW_LEFT:
+			selected--;
+			if (selected < 0)
+				selected = navail - 1;
+			break;
+			case '6':
+			case ARROW_RIGHT:
+			selected++;
+			if (selected >= navail)
+				selected = 0;
+			break;
+			case '8':
+			case KC_PGUP:
+			case ARROW_UP:
+			selected -= columns;
+			if (selected < 0)
+				selected += navail;
+			break;
+
+			/* Select */
+			case KC_ENTER: {
+				/* Prompt to confirm.
+				 * If not wanted, continue otherwise exit.
+				 * (This must attract attention. Use a pop up?)
+				 */
+				bool ok = true;
+				if (!birth) {
+					const char *prompt = format("Really permanently gain %s?", ability_name(avail[selected]));
+					c_prt(COLOUR_ORANGE, prompt, 0, 0);
+					ch = inkey();
+					prt("", 0, 0);
+					if ((ch.code == ESCAPE) || strchr("Nn", ch.code))
+						ok = false;
+				}
+				if (ok) {
+					gain_talent(avail[selected], birth);
+					leaving = !birth;
+				}
+				break;
+			}
+
+			/* Flip */
+			case 'a':
+			case 'A':
+			if (flip) {
+				*flip = true;
+				leaving = true;
+			}
+			break;
+
+			/* Leave */
+			case ESCAPE:
+			case 'Q':
+			case ' ':
+			leaving = true;
+			break;
+		}
+	} while (!leaving);
+
+	return navail;
+}
+
+/* Complete init of player talents (roll out TP-gain levels)
+ * This must be done after birth talents (including Patience etc.) have been fixed.
+ **/
+void init_talent(int tp) {
+	int bp = player->talent_points;
+	memset(player->talent_gain, 0, sizeof(player->talent_gain));
+
+	/* Distribute fairly evenly between level 2 and maximum.
+	 * (Or max/2 and maximum for Patience, or level 3 and 90% of max for Unknown)
+	 */
+	int min = 2;
+	int max = PY_MAX_LEVEL;
+
+	/* Patience = more TP, but later */
+	if (player_has(player, PF_PATIENCE)) {
+		tp += (((bp * 3) + 1) / 2) + 1;
+		min = PY_MAX_LEVEL / 2;
+	} else {
+		tp += bp;
+	}
+
+	/* This doesn't require that all talents *must* be taken immediately */
+	if (player_has(player, PF_PRECOCITY)) {
+		bp = ((tp * 2) + 2) / 3;
+		tp = 0;
+	}
+
+	/* Avoid getting TP close to max level for unknown talents */
+	if (player_has(player, PF_UNKNOWN_TALENTS)) {
+		min++;
+		max -= (PY_MAX_LEVEL / 10);
+	}
+
+	/* If there are any level-gain TP level, spread them.
+	 * FIXME: try to be more equally spaced?
+	 **/
+	for (int i = 0; i < tp; i++)
+		player->talent_gain[rand_range(min, max)]++;
+
+	player->talent_points = bp;
+}
+
+/* Handle ability gain at level up.
+ * Give in the original and new max level - call this only when gaining a level for the first time.
+ * If more than one level is gained at once, it should only be called once.
+ * Return true if anything noticeable happened.
+ **/
+bool ability_levelup(struct player *p, int from, int to)
+{
+	/* For all levels gained, sum TP per level */
+	for(int level = from+1; level <= to; level++)
+		p->talent_points += p->talent_gain[level];
+
+	int gains = p->talent_points;
+	if (gains == 0)
+		return false;
+
+	/* Gains is now the number of talent points available.
+	 * Both random and interactive need to know what talents are available (there could be none)
+	 */
+	int avail[PF_MAX];
+	int navail = 0;
+
+	for (int i = 0; i < PF_MAX; i++) {
+		if (ability[i]) {
+			if ((ability[i]->flags & AF_TALENT) && (ability[i]->cost <= gains)) {
+				if (ability_allowed(i, true)) {
+					avail[navail++] = i;
+				}
+			}
+		}
+	}
+
+	/* No possible talents to gain? Leave now... */
+	if (navail == 0)
+		return false;
+
+	/* Unknown Talents:
+	 * Nothing 'nasty' or -ve value.
+	 * Going for a random talent as soon as it became available would prevent gaining >1-point talents.
+	 * It would also be predictable when it happened.
+	 * So don't always gain the talent, especially for less valuable ones and at lower levels.
+	 * Exception is maximum level - at this point everything must go!
+	 */
+	if (player_has(p, PF_UNKNOWN_TALENTS)) {
+		for(int level = from+1; level <= to; level++) {
+			int tal[PF_MAX];
+			int ntal = 0;
+			for (int i = 0; i < navail; i++) {
+				if ((!(ability[avail[i]]->flags & AF_NASTY)) && (ability[avail[i]]->cost > 0)) {
+					int bodge = 7; /* 5 => 1 in 6 cost 1, 1 in 3 cost 2 etc. This is scaled so that when you are rapidly gaining levels early you get less, while to avoid hitting
+					max level with a lot of TP remaining it will trigger more often. */
+					if (level > 12)
+						bodge--;
+
+					if (level > 25)
+						bodge--;
+
+					if (level > 34)
+						bodge--;
+
+					if (level > 41)
+						bodge--;
+
+					if (level > 45)
+						bodge--;
+
+					if ((level == PY_MAX_LEVEL) || (randint0(ability[avail[i]]->cost + bodge) < ability[avail[i]]->cost))
+						tal[ntal++] = avail[i];
+				}
+			}
+
+			/* No talents available to gain this time around? */
+			if (ntal == 0)
+				continue;
+
+			if (level == PY_MAX_LEVEL) {
+				/* Take as many talents as can be taken, from the most valuable talent
+				 * to the least, until out of TP.
+				 **/
+				for (int j = 0; j < ntal; j++) {
+					int best = -1;
+					for (int i = 0; i < ntal; i++) {
+						if ((!player_has(p, tal[i])) && (ability[best]->cost > ability[tal[i]]->cost))
+							best = tal[i];
+					}
+					if (best >= 0)
+						gain_talent(best, false);
+				}
+			} else {
+				/* Take one at random */
+				gain_talent(tal[randint0(ntal)], false);
+			}
+		}
+	} else {
+		/* Not Unknown Talents. There is no need to force a decision immediately, though. */
+		msgt(MSG_LEVEL, "You may now gain new talents. Press Ctrl-T at any time to browse and gain talents.");
+	}
+
+	return true;
+}
