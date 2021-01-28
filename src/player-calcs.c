@@ -33,6 +33,7 @@
 #include "obj-power.h"
 #include "obj-tval.h"
 #include "obj-util.h"
+#include "player-ability.h"
 #include "player-calcs.h"
 #include "player-spell.h"
 #include "player-timed.h"
@@ -1818,6 +1819,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	pf_wipe(state->pflags);
 	pf_copy(state->pflags, p->race->pflags);
 	pf_union(state->pflags, p->class->pflags);
+	pf_union(state->pflags, p->ability_pflags);
 
 	/* Extract the player flags */
 	player_flags(p, collect_f);
@@ -1953,6 +1955,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 
 		add = state->stat_add[i];
 		add += (p->race->r_adj[i] + p->class->c_adj[i]);
+		add += ability_to_stat(i);
 		state->stat_top[i] =  modify_stat_value(p->stat_max[i], add);
 		use = modify_stat_value(p->stat_cur[i], add);
 

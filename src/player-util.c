@@ -52,6 +52,15 @@ int danger_depth(struct player *p)
 	return MIN(z_info->max_depth - 1, p->depth + p->danger);
 }
 
+/** Return the number of 'feeling squares' needed to get an object feeling
+ */
+int feeling_need(struct player *p)
+{
+	if (player_has(p, PF_EMOTIONAL_INTELLIGENCE))
+		return 1;
+	return z_info->feeling_need;
+}
+
 /** Return a random message from the death message list */
 static const char *random_death_msg(void)
 {
@@ -440,17 +449,27 @@ void player_regen_hp(struct player *p)
 	int percent = 0;/* max 32k -> 50% of mhp; more accurately "pertwobytes" */
 	int fed_pct, old_chp = p->chp;
 
-	/* Default regeneration */
-	if (p->timed[TMD_FOOD] >= PY_FOOD_WEAK) {
-		percent = PY_REGEN_NORMAL;
-	} else if (p->timed[TMD_FOOD] >= PY_FOOD_FAINT) {
-		percent = PY_REGEN_WEAK;
-	} else if (p->timed[TMD_FOOD] >= PY_FOOD_STARVE) {
-		percent = PY_REGEN_FAINT;
+	if (player_has(p, PF_FORAGING)) {
+		/* Foraging = always regenerate as if full */
+		if (p->timed[TMD_FOOD] >= PY_FOOD_STARVE)
+			percent = PY_REGEN_NORMAL;
+
+		fed_pct = PY_FOOD_MAX;
+	} else {
+		/* Default regeneration */
+		if (p->timed[TMD_FOOD] >= PY_FOOD_WEAK) {
+			percent = PY_REGEN_NORMAL;
+		} else if (p->timed[TMD_FOOD] >= PY_FOOD_FAINT) {
+			percent = PY_REGEN_WEAK;
+		} else if (p->timed[TMD_FOOD] >= PY_FOOD_STARVE) {
+			percent = PY_REGEN_FAINT;
+		}
+
+		fed_pct = p->timed[TMD_FOOD];
 	}
 
 	/* Food bonus - better fed players regenerate up to 1/3 faster */
-	fed_pct = p->timed[TMD_FOOD] / z_info->food_value;
+	fed_pct /= z_info->food_value;
 	percent *= 100 + fed_pct / 3;
 	percent /= 100;
 

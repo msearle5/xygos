@@ -20,6 +20,7 @@
 #include "init.h"
 #include "obj-pile.h"
 #include "obj-util.h"
+#include "player-ability.h"
 #include "player-birth.h"
 #include "player-calcs.h"
 #include "player-history.h"

@@ -1058,7 +1058,7 @@ static size_t prt_level_feeling(int row, int col)
 	 *   But before that check if the player has explored enough
 	 * to get a feeling. If not display as ?
 	 */
-	if (cave->feeling_squares < z_info->feeling_need) {
+	if (cave->feeling_squares < feeling_need(player)) {
 		my_strcpy(obj_feeling_str, "?", sizeof(obj_feeling_str));
 		obj_feeling_color_print = COLOUR_WHITE;
 	} else {
@@ -1076,7 +1076,7 @@ static size_t prt_level_feeling(int row, int col)
 	 * for a human.
 	 *   0 -> ? . Monster feeling should never be 0, but we check
 	 * it just in case.
-	 *   1 to 9 are feelings from omens of death to quiet, paceful.
+	 *   1 to 9 are feelings from omens of death to quiet, peaceful.
 	 * We also reverse this so that what we show is a danger feeling.
 	 */
 	if (mon_feeling == 0)

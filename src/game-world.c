@@ -29,6 +29,8 @@
 #include "obj-desc.h"
 #include "obj-gear.h"
 #include "obj-knowledge.h"
+#include "obj-make.h"
+#include "obj-pile.h"
 #include "obj-tval.h"
 #include "obj-util.h"
 #include "player-calcs.h"
@@ -560,7 +562,7 @@ void process_world(struct chunk *c)
 
 	/* Handle stores and sunshine */
 	if (!player->depth) {
-		/* Daybreak/Nighfall in town */
+		/* Daybreak/Nightfall in town */
 		if (!(turn % ((10L * z_info->day_length) / 2))) {
 			/* Check for dawn */
 			bool dawn = (!(turn % (10L * z_info->day_length)));
@@ -673,6 +675,49 @@ void process_world(struct chunk *c)
 			/* Slow digestion takes less food */
 			if (player_of_has(player, OF_SLOW_DIGEST)) i /= 2;
 
+			/* Foraging helps if you are hungry - and if you are moving, occasionally you find food. */
+			if (player_has(player, PF_FORAGING)) {
+				if ((player->timed[TMD_FOOD] < PY_FOOD_HUNGRY)) {
+					i /= 2;
+					if (!player_is_resting(player)) {
+						int chance = player->timed[TMD_FOOD];
+						if (chance < PY_FOOD_FAINT)
+							chance = PY_FOOD_FAINT;
+						chance *= 300;
+						chance /= z_info->food_value;
+						if (one_in_(chance)) {
+							/* No mushrooms growing in lava */
+							if (square_isprojectable(cave, player->grid) &&
+								(!square_isfiery(cave, player->grid))) {
+								/* Food item or mushie, sometimes high level.
+								 * You are more likely to get food items rather than shrooms - and more likely
+								 * to get low level ones - when very low food
+								 **/
+								bool shroom = (randint0(PY_FOOD_HUNGRY * 3) < player->timed[TMD_FOOD]);
+								bool hilevel = (randint0(PY_FOOD_HUNGRY * 2) < player->timed[TMD_FOOD]);
+								int level = player->depth;
+								if (hilevel) {
+									level += player->lev + 25;
+								}
+								if (level > 100)
+									level = 100;
+								const char *fmsg;
+								
+								struct object *food = make_object(cave, level, false, false, false, NULL, shroom? TV_MUSHROOM : TV_FOOD);
+								if (food) {
+									if (shroom)
+										fmsg = "You spot a mushroom growing near your feet.";
+									else
+										fmsg = "You notice a cache of food hidden under a rock.";
+									msg(fmsg);
+									drop_near(cave, &food, 0, player->grid, false, true);
+								}
+							}
+						}
+					}
+				}
+			}
+
 			/* Minimal digestion */
 			if (i < 1) i = 1;
 
@@ -697,13 +742,21 @@ void process_world(struct chunk *c)
 	if (player_timed_grade_eq(player, TMD_FOOD, "Faint")) {
 		/* Faint occasionally */
 		if (!player->timed[TMD_PARALYZED] && one_in_(10)) {
-			/* Message */
-			msg("You faint from the lack of food.");
-			disturb(player);
+			if (player_has(player, PF_FORAGING)) {
+				/* Foraging helps you ignore it, but you should still get a warning.
+				 * Not too often though as it gets annoying.
+				 **/
+				if (one_in_(10))
+					msg("You momentarily feel faint from the lack of food.");
+			} else {
+				/* Message */
+				msg("You faint from the lack of food.");
+				disturb(player);
 
-			/* Faint (bypass free action) */
-			(void)player_inc_timed(player, TMD_PARALYZED, 1 + randint0(5),
-								   true, false);
+				/* Faint (bypass free action) */
+				(void)player_inc_timed(player, TMD_PARALYZED, 1 + randint0(5),
+									   true, false);
+			}
 		}
 	} else if (player_timed_grade_eq(player, TMD_FOOD, "Starving")) {
 		/* Calculate damage */

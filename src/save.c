@@ -516,6 +516,11 @@ void wr_player(void)
 	/* Quest currently active */
 	wr_s32b(player->active_quest);
 
+	/* Player flags */
+	for(i=0; i < (int)PF_SIZE; i++)
+		wr_byte(player->ability_pflags[i]);
+
+
 	/* Future use */
 	for (i = 0; i < 8; i++) wr_u32b(0L);
 }

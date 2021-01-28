@@ -21,6 +21,7 @@
 #include "init.h"
 #include "player.h"
 #include "player-ability.h"
+#include "ui-display.h"
 #include "ui-input.h"
 #include "ui-output.h"
 #include "z-textblock.h"
@@ -90,6 +91,20 @@ static enum parser_error parse_ability_require(struct parser *p) {
 	#undef PF
 
 	return PARSE_ERROR_INVALID_PLAYER_FLAG;
+}
+
+static enum parser_error parse_ability_stats(struct parser *p) {
+	struct ability *a = parser_priv(p);
+	assert(a);
+
+	a->a_adj[STAT_STR] = parser_getint(p, "str");
+	a->a_adj[STAT_DEX] = parser_getint(p, "dex");
+	a->a_adj[STAT_CON] = parser_getint(p, "con");
+	a->a_adj[STAT_INT] = parser_getint(p, "int");
+	a->a_adj[STAT_WIS] = parser_getint(p, "wis");
+	a->a_adj[STAT_CHR] = parser_getint(p, "chr");
+	a->a_adj[STAT_SPD] = parser_getint(p, "spd");
+	return PARSE_ERROR_NONE;
 }
 
 static enum parser_error parse_ability_gain(struct parser *p) {
@@ -184,6 +199,7 @@ struct parser *init_parse_ability(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
 	parser_reg(p, "name str name", parse_ability_name);
+	parser_reg(p, "stats int str int int int wis int dex int con int chr int spd", parse_ability_stats);
 	parser_reg(p, "gain str gain", parse_ability_gain);
 	parser_reg(p, "lose str lose", parse_ability_lose);
 	parser_reg(p, "brief str brief", parse_ability_brief);
@@ -226,6 +242,19 @@ struct file_parser ability_parser = {
 	cleanup_ability
 };
 
+/* The effect of all abilities combined on a given stat */
+int ability_to_stat(int stat) {
+	assert(stat < STAT_MAX);
+	int bonus = 0;
+	for(int i=0; i<PF_MAX; i++) {
+		if (ability[i]) {
+			if (player_has(player, i)) {
+				bonus += ability[i]->a_adj[stat];
+			}
+		}
+	}
+	return bonus;
+}
 
 /* Forbidden and prerequisite combos */
 static bool ability_allowed(unsigned a, bool gain) {
@@ -305,7 +334,7 @@ static bool gain_ability(unsigned a, bool birth) {
 	if (!can_gain_ability(a, birth))
 		return false;
 
-	pf_on(player->state.pflags, a);
+	pf_on(player->ability_pflags, a);
 	if (ability[a]->gain)
 		msg(ability[a]->gain);
 	changed_abilities();
@@ -325,7 +354,7 @@ static bool lose_ability(unsigned a) {
 	if (!ability_allowed(a, false))
 		return false;
 
-	pf_off(player->state.pflags, a);
+	pf_off(player->ability_pflags, a);
 	if (ability[a]->lose)
 		msg(ability[a]->lose);
 	changed_abilities();
@@ -405,10 +434,14 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 		strnfmt(ntp, sizeof(ntp), "%d", p->talent_points);
 	else
 		my_strcpy(ntp, "no", sizeof(ntp));
+	const char *ntp2 = "s";
+	if (p->talent_points == 1)
+		ntp2 = "";
+	
 
 	/* Format and output it */
 	struct textblock *tb = textblock_new();
-	textblock_append_c(tb, COLOUR_L_YELLOW, "%s%s%s %s talent points remaining.", tops, tops_b, tops_e, ntp);
+	textblock_append_c(tb, COLOUR_L_YELLOW, "%s%s%s %s talent point%s remaining.", tops, tops_b, tops_e, ntp, ntp2);
 	size_t *line_starts = NULL;
 	size_t *line_lengths = NULL;
 	int w, h;
@@ -429,7 +462,8 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 		for (int i = 0; i < PF_MAX; i++) {
 			if (ability[i]) {
 				/* Gainable */
-				if ((ability[i]->flags & AF_TALENT) && (ability[i]->cost <= player->talent_points) && (birth || (!ability[i]->flags & AF_BIRTH)) && (!(player_has(p, i)))) {
+				if (can_gain_talent(i, birth)) {
+				//(ability[i]->flags & AF_TALENT) && (ability[i]->cost <= player->talent_points) && (birth || (!ability[i]->flags & AF_BIRTH)) && (!(player_has(p, i)))) {
 					gain[navail] = true;
 					avail[navail++] = i;
 				}
@@ -437,7 +471,7 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 		}
 		for (int i = 0; i < PF_MAX; i++) {
 			if (ability[i]) {
-				if ((ability[i]->flags & AF_TALENT) && (ability[i]->cost <= player->talent_points) && (birth || (!ability[i]->flags & AF_BIRTH)) && (!(player_has(p, i)))) {
+				if (can_gain_talent(i, birth)) {
 					/* Don't add - it's already been gained */
 				} else if (player_has(p, i)) {
 					/* Already has */
@@ -454,7 +488,7 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 		 */
 		int columns = 1;
 		if (navail == 0) {
-			c_prt(COLOUR_ORANGE, "You currently have no abilities and can gain no talents. Press any key to exit.", 6, 0);
+			c_prt(COLOUR_ORANGE, "You currently have no abilities and can gain no talents. Press any key to exit.", top, 0);
 		} else {
 
 			/* Find longest ability name - this (+ 1 blank) is the column size */
@@ -509,8 +543,17 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 
 			/* Description and cost */
 			tb = textblock_new();
-			textblock_append_c(tb, COLOUR_SLATE, "%s", ability[avail[selected]]->desc_future ? ability[avail[selected]]->desc_future : ability[avail[selected]]->desc);
-			textblock_append_c(tb, costco, " Cost: %d", ability[avail[selected]]->cost);
+			if (gain[selected]) {
+				textblock_append_c(tb, COLOUR_SLATE, "With this talent %s", ability[avail[selected]]->desc_future ? ability[avail[selected]]->desc_future : ability[avail[selected]]->desc);
+				for(int i=0;i<STAT_MAX;i++) {
+					if (ability[avail[selected]]->a_adj[i]) {
+						textblock_append_c(tb, COLOUR_YELLOW, " (%+d to %s)", ability[avail[selected]]->a_adj[i], stat_names[i]);
+					}
+				}
+				textblock_append_c(tb, costco, " Cost: %d", ability[avail[selected]]->cost);
+			} else {
+				textblock_append_c(tb, COLOUR_SLATE, "%s", ability[avail[selected]]->desc);
+			}
 			line_starts = NULL;
 			line_lengths = NULL;
 			int lines = textblock_calculate_lines(tb, &line_starts, &line_lengths, w);

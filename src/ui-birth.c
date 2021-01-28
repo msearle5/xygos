@@ -332,7 +332,7 @@ static void class_help(int i, void *db, const region *l)
 	}
 
 	text_out_e("\n");
-	
+
 	skill_help(r->r_skills, c->c_skills, r->r_mhp + c->c_mhp,
 			   r->r_exp + c->c_exp, -1);
 

@@ -454,8 +454,8 @@ struct player_state {
 	bool cumber_armor;	/**< Mana draining armor */
 
 	bitflag flags[OF_SIZE];					/**< Status flags from race and items */
-	bitflag pflags[PF_SIZE];				/**< Player intrinsic flags */
 	struct element_info el_info[ELEM_MAX];	/**< Resists from race and items */
+	bitflag pflags[PF_SIZE];				/**< Player intrinsic flags */
 };
 
 #define player_has(p, flag)       (pf_has(p->state.pflags, (flag)))
@@ -602,6 +602,8 @@ struct player {
 	s16b stat_birth[STAT_MAX];			/* Birth "natural" stat values */
 	s16b ht_birth;						/* Birth Height */
 	s32b wt_birth;						/* Birth Weight */
+
+	byte ability_pflags[PF_MAX];		/* Player flags from abilities */
 
 	struct player_options opts;			/* Player options */
 	struct player_history hist;			/* Player history (see player-history.c) */

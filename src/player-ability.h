@@ -29,6 +29,7 @@ struct ability {
 	s16b cost;
 	bool forbid[PF_MAX];
 	bool require[PF_MAX];
+	int a_adj[STAT_MAX];
 };
 
 /* Ability flags */
@@ -45,3 +46,5 @@ extern struct file_parser ability_parser;
 bool ability_levelup(struct player *p, int from, int to);
 int setup_talents(void);
 int cmd_abilities(struct player *p, bool birth, int selected, bool *flip);
+int ability_to_stat(int stat);
+void init_talent(int tp);

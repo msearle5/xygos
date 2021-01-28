@@ -26,6 +26,7 @@
 #include "obj-knowledge.h"
 #include "obj-util.h"
 #include "player.h"
+#include "player-ability.h"
 #include "player-calcs.h"
 #include "player-timed.h"
 #include "player-util.h"
@@ -453,14 +454,15 @@ void display_player_stat_info(void)
 	row = 2;
 
 	/* Column */
-	col = 42;
+	col = 39;
 
 	/* Print out the labels for the columns */
 	c_put_str(COLOUR_WHITE, "  Self", row-1, col+5);
-	c_put_str(COLOUR_WHITE, " RB", row-1, col+12);
-	c_put_str(COLOUR_WHITE, " CB", row-1, col+16);
-	c_put_str(COLOUR_WHITE, " EB", row-1, col+20);
-	c_put_str(COLOUR_WHITE, "  Best", row-1, col+24);
+	c_put_str(COLOUR_WHITE, " RB", row-1, col+11);
+	c_put_str(COLOUR_WHITE, " AB", row-1, col+15);
+	c_put_str(COLOUR_WHITE, " CB", row-1, col+19);
+	c_put_str(COLOUR_WHITE, " EB", row-1, col+23);
+	c_put_str(COLOUR_WHITE, "  Best", row-1, col+27);
 
 	/* Display the stats */
 	for (i = 0; i < STAT_MAX; i++) {
@@ -474,27 +476,31 @@ void display_player_stat_info(void)
 
 		/* Indicate natural maximum */
 		if (player->stat_max[i] == 18+100)
-			put_str("!", row+i, col+3);
+			put_str("!", row+i, col+10);
 
 		/* Internal "natural" maximum value */
 		cnv_stat(player->stat_max[i], buf, sizeof(buf));
-		c_put_str(COLOUR_L_GREEN, buf, row+i, col+5);
+		c_put_str(COLOUR_L_GREEN, buf, row+i, col+4);
 
 		/* Race Bonus */
 		strnfmt(buf, sizeof(buf), "%+3d", player->race->r_adj[i]);
-		c_put_str(COLOUR_L_BLUE, buf, row+i, col+12);
+		c_put_str(COLOUR_L_BLUE, buf, row+i, col+11);
+
+		/* Ability Bonus */
+		strnfmt(buf, sizeof(buf), "%+3d", ability_to_stat(i));
+		c_put_str(COLOUR_L_BLUE, buf, row+i, col+15);
 
 		/* Class Bonus */
 		strnfmt(buf, sizeof(buf), "%+3d", player->class->c_adj[i]);
-		c_put_str(COLOUR_L_BLUE, buf, row+i, col+16);
+		c_put_str(COLOUR_L_BLUE, buf, row+i, col+19);
 
 		/* Equipment Bonus */
 		strnfmt(buf, sizeof(buf), "%+3d", player->state.stat_add[i]);
-		c_put_str(COLOUR_L_BLUE, buf, row+i, col+20);
+		c_put_str(COLOUR_L_BLUE, buf, row+i, col+23);
 
 		/* Resulting "modified" maximum value */
 		cnv_stat(player->state.stat_top[i], buf, sizeof(buf));
-		c_put_str(COLOUR_L_GREEN, buf, row+i, col+24);
+		c_put_str(COLOUR_L_GREEN, buf, row+i, col+27);
 
 		/* Only display stat_use if there has been draining */
 		if (player->stat_cur[i] < player->stat_max[i]) {
@@ -819,8 +825,8 @@ static struct panel *get_panel_misc(void) {
 	panel_line(p, attr, "Weight", fmt_weight(player->wt, NULL));
 	panel_line(p, attr, "Turns used:", "");
 	panel_line(p, attr, "Game", "%d", turn);
-	panel_line(p, attr, "Standard", "%d", player->total_energy / 100);
-	panel_line(p, attr, "Resting", "%d", player->resting_turn);
+	panel_line(p, attr, "Active", "%d", player->total_energy / 100);
+	panel_line(p, attr, "Rest", "%d", player->resting_turn);
 
 	return p;
 }
@@ -836,7 +842,7 @@ static const struct {
 {
 	/*   x  y wid rows */
 	{ {  1, 1, 40, 7 }, true,  get_panel_topleft },	/* Name, Class, ... */
-	{ { 21, 1, 18, 3 }, false, get_panel_misc },	/* Age, ht, wt, ... */
+	{ { 21, 1, 16, 3 }, false, get_panel_misc },	/* Age, ht, wt, ... */
 	{ {  1, 9, 24, 9 }, false, get_panel_midleft },	/* Cur Exp, Max Exp, ... */
 	{ { 29, 9, 19, 9 }, false, get_panel_combat },
 	{ { 52, 9, 20, 8 }, false, get_panel_skills },
@@ -886,9 +892,6 @@ void display_player(int mode)
 	/* When not playing, do not display in subwindows */
 	if (Term != angband_term[0] && !player->upkeep->playing) return;
 
-	/* Stat info */
-	display_player_stat_info();
-
 	if (mode) {
 		struct panel *p = panels[0].panel();
 		display_panel(p, panels[0].align_left, &panels[0].bounds);
@@ -903,6 +906,9 @@ void display_player(int mode)
 		/* Extra info */
 		display_player_xtra_info();
 	}
+
+	/* Stat info */
+	display_player_stat_info();
 }
 
 

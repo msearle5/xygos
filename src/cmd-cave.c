@@ -1574,7 +1574,7 @@ void display_feeling(bool obj_only)
 	}
 
 	/* Players automatically get a monster feeling. */
-	if (cave->feeling_squares < z_info->feeling_need) {
+	if (cave->feeling_squares < feeling_need(player)) {
 		msg("%s.", mon_feeling_text[mon_feeling]);
 		return;
 	}

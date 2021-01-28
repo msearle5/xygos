@@ -22,6 +22,7 @@
 #include "monster.h"
 #include "obj-pile.h"
 #include "obj-util.h"
+#include "player-birth.h"
 #include "player-calcs.h"
 #include "player-quest.h"
 #include "store.h"

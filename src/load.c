@@ -829,6 +829,10 @@ int rd_player(void)
 	/* Quest currently active */
 	rd_s32b(&player->active_quest);
 
+	/* Player flags */
+	for(i=0; i < (int)PF_SIZE; i++)
+		rd_byte(&player->ability_pflags[i]);
+
 	/* Future use */
 	strip_bytes(32);
 
