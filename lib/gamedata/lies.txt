@@ -450,6 +450,7 @@ R:They say that the most deadly enemy is the sado-random number generator.
 R:They say that the princess is in another castle.
 R:They say that the random number generator hates you.
 R:They say that the random number generator isn't.
+R:They say that the military laser is the key to the game.
 R:They say that the turtle moves.
 R:They say that the worms are the source of all spice...
 R:They say that the worms crawl in and the worms crawl out.
@@ -468,15 +469,19 @@ R:They say that there's lots more ways to die than win.
 R:They say that there's slime all over the walls.
 R:They say that there's work to be done, and no rest this side of Heaven.
 R:They say that they came from beyond the stars.
+R:They say that the customer is always right.
 R:They say that this is a scorched earth scenario.
+R:They say that this is a Forbidden Planet.
 R:They say that to win the game, you must kill me, John Romero.
 R:They say that true berserkers fight naked.
 R:They say that we aren't in Kansas any more.
 R:They say that when you're hungry you can get a pizza in 30 moves or it's free.
 R:They say that you already lost your chance to see the Ultra ending.
+R:They say that you are fated to die on level nivelo.
 R:They say that you can always trust rumors.
 R:They say that you can find Genetic Engineering in ancient scrolls of wisdom.
 R:They say that you can gain Charisma by dipping your T-shirt in a fountain.
+R:They say you can get a potion of cure dianthroritis in 30 turns, or it's free.
 R:They say that you can stand on an explosive barrel and fire a rocket down.
 R:They say that you got the quad damage!
 R:They say that you have nothing to fear but fear itself - that, and being shot.
@@ -495,10 +500,12 @@ R:They say that you should eat crap - billions of flies can't all be wrong.
 R:They say that you should fear fire and fire fear.
 R:They say that you should fear the MISSINGNO.
 R:They say that you should fight fire with fire.
+R:They say that you should fight fire with fire - but the fire dept. uses water.
 R:They say that you should fill your vial with dew, and farm flies.
 R:They say that you should lay off the doughnuts, fatass.
 R:They say that you should name your weapon after your first monster kill.
 R:They say that you should never be self-defecating.
+R:They say that you should put a brick in your petrol tank, for cheaper refills.
 R:They say that you should water down your petrol to make it last longer.
 R:They say that you will need a bell, book, and candle. 
 R:They say that you will need a black rod with a rusty star on the end.
@@ -582,7 +589,7 @@ R:You are going to have some new clothes.
 R:You are heading for head-stone for sure.
 R:You are not illiterate.
 R:You are probably going to die down here.
-R:You are so hosed! Escape now and call it a draw!
+R:You are so hosed! Quit now and call it a draw!
 R:You are starting to lose your temper? So what? Gnaw your pistachios!
 R:You are the very model of a modern major general!
 R:You are totally going to win this time!
