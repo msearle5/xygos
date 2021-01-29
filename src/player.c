@@ -222,6 +222,8 @@ static void adjust_level(struct player *p, bool verbose)
 	if (p->exp > p->max_exp)
 		p->max_exp = p->exp;
 
+	int max_from = p->max_lev;
+
 	p->upkeep->redraw |= PR_EXP;
 
 	handle_stuff(p);
@@ -253,8 +255,6 @@ static void adjust_level(struct player *p, bool verbose)
 		for(int i=0;i<STAT_MAX;i++)
 			effect_simple(EF_RESTORE_STAT, source_none(), "0", STAT_STR+i, 0, 0, 0, 0, NULL);
 	}
-
-	int max_from = p->max_lev;
 
 	while ((p->max_lev < PY_MAX_LEVEL) &&
 	       (p->max_exp >= (player_exp[p->max_lev-1] * p->expfact / 100L)))

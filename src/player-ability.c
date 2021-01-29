@@ -21,6 +21,7 @@
 #include "init.h"
 #include "player.h"
 #include "player-ability.h"
+#include "player-calcs.h"
 #include "ui-display.h"
 #include "ui-input.h"
 #include "ui-output.h"
@@ -319,7 +320,8 @@ static bool can_gain_talent(unsigned a, bool birth) {
 
 /* Recalculate everything needed after an ability has been changed */
 static void changed_abilities(void) {
-	;
+	player->upkeep->update |= PU_BONUS | PU_HP;
+	update_stuff(player);
 }
 
 
@@ -397,8 +399,8 @@ static const char *ability_name(int a) {
  * to init_talent after birth talents have been selected)
  */
 int setup_talents(void) {
-	int tp = 0;
-	return tp;
+	player->talent_points = player->race->tp_base + player->class->tp_base;
+	return player->race->tp_max + player->class->tp_max;
 }
 
 /* Display the abilities which you have or could gain, with more information
@@ -463,7 +465,6 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 			if (ability[i]) {
 				/* Gainable */
 				if (can_gain_talent(i, birth)) {
-				//(ability[i]->flags & AF_TALENT) && (ability[i]->cost <= player->talent_points) && (birth || (!ability[i]->flags & AF_BIRTH)) && (!(player_has(p, i)))) {
 					gain[navail] = true;
 					avail[navail++] = i;
 				}
@@ -603,18 +604,22 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 				 * If not wanted, continue otherwise exit.
 				 * (This must attract attention. Use a pop up?)
 				 */
-				bool ok = true;
-				if (!birth) {
-					const char *prompt = format("Really permanently gain %s?", ability_name(avail[selected]));
-					c_prt(COLOUR_ORANGE, prompt, 0, 0);
-					ch = inkey();
-					prt("", 0, 0);
-					if ((ch.code == ESCAPE) || strchr("Nn", ch.code))
-						ok = false;
-				}
-				if (ok) {
-					gain_talent(avail[selected], birth);
-					leaving = !birth;
+				if (gain[selected]) {
+					bool ok = true;
+					if (!birth) {
+						const char *prompt = format("Really permanently gain %s?", ability_name(avail[selected]));
+						c_prt(COLOUR_ORANGE, prompt, 0, 0);
+						ch = inkey();
+						prt("", 0, 0);
+						if ((ch.code == ESCAPE) || strchr("Nn", ch.code))
+							ok = false;
+					}
+					if (ok) {
+						gain_talent(avail[selected], birth);
+						leaving = !birth;
+					}
+				} else {
+					msg("You already have that ability.");
 				}
 				break;
 			}
@@ -651,14 +656,13 @@ void init_talent(int tp) {
 	 * (Or max/2 and maximum for Patience, or level 3 and 90% of max for Unknown)
 	 */
 	int min = 2;
-	int max = PY_MAX_LEVEL;
+	int max = PY_MAX_LEVEL - 1;
 
 	/* Patience = more TP, but later */
 	if (player_has(player, PF_PATIENCE)) {
 		tp += (((bp * 3) + 1) / 2) + 1;
 		min = PY_MAX_LEVEL / 2;
-	} else {
-		tp += bp;
+		bp = 0;
 	}
 
 	/* This doesn't require that all talents *must* be taken immediately */
@@ -674,7 +678,7 @@ void init_talent(int tp) {
 	}
 
 	/* If there are any level-gain TP level, spread them.
-	 * FIXME: try to be more equally spaced?
+	 * FIXME: try to be more equally spaced? (e.g. minimise the difference between pairs, including ends)
 	 **/
 	for (int i = 0; i < tp; i++)
 		player->talent_gain[rand_range(min, max)]++;
@@ -691,7 +695,7 @@ bool ability_levelup(struct player *p, int from, int to)
 {
 	/* For all levels gained, sum TP per level */
 	for(int level = from+1; level <= to; level++)
-		p->talent_points += p->talent_gain[level];
+		p->talent_points += p->talent_gain[level-1];
 
 	int gains = p->talent_points;
 	if (gains == 0)

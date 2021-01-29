@@ -199,6 +199,9 @@ struct player_race {
 	int r_mhp;		/**< Hit-dice modifier */
 	int r_exp;		/**< Experience factor */
 
+	int tp_base;	/** Talent points at birth */
+	int tp_max;		/** Talent points gained by max level */
+
 	int b_age;		/**< Base age */
 	int m_age;		/**< Mod age */
 
@@ -340,6 +343,9 @@ struct player_class {
 
 	int c_mhp;					/**< Hit-dice adjustment */
 	int c_exp;					/**< Experience factor */
+
+	int tp_base;				/** Talent points at birth */
+	int tp_max;					/** Talent points gained by max level */
 
 	bitflag flags[OF_SIZE];		/**< (Object) flags */
 	bitflag pflags[PF_SIZE];	/**< (Player) flags */
@@ -530,7 +536,7 @@ struct player {
 
 	struct loc grid;/* Player location */
 
-	byte hitdie;	/* Hit dice (sides) */
+	u32b hitdie;	/* Hit dice (sides) */
 	byte expfact;	/* Experience factor */
 
 	s16b age;		/* Characters age */

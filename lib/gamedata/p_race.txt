@@ -11,6 +11,7 @@
 # Format:
 # name:race name
 # stats:str:int:wis:dex:con
+# talents:base:max
 # skill-disarm:base
 # skill-device:base
 # skill-save:base
@@ -36,11 +37,14 @@
 # 'stats' is for the stat modifiers - strength, intelligence, wisdom,
 # dexterity, constitution.
 
+# 'talents' is for the base number of talent points (at birth), and the
+# number of points added by max level. This defaults to 0:0.
+
 # 'skill-<skill name>' is for skills that get added at birth - physical
 # and magical disarming, magic devices, saving throws, stealth,
 # to hit (normal), to hit (bows), to hit (throwing), digging.
 
-# 'hitdie' is for max. hitpoints gained per level.
+# 'hitdie' is for average hitpoints gained at maximum level.
 
 # 'exp' is for percent of "standard" experience needed to gain a level.
 
@@ -66,6 +70,7 @@
 
 name:Human
 stats:0:0:0:0:0:0:0
+talents:3:5
 skill-disarm-phys:0
 skill-disarm-magic:0
 skill-device:0
@@ -76,7 +81,7 @@ skill-melee:0
 skill-shoot:0
 skill-throw:0
 skill-dig:0
-hitdie:10
+hitdie:275
 exp:100
 infravision:0
 history:1

@@ -2211,6 +2211,15 @@ static enum parser_error parse_p_race_stats(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_p_race_talents(struct parser *p) {
+	struct player_race *r = parser_priv(p);
+	if (!r)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	r->tp_base = parser_getuint(p, "base");
+	r->tp_max = parser_getuint(p, "max");
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_p_race_skill_disarm_phys(struct parser *p) {
 	struct player_race *r = parser_priv(p);
 	if (!r)
@@ -2430,6 +2439,7 @@ struct parser *init_parse_p_race(void) {
 	parser_setpriv(p, NULL);
 	parser_reg(p, "name str name", parse_p_race_name);
 	parser_reg(p, "stats int str int int int wis int dex int con int chr int spd", parse_p_race_stats);
+	parser_reg(p, "talents uint base uint max", parse_p_race_talents);
 	parser_reg(p, "skill-disarm-phys int disarm", parse_p_race_skill_disarm_phys);
 	parser_reg(p, "skill-disarm-magic int disarm", parse_p_race_skill_disarm_magic);
 	parser_reg(p, "skill-device int device", parse_p_race_skill_device);
@@ -2996,6 +3006,15 @@ static enum parser_error parse_class_stats(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_class_talents(struct parser *p) {
+	struct player_class *c = parser_priv(p);
+	if (!c)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	c->tp_base = parser_getuint(p, "base");
+	c->tp_max = parser_getuint(p, "max");
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_class_skill_disarm_phys(struct parser *p) {
 	struct player_class *c = parser_priv(p);
 	if (!c)
@@ -3486,6 +3505,7 @@ struct parser *init_parse_class(void) {
 	parser_reg(p, "name str name", parse_class_name);
 	parser_reg(p, "stats int str int int int wis int dex int con int chr int spd",
 			   parse_class_stats);
+	parser_reg(p, "talents uint base uint max", parse_class_talents);
 	parser_reg(p, "skill-disarm-phys int base int incr",
 			   parse_class_skill_disarm_phys);
 	parser_reg(p, "skill-disarm-magic int base int incr",

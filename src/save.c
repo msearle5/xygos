@@ -437,7 +437,7 @@ void wr_player(void)
 	wr_string(player->class->name);
 	wr_byte(player->opts.name_suffix);
 
-	wr_byte(player->hitdie);
+	wr_u32b(player->hitdie);
 	wr_byte(player->expfact);
 
 	wr_s16b(player->age);

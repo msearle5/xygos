@@ -25,7 +25,7 @@ turnover:2
 danger:65:80
 always:cloak:Cloak
 always:food:Apple
-always:light:Wooden Torch
+#always:light:Wooden Torch
 always:flask:Flask of Oil
 always:digger:Shovel
 always:digger:Pick
@@ -234,4 +234,5 @@ owner:0:Your home
 owner:0:Your home
 owner:0:Your home
 owner:0:Your home
+slots:230:230
 danger:90:99

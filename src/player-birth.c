@@ -283,7 +283,7 @@ int hp_roll_worst(int *level)
 	int worst = 0;
 	int rdev = 0;
 	for(int i=1; i<PY_MAX_LEVEL-10; i++) {
-		int mean = (((i - 1) * (player->hitdie + 1)) / 2); 
+		int mean = (i / 2) + ((player->hitdie * i) / (PY_MAX_LEVEL - 1)); 
 		rdev += level[i];
 		if (i >= 5) {
 			int dev = rdev - mean;
@@ -302,7 +302,7 @@ int hp_roll_score(int *level)
 	int sum = 0;
 	int rdev = 0;
 	for(int i=1; i<PY_MAX_LEVEL; i++) {
-		int mean = (((i - 1) * (player->hitdie + 1)) / 2); 
+		int mean = (i / 2) + ((player->hitdie * i) / (PY_MAX_LEVEL - 1)); 
 		rdev += level[i];
 		int dev = rdev - mean;
 		if (dev < 0)
@@ -317,16 +317,16 @@ int hp_roll_score(int *level)
  * It should also not deviate too far from the average at any other
  * level.
  */
-static void roll_hp(void)
+void roll_hp(void)
 {
 	/* Average expected HP - ignoring the first level */
-	int target = (((PY_MAX_LEVEL - 1) * (player->hitdie + 1)) / 2); 
+	int target = player->hitdie;
 
 	/* Roll all hitpoints */
 	int level[PY_MAX_LEVEL];
 	int sum = 0;
 	for(int i=1;i<PY_MAX_LEVEL;i++) {
-		level[i] = randint1(player->hitdie);
+		level[i] = 1+(randint0(target * 2) / (PY_MAX_LEVEL - 1));
 		sum += level[i];
 	}
 
@@ -336,7 +336,7 @@ static void roll_hp(void)
 	while (sum != target) {
 		int l = randint1(PY_MAX_LEVEL-1);
 		int prev = level[l];
-		int reroll = randint1(player->hitdie);
+		int reroll = 1+(randint0(target * 2) / (PY_MAX_LEVEL - 1));
 		int best;
 		if (sum < target)
 			best = MAX(prev, reroll);
@@ -355,7 +355,6 @@ static void roll_hp(void)
 	 * the process finishes when the worst-case -ve deviation between
 	 * levels 5 and 40 has been reduced below 10%.
 	 */
-	int reps = 0;
 	do {
 		int before = hp_roll_score(level);
 		int from = randint1(PY_MAX_LEVEL-1);
@@ -364,7 +363,6 @@ static void roll_hp(void)
 		level[from] = level[to];
 		level[to] = tmp;
 		int after = hp_roll_score(level);
-		++reps;
 		if (before < after) {
 			// revert it - this has increased the deviation
 			tmp = level[from];
@@ -374,7 +372,7 @@ static void roll_hp(void)
 	} while (hp_roll_worst(level) < -500); // 5%
 
 	/* Copy into the player's hitpoints */
-	player->player_hp[0] = player->hitdie;
+	player->player_hp[0] = (2 * player->hitdie) / PY_MAX_LEVEL;
 	for (int i = 1; i < PY_MAX_LEVEL; i++)
 		player->player_hp[i] = player->player_hp[i-1] + level[i];
 }
@@ -980,7 +978,7 @@ void player_generate(struct player *p, const struct player_race *r,
 	p->hitdie = p->race->r_mhp + p->class->c_mhp;
 
 	/* Pre-calculate level 1 hitdice */
-	p->player_hp[0] = p->hitdie;
+	p->player_hp[0] = (p->hitdie * 2) / PY_MAX_LEVEL;
 
 	/*
 	 * Fill in overestimates of hitpoints for additional levels.  Do not
@@ -988,7 +986,7 @@ void player_generate(struct player *p, const struct player_race *r,
 	 * to get a desirable set of initial rolls.
 	 */
 	for (i = 1; i < p->lev; i++) {
-		p->player_hp[i] = p->player_hp[i - 1] + p->hitdie;
+		p->player_hp[i] = p->player_hp[i - 1] + (p->hitdie / PY_MAX_LEVEL);
 	}
 
 	/* Initial hitpoints */

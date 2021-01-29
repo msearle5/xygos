@@ -103,22 +103,21 @@
 name:of Shadows
 info:1000:10
 alloc:40:10 to 100
-item:light:Lantern
+type:light
 values:STEALTH[d2] | RES_LIGHT[1] | LIGHT[-4]
 min-values:STEALTH[0] | LIGHT[-4]
 
 name:of Brightness
 info:2000:10
 alloc:50:1 to 30
-item:light:Wooden Torch
-item:light:Lantern
+type:light
 values:LIGHT[1]
 min-values:LIGHT[1]
 
 name:(Everburning)
 info:2500:10
 alloc:100:1 to 30
-item:light:Lantern
+type:light
 flags:NO_FUEL
 flags-off:TAKES_FUEL
 
@@ -126,7 +125,7 @@ flags-off:TAKES_FUEL
 name:of True Sight
 info:6000:10
 alloc:10:20 to 127
-item:light:Lantern
+type:light
 flags:PROT_BLIND | SEE_INVIS
 
 

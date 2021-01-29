@@ -202,7 +202,7 @@ static void generate_player_for_stats()
 	player->mhp = player->chp = 2000;
 
 	/* Pre-calculate level 1 hitdice */
-	player->player_hp[0] = player->hitdie;
+	player->player_hp[0] = (2 * player->hitdie) / PY_MAX_LEVEL;
 
 	/* Set age/height/weight */
 	player->ht = player->ht_birth = 66;

@@ -23,6 +23,7 @@
 # info:mhp:exp
 # attack:max_attacks:min_weight:att_multiply
 # title:title
+# hitdie:hp
 # equip:tval:sval:min:max
 # player-flags:class flags
 # magic:spell_first:spell_weight:num_books
@@ -48,6 +49,8 @@
 # to hit (throwing), digging.  The base entry is what gets added to the
 # character's skills at birth, the increments are added to the base skill
 # every ten levels.
+
+# 'hitdie' is for additional average hitpoints gained at maximum level.
 
 # 'info' is for extra info - max. hitpoints gained per level, experience
 # factor in percent.
@@ -120,7 +123,7 @@ skill-melee:70:45
 skill-shoot:55:45
 skill-throw:55:45
 skill-dig:0:0
-hitdie:9
+hitdie:275
 max-attacks:6
 min-weight:30
 strength-multiplier:5
@@ -135,7 +138,7 @@ equip:food:random:1:3
 equip:food:random:1:3
 equip:food:random:1:3
 equip:random:random:1:3
-equip:light:Wooden Torch:1:3
+##equip:light:Wooden Torch:1:3
 equip:pill:Berserk Strength:1:1
 equip:sword:Dagger:1:1
 equip:soft armour:Soft Leather Armour:1:1
@@ -171,7 +174,7 @@ max-attacks:4
 min-weight:40
 strength-multiplier:2
 equip:food:random:1:3
-equip:light:Wooden Torch:1:3
+##equip:light:Wooden Torch:1:3
 equip:sword:Rapier:1:1
 equip:scroll:Word of Recall:1:1
 player-flags:ZERO_FAIL | BEAM | CHOOSE_SPELLS
@@ -447,7 +450,7 @@ min-weight:35
 strength-multiplier:3
 equip:food:random:1:3
 equip:hafted:Whip:1:1
-equip:light:Wooden Torch:1:3
+#equip:light:Wooden Torch:1:3
 equip:scroll:Word of Recall:1:1
 player-flags:ZERO_FAIL | CHOOSE_SPELLS | CHARM
 title:Wanderer
@@ -681,7 +684,7 @@ max-attacks:4
 min-weight:35
 strength-multiplier:3
 equip:food:random:1:3
-equip:light:Wooden Torch:1:3
+#equip:light:Wooden Torch:1:3
 equip:hafted:Mace:1:1
 equip:pill:Cure Serious Wounds:2:2
 equip:scroll:Word of Recall:1:1
@@ -1205,7 +1208,7 @@ max-attacks:5
 min-weight:30
 strength-multiplier:5
 equip:food:random:1:3
-equip:light:Wooden Torch:1:3
+#equip:light:Wooden Torch:1:3
 equip:sword:Main Gauche:1:1
 equip:scroll:Protection from Evil:1:1
 equip:scroll:Word of Recall:1:1
@@ -1366,7 +1369,7 @@ max-attacks:5
 min-weight:20
 strength-multiplier:4
 equip:food:random:1:3
-equip:light:Wooden Torch:1:3
+#equip:light:Wooden Torch:1:3
 equip:sword:Dagger:1:1
 equip:soft armour:Soft Leather Armour:1:1
 equip:scroll:Word of Recall:1:1
@@ -1470,7 +1473,7 @@ max-attacks:5
 min-weight:35
 strength-multiplier:4
 equip:food:random:1:3
-equip:light:Wooden Torch:1:3
+#equip:light:Wooden Torch:1:3
 equip:sword:Main Gauche:1:1
 #equip:bow:Short Bow:1:1
 #equip:arrow:Arrow:15:20
@@ -1577,7 +1580,7 @@ min-weight:100
 strength-multiplier:5
 equip:shadow book:[Into the Shadows]:1:1
 equip:food:random:1:3
-equip:light:Wooden Torch:1:3
+#equip:light:Wooden Torch:1:3
 equip:sword:Tulwar:1:1
 equip:shield:Leather Shield:1:1
 equip:scroll:Word of Recall:1:1

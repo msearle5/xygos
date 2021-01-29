@@ -163,16 +163,29 @@ graphics:*:v
 
 ##### Lights #####
 
-name:& Wooden Torch~
+name:& wax candle~
 type:light
-graphics:~:u
-level:1
-weight:22
-cost:2
-alloc:70:1 to 40
+graphics:~:Y
+level:0
+weight:150g
+cost:1
+alloc:20:0 to 40
 attack:1d1:0:0
 armor:0:0
-flags:BURNS_OUT | LIGHT_2 | EASY_KNOW
+flags:BURNS_OUT | LIGHT_2
+desc:A wax candle.
+
+name:& firecracker~
+type:light
+graphics:~:r
+level:1
+weight:150g
+cost:8
+alloc:6:0 to 45
+attack:1d1:0:0
+armor:0:0
+flags:BURNS_OUT | LIGHT_2
+desc:A candle-shaped firework. Light the blue touch paper and after a 15 second delay - BANG.
 
 name:& Lantern~
 type:light

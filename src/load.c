@@ -708,7 +708,7 @@ int rd_player(void)
 	rd_byte(&player->opts.name_suffix);
 
 	/* Special Race/Class info */
-	rd_byte(&player->hitdie);
+	rd_u32b(&player->hitdie);
 	rd_byte(&player->expfact);
 
 	/* Age/Height/Weight */
