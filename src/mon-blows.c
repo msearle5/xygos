@@ -676,7 +676,7 @@ static void melee_effect_handler_EAT_GOLD(melee_effect_handler_context_t *contex
         (randint0(100) < (adj_dex_safe[current_player->state.stat_ind[STAT_DEX]]
 						  + current_player->lev))) {
         /* Saving throw message */
-        msg("You quickly protect your money pouch!");
+        msg("You quickly protect your wallet!");
 
         /* Occasional blink anyway */
         if (randint0(3)) context->blinked = true;
@@ -686,17 +686,17 @@ static void melee_effect_handler_EAT_GOLD(melee_effect_handler_context_t *contex
         if (gold > 5000) gold = (current_player->au / 20) + randint1(3000);
         if (gold > current_player->au) gold = current_player->au;
         current_player->au -= gold;
-        if (gold <= 0) {
+        if (gold <= 1) {
             msg("Nothing was stolen.");
             return;
         }
 
         /* Let the player know they were robbed */
-        msg("Your purse feels lighter.");
+        msg("Your wallet feels lighter.");
         if (current_player->au)
-            msg("%d coins were stolen!", gold);
+            msg("$%d was stolen!", gold);
         else
-            msg("All of your coins were stolen!");
+            msg("All your cash was stolen!");
 
         /* While we have gold, put it in objects */
         while (gold > 0) {
@@ -704,10 +704,17 @@ static void melee_effect_handler_EAT_GOLD(melee_effect_handler_context_t *contex
 
             /* Create a new temporary object */
             struct object *obj = object_new();
-            object_prep(obj, money_kind("gold", gold), 0, MINIMISE);
-
             /* Amount of gold to put in this object */
-            amt = gold > MAX_PVAL ? MAX_PVAL : gold;
+            if (gold > MAX_PVAL) {
+				amt = rand_range(rand_range(100, MAX_PVAL), MAX_PVAL);
+			} else {
+				amt = rand_range(rand_range(1, gold), gold) + randint1(100);
+				if (amt > gold)
+					amt = gold;
+			}
+            
+            object_prep(obj, money_kind(NULL, gold), 0, MINIMISE);
+
             obj->pval = amt;
             gold -= amt;
 
