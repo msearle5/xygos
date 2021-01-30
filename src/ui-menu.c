@@ -213,8 +213,11 @@ static void display_scrolling(struct menu *menu, int cursor, int *top, region *l
 
 static char scroll_get_tag(struct menu *menu, int pos)
 {
-	if (menu->selections)
-		return menu->selections[pos - menu->top];
+	int idx = pos = menu->top;
+	if (menu->selections) {
+		if (idx < (int)strlen(menu->selections))
+			return menu->selections[idx];
+	}
 
 	return 0;
 }
@@ -306,8 +309,11 @@ static void object_skin_display(struct menu *menu, int cursor, int *top, region 
 
 static char object_skin_get_tag(struct menu *menu, int pos)
 {
-	if (menu->selections)
-		return menu->selections[pos - menu->top];
+	int idx = pos = menu->top;
+	if (menu->selections) {
+		if (idx < (int)strlen(menu->selections))
+			return menu->selections[idx];
+	}
 
 	return 0;
 }
@@ -402,8 +408,11 @@ static void display_columns(struct menu *menu, int cursor, int *top, region *loc
 
 static char column_get_tag(struct menu *menu, int pos)
 {
-	if (menu->selections)
-		return menu->selections[pos];
+	int idx = pos = menu->top;
+	if (menu->selections) {
+		if (idx < (int)strlen(menu->selections))
+			return menu->selections[idx];
+	}
 
 	return 0;
 }
@@ -567,8 +576,10 @@ static void display_menu_row(struct menu *menu, int pos, int top,
 	if (!(flags & MN_NO_TAGS)) {
 		if (flags & MN_REL_TAGS)
 			sel = menu->skin->get_tag(menu, pos);
-		else if (menu->selections && !(flags & MN_PVT_TAGS))
-			sel = menu->selections[pos];
+		else if (menu->selections && !(flags & MN_PVT_TAGS)) {
+			if (pos < (int)strlen(menu->selections))
+				sel = menu->selections[pos];
+		}
 		else if (menu->row_funcs->get_tag)
 			sel = menu->row_funcs->get_tag(menu, oid);
 	}
@@ -685,7 +696,7 @@ static bool menu_handle_action(struct menu *m, const ui_event *in, bool *exit)
 /**
  * Handle navigation keypresses.
  *
- * Returns true if they key was intelligible as navigation, regardless of
+ * Returns true if the key was intelligible as navigation, regardless of
  * whether any action was taken.
  */
 bool menu_handle_keypress(struct menu *menu, const ui_event *in,

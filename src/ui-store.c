@@ -299,9 +299,9 @@ static void store_display_recalc(struct store_context *ctx)
 
 	/* If we're displaying the help, then put it with a line of padding */
 	if (ctx->flags & (STORE_SHOW_HELP)) {
-		ctx->scr_places_y[LOC_HELP_CLEAR] = hgt - 10;
-		ctx->scr_places_y[LOC_HELP_PROMPT] = hgt - 6;
-		loc.page_rows = -10;
+		ctx->scr_places_y[LOC_HELP_CLEAR] = hgt - 11;
+		ctx->scr_places_y[LOC_HELP_PROMPT] = hgt - 7;
+		loc.page_rows = -11;
 	} else {
 		ctx->scr_places_y[LOC_HELP_CLEAR] = hgt - 2;
 		ctx->scr_places_y[LOC_HELP_PROMPT] = hgt - 1;
@@ -450,6 +450,8 @@ static void store_display_help(struct store_context *ctx)
 		else text_out(" purchases");
 	}
 	text_out(" the selected item. ");
+	text_out_c(COLOUR_L_GREEN, "Space");
+	text_out(" pages through off-screen items. ");
 
 	if (!ctx->inspect_only) {
 		if (OPT(player, birth_no_selling)) {
@@ -1180,6 +1182,7 @@ static void store_replace(struct store_context *ctx, bool *exit)
 
 	int price = store_roundup((store_price_all(store) / 3) + store->owner->max_cost + 2000);
 	if ((store->sidx == STORE_HOME) || (you_own(store))) {
+		/* Could treat this a request to sell */
 		msg("It's all yours, and it's staying that way.");
 		return;
 	}
@@ -1618,11 +1621,11 @@ static void store_menu_set_selections(struct menu *menu, bool knowledge_menu)
 		if (OPT(player, rogue_like_commands)) {
 			/* These two can't intersect! */
 			menu->cmd_keys = "\x04\x05\x10?={|}~CEIPTdegilpswxFQSNOB"; /* \x10 = ^p , \x04 = ^D, \x05 = ^E */
-			menu->selections = "abcfmnoqrtuvyz13456790ABDFGH";
+			menu->selections = "abcfmnoqrtuvyz13456790ABDGH";
 		} else {
 			/* These two can't intersect! */
 			menu->cmd_keys = "\x05\x010?={|}~CEIbdegiklpstwxFQSNOB"; /* \x05 = ^E, \x10 = ^p */
-			menu->selections = "acfhjmnoqruvyz13456790ABDFGH";
+			menu->selections = "acfhjmnoqruvyz13456790ABDGH";
 		}
 	}
 }

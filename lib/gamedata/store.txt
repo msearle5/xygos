@@ -6,6 +6,7 @@
 # owner: max purse : name			- as many or few as you like >1
 # turnover: turnover				- how many items the store turns over
 # slots: min : max					- number of 'normal' slots to keep stocked
+# size: max							- initial maximum number of items (defaults to store_inven_max constant)
 # normal: type name : item name		- for the normal stocking list
 # always: type name : ?item name	- for things to always stock
 # buy: type name					- base types the store will buy
@@ -234,5 +235,5 @@ owner:0:Your home
 owner:0:Your home
 owner:0:Your home
 owner:0:Your home
-slots:230:230
+size:23
 danger:90:99

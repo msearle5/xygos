@@ -353,7 +353,7 @@ void roll_hp(void)
 	 * without the change - keep the swap if the score has improved.
 	 * The score is the geometric mean of all negative deviations, and
 	 * the process finishes when the worst-case -ve deviation between
-	 * levels 5 and 40 has been reduced below 10%.
+	 * levels 5 and 40 has been reduced below 5%.
 	 */
 	do {
 		int before = hp_roll_score(level);

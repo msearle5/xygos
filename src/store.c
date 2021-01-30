@@ -186,6 +186,12 @@ static enum parser_error parse_turnover(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_max(struct parser *p) {
+	struct store *s = parser_priv(p);
+	s->stock_size = parser_getuint(p, "max");
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_normal(struct parser *p) {
 	struct store *s = parser_priv(p);
 	int tval = tval_find_idx(parser_getsym(p, "tval"));
@@ -322,6 +328,7 @@ struct parser *init_parse_stores(void) {
 	parser_reg(p, "owner uint purse str name", parse_owner);
 	parser_reg(p, "slots uint min uint max", parse_slots);
 	parser_reg(p, "turnover uint turnover", parse_turnover);
+	parser_reg(p, "size uint max", parse_max);
 	parser_reg(p, "normal sym tval sym sval", parse_normal);
 	parser_reg(p, "always sym tval ?sym sval", parse_always);
 	parser_reg(p, "buy str base", parse_buy);
@@ -618,7 +625,7 @@ bool you_own(struct store *store)
  * The "greed" value should exceed 100 when the player is "buying" the
  * object, and should be less than 100 when the player is "selling" it.
  *
- * Hack -- the black market always charges twice as much as it should.
+ * Hack -- the black market always charges more than it should.
  */
 int price_item(struct store *store, const struct object *obj,
 			   bool store_buying, int qty)
@@ -1735,7 +1742,7 @@ void do_cmd_buy(struct command *cmd)
 
 	/* Message */
 	if (one_in_(3)) msgt(MSG_STORE5, "%s", ONE_OF(comment_accept));
-	msg("You bought %s for %d gold.", o_name, price);
+	msg("You bought %s for $%d.", o_name, price);
 
 	/* Erase the inscription */
 	bought->note = 0;
@@ -1917,7 +1924,7 @@ void do_cmd_sell(struct command *cmd)
 	/* Check if the store has space for the items */
 	if (!store_check_num(store, &dummy_item)) {
 		object_wipe(&dummy_item);
-		msg("I have not the room in my store to keep it.");
+		msg("I don't have the room in my store to keep it.");
 		return;
 	}
 
@@ -1972,7 +1979,7 @@ void do_cmd_sell(struct command *cmd)
 	if (OPT(player, birth_no_selling)) {
 		msg("You had %s (%c).", o_name, label);
 	} else {
-		msg("You sold %s (%c) for %d gold.", o_name, label, price);
+		msg("You sold %s (%c) for $%d.", o_name, label, price);
 
 		/* Analyze the prices (and comment verbally) */
 		purchase_analyze(price, value, dummy);

@@ -763,8 +763,9 @@ void wr_stores(void)
 		/* Save the current owner */
 		wr_byte(store->owner->oidx);
 
-		/* Save the stock size */
-		wr_byte(store->stock_num);
+		/* Save the current and maximum stock size */
+		wr_u16b(store->stock_num);
+		wr_s16b(store->stock_size);
 
 		/* Save the stock */
 		for (obj = store->stock; obj; obj = obj->next) {

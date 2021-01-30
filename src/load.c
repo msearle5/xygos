@@ -1197,11 +1197,13 @@ static int rd_stores_aux(rd_item_t rd_item_version)
 	for (i = 0; i < tmp16u; i++) {
 		struct store *store = &stores[i];
 
-		byte own, num;
+		byte own;
+		u16b num;
 
 		/* Read the basic info */
 		rd_byte(&own);
-		rd_byte(&num);
+		rd_u16b(&num);
+		rd_s16b(&store->stock_size);
 
 		/* XXX: refactor into store.c */
 		store->owner = store_ownerbyidx(store, own);

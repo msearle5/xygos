@@ -167,7 +167,7 @@ carry-cap:floor-size:23
 #---------------------------------------------------------------------
 
 # Maximum number of discrete objects in store inventory
-store:inven-max:24
+store:inven-max:480
 
 # Number of turns between turnovers
 store:turns:1000
