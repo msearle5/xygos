@@ -154,6 +154,7 @@ static enum parser_error parse_store(struct parser *p) {
 	s = store_new(parser_getuint(p, "index") - 1);
 	s->name = string_make(parser_getstr(p, "name"));
 	s->next = h;
+	s->open = true;
 	parser_setpriv(p, s);
 	return PARSE_ERROR_NONE;
 }
@@ -189,6 +190,12 @@ static enum parser_error parse_turnover(struct parser *p) {
 static enum parser_error parse_max(struct parser *p) {
 	struct store *s = parser_priv(p);
 	s->stock_size = parser_getuint(p, "max");
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_closed(struct parser *p) {
+	struct store *s = parser_priv(p);
+	s->open = false;
 	return PARSE_ERROR_NONE;
 }
 
@@ -329,6 +336,7 @@ struct parser *init_parse_stores(void) {
 	parser_reg(p, "slots uint min uint max", parse_slots);
 	parser_reg(p, "turnover uint turnover", parse_turnover);
 	parser_reg(p, "size uint max", parse_max);
+	parser_reg(p, "closed", parse_closed);
 	parser_reg(p, "normal sym tval sym sval", parse_normal);
 	parser_reg(p, "always sym tval ?sym sval", parse_always);
 	parser_reg(p, "buy str base", parse_buy);

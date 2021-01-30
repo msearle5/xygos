@@ -1234,6 +1234,10 @@ static int rd_stores_aux(rd_item_t rd_item_version)
 			}
 		}
 
+		/* Read the entrance position */
+		rd_u16b(&store->x);
+		rd_u16b(&store->y);
+
 		/* Read the ban days and reason */
 		rd_u32b(&store->bandays);
 		{
@@ -1248,6 +1252,7 @@ static int rd_stores_aux(rd_item_t rd_item_version)
 
 		/* Destroyed flag and danger */
 		rd_bool(&store->destroy);
+		rd_bool(&store->open);
 		rd_s32b(&store->max_danger);
 	}
 

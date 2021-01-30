@@ -130,13 +130,6 @@ strength-multiplier:5
 equip:food:random:1:3
 equip:food:random:1:3
 equip:food:random:1:3
-equip:food:random:1:3
-equip:food:random:1:3
-equip:food:random:1:3
-equip:food:random:1:3
-equip:food:random:1:3
-equip:food:random:1:3
-equip:food:random:1:3
 equip:random:random:1:3
 ##equip:light:Wooden Torch:1:3
 equip:pill:Berserk Strength:1:1

@@ -1476,6 +1476,14 @@ bool lot_has_shop(struct chunk *c, struct loc xroads, struct loc lot,
 	return false;
 }
 
+static int entrance_feature(int n)
+{
+	for (int feat = 0; feat < z_info->f_max; feat++)
+		if (feat_is_shop(feat) && (f_info[feat].shopnum == n))
+			return feat;
+	return 0;
+}
+
 /**
  * Builds a store at a given pseudo-location
  * \param c is the current chunk
@@ -1486,7 +1494,6 @@ bool lot_has_shop(struct chunk *c, struct loc xroads, struct loc lot,
 static void build_store(struct chunk *c, int n, struct loc xroads,
 						struct loc lot, int lot_wid, int lot_hgt)
 {
-	int feat;
 	struct loc door;
 
 	int lot_w, lot_n, lot_e, lot_s;
@@ -1615,16 +1622,18 @@ static void build_store(struct chunk *c, int n, struct loc xroads,
 
 	/* Build an invulnerable rectangular building */
 	fill_rectangle(c, build_n, build_w, build_s, build_e, FEAT_PERM, SQUARE_NONE);
-	
+
 	/* Tagged with the store number (+1, because 0 is a valid store ID) */
 	for(int x=build_w; x<=build_e; x++)
 		for(int y=build_n; y<=build_s; y++)
 			square_set_tag(c, loc(x, y), n+1);
 
 	/* Clear previous contents, add a store door */
-	for (feat = 0; feat < z_info->f_max; feat++)
-		if (feat_is_shop(feat) && (f_info[feat].shopnum == n + 1))
-			square_set_feat(c, door, feat);
+	square_set_feat(c, door, entrance_feature(n+1));
+	
+	/* And store its location */
+	stores[n].x = door.x;
+	stores[n].y = door.y;
 }
 
 static void build_ruin(struct chunk *c, struct loc xroads, struct loc lot, int lot_wid, int lot_hgt) {
@@ -1879,6 +1888,7 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 			if (stores[i].destroy) {
 				destroy_store(c_old, i);
 				stores[i].destroy = false;
+				stores[i].open = false;
 				modded = true;
 			}
 		}
@@ -1928,6 +1938,22 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 
 	/* Apply illumination */
 	cave_illuminate(c_new, is_daytime());
+
+	/* Add or remove doors (after quest return) */
+	for(int i=0;i<MAX_STORES;i++) {
+		struct loc grid = loc(stores[i].x, stores[i].y);
+		assert(grid.x > 0);
+		assert(grid.y > 0);
+		byte feature = square(c_new, grid)->feat;
+		byte entrance = entrance_feature(i+1);
+		/* Otherwise destroyed, so ignore */
+		if ((feature == entrance) || (feature == FEAT_PERM)) {
+			feature = FEAT_PERM;
+			if (stores[i].open)
+				feature = entrance;
+			square_set_feat(c_new, grid, feature);
+		}
+	}
 
 	/* Make some residents */
 	int depth = c_new->depth;

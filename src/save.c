@@ -773,6 +773,10 @@ void wr_stores(void)
 			wr_item(obj);
 		}
 
+		/* Save the entrance position */
+		wr_u16b(store->x);
+		wr_u16b(store->y);
+
 		/* Save the ban days and reason */
 		wr_u32b(store->bandays);
 		wr_string(store->banreason ? store->banreason : "");
@@ -783,6 +787,7 @@ void wr_stores(void)
 
 		/* Destroyed flag and danger */
 		wr_bool(store->destroy);
+		wr_bool(store->open);
 		wr_s32b(store->max_danger);
 	}
 }

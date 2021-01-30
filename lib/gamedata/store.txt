@@ -8,6 +8,7 @@
 # slots: min : max					- number of 'normal' slots to keep stocked
 # size: max							- initial maximum number of items (defaults to store_inven_max constant)
 # normal: type name : item name		- for the normal stocking list
+# closed							- initially closed (stores are open by default)
 # always: type name : ?item name	- for things to always stock
 # buy: type name					- base types the store will buy
 # buy-flag: flag : type name		- types to buy if the flag is present
