@@ -537,8 +537,9 @@ int lookup_sval(int tval, const char *name)
 {
 	int k;
 	unsigned int r;
+	int length = 0;
 
-	if (sscanf(name, "%u", &r) == 1)
+	if ((sscanf(name, "%u%n", &r, &length) == 1) && (length == strlen(name)))
 		return r;
 
 	/* Look for it */

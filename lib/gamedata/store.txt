@@ -26,13 +26,13 @@ slots:0:4
 turnover:2
 danger:65:80
 always:cloak:Cloak
-always:food:Apple
-always:digger:Shovel
-always:digger:Pick
-always:6mm ammo:Iron Shot
-always:9mm ammo:Arrow
-always:12mm ammo:Bolt
-normal:light:disposable flashlight
+#always:food:Apple
+#always:digger:Shovel
+#always:digger:Pick
+normal:6mm ammo:6mm bullet
+#normal:9mm ammo:9mm bullet
+#normal:12mm ammo:12mm bullet
+#normal:light:disposable flashlight
 normal:light:keyfob light
 normal:battery:alkaline battery
 normal:food:Pint of Fine Wine
@@ -98,9 +98,9 @@ owner:0:-
 slots:3:14
 turnover:9
 danger:72:90
-normal:6mm ammo:Iron Shot
-normal:9mm ammo:Arrow
-normal:12mm ammo:Bolt
+#normal:6mm ammo:Iron Shot
+#normal:9mm ammo:Arrow
+#normal:12mm ammo:Bolt
 normal:sword:Dagger
 normal:sword:Main Gauche
 normal:sword:Rapier
