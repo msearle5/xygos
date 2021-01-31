@@ -20,6 +20,7 @@
 #include "cave.h"
 #include "cmd-core.h"
 #include "cmds.h"
+#include "effects.h"
 #include "game-input.h"
 #include "game-world.h"
 #include "generate.h"
@@ -677,31 +678,49 @@ void player_update_light(struct player *p)
 		bool burn_fuel = true;
 
 		/* Turn off the wanton burning of light during the day in the town */
-		if (!p->depth && is_daytime())
+		if (!p->depth && is_daytime() && (!of_has(obj->flags, OF_BURNS_OUT)))
 			burn_fuel = false;
 
 		/* If the light has the NO_FUEL flag, well... */
 		if (of_has(obj->flags, OF_NO_FUEL))
 		    burn_fuel = false;
-
 		/* Use some fuel (except on artifacts, or during the day) */
-		if (burn_fuel && obj->timeout > 0) {
+		if (burn_fuel && ((obj->timeout > 0) || (of_has(obj->flags, OF_BURNS_OUT)))) {
+			int burnable = obj->modifiers[OBJ_MOD_USE_ENERGY];
+			int burnstep = burnable;
+			if (burnable > obj->timeout)
+				burnable = obj->timeout;
+
 			/* Decrease life-span */
-			obj->timeout--;
+			int prev = obj->timeout;
+			obj->timeout -= burnable;
 
 			/* Hack -- notice interesting fuel steps */
-			if ((obj->timeout < 100) || (!(obj->timeout % 100)))
+			if ((obj->timeout < 100) || ((obj->timeout / 100) != (prev / 100)))
 				/* Redraw stuff */
 				p->upkeep->redraw |= (PR_EQUIP);
 
 			/* Hack -- Special treatment when blind */
 			if (p->timed[TMD_BLIND]) {
 				/* Hack -- save some light for later */
-				if (obj->timeout == 0) obj->timeout++;
+				if (obj->timeout == 0) obj->timeout = prev;
 			} else if (obj->timeout == 0) {
 				/* The light is now out */
 				disturb(p);
-				msg("Your light has gone out!");
+
+				/* Special handling for some 'lights' */
+				if (object_effect(obj) && (of_has(obj->flags, OF_NO_ACTIVATION))) {
+					bool ident = false;
+					bool was_aware = object_flavor_is_aware(obj);
+					int dir = randint1(8);
+					effect_do(obj->effect, source_object(obj), NULL, &ident, was_aware, dir, 0, 0, NULL);
+					object_flavor_aware(obj);
+					if (obj->kind->effect_msg)
+						print_custom_message(obj, obj->kind->effect_msg, MSG_GENERIC);
+				} else {
+					/* Default burning out message */
+					msg("Your light has gone out!");
+				}
 
 				/* If it's a torch, now is the time to delete it */
 				if (of_has(obj->flags, OF_BURNS_OUT)) {
@@ -712,7 +731,7 @@ void player_update_light(struct player *p)
 						object_delete(&burnt->known);
 					object_delete(&burnt);
 				}
-			} else if ((obj->timeout < 50) && (!(obj->timeout % 20))) {
+			} else if ((obj->timeout < 50 * burnstep) && (!(obj->timeout % (20 * burnstep)))) {
 				/* The light is getting dim */
 				disturb(p);
 				msg("Your light is growing faint.");

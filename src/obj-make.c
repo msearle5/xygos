@@ -865,12 +865,8 @@ void object_prep(struct object *obj, struct object_kind *k, int lev,
 			= randcalc(k->pval, lev, rand_aspect);
 
 	/* Default fuel */
-	if (tval_is_light(obj)) {
-		if (of_has(obj->flags, OF_BURNS_OUT))
-			obj->timeout = z_info->fuel_torch;
-		else if (of_has(obj->flags, OF_TAKES_FUEL))
-			obj->timeout = z_info->default_lamp;
-	}
+	if (tval_is_light(obj))
+		obj->timeout = randcalc(k->pval, lev, rand_aspect);
 
 	/* Default magic */
 	obj->to_h = randcalc(k->to_h, lev, rand_aspect);
@@ -1261,13 +1257,15 @@ void acquirement(struct loc grid, int level, int num, bool great)
  */
 struct object_kind *money_kind(const char *name, int value)
 {
-	int rank;
+	int rank = num_money_types;
 	int max_gold_drop = (3 + z_info->max_depth + ((z_info->max_depth * z_info->max_depth) / 25)) * 10;
 
 	/* Check for specified treasure variety */
-	for (rank = 0; rank < num_money_types; rank++)
-		if (streq(name, money_type[rank].name))
-			break;
+	if (name) {
+		for (rank = 0; rank < num_money_types; rank++)
+			if (streq(name, money_type[rank].name))
+				break;
+	}
 
 	/* Pick a treasure variety scaled by level */
 	if (rank == num_money_types) {

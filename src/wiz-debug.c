@@ -1323,7 +1323,7 @@ static void wiz_quantity_item(struct object *obj, bool carried)
 		if (tval_can_have_charges(obj))
 			obj->pval = obj->pval * tmp_int / obj->number;
 
-		if (tval_can_have_timeout(obj))
+		if (tval_can_have_timeout(obj) && (!tval_is_light(obj)))
 			obj->timeout = obj->timeout * tmp_int / obj->number;
 
 		/* Accept modifications */

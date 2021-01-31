@@ -27,13 +27,14 @@ turnover:2
 danger:65:80
 always:cloak:Cloak
 always:food:Apple
-#always:light:Wooden Torch
-always:flask:Flask of Oil
 always:digger:Shovel
 always:digger:Pick
 always:6mm ammo:Iron Shot
 always:9mm ammo:Arrow
 always:12mm ammo:Bolt
+normal:light:disposable flashlight
+normal:light:keyfob light
+normal:battery:alkaline battery
 normal:food:Pint of Fine Wine
 normal:food:Slime Mold
 normal:food:Flask of Whisky
@@ -42,7 +43,7 @@ normal:mushroom:Purging
 buy:light
 buy:food
 buy:mushroom
-buy:flask
+buy:battery
 buy:digger
 buy:cloak
 buy:shot

@@ -129,8 +129,8 @@ static const grouper group_item[] =
 
 	{ TV_CHEST,		"Chests" },
 
-	{ TV_LIGHT,		  "Lights and fuel" },
-	{ TV_FLASK,		  NULL },
+	{ TV_LIGHT,		  "Lights" },
+	{ TV_BATTERY,		"Batteries" },
 
 	{ 0, "" }
 };

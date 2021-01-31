@@ -864,7 +864,7 @@ bool project_p(struct source origin, int r, struct loc grid, int dam, int typ,
 					 true);
 	if (dam) {
 		/* Self-inflicted damage is scaled down */
-		if (self) {
+		if (self && (origin.what != SRC_OBJECT)) {
 			dam /= 10;
 		}
 		take_hit(player, dam, killer);

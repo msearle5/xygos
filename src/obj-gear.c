@@ -746,9 +746,9 @@ void inven_wield(struct object *obj, int slot)
 
 	/* Where is the item now */
 	if (tval_is_melee_weapon(wielded))
-		fmt = "You are wielding %s (%c).";
+		fmt = "You are holding %s (%c).";
 	else if (wielded->tval == TV_GUN)
-		fmt = "You are shooting with %s (%c).";
+		fmt = "You are firing %s (%c).";
 	else if (tval_is_light(wielded))
 		fmt = "Your light source is %s (%c).";
 	else
@@ -763,7 +763,18 @@ void inven_wield(struct object *obj, int slot)
 	/* Sticky flag geats a special mention */
 	if (of_has(wielded->flags, OF_STICKY)) {
 		/* Warn the player */
-		msgt(MSG_CURSED, "Oops! It feels deathly cold!");
+		msgt(MSG_CURSED, "Oops! It sticks to you like a magnet!");
+	}
+
+	/* Lights which cannot be recharged: reduce by 1
+	 * to start the count
+	 **/
+	if (tval_is_light(wielded)) {
+		if (of_has(obj->flags, OF_BURNS_OUT)) {
+			if (obj->timeout == randcalc(obj->kind->pval, 0, AVERAGE)) {
+				obj->timeout--;
+			}
+		}
 	}
 
 	/* See if we have to overflow the pack */

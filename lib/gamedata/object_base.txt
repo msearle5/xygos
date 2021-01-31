@@ -170,11 +170,11 @@ break:10
 flags:HATES_ACID | HATES_FIRE
 flags:EASY_KNOW
 
-name:flask:Flask~
-graphics:yellow
-break:100
+name:battery:battery~
+graphics:orange
+break:10
 # max-stack:20
-flags:HATES_COLD | HATES_SOUND | HATES_SHARD | HATES_ICE | HATES_FORCE
+flags:HATES_FIRE | HATES_ELEC
 flags:EASY_KNOW
 
 name:food:Food

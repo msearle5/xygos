@@ -88,7 +88,7 @@ bool tval_is_chest(const struct object *obj)
 
 bool tval_is_fuel(const struct object *obj)
 {
-	return obj->tval == TV_FLASK;
+	return obj->tval == TV_BATTERY;
 }
 
 bool tval_is_money(const struct object *obj)
@@ -119,7 +119,7 @@ bool tval_can_have_charges(const struct object *obj)
 
 bool tval_can_have_timeout(const struct object *obj)
 {
-	return obj->tval == TV_ROD;
+	return obj->tval == TV_ROD || obj->tval == TV_BATTERY || obj->tval == TV_LIGHT;
 }
 
 bool tval_is_body_armor(const struct object *obj)

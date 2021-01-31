@@ -1519,7 +1519,7 @@ static tval_desc sval_dependent[] =
 	{ TV_WAND,			"Wands" },
 	{ TV_ROD,			"Rods" },
 	{ TV_SCROLL,		"Scrolls" },
-	{ TV_PILL,		"Pills" },
+	{ TV_PILL,			"Pills" },
 	{ TV_RING,			"Rings" },
 	{ TV_AMULET,		"Amulets" },
 	{ TV_FOOD,			"Food" },
@@ -1530,7 +1530,7 @@ static tval_desc sval_dependent[] =
 	{ TV_SHADOW_BOOK,	"Shadow books" },
 	{ TV_OTHER_BOOK,	"Mystery books" },
 	{ TV_LIGHT,			"Lights" },
-	{ TV_FLASK,			"Flasks of oil" },
+	{ TV_BATTERY,		"Batteries" },
 	{ TV_GOLD,			"Money" },
 };
 

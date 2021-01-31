@@ -918,19 +918,23 @@ void do_cmd_use(struct command *cmd)
 
 static void refill_lamp(struct object *lamp, struct object *obj)
 {
-	/* Refuel */
-	lamp->timeout += obj->timeout ? obj->timeout : obj->pval;
+	if (obj->timeout > 0) {
+		/* Cool down */
+		msg("You cannot use that battery yet.");
+	} else {
+		/* Refuel */
+		int timeout = obj->timeout ? obj->timeout : obj->pval;
+		timeout += lamp->timeout;
+		int rpval = randcalc(lamp->kind->pval, player->lev, RANDOMISE);
+		if (timeout > rpval)
+			timeout = rpval;
+		lamp->timeout = timeout;
 
-	/* Message */
-	msg("You fuel your lamp.");
-
-	/* Comment */
-	if (lamp->timeout >= z_info->fuel_lamp) {
-		lamp->timeout = z_info->fuel_lamp;
-		msg("Your lamp is full.");
+		/* Message */
+		msg("You %srecharge your light.", ((int)lamp->timeout == rpval) ? "fully " : "");
 	}
 
-	/* Refilled from a lantern */
+	/* Refilled from another light */
 	if (of_has(obj->flags, OF_TAKES_FUEL)) {
 		/* Unstack if necessary */
 		if (obj->number > 1) {
@@ -954,18 +958,22 @@ static void refill_lamp(struct object *lamp, struct object *obj)
 
 		/* Redraw stuff */
 		player->upkeep->redraw |= (PR_INVEN);
-	} else { /* Refilled from a flask */
-		struct object *used;
-		bool none_left = false;
+	} else { /* Refilled from a battery */
+		if (of_has(obj->flags, OF_BURNS_OUT)) {
+			struct object *used;
+			bool none_left = false;
 
-		/* Decrease the item from the pack or the floor */
-		if (object_is_carried(player, obj))
-			used = gear_object_for_use(obj, 1, true, &none_left);
-		else
-			used = floor_object_for_use(obj, 1, true, &none_left);
-		if (used->known)
-			object_delete(&used->known);
-		object_delete(&used);
+			/* Decrease the item from the pack or the floor */
+			if (object_is_carried(player, obj))
+				used = gear_object_for_use(obj, 1, true, &none_left);
+			else
+				used = floor_object_for_use(obj, 1, true, &none_left);
+			if (used->known)
+				object_delete(&used->known);
+			object_delete(&used);
+		} else {
+			obj->timeout = randcalc(obj->time, 0, AVERAGE);
+		}
 	}
 
 	/* Recalculate torch */
@@ -981,33 +989,27 @@ void do_cmd_refill(struct command *cmd)
 	struct object *light = equipped_item_by_slot_name(player, "light");
 	struct object *obj;
 
-	if (player_is_shapechanged(player)) {
-		msg("You cannot do this while in %s form.",	player->shape->name);
-		if (get_check("Do you want to change back? " )) {
-			player_resume_normal_shape(player);
-		} else {
-			return;
-		}
-	}
+	if (check_shapechanged())
+		return;
 
 	/* Get an item */
 	if (cmd_get_item(cmd, "item", &obj,
-			"Refuel with with fuel source? ",
-			"You have nothing you can refuel with.",
+			"Recharge from which battery? ",
+			"You have nothing you can recharge with.",
 			obj_can_refill,
 			USE_INVEN | USE_FLOOR) != CMD_OK) return;
 
 	/* Check what we're wielding. */
 	if (!light || !tval_is_light(light)) {
-		msg("You are not wielding a light.");
+		msg("You are not using a light.");
 		return;
 	} else if (of_has(light->flags, OF_NO_FUEL)) {
-		msg("Your light cannot be refilled.");
+		msg("Your light cannot be recharged.");
 		return;
 	} else if (of_has(light->flags, OF_TAKES_FUEL)) {
 		refill_lamp(light, obj);
 	} else {
-		msg("Your light cannot be refilled.");
+		msg("Your light cannot be recharged.");
 		return;
 	}
 

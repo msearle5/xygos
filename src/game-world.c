@@ -222,8 +222,8 @@ static void recharge_objects(void)
 			/* Recharge the inventory */
 			discharged_stack =
 				(number_charging(obj) == obj->number) ? true : false;
+			/* Recharge items, and update if any items are recharged */
 
-			/* Recharge rods, and update if any rods are recharged */
 			if (tval_can_have_timeout(obj) && recharge_timeout(obj)) {
 				/* Entire stack is recharged */
 				if (obj->timeout == 0)

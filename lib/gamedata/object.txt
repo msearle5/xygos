@@ -165,54 +165,211 @@ graphics:*:v
 
 name:& wax candle~
 type:light
-graphics:~:Y
+graphics:~:Cream
 level:0
 weight:150g
 cost:1
+pile:20:6
 alloc:20:0 to 40
 attack:1d1:0:0
 armor:0:0
-flags:BURNS_OUT | LIGHT_2
+pval:1500
+time:1500
+flags:BURNS_OUT | LIGHT_2 | MIMIC_KNOW
 desc:A wax candle.
 
 name:& firecracker~
 type:light
-graphics:~:r
+graphics:~:Cream
 level:1
 weight:150g
-cost:8
+cost:30
+pile:5:6
 alloc:6:0 to 45
 attack:1d1:0:0
 armor:0:0
-flags:BURNS_OUT | LIGHT_2
+pval:15
+time:15
+flags:BURNS_OUT | LIGHT_2 | NO_ACTIVATION | MIMIC_KNOW
+msg:The {kind} explodes!
+effect:SPOT:SHARD:3
+dice:4d10
 desc:A candle-shaped firework. Light the blue touch paper and after a 15 second delay - BANG.
 
-name:& Lantern~
+name:& keyfob light~
 type:light
-graphics:~:U
-level:3
-weight:50
-cost:35
-alloc:70:5 to 100
+graphics:~:CadetBlue
+level:0
+weight:15g
+cost:25
+pile:10:2
+alloc:30:0 to 60
 attack:1d1:0:0
 armor:0:0
-flags:TAKES_FUEL | EASY_KNOW | LIGHT_3 | IGNORE_FIRE
+material:plastic
+pval:2000
+values:USE_ENERGY[1]
+flags:BURNS_OUT | EASY_KNOW | LIGHT_2 | IGNORE_FIRE
+desc:A tiny LED light. While it will last for a while it's too dim to be much help, and it can't be recharged.
 
-name:& Flask~ of oil
-type:flask
-graphics:!:y
-level:1
-weight:20
-cost:3
-alloc:50:1 to 100
+name:& disposable flashlight~
+type:light
+graphics:~:SkyBlue
+level:0
+weight:80g
+cost:40
+pile:30:5
+alloc:20:0 to 60
+attack:1d1:0:0
+armor:0:0
+material:plastic
+pval:500
+values:USE_ENERGY[1]
+flags:BURNS_OUT | EASY_KNOW | LIGHT_3 | IGNORE_FIRE
+desc:A small, light yet reasonably bright LED light. It won't last long, though and it cannot be recharged.
+
+name:& glowstick~
+type:light
+graphics:~:T
+level:0
+weight:30g
+cost:30
+alloc:12:0 to 60
+pile:75:10
+attack:1d1:0:0
+armor:0:0
+material:plastic
+pval:800
+time:800
+flags:BURNS_OUT | EASY_KNOW | LIGHT_2 | IGNORE_FIRE
+desc:A slim cylinder of fluorescent goop. Once activated you'll have a few hours of dim, sickly green light. A good backup but you don't want to rely on it as your primary light source.
+
+name:& electric torch~
+type:light
+graphics:~:w
+level:2
+weight:220g
+cost:90
+alloc:30:0 to 80
+attack:1d1:0:0
+armor:0:0
+material:aluminium
+pval:7500
+values:USE_ENERGY[1]
+flags:TAKES_FUEL | EASY_KNOW | LIGHT_3 | IGNORE_FIRE
+desc:A reasonably small and light LED torch, with a rechargable battery.
+
+name:& tactical flashlight~
+type:light
+graphics:~:w
+level:15
+weight:380g
+cost:260
+alloc:10:0 to 100
+attack:1d1:0:0
+armor:0:0
+material:aluminium
+pval:15000
+values:USE_ENERGY[3]
+flags:TAKES_FUEL | EASY_KNOW | LIGHT_4 | IGNORE_FIRE
+desc:A bulky but very bright LED torch, with a rechargable battery which it drains faster than typical torches do.
+
+name:& mobilamp~
+type:light
+graphics:~:w
+level:24
+weight:3200g
+cost:840
+alloc:3:0 to 100
+attack:1d1:0:0
+armor:0:0
+material:aluminium
+pval:30000
+values:USE_ENERGY[10]
+flags:TAKES_FUEL | EASY_KNOW | LIGHT_5 | IGNORE_FIRE
+desc:A very big, heavy and bright LED lamp, which drains its battery very quickly.
+
+name:& alkaline battery
+type:battery
+graphics:!:Copper
+level:0
+weight:135g
+cost:15
+alloc:50:0 to 50
+attack:1d4:0:0
+armor:0:0
+pval:3000
+flags:BURNS_OUT
+desc:A BogStan brand D-cell, sealed in plastic and claiming to be ultra-long-life but long past its sell-by date despite that. Still, with luck it should still be usable to some extent.
+
+name:& lithium battery
+type:battery
+graphics:!:HotPink
+level:3
+weight:95g
+cost:65
+alloc:20:2 to 70
 attack:1d4:0:0
 armor:0:0
 pval:7500
-flags:EXPLODE | THROWING
-desc:It can be used to fuel a lantern with 7500 turns of light, up to
-desc: a maximum of 15000 turns of light.
-desc:  When thrown, it is considered lit, so it does more than nominal
-desc: damage (which occurs even against creatures resistant to fire).
+flags:BURNS_OUT
+desc:A Flammacell D-size battery, sealed in plastic and not too far past its sell-by date. You can expect to get a lot more use from it than the cheap alternatives.
+
+name:& alcohol cell
+type:battery
+graphics:!:Violet
+level:19
+weight:72g
+cost:350
+alloc:5:13 to 85
+attack:1d4:0:0
+armor:0:0
+pval:15000
+flags:BURNS_OUT
+desc:A D-size Bendacell battery, based on an alcohol fuel cell. It lasts much longer than any normal battery, and is lighter as well. In more than ways than one - drop it and it's as likely as not to go up in flames.
+
+name:& hydrogen cell
+type:battery
+graphics:!:OrangeRed
+level:33
+weight:40g
+cost:720
+alloc:5:20 to 100
+attack:1d4:0:0
+armor:0:0
+pval:30000
+flags:BURNS_OUT
+desc:A D-size Flammacell battery, based on a hydrogen fuel cell. It lasts a great deal longer than any normal battery, and it's very light too. Apart from a slight tendency to explode it's a real win.
+
+# cooldown, reusable
+name:& atomic cell
+type:battery
+graphics:!:CadetBlue
+level:54
+weight:380g
+cost:5500
+alloc:3:53 to 100
+attack:1d4:0:0
+armor:0:0
+pval:7500
+time:500
+desc:A Bettacell atomic battery which can be used like conventional D cells, to recharge any device. While it has a cooldown interlock preventing it from being used twice without waiting for a few minutes, its reserves of energy are sufficient that it will live - if not quite for ever - then at least for longer than you will. Especially if you drop it.
+
+# no or much shorter cooldown, higher pval
+# Should be scarce (e.g. 10), but not unique
+name:Mr Fusion~
+type:battery
+graphics:!:w
+level:75
+weight:82g
+cost:17000
+alloc:1:72 to 100
+attack:1d4:0:0
+armor:0:0
+pval:30000
+time:25
+desc:The iconic dustbin-sized fusion reactor that powers cars and homes, now shrunk into a D-cell format. Few were made - you may consider yourself lucky to have found one of them. Or not, depending on which rumors you believe about *why* they were so quickly pulled off the market...
+
 
 ##### Chunks #####
 # Chunks (blocks) are raw materials in 1 kg blocks, used for item creation.

@@ -90,7 +90,7 @@ static void flavor_assign_random(byte tval)
 			flavor_count++;
 
 	for (i = 0; i < z_info->k_max; i++) {
-		if (k_info[i].tval != tval || k_info[i].flavor)
+		if (k_info[i].tval != tval || k_info[i].flavor || (tval == TV_LIGHT && kf_has(k_info[i].kind_flags, KF_EASY_KNOW)))
 			continue;
 
 		if (!flavor_count)
@@ -186,6 +186,7 @@ void flavor_init(void)
 
 	flavor_assign_fixed();
 
+	flavor_assign_random(TV_LIGHT);
 	flavor_assign_random(TV_RING);
 	flavor_assign_random(TV_AMULET);
 	flavor_assign_random(TV_STAFF);
@@ -645,7 +646,7 @@ bool obj_has_charges(const struct object *obj)
 bool obj_can_zap(const struct object *obj)
 {
 	/* Any rods not charging? */
-	if (tval_can_have_timeout(obj) && number_charging(obj) < obj->number)
+	if (tval_can_have_timeout(obj) && (!tval_is_light(obj)) && number_charging(obj) < obj->number)
 		return true;
 
 	return false;
@@ -657,7 +658,7 @@ bool obj_can_zap(const struct object *obj)
 bool obj_is_activatable(const struct object *obj)
 {
 	if (!tval_is_wearable(obj)) return false;
-	return object_effect(obj) ? true : false;
+	return (object_effect(obj) && (!of_has(obj->flags, OF_NO_ACTIVATION))) ? true : false;
 }
 
 /**
@@ -921,7 +922,7 @@ void distribute_charges(struct object *source, struct object *dest, int amt)
 	 * The dropped stack will accept all time remaining to charge up to
 	 * its maximum.
 	 */
-	if (tval_can_have_timeout(source)) {
+	if (tval_can_have_timeout(source) && (!tval_is_light(source))) {
 		max_time = charge_time * amt;
 
 		if (source->timeout > max_time)
@@ -975,7 +976,8 @@ bool recharge_timeout(struct object *obj)
 		return false;
 
 	/* Decrease the timeout */
-	obj->timeout -= MIN(charging_before, obj->timeout);
+	if ((!tval_is_light(obj)) || (obj->timeout < randcalc(obj->kind->pval, 0, AVERAGE)))
+		obj->timeout -= MIN(charging_before, obj->timeout);
 
 	/* Find the new number of charging items */
 	charging_after = number_charging(obj);

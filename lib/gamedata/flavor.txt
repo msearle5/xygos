@@ -15,6 +15,20 @@ fixed:303:choke-apple:Light Green:& apple~
 fixed:304:habanero:Red:& pepper~
 fixed:305:snozzcumber:Green:& cucumber~
 
+#### Lights
+kind:light:~
+
+flavor:306:Red:& red candle~
+flavor:307:Blue:& blue candle~
+flavor:308:Green:& green candle~
+flavor:309:White:& white candle~
+flavor:310:Light Slate:& silvery candle~
+flavor:311:Cream:& stubby candle~
+flavor:312:Cream:& long candle~
+flavor:313:Cream:& tapered candle~
+flavor:314:Cream:& ribbed candle~
+flavor:315:Violet:& striped candle~
+
 
 ##### Rings #####
 # These are precious or semi-precious stones

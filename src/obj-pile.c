@@ -566,8 +566,8 @@ static void object_absorb_merge(struct object *obj1, const struct object *obj2)
 	if (obj2->note)
 		obj1->note = obj2->note;
 
-	/* Combine timeouts for rod stacking */
-	if (tval_can_have_timeout(obj1))
+	/* Combine timeouts for cooldown stacking */
+	if (tval_can_have_timeout(obj1) && (!tval_is_light(obj1)))
 		obj1->timeout += obj2->timeout;
 
 	/* Combine pvals for wands and staves */
@@ -682,7 +682,7 @@ void object_copy_amt(struct object *dest, struct object *src, int amt)
 	if (tval_can_have_charges(src))
 		dest->pval = src->pval * amt / src->number;
 
-	if (tval_can_have_timeout(src)) {
+	if ((tval_can_have_timeout(src)) && (!tval_is_light(src))) {
 		max_time = charge_time * amt;
 
 		if (src->timeout > max_time)

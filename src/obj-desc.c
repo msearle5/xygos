@@ -299,7 +299,7 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 	if (prefix)
 		end = obj_desc_name_prefix(buf, max , end, obj, basename, modstr, terse);
 
-	if (aware && obj->kind->flavor && obj->tval != TV_FOOD) {
+	if (aware && obj->kind->flavor && obj->tval != TV_FOOD && obj->tval != TV_LIGHT) {
 		strnfcat(buf, max, &end, "%s ", obj->kind->name);
 	}
 
@@ -411,8 +411,10 @@ static size_t obj_desc_combat(const struct object *obj, char *buf, size_t max,
 static size_t obj_desc_light(const struct object *obj, char *buf, size_t max,
 							 size_t end)
 {
-	/* Fuelled light sources get number of remaining turns appended */
-	if (tval_is_light(obj) && !of_has(obj->flags, OF_NO_FUEL))
+	/* Fuelled light sources get number of remaining turns appended. Lights that don't require fuel or
+	 * which should be indistinguishable from other lights when unIDed don't.
+	 **/
+	if (tval_is_light(obj) && !of_has(obj->flags, OF_NO_FUEL) && kf_has(obj->kind->kind_flags, KF_EASY_KNOW))
 		strnfcat(buf, max, &end, " (%d turns)", obj->timeout);
 
 	return end;
@@ -474,11 +476,24 @@ static size_t obj_desc_charges(const struct object *obj, char *buf, size_t max,
 		strnfcat(buf, max, &end, " (%d charge%s)", obj->pval,
 				 PLURAL(obj->pval));
 	} else if (obj->timeout > 0) {
-		if (tval_is_rod(obj) && obj->number > 1)
-			strnfcat(buf, max, &end, " (%d charging)", number_charging(obj));
-		else if (tval_is_rod(obj) || obj->activation || obj->effect)
-			/* Artifacts, single rods */
-			strnfcat(buf, max, &end, " (charging)");
+		if (tval_can_have_timeout(obj)) {
+			/* Lights are 'lit' if they have less than max timeout.
+			 * Lights must also be allowed to be 'charging', because they may have activations.
+			 * This assumes that nothing with fuel will also have an activation.
+			 */
+			const char *charging = "charging";
+			if (tval_is_light(obj)) {
+				if ((obj->timeout < randcalc(obj->kind->pval, 0, AVERAGE)) && (of_has(obj->flags, OF_BURNS_OUT)))
+					charging = "lit";
+				else if (!(of_has(obj->flags, OF_NO_FUEL)))
+					return end;
+			}
+			if (obj->number > 1)
+				strnfcat(buf, max, &end, " (%d %s)", number_charging(obj), charging);
+			else if (tval_can_have_timeout(obj) || obj->activation || obj->effect)
+				/* Artifacts, single rods */
+				strnfcat(buf, max, &end, " (%s)", charging);
+		}
 	}
 
 	return end;

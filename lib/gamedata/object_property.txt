@@ -228,6 +228,13 @@ mult:6
 type-mult:light:3
 bindui:light_ui_compact_0:0
 
+name:use energy
+type:mod
+code:USE_ENERGY
+power:0
+mult:1
+bindui:light_ui_compact_0:0
+
 name:sustain strength
 type:flag
 subtype:sustain
@@ -703,6 +710,52 @@ type-mult:crown:0
 type-mult:gloves:0
 type-mult:boots:0
 
+name:intensity 4 light
+type:flag
+subtype:light
+id-type:on wield
+code:LIGHT_4
+power:27
+type-mult:sword:0
+type-mult:polearm:0
+type-mult:hafted:0
+type-mult:digger:0
+type-mult:gun:0
+type-mult:ring:0
+type-mult:amulet:0
+type-mult:soft armor:0
+type-mult:hard armor:0
+type-mult:dragon armor:0
+type-mult:cloak:0
+type-mult:shield:0
+type-mult:helm:0
+type-mult:crown:0
+type-mult:gloves:0
+type-mult:boots:0
+
+name:intensity 5 light
+type:flag
+subtype:light
+id-type:on wield
+code:LIGHT_5
+power:36
+type-mult:sword:0
+type-mult:polearm:0
+type-mult:hafted:0
+type-mult:digger:0
+type-mult:gun:0
+type-mult:ring:0
+type-mult:amulet:0
+type-mult:soft armor:0
+type-mult:hard armor:0
+type-mult:dragon armor:0
+type-mult:cloak:0
+type-mult:shield:0
+type-mult:helm:0
+type-mult:crown:0
+type-mult:gloves:0
+type-mult:boots:0
+
 name:power 1 digging
 type:flag
 subtype:dig
@@ -778,6 +831,12 @@ subtype:throw
 id-type:on wield
 code:THROWING
 power:4
+
+name:no-activate
+type:flag
+subtype:throw
+code:NO_ACTIVATION
+power:0
 
 name:ignore acid
 type:ignore

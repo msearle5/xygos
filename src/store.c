@@ -751,10 +751,10 @@ static void mass_produce(struct object *obj)
 	/* Analyze the type */
 	switch (obj->tval)
 	{
-		/* Food, Flasks, and Lights */
+		/* Food, batteries, and lights */
 		case TV_FOOD:
 		case TV_MUSHROOM:
-		case TV_FLASK:
+		case TV_BATTERY:
 		case TV_LIGHT:
 		{
 			if (cost <= 5L) size += mass_roll(3, 5);
@@ -869,7 +869,7 @@ static void store_object_absorb(struct object *old, struct object *new)
 	old->number = MIN(total, old->kind->base->max_stack);
 
 	/* If rods are stacking, add the charging timeouts */
-	if (tval_can_have_timeout(old))
+	if (tval_can_have_timeout(old) && (!tval_is_light(old)))
 		old->timeout += new->timeout;
 
 	/* If wands/staves are stacking, combine the charges */
@@ -985,12 +985,22 @@ struct object *store_carry(struct store *store, struct object *obj)
 
 	/* Some item types require maintenance */
 	if (tval_is_light(obj)) {
-		if (!of_has(obj->flags, OF_NO_FUEL)) {
-			if (of_has(obj->flags, OF_BURNS_OUT))
-				obj->timeout = z_info->fuel_torch;
-
-			else if (of_has(obj->flags, OF_TAKES_FUEL))
-				obj->timeout = z_info->default_lamp;
+		/* If timeout == pval then it's at full power and can be stocked as is.
+		 * Lights that can be stopped but not refueled can also be stocked as is.
+		 * Lights that don't require charging can also be stocked as is.
+		 * 
+		 * Otherwise, if it's a light that can't be stopped once lit, just discard
+		 * it to avoid turn-by-turn shop item maintenance (or 'magically' stopping
+		 * the fuze without explanation). These are the ones with "time" set.
+		 * 
+		 * The remainder can be recharged, so do so (set timeout to pval).
+		 */
+		if ((of_has(obj->flags, OF_NO_FUEL)) || (obj->timeout == obj->pval) || (!of_has(obj->flags, OF_TAKES_FUEL))) {
+			; // as is
+		} else if (randcalc(obj->time, 0, AVERAGE) > 0) {
+			return NULL; // discard
+		} else {
+			obj->timeout = obj->pval; // charge
 		}
 	} else if (tval_can_have_timeout(obj)) {
 		obj->timeout = 0;

@@ -1570,6 +1570,10 @@ static void calc_light(struct player *p, struct player_state *state,
 			amt = 2;
 		} else if (of_has(obj->flags, OF_LIGHT_3)) {
 			amt = 3;
+		} else if (of_has(obj->flags, OF_LIGHT_4)) {
+			amt = 4;
+		} else if (of_has(obj->flags, OF_LIGHT_5)) {
+			amt = 5;
 		}
 		amt += obj->modifiers[OBJ_MOD_LIGHT];
 

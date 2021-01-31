@@ -1386,7 +1386,7 @@ static const grouper object_text_order[] =
 	{TV_SHADOW_BOOK,	"Shadow Book"	},
 	{TV_OTHER_BOOK,		"Mystery Book"	},
 	{TV_LIGHT,			"Light"			},
-	{TV_FLASK,			"Flask"			},
+	{TV_BATTERY,		"Battery"			},
 	{TV_SWORD,			"Sword"			},
 	{TV_POLEARM,		"Polearm"		},
 	{TV_HAFTED,			"Hafted Weapon" },
