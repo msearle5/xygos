@@ -52,6 +52,12 @@
 #include "source.h"
 #include "target.h"
 #include "trap.h"
+#include "ui-display.h"
+#include "ui-input.h"
+#include "ui-output.h"
+#include "z-textblock.h"
+
+#include <math.h>
 
 /**
  * ------------------------------------------------------------------------
@@ -5398,6 +5404,36 @@ bool effect_handler_BIZARRE(effect_handler_context_t *context)
 	return false;
 }
 
+struct printkind {
+	const struct object_kind *kind;
+	int difficulty;
+	int colour;
+	int chunks;
+	int chunk_idx;
+	char name[80];
+};
+
+static int printkind_compar(const void *a, const void *b)
+{
+	return ((struct printkind *)a)->difficulty - ((struct printkind *)b)->difficulty;
+}
+
+/* Convert a difficulty (per 10K) to a colour index: red -> green */
+static int difficulty_colour(int diff)
+{
+	if (diff < 1000)
+		return COLOUR_GREEN;
+	else if (diff < 2000)
+		return COLOUR_L_GREEN;
+	else if (diff < 3500)
+		return COLOUR_YELLOW;
+	else if (diff < 5500)
+		return COLOUR_ORANGE;
+	else if (diff < 7500)
+		return COLOUR_RED;
+	return COLOUR_PURPLE;
+}
+
 /** The effect of a printer
  * Requires INT and device skill for success
  * Higher level printers help, higher level items hurt.
@@ -5412,6 +5448,8 @@ bool effect_handler_BIZARRE(effect_handler_context_t *context)
  *  2 = ", hard metals: steel, titanium
  *  3 = ", unobtainium, exotics
  * 
+ * (May want to allow 1 step up, but at risk to the printer)
+ * 
  * Use item knowledge screen?
  * First step is to select an item - limited by it having a material that the printer can use & having chunks for it
  */
@@ -5420,6 +5458,351 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 	int skill = player->state.skills[SKILL_DEVICE];
 	int maxchunks = context->subtype;
 	int maxmetal = context->radius;
+	struct object **chunk;
+	struct printkind *item;
+	int nchunks = 0;
+	/* This is a divisor modifying the weight needed to make an item: perfect efficiency would be 1000 */
+	int efficiency = 800;
+	const char *nogo = NULL;
+	int longestname = 0;
+	const char **chunkname;
+
+	/* First clear the screen and print the help */
+	screen_save();
+	Term_clear();
+	struct textblock *tb = textblock_new();
+	textblock_append_c(tb, COLOUR_SLATE, "Select an item to attempt to create one from blocks. Higher level materials (especially when it's more than the printer is really meant for), higher level items, items requiring more blocks, rare or expensive items are all likely to push the difficulty up. Large format or high level printers will help, as will your level and device skill. The items displayed are sorted from easiest to most difficult and coloured based on your chance of success, which is also displayed numerically for the currently selected item. Use the cursor keys to select an item, Return to print it, Page Up/Down to move between pages or Space to exit.");
+	size_t *line_starts = NULL;
+	size_t *line_lengths = NULL;
+	int w, h;
+	Term_get_size(&w, &h);
+	int top = textblock_calculate_lines(tb, &line_starts, &line_lengths, w) + 2;
+	textui_textblock_place(tb, SCREEN_REGION, NULL);
+	textblock_free(tb);
+
+	/* Redraw */
+	Term_redraw();
+
+	/* Chunks' pval is the printer class. Count up the available chunks */
+	struct object *obj;
+	for(obj=player->gear; obj; obj=obj->next)
+		if (obj->tval == TV_BLOCK)
+			nchunks++;
+	chunk = malloc(sizeof(*chunk) * nchunks);
+	chunkname = malloc(sizeof(*chunkname) * nchunks);
+	int i = 0;
+	for(obj=player->gear; obj; obj=obj->next)
+		if (obj->tval == TV_BLOCK)
+			chunk[i++] = obj;
+
+	/* Come up with a short name for each chunk */
+	for(int i=0;i<nchunks;i++) {
+		const char *name = "?????";
+		const char *cname = chunk[i]->kind->name;
+		if (my_stristr(cname, "alum"))
+			name = "Alumi";
+		else if (my_stristr(cname, "plas"))
+			name = "Plast";
+		else if (my_stristr(cname, "steel"))
+			name = "Steel";
+		else if (my_stristr(cname, "titan"))
+			name = "Titan";
+		else if (my_stristr(cname, "gold"))
+			name = "Gold ";
+		else if (my_stristr(cname, "unob"))
+			name = "Unobt";
+		chunkname[i] = name;
+	}
+
+	/* There is now an array of all chunks carried in chunk, length nchunks.
+	 * Get out early if you have none (but distinguish from 'none usable')
+	 */
+	if (nchunks == 0)
+		nogo = "You can't print anything as you have no raw materials (blocks).";
+
+	/* Skip high level chunks. */
+	for(i=0; i<nchunks; i++) {
+		if ((chunk[i]->pval - maxmetal) > 1) {
+			nchunks--;
+			chunk[i] = chunk[nchunks];
+			i--;
+			break;
+		}
+	}
+	if (nchunks == 0)
+		nogo = "You can't print anything as you only have blocks that your printer can't use.";
+
+	/* Scan item kinds.
+	 * Get a list of printable items.
+	 **/
+	item = mem_zalloc(z_info->k_max * sizeof(*item));
+	int nprintable = 0;
+	if (nchunks) {
+		for(i=0;i<z_info->k_max; i++) {
+			const struct object_kind *k = k_info + i;
+
+			/* Check if it's a usable material */
+			bool ok = false;
+			int material;
+			for(int j=0;j<nchunks;j++) {
+				if (chunk[j]->kind->material == k->material) {
+					ok = true;
+					material = j;
+					break;
+				}
+			}
+			/* If so, check the weight is not more than you have, or more than
+			 * the printer can do.
+			 **/
+			int chunks = 0;
+			if (ok) {
+				chunks = k->weight / efficiency;
+				if (chunks > chunk[material]->number)
+					ok = false;
+				if (chunks > maxchunks)
+					ok = false;
+			}
+			/* The printer and materials can do it. You may not be able to, though.
+			 * Compute a difficulty (chance of success), and if it's near zero
+			 * don't even list it.
+			 */
+			int difficulty = -1;
+			if (ok) {
+				/* Higher level materials = more difficult */
+				difficulty = chunk[material]->pval * 20;
+
+				/* Higher level item = more difficult */
+				difficulty += k->level;
+	
+				/* Higher cost item = more difficult */
+				difficulty += sqrt(k->cost);
+
+				/* Higher rarity item = more difficult */
+				difficulty += 100 / (k->alloc_prob + 1);
+
+				/* Larger prints are more difficult */
+				difficulty += chunks;
+
+				/* Printer is pushed to beyond its normal use */
+				if (chunk[material]->pval > maxmetal)
+					difficulty += 10 + (difficulty / 2);
+
+				/* Higher level printer = less difficult */
+				difficulty -= maxmetal * 5;
+				if (maxchunks <= 5)
+					difficulty += 2;
+
+				/* Higher level characters are better */
+				difficulty -= player->lev * 2;
+
+				/* Device skill (scaled 0 to ~140) helps */
+				difficulty -= (skill * 2) / 3;
+
+				/* 
+				 * There should be no perfect chance (but at -100 you will be 5% or so,
+				 * maybe 10% at -50, 20% at -25, 50% at 0, 80% at 25, 90% at 50 and cut off
+				 * about 50-70.
+				 * 
+				 * The table below maps difficulty to chance-per-10K.
+				 */
+				 static const u16b difftab[] = {
+					 /* -100 */
+					 500,	505,	510,	515,	520,	525,	530,	535,	540,	545,
+					 /* -90 */
+					 550,	555,	561,	567,	573,	580,	587,	594,	602,	610,
+					 /* -80 */
+					 618,	627,	637,	647,	658,	668,	680,	692,	705,	718,
+					 /* -70 */
+					 721,	735,	750,	785,	800,	815,	830,	845,	860,	875,	
+					 /* -60 */
+					 890,	905,	921,	937,	956,	974,	983,	992,	1011,	1030,
+					 /* -50 */
+					 1050,	1070,	1090,	1110,	1130,	1150,	1175,	1200,	1225,	1250,
+					 /* -40 */
+					 1275,	1300,	1330,	1360,	1390,	1420,	1455,	1490,	1550,	1610,
+					 /* -30 */
+					 1680,	1720,	1790,	1860,	1930,	2010,	2090,	2190,	2280,	2380,
+					 /* -20 */
+					 2480,	2580,	2690,	2800,	2830,	2970,	3000,	3130,	3260,	3400,
+					 /* -10 */
+					 3550,	3700,	3850,	4000,	4150,	4300,	4450,	4600,	4800,	5000,
+					 /* 0 */
+					 5200,	5400,	5600,	5800,	6000,	6200,	6400,	6550,	6700,	6900,
+					 /* 10 */
+					 7050,	7200,	7325,	7450,	7575,	7800,	7900,	8000,	8100,	8200,
+					 /* 20 */
+					 8280,	8360,	8430,	8530,	8590,	8640,	8690,	8730,	8770,	8800,
+					 /* 30 */
+					 8825,	8850,	8875,	8900,	8920,	8940,	8960,	8980,	9000,	9020,
+					 /* 40 */
+					 9040,	9060,	9080,	9100,	9120,	9140,	9160,	9180,	9200,	9220,
+					 /* 50 */
+					 9240,	9260,	9280,	9300,	9320,	9340,	9360,	9380,	9400,	9420,
+					 /* 60 */
+					 9440,	9460,	9480,	9500
+				 };
+
+				/* Scale to the table */
+				difficulty /= 2;
+				difficulty += 100;
+
+				 /* Easy end: difficulty easier than -100 is all the same */
+				 if (difficulty < 0) 
+					difficulty = 0;
+
+				/* Difficult end: off the end = no chance, stop */
+				if (difficulty > (int)(sizeof(difftab)/sizeof(*difftab))) {
+					ok = false;
+					difficulty = -1;
+				} else {
+					difficulty = difftab[difficulty];
+				}
+			}
+			if (ok) {
+				/* List an item: store kind and difficulty, and produce a name.
+				 * Track the longest name.
+				 * Add a colour, and the chunks required
+				 **/
+				item[nprintable].difficulty = difficulty;
+				item[nprintable].colour = difficulty_colour(difficulty);
+				item[nprintable].chunks = chunks;
+				item[nprintable].chunk_idx = material;
+				item[nprintable].kind = k;
+				
+				obj_desc_name_format(item[nprintable].name, sizeof item[nprintable].name, 0, k->name, 0, false);
+				int length = strlen(item[nprintable].name);
+				if (length > longestname)
+					longestname = length;
+				
+				
+				nprintable++;
+			}
+		}
+
+		if (nprintable == 0) {
+			nogo = "You can't print anything as you don't have the skill yet.";
+		} else {
+
+			/* There are now one or more printable items, total 'nprintable',
+			 * indexed as kinds in item[] and difficulties in itemdiff[].
+			 * Sort by difficulty
+			 */
+			qsort(item, nprintable, sizeof(*item), printkind_compar);
+		}
+	}
+
+	/* Display - a how-to across the top, followed by either a no-go message or
+	 * a grid of items to select. There may be a lot of items, so it must be pageable.
+	 * While item names may be long, to make best use of a large terminal it should
+	 * still allow multicolumn layouts, adapting to the size of the names and the
+	 * display. To help this, there should be a minimum of tourist information - the
+	 * items are listed by difficulty and coloured by difficulty, so precise difficulty
+	 * (and the # of chunks) can be moved out, displayed only for the item at the
+	 * cursor. The selection should also be done without adding columns - e.g. display
+	 * in white (using the colour for the current-item info).
+	 */
+	bool leaving = false;
+	int selected = 0;
+	int columns = w / (longestname + 1);
+	int rows = h - (top + 2);
+	//int totalrows = nprintable / rows;
+	//int pages = (totalrows + rows - 1) / rows;
+	//int page = 0;
+	int toprow = 0;
+	do 
+	{
+		/* Print a no-go line or the selected item */
+		if (nogo)
+			c_prt(COLOUR_ORANGE, nogo, top, 0);
+		else {
+			char buf[80];
+			strnfmt(buf, sizeof(buf), "%d%%: %d %s: %s", item[selected].difficulty / 100, chunkname[item[selected].chunk_idx], item[selected].name);
+			c_prt(item[selected].colour, buf, top, 0);
+		}
+
+		/* Print a grid of items - left to right, top to bottom */
+		for(int y=0;y<rows;y++) {
+			for(int x=0;x<columns;x++) {
+				int idx = x + (y * columns) + (toprow * rows * columns);
+				c_prt(idx == selected ? COLOUR_L_WHITE : item[idx].colour, item[idx].name, top + 2 + y, 0);
+			}
+		}
+		Term_redraw();
+
+		/* Key loop : read a key */
+		struct keypress ch = inkey();
+		switch(ch.code) {
+			/* Navigate around the grid */
+			case '2':
+			case ARROW_DOWN:
+			selected += columns;
+			if (selected >= nprintable)
+				selected %= columns;
+			break;
+			case '4':
+			case ARROW_LEFT:
+			selected--;
+			if (selected < 0)
+				selected = nprintable - 1;
+			break;
+			case '6':
+			case ARROW_RIGHT:
+			selected++;
+			if (selected >= nprintable)
+				selected = 0;
+			break;
+			case '8':
+			case ARROW_UP:
+			selected -= columns;
+			if (selected < 0)
+				selected += nprintable;
+			break;
+			case KC_PGDOWN:
+			selected += columns * rows;
+			if (selected >= nprintable)
+				selected %= (columns * rows);
+			break;
+			case KC_PGUP:
+			selected -= columns * rows;
+			if (selected < 0)
+				selected += nprintable;
+			break;
+
+			/* Select */
+			case KC_ENTER:
+			/* Prompt to confirm. If not confirmed continue, otherwise exit this loop with a selected item.
+			 */
+			c_prt(COLOUR_ORANGE, format("Really build %s? [yn]", item[selected].name), 0, 0);
+			ch = inkey();
+			if (strchr("Yy", ch.code)) {
+				// Accept
+				leaving = true;
+			}
+			break;
+
+			/* Leave */
+			case ESCAPE:
+			case 'Q':
+			case ' ':
+			selected = -1;	/* do not create an item */
+			leaving = true;
+			break;
+		}
+	} while (!leaving);
+
+	/* Do we have an item? If so, try to build one */
+	if (selected >= 0) {
+		struct printkind *pk = &item[selected];
+		
+		/* Difficulty check */
+		if (randint0(10000) < pk->difficulty) {
+			
+		}
+	}
+
+	free(item);
+	free(chunk);
+	free(chunkname);
 	return true;
 }
 

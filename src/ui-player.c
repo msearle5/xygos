@@ -794,9 +794,9 @@ static struct panel *get_panel_skills(void) {
 	skill = BOUND(player->state.skills[SKILL_DISARM_MAGIC] - depth / 5, 2, 100);
 	panel_line(p, colour_table[skill / 10], "Disarm - magic", "%d%%", skill);
 
-	/* Magic devices */
+	/* Devices */
 	skill = player->state.skills[SKILL_DEVICE];
-	panel_line(p, colour_table[skill / 13], "Magic Devices", "%d", skill);
+	panel_line(p, colour_table[skill / 13], "Devices", "%d", skill);
 
 	/* Searching ability */
 	skill = BOUND(player->state.skills[SKILL_SEARCH], 0, 100);
