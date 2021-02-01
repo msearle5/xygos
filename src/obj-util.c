@@ -539,7 +539,7 @@ int lookup_sval(int tval, const char *name)
 	unsigned int r;
 	int length = 0;
 
-	if ((sscanf(name, "%u%n", &r, &length) == 1) && (length == strlen(name)))
+	if ((sscanf(name, "%u%n", &r, &length) == 1) && (length == (int)strlen(name)))
 		return r;
 
 	/* Look for it */
@@ -970,18 +970,25 @@ bool recharge_timeout(struct object *obj)
 	int charging_before, charging_after;
 
 	/* Find the number of charging items */
-	charging_before = number_charging(obj);
+	charging_before = charging_after = number_charging(obj);
 
 	/* Nothing to charge */	
 	if (charging_before == 0)
 		return false;
 
 	/* Decrease the timeout */
-	if ((!tval_is_light(obj)) || (obj->timeout < randcalc(obj->kind->pval, 0, AVERAGE)))
-		obj->timeout -= MIN(charging_before, obj->timeout);
-
-	/* Find the new number of charging items */
-	charging_after = number_charging(obj);
+	if ((!tval_is_light(obj)) || (obj->timeout < randcalc(obj->kind->pval, 0, AVERAGE))) {
+		if (obj->timeout > 0) {
+			obj->timeout -= MIN(charging_before, obj->timeout);
+			charging_after = number_charging(obj);
+			if (obj->timeout <= 0) {
+				obj->timeout = 0;
+				if (tval_is_light(obj))
+					light_timeout(obj);
+				/* The object may no longer exist */
+			}
+		}
+	}
 
 	/* Return true if at least 1 item obtained a charge */
 	if (charging_after < charging_before)
@@ -1016,6 +1023,7 @@ typedef enum {
 	MSG_TAG_NONE,
 	MSG_TAG_NAME,
 	MSG_TAG_KIND,
+	MSG_TAG_FLAVOR,
 	MSG_TAG_VERB,
 	MSG_TAG_VERB_IS
 } msg_tag_t;
@@ -1026,6 +1034,8 @@ static msg_tag_t msg_tag_lookup(const char *tag)
 		return MSG_TAG_NAME;
 	} else if (strncmp(tag, "kind", 4) == 0) {
 		return MSG_TAG_KIND;
+	} else if (strncmp(tag, "flavor", 6) == 0) {
+		return MSG_TAG_FLAVOR;
 	} else if (strncmp(tag, "s", 1) == 0) {
 		return MSG_TAG_VERB;
 	} else if (strncmp(tag, "is", 2) == 0) {
@@ -1072,6 +1082,13 @@ void print_custom_message(struct object *obj, const char *string, int msg_type)
 					strnfcat(buf, 1024, &end, "hands");
 				}
 				break;
+			case MSG_TAG_FLAVOR:
+				if (obj && (obj->kind->flavor) && (obj->kind->flavor->text) && (!object_flavor_is_aware(obj))) {
+					obj_desc_name_format(&buf[end], sizeof(buf) - end, 0, obj->kind->flavor->text, NULL, false);
+					end += strlen(&buf[end]);
+					break;
+				}
+				/* FALL THROUGH */
 			case MSG_TAG_KIND:
 				if (obj) {
 					object_kind_name(&buf[end], 1024 - end, obj->kind, true);

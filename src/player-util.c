@@ -665,6 +665,47 @@ void convert_mana_to_hp(struct player *p, s32b sp_long) {
 	player_adjust_hp_precise(p, hp_gain);
 }
 
+void light_timeout(struct object *obj)
+{
+	/* The light is now out */
+	disturb(player);
+
+	/* Special handling for some 'lights' */
+	if (object_effect(obj) && (of_has(obj->flags, OF_NO_ACTIVATION))) {
+		bool ident = false;
+		bool was_aware = object_flavor_is_aware(obj);
+		int dir = randint1(8);
+		if (obj->kind->effect_msg)
+			print_custom_message(obj, obj->kind->effect_msg, MSG_GENERIC);
+		object_flavor_aware(obj);
+		if ((!was_aware) && (object_is_carried(player, obj)))
+			print_custom_message(obj, "You realize you were carrying a {kind}!", MSG_GENERIC);
+		struct effect effect;
+		memcpy(&effect, obj->effect, sizeof(effect));
+		effect.x = obj->grid.x;
+		effect.y = obj->grid.y;
+		effect_do(&effect, source_object(obj), NULL, &ident, was_aware, dir, 0, 0, NULL);
+
+	} else {
+		/* Default burning out message */
+		if (object_is_carried(player, obj))
+			msg("Your light has gone out!");
+	}
+
+	/* If it's a torch, now is the time to delete it */
+	if (of_has(obj->flags, OF_BURNS_OUT)) {
+		bool dummy;
+		struct object *burnt;
+		if (object_is_carried(player, obj))
+			burnt = gear_object_for_use(obj, 1, true, &dummy);
+		else
+			burnt = floor_object_for_use(obj, 1, true, &dummy);
+		if (burnt->known)
+			object_delete(&burnt->known);
+		object_delete(&burnt);
+	}
+}
+
 /**
  * Update the player's light fuel
  */
@@ -705,32 +746,7 @@ void player_update_light(struct player *p)
 				/* Hack -- save some light for later */
 				if (obj->timeout == 0) obj->timeout = prev;
 			} else if (obj->timeout == 0) {
-				/* The light is now out */
-				disturb(p);
-
-				/* Special handling for some 'lights' */
-				if (object_effect(obj) && (of_has(obj->flags, OF_NO_ACTIVATION))) {
-					bool ident = false;
-					bool was_aware = object_flavor_is_aware(obj);
-					int dir = randint1(8);
-					effect_do(obj->effect, source_object(obj), NULL, &ident, was_aware, dir, 0, 0, NULL);
-					object_flavor_aware(obj);
-					if (obj->kind->effect_msg)
-						print_custom_message(obj, obj->kind->effect_msg, MSG_GENERIC);
-				} else {
-					/* Default burning out message */
-					msg("Your light has gone out!");
-				}
-
-				/* If it's a torch, now is the time to delete it */
-				if (of_has(obj->flags, OF_BURNS_OUT)) {
-					bool dummy;
-					struct object *burnt = gear_object_for_use(obj, 1, false,
-															   &dummy);
-					if (burnt->known)
-						object_delete(&burnt->known);
-					object_delete(&burnt);
-				}
+				light_timeout(obj);
 			} else if ((obj->timeout < 50 * burnstep) && (!(obj->timeout % (20 * burnstep)))) {
 				/* The light is getting dim */
 				disturb(p);

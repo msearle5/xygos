@@ -3883,6 +3883,12 @@ bool effect_handler_SPOT(effect_handler_context_t *context)
 		rad += player->lev / context->other;
 	}
 
+	/* If the origin is an object, use the object's grid (and don't display a ray from the player to the object) */
+	if (context->origin.what == SRC_OBJECT) {
+		pgrid = context->origin.which.object->grid;
+		flg |= PROJECT_JUMP;
+	}
+
 	/* Aim at the target, explode */
 	if (project(context->origin, rad, pgrid, dam, context->subtype, flg, 0,
 				rad, NULL))

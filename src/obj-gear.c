@@ -770,9 +770,9 @@ void inven_wield(struct object *obj, int slot)
 	 * to start the count
 	 **/
 	if (tval_is_light(wielded)) {
-		if (of_has(obj->flags, OF_BURNS_OUT)) {
-			if (obj->timeout == randcalc(obj->kind->pval, 0, AVERAGE)) {
-				obj->timeout--;
+		if (of_has(wielded->flags, OF_BURNS_OUT)) {
+			if (wielded->timeout == randcalc(wielded->kind->pval, 0, AVERAGE)) {
+				wielded->timeout--;
 			}
 		}
 	}
