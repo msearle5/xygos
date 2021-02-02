@@ -2434,6 +2434,14 @@ static enum parser_error parse_p_race_values(struct parser *p) {
 	return t ? PARSE_ERROR_INVALID_VALUE : PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_p_race_desc(struct parser *p) {
+	struct player_race *r = parser_priv(p);
+	if (!r)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	r->desc = string_make(parser_getstr(p, "desc"));
+	return PARSE_ERROR_NONE;
+}
+
 struct parser *init_parse_p_race(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
@@ -2461,6 +2469,7 @@ struct parser *init_parse_p_race(void) {
 	parser_reg(p, "obj-flags ?str flags", parse_p_race_obj_flags);
 	parser_reg(p, "player-flags ?str flags", parse_p_race_play_flags);
 	parser_reg(p, "values str values", parse_p_race_values);
+	parser_reg(p, "desc str desc", parse_p_race_desc);
 	return p;
 }
 
@@ -3499,6 +3508,15 @@ static enum parser_error parse_class_desc(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+/* Class description to display on the character creation screeen */
+static enum parser_error parse_class_cdesc(struct parser *p) {
+	struct player_class *c = parser_priv(p);
+	if (!c)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	c->desc = string_make(parser_getstr(p, "cdesc"));
+	return PARSE_ERROR_NONE;
+}
+
 struct parser *init_parse_class(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
@@ -3542,6 +3560,7 @@ struct parser *init_parse_class(void) {
 	parser_reg(p, "expr sym name sym base str expr", parse_class_expr);
 	parser_reg(p, "effect-msg str text", parse_class_effect_msg);
 	parser_reg(p, "desc str desc", parse_class_desc);
+	parser_reg(p, "cdesc str cdesc", parse_class_cdesc);
 	return p;
 }
 

@@ -147,6 +147,7 @@ title:Commando
 title:Champion
 title:Hero
 title:Lord
+cdesc:Description goes here. Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
 
 
 ############### MAGE ###############

@@ -10,7 +10,7 @@
 
 # Format:
 # name:race name
-# stats:str:int:wis:dex:con
+# stats:str:int:wis:dex:con:chr:spd
 # talents:base:max
 # skill-disarm:base
 # skill-device:base
@@ -31,6 +31,7 @@
 # obj-flags:object flags
 # player-flags:player flags
 # values:values
+# desc:desc
 
 # 'name' indicates the beginning of an entry.
 
@@ -67,6 +68,7 @@
 # 'values' is for object modifiers which take a value that races possess
 # innately.
 
+# 'desc' is for the description shown on the character creation screen
 
 name:Human
 stats:0:0:0:0:0:0:0
@@ -89,6 +91,7 @@ age:14:6
 height:69:10
 weight:1650
 weightmod:350
+desc:The race with average abilities, from a human perspective at least. While you won't have bulletproof skin or [bla], there's a reason that is has primarily been humans who have colonized the galaxy - in a word, adaptability. That [blas] in the lowest experience requirement and the most specialization through talents.
 
 name:Half-Elf
 stats:0:1:-1:1:-1:0:0

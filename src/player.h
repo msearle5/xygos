@@ -193,26 +193,27 @@ struct player_body {
 struct player_race {
 	struct player_race *next;
 	const char *name;
+	const char *desc;			/**< Description */
 
 	unsigned int ridx;
 
-	int r_mhp;		/**< Hit-dice modifier */
-	int r_exp;		/**< Experience factor */
+	int r_mhp;					/**< Hit-dice modifier */
+	int r_exp;					/**< Experience factor */
 
-	int tp_base;	/** Talent points at birth */
-	int tp_max;		/** Talent points gained by max level */
+	int tp_base;				/** Talent points at birth */
+	int tp_max;					/** Talent points gained by max level */
 
-	int b_age;		/**< Base age */
-	int m_age;		/**< Mod age */
+	int b_age;					/**< Base age */
+	int m_age;					/**< Mod age */
 
-	int base_hgt;	/**< Base height */
-	int mod_hgt;	/**< Mod height */
-	int base_wgt;	/**< Base weight */
-	int mod_wgt;	/**< Mod weight */
+	int base_hgt;				/**< Base height */
+	int mod_hgt;				/**< Mod height */
+	int base_wgt;				/**< Base weight */
+	int mod_wgt;				/**< Mod weight */
 
-	int infra;		/**< Infra-vision range */
+	int infra;					/**< Infra-vision range */
 
-	int body;		/**< Race body */
+	int body;					/**< Race body */
 
 	int r_adj[STAT_MAX];		/**< Stat bonuses */
 
@@ -332,6 +333,7 @@ struct class_magic {
 struct player_class {
 	struct player_class *next;
 	const char *name;
+	const char *desc;			/**< Description */
 	unsigned int cidx;
 
 	const char *title[10];		/**< Titles */

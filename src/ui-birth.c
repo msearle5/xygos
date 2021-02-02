@@ -155,10 +155,25 @@ static struct menu race_menu, class_menu, roller_menu;
 #define QUESTION_COL     2
 #define RACE_COL         2
 #define RACE_AUX_COL    19
-#define CLASS_COL       19
-#define CLASS_AUX_COL   36
-#define ROLLER_COL      36
+#define CLASS_COL        2
+#define CLASS_AUX_COL   19
+
+/* X coordinate of the menu to select point-based vs. rolled character creation */
+#define ROLLER_COL      40
+/* Number or rows cleared for this menu */
+#define ROLLER_ROWS		8 
+
 #define HIST_INSTRUCT_ROW 18
+#define SKILL_COL		40
+
+/* Top row used for description of either race or class */
+#define DESC_ROW		17
+/* Bottom row used by descriptions */
+#define DESC_END		23
+/* Top row used by race description */
+#define DESC_RACE_ROW	17
+/* Top row used by class description */
+#define DESC_CLASS_ROW	18
 
 #define MENU_ROWS TABLE_ROW + 14
 
@@ -167,7 +182,7 @@ static struct menu race_menu, class_menu, roller_menu;
  */
 static region race_region = {RACE_COL, TABLE_ROW, 17, MENU_ROWS};
 static region class_region = {CLASS_COL, TABLE_ROW, 17, MENU_ROWS};
-static region roller_region = {ROLLER_COL, TABLE_ROW, 34, MENU_ROWS};
+static region roller_region = {ROLLER_COL, TABLE_ROW, 30, ROLLER_ROWS};
 
 /**
  * We use different menu "browse functions" to display the help text
@@ -218,7 +233,7 @@ static void skill_help(const int r_skills[], const int c_skills[], int mhp, int 
 	for (i = 0; i < SKILL_MAX ; ++i)
 		skills[i] = (r_skills ? r_skills[i] : 0 ) + (c_skills ? c_skills[i] : 0);
 
-	text_out_e("Hit/Shoot/Throw: %+d/%+d/%+d\n", skills[SKILL_TO_HIT_MELEE],
+	text_out_e("Hit/Shoot/Throw: %+d/%+d/%+d   \n", skills[SKILL_TO_HIT_MELEE],
 			   skills[SKILL_TO_HIT_GUN], skills[SKILL_TO_HIT_THROW]);
 	text_out_e("Hit die: %2d   XP mod: %d%%\n", mhp, exp);
 	text_out_e("Disarm: %+3d/%+3d   Devices: %+3d\n", skills[SKILL_DISARM_PHYS],
@@ -266,10 +281,6 @@ static void race_help(int i, void *db, const region *l)
 
 		text_out("\n");
 	}
-	
-	text_out_e("\n");
-	skill_help(r->r_skills, NULL, r->r_mhp, r->r_exp, r->infra);
-	text_out_e("\n");
 
 	for (ability = player_abilities; ability; ability = ability->next) {
 		if (n_flags >= flag_space) break;
@@ -292,6 +303,19 @@ static void race_help(int i, void *db, const region *l)
 		n_flags++;
 	}
 
+	/* Display skill information */
+	text_out_indent = SKILL_COL;
+	Term_gotoxy(SKILL_COL, TABLE_ROW);
+	skill_help(r->r_skills, NULL, r->r_mhp, r->r_exp, r->infra);
+
+	/* Display race description */
+	for(int y=DESC_ROW; y<=DESC_END; y++)
+		Term_erase(RACE_AUX_COL, y, 255);
+	text_out_indent = RACE_AUX_COL;
+	Term_gotoxy(RACE_AUX_COL, DESC_RACE_ROW);
+	if (r->desc)
+		text_out_c(COLOUR_SLATE, "%s", r->desc);
+
 	/* Reset text_out() indentation */
 	text_out_indent = 0;
 }
@@ -311,7 +335,7 @@ static void class_help(int i, void *db, const region *l)
 
 	/* Output to the screen */
 	text_out_hook = text_out_to_screen;
-	
+
 	/* Indent output */
 	text_out_indent = CLASS_AUX_COL;
 	Term_gotoxy(CLASS_AUX_COL, TABLE_ROW);
@@ -330,11 +354,6 @@ static void class_help(int i, void *db, const region *l)
 
 		text_out("\n");
 	}
-
-	text_out_e("\n");
-
-	skill_help(r->r_skills, c->c_skills, r->r_mhp + c->c_mhp,
-			   r->r_exp + c->c_exp, -1);
 
 	if (c->magic.total_spells) {
 		int count;
@@ -382,6 +401,20 @@ static void class_help(int i, void *db, const region *l)
 		text_out_e("\n");
 		n_flags++;
 	}
+
+	/* Display skill information */
+	text_out_indent = SKILL_COL;
+	Term_gotoxy(SKILL_COL, TABLE_ROW);
+	skill_help(r->r_skills, c->c_skills, r->r_mhp + c->c_mhp,
+			   r->r_exp + c->c_exp, -1);
+
+	/* Display class description */
+	for(int y=DESC_ROW; y<=DESC_END; y++)
+		Term_erase(RACE_AUX_COL, y, 255);
+	text_out_indent = RACE_AUX_COL;
+	Term_gotoxy(RACE_AUX_COL, DESC_CLASS_ROW);
+	if (c->desc)
+		text_out_c(COLOUR_SLATE, "%s", c->desc);
 
 	/* Reset text_out() indentation */
 	text_out_indent = 0;
