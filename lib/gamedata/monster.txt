@@ -8671,38 +8671,39 @@ spells:SPIT
 friends:100:4d4:Same
 desc:A giant ant covered in shaggy fur.  Its powerful jaws glow with heat.
 
-name:chest mimic
-base:mimic
-glyph:~
-color:s
-speed:110
-hit-points:308
-hearing:30
-armor-class:48
-sleepiness:0
-depth:35
-rarity:4
-experience:250
-blow:BITE:POISON:4d4
-blow:BITE:POISON:4d4
-blow:BUTT:CONFUSE:4d4
-blow:SPIT:BLIND:4d4
-flags:DROP_2
-spell-freq:5
-spells:BA_POIS
-spells:S_MONSTER
-spells:BLIND | WOUND | CONF | SCARE
-desc:A strange creature that disguises itself as a chest to lure unsuspecting
-desc: adventurers within reach of its venomous claws.  The first that most
-desc: adventurers realise of the deception is when the seemingly invitingly open
-desc: lid of the chest suddenly grows teeth and then slams shut on the
-desc: adventurer's hand...
-mimic:chest:Small wooden chest
-mimic:chest:Large wooden chest
-mimic:chest:Small iron chest
-mimic:chest:Large iron chest
-mimic:chest:Small steel chest
-mimic:chest:Large steel chest
+# Luggage?
+#name:chest mimic
+#base:mimic
+#glyph:~
+#color:s
+#speed:110
+#hit-points:308
+#hearing:30
+#armor-class:48
+#sleepiness:0
+#depth:35
+#rarity:4
+#experience:250
+#blow:BITE:POISON:4d4
+#blow:BITE:POISON:4d4
+#blow:BUTT:CONFUSE:4d4
+#blow:SPIT:BLIND:4d4
+#flags:DROP_2
+#spell-freq:5
+#spells:BA_POIS
+#spells:S_MONSTER
+#spells:BLIND | WOUND | CONF | SCARE
+#desc:A strange creature that disguises itself as a chest to lure unsuspecting
+#desc: adventurers within reach of its venomous claws.  The first that most
+#desc: adventurers realise of the deception is when the seemingly invitingly open
+#desc: lid of the chest suddenly grows teeth and then slams shut on the
+#desc: adventurer's hand...
+#mimic:chest:Small wooden chest
+#mimic:chest:Large wooden chest
+#mimic:chest:Small iron chest
+#mimic:chest:Large iron chest
+#mimic:chest:Small steel chest
+#mimic:chest:Large steel chest
 
 name:silent watcher
 base:golem

@@ -26,6 +26,7 @@
 #include "generate.h"
 #include "init.h"
 #include "obj-chest.h"
+#include "obj-desc.h"
 #include "obj-gear.h"
 #include "obj-knowledge.h"
 #include "obj-pile.h"
@@ -1550,6 +1551,7 @@ void disturb(struct player *p)
 void search(struct player *p)
 {
 	struct loc grid;
+	char o_name[80];
 
 	/* Various conditions mean no searching */
 	if (p->timed[TMD_BLIND] || no_light() ||
@@ -1574,7 +1576,9 @@ void search(struct player *p)
 					continue;
 
 				if (obj->known->pval != obj->pval) {
-					msg("You have discovered a trap on the chest!");
+					/* Describe the object */
+					object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+					msg("You have discovered a trap on the %s!", &o_name);
 					obj->known->pval = obj->pval;
 					disturb(p);
 				}

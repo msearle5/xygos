@@ -5520,69 +5520,115 @@ material:unobtainium
 
 
 
-##### Chests #####
+##### Containers ######
+##
+## 'What's interesting about a container?'
+## - The contents. At least some containers should have 'themed' contents - items with a common purpose, or perhaps material, etc.
+## - Difficulty of getting into it. May be locked, sealed, trapped, etc. May be able to break into it, possibly damaging the contents.
+## - As all containers can take infinite bulk and high weight, avoid anything which sounds flimsy (paper bags, cardboard boxes).
+##
+#############################################################################
 
-name:& Small wooden chest~
+
+name:& small wooden crate~
 type:chest
-graphics:~:s
-level:5
-weight:250
-cost:20
-alloc:15:5 to 100
+graphics:~:Burlywood
+level:3
+weight:20kg
+cost:10
+alloc:10:1 to 100
 attack:2d3:0:0
 armor:0:0
+material:wood
+desc:A sturdy container built of closely overlapped boards.
 
-name:& Large wooden chest~
+# metal ones are possible
+name:& plastic locker~
 type:chest
 graphics:~:s
-level:15
-weight:500
-cost:60
-alloc:10:15 to 100
+level:6
+weight:40kg
+cost:45
+alloc:10:2 to 100
 attack:2d5:0:0
 armor:0:0
+material:wood
+desc:A tub-shaped container made of thick, grey plastic with a chunky combination lock.
 
-name:& Small iron chest~
+name:& large wooden crate~
 type:chest
-graphics:~:s
-level:25
-weight:300
-cost:100
-alloc:15:25 to 100
+graphics:~:Burlywood
+level:10
+weight:80kg
+cost:30
+alloc:10:4 to 100
+attack:2d5:0:0
+armor:0:0
+material:wood
+desc:A large, sturdy container built of closely overlapped boards.
+
+# this could be made of other metals
+name:& flight case~
+type:chest
+graphics:~:Gray80
+level:18
+weight:30kg
+cost:200
+alloc:15:16 to 100
 attack:2d4:0:0
 armor:0:0
+material:aluminium
+desc:A lightweight yet strong padded metal case, with a simple lock.
 
-name:& Large iron chest~
+# this could be made of other metals
+name:& trunk~
+type:chest
+graphics:~:Gray80
+level:26
+weight:80kg
+cost:450
+alloc:15:16 to 100
+attack:2d4:0:0
+armor:0:0
+material:aluminium
+desc:A large wheeled metal case, with a fingerprint lock set into the handle.
+
+name:& file cabinet~
 type:chest
 graphics:~:s
 level:35
-weight:1000
+weight:120kg
 cost:150
 alloc:10:35 to 100
 attack:2d6:0:0
 armor:0:0
+material:steel
+desc:A large cabinet built from thin, rusty steel. The lock looks quite serious, though.
 
-name:& Small steel chest~
+# safes might rarely be of titanium, but not anything else
+name:& compact safe~
 type:chest
 graphics:~:s
 level:45
-weight:500
-cost:200
+weight:75kg
+cost:1200
 alloc:15:45 to 100
 attack:2d4:0:0
 armor:0:0
+desc:A small but very heavily built metal cabinet with an electronic lock.
+material:steel
 
-name:& Large steel chest~
+name:& large safe~
 type:chest
 graphics:~:s
 level:55
-weight:1000
-cost:250
+weight:400kg
+cost:2500
 alloc:10:55 to 100
 attack:2d6:0:0
 armor:0:0
-
-
+desc:A large and extremely heavy metal cabinet with an electronic lock.
+material:steel
 
 ##### Dragon Scale Mail #####
 

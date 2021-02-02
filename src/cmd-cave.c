@@ -63,7 +63,7 @@ void do_cmd_go_up(struct command *cmd)
 
 	/* Verify stairs */
 	if (!square_isupstairs(cave, player->grid)) {
-		msg("I see no up staircase here.");
+		msg("I see no way up here.");
 		return;
 	}
 
@@ -134,13 +134,13 @@ void do_cmd_go_down(struct command *cmd)
 
 	/* Verify stairs */
 	if (!square_isdownstairs(cave, player->grid)) {
-		msg("I see no down staircase here.");
+		msg("I see no way down here.");
 		return;
 	}
 
 	/* Paranoia, no descent from z_info->max_depth - 1 */
 	if (player->depth == z_info->max_depth - 1) {
-		msg("The dungeon does not appear to extend deeper");
+		msg("The fortress does not appear to extend deeper");
 		return;
 	}
 

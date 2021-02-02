@@ -127,7 +127,7 @@ static const grouper group_item[] =
 	{ TV_SHADOW_BOOK,	"Shadow Books" },
 	{ TV_OTHER_BOOK,	"Mystery Books" },
 
-	{ TV_CHEST,		"Chests" },
+	{ TV_CHEST,		"Containers" },
 
 	{ TV_LIGHT,		  "Lights" },
 	{ TV_BATTERY,		"Batteries" },

@@ -4,7 +4,7 @@
  */
 ORIGIN(NONE,		-1,	"")
 ORIGIN(FLOOR,		1,	"Found lying on the floor %s")
-ORIGIN(CHEST,		1,	"Taken from a chest found %s")
+ORIGIN(CHEST,		1,	"Taken from a container found %s")
 ORIGIN(SPECIAL,		1,	"Found lying on the floor of a special room %s")
 ORIGIN(PIT,			1,	"Found lying on the floor in a pit %s")
 ORIGIN(VAULT,		1,	"Found lying on the floor in a vault %s")
