@@ -3152,19 +3152,12 @@ static enum parser_error parse_class_str_mult(struct parser *p) {
 
 static enum parser_error parse_class_title(struct parser *p) {
 	struct player_class *c = parser_priv(p);
-	int i;
 
 	if (!c)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
-	for (i = 0; i < PY_MAX_LEVEL / 5; i++) {
-		if (!c->title[i]) {
-			c->title[i] = string_make(parser_getstr(p, "title"));
-			break;
-		}
-	}
+	c->title = mem_realloc(c->title, sizeof(*c->title) * (c->titles + 1));
+	c->title[c->titles++] = string_make(parser_getstr(p, "title"));
 
-	if (i >= PY_MAX_LEVEL / 5)
-		return PARSE_ERROR_TOO_MANY_ENTRIES;
 	return PARSE_ERROR_NONE;
 }
 

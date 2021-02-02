@@ -336,7 +336,8 @@ struct player_class {
 	const char *desc;			/**< Description */
 	unsigned int cidx;
 
-	const char *title[10];		/**< Titles */
+	const char **title;			/**< Titles */
+	unsigned int titles;
 
 	int c_adj[STAT_MAX];		/**< Stat modifier */
 

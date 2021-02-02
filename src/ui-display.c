@@ -165,7 +165,7 @@ static void prt_stat(int stat, int row, int col)
 
 const char *player_title(void)
 {
-	return player->class->title[(player->lev - 1) / 5];
+	return player->class->title[(player->lev - 1) * player->class->titles / PY_MAX_LEVEL];
 }
 
 static int fmt_title(char buf[], int max, bool short_mode)
