@@ -93,8 +93,8 @@ typedef struct birther /*lovely*/ birther; /*sometimes we think she's a dream*/
  */
 struct birther
 {
-	const struct player_race *race;
-	const struct player_class *class;
+	struct player_race *race;
+	struct player_class *class;
 
 	s16b age;
 	s16b wt;
@@ -955,8 +955,8 @@ static void generate_stats(int stats[STAT_MAX], int points_spent[STAT_MAX],
  * This fleshes out a full player based on the choices currently made,
  * and so is called whenever things like race or class are chosen.
  */
-void player_generate(struct player *p, const struct player_race *r,
-					 const struct player_class *c, bool old_history)
+void player_generate(struct player *p, struct player_race *r,
+					 struct player_class *c, bool old_history)
 {
 	int i;
 
@@ -1216,7 +1216,7 @@ void do_cmd_accept_character(struct command *cmd)
 
 	/* Clear old messages, add new starting message */
 	history_clear(player);
-	history_add(player, "Began the quest to save the galaxy.", HIST_PLAYER_BIRTH);
+	history_add(player, "Began the mission to save the galaxy.", HIST_PLAYER_BIRTH);
 
 	/* Note player birth in the message recall */
 	message_add(" ", MSG_GENERIC);
@@ -1275,6 +1275,10 @@ void do_cmd_accept_character(struct command *cmd)
 
 	/* No quest in progress */
 	player->active_quest = -1;
+
+	/* Class specific initialization */
+	if (player->class->init)
+		player->class->init();
 
 	/* Stop the player being quite so dead */
 	player->is_dead = false;

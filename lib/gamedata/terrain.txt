@@ -232,8 +232,16 @@ flags:SHOP | PROJECT | PASSABLE | PERMANENT | INTERESTING | EASY
 info:8:0
 look-prefix:the entrance to the
 look-in-preposition:at
-desc:Your safe piece of Middle Earth, and the only place you can store goods 
-desc:apart from on your person.
+desc:The only place you can store goods apart from on your person.
+
+name:Field HQ
+graphics:9:g
+priority:20
+flags:SHOP | PROJECT | PASSABLE | PERMANENT | INTERESTING | EASY
+info:9:0
+look-prefix:the entrance to the
+look-in-preposition:at
+desc:Your base for the assault on Xygos.
 
 name:secret door
 graphics:#:w

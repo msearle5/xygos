@@ -53,6 +53,7 @@ char *rune_desc(size_t i);
 quark_t rune_note(size_t i);
 void rune_set_note(size_t i, const char *inscription);
 
+void player_learn_rune(struct player *p, size_t i, bool message);
 bool player_knows_brand(struct player *p, int i);
 bool player_knows_slay(struct player *p, int i);
 bool player_knows_curse(struct player *p, int i);
@@ -88,6 +89,7 @@ void equip_learn_flag(struct player *p, int flag);
 void equip_learn_element(struct player *p, int element);
 void equip_learn_after_time(struct player *p);
 
+int object_find_unknown_rune(struct player *p, struct object *obj);
 void object_learn_unknown_rune(struct player *p, struct object *obj);
 void object_learn_on_wield(struct player *p, struct object *obj);
 void shape_learn_on_assume(struct player *p, const char *name);

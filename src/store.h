@@ -38,7 +38,8 @@ enum {
 	STORE_MAGIC	= 5,
 	STORE_B_MARKET	= 6,
 	STORE_HOME	= 7,
-	MAX_STORES	= 8
+	STORE_HQ	= 8,
+	MAX_STORES	= 9
 };
 
 struct object_buy {
@@ -98,6 +99,9 @@ struct store {
 };
 
 extern struct store *stores;
+
+struct store *get_store_by_idx(int idx);
+struct store *get_store_by_name(const char *name);
 bool you_own(struct store *store);
 struct store *store_at(struct chunk *c, struct loc grid);
 void store_init(void);

@@ -1163,11 +1163,12 @@ struct object_kind *get_obj_num(int level, bool good, int tval)
  * \param extra_roll is whether we get an extra roll in apply_magic()
  * \param value is the value to be returned to the calling function
  * \param tval is the desired tval, or 0 if we allow any tval
+ * \param name is the desired object's name, or NULL if we allow any item (of that tval)
  *
  * \return a pointer to the newly allocated object, or NULL on failure.
  */
-struct object *make_object(struct chunk *c, int lev, bool good, bool great,
-						   bool extra_roll, s32b *value, int tval)
+struct object *make_object_named(struct chunk *c, int lev, bool good, bool great,
+						   bool extra_roll, s32b *value, int tval, const char *name)
 {
 	int base, tries = 3;
 	struct object_kind *kind = NULL;
@@ -1188,16 +1189,34 @@ struct object *make_object(struct chunk *c, int lev, bool good, bool great,
 	/* Base level for the object */
 	base = (good ? (lev + 10) : lev);
 
-	/* Try to choose an object kind; reject most books the player can't read */
-	while (tries) {
-		kind = get_obj_num(base, good || great, tval);
-		if (kind && tval_is_book_k(kind) && !obj_kind_can_browse(kind)) {
-			if (one_in_(5)) break;
-			kind = NULL;
-			tries--;
-			continue;
+	if (name) {
+		/* Use the given name, and either the given tval or try all */
+		int sval = -1;
+
+		if (tval) {
+			sval = lookup_sval(tval, name);
 		} else {
-			break;
+			for(tval=0; tval<TV_MAX; tval++) {
+				sval = lookup_sval(tval, name);
+				if (sval >= 0)
+					break;
+			}
+		}
+		if (sval >= 0) {
+			kind = lookup_kind(tval, sval);
+		}
+	} else {
+		/* Try to choose an object kind; reject most books the player can't read */
+		while (tries) {
+			kind = get_obj_num(base, good || great, tval);
+			if (kind && tval_is_book_k(kind) && !obj_kind_can_browse(kind)) {
+				if (one_in_(5)) break;
+				kind = NULL;
+				tries--;
+				continue;
+			} else {
+				break;
+			}
 		}
 	}
 	if (!kind)
@@ -1227,6 +1246,25 @@ struct object *make_object(struct chunk *c, int lev, bool good, bool great,
 	return new_obj;
 }
 
+
+/**
+ * Attempt to make an object
+ *
+ * \param c is the current dungeon level.
+ * \param lev is the creation level of the object (not necessarily == depth).
+ * \param good is whether the object is to be good
+ * \param great is whether the object is to be great
+ * \param extra_roll is whether we get an extra roll in apply_magic()
+ * \param value is the value to be returned to the calling function
+ * \param tval is the desired tval, or 0 if we allow any tval
+ *
+ * \return a pointer to the newly allocated object, or NULL on failure.
+ */
+struct object *make_object(struct chunk *c, int lev, bool good, bool great,
+						   bool extra_roll, s32b *value, int tval)
+{
+	return make_object_named(c, lev, good, great, extra_roll, value, tval, NULL);
+}
 
 /**
  * Scatter some objects near the player

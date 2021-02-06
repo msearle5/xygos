@@ -22,6 +22,7 @@ ENDIF()
 
 ADD_EXECUTABLE(Angband
         src/buildid.c
+        src/c-soldier.c
         src/cave-map.c
         src/cave-square.c
         src/cave-view.c

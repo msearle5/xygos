@@ -333,7 +333,7 @@ static void store_display_entry(struct menu *menu, int oid, bool cursor, int row
 	/* Get the object */
 	obj = ctx->list[oid];
 
-	/* Describe the object - preserving insriptions in the home */
+	/* Describe the object - preserving inscriptions in the home */
 	if (store->sidx == STORE_HOME) {
 		desc |= ODESC_FULL;
 	} else {
@@ -427,6 +427,7 @@ static void store_display_help(struct store_context *ctx)
 	struct store *store = ctx->store;
 	int help_loc = ctx->scr_places_y[LOC_HELP_PROMPT];
 	bool is_home = (store->sidx == STORE_HOME) ? true : false;
+	bool is_hq = (store->sidx == STORE_HQ) ? true : false;
 
 	/* Clear */
 	clear_from(ctx->scr_places_y[LOC_HELP_CLEAR]);
@@ -453,22 +454,24 @@ static void store_display_help(struct store_context *ctx)
 	text_out_c(COLOUR_L_GREEN, "Space");
 	text_out(" pages through off-screen items. ");
 
-	if (!ctx->inspect_only) {
-		if (OPT(player, birth_no_selling)) {
-			text_out_c(COLOUR_L_GREEN, "d");
-			text_out(" gives an item to the store in return for its identification. Some items will also be recharged. ");
+	if (!is_hq) {
+		if (!ctx->inspect_only) {
+			if (OPT(player, birth_no_selling)) {
+				text_out_c(COLOUR_L_GREEN, "d");
+				text_out(" gives an item to the store in return for its identification. Some items will also be recharged. ");
+			} else {
+				text_out_c(COLOUR_L_GREEN, "d");
+				if (is_home) text_out(" drops");
+				else text_out(" sells");
+				text_out(" an item from your inventory. ");
+			}
 		} else {
-			text_out_c(COLOUR_L_GREEN, "d");
-			if (is_home) text_out(" drops");
-			else text_out(" sells");
-			text_out(" an item from your inventory. ");
+			text_out_c(COLOUR_L_GREEN, "I");
+			text_out(" inspects an item from your inventory. ");
 		}
-	} else {
-		text_out_c(COLOUR_L_GREEN, "I");
-		text_out(" inspects an item from your inventory. ");
 	}
 
-	if (!is_home) {
+	if ((!is_home) && (!is_hq)) {
 		text_out_c(COLOUR_L_GREEN, "H");
 		text_out(" holds an item (you pay 10%% now to keep it in stock. If you buy it the same day, you'll only pay the remaining 90%% - but each extra day will add 10%% more.) ");
 		text_out_c(COLOUR_L_GREEN, "S");
@@ -562,6 +565,11 @@ static bool store_sell(struct store_context *ctx)
 
 	assert(store);
 
+	if (store->sidx == STORE_HQ) {
+		msg("We don't buy used goods.");
+		return false;
+	}
+
 	/* Clear all current messages */
 	msg_flag = false;
 	prt("", 0, 0);
@@ -648,13 +656,16 @@ static bool store_sell(struct store_context *ctx)
 }
 
 /* Set a store's owner and name to you */
-static void store_your_name(struct store *store)
+void store_your_name(struct store *store)
 {
 	char buf[256];
 	store->owner = store->owners;
 	string_free(store->owner->name);
 	const char *shape = (player_is_shapechanged(player) ? player->shape->name : player->race->name);
-	snprintf(buf, sizeof(buf), "%s the %s (%s)", player->full_name, player_title(), shape);	// should be updated when you enter
+	if (store->sidx == STORE_HQ)
+		snprintf(buf, sizeof(buf), "General %s (%s)", player->full_name, shape);
+	else
+		snprintf(buf, sizeof(buf), "%s the %s (%s)", player->full_name, player_title(), shape);
 	buf[sizeof(buf)-1] = 0;
 	store->owner->name = string_make(buf);
 }
@@ -984,6 +995,11 @@ static void store_steal(struct store_context *ctx, bool *exit)
 		return;
 	}
 
+	if (ctx->store->sidx == STORE_HQ) {
+		msg("You decide that would be a bad move.");
+		return;
+	}
+
 	/* Confirm as it is risky */
 	screen_save();
 	int response = store_get_check(format("Sure you want to try to steal something? [ESC, any other key to accept]"));
@@ -1086,6 +1102,11 @@ static void store_fight(struct store_context *ctx, bool *exit)
 		return;
 	}
 
+	if (ctx->store->sidx == STORE_HQ) {
+		msg("You decide that would be a bad move.");
+		return;
+	}
+
 	/* Confirm as it is risky */
 	screen_save();
 	int response = store_get_check(format("Sure you want to attack %s? [ESC, any other key to accept]", store_shortname(ctx)));
@@ -1140,6 +1161,11 @@ static void store_newstock(struct store_context *ctx)
 		return;
 	}
 
+	if (ctx->store->sidx == STORE_HQ) {
+		msg("What you see is what you get.");
+		return;
+	}
+
 	int price = store_roundup((store_price_all(ctx->store) / 4) + (ctx->store->owner->max_cost / 20) + 200);
 
 	/* Confirm if they really wanted it */
@@ -1184,6 +1210,11 @@ static void store_replace(struct store_context *ctx, bool *exit)
 	if ((store->sidx == STORE_HOME) || (you_own(store))) {
 		/* Could treat this a request to sell */
 		msg("It's all yours, and it's staying that way.");
+		return;
+	}
+
+	if (ctx->store->sidx == STORE_HQ) {
+		msg("You decide that would be a bad move.");
 		return;
 	}
 
@@ -1263,6 +1294,11 @@ static int stores_destroyed(void)
 static void store_buy(struct store_context *ctx, bool *exit)
 {
 	struct store *store = ctx->store;
+	if (ctx->store->sidx == STORE_HQ) {
+		msg("You decide that would be a bad move.");
+		return;
+	}
+
 	if (store->sidx == STORE_HOME) {
 		msg("It's all yours, and it's staying that way.");
 		return;
@@ -2063,7 +2099,13 @@ void use_store(game_event_type type, game_event_data *data, void *user)
 
 	/* Check that we're on a store */
 	if (!store) return;
-	
+
+	/* Check for special handling */
+	if (player->class->building) {
+		if (player->class->building(store->sidx, true))
+			return;
+	}
+
 	/* Check that we aren't banned */
 	if (store->bandays) {
 		msg("%s", store->banreason);
@@ -2087,7 +2129,7 @@ void use_store(game_event_type type, game_event_data *data, void *user)
 	store_menu_init(&ctx, store, false);
 
 	/* Say a friendly hello - or collect some loot. */
-	if (store->sidx != STORE_HOME) {
+	if ((store->sidx != STORE_HOME) && (store->sidx != STORE_HQ)) {
 		if (you_own(store)) {
 			collect_from_store(store);
 		} else {
@@ -2102,6 +2144,10 @@ void use_store(game_event_type type, game_event_data *data, void *user)
 	event_remove_handler(EVENT_STORECHANGED, refresh_stock, &ctx);
 	msg_flag = false;
 	mem_free(ctx.list);
+
+	/* Check for special handling */
+	if (player->class->building)
+		player->class->building(store->sidx, false);
 
 	/* Take a turn */
 	player->upkeep->energy_use = z_info->move_energy;

@@ -65,6 +65,9 @@
 # 'flags' is for class flags.
 
 # 'title' is for class titles.
+# There can be any number of them - max 12 chars if possible (13 would mean
+# overlapping the blank space on the char sheet and mani display, more won't
+# be seen.)
 
 # 'magic' is for general magic info - level of the first spell, weight that
 # hurts spells, number of books used.
@@ -110,9 +113,9 @@
 
 
 
-############### WARRIOR ###############
-name:Warrior
-stats:3:-2:-2:2:2:0:0
+############### SOLDIER ###############
+name:Soldier
+stats:3:-2:-2:2:2:-1:1
 skill-disarm-phys:25:15
 skill-disarm-magic:20:10
 skill-device:18:7
@@ -130,25 +133,85 @@ strength-multiplier:5
 equip:food:random:1:3
 equip:food:random:1:3
 equip:food:random:1:3
-equip:random:random:1:3
 ##equip:light:Wooden Torch:1:3
 equip:pill:Berserk Strength:1:1
 equip:sword:Dagger:1:1
 equip:soft armour:Soft Leather Armour:1:1
 equip:scroll:Word of Recall:1:1
 player-flags:BRAVERY_30 | NO_MANA | SHIELD_BASH
-title:Rookie
-title:Soldier
-title:Swordsman
-title:Swashbuckler
-title:Veteran
-title:Myrmidon
-title:Commando
-title:Champion
-title:Hero
-title:Lord
-cdesc:Description goes here. Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
+title:Cadet
+title:Private
+title:Private 1st
+title:Lnc Corporal
+title:Corporal
+title:Sergeant
+title:Sergeant Maj
+title:Lieutenant 2
+title:Lieutenant 1
+title:Captain
+title:Major
+title:Lt Colonel
+title:Colonel
+title:Maj General
+title:Lt General
+title:General
+cdesc:You are a Space Marine. You are well trained in most forms of combat, being especially good with long guns, but your biggest advantage comes from the Marines' support: after getting a promotion and returning to field HQ you will be equipped appropriately.
 
+############### MARKSMAN ###############
+name:Marksman
+stats:1:0:0:3:0:0:0
+title:Hobbyist
+title:Marksman
+title:Sniper
+#Gunsmith?
+cdesc:A civilian weapon expert, reasonably skilled with all ranged weapons and the best of any role with your chosen specialty. Being used to firing at paper targets which rarely fire back though, your melee combat and stealth are not so hot. You'll start being able to recognize all weapon mods.
+hitdie:130
+max-attacks:5
+min-weight:40
+
+############### TOURIST ###############
+name:Tourist
+stats:-1:0:-3:0:0:2:0
+title:Tripper
+title:Holidaymaker
+title:Tourist
+title:Backpacker
+title:Hiker
+title:Trekker
+title:Traveller
+title:Journeyer
+title:Adventurer
+title:Guide
+title:Explorer
+title:Trailblazer
+title:Pioneer
+cdesc:You are well equipped, for the beach. You are in fact rather out of your depth here - this is definitely going to be a challenge. But you do have some advantages - a universal map, a winning smile and (due to being the least experienced role) the best experience and talent gain rates.
+hitdie:30
+max-attacks:5
+min-weight:40
+
+############### SPELUNKER ###############
+name:Spelunker
+stats:2:0:0:3:1:0:0
+hitdie:90
+max-attacks:5
+min-weight:40
+title:Spelunker
+title:Caver
+title:Speleologist
+cdesc:You are trained and equipped for underground exploration, can avoid falls and will gain powerful abilities to dig, climb, map, detect and find hidden passages. Your combat ability is middling - fitness helps but only so much without having practiced much. However you can become an effective tactical fighter through your positioning abilities.
+
+############### JEDI #####################
+name:Jedi
+stats:1:1:4:3:1:1:0
+title:Aspirant
+title:Padawan
+title:Initiate
+title:Adept
+title:Knight
+title:Master
+title:Grand Master
+cdesc:Jedi are famous for skill with a lightsaber - you'll excel with melee energy weapons and do well with other melee weapons. Eventually you'll even be able to construct your own. Ranged weapons are not you, but you'll be supported by a number of subtle powers as you advance. There are also Dark Jedi... who are powerful, yes, but at a cost!
 
 ############### MAGE ###############
 name:Mage

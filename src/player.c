@@ -260,8 +260,11 @@ static void adjust_level(struct player *p, bool verbose)
 	       (p->max_exp >= (player_exp[p->max_lev-1] * p->expfact / 100L)))
 		p->max_lev++;
 
-	if (p->max_lev > max_from)
+	if (p->max_lev > max_from) {
 		ability_levelup(p, max_from, p->max_lev);
+		if (p->class->levelup)
+			p->class->levelup(max_from, p->max_lev);
+	}
 
 	p->upkeep->update |= (PU_BONUS | PU_HP | PU_SPELLS);
 	p->upkeep->redraw |= (PR_LEV | PR_TITLE | PR_EXP | PR_STATS);

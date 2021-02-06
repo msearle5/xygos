@@ -1208,7 +1208,7 @@ void update_player_object_knowledge(struct player *p)
  * \param i is the rune index
  * \param message is whether or not to print a message
  */
-static void player_learn_rune(struct player *p, size_t i, bool message)
+void player_learn_rune(struct player *p, size_t i, bool message)
 {
 	struct rune *r = &rune_list[i];
 	bool learned = false;

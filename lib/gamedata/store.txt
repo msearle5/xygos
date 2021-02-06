@@ -33,6 +33,9 @@ normal:6mm ammo:6mm bullet
 #normal:9mm ammo:9mm bullet
 #normal:12mm ammo:12mm bullet
 #normal:light:disposable flashlight
+normal:boots:pair of high heels
+normal:boots:pair of flip flops
+normal:boots:pair of trainers
 normal:light:keyfob light
 normal:battery:alkaline battery
 normal:food:Pint of Fine Wine
@@ -60,9 +63,9 @@ owner:0:-
 slots:6:18
 turnover:9
 danger:72:90
-normal:boots:Pair of Leather Sandals
-normal:boots:Pair of Leather Boots
-normal:boots:Pair of Iron Shod Boots
+normal:boots:pair of combat boots
+normal:boots:pair of work boots
+normal:boots:pair of armored boots
 normal:helm:Hard Leather Cap
 normal:helm:Metal Cap
 normal:helm:Iron Helm
@@ -239,3 +242,14 @@ owner:0:Your home
 owner:0:Your home
 size:23
 danger:90:99
+
+store:9:Field HQ
+closed
+owner:0:Space Marines Field HQ
+owner:0:Space Marines Field HQ
+owner:0:Space Marines Field HQ
+owner:0:Space Marines Field HQ
+slots:6:18
+turnover:9
+#normal:boots:0
+danger:96:99

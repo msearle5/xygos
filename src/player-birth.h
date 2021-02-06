@@ -22,8 +22,8 @@
 #include "cmd-core.h"
 
 extern void player_init(struct player *p);
-extern void player_generate(struct player *p, const struct player_race *r,
-                            const struct player_class *c, bool old_history);
+extern void player_generate(struct player *p, struct player_race *r,
+                            struct player_class *c, bool old_history);
 extern char *get_history(struct history_chart *h);
 extern void add_start_items(struct player *p, const struct start_item *si, bool skip, bool pay, int origin);
 extern void wield_all(struct player *p);

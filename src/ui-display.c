@@ -163,9 +163,14 @@ static void prt_stat(int stat, int row, int col)
 		put_str("!", row, col + 3);
 }
 
+int title_idx(int level)
+{
+	return (level - 1) * player->class->titles / PY_MAX_LEVEL;
+}
+
 const char *player_title(void)
 {
-	return player->class->title[(player->lev - 1) * player->class->titles / PY_MAX_LEVEL];
+	return player->class->title[title_idx(player->lev)];
 }
 
 static int fmt_title(char buf[], int max, bool short_mode)

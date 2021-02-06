@@ -41,6 +41,7 @@
 #include "player-spell.h"
 #include "store.h"
 #include "target.h"
+#include "ui-display.h"
 #include "debug.h"
 
 /**
@@ -93,6 +94,30 @@ static struct store *store_new(int idx) {
 	s->sidx = idx;
 	s->stock_size = z_info->store_inven_max;
 	return s;
+}
+
+/**
+ * Return the store with the given index, or NULL if there is none
+ */
+struct store *get_store_by_idx(int idx) {
+	for(int i=0; i< MAX_STORES; i++) {
+		struct store *store = stores + i;
+		if ((int)store->sidx == idx)
+			return store;
+	};
+	return NULL;
+}
+
+/**
+ * Return the store with the given name, or NULL if there is none
+ */
+struct store *get_store_by_name(const char *name) {
+	for(int i=0; i< MAX_STORES; i++) {
+		struct store *store = stores + i;
+		if (streq(store->name, name))
+			return store;
+	};
+	return NULL;
 }
 
 /**
@@ -660,7 +685,7 @@ int price_item(struct store *store, const struct object *obj,
 		return 0;
 	}
 
-	if (!you_own(store)) {
+	if (!you_own(store) && (!store->sidx != STORE_HQ)) {
 		/* This adjusts the price (in either direction) based on CHA
 		 * and level, with CHA being more important at low level and
 		 * the proportion that is dependent on level increasing at high
@@ -1164,6 +1189,45 @@ static void store_delete_random(struct store *store)
 
 
 /**
+ * The HQ only stocks some items.
+ * - Melee weapons, ranged weapons, ammo.
+ * - Offensive, healing devices (TODO)
+ * - Thrown weapons (TODO)
+ * - Most armor (avoid items that aren't really armor)
+ * - Most lights, food rations
+ * - Some pills, scrolls? (TODO)
+ */
+static bool hq_ok(const struct object *obj)
+{
+	if (tval_is_weapon(obj))	/* includes ammo */
+		return true;
+	if (tval_is_armor(obj)) {
+		if ((randcalc(obj->kind->to_h, 0, AVERAGE) < 0) && (obj->kind->ac <= 1))
+			return false;	/* high heels */
+		if ((obj->kind->ac <= 0) && (randcalc(obj->kind->to_a, 0, AVERAGE) < 5))
+			return false;	/* sun hat, but not belt */
+		return true;
+	}
+	switch(obj->tval) {
+		case TV_LIGHT:
+			if (!my_stristr(obj->kind->name, "firecracker"))
+				return true;
+			return false;
+		case TV_BATTERY:
+			return true;
+		case TV_FOOD:
+			if (my_stristr(obj->kind->name, "dried"))
+				return true;
+			if (my_stristr(obj->kind->name, "ation"))
+				return true;
+			if (my_stristr(obj->kind->name, "cheese"))
+				return true;
+			return false;
+	}
+	return false;
+}
+
+/**
  * This makes sure that the black market doesn't stock any object that other
  * stores have, unless it is an ego-item or has various bonuses.
  *
@@ -1226,16 +1290,21 @@ static bool store_create_random(struct store *store)
 	int min_level, max_level;
 
 	/* Decide min/max levels */
-	if (store->sidx == STORE_B_MARKET) {
-		min_level = player->max_depth + 5;
-		max_level = player->max_depth + 20;
-	} else {
+	if (store->sidx == STORE_HQ) {
 		min_level = 1;
-		max_level = z_info->store_magic_level + MAX(player->max_depth - 20, 0);
-	}
+		max_level = 5 + (title_idx(player->lev) * 6);
+	} else {
+		if (store->sidx == STORE_B_MARKET) {
+			min_level = player->max_depth + 5;
+			max_level = player->max_depth + 20;
+		} else {
+			min_level = 1;
+			max_level = z_info->store_magic_level + MAX(player->max_depth - 20, 0);
+		}
 
-	if (min_level > 55) min_level = 55;
-	if (max_level > 70) max_level = 70;
+		if (min_level > 55) min_level = 55;
+		if (max_level > 70) max_level = 70;
+	}
 
 	/* Consider up to six items */
 	for (tries = 0; tries < 6; tries++) {
@@ -1246,7 +1315,9 @@ static bool store_create_random(struct store *store)
 		level = rand_range(min_level, max_level);
 
 		/* Black Markets have a random object, of a given level */
-		if (store->sidx == STORE_B_MARKET)
+		if (store->sidx == STORE_HQ)
+			kind = get_obj_num(level, false, 0);
+		else if (store->sidx == STORE_B_MARKET)
 			kind = get_obj_num(level, false, 0);
 		else
 			kind = store_get_choice(store);
@@ -1287,6 +1358,14 @@ static bool store_create_random(struct store *store)
 
 		/* Black markets have expensive tastes */
 		if ((store->sidx == STORE_B_MARKET) && !black_market_ok(obj)) {
+			object_delete(&known_obj);
+			obj->known = NULL;
+			object_delete(&obj);
+			continue;
+		}
+
+		/* HQ only stocks some items */
+		if ((store->sidx == STORE_HQ) && !hq_ok(obj)) {
 			object_delete(&known_obj);
 			obj->known = NULL;
 			object_delete(&obj);

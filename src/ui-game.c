@@ -588,6 +588,15 @@ void close_game(void)
 
 	/* Handle death or life */
 	if (player->is_dead) {
+
+		/* Finalize class */
+		if (player->class->free)
+			player->class->free();
+		if (player->class->state) {
+			mem_free(player->class->state);
+			player->class->state = NULL;
+		}
+
 		death_knowledge(player);
 		death_screen();
 

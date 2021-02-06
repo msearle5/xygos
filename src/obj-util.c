@@ -531,7 +531,8 @@ struct ego_item *lookup_ego_item(const char *name, int tval, int sval)
 
 /**
  * Return the numeric sval of the object kind with the given `tval` and
- * name `name`.
+ * name `name`. Will find partial matches ("combat boots" matching "pair
+ * of combat boots"), but only if no exact match is found.
  */
 int lookup_sval(int tval, const char *name)
 {
@@ -553,8 +554,25 @@ int lookup_sval(int tval, const char *name)
 							 false);
 
 		/* Found a match */
-		if (kind->tval == tval && !my_stricmp(cmp_name, name))
+		if (kind->tval == tval && !my_stricmp(cmp_name, name)) {
 			return kind->sval;
+		}
+	}
+
+	/* Try for a partial match */
+	for (k = 0; k < z_info->k_max; k++) {
+		struct object_kind *kind = &k_info[k];
+		char cmp_name[1024];
+
+		if (!kind || !kind->name) continue;
+
+		obj_desc_name_format(cmp_name, sizeof cmp_name, 0, kind->name, 0,
+							 false);
+
+		/* Found a partial match */
+		if (kind->tval == tval && my_stristr(cmp_name, name)) {
+			return kind->sval;
+		}
 	}
 
 	return -1;

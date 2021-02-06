@@ -360,6 +360,13 @@ struct player_class {
 	struct start_item *start_items; /**< Starting inventory */
 
 	struct class_magic magic;	/**< Magic spells */
+
+	void *state;				/**< Saved state */
+	void (*init)(void);			/**< Late-init hook */
+	void (*free)(void);			/**< Finish with character hook */
+	void (*levelup)(int, int);	/**< Levelup hook */
+	bool (*building)(int, bool);/**< Building hook */
+	void (*loadsave)(void);		/**< Load/save hook */
 };
 
 /**
@@ -534,8 +541,8 @@ struct player_upkeep {
  * which can be recomputed as needed.
  */
 struct player {
-	const struct player_race *race;
-	const struct player_class *class;
+	struct player_race *race;
+	struct player_class *class;
 
 	struct loc grid;/* Player location */
 
@@ -649,6 +656,7 @@ extern struct player *player;
 
 /* player-class.c */
 struct player_class *player_id2class(guid id);
+struct player_class *get_class_by_name(const char *name);
 
 /* player.c */
 int stat_name_to_idx(const char *name);

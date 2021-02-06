@@ -81,6 +81,7 @@ WINMAINFILES = \
 X11MAINFILES = main-x11.o
 
 ANGFILES = \
+	c_soldier.o \
 	cave.o \
 	cave-map.o \
 	cave-square.o \

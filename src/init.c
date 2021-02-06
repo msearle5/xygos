@@ -3561,6 +3561,21 @@ static errr run_parse_class(struct parser *p) {
 	return parse_file_quit_not_found(p, "class");
 }
 
+/* Install class hooks by calling all install_class_X functions,
+ * where X is taken from the list-player-class.h file which lists
+ * all classes with a install function.
+ */
+#undef PC
+#define PC(X) extern void install_class_##X(void);
+#include "list-player-class.h"
+
+static void install_class_hooks(void)
+{
+	#undef PC
+	#define PC(X) install_class_##X();
+	#include "list-player-class.h"
+}
+
 static errr finish_parse_class(struct parser *p) {
 	struct player_class *c;
 	int num = 0;
@@ -3571,6 +3586,8 @@ static errr finish_parse_class(struct parser *p) {
 		c->cidx = num - 1;
 	}
 	parser_destroy(p);
+	install_class_hooks();
+
 	return 0;
 }
 
@@ -3602,7 +3619,7 @@ static void cleanup_class(void)
 			mem_free(book->spells);
 		}
 		mem_free(c->magic.books);
-		for (i = 0; i < PY_MAX_LEVEL / 5; i++) {
+		for (i = 0; i < (int)c->titles; i++) {
 			string_free((char *)c->title[i]);
 		}
 		mem_free((char *)c->name);
