@@ -7,6 +7,20 @@
 # to this file).  It would also only require fairly small game code changes to
 # allow other quests to be added as a result of game events.
 
+# name: 				Name of quest
+# level: 				Level of the quest (displayed in knowledge, so use as a recommended level before entering)
+# race:<monster>		Create this many of this monster
+# number:<monsters>
+# store:<store name>	Get the quest from this store
+# entrymin:<min>		Place the quest entry between min and max (both optional) grids from the store giving it
+# entrymax:<max>		Both min and max are optional.
+# entryfeature:<feat>	The entry will be on open ground adjacent to this feature. Optional.
+# intro:<text>			Print this as a question [yn] before taking the quest.
+# desc:<text>			Brief one line description to display in knowledge
+# succeed:<text>		Message to get when you successfully complete a quest.
+# failure:<text>		Message when you @£$! it up
+# unlock:<quest name>	Another quest unlocked by this.
+
 name:Rats
 level:6
 race:giant grey rat
@@ -21,16 +35,16 @@ succeed:So you've cleaned them out? Great. Maybe some day Nijel - who is not exa
 failure:So you were defeated by a mouse? How heroic! Brave Sir Robin would be proud.
 unlock:Cave
 
-name:Cave
-level:2
-race:giant grey rat
-number:12
+name:Whiskey Cave
+level:15
+#race:giant grey rat
+#number:12
 store:General Store
 entrymin:2
 entrymax:12
 entryfeature:lava
-intro:Cave intro?
-desc:Cave desc
+intro:Well, I guess I can trust you now. I thought I was being clever, using a small cave that I thought nobody knew about to store my stash of valuable rare spirits safely. It's by the volcanic vent. Unfortunately the roof collapsed. Could you dig your way in and retrieve it for me? You'll be rewarded, and not just with a few bottle caps this time. I would take digging equipment of some kind - I don't know how far back the collapse went.
+desc:Retrieve the rare booze from the volcanic cave
 succeed:Well done. A reward? Isn't the thrill of exploration its own reward? No? Well, OK.
 failure:Defeated by a mouse. How heroic!
 flags:locked
