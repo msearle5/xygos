@@ -881,9 +881,11 @@ int get_use_device_chance(const struct object *obj)
 	int diff_max  = 100;
 
 	/* Depends on what kind of object in it */
-	if (tval_is_printer(obj)) {
+	if (tval_is_printer(obj) || tval_is_battery(obj)) {
 		/* Printers are limited by chunk supplies and fail after using chunks,
-		 * so don't need any further limiting
+		 * so don't need any further limiting. Batteries are supposed to be
+		 * obvious... and all batteries that will get here (that is, reusable
+		 * ones like the atomic cell) are limited by the cooldown.
 		 */
 		return 0;
 	}

@@ -2442,6 +2442,49 @@ static enum parser_error parse_p_race_desc(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_p_race_equip(struct parser *p) {
+	struct player_race *r = parser_priv(p);
+	struct start_item *si;
+	int tval, sval;
+
+	if (!r)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
+	const char *tvalsym = parser_getsym(p, "tval");
+	if (streq(tvalsym, "random"))
+		tval = SV_UNKNOWN;
+	else {
+		tval = tval_find_idx(parser_getsym(p, "tval"));
+		if (tval < 0)
+			return PARSE_ERROR_UNRECOGNISED_TVAL;
+	}
+
+	const char *svalsym = parser_getsym(p, "sval");
+	if (streq(svalsym, "random"))
+		sval = SV_UNKNOWN;
+	else {
+		sval = lookup_sval(tval, svalsym);
+		if (sval < 0)
+			return PARSE_ERROR_UNRECOGNISED_SVAL;
+	}
+
+	si = mem_zalloc(sizeof *si);
+	si->tval = tval;
+	si->sval = sval;
+	si->min = parser_getuint(p, "min");
+	si->max = parser_getuint(p, "max");
+
+	if (si->min > 99 || si->max > 99) {
+		mem_free(si);
+		return PARSE_ERROR_INVALID_ITEM_NUMBER;
+	}
+
+	si->next = r->start_items;
+	r->start_items = si;
+
+	return PARSE_ERROR_NONE;
+}
+
 struct parser *init_parse_p_race(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
@@ -2458,6 +2501,7 @@ struct parser *init_parse_p_race(void) {
 	parser_reg(p, "skill-shoot int shoot", parse_p_race_skill_shoot);
 	parser_reg(p, "skill-throw int throw", parse_p_race_skill_throw);
 	parser_reg(p, "skill-dig int dig", parse_p_race_skill_dig);
+	parser_reg(p, "equip sym tval sym sval uint min uint max", parse_p_race_equip);
 	parser_reg(p, "hitdie int mhp", parse_p_race_hitdie);
 	parser_reg(p, "exp int exp", parse_p_race_exp);
 	parser_reg(p, "infravision int infra", parse_p_race_infravision);

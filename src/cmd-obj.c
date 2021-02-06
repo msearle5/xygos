@@ -805,15 +805,29 @@ void do_cmd_activate(struct command *cmd)
 void do_cmd_eat_food(struct command *cmd)
 {
 	struct object *obj;
+	int use = USE_SINGLE;
 
 	/* Get an item */
-	if (cmd_get_item(cmd, "item", &obj,
-			"Eat which food? ",
-			"You have no food to eat.",
-			tval_is_edible,
-			USE_INVEN | USE_FLOOR) != CMD_OK) return;
+	if (player_has(player, PF_NO_FOOD)) {
+		if (player_has(player, PF_EAT_BATTERIES)) {
+			if (cmd_get_item(cmd, "item", &obj,
+				"Recharge from which battery? ",
+				"You have no batteries.",
+				tval_is_battery,
+				USE_INVEN | USE_FLOOR) != CMD_OK) return;
+			if (!of_has(obj->flags, OF_BURNS_OUT)) {
+				use = USE_TIMEOUT;
+			}
+		}
+	} else {
+		if (cmd_get_item(cmd, "item", &obj,
+				"Eat which food? ",
+				"You have no food to eat.",
+				tval_is_edible,
+				USE_INVEN | USE_FLOOR) != CMD_OK) return;
+	}
 
-	use_aux(cmd, obj, USE_SINGLE, MSG_EAT);
+	use_aux(cmd, obj, use, MSG_EAT);
 }
 
 static bool check_shapechanged(void)

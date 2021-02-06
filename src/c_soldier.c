@@ -88,12 +88,12 @@ static void soldier_levelup(int from, int to)
 	}
 }
 
-/* Enter or exit a town building (return true on entering to replace default behaviour) */
-static bool soldier_building(int store, bool entering)
+/* Enter or exit a town building (return false by AND of the optional parameter on entering to replace the default behaviour. This is ignored as default behavious is always wanted) */
+static void soldier_building(int store, bool entering, bool *do_default)
 {
 	struct soldier_state *state = (struct soldier_state *)player->class->state;
 	if (!streq(get_store_by_idx(store)->name, "Field HQ"))
-		return false;
+		return;
 	/* HQ: is a promotion gift available? Only give one, for the messages to make sense */
 	if (entering) {
 		if (state->gift_waiting > state->gift_given) {
@@ -215,13 +215,13 @@ static bool soldier_building(int store, bool entering)
 
 			state->gift_given++;
 		}
-		return false;
+		return;
 	} else {
 		if (state->gift_waiting > state->gift_given)
 			msg("You've got more waiting for you when you return.");
-		return false;
+		return;
 	}
-	return false;
+	return;
 }
 
 /* Install hooks */

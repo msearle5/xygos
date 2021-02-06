@@ -31,6 +31,11 @@ bool tval_is_wand(const struct object *obj)
 	return obj->tval == TV_WAND;
 }
 
+bool tval_is_battery(const struct object *obj)
+{
+	return obj->tval == TV_BATTERY;
+}
+
 bool tval_is_rod(const struct object *obj)
 {
 	return obj->tval == TV_ROD;

@@ -135,6 +135,18 @@ desc: When you spend SP by casting a spell you regain some health, and
 desc: fading SP replenish your health more efficiently. The more damaged
 desc: you are, the bigger these health gains will be.
 
+## Race player flags
+
+type:player
+code:NO_FOOD
+name:No Food
+desc:You can't eat food (including mushrooms).
+
+type:player
+code:EAT_BATTERIES
+name:Eat Batteries
+desc:You can eat batteries.
+
 
 # Object flags
 

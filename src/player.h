@@ -227,13 +227,15 @@ struct player_race {
 
 	struct history_chart *history;
 
+	struct start_item *start_items; /**< Starting inventory */
+
 	struct element_info el_info[ELEM_MAX]; /**< Resists */
 
 	void *state;				/**< Saved state */
 	void (*init)(void);			/**< Late-init hook */
 	void (*free)(void);			/**< Finish with character hook */
 	void (*levelup)(int, int);	/**< Levelup hook */
-	bool (*building)(int, bool);/**< Building hook */
+	void (*building)(int, bool, bool *);/**< Building hook */
 	void (*loadsave)(void);		/**< Load/save hook */
 };
 
@@ -375,7 +377,7 @@ struct player_class {
 	void (*init)(void);			/**< Late-init hook */
 	void (*free)(void);			/**< Finish with character hook */
 	void (*levelup)(int, int);	/**< Levelup hook */
-	bool (*building)(int, bool);/**< Building hook */
+	void (*building)(int, bool, bool *);/**< Building hook */
 	void (*loadsave)(void);		/**< Load/save hook */
 };
 

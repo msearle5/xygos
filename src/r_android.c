@@ -1,3 +1,15 @@
+/* Android race
+ * 
+ * + to AC?
+ * 
+ * Androids can't eat conventional food, use batteries?
+ * This includes mushrooms (and high level functional foods) and so is a
+ * substantial nerf. As Androids make good fighters, this is reasonable
+ * enough.
+ * 
+ * What about pills? 
+ */
+
 #include "player.h"
 #include "savefile.h"
 #include "z-util.h"

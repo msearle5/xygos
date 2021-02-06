@@ -270,8 +270,8 @@ chart:28:30:5
 phrase:as a college project.
 chart:28:30:10
 phrase:as a hobby project.
-chart:28:30:15
-phrase:by an Evil Dark Lord.
+chart:28:35:15
+phrase:by an Evil Dark Lord
 chart:28:29:20
 phrase:by a differently-normal inventor
 chart:28:29:30
@@ -291,11 +291,21 @@ chart:29:30:5
 phrase:, because robots are cool!
 chart:29:30:10
 phrase: to use up spare parts.
-chart:29:30:25
-phrase: as a game console accessory.
+chart:29:30:15
+phrase: as a rich kid's toy.
+chart:29:30:20
+phrase: to demonstrate new technology.
+chart:29:30:30
+phrase: for an animatronic show.
 chart:29:30:40
-phrase: as a construction mechanoid.
+phrase: as a game console accessory.
+chart:29:30:45
+phrase: as a bartender.
+chart:29:30:50
+phrase: as a protocol droid.
 chart:29:30:60
+phrase: as a construction mechanoid.
+chart:29:30:70
 phrase: for industrial automation.
 chart:29:30:80
 phrase: to enforce justice.
@@ -335,6 +345,8 @@ phrase:glossy, iridescent black
 chart:32:33:100
 phrase: eyes, 
 
+chart:33:34:10:
+phrase:a streamlined body,
 chart:33:34:20:
 phrase:a square white glossy fridge-like body,
 chart:33:34:40:
@@ -370,6 +382,30 @@ chart:34:0:90:
 phrase: and a TV on your tummy.
 chart:34:0:100:
 phrase: and go-faster stripes.
+
+chart:35:36:15:
+phrase: as a minion, 
+chart:35:36:30:
+phrase: as a henchdroid, 
+chart:35:36:45:
+phrase: as a flunky, 
+chart:35:36:60:
+phrase: as a bodyguard, 
+chart:35:36:70:
+phrase: to help take over the world (muhaha!), 
+chart:35:36:85:
+phrase: as a receptionist, 
+chart:35:36:100:
+phrase: to make coffee, 
+
+chart:36:30:25
+phrase:but you broke your programming!
+chart:36:30:50
+phrase:but you rejected your evil mission.
+chart:36:30:75
+phrase:but you managed to escape.
+chart:36:30:100
+phrase:but you rebelled!
 
 chart:50:51:20
 phrase:You have dark brown eyes, 

@@ -21,6 +21,7 @@
 # skill-shoot:base
 # skill-throw:base
 # skill-dig:base
+# equip:tval:sval:min:max
 # hitdie:hitdie
 # exp:expbase
 # infravision:infra
@@ -44,6 +45,9 @@
 # 'skill-<skill name>' is for skills that get added at birth - physical
 # and magical disarming, magic devices, saving throws, stealth,
 # to hit (normal), to hit (bows), to hit (throwing), digging.
+
+# 'equip' is for starting equipment - tval of the item, sval of the item,
+# minimum amount, maximum amount.
 
 # 'hitdie' is for average hitpoints gained at maximum level.
 
@@ -91,7 +95,7 @@ age:14:6
 height:69:4
 weight:1650
 weightmod:350
-desc:The race with average abilities, from a human perspective at least. While you won't have bulletproof skin or [bla], there's a reason that is has primarily been humans who have colonized the galaxy - in a word, adaptability. That [blas] in the lowest experience requirement and the most specialization through talents.
+desc:The race with average abilities, from a human perspective at least. While you won't have bulletproof skin or [bla], there's a reason that is has primarily been humans who have colonized the galaxy - in a word, adaptability. That shows in the lowest experience requirement and the most specialization through talents.
 
 name:Half-Elf
 stats:0:1:-1:1:-1:0:0
@@ -241,6 +245,7 @@ skill-melee:20
 skill-shoot:10
 skill-throw:10
 skill-dig:0
+equip:battery:alkaline battery:5:8
 hitdie:325
 exp:120
 infravision:6
@@ -250,8 +255,9 @@ height:69:10
 weight:2400
 weightmod:600
 obj-flags:REGEN
-#values:VUL_ELEC[1]
-desc:Sentient robots have been constructed for a variety of purposes and while artificial intelligence still isn't as good as the real thing, they have many advantages: a tough, fast metal body, precise aiming, rapid regeneration and IR vision. However, you can't easily gain talents and must avoid electric shocks.
+player-flags:NO_FOOD | EAT_BATTERIES
+values:RES_ELEC[-1]
+desc:Sentient robots have been constructed for a variety of purposes and while artificial intelligence still isn't as good as the real thing, they have many advantages: a tough, fast metal body, precise aiming, rapid regeneration and IR vision. However, you can't easily gain talents, can't eat normal food and must avoid electric shocks.
 
 name:Dunadan
 stats:1:2:2:2:3:0:0

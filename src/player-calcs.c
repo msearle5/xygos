@@ -2002,7 +2002,11 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		if ((excess > 0) && !p->timed[TMD_ATT_VAMP]) {
 			/* Scale to units 1/10 of the range and subtract from speed */
 			excess = (excess * 10) / (PY_FOOD_MAX - PY_FOOD_FULL);
-			state->speed -= excess;
+			/* If you don't eat food, while you can still be "overcharged" and
+			 * use up energy fast you should not slow down.
+			 */
+			if (!player_has(p, PF_NO_FOOD))
+				state->speed -= excess;
 		} else if (lack > 0) {
 			/* Scale to units 1/20 of the range */
 			lack = (lack * 20) / PY_FOOD_HUNGRY;

@@ -598,6 +598,11 @@ void add_start_items(struct player *p, const struct start_item *si, bool skip, b
 			num = 1;
 		}
 
+		/* If you can't eat food, don't start with it */
+		if (tval_is_food_k(kind))
+			if (player_has(p, PF_NO_FOOD))
+				continue;
+
 		/* Prepare a new item */
 		obj = object_new();
 		object_prep(obj, kind, 0, MINIMISE);
@@ -647,6 +652,7 @@ static void player_outfit(struct player *p)
 
 	/* Give the player starting equipment */
 	add_start_items(p, p->class->start_items, (!OPT(p, birth_start_kit)), true, ORIGIN_BIRTH);
+	add_start_items(p, p->race->start_items, (!OPT(p, birth_start_kit)), true, ORIGIN_BIRTH);
 
 	/* Sanity check */
 	if (p->au < 0)

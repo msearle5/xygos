@@ -2101,7 +2101,10 @@ void use_store(game_event_type type, game_event_data *data, void *user)
 	if (!store) return;
 
 	/* Check for special handling */
-	player_hook(building, store->sidx, true);
+	bool do_default = true;
+	player_hook(building, store->sidx, true, &do_default);
+	if (!do_default)
+		return;
 
 	/* Check that we aren't banned */
 	if (store->bandays) {
@@ -2143,7 +2146,7 @@ void use_store(game_event_type type, game_event_data *data, void *user)
 	mem_free(ctx.list);
 
 	/* Check for special handling */
-	player_hook(building, store->sidx, false);
+	player_hook(building, store->sidx, false, NULL);
 
 	/* Take a turn */
 	player->upkeep->energy_use = z_info->move_energy;
