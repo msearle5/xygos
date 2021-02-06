@@ -1998,6 +1998,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	if (!player_timed_grade_eq(p, TMD_FOOD, "Fed")) {
 		int excess = p->timed[TMD_FOOD] - PY_FOOD_FULL;
 		int lack = PY_FOOD_HUNGRY - p->timed[TMD_FOOD];
+		
 		if ((excess > 0) && !p->timed[TMD_ATT_VAMP]) {
 			/* Scale to units 1/10 of the range and subtract from speed */
 			excess = (excess * 10) / (PY_FOOD_MAX - PY_FOOD_FULL);
@@ -2005,7 +2006,9 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		} else if (lack > 0) {
 			/* Scale to units 1/20 of the range */
 			lack = (lack * 20) / PY_FOOD_HUNGRY;
-
+			if (player_has(player, PF_FORAGING)) {
+				lack = 0;
+			}
 			/* Apply effects progressively */
 			state->to_h -= lack;
 			state->to_d -= lack;
