@@ -27,16 +27,29 @@
 struct soldier_state {
 	s32b gift_waiting;
 	s32b gift_given;
+	char *storename;
 };
 
-/* Save or load state, according to the global saving flag */
-static void soldier_loadsave(void) {
-	if (player->class->state == NULL)
-		player->class->state = mem_zalloc(sizeof(struct soldier_state));
-
-	struct soldier_state *state = (struct soldier_state *)player->class->state;
-	rdwr_s32b(&state->gift_waiting);
-	rdwr_s32b(&state->gift_given);
+/* Save or load state, according to the global saving flag and the "complete" flag.
+ * This is called twice - once with complete false during load/save, and again
+ * with complete true after load/save has completed
+ **/
+static void soldier_loadsave(bool complete) {
+	struct soldier_state *state;
+	if (complete) {
+		struct store *store = get_store_by_name("Field HQ");
+		if (store->owner->name)
+			mem_free(store->owner->name);
+		state = (struct soldier_state *)player->class->state;;
+		store->owner->name = string_make(state->storename);
+	} else {
+		if (player->class->state == NULL)
+			player->class->state = mem_zalloc(sizeof(struct soldier_state));
+		state = (struct soldier_state *)player->class->state;
+		rdwr_s32b(&state->gift_waiting);
+		rdwr_s32b(&state->gift_given);
+		rdwr_string(&state->storename);
+	}
 }
 
 /* Start a new character as as Soldier - after talents setup (so not for selection of subclass) */
@@ -65,6 +78,8 @@ static void soldier_init(void)
 	name[0] = toupper(name[0]);
 	strnfmt(buf, sizeof(buf), "General %s (%s)", name, race);
 	get_store_by_name("Field HQ")->owner->name = string_make(buf);
+	struct soldier_state *state = (struct soldier_state *)player->class->state;
+	state->storename = string_make(buf);
 }
 
 /* FIXME: called-from clears hooks, etc. A final is called if there one but if it's just a single block, the wrapper can do it */

@@ -482,6 +482,7 @@ bool savefile_save(const char *path)
 		file_write(file, (char *) &savefile_name, 4);
 
 		character_saved = try_save(file);
+		player_hook(loadsave, true);
 		file_close(file);
 	}
 
@@ -527,7 +528,7 @@ bool savefile_save(const char *path)
  * ------------------------------------------------------------------------ */
 
 /**
- * Check the savefile header file clearly inicates that it's a savefile
+ * Check the savefile header file clearly indicates that it's a savefile
  */
 static bool check_header(ang_file *f) {
 	byte head[8];
@@ -710,11 +711,8 @@ bool savefile_load(const char *path, bool cheat_death)
 	}
 
 	ok = try_load(f, loaders);
+	player_hook(loadsave, true);
 	file_close(f);
-
-	if (player->chp < 0) {
-		player->is_dead = true;
-	}
 
 	if (player->is_dead && cheat_death) {
 			player->is_dead = false;

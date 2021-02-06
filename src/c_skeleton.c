@@ -13,7 +13,7 @@ struct x_state {
 };
 
 /* Save or load state, according to the global saving flag */
-static void x_loadsave(void) {
+static void x_loadsave(bool complete) {
 	if (player->class->state == NULL)
 		player->class->state = mem_zalloc(sizeof(struct x_state));
 

@@ -593,7 +593,7 @@ bool object_is_ignored(const struct object *obj)
 		return true;
 
 	/* Ignore ego items if known */
-	if (obj->known->ego && ego_is_ignored(obj->ego->eidx, ignore_type_of(obj)))
+	if (obj->known->ego && obj->ego && ego_is_ignored(obj->ego->eidx, ignore_type_of(obj)))
 		return true;
 
 	type = ignore_type_of(obj);

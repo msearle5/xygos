@@ -300,7 +300,14 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 		end = obj_desc_name_prefix(buf, max , end, obj, basename, modstr, terse);
 
 	if (aware && obj->kind->flavor && obj->tval != TV_FOOD && obj->tval != TV_LIGHT) {
-		strnfcat(buf, max, &end, "%s ", obj->kind->name);
+		const char *space = " ";
+
+		/* Contract "foo- pill" into "foo-pill" */
+		const char *spacename = obj->kind->name;
+		if (!isalpha(spacename[strlen(spacename)-1]))
+			space = "";
+
+		strnfcat(buf, max, &end, "%s%s", obj->kind->name, space);
 	}
 
 	/* Base name */
@@ -310,7 +317,7 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 	
 	if (object_is_known_artifact(obj))
 		strnfcat(buf, max, &end, " %s", obj->artifact->name);
-	else if ((obj->known->ego && !(mode & ODESC_NOEGO)) || (obj->ego && store))
+	else if ((obj->known->ego && obj->ego && !(mode & ODESC_NOEGO)) || (obj->ego && store))
 		strnfcat(buf, max, &end, " %s", obj->ego->name);
 	/*else if (aware && !obj->artifact &&
 			 (obj->kind->flavor || obj->kind->tval == TV_SCROLL)) {
@@ -487,6 +494,10 @@ static size_t obj_desc_charges(const struct object *obj, char *buf, size_t max,
 					charging = "lit";
 				else if (!(of_has(obj->flags, OF_NO_FUEL)))
 					return end;
+				if ((of_has(obj->flags, OF_NO_FUEL))) {
+					if (obj->timeout == randcalc(obj->kind->pval, 0, AVERAGE))
+						return end;
+				}
 			}
 			if (obj->number > 1)
 				strnfcat(buf, max, &end, " (%d %s)", number_charging(obj), charging);
@@ -609,7 +620,7 @@ size_t object_desc(char *buf, size_t max, const struct object *obj, int mode)
 				ignore_item_ok(obj) ? " {ignore}" : "");
 
 	/* Egos and kinds whose name we know are seen */
-	if (obj->known->ego && !spoil)
+	if (obj->known->ego && obj->ego && !spoil)
 		obj->ego->everseen = true;
 
 	if (object_flavor_is_aware(obj) && !spoil)

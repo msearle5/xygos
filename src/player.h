@@ -236,7 +236,7 @@ struct player_race {
 	void (*free)(void);			/**< Finish with character hook */
 	void (*levelup)(int, int);	/**< Levelup hook */
 	void (*building)(int, bool, bool *);/**< Building hook */
-	void (*loadsave)(void);		/**< Load/save hook */
+	void (*loadsave)(bool);		/**< Load/save hook */
 };
 
 /**
@@ -378,7 +378,7 @@ struct player_class {
 	void (*free)(void);			/**< Finish with character hook */
 	void (*levelup)(int, int);	/**< Levelup hook */
 	void (*building)(int, bool, bool *);/**< Building hook */
-	void (*loadsave)(void);		/**< Load/save hook */
+	void (*loadsave)(bool);		/**< Load/save hook */
 };
 
 /**

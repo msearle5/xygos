@@ -834,7 +834,7 @@ int rd_player(void)
 		rd_byte(&player->ability_pflags[i]);
 
 	/* Class/race specific */
-	player_hookz(loadsave);
+	player_hook(loadsave, false);
 
 	/* Future use */
 	strip_bytes(32);

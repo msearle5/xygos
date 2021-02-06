@@ -1682,9 +1682,11 @@ int object_find_unknown_rune(struct player *p, struct object *obj)
 	if (object_runes_known(obj)) return -1;
 
 	poss_runes = mem_zalloc(rune_max * sizeof(int));
-	for (i = 0; i < rune_max; i++)
-		if (object_has_rune(obj, i) && !player_knows_rune(p, i))
+	for (i = 0; i < rune_max; i++) {
+		if (object_has_rune(obj, i) && !player_knows_rune(p, i)) {
 			poss_runes[num++] = i;
+		}
+	}
 
 	/* Grab a random rune from among the unknowns  */
 	if (num) {

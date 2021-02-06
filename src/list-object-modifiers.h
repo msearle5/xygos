@@ -3,8 +3,8 @@
  * \brief object modifiers (plusses and minuses) for all objects
  *
  * Changing modifier order will break savefiles. Modifiers
- * below start from 5 on line 11, so a modifier's sequence number is its line
- * number minus 6.
+ * below start from 7 on line 11, so a modifier's sequence number is its line
+ * number minus 4.
  *
  * Modifier properties are defined in lib/gamedata/object_property.txt
  */

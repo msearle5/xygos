@@ -521,7 +521,7 @@ void wr_player(void)
 		wr_byte(player->ability_pflags[i]);
 
 	/* Class specific */
-	player_hookz(loadsave);
+	player_hook(loadsave, false);
 
 	/* Future use */
 	for (i = 0; i < 8; i++) wr_u32b(0L);

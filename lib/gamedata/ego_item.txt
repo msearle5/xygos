@@ -98,26 +98,39 @@
 # together.
 
 
-### Lanterns/torches
+### Lights
+# Candle-likes and glowsticks shouldn't get any egos.
+# Non-rechargeables (keyfob / disposable) could get RTG or Efficiency only
+# Rechargeables (electric torch/tactical/mobilamp) could get any
 
 name:(Etheric)
 info:1800:10
 alloc:10:25 to 100
-type:light
+item:light:electric torch
+item:light:tactical flashlight
+item:light:mobilamp
 values:STEALTH[d2] | RES_LIGHT[1] | RES_DARK[1] | LIGHT[-4]
 min-values:STEALTH[0] | LIGHT[-4]
 
 name:(Efficiency Mod)
 info:2000:10
 alloc:50:1 to 30
-type:light
+item:light:keyfob light
+item:light:disposable flashlight
+item:light:electric torch
+item:light:tactical flashlight
+item:light:mobilamp
 values:LIGHT[1]
 min-values:LIGHT[1]
 
 name:(RTG Mod)
 info:2500:10
 alloc:100:1 to 30
-type:light
+item:light:keyfob light
+item:light:disposable flashlight
+item:light:electric torch
+item:light:tactical flashlight
+item:light:mobilamp
 flags:NO_FUEL
 flags-off:TAKES_FUEL
 
@@ -125,14 +138,18 @@ flags-off:TAKES_FUEL
 name:(IR Vision)
 info:6000:10
 alloc:10:20 to 127
-type:light
+item:light:electric torch
+item:light:tactical flashlight
+item:light:mobilamp
 flags:PROT_BLIND | SEE_INVIS
 
 #imported from S
 name:(Laser Op)
 info:4000:10
 alloc:10:20 to 127
-type:light
+item:light:electric torch
+item:light:tactical flashlight
+item:light:mobilamp
 values:RES_LIGHT[1]
 flags:PROT_BLIND
 

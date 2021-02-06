@@ -1532,6 +1532,10 @@ static bool obj_known_light(const struct object *obj, oinfo_detail_t mode,
 		*intensity = 2;
 	else if (of_has(obj->flags, OF_LIGHT_3))
 		*intensity = 3;
+	else if (of_has(obj->flags, OF_LIGHT_4))
+		*intensity = 4;
+	else if (of_has(obj->flags, OF_LIGHT_5))
+		*intensity = 5;
 	*intensity += obj->known->modifiers[OBJ_MOD_LIGHT];
 
 	/* Prevent unidentified objects (especially artifact lights) from showing
@@ -1547,11 +1551,7 @@ static bool obj_known_light(const struct object *obj, oinfo_detail_t mode,
 		*uses_fuel = true;
 	}
 
-	if (is_light && of_has(obj->known->flags, OF_TAKES_FUEL)) {
-		*refuel_turns = z_info->fuel_lamp;
-	} else {
-		*refuel_turns = 0;
-	}
+	*refuel_turns = 0;
 
 	return true;
 }
@@ -1866,7 +1866,7 @@ static void describe_flavor_text(textblock *tb, const struct object *obj,
 		}
 
 		/* Display an additional ego-item description */
-		if ((ego || (obj->known->ego != NULL)) && obj->ego->text) {
+		if ((ego || (obj->known->ego != NULL)) && obj->ego && obj->ego->text) {
 			if (did_desc) textblock_append(tb, "  ");
 			textblock_append(tb, "%s\n\n", obj->ego->text);
 		} else if (did_desc) {
