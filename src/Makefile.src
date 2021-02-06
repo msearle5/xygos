@@ -82,6 +82,7 @@ X11MAINFILES = main-x11.o
 
 ANGFILES = \
 	c_soldier.o \
+	c_tourist.o \
 	cave.o \
 	cave-map.o \
 	cave-square.o \
@@ -143,6 +144,7 @@ ANGFILES = \
 	obj-util.o \
 	option.o \
 	parser.o \
+	r_android.o \
 	randname.o \
 	player-ability.o \
 	player-attack.o \

@@ -4,3 +4,4 @@
  */
 
 PC(SOLDIER)
+PC(TOURIST)

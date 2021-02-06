@@ -337,6 +337,9 @@ armor:0:0
 pval:3000
 flags:BURNS_OUT
 desc:A BogStan brand D-cell, sealed in plastic and claiming to be ultra-long-life but long past its sell-by date despite that. Still, with luck it should still be usable to some extent.
+msg:You drain the cell dry.
+effect:NOURISH:INC_BY
+dice:30
 
 name:& lithium battery
 type:battery
@@ -350,6 +353,9 @@ armor:0:0
 pval:7500
 flags:BURNS_OUT
 desc:A Flammacell D-size battery, sealed in plastic and not too far past its sell-by date. You can expect to get a lot more use from it than the cheap alternatives.
+msg:You drain the cell dry.
+effect:NOURISH:INC_BY
+dice:75
 
 name:& alcohol cell
 type:battery
@@ -363,6 +369,9 @@ armor:0:0
 pval:15000
 flags:BURNS_OUT
 desc:A D-size Bendacell battery, based on an alcohol fuel cell. It lasts much longer than any normal battery, and is lighter as well. In more than ways than one - drop it and it's as likely as not to go up in flames.
+msg:You drain the cell dry. Hic!
+effect:NOURISH:INC_BY
+dice:100
 
 name:& hydrogen cell
 type:battery
@@ -376,6 +385,9 @@ armor:0:0
 pval:30000
 flags:BURNS_OUT
 desc:A D-size Flammacell battery, based on a hydrogen fuel cell. It lasts a great deal longer than any normal battery, and it's very light too. Apart from a slight tendency to explode it's a real win.
+msg:You drain the cell dry.
+effect:NOURISH:INC_BY
+dice:100
 
 # cooldown, reusable
 name:& atomic cell
@@ -390,6 +402,9 @@ armor:0:0
 pval:7500
 time:500
 desc:A Bettacell atomic battery which can be used like conventional D cells, to recharge any device. While it has a cooldown interlock preventing it from being used twice without waiting for a few minutes, its reserves of energy are sufficient that it will live - if not quite for ever - then at least for longer than you will. Especially if you drop it.
+msg:You recharge from the atomic cell.
+effect:NOURISH:INC_BY
+dice:100
 
 # no or much shorter cooldown, higher pval
 # Should be scarce (e.g. 10), but not unique
@@ -405,7 +420,9 @@ armor:0:0
 pval:30000
 time:25
 desc:The iconic dustbin-sized fusion reactor that powers cars and homes, now shrunk into a D-cell format. Few were made - you may consider yourself lucky to have found one of them. Or not, depending on which rumors you believe about *why* they were so quickly pulled off the market...
-
+msg:You recharge from Mr Fusion.
+effect:NOURISH:INC_BY
+dice:100
 
 ##### Chunks #####
 # Chunks (blocks) are raw materials in 1 kg blocks, used for item creation.
@@ -1946,27 +1963,43 @@ material:titanium
 
 ### Headgear ###
 
-name:& Hard Leather Cap~
+name:& sun hat~
 type:helm
-graphics:]:u
+graphics:]:Straw
+level:1
+weight:80g
+cost:12
+alloc:5:1 to 100
+attack:0d0:0:0
+armor:1:0
+values:RES_LIGHT[1]
+desc:A light, floppy hat which would protect you from the sun, if the sun shone underground.
+
+name:& bike helmet~
+type:helm
+graphics:]:SkyBlue
 level:3
-weight:20
+weight:330g
 cost:12
 alloc:20:3 to 100
 attack:0d0:0:0
 armor:2:0
-desc:A padded skullcap of boiled leather.
+desc:Lightweight and reasonably effective - but inevitably dorky-looking - head protection.
+material:plastic
 
-name:& Metal Cap~
+name:& tin hat~
 type:helm
-graphics:]:s
+graphics:]:ForestGreen
 level:10
-weight:25
+weight:1.6kg
 cost:30
 alloc:20:10 to 100
 attack:1d1:0:0
 armor:3:0
-desc:A pot-helm of steel that protects the skull.
+desc:Heavy but fairly effective protection for your head.
+material:steel
+
+#motorcycle helmet?
 
 name:& Iron Helm~
 type:helm
@@ -2031,6 +2064,17 @@ desc: of gems and jewels; worthy of a High King.
 
 
 ### Body armours ###
+
+name:& loud shirt~
+type:soft armor
+graphics:(:HotPink
+level:1
+weight:150g
+cost:4
+alloc:20:1 to 100
+attack:0d0:0:0
+armor:1:0
+desc:A loose, short-sleeved cotton shirt printed in colourful patterns.
 
 name:& Robe~
 type:soft armor
@@ -5116,7 +5160,7 @@ effect:DETECT_VISIBLE_MONSTERS
 effect-yx:22:40
 time:100
 
-name:Magic Mapping
+name:mapping
 type:rod
 graphics:-:d
 level:65
