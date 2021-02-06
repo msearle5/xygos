@@ -56,6 +56,11 @@
 struct store *stores;
 
 /**
+ * Array[MAX_STORES] of stores as originally read from the config file
+ */
+static struct store *stores_init;
+
+/**
  * The hints array
  */
 struct hint *hints;
@@ -419,21 +424,19 @@ void store_init(void)
 	event_signal_message(EVENT_INITSTATUS, 0, "Initializing stores...");
 	if (run_parser(&store_parser)) quit("Can't initialize stores");
 	stores = flatten_stores(stores);
+	stores_init = mem_alloc(MAX_STORES * sizeof(*stores));
+	memcpy(stores_init, stores, MAX_STORES * sizeof(*stores));
 }
 
 void store_reset(void) {
 	int i, j;
 	struct store *s;
 
+	memcpy(stores, stores_init, MAX_STORES * sizeof(*stores));
 	for (i = 0; i < MAX_STORES; i++) {
 		s = &stores[i];
-		s->bandays = 0;
 		s->banreason = "";
 		s->layaway_idx = -1;
-		s->layaway_day = 0;
-		s->destroy = false;
-		s->income = 0;
-		s->stock_num = 0;
 		s->max_danger = s->low_danger + randint0(1 + s->high_danger - s->low_danger);
 		store_shuffle(s);
 		object_pile_free(s->stock);
