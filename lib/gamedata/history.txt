@@ -255,6 +255,122 @@ phrase:and your mother was a cook.
 chart:26:67:100
 phrase:and your mother was one of the Chief's harem. 
 
+chart:27:28:20
+phrase:You were built 
+chart:27:28:40
+phrase:You were constructed 
+chart:27:28:60
+phrase:You were put together 
+chart:27:28:80
+phrase:You were assembled 
+chart:27:28:100
+phrase:You were created 
+
+chart:28:30:5
+phrase:as a college project.
+chart:28:30:10
+phrase:as a hobby project.
+chart:28:30:15
+phrase:by an Evil Dark Lord.
+chart:28:29:20
+phrase:by a differently-normal inventor
+chart:28:29:30
+phrase:by Sirius Corporation
+chart:28:29:50
+phrase:by a toy company
+chart:28:29:65
+phrase:by a medical company
+chart:28:29:80
+phrase:by a vehicle company
+chart:28:29:90
+phrase:by an aerospace laboratory
+chart:28:29:100
+phrase:by a military research group
+
+chart:29:30:5
+phrase:, because robots are cool!
+chart:29:30:10
+phrase: to use up spare parts.
+chart:29:30:25
+phrase: as a game console accessory.
+chart:29:30:40
+phrase: as a construction mechanoid.
+chart:29:30:60
+phrase: for industrial automation.
+chart:29:30:80
+phrase: to enforce justice.
+chart:29:30:87
+phrase: for battlefield support.
+chart:29:30:94
+phrase: as a secret government project.
+chart:29:30:98
+phrase: for reasons which remain classified.
+chart:29:30:100
+phrase: as the last, best hope to save the galaxy.
+
+chart:30:31:100
+phrase: You have 
+
+chart:31:32:10
+phrase:expressive RGB
+chart:31:32:20
+phrase:dimly glowing red
+chart:31:32:30
+phrase:actinic white
+chart:31:32:40
+phrase:no visible
+chart:31:32:50
+phrase:slowly pulsating
+chart:31:32:60
+phrase:uncannily realistic
+chart:31:32:70
+phrase:a large number of tiny
+chart:31:32:80
+phrase:three faceted
+chart:31:32:90
+phrase:extensible telescopic
+chart:31:32:100
+phrase:glossy, iridescent black
+
+chart:32:33:100
+phrase: eyes, 
+
+chart:33:34:20:
+phrase:a square white glossy fridge-like body,
+chart:33:34:40:
+phrase:a tracked base
+chart:33:34:50:
+phrase:alloy wheels
+chart:33:34:60:
+phrase:a smooth, shiny metal body
+chart:33:34:70:
+phrase:two flexible legs
+chart:33:34:80:
+phrase:rigid, jointed legs
+chart:33:34:100:
+phrase:slim, multiply jointed arms
+
+chart:34:0:10:
+phrase: and polished chrome trim.
+chart:34:0:20:
+phrase: and a rotating antenna on your head.
+chart:34:0:30:
+phrase: and decorative carbon fiber cutouts.
+chart:34:0:40:
+phrase: and multi-hued underlighting.
+chart:34:0:50:
+phrase: and flashy gold plating.
+chart:34:0:60:
+phrase: and colourful RGB lighting effects.
+chart:34:0:70:
+phrase: and holographic accents.
+chart:34:0:80:
+phrase: and original decals.
+chart:34:0:90:
+phrase: and a TV on your tummy.
+chart:34:0:100:
+phrase: and go-faster stripes.
+
 chart:50:51:20
 phrase:You have dark brown eyes, 
 chart:50:51:60

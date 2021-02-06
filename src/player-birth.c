@@ -333,6 +333,7 @@ void roll_hp(void)
 	/* Reroll a level at random and take the maximum or minimum,
 	 * until the sum is right.
 	 */
+	assert(target >= PY_MAX_LEVEL - 1);
 	while (sum != target) {
 		int l = randint1(PY_MAX_LEVEL-1);
 		int prev = level[l];
@@ -395,7 +396,7 @@ static void get_bonuses(void)
 
 
 /**
- * Get the racial history, and social class, using the "history charts".
+ * Get the racial history using the "history charts".
  */
 char *get_history(struct history_chart *chart)
 {
@@ -1277,8 +1278,7 @@ void do_cmd_accept_character(struct command *cmd)
 	player->active_quest = -1;
 
 	/* Class specific initialization */
-	if (player->class->init)
-		player->class->init();
+	player_hookz(init);
 
 	/* Stop the player being quite so dead */
 	player->is_dead = false;

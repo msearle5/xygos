@@ -833,9 +833,8 @@ int rd_player(void)
 	for(i=0; i < (int)PF_SIZE; i++)
 		rd_byte(&player->ability_pflags[i]);
 
-	/* Class specific */
-	if (player->class->loadsave)
-		player->class->loadsave();
+	/* Class/race specific */
+	player_hookz(loadsave);
 
 	/* Future use */
 	strip_bytes(32);

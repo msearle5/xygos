@@ -48,6 +48,9 @@ enum
 	PF_MAX
 };
 
+#define player_hookz(X)			if (player->class->X) { player->class->X(); } if (player->race->X) { player->race->X(); }
+#define player_hook(X, ...)		if (player->class->X) { player->class->X(__VA_ARGS__); } if (player->race->X) player->race->X(__VA_ARGS__);
+
 #define PF_SIZE                FLAG_SIZE(PF_MAX)
 
 #define pf_has(f, flag)        flag_has_dbg(f, PF_SIZE, flag, #f, #flag)
@@ -225,6 +228,13 @@ struct player_race {
 	struct history_chart *history;
 
 	struct element_info el_info[ELEM_MAX]; /**< Resists */
+
+	void *state;				/**< Saved state */
+	void (*init)(void);			/**< Late-init hook */
+	void (*free)(void);			/**< Finish with character hook */
+	void (*levelup)(int, int);	/**< Levelup hook */
+	bool (*building)(int, bool);/**< Building hook */
+	void (*loadsave)(void);		/**< Load/save hook */
 };
 
 /**
@@ -676,5 +686,6 @@ void player_cleanup_members(struct player *p);
 
 /* player-race.c */
 struct player_race *player_id2race(guid id);
+struct player_race *get_race_by_name(const char *name);
 
 #endif /* !PLAYER_H */

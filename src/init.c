@@ -2477,6 +2477,21 @@ static errr run_parse_p_race(struct parser *p) {
 	return parse_file_quit_not_found(p, "p_race");
 }
 
+/* Install class hooks by calling all install_class_X functions,
+ * where X is taken from the list-player-class.h file which lists
+ * all classes with a install function.
+ */
+#undef PR
+#define PR(X) extern void install_race_##X(void);
+#include "list-player-race.h"
+
+static void install_race_hooks(void)
+{
+	#undef PR
+	#define PR(X) install_race_##X();
+	#include "list-player-race.h"
+}
+
 static errr finish_parse_p_race(struct parser *p) {
 	struct player_race *r;
 	int num = 0;
@@ -2487,6 +2502,7 @@ static errr finish_parse_p_race(struct parser *p) {
 		r->ridx = num - 1;
 	}
 	parser_destroy(p);
+	install_race_hooks();
 	return 0;
 }
 

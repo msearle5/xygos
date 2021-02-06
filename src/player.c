@@ -262,8 +262,7 @@ static void adjust_level(struct player *p, bool verbose)
 
 	if (p->max_lev > max_from) {
 		ability_levelup(p, max_from, p->max_lev);
-		if (p->class->levelup)
-			p->class->levelup(max_from, p->max_lev);
+		player_hook(levelup, max_from, p->max_lev);
 	}
 
 	p->upkeep->update |= (PU_BONUS | PU_HP | PU_SPELLS);

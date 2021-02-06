@@ -88,7 +88,7 @@ exp:100
 infravision:0
 history:1
 age:14:6
-height:69:10
+height:69:4
 weight:1650
 weightmod:350
 desc:The race with average abilities, from a human perspective at least. While you won't have bulletproof skin or [bla], there's a reason that is has primarily been humans who have colonized the galaxy - in a word, adaptability. That [blas] in the lowest experience requirement and the most specialization through talents.
@@ -229,27 +229,29 @@ weight:1350
 weightmod:150
 values:RES_DARK[1]
 
-name:Half-Troll
-stats:4:-4:-2:-4:3:0:0
-skill-disarm-phys:-5
-skill-disarm-magic:-5
-skill-device:-8
+name:Android
+stats:3:-2:-4:2:2:-3:2
+skill-disarm-phys:0
+skill-disarm-magic:5
+skill-device:0
 skill-save:-8
-skill-stealth:-2
-skill-search:-9
+skill-stealth:-10
+skill-search:5
 skill-melee:20
-skill-shoot:-10
-skill-throw:-10
+skill-shoot:10
+skill-throw:10
 skill-dig:0
-hitdie:12
+hitdie:325
 exp:120
-infravision:3
-history:21
-age:20:10
-height:90:16
+infravision:6
+history:27
+age:10:2
+height:69:10
 weight:2400
 weightmod:600
-obj-flags:SUST_STR | REGEN
+obj-flags:REGEN
+#values:VUL_ELEC[1]
+desc:Sentient robots have been constructed for a variety of purposes and while artificial intelligence still isn't as good as the real thing, they have many advantages: a tough, fast metal body, precise aiming, rapid regeneration and IR vision. However, you can't easily gain talents and must avoid electric shocks.
 
 name:Dunadan
 stats:1:2:2:2:3:0:0

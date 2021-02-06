@@ -685,7 +685,7 @@ int price_item(struct store *store, const struct object *obj,
 		return 0;
 	}
 
-	if (!you_own(store) && (!store->sidx != STORE_HQ)) {
+	if (!you_own(store) && (store->sidx != STORE_HQ)) {
 		/* This adjusts the price (in either direction) based on CHA
 		 * and level, with CHA being more important at low level and
 		 * the proportion that is dependent on level increasing at high
