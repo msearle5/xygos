@@ -1087,7 +1087,7 @@ void write_character_dump(ang_file *fff)
 	file_putf(fff, "\n\n");
 
 	/* Dump the quiver */
-	file_putf(fff, "\n\n  [Character Quiver]\n\n");
+	file_putf(fff, "\n\n  [Character Ammo]\n\n");
 	for (i = 0; i < z_info->quiver_size; i++) {
 		struct object *obj = player->upkeep->quiver[i];
 		if (!obj) continue;

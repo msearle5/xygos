@@ -3729,7 +3729,7 @@ void do_cmd_quiver(void)
 	int ret = 3;
 
 	if (player->upkeep->quiver_cnt == 0) {
-		msg("You have nothing in your quiver.");
+		msg("You have no ammunition.");
 		return;
 	}
 

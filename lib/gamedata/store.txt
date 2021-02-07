@@ -101,9 +101,9 @@ owner:0:-
 slots:3:14
 turnover:9
 danger:72:90
-#normal:6mm ammo:Iron Shot
-#normal:9mm ammo:Arrow
-#normal:12mm ammo:Bolt
+normal:6mm ammo:6mm bullet
+normal:9mm ammo:9mm bullet
+normal:12mm ammo:12mm bullet
 normal:sword:Dagger
 normal:sword:Main Gauche
 normal:sword:Rapier
@@ -125,10 +125,12 @@ normal:polearm:Battle Axe
 normal:polearm:Lance
 normal:polearm:Lucerne Hammer
 normal:hafted:Whip
-normal:gun:Sling
-normal:gun:Short Bow
-normal:gun:Long Bow
-normal:gun:Light Crossbow
+normal:gun:6mm handgun
+normal:gun:6mm rifle
+normal:gun:9mm handgun
+normal:gun:9mm rifle
+normal:gun:12mm handgun
+normal:gun:12mm rifle
 buy:ammo_6
 buy:ammo_9
 buy:ammo_12

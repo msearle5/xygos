@@ -1611,7 +1611,7 @@ desc:A long pole with a three- or four-pronged head balanced by a long spike.
 
 ##### Guns #####
 
-name:& Sling~
+name:& 6mm handgun~
 type:gun
 graphics:}:u
 level:1
@@ -1623,7 +1623,19 @@ pval:2
 desc:A loop of leather and cords able to hurl stones or shot with
 desc: tremendous velocity.
 
-name:& Short Bow~
+name:& 6mm rifle~
+type:gun
+graphics:}:u
+level:1
+weight:5
+cost:5
+alloc:20:1 to 100
+flags:SHOOTS_6MM
+pval:3
+desc:A loop of leather and cords able to hurl stones or shot with
+desc: tremendous velocity.
+
+name:& 9mm handgun~
 type:gun
 graphics:}:U
 level:3
@@ -1634,7 +1646,7 @@ flags:SHOOTS_9MM
 pval:2
 desc:The traditional hunter's weapon, this light bow is easily drawn.
 
-name:& Long Bow~
+name:& 9mm rifle~
 type:gun
 graphics:}:U
 level:10
@@ -1646,7 +1658,7 @@ pval:3
 desc:As tall as a man, the longbow can drive an arrow through the
 desc: heaviest armour.
 
-name:& Light Crossbow~
+name:& 12mm handgun~
 type:gun
 graphics:}:s
 level:15
@@ -1654,11 +1666,11 @@ weight:110
 cost:140
 alloc:20:15 to 100
 flags:SHOOTS_12MM
-pval:3
+pval:2
 desc:A mechanical bow made of wood, it is cocked to augment the strength
 desc: of its wielder.
 
-name:& Heavy Crossbow~
+name:& 12mm rifle~
 type:gun
 graphics:}:s
 level:30
@@ -1666,7 +1678,7 @@ weight:200
 cost:300
 alloc:20:30 to 100
 flags:SHOOTS_12MM
-pval:4
+pval:3
 desc:This arbalest is so powerful it has to be reinforced with metal and
 desc: requires a crank to be cocked.
 
@@ -1681,7 +1693,7 @@ weight:50g
 cost:3
 pile:100:7d7
 alloc:30:3 to 100
-attack:1d4:0:0
+attack:1d6:0:0
 armor:0:0
 desc:9mm ammunition, suitable for any gun of that caliber.
 
@@ -1719,7 +1731,7 @@ weight:80g
 cost:4
 pile:100:5d7
 alloc:30:3 to 100
-attack:1d5:0:0
+attack:1d10:0:0
 armor:0:0
 desc:12mm ammunition, suitable for any gun of that caliber.
 

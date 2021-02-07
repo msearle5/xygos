@@ -84,7 +84,7 @@ struct cmd_info cmd_item[] =
 	{ "Take off/unwield an item", { 't', 'T'}, CMD_TAKEOFF, NULL, NULL },
 	{ "Examine an item", { 'I' }, CMD_NULL, textui_obj_examine, NULL },
 	{ "Drop an item", { 'd' }, CMD_DROP, NULL, NULL },
-	{ "Fire your missile weapon", { 'f', 't' }, CMD_FIRE, NULL, player_can_fire_prereq },
+	{ "Fire your gun", { 'f', 't' }, CMD_FIRE, NULL, player_can_fire_prereq },
 	{ "Use a staff", { 'u', 'Z' }, CMD_USE_STAFF, NULL, NULL },
 	{ "Aim a wand", {'a', 'z'}, CMD_USE_WAND, NULL, NULL },
 	{ "Zap a rod", {'z', 'a'}, CMD_USE_ROD, NULL, NULL },
@@ -123,7 +123,7 @@ struct cmd_info cmd_item_manage[] =
 {
 	{ "Display equipment listing", { 'e' }, CMD_NULL, do_cmd_equip, NULL },
 	{ "Display inventory listing", { 'i' }, CMD_NULL, do_cmd_inven, NULL },
-	{ "Display quiver listing", { '|' }, CMD_NULL, do_cmd_quiver, NULL },
+	{ "Display ammo listing", { '|' }, CMD_NULL, do_cmd_quiver, NULL },
 	{ "Pick up objects", { 'g' }, CMD_PICKUP, NULL, NULL },
 	{ "Ignore an item", { 'k', KTRL('D') }, CMD_IGNORE, textui_cmd_ignore, NULL },
 };

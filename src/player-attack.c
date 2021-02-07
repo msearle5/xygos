@@ -59,7 +59,7 @@
  * object hits its target this chance is used.
  *
  * When an object misses it also has a chance to break. This is determined by
- * squaring the normaly breakage probability. So an item that breaks 100% of
+ * squaring the normal breakage probability. So an item that breaks 100% of
  * the time on hit will also break 100% of the time on a miss, whereas a 50%
  * hit-breakage chance gives a 25% miss-breakage chance, and a 10% hit breakage
  * chance gives a 1% miss-breakage chance.
@@ -952,6 +952,7 @@ static void ranged_helper(struct player *p,	struct object *obj, int dir,
 
 	bool hit_target = false;
 	bool none_left = false;
+	bool breaks = false;
 
 	struct object *missile;
 	int pierce = 1;
@@ -1016,6 +1017,7 @@ static void ranged_helper(struct player *p,	struct object *obj, int dir,
 				" is destroyed." : " dies.";
 
 			struct attack_result result = attack(p, obj, grid);
+			breaks = result.breaks;
 			int dmg = result.dmg;
 			u32b msg_type = result.msg_type;
 			char hit_verb[20];
@@ -1102,7 +1104,9 @@ static void ranged_helper(struct player *p,	struct object *obj, int dir,
 	}
 
 	/* Drop (or break) near that location */
-	drop_near(cave, &missile, breakage_chance(missile, hit_target), grid, true, false);
+	int breakage = breakage_chance(missile, hit_target);
+	if (breaks) breakage = 100;
+	drop_near(cave, &missile, breakage, grid, true, false);
 }
 
 
@@ -1113,7 +1117,7 @@ static struct attack_result make_ranged_shot(struct player *p,
 		struct object *ammo, struct loc grid)
 {
 	char *hit_verb = mem_alloc(20 * sizeof(char));
-	struct attack_result result = {false, 0, 0, hit_verb};
+	struct attack_result result = {false, true, 0, 0, hit_verb};
 	struct object *gun = equipped_item_by_slot_name(p, "shooting");
 	struct monster *mon = square_monster(cave, grid);
 	int chance = chance_of_missile_hit(p, ammo, gun, grid);
@@ -1151,7 +1155,7 @@ static struct attack_result make_ranged_throw(struct player *p,
 	struct object *obj, struct loc grid)
 {
 	char *hit_verb = mem_alloc(20 * sizeof(char));
-	struct attack_result result = {false, 0, 0, hit_verb};
+	struct attack_result result = {false, false, 0, 0, hit_verb};
 	struct monster *mon = square_monster(cave, grid);
 	int chance = chance_of_missile_hit(p, obj, NULL, grid);
 	int b = 0, s = 0;
@@ -1317,7 +1321,7 @@ void do_cmd_fire_at_nearest(void) {
 
 	/* Require usable ammo */
 	if (!ammo) {
-		msg("You have no ammunition in the quiver to fire.");
+		msg("You have no ammunition ready to fire.");
 		return;
 	}
 

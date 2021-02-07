@@ -361,7 +361,7 @@ static void set_obj_names(bool terse)
 
 		/* Null objects are used to skip lines, or display only a label */		
 		if (!obj) {
-			if ((i < num_head) || !strcmp(items[i].label, "In quiver"))
+			if ((i < num_head) || !strcmp(items[i].label, "Ammo"))
 				strnfmt(items[i].o_name, sizeof(items[i].o_name), "");
 			else
 				strnfmt(items[i].o_name, sizeof(items[i].o_name), "(nothing)");
@@ -443,7 +443,7 @@ static void show_obj_list(olist_detail_t mode)
 
 		/* Quiver may take multiple lines */
 		for (j = 0; j < quiver_slots; j++, i++) {
-			const char *fmt = "in Quiver: %d missile%s";
+			const char *fmt = "ammo: %d round%s";
 			char letter = I2A(in_term ? i - 1 : i);
 
 			/* Number of missiles in this "slot" */
@@ -565,7 +565,7 @@ void show_equip(int mode, item_tester tester)
 		int last_slot = -1;
 
 		strnfmt(items[num_obj].label, sizeof(items[num_obj].label),
-				"In quiver");
+				"Ammo");
 		items[num_obj].object = NULL;
 		num_obj++;
 
@@ -798,7 +798,7 @@ static void menu_header(void)
 
 		/* Indicate legality of quiver */
 		if (use_quiver)
-			my_strcat(out_val, " | for Quiver,", sizeof(out_val));
+			my_strcat(out_val, " | for Ammo,", sizeof(out_val));
 
 		/* Indicate legality of the "floor" */
 		if (allow_floor)
@@ -825,7 +825,7 @@ static void menu_header(void)
 
 		/* Indicate legality of quiver */
 		if (use_quiver)
-			my_strcat(out_val, " | for Quiver,", sizeof(out_val));
+			my_strcat(out_val, " | for Ammo,", sizeof(out_val));
 
 		/* Indicate legality of the "floor" */
 		if (allow_floor)
@@ -835,7 +835,7 @@ static void menu_header(void)
 	/* Viewing quiver */
 	else if (player->upkeep->command_wrk == USE_QUIVER) {
 		/* Begin the header */
-		strnfmt(out_val, sizeof(out_val), "Quiver:");
+		strnfmt(out_val, sizeof(out_val), "Ammo:");
 
 		/* List choices */
 		if (q1 <= q2) {
@@ -877,7 +877,7 @@ static void menu_header(void)
 
 		/* Indicate legality of quiver */
 		if (use_quiver)
-			my_strcat(out_val, " | for Quiver,", sizeof(out_val));
+			my_strcat(out_val, " | for Ammo,", sizeof(out_val));
 
 		/* Indicate legality of the "floor" */
 		if (allow_floor)
@@ -906,7 +906,7 @@ static void menu_header(void)
 
 		/* Indicate legality of quiver */
 		if (use_quiver)
-			my_strcat(out_val, " | for Quiver,", sizeof(out_val));
+			my_strcat(out_val, " | for Ammo,", sizeof(out_val));
 	}
 
 	/* Finish the header */
@@ -982,7 +982,7 @@ bool get_item_action(struct menu *menu, const ui_event *event, int oid, bool *it
 		else if (key == '|') {
 			/* No toggle allowed */
 			if ((q1 > q2) && !allow_all){
-				bell("Cannot select quiver!");
+				bell("Cannot select ammo!");
 			} else {
 				/* Toggle to quiver */
 				player->upkeep->command_wrk = (USE_QUIVER);
@@ -1027,7 +1027,7 @@ static void item_menu_browser(int oid, void *data, const region *local_area)
 	if (olist_mode & OLIST_QUIVER && player->upkeep->command_wrk == USE_INVEN) {
 		/* Quiver may take multiple lines */
 		for (j = 0; j < quiver_slots; j++, i++) {
-			const char *fmt = "in Quiver: %d missile%s\n";
+			const char *fmt = "in Ammo: %d round%s\n";
 			char letter = I2A(i);
 
 			/* Number of missiles in this "slot" */

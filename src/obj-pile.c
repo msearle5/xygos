@@ -914,7 +914,7 @@ bool floor_carry(struct chunk *c, struct loc grid, struct object *drop,
  * Delete an object when the floor fails to carry it, and attempt to remove
  * it from the object list
  */
-static void floor_carry_fail(struct object *drop, bool broke)
+static void floor_carry_fail(struct object *drop, bool broke, bool always)
 {
 	struct object *known = drop->known;
 
@@ -924,7 +924,11 @@ static void floor_carry_fail(struct object *drop, bool broke)
 		char *verb = broke ? VERB_AGREEMENT(drop->number, "breaks", "break")
 			: VERB_AGREEMENT(drop->number, "disappears", "disappear");
 		object_desc(o_name, sizeof(o_name), drop, ODESC_BASE);
-		msg("The %s %s.", o_name, verb);
+		/* For items (such as bullets) that are never recoverable, avoid the
+		 * silly "breaks" message.
+		 */
+		if (!always)
+			msg("The %s %s.", o_name, verb);
 		if (!loc_is_zero(known->grid))
 			square_excise_object(player->cave, known->grid, known);
 		delist_object(player->cave, known);
@@ -1060,7 +1064,7 @@ void drop_near(struct chunk *c, struct object **dropped, int chance,
 
 	/* Handle normal breakage */
 	if (!((*dropped)->artifact) && (randint0(100) < chance)) {
-		floor_carry_fail(*dropped, true);
+		floor_carry_fail(*dropped, true, (chance == 100));
 		return;
 	}
 
@@ -1072,7 +1076,7 @@ void drop_near(struct chunk *c, struct object **dropped, int chance,
 			msg("You feel something roll beneath your feet.");
 		}
 	} else {
-		floor_carry_fail(*dropped, false);
+		floor_carry_fail(*dropped, false, false);
 	}
 }
 
