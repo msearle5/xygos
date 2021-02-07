@@ -3885,7 +3885,18 @@ bool effect_handler_SPOT(effect_handler_context_t *context)
 
 	/* If the origin is an object, use the object's grid (and don't display a ray from the player to the object) */
 	if (context->origin.what == SRC_OBJECT) {
-		pgrid = context->origin.which.object->grid;
+		if ((context->origin.which.object->grid.x != 0) || (context->origin.which.object->grid.y != 0)) {
+			/* There's an XY, so it's on the level - use it */
+			pgrid = context->origin.which.object->grid;
+		} else {
+			/* Held by either a monster or the player.
+			 * If held by a monster, grid is (0,0) and held_m_idx is nonzero.
+			 * If by the player, grid is (0,0) and held_m_idx is 0 - so don't change the XY.
+			 */
+			if (context->origin.which.object->held_m_idx) {
+				pgrid = cave_monster(cave, context->origin.which.object->held_m_idx)->grid;
+			}
+		}
 		flg |= PROJECT_JUMP;
 	}
 
