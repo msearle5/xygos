@@ -5460,6 +5460,8 @@ static bool kind_is_printable(const struct object_kind *k)
 {
 	if (k->tval == TV_BLOCK)
 		return false;
+	if (k->tval == TV_CHEST)
+		return false;
 	return true;
 }
 
@@ -5485,6 +5487,7 @@ static bool kind_is_printable(const struct object_kind *k)
 bool effect_handler_PRINT(effect_handler_context_t *context)
 {
 	int skill = player->state.skills[SKILL_DEVICE];
+	struct object *printer = (struct object *)context->obj;
 	int maxchunks = context->subtype;
 	int maxmetal = context->radius;
 	struct object **chunk = NULL;
@@ -5557,18 +5560,22 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 	 */
 	if (nchunks == 0)
 		nogo = "You can't print anything as you have no raw materials (blocks).";
-
-	/* Skip high level chunks. */
-	for(i=0; i<nchunks; i++) {
-		if ((chunk[i]->pval - maxmetal) > 1) {
-			nchunks--;
-			chunk[i] = chunk[nchunks];
-			i--;
-			break;
+	else {
+		/* Skip high level chunks. */
+		for(i=0; i<nchunks; i++) {
+			if ((chunk[i]->pval - maxmetal) > 1) {
+				nchunks--;
+				chunk[i] = chunk[nchunks];
+				i--;
+				break;
+			}
 		}
+		if (nchunks == 0)
+			nogo = "You can't print anything as you only have blocks that your printer can't use.";
 	}
-	if (nchunks == 0)
-		nogo = "You can't print anything as you only have blocks that your printer can't use.";
+
+	/* Easymod or Maximod printers are easier to use */
+	bool easymode = (printer->ego && (my_stristr(printer->ego->name, "Easy") || my_stristr(printer->ego->name, "Maxi")));
 
 	/* Scan item kinds.
 	 * Get a list of printable items.
@@ -5644,6 +5651,10 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 
 				/* Device skill (scaled 0 to ~140) helps */
 				difficulty -= (skill * 2) / 3;
+
+				/* Easymod/Maximod printers help */
+				if (easymode)
+					difficulty -= 20;
 
 				/* 
 				 * There should be no perfect chance (but at -100 you will be 5% or so,
@@ -5756,20 +5767,22 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 	int toprow = 0;
 	do 
 	{
-		/* Print a no-go line or the selected item */
+		/* Print a no-go line or the selected item (Move to two lines?) */
 		if (nogo)
 			c_prt(COLOUR_ORANGE, nogo, top, 0);
 		else {
 			char buf[80];
-			strnfmt(buf, sizeof(buf), "%d%%: %d %s: %s", item[selected].difficulty / 100, item[selected].chunks, chunkname[item[selected].chunk_idx], item[selected].name);
+			strnfmt(buf, sizeof(buf), "%d%% fail: %d/%d %s (%d%% efficient): %s", (item[selected].difficulty + 50) / 100, item[selected].chunks, chunk[item[selected].chunk_idx]->number, chunkname[item[selected].chunk_idx], (efficiency + 5) / 10, item[selected].name);
 			c_prt(item[selected].colour, buf, top, 0);
 		}
 
 		/* Print a grid of items - left to right, top to bottom */
-		for(int y=0;y<rows;y++) {
-			for(int x=0;x<columns;x++) {
-				int idx = x + (y * columns) + (toprow * rows * columns);
-				c_prt(idx == selected ? COLOUR_L_WHITE : item[idx].colour, item[idx].name, top + 2 + y, x * (longestname + 1));
+		if (!nogo) {
+			for(int y=0;y<rows;y++) {
+				for(int x=0;x<columns;x++) {
+					int idx = x + (y * columns) + (toprow * rows * columns);
+					c_prt(idx == selected ? COLOUR_L_WHITE : item[idx].colour, item[idx].name, top + 2 + y, x * (longestname + 1));
+				}
 			}
 		}
 		Term_redraw();
@@ -5839,7 +5852,7 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 	if (selected >= 0) {
 		struct printkind *pk = &item[selected];
 		int rmblocks = pk->chunks;
-		bool success = false;
+		bool quiet = false;
 
 		/* Difficulty check */
 		if (randint0(10000) > pk->difficulty) {
@@ -5877,30 +5890,12 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 			/* Create */
 			object_prep(result, kind, lev, RANDOMISE);
 			apply_magic(result, lev, false, good, great, false);
-			
-			/* IDed */
-			struct object *known = object_new();
-			result->known = known;
-			object_set_base_known(result);
-			object_flavor_aware(result);
-			known->pval = result->pval;
-			known->effect = result->effect;
-			known->notice |= OBJ_NOTICE_ASSESSED;
-			kind->everseen = true;
 
-			/* Carry it, with a message */
-			inven_carry(player, result, true, true);
-			
-			/* and complete ID (runes) */
-			int rune;
-			do {
-				rune = object_find_unknown_rune(player, obj);
-				if (rune >= 0)
-					player_learn_rune(player, rune, false);
-			} while (rune >= 0);
-			update_player_object_knowledge(player);
-
-			success = true;
+			result->origin = ORIGIN_PRINTER;
+			result->origin_depth = player->depth;
+		
+			drop_near(cave, &result, 0, player->grid, true, false);
+			quiet = true;
 		} else {
 			/* Failed - no item.
 			 * Test for a critical failure.
@@ -5912,17 +5907,37 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 				diff /= 10;
 			}
 			if (randint0(10000) < diff) {
-				/* Oops */
-				msg("The printer smokes, chokes and tears itself apart!");
-				rmblocks = 0;
+				/* Printer tries to destroy itself.
+				 * If it has the "duramod" then it will survive at least one such event (setting the FRAGILE flag) and possibly
+				 * more, depending on a high-difficulty roll.
+				 */
+				bool save = false;
+				if (printer->ego && (my_stristr(printer->ego->name, "Dura") || my_stristr(printer->ego->name, "Maxi")))
+					save = (!of_has(printer->flags, OF_FRAGILE));
+				if (save) {
+					msg("The printer smokes, chokes and nearly tears itself apart!");
+					if (randint0(10000) < 3000 + diff) {
+						msg("It barely remains intact, but looks much more fragile now.");
+						of_on(printer->flags, OF_FRAGILE);
+						player_learn_flag(player, OF_FRAGILE);
+					} else {
+						msg("Luckily it remains undamaged, although the workpiece is ruined.");
+					}
+					quiet = true;
+				} else {
 
-				/* Destroy printer! */
-				struct object *destroyed;
-				bool none_left = false;
-				destroyed = gear_object_for_use((struct object *)context->obj, 1, false, &none_left);
-				if (destroyed->known)
-					object_delete(&destroyed->known);
-				object_delete(&destroyed);
+					/* Oops */
+					msg("The printer smokes, chokes and tears itself apart!");
+					rmblocks = 0;
+
+					/* Destroy printer! */
+					struct object *destroyed;
+					bool none_left = false;
+					destroyed = gear_object_for_use(printer, 1, false, &none_left);
+					if (destroyed->known)
+						object_delete(&destroyed->known);
+					object_delete(&destroyed);
+				}
 			} else {
 				/* Sometimes use less, but no credit for using the right material */
 				if (randint0(10000) < pk->difficulty) {
@@ -5934,9 +5949,11 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 		/* Destroy blocks */
 		if (rmblocks) {
 			char o_name[80];
+			struct object *destroyed;
+			bool none_left = false;
 
 			/* Display the number destroyed (but not if an item was created) */
-			if (!success) {
+			if (!quiet) {
 				int number = chunk[pk->chunk_idx]->number;
 				chunk[pk->chunk_idx]->number = rmblocks;
 				object_desc(o_name, sizeof(o_name), chunk[pk->chunk_idx], ODESC_BASE | ODESC_PREFIX);
@@ -5946,15 +5963,13 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 
 			if (rmblocks == chunk[pk->chunk_idx]->number) {
 				/* Destroy the whole stack */
-				struct object *destroyed;
-				bool none_left = false;
 				destroyed = gear_object_for_use(chunk[pk->chunk_idx], rmblocks, false, &none_left);
 				if (destroyed->known)
 					object_delete(&destroyed->known);
 				object_delete(&destroyed);
 			} else {
 				/* Reduce the number */
-				chunk[pk->chunk_idx]->number -= rmblocks;
+				destroyed = gear_object_for_use(chunk[pk->chunk_idx], rmblocks, false, &none_left);
 			}
 		}
 	}

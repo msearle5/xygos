@@ -5523,7 +5523,7 @@ level:5
 alloc:10:1 to 100
 cost:370
 weight:1800g
-pval:700
+pval:500
 effect:PRINT:2:0
 desc:The famous self-replicable hobbyist's printer - it's not big and can't handle metals, but it is reliable and effective for what it can do - and the price can't be beat!
 material:plastic
@@ -5547,7 +5547,7 @@ level:10
 alloc:5:1 to 100
 cost:600
 weight:1200g
-pval:750
+pval:550
 effect:PRINT:2:1
 desc:A printer designed to be especially compact and lightweight, suitable for plastic and light metal work.
 material:aluminium
@@ -5571,7 +5571,7 @@ level:28
 alloc:3:6 to 100
 cost:7200
 weight:8500g
-pval:800
+pval:700
 effect:PRINT:5:2
 desc:A medium-sized printer capable of handling all common metals - steel, titanium, aluminium - as well as plastics.
 material:steel
@@ -5595,7 +5595,7 @@ level:65
 alloc:2:30 to 100
 cost:18000
 weight:18.7kg
-pval:825
+pval:775
 effect:PRINT:5:3
 desc:A printer intended for use with exotic materials such as unobtainium.  Apart from its modest size, it's as good as it gets.
 material:titanium

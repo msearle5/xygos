@@ -662,7 +662,7 @@ id-type:on wield
 code:FRAGILE
 power:-1
 bindui:fragile_ui_compact_0:0
-desc:Can be destroyed if you attempt to remove its curses
+desc:Easily destroyed by failure to use or repair it
 
 name:intensity 2 light
 type:flag

@@ -122,6 +122,7 @@ item:light:tactical flashlight
 item:light:mobilamp
 values:LIGHT[1]
 min-values:LIGHT[1]
+desc:It runs for twice as long from a recharge.
 
 name:(RTG Mod)
 info:2500:10
@@ -133,6 +134,7 @@ item:light:tactical flashlight
 item:light:mobilamp
 flags:NO_FUEL
 flags-off:TAKES_FUEL
+desc:It never needs to be recharged.
 
 #imported from S
 name:(IR Vision)
@@ -152,6 +154,52 @@ item:light:tactical flashlight
 item:light:mobilamp
 values:RES_LIGHT[1]
 flags:PROT_BLIND
+
+### Printers ###
+# Ecomod = improve pval (and so reduce the amount of wasted material)
+# Easymod = improve chance of success (-20 to difficulty: equivalent to 10 character levels,
+# 	taking a 8% fail to 5.2%, a 52% to 24.8% and a 95% to 91% i.e. most of the win is for medium
+#	difficulties.
+# Duramod = can't easily be destroyed by "choking", you get at least one save (using the "fragile flag").
+#			As printers normally stay at home, the IGNOREs are just for looks
+# Maximod = all of the above 3 mods combined.
+# Portamod = light weight (50 to 68%)
+
+# Warning!
+#	Some of these names (Dura,Easy,Maxi) are searched for directly in effects.c:effect_handler_PRINT
+#	Don't change them without also changing the source.
+
+name:(Duramod)
+info:3000:10
+alloc:5:10 to 80
+type:printer
+flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
+
+name:(Ecomod)
+info:5000:10
+alloc:10:20 to 90
+type:printer
+pval:860+M130
+
+name:(Easymod)
+info:2000:10
+alloc:1:1 to 70
+type:printer
+## device skill? It's not wielded eq though, so would be awkward.
+#values:
+
+name:(Maximod)
+info:10000:25
+alloc:25:30 to 127
+type:printer
+flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
+pval:900+M90
+
+name:(Portamod)
+info:3000:10
+alloc:5:10 to 80
+type:printer
+weight:47+3d7
 
 ### Weapons ###
 

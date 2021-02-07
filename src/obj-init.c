@@ -2238,6 +2238,30 @@ static enum parser_error parse_ego_combat(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_ego_weight(struct parser *p) {
+	struct random weight = parser_getrand(p, "weight");
+	struct ego_item *e = parser_priv(p);
+
+	if (!e)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
+	e->weight = weight;
+
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_ego_pval(struct parser *p) {
+	struct random pval = parser_getrand(p, "pval");
+	struct ego_item *e = parser_priv(p);
+
+	if (!e)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
+	e->pval = pval;
+
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_ego_min(struct parser *p) {
 	int th = parser_getint(p, "th");
 	int td = parser_getint(p, "td");
@@ -2492,6 +2516,8 @@ struct parser *init_parse_ego(void) {
 	parser_reg(p, "type sym tval", parse_ego_type);
 	parser_reg(p, "item sym tval sym sval", parse_ego_item);
 	parser_reg(p, "combat rand th rand td rand ta", parse_ego_combat);
+	parser_reg(p, "weight rand weight", parse_ego_weight);
+	parser_reg(p, "pval rand pval", parse_ego_pval);
 	parser_reg(p, "min-combat int th int td int ta", parse_ego_min);
 	parser_reg(p, "effect sym eff ?sym type ?int radius ?int other", parse_ego_effect);
 	parser_reg(p, "dice str dice", parse_ego_dice);

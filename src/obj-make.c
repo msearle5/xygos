@@ -425,6 +425,13 @@ void ego_apply_magic(struct object *obj, int level)
 	obj->to_d += randcalc(obj->ego->to_d, level, RANDOMISE);
 	obj->to_a += randcalc(obj->ego->to_a, level, RANDOMISE);
 
+	/* Apply pval */
+	obj->pval = MAX(obj->pval, randcalc(obj->ego->pval, level, RANDOMISE));
+	int weightmul = randcalc(obj->ego->weight, level, RANDOMISE);
+	if (weightmul != 0) {
+		obj->weight = ((obj->weight * weightmul) + (obj->weight / 2)) / 100;
+	}
+
 	/* Apply modifiers */
 	for (i = 0; i < OBJ_MOD_MAX; i++) {
 		x = randcalc(obj->ego->modifiers[i], level, RANDOMISE);

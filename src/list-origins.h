@@ -31,3 +31,4 @@ ORIGIN(DROP_MIMIC,	2,	"Dropped by %s %s") /* from mimics */
 ORIGIN(DROP_WIZARD,	2,	"Dropped by %s %s") /* from wizard mode summons */
 ORIGIN(DROP_SHK,	2,	"Dropped by a shopkeeper") /* from shks */
 ORIGIN(PROMOTION,	0,	"Supplied from Field HQ")
+ORIGIN(PRINTER,		1,	"Constructed yourself %s")
