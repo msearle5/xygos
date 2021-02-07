@@ -5440,6 +5440,18 @@ static int difficulty_colour(int diff)
 	return COLOUR_PURPLE;
 }
 
+/* Return true if it is possible (in any circumstances) to print an item.
+ * (This does not have to check the material)
+ * Unprintable items include blocks, special artifacts, etc. There should probably be a flag for
+ * more granular control.
+ */ 
+static bool kind_is_printable(const struct object_kind *k)
+{
+	if (k->tval == TV_BLOCK)
+		return false;
+	return true;
+}
+
 /** The effect of a printer
  * Requires INT and device skill for success
  * Higher level printers help, higher level items hurt.
@@ -5555,17 +5567,21 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 	if (nchunks) {
 		for(i=0;i<z_info->k_max; i++) {
 			const struct object_kind *k = k_info + i;
-
-			/* Check if it's a usable material */
 			bool ok = false;
-			int material;
-			for(int j=0;j<nchunks;j++) {
-				if (chunk[j]->kind->material == k->material) {
-					ok = true;
-					material = j;
-					break;
+			int material = 0;
+
+			/* Check if it's a printable item */
+			if (kind_is_printable(k)) {
+				/* Check if it's a usable material */
+				for(int j=0;j<nchunks;j++) {
+					if (chunk[j]->kind->material == k->material) {
+						ok = true;
+						material = j;
+						break;
+					}
 				}
 			}
+
 			/* If so, check the weight is not more than you have, or more than
 			 * the printer can do.
 			 **/
@@ -5581,6 +5597,7 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 						ok = false;
 				}
 			}
+
 			/* The printer and materials can do it. You may not be able to, though.
 			 * Compute a difficulty (chance of failure), and if it's near 100%
 			 * don't even list it.
