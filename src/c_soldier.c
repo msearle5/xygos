@@ -6,7 +6,8 @@
  * mostly, but prefering long guns, especially firearms (rather than energy weapons). Not good with home-made
  * stuff but can throw. May forbid Mob/Trade Connection, store ownership etc?
  * (They are risking being OP and too similar to Marksman, so the "long guns" might get nerfed)
- * Require quests to advance? If so, do store EXP or it would be too annoying
+ * Require quests to advance? If so, do store EXP (block levelling up, rather than accumulation of experience)
+ * or it would be too annoying.
  */
 
 #include "player.h"
@@ -36,11 +37,12 @@ struct soldier_state {
  **/
 static void soldier_loadsave(bool complete) {
 	struct soldier_state *state;
+
 	if (complete) {
 		struct store *store = get_store_by_name("Field HQ");
 		if (store->owner->name)
 			mem_free(store->owner->name);
-		state = (struct soldier_state *)player->class->state;;
+		state = (struct soldier_state *)player->class->state;
 		store->owner->name = string_make(state->storename);
 	} else {
 		if (player->class->state == NULL)
@@ -48,7 +50,15 @@ static void soldier_loadsave(bool complete) {
 		state = (struct soldier_state *)player->class->state;
 		rdwr_s32b(&state->gift_waiting);
 		rdwr_s32b(&state->gift_given);
-		rdwr_string(&state->storename);
+		/* This only happens when saving at quit - the state has already gone away.
+		 * There's no need to keep it, though - so store an empty string.
+		 */
+		if (saving && !state->storename) {
+			char *empty = "";
+			rdwr_string(&empty);
+		} else {
+			rdwr_string(&state->storename);
+		}
 	}
 }
 
