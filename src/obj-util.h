@@ -63,6 +63,7 @@ bool obj_needs_aim(struct object *obj);
 bool obj_can_fail(const struct object *o);
 
 int get_use_device_chance(const struct object *obj);
+bool obj_is_pack_activatable(const struct object *obj);
 void distribute_charges(struct object *source, struct object *dest, int amt);
 int number_charging(const struct object *obj);
 bool recharge_timeout(struct object *obj);

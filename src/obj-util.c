@@ -672,11 +672,31 @@ bool obj_can_zap(const struct object *obj)
 }
 
 /**
+ * Determine if an object is activatable from inventory.
+ * Most activatable items aren't, but printers (and any future unequippable activatable tools) must be.
+ * Lights are less clunky if they can be activated in the pack.
+ */
+bool obj_is_pack_activatable(const struct object *obj)
+{
+	if (obj_is_activatable(obj)) {
+		/* Object has an activation */
+		if (object_is_equipped(player->body, obj)) {
+			/* If so, and you are wearing it, it's activatable */
+			return true;
+		} else {
+			/* If not, it might still be activatable if it's the right tval */
+			if (tval_is_printer(obj)) return true;
+			if (tval_is_light(obj)) return true;
+		}
+	}
+	return false;
+}
+
+/**
  * Determine if an object is activatable
  */
 bool obj_is_activatable(const struct object *obj)
 {
-	if (!tval_is_wearable(obj)) return false;
 	return (object_effect(obj) && (!of_has(obj->flags, OF_NO_ACTIVATION))) ? true : false;
 }
 

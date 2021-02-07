@@ -788,8 +788,8 @@ void do_cmd_activate(struct command *cmd)
 	if (cmd_get_item(cmd, "item", &obj,
 			"Activate which item? ",
 			"You have no items to activate.",
-			obj_is_activatable,
-			USE_EQUIP | SHOW_FAIL) != CMD_OK) return;
+			obj_is_pack_activatable,
+			USE_EQUIP | USE_INVEN | SHOW_FAIL) != CMD_OK) return;
 
 	if (!obj_can_activate(obj)) {
 		msg("That item is still charging.");

@@ -5464,25 +5464,34 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 	int skill = player->state.skills[SKILL_DEVICE];
 	int maxchunks = context->subtype;
 	int maxmetal = context->radius;
-	struct object **chunk;
-	struct printkind *item;
+	struct object **chunk = NULL;
+	struct printkind *item = NULL;
 	int nchunks = 0;
 	/* This is a divisor modifying the weight needed to make an item: perfect efficiency would be 1000 */
-	int efficiency = 800;
+	int efficiency = context->obj->pval;
 	const char *nogo = NULL;
 	int longestname = 0;
-	const char **chunkname;
+	const char **chunkname = NULL;
 
 	/* First clear the screen and print the help */
 	screen_save();
 	Term_clear();
 	struct textblock *tb = textblock_new();
-	textblock_append_c(tb, COLOUR_SLATE, "Select an item to attempt to create one from blocks. Higher level materials (especially when it's more than the printer is really meant for), higher level items, items requiring more blocks, rare or expensive items are all likely to push the difficulty up. Large format or high level printers will help, as will your level and device skill. The items displayed are sorted from easiest to most difficult and coloured based on your chance of success, which is also displayed numerically for the currently selected item. Use the cursor keys to select an item, Return to print it, Page Up/Down to move between pages or Space to exit.");
+	textblock_append_c(tb, COLOUR_WHITE, "Select an item to attempt to create one from blocks.");
+	textblock_append_c(tb, COLOUR_SLATE, " Higher level materials (especially when it's more than the printer is really meant for), higher level items, items requiring more blocks, rare or expensive items are all likely to push the difficulty up. Large format or high level printers will help, as will your level and device skill. The items displayed are sorted from easiest to most difficult and coloured based on your chance of success, which is also displayed numerically for the currently selected item. Use the ");
+	textblock_append_c(tb, COLOUR_WHITE, "cursor keys");
+	textblock_append_c(tb, COLOUR_SLATE, " to select an item, ");
+	textblock_append_c(tb, COLOUR_WHITE, "Return ");
+	textblock_append_c(tb, COLOUR_SLATE, "to print it, ");
+	textblock_append_c(tb, COLOUR_WHITE, "Page Up/Down ");
+	textblock_append_c(tb, COLOUR_SLATE, "to move between pages or ");
+	textblock_append_c(tb, COLOUR_WHITE, "Space ");
+	textblock_append_c(tb, COLOUR_SLATE, "to exit.");
 	size_t *line_starts = NULL;
 	size_t *line_lengths = NULL;
 	int w, h;
 	Term_get_size(&w, &h);
-	int top = textblock_calculate_lines(tb, &line_starts, &line_lengths, w) + 2;
+	int top = textblock_calculate_lines(tb, &line_starts, &line_lengths, w) + 1;
 	textui_textblock_place(tb, SCREEN_REGION, NULL);
 	textblock_free(tb);
 
@@ -5494,8 +5503,8 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 	for(obj=player->gear; obj; obj=obj->next)
 		if (obj->tval == TV_BLOCK)
 			nchunks++;
-	chunk = malloc(sizeof(*chunk) * nchunks);
-	chunkname = malloc(sizeof(*chunkname) * nchunks);
+	chunk = mem_alloc(sizeof(*chunk) * nchunks);
+	chunkname = mem_alloc(sizeof(*chunkname) * nchunks);
 	int i = 0;
 	for(obj=player->gear; obj; obj=obj->next)
 		if (obj->tval == TV_BLOCK)
@@ -5562,14 +5571,18 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 			 **/
 			int chunks = 0;
 			if (ok) {
-				chunks = k->weight / efficiency;
-				if (chunks > chunk[material]->number)
-					ok = false;
-				if (chunks > maxchunks)
-					ok = false;
+				if (k->weight < 2000000) {
+					chunks = (k->weight + 1000) / efficiency;
+					if (chunks <= 0)
+						chunks = 1;
+					if (chunks > chunk[material]->number)
+						ok = false;
+					if (chunks > maxchunks)
+						ok = false;
+				}
 			}
 			/* The printer and materials can do it. You may not be able to, though.
-			 * Compute a difficulty (chance of success), and if it's near zero
+			 * Compute a difficulty (chance of failure), and if it's near 100%
 			 * don't even list it.
 			 */
 			int difficulty = -1;
@@ -5705,15 +5718,13 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 	 * items are listed by difficulty and coloured by difficulty, so precise difficulty
 	 * (and the # of chunks) can be moved out, displayed only for the item at the
 	 * cursor. The selection should also be done without adding columns - e.g. display
-	 * in white (using the colour for the current-item info).
+	 * the selected item in white (or pastels, or inverse?) using the colour for the
+	 * current-item info).
 	 */
 	bool leaving = false;
 	int selected = 0;
 	int columns = w / (longestname + 1);
 	int rows = h - (top + 2);
-	//int totalrows = nprintable / rows;
-	//int pages = (totalrows + rows - 1) / rows;
-	//int page = 0;
 	int toprow = 0;
 	do 
 	{
@@ -5722,7 +5733,7 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 			c_prt(COLOUR_ORANGE, nogo, top, 0);
 		else {
 			char buf[80];
-			strnfmt(buf, sizeof(buf), "%d%%: %d %s: %s", item[selected].difficulty / 100, chunkname[item[selected].chunk_idx], item[selected].name);
+			strnfmt(buf, sizeof(buf), "%d%%: %d %s: %s", item[selected].difficulty / 100, item[selected].chunks, chunkname[item[selected].chunk_idx], item[selected].name);
 			c_prt(item[selected].colour, buf, top, 0);
 		}
 
@@ -5730,7 +5741,7 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 		for(int y=0;y<rows;y++) {
 			for(int x=0;x<columns;x++) {
 				int idx = x + (y * columns) + (toprow * rows * columns);
-				c_prt(idx == selected ? COLOUR_L_WHITE : item[idx].colour, item[idx].name, top + 2 + y, 0);
+				c_prt(idx == selected ? COLOUR_L_WHITE : item[idx].colour, item[idx].name, top + 2 + y, x * (longestname + 1));
 			}
 		}
 		Term_redraw();
@@ -5799,16 +5810,135 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 	/* Do we have an item? If so, try to build one */
 	if (selected >= 0) {
 		struct printkind *pk = &item[selected];
-		
+		int rmblocks = pk->chunks;
+		bool success = false;
+
 		/* Difficulty check */
-		if (randint0(10000) < pk->difficulty) {
+		if (randint0(10000) > pk->difficulty) {
+			msg("The printer whirs, blurs and something bounces out...");
+			struct object_kind *kind = (struct object_kind *)pk->kind;
+
+			/* Create an object - select level, good/great? */
+			struct object *result = object_new();
+
+			/* Level is taken from skill and player level (in roughly equal proportion, scaled 0 to ~100).
+			 * Items are 'good' or 'great' if this level exceeds the item's level.
+			 * Artifacts can't be created, and the "extra_roll" flag only affects the chance of creating
+			 * an artifact so this is always false.
+			 */
+			int lev = ((skill * 3) + player->lev) / 2;
+			int itemlev = kind->level;
+			bool good = false;
+			bool great = false;
+			if (lev < itemlev) {
+				/* 'Difficult' - sometimes good */
+				if (randint0(itemlev) < lev)
+					good = true;
+			} else {
+				/* 'Easy' - always good, sometimes great */
+				good = true;
+				if (randint0(lev) > itemlev)
+					great = true;
+			}
+			/* ... but low skill / level players will not always see that bonus */
+			if (randint0(20) < lev)
+				good = great = false;
+			if (randint0(40) < lev)
+				great = false;
+
+			/* Create */
+			object_prep(result, kind, lev, RANDOMISE);
+			apply_magic(result, lev, false, good, great, false);
 			
+			/* IDed */
+			struct object *known = object_new();
+			result->known = known;
+			object_set_base_known(result);
+			object_flavor_aware(result);
+			known->pval = result->pval;
+			known->effect = result->effect;
+			known->notice |= OBJ_NOTICE_ASSESSED;
+			kind->everseen = true;
+
+			/* Carry it, with a message */
+			inven_carry(player, result, true, true);
+			
+			/* and complete ID (runes) */
+			int rune;
+			do {
+				rune = object_find_unknown_rune(player, obj);
+				if (rune >= 0)
+					player_learn_rune(player, rune, false);
+			} while (rune >= 0);
+			update_player_object_knowledge(player);
+
+			success = true;
+		} else {
+			/* Failed - no item.
+			 * Test for a critical failure.
+			 */
+			int diff = pk->difficulty;
+			if (chunk[pk->chunk_idx]->pval <= maxmetal) {
+				/* Usually be kind */
+				diff -= 500;
+				diff /= 10;
+			}
+			if (randint0(10000) < diff) {
+				/* Oops */
+				msg("The printer smokes, chokes and tears itself apart!");
+				rmblocks = 0;
+
+				/* Destroy printer! */
+				struct object *destroyed;
+				bool none_left = false;
+				destroyed = gear_object_for_use((struct object *)context->obj, 1, false, &none_left);
+				if (destroyed->known)
+					object_delete(&destroyed->known);
+				object_delete(&destroyed);
+			} else {
+				/* Sometimes use less, but no credit for using the right material */
+				if (randint0(10000) < pk->difficulty) {
+					rmblocks = randint1(rmblocks);
+				}
+			}
+		}
+
+		/* Destroy blocks */
+		if (rmblocks) {
+			char o_name[80];
+
+			/* Display the number destroyed (but not if an item was created) */
+			if (!success) {
+				int number = chunk[pk->chunk_idx]->number;
+				chunk[pk->chunk_idx]->number = rmblocks;
+				object_desc(o_name, sizeof(o_name), chunk[pk->chunk_idx], ODESC_BASE | ODESC_PREFIX);
+				chunk[pk->chunk_idx]->number = number;
+				msg("The printer shakes, quakes and turns %s into useless swarf.", o_name);
+			}
+
+			if (rmblocks == chunk[pk->chunk_idx]->number) {
+				/* Destroy the whole stack */
+				struct object *destroyed;
+				bool none_left = false;
+				destroyed = gear_object_for_use(chunk[pk->chunk_idx], rmblocks, false, &none_left);
+				if (destroyed->known)
+					object_delete(&destroyed->known);
+				object_delete(&destroyed);
+			} else {
+				/* Reduce the number */
+				chunk[pk->chunk_idx]->number -= rmblocks;
+			}
 		}
 	}
 
-	free(item);
-	free(chunk);
-	free(chunkname);
+	/* Clean up */
+	mem_free(item);
+	mem_free(chunk);
+	mem_free(chunkname);
+
+	/* Weight, etc. */
+	player->upkeep->update |= (PU_BONUS | PU_PANEL | PU_TORCH | PU_HP);
+	screen_load();
 	return true;
 }
 
