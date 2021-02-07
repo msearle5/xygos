@@ -796,7 +796,31 @@ void do_cmd_activate(struct command *cmd)
 		return;
 	}
 
-	use_aux(cmd, obj, USE_TIMEOUT, MSG_ACT_ARTIFACT);
+	/* Special case for candle type ("MIMIC_KNOW") light sources in your pack (equipped lights
+	 * must still activate like other artifacts)
+	 * This equips the item and unequips it, taking care to give no excess messages except when
+	 * dropping a light from a stack.
+	 **/
+	if ((tval_is_light(obj)) && (kf_has(obj->kind->kind_flags, KF_MIMIC_KNOW)) && 
+		(!object_is_equipped(player->body, obj))) {
+		char o_name[80];
+		int number = obj->number;
+		obj->number = 1;
+		object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX | ODESC_BASE);
+		obj->number = number;
+		msg("You light %s.", o_name);
+		int slot = wield_slot(obj);
+		struct object *equip_obj = slot_object(player, slot);
+		if (equip_obj)
+			do_inven_takeoff(equip_obj, false, false);
+		do_inven_wield(obj, slot, false, false);
+		do_inven_takeoff(obj, false, true);
+		if (equip_obj)
+			do_inven_wield(equip_obj, slot, false, true);
+		return;
+	} else {
+		use_aux(cmd, obj, USE_TIMEOUT, MSG_ACT_ARTIFACT);
+	}
 }
 
 /**

@@ -678,6 +678,9 @@ bool obj_can_zap(const struct object *obj)
  */
 bool obj_is_pack_activatable(const struct object *obj)
 {
+	if ((tval_is_light(obj)) && (kf_has(obj->kind->kind_flags, KF_MIMIC_KNOW)))
+		return true;
+
 	if (obj_is_activatable(obj)) {
 		/* Object has an activation */
 		if (object_is_equipped(player->body, obj)) {
@@ -686,7 +689,6 @@ bool obj_is_pack_activatable(const struct object *obj)
 		} else {
 			/* If not, it might still be activatable if it's the right tval */
 			if (tval_is_printer(obj)) return true;
-			if (tval_is_light(obj)) return true;
 		}
 	}
 	return false;
@@ -705,6 +707,11 @@ bool obj_is_activatable(const struct object *obj)
  */
 bool obj_can_activate(const struct object *obj)
 {
+	/* Candle type light sources can always be activated - it's equivalent to equipping and unequipping it.
+	 * And not equivalent to running the effect (which happens on timeout).
+	 */
+	if ((tval_is_light(obj)) && (kf_has(obj->kind->kind_flags, KF_MIMIC_KNOW)))
+		return true;
 	if (obj_is_activatable(obj)) {
 		/* Check the recharge */
 		if (!obj->timeout) return true;

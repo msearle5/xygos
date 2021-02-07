@@ -696,7 +696,7 @@ void inven_carry(struct player *p, struct object *obj, bool absorb,
 /**
  * Wield or wear a single item from the pack or floor
  */
-void inven_wield(struct object *obj, int slot)
+void do_inven_wield(struct object *obj, int slot, bool verbose, bool overflow)
 {
 	struct object *wielded, *old = player->body.slots[slot].obj;
 
@@ -758,9 +758,10 @@ void inven_wield(struct object *obj, int slot)
 	object_desc(o_name, sizeof(o_name), wielded, ODESC_PREFIX | ODESC_FULL);
 
 	/* Message */
-	msgt(MSG_WIELD, fmt, o_name, I2A(slot));
+	if (verbose)
+		msgt(MSG_WIELD, fmt, o_name, I2A(slot));
 
-	/* Sticky flag geats a special mention */
+	/* Sticky flag gets a special mention */
 	if (of_has(wielded->flags, OF_STICKY)) {
 		/* Warn the player */
 		msgt(MSG_CURSED, "Oops! It sticks to you like a magnet!");
@@ -779,7 +780,8 @@ void inven_wield(struct object *obj, int slot)
 
 	/* See if we have to overflow the pack */
 	combine_pack();
-	pack_overflow(old);
+	if (overflow)
+		pack_overflow(old);
 
 	/* Recalculate bonuses, torch, mana, gear */
 	player->upkeep->notice |= (PN_IGNORE);
@@ -792,6 +794,9 @@ void inven_wield(struct object *obj, int slot)
 	cmd_disable_repeat();
 }
 
+void inven_wield(struct object *obj, int slot) {
+	do_inven_wield(obj, slot, true, true);
+}
 
 /**
  * Take off a non-cursed equipment item
@@ -802,7 +807,7 @@ void inven_wield(struct object *obj, int slot)
  * Note also that this function does not try to combine the taken off item
  * with other inventory items - that must be done by the calling function.
  */
-void inven_takeoff(struct object *obj)
+void do_inven_takeoff(struct object *obj, bool verbose, bool overflow)
 {
 	int slot = equipped_item_slot(player->body, obj);
 	const char *act;
@@ -833,11 +838,16 @@ void inven_takeoff(struct object *obj)
 	update_stuff(player);
 
 	/* Message */
-	msgt(MSG_WIELD, "%s %s (%c).", act, o_name, gear_to_label(obj));
+	if (verbose)
+		msgt(MSG_WIELD, "%s %s (%c).", act, o_name, gear_to_label(obj));
 
 	return;
 }
 
+void inven_takeoff(struct object *obj)
+{
+	do_inven_takeoff(obj, true, true);
+}
 
 /**
  * Drop (some of) a non-cursed inventory/equipment item "near" the current
