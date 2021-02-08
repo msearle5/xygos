@@ -2,34 +2,34 @@
 #include "savefile.h"
 #include "z-util.h"
 
-/* Persistent state for the android race */
-struct android_state {
+/* Persistent state for the X race */
+struct x_state {
 	
 };
 
-static void android_loadsave(void) {
+static void x_loadsave(void) {
 	if (player->race->state == NULL)
-		player->race->state = mem_zalloc(sizeof(struct android_state));
+		player->race->state = mem_zalloc(sizeof(struct x_state));
 
-	struct android_state *state = (struct android_state *)player->race->state;
+	struct x_state *state = (struct x_state *)player->race->state;
 }
 
-/* Start a new character as an Android */
-static void android_init(void)
+/* Start a new character as an x */
+static void x_init(void)
 {
 	/* Initialise saved state */
-	player->race->state = mem_zalloc(sizeof(struct android_state));
+	player->race->state = mem_zalloc(sizeof(struct x_state));
 }
 
-static void android_levelup(int from, int to)
+static void x_levelup(int from, int to)
 {
 }
 
 /* Install hooks */
-void install_race_ANDROID(void)
+void install_race_X(void)
 {
-	struct player_race *r = get_race_by_name("Android");
-	r->init = android_init;
-	r->levelup = android_levelup;
-	r->loadsave = android_loadsave;
+	struct player_race *r = get_race_by_name("Xx");
+	r->init = x_init;
+	r->levelup = x_levelup;
+	r->loadsave = x_loadsave;
 }

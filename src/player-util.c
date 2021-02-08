@@ -219,6 +219,12 @@ static bool death_check(struct player *p, const char *kb_str)
 
 	// Return true if it's at least equal to mid
 	if (check <= -p->chp) {
+		/* e.g. Time Lords may be able to regenerate */
+		bool saved = false;
+		player_hook(death, &saved);
+		if (saved)
+			return false;
+
 		/* too bad, so sad */
 		/* Hack -- Note death */
 		msgt(MSG_DEATH, "You die.");

@@ -20,7 +20,7 @@
 # 'phrase' lines are the actual chart entries which make up the history.
 
 # Chart progression by race:
-#   Human/Dunadan -->  1 -->  2 -->  3 --> 50 --> 51 --> 52 --> 53
+#   Human         -->  1 -->  2 -->  3 --> 50 --> 51 --> 52 --> 53
 #   Half-Elf      -->  4 -->  1 -->  2 -->  3 --> 50 --> 51 --> 52 --> 53
 #   Elf           -->  5 -->  6 -->  9 --> 54 --> 55 --> 56
 #   High-Elf      -->  7 -->  8 -->  9 --> 54 --> 55 --> 56
@@ -28,7 +28,8 @@
 #   Gnome         --> 13 --> 14 -->  3 --> 50 --> 51 --> 52 --> 53
 #   Dwarf         --> 16 --> 17 --> 18 --> 57 --> 58 --> 59 --> 60 --> 61
 #   Half-Orc      --> 19 --> 20 -->  2 -->  3 --> 50 --> 51 --> 52 --> 53
-#   Half-Troll    --> 21 --> 22 --> 62 --> 63 --> 64 --> 65 --> 66
+#   Android       28 .. 36
+#   Time-Lord     37 .. 40
 #   Kobold        --> 23 --> 24 --> 25 --> 26 --> 67 --> 68 --> 69
 
 # This table *must* be correct or the history may look very silly.
@@ -406,6 +407,46 @@ chart:36:30:75
 phrase:but you managed to escape.
 chart:36:30:100
 phrase:but you rebelled!
+
+chart:37:38:33
+phrase:Your father was 
+chart:37:38:66
+phrase:Your mother was 
+chart:37:38:100
+phrase:You were once 
+
+chart:38:39:10
+phrase:an Outsider
+chart:38:39:30
+phrase:a Citizen
+chart:38:39:60
+phrase:a Capitolian
+chart:38:39:90
+phrase:an Arcadian
+chart:38:39:97
+phrase:an Academician
+chart:38:39:100
+phrase:a Councillor
+
+chart:39:40:25
+phrase:, but you have left your home dirt-side to 
+chart:39:40:50
+phrase:, but you have left the comforts of home to 
+chart:39:40:75
+phrase:, but you have left your old home to 
+chart:39:40:100
+phrase:, but you have left your home planet to 
+
+chart:40:0:20
+phrase:seek adventure.
+chart:40:0:40
+phrase:travel time and space.
+chart:40:0:60
+phrase:make the universe a better place.
+chart:40:0:80
+phrase:see the galaxy.
+chart:40:0:100
+phrase:vanquish evil.
 
 chart:50:51:20
 phrase:You have dark brown eyes, 

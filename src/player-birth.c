@@ -417,6 +417,15 @@ char *get_history(struct history_chart *chart)
 	return res;
 }
 
+/**
+ * Computes character's height, and weight
+ */
+void get_height_weight(struct player *p)
+{
+	/* Calculate the height/weight */
+	p->ht = p->ht_birth = Rand_normal(p->race->base_hgt, p->race->mod_hgt);
+	p->wt = p->wt_birth = Rand_normal(p->race->base_wgt, p->race->mod_wgt);
+}
 
 /**
  * Computes character's age, height, and weight
@@ -425,10 +434,7 @@ static void get_ahw(struct player *p)
 {
 	/* Calculate the age */
 	p->age = p->race->b_age + randint1(p->race->m_age);
-
-	/* Calculate the height/weight */
-	p->ht = p->ht_birth = Rand_normal(p->race->base_hgt, p->race->mod_hgt);
-	p->wt = p->wt_birth = Rand_normal(p->race->base_wgt, p->race->mod_wgt);
+	get_height_weight(p);
 }
 
 
