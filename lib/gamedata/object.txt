@@ -1620,8 +1620,6 @@ cost:5
 alloc:20:1 to 100
 flags:SHOOTS_6MM
 pval:2
-desc:A loop of leather and cords able to hurl stones or shot with
-desc: tremendous velocity.
 
 name:& 6mm rifle~
 type:gun
@@ -1632,8 +1630,6 @@ cost:5
 alloc:20:1 to 100
 flags:SHOOTS_6MM
 pval:3
-desc:A loop of leather and cords able to hurl stones or shot with
-desc: tremendous velocity.
 
 name:& 9mm handgun~
 type:gun
@@ -1644,7 +1640,6 @@ cost:50
 alloc:20:3 to 100
 flags:SHOOTS_9MM
 pval:2
-desc:The traditional hunter's weapon, this light bow is easily drawn.
 
 name:& 9mm rifle~
 type:gun
@@ -1655,8 +1650,6 @@ cost:120
 alloc:20:10 to 100
 flags:SHOOTS_9MM
 pval:3
-desc:As tall as a man, the longbow can drive an arrow through the
-desc: heaviest armour.
 
 name:& 12mm handgun~
 type:gun
@@ -1667,8 +1660,6 @@ cost:140
 alloc:20:15 to 100
 flags:SHOOTS_12MM
 pval:2
-desc:A mechanical bow made of wood, it is cocked to augment the strength
-desc: of its wielder.
 
 name:& 12mm rifle~
 type:gun
@@ -1679,8 +1670,6 @@ cost:300
 alloc:20:30 to 100
 flags:SHOOTS_12MM
 pval:3
-desc:This arbalest is so powerful it has to be reinforced with metal and
-desc: requires a crank to be cocked.
 
 
 ##### Missiles #####
