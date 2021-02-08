@@ -1399,11 +1399,6 @@ static bool describe_combat(textblock *tb, const struct object *obj)
 		describe_damage(tb, obj, true);
 	}
 
-	if (ammo) {
-		textblock_append_c(tb, COLOUR_L_GREEN, "%d%%", break_chance);
-		textblock_append(tb, " chance of breaking upon contact.\n");
-	}
-
 	/* Something has been said */
 	return true;
 }
@@ -1519,10 +1514,12 @@ static bool describe_digger(textblock *tb, const struct object *obj)
  * includes it not actually being a light source).
  */
 static bool obj_known_light(const struct object *obj, oinfo_detail_t mode,
-							int *intensity, bool *uses_fuel, int *refuel_turns)
+							int *intensity, bool *uses_fuel, bool *recharge)
 {
 	bool no_fuel;
 	bool is_light = tval_is_light(obj);
+
+	*recharge = false;
 
 	if (!is_light && (obj->modifiers[OBJ_MOD_LIGHT] <= 0))
 		return false;
@@ -1549,9 +1546,8 @@ static bool obj_known_light(const struct object *obj, oinfo_detail_t mode,
 		*uses_fuel = false;
 	} else {
 		*uses_fuel = true;
+		*recharge = !(of_has(obj->flags, OF_BURNS_OUT));
 	}
-
-	*refuel_turns = 0;
 
 	return true;
 }
@@ -1564,10 +1560,11 @@ static bool describe_light(textblock *tb, const struct object *obj,
 {
 	int intensity = 0;
 	bool uses_fuel = false;
-	int refuel_turns = 0;
+	bool recharge = false;
 	bool terse = mode & OINFO_TERSE ? true : false;
+	
 
-	if (!obj_known_light(obj, mode, &intensity, &uses_fuel, &refuel_turns))
+	if (!obj_known_light(obj, mode, &intensity, &uses_fuel, &recharge))
 		return false;
 
 	if (tval_is_light(obj)) {
@@ -1576,13 +1573,13 @@ static bool describe_light(textblock *tb, const struct object *obj,
 		textblock_append(tb, " light.");
 
 		if (!obj->artifact && !uses_fuel)
-			textblock_append(tb, "  No fuel required.");
+			textblock_append(tb, "  No charging required.");
 
 		if (!terse) {
-			if (refuel_turns)
-				textblock_append(tb, "  Refills other lanterns up to %d turns of fuel.", refuel_turns);
+			if (recharge)
+				textblock_append(tb, "  Can be recharged.");
 			else
-				textblock_append(tb, "  Cannot be refueled.");
+				textblock_append(tb, "  Cannot be recharged.");
 		}
 		textblock_append(tb, "\n");
 	}
