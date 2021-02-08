@@ -1953,6 +1953,52 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		of_on(state->flags, OF_IMPAIR_HP);
 	}
 
+	/* Effects of food outside the "Fed" range */
+	if (!player_timed_grade_eq(p, TMD_FOOD, "Fed")) {
+		int excess = p->timed[TMD_FOOD] - PY_FOOD_FULL;
+		if ((excess > 0) && !p->timed[TMD_ATT_VAMP]) {
+			/* Scale to units 1/10 of the range and subtract from speed */
+			excess = (excess * 10) / (PY_FOOD_MAX - PY_FOOD_FULL);
+			/* If you don't eat food, while you can still be "overcharged" and
+			 * use up energy fast you should not slow down.
+			 */
+			if (!player_has(p, PF_NO_FOOD))
+				state->speed -= excess;
+		} else if (p->timed[TMD_FOOD] < PY_FOOD_WEAK) {
+			/* Scale to units 1/20 of the range */
+			int lack = ((PY_FOOD_WEAK - p->timed[TMD_FOOD]) * 20) / PY_FOOD_WEAK;
+			if (!player_has(player, PF_FORAGING)) {
+				/* Apply effects progressively */
+				state->stat_add[STAT_STR] -= 1 + (lack / 2);
+				if ((lack > 0) && (lack <= 10)) {
+					state->skills[SKILL_DEVICE] *= 9;
+					state->skills[SKILL_DEVICE] /= 10;
+					state->to_h -= (lack + 1) / 2;
+				} else if ((lack > 10) && (lack <= 16)) {
+					state->skills[SKILL_DEVICE] *= 8;
+					state->skills[SKILL_DEVICE] /= 10;
+					state->skills[SKILL_DISARM_PHYS] *= 9;
+					state->skills[SKILL_DISARM_PHYS] /= 10;
+					state->skills[SKILL_DISARM_MAGIC] *= 9;
+					state->skills[SKILL_DISARM_MAGIC] /= 10;
+					state->to_h -= 6;
+				} else if (lack > 16) {
+					state->skills[SKILL_DEVICE] *= 7;
+					state->skills[SKILL_DEVICE] /= 10;
+					state->skills[SKILL_DISARM_PHYS] *= 8;
+					state->skills[SKILL_DISARM_PHYS] /= 10;
+					state->skills[SKILL_DISARM_MAGIC] *= 8;
+					state->skills[SKILL_DISARM_MAGIC] /= 10;
+					state->skills[SKILL_SAVE] *= 9;
+					state->skills[SKILL_SAVE] /= 10;
+					state->skills[SKILL_SEARCH] *=9;
+					state->skills[SKILL_SEARCH] /= 10;
+					state->to_h -= 7;
+				}
+			}
+		}
+	}
+
 	/* Calculate the various stat values */
 	for (i = 0; i < STAT_MAX; i++) {
 		int add, use, ind;
@@ -1992,53 +2038,6 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 
 		/* Save the new index */
 		state->stat_ind[i] = ind;
-	}
-
-	/* Effects of food outside the "Fed" range */
-	if (!player_timed_grade_eq(p, TMD_FOOD, "Fed")) {
-		int excess = p->timed[TMD_FOOD] - PY_FOOD_FULL;
-		int lack = PY_FOOD_HUNGRY - p->timed[TMD_FOOD];
-		
-		if ((excess > 0) && !p->timed[TMD_ATT_VAMP]) {
-			/* Scale to units 1/10 of the range and subtract from speed */
-			excess = (excess * 10) / (PY_FOOD_MAX - PY_FOOD_FULL);
-			/* If you don't eat food, while you can still be "overcharged" and
-			 * use up energy fast you should not slow down.
-			 */
-			if (!player_has(p, PF_NO_FOOD))
-				state->speed -= excess;
-		} else if (lack > 0) {
-			/* Scale to units 1/20 of the range */
-			lack = (lack * 20) / PY_FOOD_HUNGRY;
-			if (player_has(player, PF_FORAGING)) {
-				lack = 0;
-			}
-			/* Apply effects progressively */
-			state->to_h -= lack;
-			state->to_d -= lack;
-			if ((lack > 10) && (lack <= 15)) {
-				state->skills[SKILL_DEVICE] *= 9;
-				state->skills[SKILL_DEVICE] /= 10;
-			} else if ((lack > 15) && (lack <= 18)) {
-				state->skills[SKILL_DEVICE] *= 8;
-				state->skills[SKILL_DEVICE] /= 10;
-				state->skills[SKILL_DISARM_PHYS] *= 9;
-				state->skills[SKILL_DISARM_PHYS] /= 10;
-				state->skills[SKILL_DISARM_MAGIC] *= 9;
-				state->skills[SKILL_DISARM_MAGIC] /= 10;
-			} else if (lack > 18) {
-				state->skills[SKILL_DEVICE] *= 7;
-				state->skills[SKILL_DEVICE] /= 10;
-				state->skills[SKILL_DISARM_PHYS] *= 8;
-				state->skills[SKILL_DISARM_PHYS] /= 10;
-				state->skills[SKILL_DISARM_MAGIC] *= 8;
-				state->skills[SKILL_DISARM_MAGIC] /= 10;
-				state->skills[SKILL_SAVE] *= 9;
-				state->skills[SKILL_SAVE] /= 10;
-				state->skills[SKILL_SEARCH] *=9;
-				state->skills[SKILL_SEARCH] /= 10;
-			}
-		}
 	}
 
 	state->speed += (state->stat_ind[STAT_SPD] - 7);
