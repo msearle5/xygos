@@ -2195,9 +2195,58 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		if (!state->heavy_shoot) {
 			state->num_shots += extra_shots;
 			state->ammo_mult += extra_might;
+
+			/* Ranger style fast shooting */
 			if (player_has(p, PF_FAST_SHOT)) {
 				state->num_shots += p->lev / 3;
 			}
+
+			/* Marksman style (specific types only)
+			 * The bonus is small at the point you can first gain it,
+			 * and more powerful weapon classes get less speed (and
+			 * more accuracy, but that's not intended to make up for
+			 * it - it's supposed to make it more of a real choice
+			 * on which weapon class to specialise in).
+			 * Assumes that you can gain rifle/handgun at level 5,
+			 * the caliber at level 15.
+			 **/
+			bool rifle = (randcalc(launcher->kind->pval, 0, AVERAGE) >= 3);	/* XXX This may change */
+			int shots = 0;
+			int tohit = 0;
+			if (rifle && (player_has(p, PF_RIFLE_SPECIALIST))) {
+				shots = 1 + ((p->lev - 5) / 3);
+				tohit = (p->lev - 5) / 4;
+				if ((player_has(p, PF_6MM_RIFLE_SPECIALIST)) && (state->ammo_tval == TV_AMMO_6)) {
+					shots += (p->lev - 15) / 3;
+					tohit += (p->lev - 15) / 3;
+				} else if ((player_has(p, PF_9MM_RIFLE_SPECIALIST)) && (state->ammo_tval == TV_AMMO_9)) {
+					shots += (p->lev - 15) / 5;
+					tohit += (p->lev - 15) / 5;
+				} else if ((player_has(p, PF_12MM_RIFLE_SPECIALIST)) && (state->ammo_tval == TV_AMMO_12)) {
+					shots += (p->lev - 15) / 7;
+					tohit += (p->lev - 15) / 7;
+				}
+			} else if (!rifle && (player_has(p, PF_HANDGUN_SPECIALIST))) {
+				shots = 1 + ((p->lev - 5) / 2);
+				tohit = (p->lev - 5) / 7;
+				if ((player_has(p, PF_6MM_RIFLE_SPECIALIST)) && (state->ammo_tval == TV_AMMO_6)) {
+					shots += (p->lev - 15) / 2;
+					tohit += (p->lev - 15) / 4;
+				} else if ((player_has(p, PF_9MM_RIFLE_SPECIALIST)) && (state->ammo_tval == TV_AMMO_9)) {
+					shots += (p->lev - 15) / 4;
+					tohit += (p->lev - 15) / 7;
+				} else if ((player_has(p, PF_12MM_RIFLE_SPECIALIST)) && (state->ammo_tval == TV_AMMO_12)) {
+					shots += (p->lev - 15) / 6;
+					tohit += (p->lev - 15) / 10;
+				}
+			}
+			/* Just in case you somehow got the ability early */
+			if (shots < 0)
+				shots = 0;
+			if (tohit < 0)
+				tohit = 0;
+			state->num_shots += shots;
+			state->to_h += tohit;
 		}
 
 		/* Require at least one shot */

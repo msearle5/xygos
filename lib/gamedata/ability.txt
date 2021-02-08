@@ -21,6 +21,8 @@
 # maxlevel:<level>		-	If present, the maximum level needed - 0 for both is the default and means "any level".
 #								Talents gained during character creation respect the minimum level (if it's above 1 you can't
 #								take it), but also see the "birth" flag.
+# class:<class>			-	If present, this talent cam only be gained by this class (multiple classes can be given, as one line
+#								e.g. class:Marksman,Soldier
 
 ### - interactions - ###
 # forbid:<talent>		-	This forbids another ability from being gained if this ability is already present. This may be
@@ -35,6 +37,114 @@
 #						-	mutation	- If set, the ability can be gained as a mutation.
 #						-	talent		- If set, the ability may be gained as a talent.
 #						-	nasty		- This talent may be considered harmful (for at least some characters)
+
+name:Handgun_Specialist
+gain:You now train primarily with handguns.
+lose:You no longer consider yourself a handgun specialist.
+brief:You are a handgun specialist.
+desc:You have specialised in the use of handguns, making you shoot faster and more accurately (it's more noticeable at high level).
+desc_future:you would specialise in the use of handguns, making you shoot faster and more accurately (it's more noticeable at high level).
+flag:talent
+minlevel:5
+class:Marksman
+forbid:Rifle_Specialist
+cost:0
+
+name:6mm_Handgun_Specialist
+gain:You now train primarily with 6mm handguns.
+lose:You no longer consider yourself a 6mm specialist.
+brief:You are a 6mm handgun specialist.
+desc:You have specialised in the use of 6mm handguns, making you shoot faster and more accurately (it's more noticeable at high level).
+desc_future:you would specialise in the use of 6mm handguns, making you shoot faster and more accurately (it's more noticeable at high level).
+flag:talent
+minlevel:15
+require:Handgun_Specialist
+forbid:9mm_Handgun_Specialist
+forbid:12mm_Handgun_Specialist
+class:Marksman
+cost:0
+
+name:9mm_Handgun_Specialist
+gain:You now train primarily with 9mm handguns.
+lose:You no longer consider yourself a 9mm specialist.
+brief:You are a 9mm handgun specialist.
+desc:You have specialised in the use of 9mm handguns, making you shoot faster and more accurately (it's more noticeable at high level).
+desc_future:you would specialise in the use of 9mm handguns, making you shoot faster and more accurately (it's more noticeable at high level).
+flag:talent
+minlevel:15
+require:Handgun_Specialist
+forbid:6mm_Handgun_Specialist
+forbid:12mm_Handgun_Specialist
+class:Marksman
+cost:0
+
+name:12mm_Handgun_Specialist
+gain:You now train primarily with 12mm handguns.
+lose:You no longer consider yourself a 12mm specialist.
+brief:You are a 9mm handgun specialist.
+desc:You have specialised in the use of 12mm handguns, making you shoot faster and more accurately (it's more noticeable at high level).
+desc_future:you would specialise in the use of 12mm handguns, making you shoot faster and more accurately (it's more noticeable at high level).
+flag:talent
+minlevel:15
+require:Handgun_Specialist
+forbid:6mm_Handgun_Specialist
+forbid:9mm_Handgun_Specialist
+class:Marksman
+cost:0
+
+name:Rifle_Specialist
+gain:You now train primarily with rifles.
+lose:You no longer consider yourself a rifle specialist.
+brief:You are a rifle specialist.
+desc:You have specialised in the use of rifles, making you shoot faster and more accurately (it's more noticeable at high level).
+desc_future:you would specialise in the use of rifles, making you shoot faster and more accurately (it's more noticeable at high level).
+flag:talent
+minlevel:5
+class:Marksman
+forbid:Handgun_Specialist
+cost:0
+
+name:6mm_Rifle_Specialist
+gain:You now train primarily with 6mm rifles.
+lose:You no longer consider yourself a 6mm specialist.
+brief:You are a 6mm rifle specialist.
+desc:You have specialised in the use of 6mm rifles, making you shoot faster and more accurately (it's more noticeable at high level).
+desc_future:you would specialise in the use of 6mm rifles, making you shoot faster and more accurately (it's more noticeable at high level).
+flag:talent
+minlevel:15
+require:Rifle_Specialist
+forbid:9mm_Rifle_Specialist
+forbid:12mm_Rifle_Specialist
+class:Marksman
+cost:0
+
+name:9mm_Rifle_Specialist
+gain:You now train primarily with 9mm rifles.
+lose:You no longer consider yourself a 9mm specialist.
+brief:You are a 9mm rifle specialist.
+desc:You have specialised in the use of 9mm rifles, making you shoot faster and more accurately (it's more noticeable at high level).
+desc_future:you would specialise in the use of 9mm rifles, making you shoot faster and more accurately (it's more noticeable at high level).
+flag:talent
+minlevel:15
+require:Rifle_Specialist
+forbid:6mm_Rifle_Specialist
+forbid:12mm_Rifle_Specialist
+class:Marksman
+cost:0
+
+name:12mm_Rifle_Specialist
+gain:You now train primarily with 12mm rifles.
+lose:You no longer consider yourself a 12mm specialist.
+brief:You are a 9mm rifle specialist.
+desc:You have specialised in the use of 12mm rifles, making you shoot faster and more accurately (it's more noticeable at high level).
+desc_future:you would specialise in the use of 12mm rifles, making you shoot faster and more accurately (it's more noticeable at high level).
+flag:talent
+minlevel:15
+require:Rifle_Specialist
+forbid:6mm_Rifle_Specialist
+forbid:9mm_Rifle_Specialist
+class:Marksman
+cost:0
 
 name:Emotional_Intelligence
 # this gain msg is naff

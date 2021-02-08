@@ -132,6 +132,14 @@ static enum parser_error parse_ability_brief(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_ability_class(struct parser *p) {
+	struct ability *a = parser_priv(p);
+	assert(a);
+
+	a->class = string_make(parser_getstr(p, "class"));
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_ability_desc(struct parser *p) {
 	struct ability *a = parser_priv(p);
 	assert(a);
@@ -207,10 +215,11 @@ struct parser *init_parse_ability(void) {
 	parser_reg(p, "forbid str forbid", parse_ability_forbid);
 	parser_reg(p, "require str require", parse_ability_require);
 	parser_reg(p, "desc str desc", parse_ability_desc);
+	parser_reg(p, "class str class", parse_ability_class);
 	parser_reg(p, "desc_future str desc_future", parse_ability_desc_future);
 	parser_reg(p, "cost int cost", parse_ability_cost);
-	parser_reg(p, "maxlevel uint max", parse_ability_maxlevel);
-	parser_reg(p, "minlevel uint min", parse_ability_minlevel);
+	parser_reg(p, "maxlevel int max", parse_ability_maxlevel);
+	parser_reg(p, "minlevel int min", parse_ability_minlevel);
 	parser_reg(p, "flag str flag", parse_ability_flag);
 	return p;
 }
@@ -281,6 +290,18 @@ static bool ability_allowed(unsigned a, bool gain) {
 					return false;
 				}
 			}
+		}
+	}
+
+	/* Check minimum and maximum level and class */
+	for(int i=0; i<PF_MAX; i++) {
+		if (ability[i]) {
+			if (player->lev < ability[i]->minlevel)
+				return false;
+			if ((ability[i]->maxlevel) && (player->lev > ability[i]->maxlevel))
+				return false;
+			if ((ability[i]->class) && (!my_stristr(ability[i]->class, player->class->name)))
+				return false;
 		}
 	}
 
@@ -439,7 +460,6 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 	const char *ntp2 = "s";
 	if (p->talent_points == 1)
 		ntp2 = "";
-	
 
 	/* Format and output it */
 	struct textblock *tb = textblock_new();

@@ -23,6 +23,7 @@ struct ability {
 	char *brief;
 	char *desc;
 	char *desc_future;
+	char *class;
 	u32b flags;
 	s16b minlevel;
 	s16b maxlevel;
