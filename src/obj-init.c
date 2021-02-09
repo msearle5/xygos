@@ -1982,24 +1982,12 @@ static enum parser_error parse_object_curse(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-/* If this struct gets much more than a name, read it from a config file */ 
+/* If this struct gets much more than a name, read it from a config file */
+#define MATERIAL(T, N, D, C) { N, D, C },
 const struct object_material material[] = {
-	{ "generic" },	// for objects without a specified material
-	{ "plastic" },
-	{ "aluminium" },
-	{ "steel" },
-	{ "lead" },
-	{ "gold" },
-	{ "silver" },
-	{ "titanium" },
-	{ "unobtainium" },
-	{ "leather" },
-	{ "wood" },
-	{ "organic" },
-	{ "metal" },
-	{ "mineral" },
-	{ NULL },
+#include "list-materials.h"
 };
+#undef MATERIAL
 
 /* Looks up a material by name - returns the material struct, or NULL if not recognized */
 const struct object_material *get_material_by_name(const char *name)
