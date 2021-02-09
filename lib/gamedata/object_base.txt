@@ -34,6 +34,7 @@ name:6mm ammo:6mm ammo
 graphics:light umber
 break:25
 # max-stack:40
+flags:HATES_ACID | HATES_FIRE
 flags:SHOW_DICE
 
 name:9mm ammo:9mm ammo
@@ -47,13 +48,13 @@ name:12mm ammo:12mm ammo
 graphics:light umber
 break:25
 # max-stack:40
-flags:HATES_ACID
+flags:HATES_ACID | HATES_FIRE
 flags:SHOW_DICE
 
 name:gun:gun~
 graphics:umber
 # max-stack:1
-flags:HATES_ACID | HATES_FIRE
+flags:HATES_ACID
 flags:SHOW_MULT
 
 name:digger:Digger~
@@ -174,7 +175,7 @@ name:battery:battery~
 graphics:orange
 break:10
 # max-stack:20
-flags:HATES_FIRE | HATES_ELEC
+flags:HATES_ACID | HATES_FIRE | HATES_ELEC
 flags:EASY_KNOW
 
 name:food:Food

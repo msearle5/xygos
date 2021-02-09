@@ -1089,28 +1089,51 @@ desc:It makes you very stealthy for a short while.
 
 ### Swords ###
 
-name:& Dagger~
+name:& pocket knife~
 type:sword
 graphics:|:W
 level:0
-weight:12
+weight:100g
 cost:30
 alloc:20:0 to 100
-attack:1d4:0:0
+attack:1d3:0:0
 armor:0:0
-flags:THROWING
-desc:A short two-edged blade perfect for thrusting or throwing.
+desc:A small knife (and set of several semi-useful tools) in a folding, pocketable
+desc: case. It's not intended as a weapon of course, but could be used as one if
+desc: you really had nothing else better.
 
-name:& Main Gauche~
+name:& flick knife~
+type:sword
+graphics:|:W
+level:1
+weight:180g
+cost:40
+alloc:20:1 to 100
+attack:1d5:0:0
+armor:0:0
+desc:A smallish knife, spring-loaded to open automatically.
+
+name:& survival knife~
 type:sword
 graphics:|:W
 level:3
-weight:30
-cost:45
+weight:550g
+cost:65
 alloc:20:3 to 100
-attack:1d5:0:0
+attack:1d7:0:0
 armor:0:0
-desc:A short thrusting blade with a large guard, primarily used in duels.
+desc:A long, heavy knife with a metal guard, long black leather hilt and attached strap.
+
+name:& machete~
+type:sword
+graphics:|:W
+level:5
+weight:750g
+cost:90
+alloc:20:5 to 100
+attack:1d9:0:0
+armor:0:0
+desc:A very long knife, broadening toward the tip, with a serrated back and moulded rubber grip.
 
 name:& Rapier~
 type:sword
@@ -1988,6 +2011,18 @@ armor:2:0
 desc:Lightweight and reasonably effective - but inevitably dorky-looking - head protection.
 material:plastic
 
+name:& hard hat~
+type:helm
+graphics:]:Yellow
+level:8
+weight:480g
+cost:25
+alloc:20:8 to 100
+attack:1d1:0:0
+armor:3:0
+desc:A cheery bright yellow ribbed plastic helmet with a heavy rim and a chin strap. 
+material:plastic
+
 name:& tin hat~
 type:helm
 graphics:]:ForestGreen
@@ -1996,11 +2031,23 @@ weight:1.6kg
 cost:30
 alloc:20:10 to 100
 attack:1d1:0:0
-armor:3:0
+armor:4:0
 desc:Heavy but fairly effective protection for your head.
 material:steel
 
-#motorcycle helmet?
+name:& motorcycle helmet~
+type:helm
+graphics:]:Orange
+level:16
+weight:1.45kg
+cost:80
+alloc:20:16 to 100
+attack:0d0:0:0
+armor:6:0
+desc:A smoothly curved full-face helmet that covers your entire head with tough plastic - including a clear plastic flip-up visor in front.
+material:plastic
+
+#combat helmet?
 
 name:& Iron Helm~
 type:helm

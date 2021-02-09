@@ -135,7 +135,7 @@ equip:food:random:1:3
 equip:food:random:1:3
 ##equip:light:Wooden Torch:1:3
 equip:pill:Berserk Strength:1:1
-equip:sword:Dagger:1:1
+equip:sword:survival knife:1:1
 equip:soft armour:Soft Leather Armour:1:1
 equip:scroll:Word of Recall:1:1
 player-flags:BRAVERY_30 | NO_MANA | SHIELD_BASH
@@ -165,19 +165,32 @@ title:Amateur
 title:Marksman
 title:Deadeye
 title:Contender
-#medalist?
+#Medalist?
 title:Prizewinner
 title:Champion
 title:Sharpshooter
 title:Sniper
-#expert?
-title:Specialist
-equip:food:random:1:3
+#Expert?
 #Gunsmith?
-cdesc:A civilian weapon expert, reasonably skilled with all ranged weapons and the best of any role with your chosen specialty. Being used to firing at paper targets which rarely fire back though, your melee combat and stealth are not so hot. You'll start being able to recognize all weapon mods.
+title:Specialist
+skill-disarm-phys:25:15
+skill-disarm-magic:20:10
+skill-device:18:7
+skill-save:18:10
+skill-stealth:0:0
+skill-search:10:12
+skill-melee:45:40
+skill-shoot:72:45
+skill-throw:66:30
+skill-dig:0:0
 hitdie:130
 max-attacks:5
 min-weight:40
+strength-multiplier:3
+equip:food:random:1:3
+equip:gun:6mm handgun:1:1
+equip:6mm ammo:6mm bullet:30:40
+cdesc:A civilian weapon expert, reasonably skilled with all ranged weapons and the best of any role with your chosen specialty. Being used to firing at paper targets which rarely fire back though, your melee combat and stealth are not so hot. You'll start being able to recognize all weapon mods.
 
 ############### TOURIST ###############
 name:Tourist
@@ -195,6 +208,20 @@ title:Guide
 title:Explorer
 title:Trailblazer
 title:Pioneer
+skill-disarm-phys:30:10
+skill-disarm-magic:35:12
+skill-device:36:13
+skill-save:30:9
+skill-stealth:2:0
+skill-search:10:12
+skill-melee:35:15
+skill-shoot:20:15
+skill-throw:20:15
+skill-dig:0:0
+hitdie:30
+max-attacks:5
+min-weight:40
+strength-multiplier:4
 cdesc:You are well equipped, for the beach. You are in fact rather out of your depth here - this is definitely going to be a challenge. But you do have some advantages - a universal map, a winning smile, some spending money and (due to being the least experienced role) the best experience and talent gain rates.
 equip:food:random:1:1
 equip:food:random:1:1
@@ -206,10 +233,6 @@ equip:rod:mapping:1:1
 equip:boots:flip flops:1:1
 equip:helm:sun hat:1:1
 equip:soft armor:loud shirt:1:1
-hitdie:30
-strength-multiplier:4
-max-attacks:5
-min-weight:40
 
 ############### SPELUNKER ###############
 name:Spelunker
@@ -217,9 +240,16 @@ stats:2:0:0:3:1:0:0
 hitdie:90
 max-attacks:5
 min-weight:40
+#Digger, climber, diver, explorer, mapper, pathfinder, cave finder...
 title:Spelunker
 title:Caver
 title:Speleologist
+equip:helm:hard hat (lamp):1:1
+equip:light:glowstick:2:4
+equip:light:electric torch:1:1
+equip:battery:alkaline battery:4:6
+# FF clothes?
+# spikes have disappeared
 cdesc:You are trained and equipped for underground exploration, can avoid falls and will gain powerful abilities to dig, climb, map, detect and find hidden passages. Your combat ability is middling - fitness helps but only so much without having practiced much. However you can become an effective tactical fighter through your positioning abilities.
 
 ############### JEDI #####################
@@ -233,6 +263,36 @@ title:Knight
 title:Master
 title:Grand Master
 cdesc:Jedi are famous for skill with a lightsaber - you'll excel with melee energy weapons and do well with other melee weapons. Eventually you'll even be able to construct your own. Ranged weapons are not you, but you'll be supported by a number of subtle powers as you advance. There are also Dark Jedi... who are powerful, yes, but at a cost!
+
+############### ENGINEER #####################
+name:Engineer
+stats:0:3:1:-1:0:-1:0
+title:Hobbyist
+title:Modder
+title:Maker
+title:Student
+title:Techie
+title:Engineer
+title:Expert
+title:Hacker
+skill-disarm-phys:30:20
+skill-disarm-magic:35:12
+skill-device:40:25
+skill-save:10:5
+skill-stealth:0:2
+skill-search:0:5
+skill-melee:35:15
+skill-shoot:20:15
+skill-throw:20:15
+skill-dig:0:0
+hitdie:0
+max-attacks:4
+min-weight:40
+strength-multiplier:2
+equip:sword:pocket knife:1:1
+cdesc:Devices are your strength - you'll know most on sight, and know how to get the best out of them too. While you aren't much of a fighter in general, you do know energy weapons (melee and ranged) and can see any machine or cyborg's weak points. You also excel with printers and item related cards, and will gain a few skills to use items in unexpected ways.
+
+
 
 ############### MAGE ###############
 name:Mage
@@ -1031,7 +1091,7 @@ max-attacks:4
 min-weight:35
 strength-multiplier:3
 equip:food:random:1:3
-equip:sword:Main Gauche:1:1
+equip:sword:flick knife:1:1
 equip:scroll:Word of Recall:1:1
 player-flags:ZERO_FAIL | CHOOSE_SPELLS | UNLIGHT | EVIL
 title:Acolyte
@@ -1287,7 +1347,7 @@ min-weight:30
 strength-multiplier:5
 equip:food:random:1:3
 #equip:light:Wooden Torch:1:3
-equip:sword:Main Gauche:1:1
+equip:sword:flick knife:1:1
 equip:scroll:Protection from Evil:1:1
 equip:scroll:Word of Recall:1:1
 equip:prayer book:[Novice's Handbook]:1:1
@@ -1448,7 +1508,7 @@ min-weight:20
 strength-multiplier:4
 equip:food:random:1:3
 #equip:light:Wooden Torch:1:3
-equip:sword:Dagger:1:1
+equip:sword:flick knife:1:1
 equip:soft armour:Soft Leather Armour:1:1
 equip:scroll:Word of Recall:1:1
 equip:magic book:[First Spells]:1:1
@@ -1552,7 +1612,7 @@ min-weight:35
 strength-multiplier:4
 equip:food:random:1:3
 #equip:light:Wooden Torch:1:3
-equip:sword:Main Gauche:1:1
+equip:sword:flick knife:1:1
 #equip:bow:Short Bow:1:1
 #equip:arrow:Arrow:15:20
 equip:scroll:Word of Recall:1:1
