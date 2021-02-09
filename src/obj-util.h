@@ -19,6 +19,8 @@
 #ifndef OBJECT_UTIL_H
 #define OBJECT_UTIL_H
 
+#include "obj-ignore.h"
+
 /* Maximum number of scroll titles generated */
 #define MAX_TITLES	 50
 
@@ -39,6 +41,7 @@ struct object_kind *objkind_byid(int kidx);
 struct artifact *lookup_artifact_name(const char *name);
 struct ego_item *lookup_ego_item(const char *name, int tval, int sval);
 int lookup_sval(int tval, const char *name);
+int lookup_sval_ego(int tval, const char *name, const struct ego_item **ego);
 void object_short_name(char *buf, size_t max, const char *name);
 int compare_items(const struct object *o1, const struct object *o2);
 bool obj_has_charges(const struct object *obj);

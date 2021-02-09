@@ -3239,10 +3239,11 @@ static enum parser_error parse_class_equip(struct parser *p) {
 	}
 
 	const char *svalsym = parser_getsym(p, "sval");
+	const struct ego_item *ego = NULL;
 	if (streq(svalsym, "random"))
 		sval = SV_UNKNOWN;
 	else {
-		sval = lookup_sval(tval, svalsym);
+		sval = lookup_sval_ego(tval, svalsym, &ego);
 		if (sval < 0)
 			return PARSE_ERROR_UNRECOGNISED_SVAL;
 	}
@@ -3252,6 +3253,7 @@ static enum parser_error parse_class_equip(struct parser *p) {
 	si->sval = sval;
 	si->min = parser_getuint(p, "min");
 	si->max = parser_getuint(p, "max");
+	si->ego = ego;
 
 	if (si->min > 99 || si->max > 99) {
 		mem_free(si);

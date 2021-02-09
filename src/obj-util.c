@@ -531,14 +531,23 @@ struct ego_item *lookup_ego_item(const char *name, int tval, int sval)
 
 /**
  * Return the numeric sval of the object kind with the given `tval` and
- * name `name`. Will find partial matches ("combat boots" matching "pair
- * of combat boots"), but only if no exact match is found.
+ * name `name`, and an ego item if that is also specified. Will find partial
+ * matches ("combat boots" matching "pair of combat boots"), but only if no
+ * exact match is found. If neither is found then it will look for a reverse
+ * partial match ("hard hat (lamp)" matching "hard hat") - in that case it
+ * will try to find an ego item ("hard hat (lamp)" matching "(lamp)").
+ * The ego item pointer may be NULL, but if specified the resulting ego item
+ * pointer (or NULL) will always be returned through it.
  */
-int lookup_sval(int tval, const char *name)
+int lookup_sval_ego(int tval, const char *name, const struct ego_item **ego)
 {
-	int k;
+	int k, e;
 	unsigned int r;
 	int length = 0;
+
+	/* By default, no ego */
+	if (ego)
+		*ego = NULL;
 
 	if ((sscanf(name, "%u%n", &r, &length) == 1) && (length == (int)strlen(name)))
 		return r;
@@ -575,7 +584,43 @@ int lookup_sval(int tval, const char *name)
 		}
 	}
 
+	/* Try for a reverse partial match */
+	for (k = 0; k < z_info->k_max; k++) {
+		struct object_kind *kind = &k_info[k];
+		char cmp_name[1024];
+
+		if (!kind || !kind->name) continue;
+
+		obj_desc_name_format(cmp_name, sizeof cmp_name, 0, kind->name, 0,
+							 false);
+
+		/* Found a reverse partial match */
+		if (kind->tval == tval && my_stristr(name, cmp_name)) {
+			if (ego) {
+				/* Search for an ego item */
+				for (e = 0; e < z_info->e_max; e++) {
+					struct ego_item *eitem = &e_info[e];
+					if (my_stristr(name, eitem->name)) {
+						*ego = eitem;
+						break;
+					}
+				}
+			}
+			return kind->sval;
+		}
+	}
+
 	return -1;
+}
+
+/**
+ * Return the numeric sval of the object kind with the given `tval` and
+ * name `name`. Will find partial matches ("combat boots" matching "pair
+ * of combat boots"), but only if no exact match is found.
+ */
+int lookup_sval(int tval, const char *name)
+{
+	return lookup_sval_ego(tval, name, NULL);
 }
 
 void object_short_name(char *buf, size_t max, const char *name)

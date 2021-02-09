@@ -282,7 +282,7 @@ struct start_item {
 	int sval;	/**< Object sub-type  */
 	int min;	/**< Minimum starting amount */
 	int max;	/**< Maximum starting amount */
-
+	struct ego_item *ego;		/** Ego to apply, or NULL */
 	struct start_item *next;
 };
 

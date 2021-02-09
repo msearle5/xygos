@@ -612,6 +612,10 @@ void add_start_items(struct player *p, const struct start_item *si, bool skip, b
 		/* Prepare a new item */
 		obj = object_new();
 		object_prep(obj, kind, 0, MINIMISE);
+		if (si->ego) {
+			obj->ego = si->ego;
+			ego_apply_magic(obj, 0);
+		}
 		obj->number = num;
 		obj->origin = origin;
 
