@@ -11,6 +11,7 @@
 #include "angband.h"
 #include "obj-util.h"
 #include "player.h"
+#include "player-birth.h"
 #include "savefile.h"
 #include "z-util.h"
 
@@ -52,7 +53,7 @@ static void tourist_init(void)
 			player->au += 30;
 	}
 	player->au_birth = player->au;
-	add_start_items(player, item, (!OPT(player, birth_start_kit)), false, ORIGIN_BIRTH);
+	add_start_items(player, &item, (!OPT(player, birth_start_kit)), false, ORIGIN_BIRTH);
 }
 
 /* Gain a new level (or levels) for the first time */

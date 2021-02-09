@@ -19,11 +19,13 @@ struct android_state {
 	
 };
 
-static void android_loadsave(void) {
-	if (player->race->state == NULL)
-		player->race->state = mem_zalloc(sizeof(struct android_state));
+static void android_loadsave(bool complete) {
+	if (!complete) {
+		if (player->race->state == NULL)
+			player->race->state = mem_zalloc(sizeof(struct android_state));
 
-	struct android_state *state = (struct android_state *)player->race->state;
+		struct android_state *state = (struct android_state *)player->race->state;
+	}
 }
 
 /* Start a new character as an Android */
