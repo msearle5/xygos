@@ -474,8 +474,8 @@ sound:BR_LIGHT:mco_attack_breath
 # Breathe darkness.
 sound:BR_DARK:mco_attack_breath
 
-# Breathe nether.
-sound:BR_NETHER:mco_attack_breath
+# Breathe radiation.
+sound:BR_RADIATION:mco_attack_breath
 
 # Breathe nexus.
 sound:BR_NEXUS:mco_attack_breath

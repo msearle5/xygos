@@ -257,7 +257,7 @@ static void project_object_handler_NEXUS(project_object_handler_context_t *conte
 {
 }
 
-static void project_object_handler_NETHER(project_object_handler_context_t *context)
+static void project_object_handler_RADIATION(project_object_handler_context_t *context)
 {
 }
 

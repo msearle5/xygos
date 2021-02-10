@@ -572,20 +572,20 @@ static void project_monster_handler_NEXUS(project_monster_handler_context_t *con
 	}
 }
 
-/* Nether -- see above */
-static void project_monster_handler_NETHER(project_monster_handler_context_t *context)
+/* Radiation -- see above */
+static void project_monster_handler_RADIATION(project_monster_handler_context_t *context)
 {
 	/* Update the lore */
 	if (context->seen) {
-		/* Acquire knowledge of undead type and nether resistance */
+		/* Acquire knowledge of undead type and radiation resistance */
 		rf_on(context->lore->flags, RF_UNDEAD);
-		rf_on(context->lore->flags, RF_IM_NETHER);
+		rf_on(context->lore->flags, RF_IM_RADIATION);
 
 		/* If it isn't undead, acquire extra knowledge */
 		if (!rf_has(context->mon->race->flags, RF_UNDEAD)) {
-			/* Learn this creature breathes nether if true */
-			if (rsf_has(context->mon->race->spell_flags, RSF_BR_NETH)) {
-				rsf_on(context->lore->spell_flags, RSF_BR_NETH);
+			/* Learn this creature breathes radiation if true */
+			if (rsf_has(context->mon->race->spell_flags, RSF_BR_RADI)) {
+				rsf_on(context->lore->spell_flags, RSF_BR_RADI);
 			}
 
 			/* Otherwise learn about evil type */
@@ -599,7 +599,7 @@ static void project_monster_handler_NETHER(project_monster_handler_context_t *co
 		context->hurt_msg = MON_MSG_IMMUNE;
 		context->dam = 0;
 	}
-	else if (rf_has(context->mon->race->flags, RF_IM_NETHER)) {
+	else if (rf_has(context->mon->race->flags, RF_IM_RADIATION)) {
 		context->hurt_msg = MON_MSG_RESIST;
 		context->dam *= 3;
 		context->dam /= (randint1(6)+6);
@@ -1248,8 +1248,8 @@ static void project_m_apply_side_effects(project_monster_handler_context_t *cont
  * We assume that "Plasma" monsters, and "Plasma" breathers, are immune
  * to plasma.
  *
- * We assume "Nether" is an evil, necromantic force, so it doesn't hurt undead,
- * and hurts evil less.  If can breath nether, then it resists it as well.
+ * We assume "Radiation" is an evil, necromantic force, so it doesn't hurt undead,
+ * and hurts evil less.  If can breath radiation, then it resists it as well.
  * This should actually be coded into monster records rather than aasumed - NRM
  *
  * Damage reductions use the following formulas:

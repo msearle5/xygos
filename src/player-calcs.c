@@ -2003,7 +2003,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 
 	/* Evil */
 	if (player_has(p, PF_EVIL) && character_dungeon) {
-		state->el_info[ELEM_NETHER].res_level = 1;
+		state->el_info[ELEM_RADIATION].res_level = 1;
 		state->el_info[ELEM_HOLY_ORB].res_level = -1;
 	}
 

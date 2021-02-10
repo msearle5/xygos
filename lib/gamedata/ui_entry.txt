@@ -148,9 +148,9 @@ label2:Nx
 category:CHAR_SCREEN1
 category:EQUIPCMP_SCREEN
 
-name:resist_ui_compact_0<NETHER>
-label:Nether
-label5:Nethr
+name:resist_ui_compact_0<RADIATION>
+label:Radiation
+label5:Radia
 category:CHAR_SCREEN1
 category:EQUIPCMP_SCREEN
 

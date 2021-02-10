@@ -3576,7 +3576,7 @@ spell-freq:11
 spells:DRAIN_MANA
 desc:Yum!  It looks quite tasty.  It is a pulsing mound of glowing flesh.
 
-name:nether worm mass
+name:radiation worm mass
 base:worm
 color:D
 speed:100
@@ -3590,7 +3590,7 @@ experience:6
 blow:TOUCH:EXP_10
 flags:WEIRD_MIND | MULTIPLY | STUPID
 flags:RAND_25 | RAND_50 | BASH_DOOR
-flags:HURT_LIGHT | NO_FEAR | IM_NETHER
+flags:HURT_LIGHT | NO_FEAR | IM_RADIATION
 desc:It is a disgusting mass of dark worms, eating each other, the floor, the
 desc: air, you....
 
@@ -6170,7 +6170,7 @@ flags:OPEN_DOOR
 flags:FORCE_SLEEP
 spell-freq:5
 spells:BLIND | WOUND | DARKNESS | SCARE
-spells:BO_NETH
+spells:BO_RADI
 spells:S_UNDEAD
 drop-base:shadow book:8:1:1
 drop-base:shadow book:8:1:1
@@ -7945,11 +7945,11 @@ blow:BITE:EXP_10:3d6
 flags:INVISIBLE
 flags:DROP_3 | ONLY_ITEM
 flags:OPEN_DOOR | BASH_DOOR | PASS_WALL
-flags:NO_CONF | NO_SLEEP | IM_NETHER
+flags:NO_CONF | NO_SLEEP | IM_RADIATION
 innate-freq:25
 spell-freq:10
 spells:CONF | DARKNESS | SCARE | SLOW
-spells:BR_NETH
+spells:BR_RADI
 desc:It is a dragon-like form wrapped in shadow.  Glowing red eyes shine out in
 desc: the dark, and it is surrounded by an aura of unearthly cold that chills
 desc: the soul rather than the body.
@@ -8819,7 +8819,7 @@ flags:DROP_4
 spell-freq:6
 spells:WOUND | CONF | DARKNESS | MIND_BLAST
 spells:TELE_TO
-spells:BO_NETH
+spells:BO_RADI
 spells:HOLD | SCARE
 desc:It is a humanoid form dressed in robes.  Power emanates from its chilling
 desc: frame.
@@ -8974,7 +8974,7 @@ flags:FORCE_SLEEP
 spell-freq:3
 spells:BLIND | WOUND | DARKNESS | HOLD | SCARE
 spells:TPORT
-spells:BO_NETH
+spells:BO_RADI
 spells:S_UNDEAD
 drop-base:shadow book:8:1:1
 drop-base:shadow book:8:1:1
@@ -9275,7 +9275,7 @@ flags:OPEN_DOOR | BASH_DOOR
 flags:FORCE_SLEEP
 spell-freq:6
 spells:WOUND | HOLD | SCARE
-spells:BO_NETH
+spells:BO_RADI
 friends-base:50:1d3:wraith
 desc:Your life force is torn from your body as this powerful unearthly being
 desc: approaches.
@@ -9308,7 +9308,7 @@ spells:SHRIEK
 spells:BLIND | WOUND | DARKNESS | DRAIN_MANA | FORGET | HASTE
 spells:HEAL | MIND_BLAST | SCARE
 spells:BA_COLD | BA_POIS
-spells:BO_NETH
+spells:BO_RADI
 spells:S_UNDEAD
 friends:100:2d3:Mummified orc:servant
 friends:100:2d3:Mummified human:servant
@@ -9363,7 +9363,7 @@ flags:IM_COLD
 flags:FORCE_SLEEP
 spell-freq:5
 spells:BLIND | WOUND | SCARE
-spells:BO_NETH
+spells:BO_RADI
 spells:S_MONSTERS
 drop-base:shadow book:8:1:1
 drop-base:shadow book:8:1:1
@@ -10628,7 +10628,7 @@ flags:RAND_25 | TAKE_ITEM
 flags:FORCE_SLEEP
 spell-freq:15
 spells:BLIND | CONF | DRAIN_MANA | HOLD
-spells:BO_NETH
+spells:BO_RADI
 friends:100:2d5:Same
 desc:It is a form that screams its presence against the eye.  Death incarnate,
 desc: its hideous black body seems to struggle against reality as the universe
@@ -10722,9 +10722,9 @@ spell-freq:2
 spells:BRAIN_SMASH | WOUND | CONF | DRAIN_MANA | FORGET | MIND_BLAST
 spells:SLOW
 spells:BA_COLD | BA_FIRE
-spells:BO_ACID | BO_MANA | BO_NETH
+spells:BO_ACID | BO_MANA | BO_RADI
 spells:S_UNDEAD
-desc:A beholder which has cheated death.  Black nether storms rage around the
+desc:A beholder which has cheated death.  Black radiation storms rage around the
 desc: bloodshot pupil of its central giant eye, and light seems to bend as it
 desc: sucks its power from the very air around it.  Your soul chills as it
 desc: drains your vitality for its evil enchantments.
@@ -10917,7 +10917,7 @@ blow:BITE:EXP_80:4d6
 flags:DROP_4
 spell-freq:7
 spells:BLIND | BRAIN_SMASH | WOUND | DARKNESS | DRAIN_MANA
-spells:BO_NETH
+spells:BO_RADI
 spells:HOLD | SCARE
 friends:40:1d4:Vampire:servant
 desc:A foul wind chills your bones as this ghastly figure approaches.
@@ -11014,9 +11014,9 @@ blow:CLAW:HURT:3d8
 blow:CLAW:HURT:3d8
 blow:BITE:EXP_40:4d6
 blow:BITE:EXP_40:4d6
-flags:IM_COLD | IM_POIS | IM_NETHER
+flags:IM_COLD | IM_POIS | IM_RADIATION
 innate-freq:6
-spells:BR_DARK | BR_NETH | BR_POIS
+spells:BR_DARK | BR_RADI | BR_POIS
 desc:A terrifying sight: a winged creature greater than any bird you have ever
 desc: seen, and with no feathers on its horrid black leathery wings.  Descended
 desc: from a creature of an older world perhaps, bred by Sauron to be a winged
@@ -11128,7 +11128,7 @@ flags:OPEN_DOOR | BASH_DOOR
 flags:FORCE_SLEEP
 spell-freq:7
 spells:BLIND | WOUND | HOLD | SCARE
-spells:BO_NETH
+spells:BO_RADI
 desc:A figure that seems made of void, its strangely human shape is cloaked in
 desc: shadow.  It reaches out at you.
 
@@ -11153,7 +11153,7 @@ flags:FORCE_SLEEP
 spell-freq:2
 spells:BLIND | BLINK | WOUND | CONF | DARKNESS | HEAL
 spells:TELE_TO
-spells:BA_ACID | BA_COLD | BA_ELEC | BA_FIRE | BA_NETH
+spells:BA_ACID | BA_COLD | BA_ELEC | BA_FIRE | BA_RADI
 spells:BO_MANA
 spells:S_DEMON | S_DRAGON | S_MONSTERS | S_UNDEAD
 desc:A lord of the Teleri, Eöl is a mighty metalsmith, the only one to ever
@@ -11252,11 +11252,11 @@ blow:BITE:EXP_80:7d10
 flags:INVISIBLE
 flags:ONLY_ITEM
 flags:PASS_WALL | TAKE_ITEM
-flags:IM_COLD | IM_NETHER
+flags:IM_COLD | IM_RADIATION
 innate-freq:12
 spell-freq:6
 spells:CONF | DARKNESS | SCARE | SLOW
-spells:BR_NETH
+spells:BR_RADI
 desc:It is a dragon-like form wrapped in darkness.  You cannot make out its true
 desc: form but you sense its evil.
 
@@ -11364,7 +11364,7 @@ flags:DROP_1 | ONLY_ITEM
 flags:FORCE_SLEEP
 spell-freq:8
 spells:SLOW | TELE_TO
-spells:BO_NETH
+spells:BO_RADI
 desc:A mighty spirit of darkness of vaguely humanoid form.  Razor-edged claws
 desc: reach out to end your life as it glides towards you, seeking to suck the
 desc: energy from your soul to feed its power.
@@ -11470,7 +11470,7 @@ spells:BR_SOUN
 desc:A huge draconic form wreathed in a nimbus of light.  Its roar stuns and
 desc: deafens you.
 
-name:nether hound
+name:radiation hound
 base:zephyr hound
 color:G
 speed:120
@@ -11487,10 +11487,10 @@ blow:CLAW:HURT:2d12
 blow:BITE:HURT:2d12
 blow:BITE:HURT:2d12
 flags:OPEN_DOOR | BASH_DOOR
-flags:NO_CONF | NO_SLEEP | IM_NETHER
+flags:NO_CONF | NO_SLEEP | IM_RADIATION
 flags:FORCE_SLEEP
 innate-freq:5
-spells:BR_NETH
+spells:BR_RADI
 friends:100:2d7:Same
 desc:You feel a soul-tearing chill upon viewing this beast, a ghostly form of
 desc: darkness in the shape of a large dog.
@@ -11862,13 +11862,13 @@ flags:RAND_25 | TAKE_ITEM
 flags:FORCE_SLEEP
 spell-freq:9
 spells:BLIND | WOUND | CONF | DRAIN_MANA | HOLD | TELE_LEVEL
-spells:BO_NETH
+spells:BO_RADI
 spells:S_UNDEAD
 desc:It is an unlife of power almost unequaled.  An affront to existence, its
 desc: very touch abuses and disrupts the flow of life, and its unearthly limbs,
 desc: of purest black, crush rock and flesh with ease.
 
-name:nether wraith
+name:radiation wraith
 base:wraith
 color:G
 speed:120
@@ -11889,7 +11889,7 @@ flags:PASS_WALL
 flags:FORCE_SLEEP
 spell-freq:6
 spells:BLIND | WOUND | DARKNESS | MIND_BLAST | SCARE
-spells:BO_NETH | BE_NETH
+spells:BO_RADI | BE_RADI
 desc:A form that hurts the eye, death permeates the air around it.  As it nears
 desc: you, a coldness saps your soul.
 
@@ -11946,11 +11946,11 @@ blow:BITE:EXP_80:7d14
 flags:UNDEAD | COLD_BLOOD
 flags:ONLY_ITEM
 flags:BASH_DOOR | TAKE_ITEM
-flags:IM_COLD | IM_POIS | NO_STUN | IM_NETHER
+flags:IM_COLD | IM_POIS | NO_STUN | IM_RADIATION
 innate-freq:10
 spell-freq:12
 spells:CONF | SCARE
-spells:BR_COLD | BR_NETH
+spells:BR_COLD | BR_RADI
 desc:The skeletal form of a once-great dragon, enchanted by magic most
 desc: perilous.   Its animated form strikes with speed and drains life from its
 desc: prey to satisfy its hunger.
@@ -12145,7 +12145,7 @@ flags:IM_FIRE | IM_POIS | IM_ACID | NO_CONF | NO_SLEEP | NO_HOLD
 innate-freq:4
 spell-freq:9
 spells:SCARE
-spells:BR_FIRE | BR_POIS | BR_ACID | BR_NETH
+spells:BR_FIRE | BR_POIS | BR_ACID | BR_RADI
 spells:S_HYDRA | S_KIN
 desc:A massive legendary hydra, like an 8-headed hydra, but with a massive
 desc: extra head that opens its mighty jaws at you.  Its many eyes
@@ -12207,7 +12207,7 @@ flags:DROP_4
 flags:PASS_WALL
 spell-freq:5
 spells:BRAIN_SMASH | WOUND | DARKNESS | DRAIN_MANA
-spells:BO_NETH
+spells:BO_RADI
 spells:S_UNDEAD
 spells:HOLD | SCARE
 friends-base:30:1d3:ghost
@@ -12374,12 +12374,12 @@ blow:ENGULF:FIRE:5d5
 blow:ENGULF:ACID:5d5
 blow:ENGULF:COLD:5d5
 flags:RAND_25
-flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_NEXUS | IM_NETHER
+flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_NEXUS | IM_RADIATION
 flags:IM_PLASMA | NO_SLOW | NO_STUN
 flags:ATTR_MULTI
 innate-freq:4
 spells:BR_ACID | BR_CHAO | BR_COLD | BR_DARK | BR_ELEC
-spells:BR_FIRE | BR_GRAV | BR_INER | BR_LIGHT | BR_NETH | BR_NEXU
+spells:BR_FIRE | BR_GRAV | BR_INER | BR_LIGHT | BR_RADI | BR_NEXU
 spells:BR_PLAS | BR_POIS | BR_SHAR | BR_SOUN | BR_TIME | BR_WALL
 desc:An awesome vortex of pure magic, power radiates from its frame.
 
@@ -12438,8 +12438,8 @@ flags:OPEN_DOOR | BASH_DOOR
 flags:FORCE_SLEEP
 spell-freq:4
 spells:BLIND | BRAIN_SMASH | WOUND | SCARE
-spells:BA_NETH
-spells:BO_MANA | BO_NETH
+spells:BA_RADI
+spells:BO_MANA | BO_RADI
 spells:S_UNDEAD
 desc:Everywhere colours seem paler and the air chillier.  At the centre of the
 desc: cold stands a mighty figure.  Its wings envelop you in the chill of death
@@ -12498,7 +12498,7 @@ flags:FORCE_SLEEP
 spell-freq:4
 spells:BLIND | BLINK | BRAIN_SMASH | CONF | DRAIN_MANA | HOLD
 spells:TELE_TO | TPORT
-spells:BA_NETH
+spells:BA_RADI
 spells:S_UNDEAD
 friends:50:2d3:Dread:servant
 desc:It is a massive form of animated death, its colour deeper than black.  It
@@ -12555,11 +12555,11 @@ blow:CLAW:POISON:4d10
 blow:CLAW:POISON:4d10
 flags:FORCE_SLEEP | SMART | EVIL
 flags:OPEN_DOOR | BASH_DOOR | MOVE_BODY
-flags:IM_POIS | IM_COLD | IM_FIRE | IM_NETHER
+flags:IM_POIS | IM_COLD | IM_FIRE | IM_RADIATION
 flags:NO_FEAR | NO_CONF | NO_SLEEP
 innate-freq:6
 spell-freq:7
-spells:BR_NETH | BR_DARK
+spells:BR_RADI | BR_DARK
 spells:S_HOUND
 friends:50:2d4:warg:servant
 friends:50:2d3:hellhound:servant
@@ -12647,7 +12647,7 @@ flags:PASS_WALL
 spell-freq:3
 spells:BLINK | WOUND | DRAIN_MANA | FORGET | HEAL | BRAIN_SMASH
 spells:HOLD | SCARE | TELE_TO | TPORT
-spells:BA_NETH
+spells:BA_RADI
 spells:S_DEMON | S_HI_UNDEAD
 desc:A lich who has reached its ultimate evolutionary stage: a completely
 desc: immaterial state.
@@ -12730,7 +12730,7 @@ flags:IM_COLD | IM_ELEC | IM_FIRE | NO_CONF | NO_SLEEP | NO_HOLD
 flags:FORCE_SLEEP
 spell-freq:2
 spells:WOUND | HOLD | TELE_TO | TRAPS
-spells:BA_DARK | BA_FIRE | BA_MANA | BA_NETH | BA_WATE
+spells:BA_DARK | BA_FIRE | BA_MANA | BA_RADI | BA_WATE
 spells:BO_PLAS
 spells:S_HI_DEMON | S_HI_UNDEAD
 desc:The Mouth of Sauron is a mighty spell caster.  So old that even he cannot
@@ -12809,8 +12809,8 @@ flags:IM_FIRE
 flags:FORCE_SLEEP
 spell-freq:1
 spells:BRAIN_SMASH
-spells:BA_NETH
-spells:BO_MANA | BO_NETH
+spells:BA_RADI
+spells:BO_MANA | BO_RADI
 spells:S_UNDEAD
 desc:A bloodshot eyeball floating in the air, you'd be forgiven for assuming it
 desc: harmless.
@@ -12896,7 +12896,7 @@ flags:DROP_4 | DROP_GOOD | ONLY_ITEM
 flags-off:HURT_FIRE
 spell-freq:3
 spells:BLIND | BRAIN_SMASH | WOUND | DRAIN_MANA
-spells:BA_NETH
+spells:BA_RADI
 spells:S_HI_UNDEAD | S_KIN
 spells:HOLD | SCARE
 desc:Chief messenger between Sauron and Morgoth, she is surely the most deadly
@@ -12925,7 +12925,7 @@ flags:FORCE_SLEEP
 spell-freq:2
 spells:BLIND | BRAIN_SMASH | CONF | DRAIN_MANA | FORGET | SCARE
 spells:BA_ACID | BA_COLD | BA_DARK | BA_FIRE
-spells:BO_MANA | BO_NETH
+spells:BO_MANA | BO_RADI
 spells:S_KIN
 desc:A hive mother of the race of beholders, she can summon her brood to her aid
 desc: whenever she wishes.
@@ -12979,7 +12979,7 @@ flags:DROP_4 | DROP_GOOD | ONLY_ITEM
 flags:FORCE_SLEEP
 spell-freq:3
 spells:BLIND | CONF | HOLD
-spells:BA_DARK | BA_NETH
+spells:BA_DARK | BA_RADI
 spells:S_HI_UNDEAD | S_KIN
 desc:This huge affront to existence twists and tears at the fabric of space.  A
 desc: master of mighty magic, Tselakus hungers for your tender flesh.  Darkness
@@ -13009,7 +13009,7 @@ flags:IM_COLD | IM_FIRE | IM_POIS | NO_STUN
 flags:FORCE_SLEEP
 spell-freq:8
 spells:BRAIN_SMASH | WOUND | DRAIN_MANA | TELE_TO
-spells:BA_NETH
+spells:BA_RADI
 spells:S_UNDEAD
 desc:A skeletal form, black as night, constructed from the bones of its previous
 desc: victims.
@@ -13035,10 +13035,10 @@ blow:BITE:HURT:2d12
 blow:BITE:HURT:2d12
 flags:INVISIBLE
 flags:PASS_WALL
-flags:NO_CONF | NO_SLEEP | NO_HOLD | IM_NETHER
+flags:NO_CONF | NO_SLEEP | NO_HOLD | IM_RADIATION
 flags:FORCE_SLEEP
 innate-freq:5
-spells:BR_NETH | BR_DISE | BR_TIME
+spells:BR_RADI | BR_DISE | BR_TIME
 friends:100:2d7:Same
 desc:Bodies of death, receptacles of all foulness, they emerge like smoke from
 desc: the angles of time, ravenous and snarling and unsatisfied.
@@ -13092,15 +13092,15 @@ flags:DROP_2 | ONLY_ITEM
 flags:OPEN_DOOR
 flags:UNDEAD | EVIL | COLD_BLOOD | SPIRIT
 flags:HURT_LIGHT| NO_CONF | NO_SLEEP | NO_STUN | NO_HOLD
-flags:IM_FIRE | IM_COLD | IM_POIS | IM_NETHER
+flags:IM_FIRE | IM_COLD | IM_POIS | IM_RADIATION
 flags:FORCE_SLEEP
 flags-off:HURT_COLD
 innate-freq:25
 spell-freq:4
 spells:BLIND | BRAIN_SMASH | SCARE
-spells:BA_NETH
-spells:BO_MANA | BO_NETH
-spells:BR_NETH
+spells:BA_RADI
+spells:BO_MANA | BO_RADI
+spells:BR_RADI
 spells:S_UNDEAD
 desc:This intensely evil creature bears the form of a gargantuan black worm.
 desc:  Its gaping maw is a void of blackness, acid drips from its steely hide.
@@ -13515,8 +13515,8 @@ flags:IM_ELEC | IM_FIRE
 flags:FORCE_SLEEP
 spell-freq:4
 spells:BLIND | BRAIN_SMASH | SCARE
-spells:BA_NETH
-spells:BO_MANA | BO_NETH
+spells:BA_RADI
+spells:BO_MANA | BO_RADI
 spells:S_UNDEAD
 desc:A huge giant garbed in black, it breaks your armour from your back,
 desc: leaving you defenseless against its evil wrath.  It can smell your fear,
@@ -13544,7 +13544,7 @@ flags:IM_ACID | IM_COLD | IM_FIRE | IM_POIS | NO_CONF | NO_SLEEP | NO_HOLD
 flags:FORCE_SLEEP
 spell-freq:2
 spells:BLIND | BRAIN_SMASH | CONF | DRAIN_MANA | FORGET | SCARE
-spells:BA_ACID | BA_COLD | BA_DARK | BA_FIRE | BA_NETH
+spells:BA_ACID | BA_COLD | BA_DARK | BA_FIRE | BA_RADI
 spells:BO_MANA
 spells:S_KIN
 desc:A beholder of great size and age, floating in the air.  His gaze seems to
@@ -13571,7 +13571,7 @@ flags:FORCE_SLEEP
 spell-freq:1
 spells:BRAIN_SMASH | WOUND | TRAPS
 spells:BA_WATE
-spells:BO_NETH | BO_PLAS
+spells:BO_RADI | BO_PLAS
 spells:S_UNDEAD
 desc:A glowing skull possessed by sorcerous power.  It need not move, but merely
 desc: blast you with mighty magic as it speaks the words of power.
@@ -13597,7 +13597,7 @@ flags:KILL_WALL
 spell-freq:3
 spells:BLIND | WOUND | CONF | DRAIN_MANA | BRAIN_SMASH
 spells:HOLD | TELE_TO
-spells:BA_MANA | BA_NETH
+spells:BA_MANA | BA_RADI
 spells:S_UNDEAD
 desc:A humanoid form, black as night, advancing steadily and unstoppably, even
 desc: the very rock of the dungeon cannot prevent it reaching you.
@@ -13619,12 +13619,12 @@ blow:CLAW:HURT:3d12
 blow:BITE:HURT:3d12
 blow:BITE:HURT:3d12
 flags:BASH_DOOR
-flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS | IM_DISEN | IM_NETHER
+flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS | IM_DISEN | IM_RADIATION
 flags:IM_NEXUS | IM_PLASMA | NO_CONF | NO_SLEEP | NO_HOLD | NO_SLOW | NO_STUN
 flags:ATTR_MULTI | FORCE_SLEEP
 innate-freq:5
 spells:BR_ACID | BR_CHAO | BR_COLD | BR_DARK | BR_DISE
-spells:BR_ELEC | BR_FIRE | BR_GRAV | BR_INER | BR_LIGHT | BR_NETH
+spells:BR_ELEC | BR_FIRE | BR_GRAV | BR_INER | BR_LIGHT | BR_RADI
 spells:BR_NEXU | BR_PLAS | BR_POIS | BR_SHAR | BR_SOUN | BR_TIME
 spells:BR_WALL
 friends:100:2d7:Same
@@ -13851,7 +13851,7 @@ flags:DROP_4 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
 spell-freq:2
 spells:BLIND | BLINK | WOUND | HOLD | SCARE | BRAIN_SMASH
 spells:TELE_TO | TRAPS
-spells:BA_MANA | BA_NETH
+spells:BA_MANA | BA_RADI
 spells:BO_MANA
 spells:S_KIN | S_MONSTERS | S_UNDEAD
 friends:100:2d4:Dread:servant
@@ -13914,7 +13914,7 @@ flags:DROP_2 | DROP_GOOD | ONLY_ITEM
 flags:OPEN_DOOR | BASH_DOOR | MOVE_BODY
 spell-freq:3
 spells:BLIND | WOUND | FORGET | HOLD | SCARE
-spells:BO_COLD | BO_NETH
+spells:BO_COLD | BO_RADI
 spells:S_MONSTER | S_WRAITH
 desc:A tall black cloaked Ringwraith, he is a master of horsemanship.  He longs
 desc: to taste your blood.
@@ -13966,7 +13966,7 @@ flags:OPEN_DOOR | BASH_DOOR | MOVE_BODY
 flags:FORCE_SLEEP
 spell-freq:3
 spells:BLIND | WOUND | FORGET | HOLD | SCARE
-spells:BO_ACID | BO_COLD | BO_FIRE | BO_NETH
+spells:BO_ACID | BO_COLD | BO_FIRE | BO_RADI
 spells:S_MONSTER | S_WRAITH
 desc:A sorceress in life, Adunaphel quickly fell under Sauron's sway and the
 desc: power of the rings.
@@ -14016,7 +14016,7 @@ flags:OPEN_DOOR | BASH_DOOR | MOVE_BODY
 flags:FORCE_SLEEP
 spell-freq:3
 spells:BLIND | WOUND | DARKNESS | HOLD | SCARE
-spells:BO_COLD | BO_FIRE | BO_NETH
+spells:BO_COLD | BO_FIRE | BO_RADI
 spells:S_MONSTERS | S_WRAITH
 desc:A mighty sorcerer King, Akhorahil was blind in life.  With powerful
 desc: enchantments, he created jewelled eyes that enabled him to see better than
@@ -14076,7 +14076,7 @@ flags:ATTR_MULTI
 innate-freq:5
 spell-freq:5
 spells:BLIND | CONF | SCARE
-spells:BR_POIS | BR_DARK | BR_NETH | BR_CHAO | BR_TIME
+spells:BR_POIS | BR_DARK | BR_RADI | BR_CHAO | BR_TIME
 spells:S_DRAGON | S_HI_DRAGON
 desc:A massive dragon of hideous form.  From its shadowy aura comes the stench
 desc: of the underworld.  Its body is twisted by chaotic forces as it strives
@@ -14159,7 +14159,7 @@ flags:FORCE_SLEEP
 spell-freq:3
 spells:BLIND | WOUND | HOLD | SCARE
 spells:BA_FIRE
-spells:BO_FIRE | BO_NETH
+spells:BO_FIRE | BO_RADI
 spells:S_MONSTER | S_WRAITH
 desc:Ren was an insane eastern king who believed himself to be the son of a
 desc: volcano god.  At an early age his sanity was destroyed by a plague that
@@ -14217,7 +14217,7 @@ flags:IM_FIRE
 flags:FORCE_SLEEP
 spell-freq:3
 spells:BLIND | WOUND | HOLD | SCARE
-spells:BA_ACID | BA_COLD | BA_ELEC | BA_FIRE | BA_NETH
+spells:BA_ACID | BA_COLD | BA_ELEC | BA_FIRE | BA_RADI
 spells:S_UNDEAD | S_WRAITH
 desc:This Ringwraith was a weak-minded sorcerer-king who fell easily under
 desc: Sauron's power.
@@ -14331,7 +14331,7 @@ flags:OPEN_DOOR | BASH_DOOR | MOVE_BODY
 flags:FORCE_SLEEP
 spell-freq:3
 spells:BLIND | WOUND | HOLD | SCARE
-spells:BA_FIRE | BA_NETH
+spells:BA_FIRE | BA_RADI
 spells:S_HOUND | S_UNDEAD | S_WRAITH
 desc:Dwar had a special affinity for dogs in life, and can still command them at
 desc: will.  He howls maniacally as he reaches out to destroy you.
@@ -14360,8 +14360,8 @@ flags:OPEN_DOOR | BASH_DOOR | MOVE_BODY
 flags:FORCE_SLEEP
 spell-freq:3
 spells:BLIND | WOUND | HOLD | MIND_BLAST | SCARE
-spells:BA_COLD | BA_NETH
-spells:BE_NETH
+spells:BA_COLD | BA_RADI
+spells:BE_RADI
 spells:S_UNDEAD | S_WRAITH
 desc:A Ringwraith powerful in fell sorcery, he yearns for the life he has lost
 desc: for an unlife of everlasting torment.
@@ -14420,7 +14420,7 @@ flags:IM_ACID | IM_FIRE
 flags:FORCE_SLEEP
 spell-freq:2
 spells:BLIND | WOUND | HOLD | SCARE | TELE_LEVEL
-spells:BA_COLD | BA_FIRE | BA_NETH
+spells:BA_COLD | BA_FIRE | BA_RADI
 spells:BO_MANA
 spells:S_HI_UNDEAD | S_WRAITH
 desc:A warrior-king of the East.  Khamûl is a powerful opponent, his skill in
@@ -14449,7 +14449,7 @@ flags:FORCE_SLEEP
 spell-freq:2
 spell-power:110
 spells:BRAIN_SMASH | WOUND | SCARE | TELE_TO
-spells:BA_NETH | BA_WATE
+spells:BA_RADI | BA_WATE
 spells:BO_ICE | BO_MANA
 spells:S_HI_UNDEAD
 desc:A legion of evil undead druj animating the skeleton of a once mighty
@@ -14510,7 +14510,7 @@ flags:OPEN_DOOR | BASH_DOOR | MOVE_BODY
 flags:FORCE_SLEEP
 spell-freq:2
 spells:BLIND | BRAIN_SMASH | WOUND | HOLD | SCARE | TELE_AWAY
-spells:BA_NETH
+spells:BA_RADI
 spells:BO_MANA
 spells:S_HI_DEMON | S_HI_DRAGON | S_HI_UNDEAD | S_KIN | S_MONSTERS | S_WRAITH
 friends:50:1d1:Winged Horror
@@ -14706,11 +14706,11 @@ blow:BITE:FIRE:9d12
 flags:UNIQUE | MALE | EVIL | SMART | ATTR_FLICKER
 flags:DROP_4 | DROP_GOOD | ONLY_ITEM
 flags:OPEN_DOOR | BASH_DOOR | MOVE_BODY
-flags:IM_FIRE | IM_POIS | NO_CONF | NO_SLEEP | NO_HOLD | IM_NETHER
+flags:IM_FIRE | IM_POIS | NO_CONF | NO_SLEEP | NO_HOLD | IM_RADIATION
 flags:FORCE_SLEEP
 innate-freq:3
 spell-freq:15
-spells:BR_DARK | BR_FIRE | BR_NETH | BR_POIS
+spells:BR_DARK | BR_FIRE | BR_RADI | BR_POIS
 spells:S_HOUND
 desc:The first guard of Angband, Carcharoth, also known as 'The Red Maw', is the
 desc: greatest wolf to ever walk the earth.  He is highly intelligent and a
@@ -14738,7 +14738,7 @@ flags:DROP_4 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
 flags:IM_ELEC | IM_FIRE
 spell-freq:2
 spells:BLIND | WOUND | SCARE | TPORT | BRAIN_SMASH
-spells:BA_FIRE | BA_MANA | BA_NETH
+spells:BA_FIRE | BA_MANA | BA_RADI
 spells:BO_MANA
 spells:S_HI_DEMON | S_HI_UNDEAD | S_KIN | S_MONSTERS
 friends:50:1d3:mummified chieftain:servant
@@ -14842,7 +14842,7 @@ flags:FORCE_DEPTH
 spell-freq:2
 spell-power:130
 spells:BRAIN_SMASH | WOUND | TELE_LEVEL | TPORT
-spells:BA_DARK | BA_FIRE | BA_NETH
+spells:BA_DARK | BA_FIRE | BA_RADI
 spells:BO_ICE | BO_MANA | BO_PLAS
 spells:SHAPECHANGE
 spells:S_HI_DEMON | S_HI_DRAGON | S_HI_UNDEAD | S_UNIQUE | S_WRAITH
@@ -14880,7 +14880,7 @@ spell-freq:3
 spell-power:105
 spells:BLINK | TPORT | TELE_LEVEL | TELE_SELF_TO
 spells:BLIND | CONF | SCARE | WOUND
-spells:BR_FIRE | BR_NETH | BA_DARK
+spells:BR_FIRE | BR_RADI | BA_DARK
 spells:S_HOUND | S_DRAGON | S_HI_DEMON | S_HI_UNDEAD
 desc:Sauron's form as the mightiest wolf to walk the world.
 
@@ -14934,8 +14934,8 @@ spell-freq:2
 spell-power:130
 spells:BLINK | TPORT | TELE_LEVEL | BLIND | CONF
 spells:BRAIN_SMASH | FORGET
-spells:BO_ICE | BO_PLAS | BE_NETH
-spells:BA_NETH | STORM | BA_DARK | BA_POIS | BA_ACID
+spells:BO_ICE | BO_PLAS | BE_RADI
+spells:BA_RADI | STORM | BA_DARK | BA_POIS | BA_ACID
 spells:S_DRAGON | S_HI_DEMON | S_HI_UNDEAD
 desc:Sauron's form as a vampire, great as a dark cloud across the moon.
 
@@ -14964,7 +14964,7 @@ flags:NO_CONF | NO_SLEEP | NO_HOLD
 flags:FORCE_DEPTH | FORCE_SLEEP
 spell-freq:3
 spells:BRAIN_SMASH
-spells:BA_MANA | BA_NETH
+spells:BA_MANA | BA_RADI
 spells:BO_MANA
 spells:S_HI_DEMON | S_HI_DRAGON | S_HI_UNDEAD | S_MONSTERS | S_UNIQUE
 desc:He is the Master of the Pits of Angband.  His figure is like a black

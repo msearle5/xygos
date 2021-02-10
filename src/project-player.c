@@ -368,11 +368,11 @@ static int project_player_handler_NEXUS(project_player_handler_context_t *contex
 	return 0;
 }
 
-static int project_player_handler_NETHER(project_player_handler_context_t *context)
+static int project_player_handler_RADIATION(project_player_handler_context_t *context)
 {
 	int drain = 200 + (player->exp / 100) * z_info->life_drain_percent;
 
-	if (player_resists(player, ELEM_NETHER) ||
+	if (player_resists(player, ELEM_RADIATION) ||
 		player_of_has(player, OF_HOLD_LIFE)) {
 		msg("You resist the effect!");
 		equip_learn_flag(player, OF_HOLD_LIFE);
@@ -383,7 +383,7 @@ static int project_player_handler_NETHER(project_player_handler_context_t *conte
 	msg("You feel your life force draining away!");
 	player_exp_lose(player, drain, false);
 
-	/* Powerful nether attacks have further side-effects */
+	/* Powerful radiation attacks have further side-effects */
 	if (context->power >= 80) {
 		/* Mana loss */
 		if ((randint0(context->dam) > 100) && player->msp) {

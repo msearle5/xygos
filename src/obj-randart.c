@@ -150,7 +150,7 @@ static s16b art_idx_gen[] = {
 	ART_IDX_GEN_RSOUND,
 	ART_IDX_GEN_RSHARD,
 	ART_IDX_GEN_RNEXUS,
-	ART_IDX_GEN_RNETHER,
+	ART_IDX_GEN_RRADIATION,
 	ART_IDX_GEN_RCHAOS,
 	ART_IDX_GEN_RDISEN,
 	ART_IDX_GEN_AC,
@@ -171,7 +171,7 @@ static s16b art_idx_high_resist[] =	{
 	ART_IDX_GEN_RSOUND,
 	ART_IDX_GEN_RSHARD,
 	ART_IDX_GEN_RNEXUS,
-	ART_IDX_GEN_RNETHER,
+	ART_IDX_GEN_RRADIATION,
 	ART_IDX_GEN_RCHAOS,
 	ART_IDX_GEN_RDISEN,
 	ART_IDX_GEN_PSTUN
@@ -835,7 +835,7 @@ void count_high_resists(const struct artifact *art,
 		if (art->el_info[ELEM_SOUND].res_level == 1) num++;
 		if (art->el_info[ELEM_SHARD].res_level == 1) num++;
 		if (art->el_info[ELEM_NEXUS].res_level == 1) num++;
-		if (art->el_info[ELEM_NETHER].res_level == 1) num++;
+		if (art->el_info[ELEM_RADIATION].res_level == 1) num++;
 		if (art->el_info[ELEM_CHAOS].res_level == 1) num++;
 		if (art->el_info[ELEM_DISEN].res_level == 1) num++;
 		if (of_has(art->flags, OF_PROT_STUN)) num++;
@@ -906,10 +906,10 @@ void count_high_resists(const struct artifact *art,
 		(data->art_probs[ART_IDX_GEN_RNEXUS])++;
 	}
 
-	if (art->el_info[ELEM_NETHER].res_level == 1) {
-		/* Resist nether ability */
-		file_putf(log_file, "Adding 1 for resist nether - general.\n");
-		(data->art_probs[ART_IDX_GEN_RNETHER])++;
+	if (art->el_info[ELEM_RADIATION].res_level == 1) {
+		/* Resist radiation ability */
+		file_putf(log_file, "Adding 1 for resist radiation - general.\n");
+		(data->art_probs[ART_IDX_GEN_RRADIATION])++;
 	}
 
 	if (art->el_info[ELEM_CHAOS].res_level == 1) {
@@ -1883,7 +1883,7 @@ static void add_high_resist(struct artifact *art,
 		else if (i == 6) success = add_resist(art, ELEM_SOUND);
 		else if (i == 7) success = add_resist(art, ELEM_SHARD);
 		else if (i == 8) success = add_resist(art, ELEM_NEXUS);
-		else if (i == 9) success = add_resist(art, ELEM_NETHER);
+		else if (i == 9) success = add_resist(art, ELEM_RADIATION);
 		else if (i == 10) success = add_resist(art, ELEM_CHAOS);
 		else if (i == 11) success = add_resist(art, ELEM_DISEN);
 		else if (i == 12) success = add_flag(art, OF_PROT_STUN);
@@ -2338,8 +2338,8 @@ static void add_ability_aux(struct artifact *art, int r, s32b target_power,
 			add_resist(art, ELEM_NEXUS);
 			break;
 
-		case ART_IDX_GEN_RNETHER:
-			add_resist(art, ELEM_NETHER);
+		case ART_IDX_GEN_RRADIATION:
+			add_resist(art, ELEM_RADIATION);
 			break;
 
 		case ART_IDX_GEN_RCHAOS:

@@ -3253,7 +3253,7 @@ static enum parser_error parse_class_equip(struct parser *p) {
 	si->sval = sval;
 	si->min = parser_getuint(p, "min");
 	si->max = parser_getuint(p, "max");
-	si->ego = ego;
+	si->ego = (struct ego_item *)ego;
 
 	if (si->min > 99 || si->max > 99) {
 		mem_free(si);

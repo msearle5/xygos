@@ -555,7 +555,7 @@ alloc:3:30 to 127
 attack:4d4:12:16
 armor:0:0
 flags:PROT_FEAR
-values:STR[4] | STEALTH[2] | RES_NETHER[1] | RES_DARK[1] | RES_COLD[1]
+values:STR[4] | STEALTH[2] | RES_RADIATION[1] | RES_DARK[1] | RES_COLD[1]
 slay:EVIL_2
 slay:UNDEAD_5
 slay:GIANT_3
@@ -711,7 +711,7 @@ alloc:2:65 to 127
 attack:4d4:13:17
 armor:0:10
 flags:HOLD_LIFE
-values:STR[4] | WIS[4] | LIGHT[1] | RES_FIRE[1] | RES_ELEC[1] | RES_NETHER[1]
+values:STR[4] | WIS[4] | LIGHT[1] | RES_FIRE[1] | RES_ELEC[1] | RES_RADIATION[1]
 slay:EVIL_2
 slay:UNDEAD_3
 act:DISPEL_EVIL
@@ -843,7 +843,7 @@ alloc:1:30 to 100
 attack:2d9:10:13
 armor:0:0
 flags:HOLD_LIFE | SEE_INVIS
-values:INT[4] | WIS[4] | RES_FIRE[1] | RES_NETHER[1]
+values:INT[4] | WIS[4] | RES_FIRE[1] | RES_RADIATION[1]
 brand:FIRE_3
 slay:DEMON_5
 slay:EVIL_2
@@ -969,7 +969,7 @@ attack:4d6:-12:20
 armor:0:0 
 # F:DRAIN_MANA | DRAIN_HP | 
 flags:DRAIN_EXP | AGGRAVATE | PROT_BLIND
-values:STEALTH[-4] | WIS[-4] | RES_DARK[1] | RES_LIGHT[1] | RES_NETHER[1]
+values:STEALTH[-4] | WIS[-4] | RES_DARK[1] | RES_LIGHT[1] | RES_RADIATION[1]
 brand:POIS_3
 desc:A mighty, heavy black spear, once wielded by the Lord of Darkness
 desc: himself as he came to Valinor in wrath.  Its envenomed bite pierced
@@ -1001,7 +1001,7 @@ alloc:1:30 to 127
 attack:4d10:15:19
 armor:0:0
 flags:FREE_ACT | HOLD_LIFE | SEE_INVIS | SLOW_DIGEST | REGEN | BLESSED
-values:DEX[4] | RES_ACID[3] | RES_NETHER[1]
+values:DEX[4] | RES_ACID[3] | RES_RADIATION[1]
 slay:DRAGON_3
 slay:ANIMAL_2
 act:TELE_OTHER
@@ -1411,7 +1411,7 @@ attack:1d1:0:0
 armor:2:15
 flags:FREE_ACT
 flags:PROT_CONF | SUST_CON
-values:DEX[5] | SPD[5] | RES_NETHER[1]
+values:DEX[5] | SPD[5] | RES_RADIATION[1]
 act:REM_FEAR_POIS
 time:5
 desc:A pair of high-laced shoes, bestowing extraordinary agility and proof
@@ -1640,7 +1640,7 @@ cost:45000
 alloc:20:20 to 80
 attack:0d0:0:0
 armor:10:20
-values:STEALTH[3] | RES_DARK[1] | RES_NETHER[1]
+values:STEALTH[3] | RES_DARK[1] | RES_RADIATION[1]
 values:RES_ACID[1] | RES_ELEC[1] | RES_FIRE[1] | RES_COLD[1]
 desc:Familiar with the secret ways hidden in darkness, this leather cuirass is
 desc: truly more than it appears.
@@ -1653,7 +1653,7 @@ cost:35000
 alloc:20:25 to 90
 attack:0d0:0:0
 armor:20:15
-values:RES_CHAOS[1] | RES_NETHER[1] | RES_POIS[1]
+values:RES_CHAOS[1] | RES_RADIATION[1] | RES_POIS[1]
 act:PROTEVIL
 time:100+d100
 desc:In this studded cuirass of pliable leather lives the memory of
@@ -1779,7 +1779,7 @@ alloc:11:75 to 127
 attack:2d4:-4:0
 armor:90:20
 flags:HOLD_LIFE | SUST_CON | PROT_FEAR
-values:CON[2] | RES_ACID[1] | RES_COLD[1] | RES_DARK[1] | RES_NETHER[1]
+values:CON[2] | RES_ACID[1] | RES_COLD[1] | RES_DARK[1] | RES_RADIATION[1]
 values:RES_NEXUS[1] | RES_CHAOS[1]
 act:HEAL2
 time:444
@@ -2105,7 +2105,7 @@ cost:90000
 alloc:6:65 to 127
 attack:1d6:0:0
 armor:10:15
-values:RES_DARK[1] | RES_NETHER[1] | RES_ELEC[1] | RES_FIRE[1] | LIGHT[1]
+values:RES_DARK[1] | RES_RADIATION[1] | RES_ELEC[1] | RES_FIRE[1] | LIGHT[1]
 flags:PROT_BLIND
 act:CURE_TEMP
 time:100
@@ -2234,7 +2234,7 @@ flags:AGGRAVATE | DRAIN_EXP | SEE_INVIS | REGEN | TELEPATHY | STICKY
 flags:SUST_STR | SUST_DEX | SUST_CON | SUST_INT | SUST_WIS
 values:STR[5] | INT[5] | WIS[5] | DEX[5] | CON[5] | SPD[5]
 values:RES_FIRE[3] | RES_COLD[3] | RES_ELEC[3] | RES_ACID[3] | RES_DARK[1]
-values:RES_DISEN[1] | RES_POIS[1] | RES_NETHER[1]
+values:RES_DISEN[1] | RES_POIS[1] | RES_RADIATION[1]
 act:BIZARRE
 time:200+9d50
 desc:"One Ring to rule them all, One Ring to find them, One Ring to bring
@@ -2312,7 +2312,7 @@ weight:3
 cost:25000
 alloc:2:30 to 70
 flags:HOLD_LIFE | SUST_CON | SUST_WIS | REGEN
-values:WIS[2] | RES_DARK[1] | RES_COLD[1] | RES_NETHER[1]
+values:WIS[2] | RES_DARK[1] | RES_COLD[1] | RES_RADIATION[1]
 act:RESTORE_LIFE
 time:150
 desc:A plain white jewel, given by Queen Arwen to Frodo Baggins before his
@@ -2375,7 +2375,7 @@ attack:2d4:-8:0
 armor:80:35
 flags:HOLD_LIFE | REGEN | PROT_FEAR | PROT_BLIND | PROT_CONF 
 values:RES_ACID[1] | RES_ELEC[1] | RES_FIRE[1] | RES_COLD[1] | RES_POIS[1]
-values:RES_LIGHT[1] | RES_DARK[1] | RES_SOUND[1] | RES_SHARD[1] | RES_NETHER[1]
+values:RES_LIGHT[1] | RES_DARK[1] | RES_SOUND[1] | RES_SHARD[1] | RES_RADIATION[1]
 values:RES_NEXUS[1] | RES_CHAOS[1] | RES_DISEN[1]
 act:RAGE_BLESS_RESIST
 time:50
@@ -2416,7 +2416,7 @@ flags:PROT_CONF | SEE_INVIS | TELEPATHY | PROT_FEAR | STICKY
 values:STR[50] | INT[50] | WIS[50] | DEX[50] | CON[50] | INFRA[50]
 values:LIGHT[1]
 values:RES_ACID[1] | RES_ELEC[1] | RES_FIRE[1] | RES_COLD[1] | RES_POIS[1]
-values:RES_LIGHT[1] | RES_DARK[1] | RES_NEXUS[1] | RES_NETHER[1]
+values:RES_LIGHT[1] | RES_DARK[1] | RES_NEXUS[1] | RES_RADIATION[1]
 desc:Containing much of the power of he who once was mightiest among the Ainur,
 desc: this plain iron crown has mounted upon it the two remaining Silmarils,
 desc: greatest treasures of Middle-Earth.

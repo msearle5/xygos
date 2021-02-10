@@ -118,7 +118,7 @@ static struct element_powers {
 	{ "sound",			T_HRES,	0,	0,	14,	0 },
 	{ "shards",			T_HRES,	0,	0,	8,	0 },
 	{ "nexus",			T_HRES,	0,	0,	15,	0 },
-	{ "nether",			T_HRES,	0,	0,	20,	0 },
+	{ "radiation",		T_HRES,	0,	0,	20,	0 },
 	{ "chaos",			T_HRES,	0,	0,	20,	0 },
 	{ "disenchantment",	T_HRES,	0,	0,	20,	0 }
 };

@@ -299,23 +299,15 @@ immunities: immunity means that no damage is taken, and the character's
 equipment is also totally protected. Immunities are EXTREMELY rare.
 
 Another attack that the player will come into contact with all too often is
-the soul-chilling nature of the undead, which can drain the character's
-life experience. Some monsters have a life-draining melee attack, others
-may cast ball or bolt spells or, in extreme cases, breathe the very force
-of the netherworld (shortened by the game to "nether".) There are two
-powers which are of assistance in this case: that of "hold life" will
-prevent 90% of all experience drains, and in the other 10% of cases, the
-amount of experience lost will be reduced by 90%. That of "resistance to
-nether forces" will provide resistance to nether bolts, balls and breaths,
-reducing the damage and preventing any experience drains from these
-attacks, but has no effect on melee "hits to drain experience". Monsters
-caught in the blast from a nether ball or breath will take damage
-proportional to distance from the centre of the attack, except for undead
-who are totally immune. The player may find wands or rods of Drain Life,
-which similarly are ineffective on those undead creatures which have no
-life to drain: however, the real player equivalent attack spell is the
-priest/paladin spell of "Orb of Draining", a ball spell which does damage
-to all monsters, double damage to evil monsters, and is resisted by none.
+radiation, which can cause mutations and other nasty side-effects. You may
+be irradiated by monsters' attacks, by the terrain ("don't you go where you
+see it glow"), or by using some items. Sometimes these are useful items,
+it is up to you to decide whether the risk is worth it.
+Monsters caught in the blast from a radiation ball or breath will take damage
+proportional to distance from the centre of the attack, unless immune.
+Some monsters have a life-draining melee attack, against which "hold life"
+will prevent 90% of all experience drains, and in the other 10% of cases,
+the amount of experience lost will be reduced by 90%.
 
 Other attack forms are rarer, but may include: disenchantment (both in
 melee or by a monster breath), chaos (breath or melee, which if unresisted

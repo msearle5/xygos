@@ -918,11 +918,11 @@ code:NEXUS
 power:15
 bindui:resist_ui_compact_0<NEXUS>:0
 
-name:nether resistance
+name:radiation resistance
 type:resistance
-code:NETHER
+code:RADIATION
 power:20
-bindui:resist_ui_compact_0<NETHER>:0
+bindui:resist_ui_compact_0<RADIATION>:0
 
 name:chaos resistance
 type:resistance

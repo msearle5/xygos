@@ -119,9 +119,9 @@ desc:You can bash monsters with a shield in melee.
 
 type:player
 code:EVIL
-bindui:resist_ui_compact_0<NETHER>:0:1
+bindui:resist_ui_compact_0<RADIATION>:0:1
 name:Evil
-desc:You resist nether, but are hurt by holy attacks.
+desc:You resist radiation, but are hurt by holy attacks.
 
 type:player
 code:COMBAT_REGEN

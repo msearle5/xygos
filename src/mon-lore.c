@@ -1351,7 +1351,7 @@ void lore_append_abilities(textblock *tb, const struct monster_race *race,
 
 	/* Special case for undead */
 	if (rf_has(known_flags, RF_UNDEAD)) {
-		rf_off(current_flags, RF_IM_NETHER);
+		rf_off(current_flags, RF_IM_RADIATION);
 	}
 
 	lore_append_clause(tb, current_flags, COLOUR_L_UMBER, start, "or", "");
