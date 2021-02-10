@@ -539,6 +539,10 @@ static size_t obj_desc_inscrip(const struct object *obj, char *buf,
 	if (ignore_item_ok(obj))
 		u[n++] = "ignore";
 
+	/* Note quest */
+	if (of_has(obj->flags, OF_QUEST_SPECIAL))
+		u[n++] = "special";
+
 	/* Note unknown properties */
 	if (!object_runes_known(obj) && (obj->known->notice & OBJ_NOTICE_ASSESSED))
 		u[n++] = "??";

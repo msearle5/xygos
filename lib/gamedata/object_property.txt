@@ -6,7 +6,7 @@
 # subtype: subtype of object property, currently only used by flags
 # id-type: how a property is identified, currently only used by flags
 # code: a code for the object property, which is used to associate it with its
-#       index among the other properties of that type
+#       index among the other properties of that ty pe
 # power: the value given to the property in object power calculations
 # mult: relative value of properties, used in power calculations
 # type-mult: extra multiplier used in power for particular properties on
@@ -984,3 +984,7 @@ code:COLD
 power:43
 bindui:resist_ui_compact_0<COLD>:0
 
+name:task special
+type:flag
+code:QUEST_SPECIAL
+power:1
