@@ -536,6 +536,15 @@ static int quiver_absorb_num(const struct object *obj)
  */
 int inven_carry_num(const struct object *obj, bool stack)
 {
+	/* Reduce the number we can absorb if too heavy */
+	int items = obj->number;
+	int maxweight = weight_limit(&player->state) * BURDEN_LIMIT;
+	while (player->upkeep->total_weight + (items * obj->weight) > maxweight) {
+		items--;
+		if (items == 0)
+			return 0;
+	}
+
 	/* Check for similarity */
 	if (stack) {
 		struct object *gear_obj;
@@ -555,12 +564,12 @@ int inven_carry_num(const struct object *obj, bool stack)
 
 	/* Free inventory slots, so there is definitely room */
 	if (pack_slots_used(player) < z_info->pack_size) {
-		return obj->number;
+		return items;
 	} else {
 		int i;
 
 		/* Absorb as many as we can in the quiver */
-		int num_left = obj->number - quiver_absorb_num(obj);
+		int num_left = items - quiver_absorb_num(obj);
 
 		/* See if we can add to a part full inventory slot */
 		for (i = 0; i < z_info->pack_size; i++) {
@@ -570,8 +579,7 @@ int inven_carry_num(const struct object *obj, bool stack)
 			}
 		}
 
-		/* Return the number we can absorb */
-		return obj->number - MAX(num_left, 0);
+		return items - MAX(num_left, 0);
 	}
 }
 

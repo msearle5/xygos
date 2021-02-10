@@ -405,50 +405,104 @@ static const int adj_str_th[STAT_RANGE] =
 
 
 /**
- * Stat Table (STR) -- weight limit in deca-pounds
+ * Stat Table (STR) -- weight limit (point at which burdening starts) in grams
  */
 static const int adj_str_wgt[STAT_RANGE] =
 {
-	5	/* 3 */,
-	6	/* 4 */,
-	7	/* 5 */,
-	8	/* 6 */,
-	9	/* 7 */,
-	10	/* 8 */,
-	11	/* 9 */,
-	12	/* 10 */,
-	13	/* 11 */,
-	14	/* 12 */,
-	15	/* 13 */,
-	16	/* 14 */,
-	17	/* 15 */,
-	18	/* 16 */,
-	19	/* 17 */,
-	20	/* 18/00-18/09 */,
-	22	/* 18/10-18/19 */,
-	24	/* 18/20-18/29 */,
-	26	/* 18/30-18/39 */,
-	28	/* 18/40-18/49 */,
-	30	/* 18/50-18/59 */,
-	30	/* 18/60-18/69 */,
-	30	/* 18/70-18/79 */,
-	30	/* 18/80-18/89 */,
-	30	/* 18/90-18/99 */,
-	30	/* 18/100-18/109 */,
-	30	/* 18/110-18/119 */,
-	30	/* 18/120-18/129 */,
-	30	/* 18/130-18/139 */,
-	30	/* 18/140-18/149 */,
-	30	/* 18/150-18/159 */,
-	30	/* 18/160-18/169 */,
-	30	/* 18/170-18/179 */,
-	30	/* 18/180-18/189 */,
-	30	/* 18/190-18/199 */,
-	30	/* 18/200-18/209 */,
-	30	/* 18/210-18/219 */,
-	30	/* 18/220+ */
+	7500	/* 3 */,
+	11000	/* 4 */,
+	14500	/* 5 */,
+	17500	/* 6 */,
+	20500	/* 7 */,
+	23500	/* 8 */,
+	25500	/* 9 */,
+	28500	/* 10 */,
+	31000	/* 11 */,
+	33250	/* 12 */,
+	35500	/* 13 */,
+	37500	/* 14 */,
+	39500	/* 15 */,
+	41500	/* 16 */,
+	43250	/* 17 */,
+	45000	/* 18/00-18/09 */,
+	48000	/* 18/10-18/19 */,
+	52000	/* 18/20-18/29 */,
+	57000	/* 18/30-18/39 */,
+	61000	/* 18/40-18/49 */,
+	65000	/* 18/50-18/59 */,
+	67500	/* 18/60-18/69 */,
+	69000	/* 18/70-18/79 */,
+	70250	/* 18/80-18/89 */,
+	71000	/* 18/90-18/99 */,
+	71500	/* 18/100-18/109 */,
+	71950	/* 18/110-18/119 */,
+	72350	/* 18/120-18/129 */,
+	72700	/* 18/130-18/139 */,
+	73000	/* 18/140-18/149 */,
+	73250	/* 18/150-18/159 */,
+	73500	/* 18/160-18/169 */,
+	73750	/* 18/170-18/179 */,
+	74000	/* 18/180-18/189 */,
+	74250	/* 18/190-18/199 */,
+	74500	/* 18/200-18/209 */,
+	74750	/* 18/210-18/219 */,
+	75000	/* 18/220+ */
 };
 
+/**
+ * Burden Table -- penalty to speed against burden as a proportion of weight limit.
+ * 
+ * This is a purely exponential function from Limit x 2.0 (10) up. The lower range has
+ * been hand tweaked. It's supposed to have round numbers out at round numbers in (4,
+ * 10, 20, 40,80, 160), to not have these round numbers used on earlier entries, to
+ * have 20 entries for -1, and to never decrease the length of run down the table.
+ */
+static const byte adj_wgt_speed[1 + (BURDEN_RANGE * (BURDEN_LIMIT - 1))] = {
+	/* Limit x 1.0 */
+	1,      1,      1,      1,      1,              1,      1,      1,      1,      1,
+	1,      1,      1,      1,      1,              1,      1,      1,      1,      1,
+	2,      2,      2,      2,      2,              2,      2,      2,      2,      2,
+	2,      2,      2,      2,      2,              2,      2,      3,      3,      3,
+	3,      3,      3,      3,      3,              3,      3,      3,      3,      3,
+
+	/* Limit x 1.5 */
+	4,      4,      4,      4,      4,              4,      4,      4,      4,      4,
+	4,      5,      5,      5,      5,              5,      5,      5,      5,      5,
+	6,      6,      6,      6,      6,              6,      6,      6,      7,      7,
+	7,      7,      7,      7,      7,              8,      8,      8,      8,      8,
+	8,      8,      9,      9,      9,              9,      9,      9,      9,      9,
+
+	/* Limit x 2.0 */
+	10,     10,     10,     10,     10,             10,     10,     11,     11,     11,
+	11,     11,     11,     11,     12,             12,     12,     12,     12,     13,
+	13,     13,     13,     13,     13,             14,     14,     14,     14,     14,
+	15,     15,     15,     15,     16,             16,     16,     16,     16,     17,
+	17,     17,     17,     18,     18,             18,     18,     19,     19,     19,
+
+	/* Limit x 2.5 */
+	20,     20,     20,     20,     21,             21,     21,     22,     22,     22,
+	22,     23,     23,     23,     24,             24,     24,     25,     25,     26,
+	26,     26,     27,     27,     27,             28,     28,     29,     29,     29,
+	30,     30,     31,     31,     32,             32,     32,     33,     33,     34,
+	34,     35,     35,     36,     36,             37,     37,     38,     38,     39,
+
+	/* Limit x 3.0 */
+	40,     40,     41,     41,     42,             42,     43,     44,     44,     45,
+	45,     46,     47,     47,     48,             49,     49,     50,     51,     52,
+	52,     53,     54,     55,     55,             56,     57,     58,     58,     59,
+	60,     61,     62,     63,     64,             64,     65,     66,     67,     68,
+	69,     70,     71,     72,     73,             74,     75,     76,     77,     78,
+
+	/* Limit x 3.5 */
+	80,     81,     82,     83,     84,             85,     86,     88,     89,     90,
+	91,     93,     94,     95,     97,             98,     99,     101,    102,    104,
+	105,    107,    108,    110,    111,            113,    114,    116,    117,    119,
+	121,    122,    124,    126,    128,            129,    131,    133,    135,    137,
+	139,    141,    143,    145,    147,            149,    151,    153,    155,    157,
+
+	/* Limit x 4.0 */
+	160,
+};
 
 /**
  * Stat Table (STR) -- weapon weight limit in pounds
@@ -1662,13 +1716,19 @@ int calc_blows(struct player *p, const struct object *obj,
 
 /**
  * Computes current weight limit.
+ * This is the point at which speed penalties start - 75kg for a very strong player, 45kg
+ * for a moderately (18) strong player, 7.5kg for a wimp (3)
+ * At twice this, there is a -10 penalty to speed
+ * At 3 times, a -40 penalty
+ * At 4 times, a -150 penalty
+ * No more than 4 times this can be carried
  */
-static int weight_limit(struct player_state *state)
+int weight_limit(struct player_state *state)
 {
 	int i;
 
 	/* Weight limit based only on strength */
-	i = adj_str_wgt[state->stat_ind[STAT_STR]] * 4500;
+	i = adj_str_wgt[state->stat_ind[STAT_STR]];
 
 	/* Return the result */
 	return (i);
@@ -1683,8 +1743,7 @@ int weight_remaining(struct player *p)
 	int i;
 
 	/* Weight limit based only on strength */
-	i = 2700 * adj_str_wgt[p->state.stat_ind[STAT_STR]]
-		- p->upkeep->total_weight - 1;
+	i = weight_limit(&p->state) - p->upkeep->total_weight;
 
 	/* Return the result */
 	return (i);
@@ -2141,8 +2200,12 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	/* Analyze weight */
 	j = p->upkeep->total_weight;
 	i = weight_limit(state);
-	if (j > i / 2)
-		state->speed -= ((j - (i / 2)) / (i / 10));
+	int burden = ((j * BURDEN_RANGE) / i) - BURDEN_RANGE;
+	if (burden >= 0) {
+		if (burden >= (int)sizeof(adj_wgt_speed))
+			burden = sizeof(adj_wgt_speed) - 1;
+		state->speed -= adj_wgt_speed[burden];
+	}
 	if (state->speed < 0)
 		state->speed = 0;
 	if (state->speed > 199)

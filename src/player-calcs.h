@@ -100,6 +100,14 @@
 #define PR_SUBWINDOW \
 	(PR_MONSTER | PR_OBJECT | PR_MONLIST | PR_ITEMLIST)
 
+/** Weight to Speed
+*/
+
+/* Number of entries between 1x and 2x */
+#define BURDEN_RANGE	100
+
+/* Maximum burden */
+#define BURDEN_LIMIT	4
 
 extern const int adj_dex_th[STAT_RANGE];
 extern const int adj_str_td[STAT_RANGE];
@@ -108,6 +116,7 @@ extern const int adj_dex_safe[STAT_RANGE];
 extern const int adj_con_fix[STAT_RANGE];
 extern const int adj_str_hold[STAT_RANGE];
 
+int weight_limit(struct player_state *state);
 bool earlier_object(struct object *orig, struct object *new, bool store);
 int equipped_item_slot(struct player_body body, struct object *obj);
 void calc_inventory(struct player_upkeep *upkeep, struct object *gear,
