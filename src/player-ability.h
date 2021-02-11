@@ -49,3 +49,4 @@ int setup_talents(void);
 int cmd_abilities(struct player *p, bool birth, int selected, bool *flip);
 int ability_to_stat(int stat);
 void init_talent(int tp);
+bool mutate(void);

@@ -33,6 +33,7 @@
 #include "obj-pile.h"
 #include "obj-tval.h"
 #include "obj-util.h"
+#include "player-ability.h"
 #include "player-calcs.h"
 #include "player-timed.h"
 #include "player-util.h"
@@ -544,6 +545,7 @@ static void update_scent(void)
  */
 void process_world(struct chunk *c)
 {
+	struct player *p = player;
 	int i, y, x;
 
 	/* Compact the monster list if we're approaching the limit */
@@ -595,7 +597,88 @@ void process_world(struct chunk *c)
 		(void)pick_and_place_distant_monster(c, player, z_info->max_sight + 5,
 											 true, player->depth);
 
+	/*** Abilities and mutations */
+
+	/* Occasionally puke. CON helps reduce the chance, and it won't happen if you are paralyzed to ensure it doesn't
+	 * ever result in more than one turn of paralysis. It also won't happen if you are already weak with hunger.
+	 */
+	if (player_has(p, PF_PUKING) && one_in_((p->state.stat_ind[STAT_CON] + 3) * 100) &&
+		(p->timed[TMD_PARALYZED] == 0) && (p->timed[TMD_FOOD] > PY_FOOD_HUNGRY)) {
+		msg("You throw up!");
+		p->timed[TMD_PARALYZED] = 2;	// as it will be reduced by 1 later in process_world
+		p->timed[TMD_FOOD] = PY_FOOD_WEAK;
+	}
 	/*** Damage (or healing) over Time ***/
+
+	/* Take damage from radiation */
+	if (player->timed[TMD_RAD]) {
+		take_hit(player, 1, "radiation");
+		if (randint0(5000 + p->timed[TMD_RAD]) < p->timed[TMD_RAD]) {
+			int reduce = 0;
+			int maxreduce = 0;
+			/* So is this message, FIXME */
+			msg("Your radiation sickness is causing trouble...");
+
+			/* Do nasty things */
+			switch(randint0(10)) {
+				case 9:
+				/* Mutate */
+				if (mutate()) {
+					reduce = 5;
+					maxreduce = 400;
+					break;
+				}
+				/* fall through */
+				case 0:
+				case 1:
+				case 2:
+				/* Scramble stats */
+				player_inc_timed(p, TMD_SCRAMBLE, rand_range(10, 10+(p->timed[TMD_RAD] / 4)), true, true);
+				reduce = 2;
+				maxreduce = 50;
+				break;
+				case 3:
+				/* If it's powerful, drain CON or STR permanently */
+				player_stat_dec(p, randint0(2) ? STAT_CON : STAT_STR, (randint0(1000 + p->timed[TMD_RAD]) < (p->timed[TMD_RAD] - 200)));
+				reduce = 4;
+				maxreduce = 250;
+				/* fall through */
+				case 4:
+				case 5:
+				/* Drain a stat or two */
+				player_stat_dec(p, randint0(STAT_MAX), false);
+				reduce = 3;
+				maxreduce = 125;
+				break;
+				case 6:
+				/* Rarely drain exp permanently */
+				if (randint0(p->timed[TMD_RAD]) > 500) {
+					player_exp_lose(p, ((double)p->max_exp * (double)(randint1(MIN(100, (p->timed[TMD_RAD] / 10))))) / 10000.0, true);
+					reduce = 5;
+					maxreduce = 400;
+					break;
+				}
+				/* fall through */
+				case 7:
+				case 8:
+				/* Drain exp */
+				player_exp_lose(p, ((double)p->max_exp * (double)(randint1(MIN(100, (p->timed[TMD_RAD] / 10))))) / 1000.0, false);
+				reduce = 3;
+				maxreduce = 125;
+				break;
+			}
+
+			/* Be kind, rewind your radiation sickness to limit the amount of nasty you
+			 * get from one episode. Don't reduce it below 1, and do proportionally more
+			 * for milder cases (where the divisor has more effect than the subtraction)
+			 */
+			if (reduce) {
+				int newrad1 = (p->timed[TMD_RAD] / reduce) + 1;
+				int newrad2 = p->timed[TMD_RAD] - maxreduce;
+				p->timed[TMD_RAD] = MAX(newrad1, newrad2);
+			}
+		}
+	}
 
 	/* Take damage from poison */
 	if (player->timed[TMD_POISONED])

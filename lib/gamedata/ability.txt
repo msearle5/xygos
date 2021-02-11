@@ -38,6 +38,10 @@
 #						-	talent		- If set, the ability may be gained as a talent.
 #						-	nasty		- This talent may be considered harmful (for at least some characters)
 
+######### Marksman Skill Abilities ###########
+# These are available only to the Marksman class
+#
+
 name:Handgun_Specialist
 gain:You now train primarily with handguns.
 lose:You no longer consider yourself a handgun specialist.
@@ -146,6 +150,9 @@ forbid:9mm_Rifle_Specialist
 class:Marksman
 cost:0
 
+
+######## Generally available talents ##########
+
 name:Emotional_Intelligence
 # this gain msg is naff
 gain:You feel in touch with the Universal Oneness.
@@ -177,8 +184,10 @@ forbid:Precocity
 forbid:Unknown_Talents
 cost:-1
 
-# Hoarding [as in TP] might be a better name (or at leastr gain/lose)
+# Hoarding [as in TP] might be a better name (or at least gain/lose message: "You feel the need to hoard TP.")
 name:Precocity
+gain:You feel the need to hoard TP.
+lose:You no longer feel the need to hoard TP.
 brief:You will gain no more talents.
 desc:You get all your talent points available from the start. But that is all you will ever get, and by maximum level you will end up with less than you would without.
 flag:birth
@@ -198,3 +207,15 @@ forbid:Patience
 forbid:Precocity
 # so that you can take it even if you start with 0 
 cost:-1
+
+
+######### Mutations #################
+
+name:Puking
+gain:You don't feel very well.
+lose:You feel less queasy.
+brief:You will randomly puke.
+desc:At unpredicable times you will puke - preventing you from doing anything else that turn, and leaving you weak with hunger. Try to keep some food with you at all times!
+flag:mutation
+flag:nasty
+

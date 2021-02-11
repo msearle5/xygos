@@ -131,22 +131,28 @@ int inven_damage(struct player *p, int type, int cperc)
 
 				/* Get a description */
 				object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+				char buf[1024];
+				strnfmt(buf, sizeof(buf), "%sour %s (%c) %s %s!",
+							   ((obj->number > 1) ?
+								((amt == obj->number) ? "All of y" :
+								 (amt > 1 ? "Some of y" : "One of y")) : "Y"),
+							   o_name, gear_to_label(obj),
+							   ((amt > 1) ? "were" : "was"),
+						   (damage ? "damaged" : "destroyed"));
 
 				/* Message */
-				msgt(MSG_DESTROY, "%sour %s (%c) %s %s!",
-				           ((obj->number > 1) ?
-				            ((amt == obj->number) ? "All of y" :
-				             (amt > 1 ? "Some of y" : "One of y")) : "Y"),
-				           o_name, gear_to_label(obj),
-				           ((amt > 1) ? "were" : "was"),
-					   (damage ? "damaged" : "destroyed"));
+				if (damage) {
+					msgt(MSG_DESTROY, buf);
 
-				/* Damage already done? */
-				if (damage)
+					/* Damage already done? */
 					continue;
+				}
 
 				/* Destroy "amt" items */
 				destroyed = gear_object_for_use(obj, amt, false, &none_left);
+				if (!object_destroyed(obj, player->grid)) {
+					msgt(MSG_DESTROY, buf);
+				}
 				if (destroyed->known)
 					object_delete(&destroyed->known);
 				object_delete(&destroyed);
@@ -557,8 +563,10 @@ bool project_o(struct source origin, int r, struct loc grid, int dam, int typ,
 					become_aware(cave_monster(cave, obj->mimicking_m_idx));
 			} else {
 				/* Describe if needed */
-				if (obvious && obj->known && note_kill && !ignore_item_ok(obj))
-					msgt(MSG_DESTROY, "The %s %s!", o_name, note_kill);
+				if (obvious && obj->known && note_kill && !ignore_item_ok(obj)) {
+					if (!object_destroyed(obj, grid))
+						msgt(MSG_DESTROY, "The %s %s!", o_name, note_kill);
+				}
 
 				/* Delete the object */
 				square_delete_object(cave, grid, obj, true, true);

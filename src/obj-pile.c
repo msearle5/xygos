@@ -42,6 +42,7 @@
 #include "player-history.h"
 #include "player-spell.h"
 #include "player-util.h"
+#include "project.h"
 #include "randname.h"
 #include "trap.h"
 #include "z-queue.h"
@@ -910,6 +911,28 @@ bool floor_carry(struct chunk *c, struct loc grid, struct object *drop,
 	return true;
 }
 
+/* Return true if something interesting has happended (and a message printed) */
+bool object_destroyed(struct object *obj, struct loc loc)
+{
+	static bool first = true;
+	static int atomic;
+	if (first) {
+		atomic = lookup_sval(TV_BATTERY, "atomic cell");
+	}
+
+	int sv = obj->kind->sval;
+	switch(obj->kind->tval) {
+		case TV_BATTERY: {
+			if (sv == atomic) {
+				msg("The atomic cell breaks open!");
+				project(source_object(obj), 6, loc, 150 + damroll(1, 20), ELEM_RADIATION,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 /**
  * Delete an object when the floor fails to carry it, and attempt to remove
  * it from the object list
@@ -1064,7 +1087,7 @@ void drop_near(struct chunk *c, struct object **dropped, int chance,
 
 	/* Handle normal breakage */
 	if (!((*dropped)->artifact) && (randint0(100) < chance)) {
-		floor_carry_fail(*dropped, true, (chance == 100));
+		floor_carry_fail(*dropped, true, object_destroyed(*dropped, grid) || (chance == 100));
 		return;
 	}
 

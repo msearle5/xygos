@@ -150,11 +150,19 @@ bool feat_is_bright(int feat)
 }
 
 /**
- * True if the feature is internally lit.
+ * True if the feature is fire-based.
  */
 bool feat_is_fiery(int feat)
 {
 	return tf_has(f_info[feat].flags, TF_FIERY);
+}
+
+/**
+ * True if the feature is fire-based.
+ */
+bool feat_is_radioactive(int feat)
+{
+	return tf_has(f_info[feat].flags, TF_RADIOACTIVE);
 }
 
 /**
@@ -706,6 +714,14 @@ bool square_isfiery(struct chunk *c, struct loc grid) {
 }
 
 /**
+ * True if the cave square is radioactive.
+ */
+bool square_isradioactive(struct chunk *c, struct loc grid) {
+	assert(square_in_bounds(c, grid));
+	return feat_is_radioactive(square(c, grid)->feat);
+}
+
+/**
  * True if the cave square is lit.
  */
 bool square_islit(struct chunk *c, struct loc grid) {
@@ -737,7 +753,7 @@ bool square_islitwall(struct chunk *c, struct loc grid) {
  */
 bool square_isdamaging(struct chunk *c, struct loc grid) {
 	assert(square_in_bounds(c, grid));
-	return feat_is_fiery(square(c, grid)->feat);
+	return (feat_is_fiery(square(c, grid)->feat) || feat_is_radioactive(square(c, grid)->feat));
 }
 
 /**

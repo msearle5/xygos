@@ -572,41 +572,24 @@ static void project_monster_handler_NEXUS(project_monster_handler_context_t *con
 	}
 }
 
-/* Radiation -- see above */
+/* Radiation */
 static void project_monster_handler_RADIATION(project_monster_handler_context_t *context)
 {
 	/* Update the lore */
 	if (context->seen) {
-		/* Acquire knowledge of undead type and radiation resistance */
-		rf_on(context->lore->flags, RF_UNDEAD);
+		/* Acquire knowledge of radiation resistance */
 		rf_on(context->lore->flags, RF_IM_RADIATION);
 
-		/* If it isn't undead, acquire extra knowledge */
-		if (!rf_has(context->mon->race->flags, RF_UNDEAD)) {
-			/* Learn this creature breathes radiation if true */
-			if (rsf_has(context->mon->race->spell_flags, RSF_BR_RADI)) {
-				rsf_on(context->lore->spell_flags, RSF_BR_RADI);
-			}
-
-			/* Otherwise learn about evil type */
-			else {
-				rf_on(context->lore->flags, RF_EVIL);
-			}
+		/* Learn this creature breathes radiation if true */
+		if (rsf_has(context->mon->race->spell_flags, RSF_BR_RADI)) {
+			rsf_on(context->lore->spell_flags, RSF_BR_RADI);
 		}
 	}
 
-	if (rf_has(context->mon->race->flags, RF_UNDEAD)) {
-		context->hurt_msg = MON_MSG_IMMUNE;
-		context->dam = 0;
-	}
-	else if (rf_has(context->mon->race->flags, RF_IM_RADIATION)) {
+	if (rf_has(context->mon->race->flags, RF_IM_RADIATION)) {
 		context->hurt_msg = MON_MSG_RESIST;
 		context->dam *= 3;
 		context->dam /= (randint1(6)+6);
-	}
-	else if (rf_has(context->mon->race->flags, RF_EVIL)) {
-		context->dam /= 2;
-		context->hurt_msg = MON_MSG_RESIST_SOMEWHAT;
 	}
 }
 

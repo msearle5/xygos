@@ -985,7 +985,7 @@ bool project(struct source origin, int rad, struct loc finish,
 	/* Look for the player, affect them when found */
 	if (flg & (PROJECT_PLAY)) {
 		/* Set power */
-		int power = 0;
+		int power = dam;
 		if (origin.what == SRC_MONSTER) {
 			struct monster *mon = cave_monster(cave, origin.which.monster);
 			power = mon->race->spell_power;

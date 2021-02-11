@@ -320,6 +320,18 @@ desc:surrounded by these kinds of walls and some special rooms are made of them.
 
 ## New terrain
 
+name:fallout
+graphics:#:b
+priority:10
+flags:PROJECT | RADIOACTIVE | PASSABLE | BRIGHT
+look-prefix:some
+desc:Bare rock which glows an ominous blue, a signal of intense radioactivity.
+walk-msg:Really step on the radioactive ground?
+run-msg:Radioactive fallout blocks your path.  Step into it?
+hurt-msg:The radiation burns you!
+die-msg:radioactive fallout
+resist-flag:IM_RADIATION
+
 name:lava
 graphics:#:r
 priority:10
@@ -327,7 +339,7 @@ flags:PROJECT | FIERY | PASSABLE | NO_SCENT | BRIGHT
 look-prefix:some
 desc:A fiery pool of glowing lava.  Step in it at your peril!
 walk-msg:The lava will scald you!  Really step in? 
-run-msg:Lava blocks your path.  Step into it? 
+run-msg:Lava blocks your path. Step into it? 
 hurt-msg:The lava burns you!
 die-msg:burning to a cinder in lava
 resist-flag:IM_FIRE

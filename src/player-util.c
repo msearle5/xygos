@@ -495,6 +495,7 @@ void player_regen_hp(struct player *p)
 	if (p->timed[TMD_PARALYZED]) percent = 0;
 	if (p->timed[TMD_POISONED]) percent = 0;
 	if (p->timed[TMD_STUN]) percent = 0;
+	if (p->timed[TMD_RAD]) percent = 0;
 	if (p->timed[TMD_CUT]) percent = 0;
 
 	/* Extract the new hitpoints */
@@ -926,6 +927,12 @@ int player_check_terrain_damage(struct player *p, struct loc grid)
 		if (player_of_has(p, OF_FEATHER)) {
 			dam_taken /= 2;
 		}
+	} else if (square_isradioactive(cave, grid)) {
+		int base_dam = 20 + randint1(40);
+		int res = p->state.el_info[ELEM_RADIATION].res_level;
+
+		/* Radiation damage */
+		dam_taken = adjust_dam(p, ELEM_RADIATION, base_dam, RANDOMISE, res, false);
 	}
 
 	return dam_taken;
@@ -947,6 +954,10 @@ void player_take_terrain_damage(struct player *p, struct loc grid)
 	if (square_isfiery(cave, grid)) {
 		msg(square_feat(cave, grid)->hurt_msg);
 		inven_damage(player, PROJ_FIRE, dam_taken);
+	} else if (square_isradioactive(cave, grid)) {
+		msg(square_feat(cave, grid)->hurt_msg);
+		inven_damage(player, PROJ_RADIATION, dam_taken);
+		player_inc_timed(player, TMD_RAD, dam_taken, false, false);
 	}
 }
 

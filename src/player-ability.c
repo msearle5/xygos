@@ -271,6 +271,12 @@ static bool ability_allowed(unsigned a, bool gain) {
 	assert(a < PF_MAX);
 	assert(ability[a]);
 
+	/* Is it possible to lose this ability? */
+	if (!gain) {
+		/* FIXME */
+		return true;
+	}
+
 	/* Is it forbidden? */
 	for(int i=0; i<PF_MAX; i++) {
 		if (ability[i]) {
@@ -294,15 +300,14 @@ static bool ability_allowed(unsigned a, bool gain) {
 	}
 
 	/* Check minimum and maximum level and class */
-	for(int i=0; i<PF_MAX; i++) {
-		if (ability[i]) {
-			if (player->lev < ability[i]->minlevel)
-				return false;
-			if ((ability[i]->maxlevel) && (player->lev > ability[i]->maxlevel))
-				return false;
-			if ((ability[i]->class) && (!my_stristr(ability[i]->class, player->class->name)))
-				return false;
-		}
+	if (player->lev < ability[a]->minlevel) {
+		return false;
+	}
+	if ((ability[a]->maxlevel) && (player->lev > ability[a]->maxlevel)) {
+		return false;
+	}
+	if ((ability[a]->class) && (!my_stristr(ability[a]->class, player->class->name))) {
+		return false;
 	}
 
 	return true;
@@ -344,7 +349,6 @@ static void changed_abilities(void) {
 	player->upkeep->update |= PU_BONUS | PU_HP;
 	update_stuff(player);
 }
-
 
 /* Attempt to gain an ability, returning true if successful.
  * This does not care about talent points & so could be used for mutations, etc.
@@ -399,6 +403,63 @@ static bool gain_talent(int a, bool birth) {
 		return false;
 
 	player->talent_points -= ability[a]->cost;
+	return true;
+}
+
+/* Attempt to mutate.
+ * This may fail (typically only if there is nothing possible to lose or gain - an unlikely
+ * situation. But there are special circumstances, such as being an Android.)
+ * It may also remove a mutation, especially if you have a lot of mutations already.
+ * If it returns true, then something happened (and a message has been printed).
+ * 
+ * This assumes that mutations can always be safely removed, i.e. that none depend on each
+ * other (although forbidding each other is OK).
+ */
+bool mutate(void) {
+
+	/* Androids cannot mutate */
+	if (streq(player->race->name, "Android"))
+		return false;
+
+	/* Are any mutations available to gain or lose? */
+	bool ok = false;
+	for(int i=0;i<PF_MAX;i++) {
+		if (ability[i]) {
+			fprintf(stderr,"ability %d\n",i);
+			if (ability[i]->flags & AF_MUTATION) {
+				fprintf(stderr,"ability %d is a mut. has? %d gain? %d\n", i,
+					(player_has(player, i)) , (can_gain_ability(i, false)));
+				if ((player_has(player, i)) || (can_gain_ability(i, false))) {
+					ok = true;
+					break;
+				}
+			}
+		}
+	}
+
+	/* No possible choices */
+	if (!ok)
+		return false;
+
+	/* At least one is available, either to gain or lose. Select randomly. */
+	int mut;
+	do {
+		mut = randint0(PF_MAX);
+		if (ability[mut]) {
+			if (ability[mut]->flags & AF_MUTATION) {
+				if ((player_has(player, mut)) || (can_gain_ability(mut, false))) {
+					break;
+				}
+			}
+		}
+	} while (true);
+
+	/* If you already have it, remove it - otherwise gain it */
+	if (player_has(player, mut))
+		lose_ability(mut);
+	else
+		gain_ability(mut, false);
+
 	return true;
 }
 

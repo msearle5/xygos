@@ -173,7 +173,7 @@ flags:EASY_KNOW
 
 name:battery:battery~
 graphics:orange
-break:10
+break:80
 # max-stack:20
 flags:HATES_ACID | HATES_FIRE | HATES_ELEC
 flags:EASY_KNOW

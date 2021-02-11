@@ -405,6 +405,14 @@ static void project_feature_handler_RADIATION(project_feature_handler_context_t 
 		/* Observe */
 		context->obvious = true;
 	}
+
+	/* Can create fallout if sufficiently powerful. */
+	if ((context->dam > randint1(500) + 50) &&
+		square_isfloor(cave, context->grid)) {
+		/* Forget the floor, make fallout. */
+		square_unmark(cave, context->grid);
+		square_set_feat(cave, context->grid, FEAT_FALLOUT);
+	}
 }
 
 static void project_feature_handler_CHAOS(project_feature_handler_context_t *context)

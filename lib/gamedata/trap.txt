@@ -241,6 +241,19 @@ expr:S:DUNGEON_LEVEL:/ 2
 desc:A strange coloured spot on the ground - beware its fiery attack.
 msg:You are enveloped in flames!
 
+# spot -- radiation -- wide, so there is some chance of fallout
+
+name:discolored spot:radiation trap
+graphics:^:b
+appear:1:2:0
+visibility:20
+flags:TRAP | FLOOR | MAGICAL
+effect:SPOT:RADIATION:5
+dice:4d$S
+expr:S:DUNGEON_LEVEL:/ 2
+desc:A strange coloured spot on the ground - beware its radioactive attack.
+msg:Glowing dust fountains up, settling on and around you.
+
 # spot -- acid
 
 name:discolored spot:acid trap
