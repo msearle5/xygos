@@ -119,3 +119,4 @@ EFFECT(WONDER,						true,	NULL,		0,		EFINFO_NONE,	"creates random and unpredicta
 EFFECT(HABANERO,					false, "dam",		3,		EFINFO_NONE,	"may make you resist cold for a while, and maybe even breathe fire")
 EFFECT(SNOZZCUMBER,					false, NULL,		0,		EFINFO_NONE,	"may turn you into a giant")
 EFFECT(PRINT,						false, NULL,		2,		EFINFO_NONE,	"creates an item") 
+EFFECT(MUTATE,						false, NULL,		0,		EFINFO_NONE,	"causes you to mutate strangely (or perhaps lose a mutation)") 

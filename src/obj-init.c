@@ -31,6 +31,7 @@
 #include "mon-util.h"
 #include "obj-curse.h"
 #include "obj-ignore.h"
+#include "obj-init.h"
 #include "obj-list.h"
 #include "obj-make.h"
 #include "obj-pile.h"
@@ -58,16 +59,6 @@ static const char *obj_flags[] = {
 	#define OF(a) #a,
 	#include "list-object-flags.h"
 	#undef OF
-	NULL
-};
-
-static const char *obj_mods[] = {
-	#define STAT(a) #a,
-	#include "list-stats.h"
-	#undef STAT
-	#define OBJ_MOD(a) #a,
-	#include "list-object-modifiers.h"
-	#undef OBJ_MOD
 	NULL
 };
 

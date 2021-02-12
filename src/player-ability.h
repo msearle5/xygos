@@ -28,9 +28,14 @@ struct ability {
 	s16b minlevel;
 	s16b maxlevel;
 	s16b cost;
+	int ac;
 	bool forbid[PF_MAX];
 	bool require[PF_MAX];
 	int a_adj[STAT_MAX];
+	bitflag oflags[OF_SIZE];				/**< Racial (object) flags */
+	bitflag pflags[PF_SIZE];				/**< Racial (player) flags */
+	struct element_info el_info[ELEM_MAX];	/**< Resists */
+	s16b modifiers[OBJ_MOD_MAX];
 };
 
 /* Ability flags */

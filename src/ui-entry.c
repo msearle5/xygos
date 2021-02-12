@@ -21,6 +21,7 @@
 #include "obj-knowledge.h"
 #include "obj-util.h"
 #include "player.h"
+#include "player-ability.h"
 #include "player-timed.h"
 #include "ui-entry.h"
 #include "ui-entry-combiner.h"
@@ -943,6 +944,15 @@ void compute_ui_entry_values_for_player(const struct ui_entry *entry,
 					a = t;
 				}
 				(*combiner.accum_func)(v, a, &cst);
+			}
+			for(int i=0; i<PF_MAX; i++) {
+				if ((ability[i]) && (player_has(p, i))) {
+					if (ability[i]->el_info[ind].res_level) {
+						v = ability[i]->el_info[ind].res_level;
+						a = 0;
+						(*combiner.accum_func)(v, a, &cst);
+					}
+				}
 			}
 		}
 	}

@@ -116,7 +116,7 @@ const char *list_obj_flag_names[] = {
 	NULL
 };
 
-static const char *obj_mods[] = {
+const char *obj_mods[] = {
 	#define STAT(a) #a,
 	#include "list-stats.h"
 	#undef STAT
@@ -165,7 +165,7 @@ static const char *mon_race_flags[] =
 	NULL
 };
 
-static const char *player_info_flags[] =
+const char *player_info_flags[] =
 {
 	#define PF(a) #a,
 	#include "list-player-flags.h"

@@ -19,9 +19,11 @@
 #include "angband.h"
 #include "datafile.h"
 #include "init.h"
+#include "obj-init.h"
 #include "player.h"
 #include "player-ability.h"
 #include "player-calcs.h"
+#include "project.h"
 #include "ui-display.h"
 #include "ui-input.h"
 #include "ui-output.h"
@@ -180,9 +182,19 @@ static enum parser_error parse_ability_cost(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-static enum parser_error parse_ability_flag(struct parser *p) {
+static enum parser_error parse_ability_ac(struct parser *p) {
 	struct ability *a = parser_priv(p);
 	assert(a);
+
+	a->ac = parser_getint(p, "ac");
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_ability_flag(struct parser *p) {
+	struct ability *a = parser_priv(p);
+
+	if (!a)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
 	const char *text = parser_getstr(p, "flag");
 	u32b flag = 0;
@@ -204,6 +216,76 @@ static enum parser_error parse_ability_flag(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_ability_obj_flags(struct parser *p) {
+	struct ability *a = parser_priv(p);
+	char *flags;
+	char *s;
+
+	if (!a)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	if (!parser_hasval(p, "flags"))
+		return PARSE_ERROR_NONE;
+	flags = string_make(parser_getstr(p, "flags"));
+	s = strtok(flags, " |");
+	while (s) {
+		if (grab_flag(a->oflags, OF_SIZE, list_obj_flag_names, s))
+			break;
+		s = strtok(NULL, " |");
+	}
+	mem_free(flags);
+	return s ? PARSE_ERROR_INVALID_FLAG : PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_ability_play_flags(struct parser *p) {
+	struct ability *a = parser_priv(p);
+	char *flags;
+	char *s;
+
+	if (!a)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	if (!parser_hasval(p, "flags"))
+		return PARSE_ERROR_NONE;
+	flags = string_make(parser_getstr(p, "flags"));
+	s = strtok(flags, " |");
+	while (s) {
+		if (grab_flag(a->pflags, PF_SIZE, player_info_flags, s))
+			break;
+		s = strtok(NULL, " |");
+	}
+	mem_free(flags);
+	return s ? PARSE_ERROR_INVALID_FLAG : PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_ability_values(struct parser *p) {
+	struct ability *a = parser_priv(p);
+	char *s;
+	char *t;
+
+	if (!a)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	s = string_make(parser_getstr(p, "values"));
+	t = strtok(s, " |");
+
+	while (t) {
+		int value = 0;
+		int index = 0;
+		bool found = false;
+		if (!grab_short_value(a->modifiers, obj_mods, t))
+			found = true;
+		if (!grab_index_and_int(&value, &index, list_element_names, "RES_", t)) {
+			found = true;
+			a->el_info[index].res_level = value;
+		}
+		if (!found)
+			break;
+
+		t = strtok(NULL, " |");
+	}
+
+	mem_free(s);
+	return t ? PARSE_ERROR_INVALID_VALUE : PARSE_ERROR_NONE;
+}
+
 struct parser *init_parse_ability(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
@@ -216,11 +298,15 @@ struct parser *init_parse_ability(void) {
 	parser_reg(p, "require str require", parse_ability_require);
 	parser_reg(p, "desc str desc", parse_ability_desc);
 	parser_reg(p, "class str class", parse_ability_class);
+	parser_reg(p, "ac int ac", parse_ability_ac);
 	parser_reg(p, "desc_future str desc_future", parse_ability_desc_future);
 	parser_reg(p, "cost int cost", parse_ability_cost);
 	parser_reg(p, "maxlevel int max", parse_ability_maxlevel);
 	parser_reg(p, "minlevel int min", parse_ability_minlevel);
 	parser_reg(p, "flag str flag", parse_ability_flag);
+	parser_reg(p, "obj-flags ?str flags", parse_ability_obj_flags);
+	parser_reg(p, "player-flags ?str flags", parse_ability_play_flags);
+	parser_reg(p, "values str values", parse_ability_values);
 	return p;
 }
 
@@ -425,10 +511,7 @@ bool mutate(void) {
 	bool ok = false;
 	for(int i=0;i<PF_MAX;i++) {
 		if (ability[i]) {
-			fprintf(stderr,"ability %d\n",i);
 			if (ability[i]->flags & AF_MUTATION) {
-				fprintf(stderr,"ability %d is a mut. has? %d gain? %d\n", i,
-					(player_has(player, i)) , (can_gain_ability(i, false)));
 				if ((player_has(player, i)) || (can_gain_ability(i, false))) {
 					ok = true;
 					break;
@@ -623,19 +706,49 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 			if (ability[avail[selected]]->cost < 0)
 				costco = COLOUR_RED;
 
-			/* Description and cost */
+			/* Description */
 			tb = textblock_new();
-			if (gain[selected]) {
+			if (gain[selected])
 				textblock_append_c(tb, COLOUR_SLATE, "With this talent %s", ability[avail[selected]]->desc_future ? ability[avail[selected]]->desc_future : ability[avail[selected]]->desc);
-				for(int i=0;i<STAT_MAX;i++) {
-					if (ability[avail[selected]]->a_adj[i]) {
-						textblock_append_c(tb, COLOUR_YELLOW, " (%+d to %s)", ability[avail[selected]]->a_adj[i], stat_names[i]);
-					}
-				}
-				textblock_append_c(tb, costco, " Cost: %d", ability[avail[selected]]->cost);
-			} else {
+			else
 				textblock_append_c(tb, COLOUR_SLATE, "%s", ability[avail[selected]]->desc);
+
+			/* Stats, AC, skills, etc */
+			for(int i=0;i<STAT_MAX;i++) {
+				if (ability[avail[selected]]->a_adj[i]) {
+					textblock_append_c(tb, COLOUR_YELLOW, " (%+d to %s)", ability[avail[selected]]->a_adj[i], stat_names[i]);
+				}
 			}
+			if (ability[avail[selected]]->ac)
+				textblock_append_c(tb, COLOUR_YELLOW, " (%+d to AC)", ability[avail[selected]]->ac);
+			for(int i=0;i<ELEM_MAX;i++) {
+				if (ability[avail[selected]]->el_info[i].res_level) {
+					textblock_append_c(tb, COLOUR_YELLOW, " (%+d vs %s)", ability[avail[selected]]->el_info[i].res_level, projections[i].name);
+				}
+			}
+			for(int i=0;i<OBJ_MOD_MAX;i++) {
+				if (ability[avail[selected]]->modifiers[i]) {
+					char name[256];
+					my_strcpy(name, obj_mods[i], sizeof name);
+					titlecase(name);
+					textblock_append_c(tb, COLOUR_YELLOW, " (%+d to %s)", ability[avail[selected]]->modifiers[i], name);
+				}
+			}
+			for(int i=0;i<PF_MAX;i++) {
+				if (pf_has(ability[avail[selected]]->pflags, i)) {
+					textblock_append_c(tb, COLOUR_YELLOW, " (%s)", player_info_flags[i]);
+				}
+			}
+			for(int i=0;i<OF_MAX;i++) {
+				if (of_has(ability[avail[selected]]->oflags, i)) {
+					textblock_append_c(tb, COLOUR_YELLOW, " (%s)", list_obj_flag_names[i]);
+				}
+			}
+		//@ obj, player fs
+			/* Cost to gain */
+			if (gain[selected])
+				textblock_append_c(tb, costco, " Cost: %d", ability[avail[selected]]->cost);
+
 			line_starts = NULL;
 			line_lengths = NULL;
 			int lines = textblock_calculate_lines(tb, &line_starts, &line_lengths, w);

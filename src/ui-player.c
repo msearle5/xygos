@@ -395,7 +395,7 @@ static void display_resistance_panel(int ipart, struct char_sheet_config *config
 	/* Equippy */
 	display_player_equippy(row++, col + config->res_nlabel);
 
-	Term_putstr(col, row++, config->res_cols, COLOUR_WHITE, "      abcdefghijkl@");
+	Term_putstr(col, row++, config->res_cols, COLOUR_WHITE, "      abcdefghijklm@");
 	render_details.label_position.x = col;
 	render_details.value_position.x = col + config->res_nlabel;
 	render_details.position_step = loc(1, 0);

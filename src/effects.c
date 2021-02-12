@@ -43,6 +43,7 @@
 #include "obj-power.h"
 #include "obj-tval.h"
 #include "obj-util.h"
+#include "player-ability.h"
 #include "player-calcs.h"
 #include "player-history.h"
 #include "player-spell.h"
@@ -6135,6 +6136,23 @@ bool effect_handler_WONDER(effect_handler_context_t *context)
 		return true;
 	}
 }
+
+/**
+ * Mutate
+ */
+bool effect_handler_MUTATE(effect_handler_context_t *context)
+{
+	if (mutate()) {
+		/* Something noticeable happened - so ID it */
+		context->ident = true;
+	} else {
+		/* Nothing happened, print a message */
+		msg("Nothing obvious happens.");
+	}
+	/* Done */
+	return (true);
+}
+
 
 
 /**

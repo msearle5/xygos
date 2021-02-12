@@ -1720,7 +1720,7 @@ int calc_blows(struct player *p, const struct object *obj,
  * for a moderately (18) strong player, 7.5kg for a wimp (3)
  * At twice this, there is a -10 penalty to speed
  * At 3 times, a -40 penalty
- * At 4 times, a -150 penalty
+ * At 4 times, a -160 penalty
  * No more than 4 times this can be carried
  */
 int weight_limit(struct player_state *state)
@@ -1811,10 +1811,37 @@ static void calc_shapechange(struct player_state *state,
 				state->el_info[i].res_level = 3;
 			}
 		} else if (state->el_info[i].res_level == 3) {
-			/* Immmunity, shape has no effect */
+			/* Immunity, shape has no effect */
 		}
 	}
 
+}
+
+static void apply_modifiers(struct player *p, struct player_state *state, s16b *modifiers, int *extra_blows, int *extra_shots, int *extra_might, int *extra_moves)
+{
+	for(int i=0;i<STAT_MAX;i++)
+		state->stat_add[i] += modifiers[OBJ_MOD_STR + i]
+			* p->obj_k->modifiers[OBJ_MOD_STR + i];
+	state->skills[SKILL_STEALTH] += modifiers[OBJ_MOD_STEALTH]
+		* p->obj_k->modifiers[OBJ_MOD_STEALTH];
+	state->skills[SKILL_SEARCH] += (modifiers[OBJ_MOD_SEARCH] * 5)
+		* p->obj_k->modifiers[OBJ_MOD_SEARCH];
+
+	state->see_infra += modifiers[OBJ_MOD_INFRA]
+		* p->obj_k->modifiers[OBJ_MOD_INFRA];
+
+	state->skills[SKILL_DIGGING] += (modifiers[OBJ_MOD_TUNNEL]
+		* p->obj_k->modifiers[OBJ_MOD_TUNNEL] * 20);
+	state->dam_red += modifiers[OBJ_MOD_DAM_RED]
+		* p->obj_k->modifiers[OBJ_MOD_DAM_RED];
+	*extra_blows += modifiers[OBJ_MOD_BLOWS]
+		* p->obj_k->modifiers[OBJ_MOD_BLOWS];
+	*extra_shots += modifiers[OBJ_MOD_SHOTS]
+		* p->obj_k->modifiers[OBJ_MOD_SHOTS];
+	*extra_might += modifiers[OBJ_MOD_MIGHT]
+		* p->obj_k->modifiers[OBJ_MOD_MIGHT];
+	*extra_moves += modifiers[OBJ_MOD_MOVES]
+		* p->obj_k->modifiers[OBJ_MOD_MOVES];
 }
 
 /**
@@ -1823,13 +1850,6 @@ static void calc_shapechange(struct player_state *state,
  * and temporary spell effects.
  *
  * See also calc_mana() and calc_hitpoints().
- *
- * Take note of the new "speed code", in particular, a very strong
- * player will start slowing down as soon as he reaches 150 pounds,
- * but not until he reaches 450 pounds will he be half as fast as
- * a normal kobold.  This both hurts and helps the player, hurts
- * because in the old days a player could just avoid 300 pounds,
- * and helps because now carrying 300 pounds is not very painful.
  *
  * The "weapon" and "gun" do *not* add to the bonuses to hit or to
  * damage, since that would affect non-combat things.  These values
@@ -1887,6 +1907,33 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	/* Extract the player flags */
 	player_flags(p, collect_f);
 
+	/* Extract from abilities */
+	state->ac = 0;
+	for (i = 0; i < PF_MAX; i++) {
+		if (ability[i]) {
+			if (player_has(p, i)) {
+				state->ac += ability[i]->ac;
+				pf_union(state->pflags, ability[i]->pflags);
+				of_union(collect_f, ability[i]->oflags);
+
+				/* Apply element info, noting vulnerabilites for later processing */
+				for (j = 0; j < ELEM_MAX; j++) {
+					if (ability[i]->el_info[j].res_level) {
+						if (ability[i]->el_info[j].res_level == -1)
+							vuln[j] = true;
+
+						/* OK because res_level hasn't included vulnerability yet */
+						if (ability[i]->el_info[j].res_level > state->el_info[j].res_level)
+							state->el_info[j].res_level = ability[i]->el_info[j].res_level;
+
+						/* Apply modifiers */
+						apply_modifiers(p, state, ability[i]->modifiers, &extra_blows, &extra_shots, &extra_might, &extra_moves);
+					}
+				}
+			}
+		}
+	}
+
 	/* Analyze equipment */
 	for (i = 0; i < p->body.count; i++) {
 		int index = 0;
@@ -1905,16 +1952,8 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 			of_union(collect_f, f);
 
 			/* Apply modifiers */
-			for(int i=0;i<STAT_MAX;i++)
-				state->stat_add[i] += obj->modifiers[OBJ_MOD_STR + i]
-					* p->obj_k->modifiers[OBJ_MOD_STR + i];
-			state->skills[SKILL_STEALTH] += obj->modifiers[OBJ_MOD_STEALTH]
-				* p->obj_k->modifiers[OBJ_MOD_STEALTH];
-			state->skills[SKILL_SEARCH] += (obj->modifiers[OBJ_MOD_SEARCH] * 5)
-				* p->obj_k->modifiers[OBJ_MOD_SEARCH];
+			apply_modifiers(p, state, obj->modifiers, &extra_blows, &extra_shots, &extra_might, &extra_moves);
 
-			state->see_infra += obj->modifiers[OBJ_MOD_INFRA]
-				* p->obj_k->modifiers[OBJ_MOD_INFRA];
 			if (tval_is_digger(obj)) {
 				if (of_has(obj->flags, OF_DIG_1))
 					dig = 1;
@@ -1923,20 +1962,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 				else if (of_has(obj->flags, OF_DIG_3))
 					dig = 3;
 			}
-			dig += obj->modifiers[OBJ_MOD_TUNNEL]
-				* p->obj_k->modifiers[OBJ_MOD_TUNNEL];
-			state->skills[SKILL_DIGGING] += (dig * 20);
-			state->dam_red += obj->modifiers[OBJ_MOD_DAM_RED]
-				* p->obj_k->modifiers[OBJ_MOD_DAM_RED];
-			extra_blows += obj->modifiers[OBJ_MOD_BLOWS]
-				* p->obj_k->modifiers[OBJ_MOD_BLOWS];
-			extra_shots += obj->modifiers[OBJ_MOD_SHOTS]
-				* p->obj_k->modifiers[OBJ_MOD_SHOTS];
-			extra_might += obj->modifiers[OBJ_MOD_MIGHT]
-				* p->obj_k->modifiers[OBJ_MOD_MIGHT];
-			extra_moves += obj->modifiers[OBJ_MOD_MOVES]
-				* p->obj_k->modifiers[OBJ_MOD_MOVES];
-
+			state->skills[SKILL_DIGGING] += dig * p->obj_k->modifiers[OBJ_MOD_TUNNEL] * 20;
 			/* Apply element info, noting vulnerabilites for later processing */
 			for (j = 0; j < ELEM_MAX; j++) {
 				if (!known_only || obj->known->el_info[j].res_level) {
@@ -1999,12 +2025,6 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	/* Unlight - needs change if anything but resist is introduced for dark */
 	if (player_has(p, PF_UNLIGHT) && character_dungeon) {
 		state->el_info[ELEM_DARK].res_level = 1;
-	}
-
-	/* Evil */
-	if (player_has(p, PF_EVIL) && character_dungeon) {
-		state->el_info[ELEM_RADIATION].res_level = 1;
-		state->el_info[ELEM_HOLY_ORB].res_level = -1;
 	}
 
 	/* Combat Regeneration */

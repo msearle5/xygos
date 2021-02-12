@@ -180,6 +180,8 @@ extern struct parser *init_parse_quest(void);
 
 extern struct file_parser flavor_parser;
 
+extern const char *player_info_flags[];
+
 errr grab_effect_data(struct parser *p, struct effect *effect);
 extern void init_file_paths(const char *config, const char *lib, const char *data);
 extern void init_game_constants(void);

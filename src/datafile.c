@@ -215,6 +215,36 @@ errr grab_rand_value(random_value *value, const char **value_type,
 }
 
 /**
+ * Get the s16b argument from a value expression and put it into the
+ * appropriate place in an array
+ * \param value the target array of integers
+ * \param value_type the possible value strings
+ * \param name_and_value the value expression being matched
+ * \return 0 if successful, otherwise an error value
+ */
+errr grab_short_value(s16b *value, const char **value_type,
+					const char *name_and_value)
+{
+	int val, i = 0;
+	char value_name[80];
+
+	/* Get a rewritable string */
+	my_strcpy(value_name, name_and_value, strlen(name_and_value));
+
+	/* Parse the value expression */
+	if (!find_value_arg(value_name, NULL, &val))
+		return PARSE_ERROR_INVALID_VALUE;
+
+	while (value_type[i] && !streq(value_type[i], value_name))
+		i++;
+
+	if (value_type[i])
+		value[i] = val;
+
+	return value_type[i] ? PARSE_ERROR_NONE : PARSE_ERROR_INTERNAL;
+}
+
+/**
  * Get the integer argument from a value expression and put it into the
  * appropriate place in an array
  * \param value the target array of integers
