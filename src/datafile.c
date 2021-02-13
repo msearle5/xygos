@@ -523,7 +523,7 @@ void write_elements(ang_file *fff, const struct element_info *el_info)
 /**
  * Archive a data file from ANGBAND_DIR_USER into ANGBAND_DIR_ARCHIVE
  */
-void file_archive(char *fname, char *append)
+void file_archive(const char *fname, char *append)
 {
 	char arch[1024];
 	char old[1024];

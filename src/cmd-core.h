@@ -331,4 +331,5 @@ int cmd_get_string(struct command *cmd, const char *arg, const char **str,
 int cmd_get_spell(struct command *cmd, const char *arg, int *spell,
 				  const char *verb, const char *error, bool (*spell_filter)(int spell));
 
+void process_command(cmd_context ctx, struct command *cmd);
 #endif

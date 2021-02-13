@@ -79,6 +79,10 @@ typedef struct effect_handler_context_s {
 	struct command *cmd;
 } effect_handler_context_t;
 
+#define EFFECT(x, a, b, c, d, e)	bool effect_handler_##x(effect_handler_context_t *context);
+#include "list-effects.h"
+#undef EFFECT
+
 typedef bool (*effect_handler_f)(effect_handler_context_t *);
 
 /**
