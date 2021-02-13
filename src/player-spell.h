@@ -20,9 +20,7 @@ void player_spells_init(struct player *p);
 void player_spells_free(struct player *p);
 struct magic_realm *class_magic_realms(const struct player_class *c,
 									   int *count);
-const struct class_book *player_object_to_book(struct player *p);
 const struct class_spell *spell_by_index(int index);
-int spell_collect_from_book(int **spells);
 int spell_book_count_spells(bool (*tester)(int spell_index));
 bool spell_okay_list(bool (*spell_test)(int spell_index), const int spells[],
 					 int n_spells);

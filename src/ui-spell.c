@@ -52,7 +52,7 @@ static int spell_menu_valid(struct menu *m, int oid)
 	struct spell_menu_data *d = menu_priv(m);
 	int *spells = d->spells;
 
-	return d->is_valid(spells[oid]);
+	return d->is_valid ? d->is_valid(spells[oid]) : true;
 }
 
 /**
@@ -74,28 +74,14 @@ static void spell_menu_display(struct menu *m, int oid, bool cursor,
 
 	if (!spell) return;
 
-	if (spell->slevel >= 99) {
-		illegible = "(illegible)";
-		attr = COLOUR_L_DARK;
-	} else if (player->spell_flags[spell_index] & PY_SPELL_FORGOTTEN) {
-		comment = " forgotten";
-		attr = COLOUR_YELLOW;
-	} else if (player->spell_flags[spell_index] & PY_SPELL_LEARNED) {
-		if (player->spell_flags[spell_index] & PY_SPELL_WORKED) {
-			/* Get extra info */
-			get_spell_info(spell_index, help, sizeof(help));
-			comment = help;
-			attr = COLOUR_WHITE;
-		} else {
-			comment = " untried";
-			attr = COLOUR_L_GREEN;
-		}
-	} else if (spell->slevel <= player->lev) {
-		comment = " unknown";
-		attr = COLOUR_L_BLUE;
+	if (player->spell_flags[spell_index] & PY_SPELL_WORKED) {
+		/* Get extra info */
+		get_spell_info(spell_index, help, sizeof(help));
+		comment = help;
+		attr = COLOUR_WHITE;
 	} else {
-		comment = " difficult";
-		attr = COLOUR_RED;
+		comment = " untried";
+		attr = COLOUR_L_GREEN;
 	}
 
 	/* Dump the spell --(-- */
@@ -273,7 +259,7 @@ int textui_get_spell_from_book(const char *verb,
 							   const char *error,
 							   bool (*spell_filter)(int spell_index))
 {
-	const char *noun = "use";
+	const char *noun = "ability";
 	struct menu *m;
 
 	handle_stuff(player);

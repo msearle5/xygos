@@ -199,85 +199,112 @@ struct magic_realm *class_magic_realms(const struct player_class *c, int *count)
 }
 
 /**
- * Get the spellbook structure from an object which is a book the player can
- * cast from
+ * Collect spells from a book into the spells[] array (if spells is non-null).
+ * If spells is null, it just counts how many are needed.
  */
-const struct class_book *player_object_to_book(struct player *p)
+void combine_book(const struct class_book *src, int *count, int *spells, int *maxidx, struct class_spell **spellps)
 {
-/*
-	int i;
-	for (i = 0; i < p->class->magic.num_books; i++)
-		if ((obj->tval == p->class->magic.books[i].tval) &&
-			(obj->sval == p->class->magic.books[i].sval))
-			return &p->class->magic.books[i];
-*/
-	return NULL;
+	int index = *count;
+	for (int i = 0; i < src->num_spells; i++) {
+
+		/* Ignore out of level spells */
+		if (src->spells[i].slevel > player->lev)
+			continue;
+
+		/* Spell is OK to add */
+		if (spells) {
+			/* Second pass, fill in the spells array */
+			spells[index] = src->spells[i].sidx;
+		}
+		if (spellps) {
+			spellps[src->spells[i].sidx] = &src->spells[i];
+		}
+		if (maxidx)
+			if ((src->spells[i].sidx + 1) > *maxidx)
+				*maxidx = src->spells[i].sidx + 1;
+		index++;
+	}
+	*count = index;
 }
+
+/**
+ * Collect spells from all books of a class-magic into the spells[] array.
+ */
+void combine_class_books(struct class_magic *cmagic, int *count, int *spells, int *maxidx, struct class_spell **spellps)
+{
+	for(int i=0;i<cmagic->num_books;i++)
+		combine_book(&cmagic->books[i], count, spells, maxidx, spellps);
+}
+
+/**
+ * Collect spells from all books into the spells[] array.
+ */
+void combine_books(int *count, int *spells, int *maxidx, struct class_spell **spellps)
+{
+	combine_class_books(&player->class->magic, count, spells, maxidx, spellps);
+}
+
+static int collect_from_book(int **spells, struct class_spell ***spellps, int *n_i)
+{
+	int n_spells = 0;
+
+	if (n_i)
+		*n_i = 0;
+
+	/* Count the spells */
+	combine_books(&n_spells, NULL, n_i, NULL);
+	/* Exit early if there are none */
+	if (!n_spells) {
+		if (spells)
+			*spells = NULL;
+		if (spellps)
+			*spellps = NULL;
+		return 0;
+	}
+
+	/* Allocate the array(s) */
+	if (spells)
+		*spells = mem_zalloc(n_spells * sizeof(*spells));
+	if (spellps && n_i)
+		*spellps = mem_zalloc((*n_i + 100) * sizeof(*spellps));
+
+	/* Write the spells */
+	n_spells = 0;
+	if (n_i)
+		*n_i = 0;
+	combine_books(&n_spells, spells ? *spells : NULL, n_i, spellps ? *spellps : NULL);
+
+	return n_spells;
+}
+
 
 const struct class_spell *spell_by_index(int index)
 {
-	int book = 0, count = 0;
-	const struct class_magic *magic = &player->class->magic;
+	struct class_spell **spellps = NULL;
+	int maxidx = 0;
+	collect_from_book(NULL, &spellps, &maxidx);
 
 	/* Check index validity */
-	if (index < 0 || index >= magic->total_spells)
+	if (index < 0 || index >= maxidx) {
+		mem_free(spellps);
 		return NULL;
-
-	/* Find the book, count the spells in previous books */
-	while (count + magic->books[book].num_spells - 1 < index)
-		count += magic->books[book++].num_spells;
+	}
 
 	/* Find the spell */
-	return &magic->books[book].spells[index - count];
+	struct class_spell *ret = spellps[index];
+	mem_free(spellps);
+	return ret;
 }
 
 /**
  * Collect spells from a book into the spells[] array, allocating
- * appropriate memory.
+ * appropriate memory (by calling combine_books twice, first to
+ * get the size then again to fill the newly allocated array).
  */
 int spell_collect_from_book(int **spells)
 {
-	const struct class_book *book = player_object_to_book(player);
-	int i, n_spells = 0;
-
-	if (!book) {
-		return n_spells;
-	}
-
-	/* Count the spells */
-	for (i = 0; i < book->num_spells; i++)
-		n_spells++;
-
-	/* Allocate the array */
-	*spells = mem_zalloc(n_spells * sizeof(*spells));
-
-	/* Write the spells */
-	for (i = 0; i < book->num_spells; i++)
-		(*spells)[i] = book->spells[i].sidx;
-
-	return n_spells;
+	return collect_from_book(spells, NULL, NULL);
 }
-
-
-/**
- * Return the number of castable spells in the spellbook 'obj'.
- */
-int spell_book_count_spells(bool (*tester)(int spell))
-{
-	const struct class_book *book = player_object_to_book(player);
-	int i, n_spells = 0;
-
-	if (!book) {
-		return n_spells;
-	}
-
-	for (i = 0; i < book->num_spells; i++)
-		if (tester(book->spells[i].sidx))
-			n_spells++;
-
-	return n_spells;
-}
-
 
 /**
  * True if at least one spell in spells[] is OK according to spell_test.
@@ -287,6 +314,9 @@ bool spell_okay_list(bool (*spell_test)(int spell),
 {
 	int i;
 	bool okay = false;
+
+	if (!spell_test)
+		return true;
 
 	for (i = 0; i < n_spells; i++)
 		if (spell_test(spells[i]))

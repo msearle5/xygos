@@ -1090,7 +1090,7 @@ void do_cmd_cast(struct command *cmd)
 	if (cmd_get_spell(cmd, "ability", &spell_index,
 			/* Verb */   "use",
 			/* Error */  "There are no abilities you can use.",
-			/* Filter */ spell_okay_to_cast) != CMD_OK)
+			/* Filter */ NULL/*spell_okay_to_cast*/) != CMD_OK)
 		return;
 
 	if (spell_needs_aim(spell_index)) {
