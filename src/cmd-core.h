@@ -329,7 +329,6 @@ int cmd_get_quantity(struct command *cmd, const char *arg, int *amt, int max);
 int cmd_get_string(struct command *cmd, const char *arg, const char **str,
 				   const char *initial, const char *title, const char *prompt);
 int cmd_get_spell(struct command *cmd, const char *arg, int *spell,
-				  const char *verb, item_tester book_filter, const char *error,
-				  bool (*spell_filter)(int spell));
+				  const char *verb, const char *error, bool (*spell_filter)(int spell));
 
 #endif

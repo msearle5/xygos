@@ -853,9 +853,6 @@ void process_world(struct chunk *c)
 	if ((player->chp < player->mhp) && (player->chp >= 0))
 		player_regen_hp(player);
 
-	/* Regenerate or lose mana */
-	player_regen_mana(player);
-
 	/* Timeout various things */
 	decrease_timeouts();
 

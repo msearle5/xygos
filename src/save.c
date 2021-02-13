@@ -478,10 +478,6 @@ void wr_player(void)
 	wr_s16b(player->chp);
 	wr_u16b(player->chp_frac);
 
-	wr_s16b(player->msp);
-	wr_s16b(player->csp);
-	wr_u16b(player->csp_frac);
-
 	wr_u16b(player->talent_points);
 
 	/* Max Player and Dungeon Levels */

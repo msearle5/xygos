@@ -134,7 +134,6 @@ struct cmd_info cmd_item_manage[] =
 struct cmd_info cmd_info[] =
 {
 	{ "Browse a book", { 'b', 'P' }, CMD_BROWSE_SPELL, textui_spell_browse, NULL },
-	{ "Gain new spells", { 'G' }, CMD_STUDY, NULL, player_can_study_prereq },
 	{ "Interact with abilities", { 'S' }, CMD_NULL, do_cmd_abilities, NULL },
 	{ "Cast a spell", { 'm' }, CMD_CAST, NULL, player_can_cast_prereq },
 	{ "Cast a spell", { 'p' }, CMD_CAST, NULL, player_can_cast_prereq },

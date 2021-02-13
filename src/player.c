@@ -344,34 +344,6 @@ byte player_hp_attr(struct player *p)
 	return attr;
 }
 
-byte player_sp_attr(struct player *p)
-{
-	byte attr;
-	
-	if (p->csp >= p->msp)
-		attr = COLOUR_L_GREEN;
-	else if (p->csp > (p->msp * p->opts.hitpoint_warn) / 10)
-		attr = COLOUR_YELLOW;
-	else
-		attr = COLOUR_RED;
-	
-	return attr;
-}
-
-bool player_restore_mana(struct player *p, int amt) {
-	int old_csp = p->csp;
-
-	p->csp += amt;
-	if (p->csp > p->msp) {
-		p->csp = p->msp;
-	}
-	p->upkeep->redraw |= PR_MANA;
-
-	msg("You feel some of your energies returning.");
-
-	return p->csp != old_csp;
-}
-
 /**
  * Return a version of the player's name safe for use in filesystems.
  *

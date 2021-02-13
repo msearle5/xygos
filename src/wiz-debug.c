@@ -1477,8 +1477,6 @@ void wiz_cheat_death(void)
 	/* Restore hit & spell points */
 	player->chp = player->mhp;
 	player->chp_frac = 0;
-	player->csp = player->msp;
-	player->csp_frac = 0;
 
 	/* Healing */
 	(void)player_clear_timed(player, TMD_BLIND, true);
@@ -1547,10 +1545,6 @@ static void do_cmd_wiz_cure_all(void)
 	/* Heal the player */
 	player->chp = player->mhp;
 	player->chp_frac = 0;
-
-	/* Restore mana */
-	player->csp = player->msp;
-	player->csp_frac = 0;
 
 	/* Cure stuff */
 	(void)player_clear_timed(player, TMD_BLIND, true);
@@ -1982,10 +1976,6 @@ static void do_cmd_wiz_advance(void)
 	/* Heal the player */
 	player->chp = player->mhp;
 	player->chp_frac = 0;
-
-	/* Restore mana */
-	player->csp = player->msp;
-	player->csp_frac = 0;
 
 	/* Get some awesome equipment */
 	/* Artifacts: 3, 5, 12, ...*/

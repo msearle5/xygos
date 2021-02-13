@@ -159,8 +159,7 @@ static const menu_iter spell_menu_iter = {
 /**
  * Create and initialise a spell menu, given an object and a validity hook
  */
-static struct menu *spell_menu_new(const struct object *obj,
-								   bool (*is_valid)(int spell_index))
+static struct menu *spell_menu_new(bool (*is_valid)(int spell_index))
 {
 	struct menu *m = menu_new(MN_SKIN_SCROLL, &spell_menu_iter);
 	struct spell_menu_data *d = mem_alloc(sizeof *d);
@@ -169,7 +168,7 @@ static struct menu *spell_menu_new(const struct object *obj,
 	region loc = { 0 - width, 1, width, -99 };
 
 	/* collect spells from object */
-	d->n_spells = spell_collect_from_book(obj, &d->spells);
+	d->n_spells = spell_collect_from_book(&d->spells);
 	if (d->n_spells == 0 || !spell_okay_list(is_valid, d->spells, d->n_spells)){
 		mem_free(m);
 		mem_free(d->spells);
@@ -252,56 +251,34 @@ static void spell_menu_browse(struct menu *m, const char *noun)
 }
 
 /**
- * Browse a given book.
+ * Browse intrinsic abilities
  */
-void textui_book_browse(const struct object *obj)
+void textui_spell_browse(void)
 {
 	struct menu *m;
-	const char *noun = player_object_to_book(player, obj)->realm->spell_noun;
 
-	m = spell_menu_new(obj, spell_okay_to_browse);
+	m = spell_menu_new(spell_okay_to_browse);
 	if (m) {
-		spell_menu_browse(m, noun);
+		spell_menu_browse(m, "intrinsic abilities");
 		spell_menu_destroy(m);
 	} else {
-		msg("You cannot browse that.");
+		msg("You cannot browse that."); // have no intrinsic abilities?
 	}
 }
 
 /**
- * Browse the given book.
+ * Get a intrinsic ability from specified book.
  */
-void textui_spell_browse(void)
-{
-	struct object *obj;
-
-	if (!get_item(&obj, "Browse which book? ",
-				  "You have no books that you can read.",
-				  CMD_BROWSE_SPELL, obj_can_browse,
-				  (USE_INVEN | USE_FLOOR | IS_HARMLESS)))
-		return;
-
-	/* Track the object kind */
-	track_object(player->upkeep, obj);
-	handle_stuff(player);
-
-	textui_book_browse(obj);
-}
-
-/**
- * Get a spell from specified book.
- */
-int textui_get_spell_from_book(const char *verb, struct object *book,
+int textui_get_spell_from_book(const char *verb,
 							   const char *error,
 							   bool (*spell_filter)(int spell_index))
 {
-	const char *noun = player_object_to_book(player, book)->realm->spell_noun;
+	const char *noun = "use";
 	struct menu *m;
 
-	track_object(player->upkeep, book);
 	handle_stuff(player);
 
-	m = spell_menu_new(book, spell_filter);
+	m = spell_menu_new(spell_filter);
 	if (m) {
 		int spell_index = spell_menu_select(m, noun, verb);
 		spell_menu_destroy(m);
@@ -312,22 +289,11 @@ int textui_get_spell_from_book(const char *verb, struct object *book,
 }
 
 /**
- * Get a spell from the player.
+ * Get a intrinsic ability from the player.
  */
-int textui_get_spell(const char *verb, item_tester book_filter,
+int textui_get_spell(const char *verb,
 					 cmd_code cmd, const char *error,
 					 bool (*spell_filter)(int spell_index))
 {
-	char prompt[1024];
-	struct object *book;
-
-	/* Create prompt */
-	strnfmt(prompt, sizeof prompt, "%s which book?", verb);
-	my_strcap(prompt);
-
-	if (!get_item(&book, prompt, error,
-				  cmd, book_filter, (USE_INVEN | USE_FLOOR)))
-		return -1;
-
-	return textui_get_spell_from_book(verb, book, error, spell_filter);
+	return textui_get_spell_from_book(verb, error, spell_filter);
 }

@@ -885,13 +885,13 @@ void py_attack(struct player *p, struct loc grid)
 
 	/* Initialize the energy used */
 	p->upkeep->energy_use = 0;
-
+#ifdef undef
 	/* Reward BGs with 5% of max SPs, min 1/2 point */
 	if (player_has(p, PF_COMBAT_REGEN)) {
 		s32b sp_gain = (s32b)(MAX(p->msp, 10) << 16) / 20;
 		player_adjust_mana_precise(p, sp_gain);
 	}
-
+#endif
 	/* Player attempts a shield bash if they can, and if monster is visible
 	 * and not too pathetic */
 	if (player_has(p, PF_SHIELD_BASH) && monster_is_visible(mon)) {

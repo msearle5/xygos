@@ -257,7 +257,6 @@ static enum parser_error parse_always(struct parser *p) {
 	int tval = tval_find_idx(parser_getsym(p, "tval"));
 	struct object_kind *kind = NULL;
 
-	/* Mostly svals are given, but special handling is needed for books */
 	if (parser_hasval(p, "sval")) {
 		int sval = lookup_sval(tval, parser_getsym(p, "sval"));
 		kind = lookup_kind(tval, sval);
@@ -275,29 +274,6 @@ static enum parser_error parse_always(struct parser *p) {
 		}
 
 		s->always_table[s->always_num++] = kind;
-	} else {
-		/* Books */
-		struct object_base *book_base = &kb_info[tval];
-		int i;
-
-		/* Run across all the books for this type, add the town books */
-		for (i = 1; i <= book_base->num_svals; i++) {
-			const struct class_book *book = NULL;
-			kind = lookup_kind(tval, i);
-			book = object_kind_to_book(kind);
-			if (!book->dungeon) {
-				/* Expand if necessary */
-				if (!s->always_num) {
-					s->always_size = 8;
-					s->always_table = mem_zalloc(s->always_size * sizeof *s->always_table);
-				} else if (s->always_num >= s->always_size) {
-					s->always_size += 8;
-					s->always_table = mem_realloc(s->always_table, s->always_size * sizeof *s->always_table);
-				}
-
-				s->always_table[s->always_num++] = kind;
-			}
-		}
 	}
 
 	return PARSE_ERROR_NONE;

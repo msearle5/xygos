@@ -388,12 +388,6 @@ void unset_spells(bitflag *spells, bitflag *flags, bitflag *pflags,
 						of_has(flags, timed_effects[effect->subtype].fail))
 					break;
 
-				/* Mana drain */
-				if ((smart || one_in_(2)) &&
-						effect->index == EF_DRAIN_MANA &&
-						pf_has(pflags, PF_NO_MANA))
-					break;
-
 				effect = effect->next;
 			}
 			if (effect)

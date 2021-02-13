@@ -289,17 +289,6 @@ void take_hit(struct player *p, int dam, const char *kb_str)
 	/* Hurt the player */
 	p->chp -= dam;
 
-	/* Reward COMBAT_REGEN characters with mana for their lost hitpoints
-	 * Unenviable task of separating what should and should not cause rage
-	 * If we eliminate the most exploitable cases it should be fine.
-	 * All traps and lava currently give mana, which could be exploited  */
-	if (player_has(p, PF_COMBAT_REGEN)  && strcmp(kb_str, "poison")
-		&& strcmp(kb_str, "a fatal wound") && strcmp(kb_str, "starvation")) {
-		/* lose X% of hitpoints get X% of spell points */
-		s32b sp_gain = (MAX((s32b)p->msp, 10) << 16) / (s32b)p->mhp * dam;
-		player_adjust_mana_precise(p, sp_gain);
-	}
-
 	/* Display the hitpoints */
 	p->upkeep->redraw |= (PR_HP);
 
@@ -510,54 +499,6 @@ void player_regen_hp(struct player *p)
 }
 
 
-/**
- * Regenerate one turn's worth of mana
- */
-void player_regen_mana(struct player *p)
-{
-	s32b sp_gain;
-	int percent, old_csp = p->csp;
-
-	/* Save the old spell points */
-	old_csp = p->csp;
-
-	/* Default regeneration */
-	percent = PY_REGEN_NORMAL;
-
-	/* Various things speed up regeneration, but shouldn't punish healthy BGs */
-	if (!(player_has(p, PF_COMBAT_REGEN) && p->chp  > p->mhp / 2)) {
-		if (player_of_has(p, OF_REGEN))
-			percent *= 2;
-		if (player_resting_can_regenerate(p))
-			percent *= 2;
-	}
-
-	/* Some things slow it down */
-	if (player_has(p, PF_COMBAT_REGEN)) {
-		percent /= -2;
-	} else if (player_of_has(p, OF_IMPAIR_MANA)) {
-		percent /= 2;
-	}
-
-	/* Regenerate mana */
-	sp_gain = (s32b)(p->msp * percent);
-	if (percent >= 0)
-		sp_gain += PY_REGEN_MNBASE;
-	sp_gain = player_adjust_mana_precise(p, sp_gain);
-
-	/* SP degen heals BGs at double efficiency vs casting */
-	if (sp_gain < 0  && player_has(p, PF_COMBAT_REGEN)) {
-		convert_mana_to_hp(p, -sp_gain << 2);
-	}
-
-	/* Notice changes */
-	if (old_csp != p->csp) {
-		p->upkeep->redraw |= (PR_MANA);
-		equip_learn_flag(p, OF_REGEN);
-		equip_learn_flag(p, OF_IMPAIR_MANA);
-	}
-}
-
 void player_adjust_hp_precise(struct player *p, s32b hp_gain)
 {
 	s32b new_chp;
@@ -591,86 +532,6 @@ void player_adjust_hp_precise(struct player *p, s32b hp_gain)
 		return;
 
 	p->upkeep->redraw |= (PR_HP);
-}
-
-
-/**
- * Accept a 4 byte signed int, divide it by 65k, and add
- * to current spell points. p->csp and csp_frac are 2 bytes each.
- */
-s32b player_adjust_mana_precise(struct player *p, s32b sp_gain)
-{
-	s32b old_csp_long, new_csp_long;
-	int old_csp_short = p->csp;
-
-	if (sp_gain == 0) return 0;
-
-	/* Load it all into 4 byte format*/
-	old_csp_long = (s32b)((p->csp << 16) + p->csp_frac);
-	new_csp_long = old_csp_long + sp_gain;
-
-	/* Check for overflow */
-
-	/* new_csp = LONG_MAX LONG_MIN;} DAVIDTODO produces warning*/
-	if ((new_csp_long < 0) && (old_csp_long > 0) && (sp_gain > 0)) {
-		new_csp_long = INT32_MAX;
-		sp_gain = 0;
-	} else if ((new_csp_long > 0) && (old_csp_long < 0) && (sp_gain < 0)) {
-		new_csp_long = INT32_MIN;
-		sp_gain = 0;
-	}
-
-	/* Break it back down*/
-	p->csp = (s16b)(new_csp_long >> 16);   /* div 65536 */
-	p->csp_frac = (u16b)(new_csp_long & 0xFFFF);    /* mod 65536 */
-
-	/* Max/min SP */
-	if (p->csp >= p->msp) {
-		p->csp = p->msp;
-		p->csp_frac = 0;
-		sp_gain = 0;
-	} else if (p->csp < 0) {
-		p->csp = 0;
-		p->csp_frac = 0;
-		sp_gain = 0;
-	}
-
-	/* Notice changes */
-	if (old_csp_short != p->csp) {
-		p->upkeep->redraw |= (PR_MANA);
-	}
-
-	if (sp_gain == 0) {
-		/* Recalculate */
-		new_csp_long = (s32b)((p->csp << 16) + p->csp_frac);
-		sp_gain = new_csp_long - old_csp_long;
-	}
-
-	return sp_gain;
-}
-
-void convert_mana_to_hp(struct player *p, s32b sp_long) {
-	s32b hp_gain, sp_ratio;
-
-	if (sp_long <= 0 || p->msp == 0 || p->mhp == p->chp) return;
-
-	/* Total HP from max */
-	hp_gain = (s32b)((p->mhp - p->chp) << 16);
-	hp_gain -= (s32b)p->chp_frac;
-
-	/* Spend X% of SP get X/2% of lost HP. E.g., at 50% HP get X/4% */
-	/* Gain stays low at msp<10 because MP gains are generous at msp<10 */
-	/* sp_ratio is max sp to spent sp, doubled to suit target rate. */
-	sp_ratio = (MAX(10, (s32b)p->msp) << 16) * 2 / sp_long;
-
-	/* Limit max healing to 25% of damage; ergo spending > 50% msp
-	 * is inefficient */
-	if (sp_ratio < 4) {sp_ratio = 4;}
-	hp_gain /= sp_ratio;
-
-	/* DAVIDTODO Flavorful comments on large gains would be fun and informative */
-
-	player_adjust_hp_precise(p, hp_gain);
 }
 
 void light_timeout(struct object *obj)
@@ -839,7 +700,7 @@ void player_over_exert(struct player *p, int flag, int chance, int amount)
 	/* CON damage */
 	if (flag & PY_EXERT_CON) {
 		if (randint0(100) < chance) {
-			/* Hack - only permanent with high chance (no-mana casting) */
+			/* Hack - only permanent with high chance */
 			bool perm = (randint0(100) < chance / 2) && (chance >= 50);
 			msg("You have damaged your health!");
 			player_stat_dec(p, STAT_CON, perm);
@@ -1042,7 +903,7 @@ bool player_is_trapsafe(struct player *p)
 }
 
 /**
- * Return true if the player can cast a spell.
+ * Return true if the player can use an intrinsic ability.
  *
  * \param p is the player
  * \param show_msg should be set to true if a failure message should be
@@ -1052,14 +913,7 @@ bool player_can_cast(struct player *p, bool show_msg)
 {
 	if (!p->class->magic.total_spells) {
 		if (show_msg) {
-			msg("You cannot pray or produce magics.");
-		}
-		return false;
-	}
-
-	if (p->timed[TMD_BLIND] || no_light()) {
-		if (show_msg) {
-			msg("You cannot see!");
+			msg("You have no intrinsic abilities.");
 		}
 		return false;
 	}
@@ -1067,52 +921,6 @@ bool player_can_cast(struct player *p, bool show_msg)
 	if (p->timed[TMD_CONFUSED]) {
 		if (show_msg) {
 			msg("You are too confused!");
-		}
-		return false;
-	}
-
-	return true;
-}
-
-/**
- * Return true if the player can study a spell.
- *
- * \param p is the player
- * \param show_msg should be set to true if a failure message should be
- * displayed.
- */
-bool player_can_study(struct player *p, bool show_msg)
-{
-	if (!player_can_cast(p, show_msg))
-		return false;
-
-	if (!p->upkeep->new_spells) {
-		if (show_msg) {
-			int count;
-			struct magic_realm *r = class_magic_realms(p->class, &count), *r1;
-			char buf[120];
-
-			my_strcpy(buf, r->spell_noun, sizeof(buf));
-			my_strcat(buf, "s", sizeof(buf));
-			r1 = r->next;
-			mem_free(r);
-			r = r1;
-			if (count > 1) {
-				while (r) {
-					count--;
-					if (count) {
-						my_strcat(buf, ", ", sizeof(buf));
-					} else {
-						my_strcat(buf, " or ", sizeof(buf));
-					}
-					my_strcat(buf, r->spell_noun, sizeof(buf));
-					my_strcat(buf, "s", sizeof(buf));
-					r1 = r->next;
-					mem_free(r);
-					r = r1;
-				}
-			}
-			msg("You cannot learn any new %s!", buf);
 		}
 		return false;
 	}
@@ -1214,14 +1022,6 @@ bool player_can_cast_prereq(void)
 /**
  * Prerequiste function for command. See struct cmd_info in cmd-process.c.
  */
-bool player_can_study_prereq(void)
-{
-	return player_can_study(player, true);
-}
-
-/**
- * Prerequiste function for command. See struct cmd_info in cmd-process.c.
- */
 bool player_can_read_prereq(void)
 {
 	return player_can_read(player, true);
@@ -1241,44 +1041,6 @@ bool player_can_fire_prereq(void)
 bool player_can_refuel_prereq(void)
 {
 	return player_can_refuel(player, true);
-}
-
-/**
- * Return true if the player has access to a book that has unlearned spells.
- *
- * \param p is the player
- */
-bool player_book_has_unlearned_spells(struct player *p)
-{
-	int i, j;
-	int item_max = z_info->pack_size + z_info->floor_size;
-	struct object **item_list = mem_zalloc(item_max * sizeof(struct object *));
-	int item_num;
-
-	/* Check if the player can learn new spells */
-	if (!p->upkeep->new_spells) {
-		mem_free(item_list);
-		return false;
-	}
-
-	/* Check through all available books */
-	item_num = scan_items(item_list, item_max, USE_INVEN | USE_FLOOR,
-						  obj_can_study);
-	for (i = 0; i < item_num; i++) {
-		const struct class_book *book = player_object_to_book(p, item_list[i]);
-		if (!book) continue;
-
-		/* Extract spells */
-		for (j = 0; j < book->num_spells; j++)
-			if (spell_okay_to_study(book->spells[j].sidx)) {
-				/* There is a spell the player can study */
-				mem_free(item_list);
-				return true;
-			}
-	}
-
-	mem_free(item_list);
-	return false;
 }
 
 /**
@@ -1433,12 +1195,12 @@ void player_resting_complete_special(struct player *p)
 	if (!player_resting_is_special(p->upkeep->resting)) return;
 
 	if (p->upkeep->resting == REST_ALL_POINTS) {
-		if ((p->chp == p->mhp) && (p->csp == p->msp))
+		if (p->chp == p->mhp)
 			/* Stop resting */
 			disturb(p);
 	} else if (p->upkeep->resting == REST_COMPLETE) {
 		if ((p->chp == p->mhp) &&
-			(p->csp == p->msp || player_has(p, PF_COMBAT_REGEN)) &&
+			(player_has(p, PF_COMBAT_REGEN)) &&
 			!p->timed[TMD_BLIND] && !p->timed[TMD_CONFUSED] &&
 			!p->timed[TMD_POISONED] && !p->timed[TMD_AFRAID] &&
 			!p->timed[TMD_TERROR] && !p->timed[TMD_STUN] &&
@@ -1448,7 +1210,7 @@ void player_resting_complete_special(struct player *p)
 			/* Stop resting */
 			disturb(p);
 	} else if (p->upkeep->resting == REST_SOME_POINTS) {
-		if ((p->chp == p->mhp) || (p->csp == p->msp))
+		if (p->chp == p->mhp)
 			/* Stop resting */
 			disturb(p);
 	}

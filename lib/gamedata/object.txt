@@ -949,8 +949,6 @@ cost:200
 alloc:10:5 to 40
 pile:70:1d4
 power:8
-effect:RESTORE_MANA
-dice:20
 effect:CURE:CONFUSED
 effect:CURE:AFRAID
 effect:CURE:IMAGE
@@ -1028,8 +1026,6 @@ weight:1
 cost:20
 alloc:10:10 to 40
 pile:70:1d4
-power:5
-effect:RESTORE_MANA
 effect:NOURISH:INC_BY
 dice:5
 effect:RANDOM
@@ -1638,7 +1634,7 @@ name:& 6mm handgun~
 type:gun
 graphics:}:u
 level:1
-weight:5
+weight:710g
 cost:5
 alloc:20:1 to 100
 flags:SHOOTS_6MM
@@ -1648,7 +1644,7 @@ name:& 6mm rifle~
 type:gun
 graphics:}:u
 level:1
-weight:5
+weight:4500g
 cost:5
 alloc:20:1 to 100
 flags:SHOOTS_6MM
@@ -1658,7 +1654,7 @@ name:& 9mm handgun~
 type:gun
 graphics:}:U
 level:3
-weight:30
+weight:930g
 cost:50
 alloc:20:3 to 100
 flags:SHOOTS_9MM
@@ -1668,7 +1664,7 @@ name:& 9mm rifle~
 type:gun
 graphics:}:U
 level:10
-weight:40
+weight:5700g
 cost:120
 alloc:20:10 to 100
 flags:SHOOTS_9MM
@@ -1678,7 +1674,7 @@ name:& 12mm handgun~
 type:gun
 graphics:}:s
 level:15
-weight:110
+weight:1100g
 cost:140
 alloc:20:15 to 100
 flags:SHOOTS_12MM
@@ -1688,7 +1684,7 @@ name:& 12mm rifle~
 type:gun
 graphics:}:s
 level:30
-weight:200
+weight:7200g
 cost:300
 alloc:20:30 to 100
 flags:SHOOTS_12MM
@@ -3914,17 +3910,6 @@ pile:25:2
 power:1
 effect:CURE:POISONED
 
-name:Restore Mana
-type:pill
-graphics:!:d
-level:25
-weight:1g
-cost:350
-alloc:64:15 to 100
-pile:25:2
-power:20
-effect:RESTORE_MANA
-
 
 ### Stat restore ###
 
@@ -4170,6 +4155,18 @@ dice:100+4d25
 
 ### Useless buggers ###
 
+name:mutagen
+type:pill
+graphics:!:d
+level:12
+weight:1g
+cost:250
+alloc:10:3 to 100
+pile:10:1d3
+power:2
+effect:MUTATE
+dice:1
+
 name:sugar
 type:pill
 graphics:!:d
@@ -4182,7 +4179,7 @@ power:0
 effect:NOURISH:INC_BY
 dice:1
 
-name:Sleep
+name:sleeping
 type:pill
 graphics:!:d
 level:0
@@ -5152,21 +5149,6 @@ charges:4+d3
 power:8
 effect:REMOVE_CURSE
 dice:20+d20
-
-name:the Magi
-type:staff
-graphics:_:d
-level:70
-weight:50
-cost:4500
-alloc:10:70 to 100
-attack:1d2:0:0
-armor:0:0
-charges:2+1d2
-power:20
-effect:RESTORE_STAT:INT
-effect:RESTORE_MANA
-
 
 
 ##### Rods #####

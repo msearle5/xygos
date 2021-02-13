@@ -146,7 +146,6 @@ typedef enum stat_code
 	ST_GAINSTAT_PILLS,
 	ST_HEALING_PILLS,
 	ST_BIGHEAL_PILLS,
-	ST_RESTOREMANA_PILLS,
 	ST_SCROLLS,
 	ST_ENDGAME_SCROLLS,
 	ST_ACQUIRE_SCROLLS,
@@ -262,7 +261,6 @@ static const struct stat_data stat_message[] =
 	{ST_GAINSTAT_PILLS, " Gain stat   "},//includes *enlight*
 	{ST_HEALING_PILLS, " Healing     "},
 	{ST_BIGHEAL_PILLS, " Big heal    "},//*heal* and life
-	{ST_RESTOREMANA_PILLS, " Rest. Mana  "},
 	{ST_SCROLLS, "\n ***SCROLLS***   \n All:        "},
 	{ST_ENDGAME_SCROLLS, " Endgame     "},// destruction, banish, mass banish, rune
 	{ST_ACQUIRE_SCROLLS, " Acquire.    "},
@@ -746,11 +744,9 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 			} else if (strstr(obj->kind->name, "*Enlightenment*")) {
 				/* *Enlight* counts as 2 stat pots */
 				add_stats(ST_GAINSTAT_PILLS, vault, mon, number * 2);
-			} else if (strstr(obj->kind->name, "Restore Mana")) {
-				add_stats(ST_RESTOREMANA_PILLS, vault, mon, number);
 			} else if ((strstr(obj->kind->name, "Life")) ||
 					   (strstr(obj->kind->name, "*Healing*"))) {
-				add_stats(ST_ELVEN_RINGS, vault, mon, number);
+				add_stats(ST_BIGHEAL_PILLS, vault, mon, number);
 			} else if (strstr(obj->kind->name, "Healing")) {
 				add_stats(ST_HEALING_PILLS, vault, mon, number);
 			}

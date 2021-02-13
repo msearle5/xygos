@@ -100,7 +100,6 @@ static const struct command_info game_cmds[] =
 	{ CMD_FIRE, "fire", do_cmd_fire, false, 0 },
 	{ CMD_THROW, "throw", do_cmd_throw, false, 0 },
 	{ CMD_INSCRIBE, "inscribe", do_cmd_inscribe, false, 0 },
-	{ CMD_STUDY, "study", do_cmd_study, false, 0 },
 	{ CMD_CAST, "cast", do_cmd_cast, false, 0 },
 	{ CMD_SELL, "sell", do_cmd_sell, false, 0 },
 	{ CMD_STASH, "stash", do_cmd_stash, false, 0 },
@@ -497,11 +496,8 @@ int cmd_get_arg_choice(struct command *cmd, const char *arg, int *choice)
  * Get a spell from the user, trying the command first but then prompting
  */
 int cmd_get_spell(struct command *cmd, const char *arg, int *spell,
-				  const char *verb, item_tester book_filter, const char *error,
-				  bool (*spell_filter)(int spell))
+				  const char *verb, const char *error, bool (*spell_filter)(int spell))
 {
-	struct object *book;
-
 	/* See if we've been provided with this one */
 	if (cmd_get_arg_choice(cmd, arg, spell) == CMD_OK) {
 		/* Ensure it passes the filter */
@@ -509,11 +505,7 @@ int cmd_get_spell(struct command *cmd, const char *arg, int *spell,
 			return CMD_OK;
 	}
 
-	/* See if we've been given a book to look at */
-	if (cmd_get_arg_item(cmd, "book", &book) == CMD_OK)
-		*spell = get_spell_from_book(verb, book, error, spell_filter);
-	else
-		*spell = get_spell(verb, book_filter, cmd->code, error, spell_filter);
+	*spell = get_spell(verb, cmd->code, error, spell_filter);
 
 	if (*spell >= 0) {
 		cmd_set_arg_choice(cmd, arg, *spell);

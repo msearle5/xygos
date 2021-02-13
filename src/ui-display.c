@@ -332,30 +332,6 @@ static void prt_hp(int row, int col)
 }
 
 /**
- * Prints players max/cur spell points
- */
-static void prt_sp(int row, int col)
-{
-	char cur_sp[32], max_sp[32];
-	byte color = player_sp_attr(player);
-
-	/* Do not show mana unless we should have some */
-	if (player_has(player, PF_NO_MANA) || 
-		(player->lev < player->class->magic.spell_first))
-		return;
-
-	put_str("SP ", row, col);
-
-	strnfmt(max_sp, sizeof(max_sp), "%4d", player->msp);
-	strnfmt(cur_sp, sizeof(cur_sp), "%4d", player->csp);
-
-	/* Show mana */
-	c_put_str(color, cur_sp, row, col + 3);
-	c_put_str(COLOUR_WHITE, "/", row, col + 7);
-	c_put_str(COLOUR_L_GREEN, max_sp, row, col + 8);
-}
-
-/**
  * Calculate the monster bar color separately, for ports.
  */
 byte monster_health_attr(void)
@@ -676,31 +652,6 @@ static int prt_hp_short(int row, int col)
 	return 5+strlen(cur_hp)+strlen(max_hp);
 }
 
-static int prt_sp_short(int row, int col)
-{
-	char cur_sp[32], max_sp[32];
-	byte color = player_sp_attr(player);
-
-	/* Do not show mana unless we should have some */
-	if (player_has(player, PF_NO_MANA) || 
-		(player->lev < player->class->magic.spell_first))
-		return 0;
-
-	put_str("SP:", row, col);
-	col += 3;
-
-	strnfmt(max_sp, sizeof(max_sp), "%d", player->msp);
-	strnfmt(cur_sp, sizeof(cur_sp), "%d", player->csp);
-
-	/* Show mana */
-	c_put_str(color, cur_sp, row, col);
-	col += strlen(cur_sp);
-	c_put_str(COLOUR_WHITE, "/", row, col);
-	col += 1;
-	c_put_str(COLOUR_L_GREEN, max_sp, row, col);
-	return 5+strlen(cur_sp)+strlen(max_sp);
-}
-
 static int prt_health_short(int row, int col)
 {
 	int len = prt_health_aux(row, col);
@@ -768,7 +719,6 @@ static void update_topbar(game_event_type type, game_event_data *data,
 	prt("", row, col);
 
 	col += prt_hp_short(row, col);
-	col += prt_sp_short(row, col);
 	col += prt_health_short(row, col);	
 	col += prt_speed_short(row, col);
 	col += prt_depth_short(row, col);
@@ -802,7 +752,6 @@ static const struct side_handler_t
 	{ NULL,        15, 0 },
 	{ prt_ac,       7, EVENT_AC },
 	{ prt_hp,       8, EVENT_HP },
-	{ prt_sp,       9, EVENT_MANA },
 	{ NULL,        21, 0 },
 	{ prt_health,  12, EVENT_MONSTERHEALTH },
 	{ NULL,        20, 0 },
@@ -1199,31 +1148,6 @@ static size_t prt_dtrap(int row, int col)
 }
 
 /**
- * Print how many spells the player can study.
- */
-static size_t prt_study(int row, int col)
-{
-	char *text;
-	int attr = COLOUR_WHITE;
-
-	/* Can the player learn new spells? */
-	if (player->upkeep->new_spells) {
-		/* If the player does not carry a book with spells they can study,
-		   the message is displayed in a darker colour */
-		if (!player_book_has_unlearned_spells(player))
-			attr = COLOUR_L_DARK;
-
-		/* Print study message */
-		text = format("Study (%d)", player->upkeep->new_spells);
-		c_put_str(attr, text, row, col);
-		return strlen(text) + 1;
-	}
-
-	return 0;
-}
-
-
-/**
  * Print all timed effects.
  */
 static size_t prt_tmd(int row, int col)
@@ -1273,7 +1197,7 @@ typedef size_t status_f(int row, int col);
 
 static status_f *status_handlers[] =
 { prt_level_feeling, prt_light, prt_moves, prt_unignore, prt_recall,
-  prt_descent, prt_state, prt_study, prt_tmd, prt_dtrap, prt_terrain };
+  prt_descent, prt_state, prt_tmd, prt_dtrap, prt_terrain };
 
 
 /**
@@ -2043,9 +1967,6 @@ static void update_player_compact_subwindow(game_event_type type,
 
 	/* Hitpoints */
 	prt_hp(row++, col);
-
-	/* Spellpoints */
-	prt_sp(row++, col);
 
 	/* Monster health */
 	prt_health(row, col);

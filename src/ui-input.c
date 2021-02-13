@@ -1368,7 +1368,6 @@ void textui_input_init(void)
 	get_com_hook = textui_get_com;
 	get_rep_dir_hook = textui_get_rep_dir;
 	get_aim_dir_hook = textui_get_aim_dir;
-	get_spell_from_book_hook = textui_get_spell_from_book;
 	get_spell_hook = textui_get_spell;
 	get_item_hook = textui_get_item;
 	get_curse_hook = textui_get_curse;

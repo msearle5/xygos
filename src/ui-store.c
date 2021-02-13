@@ -1635,10 +1635,6 @@ static void store_examine(struct store_context *ctx, int item)
 
 	textui_textblock_show(tb, area, header);
 	textblock_free(tb);
-
-	/* Hack -- Browse book, then prompt for a command */
-	if (obj_can_browse(obj))
-		textui_book_browse(obj);
 }
 
 static void store_menu_set_selections(struct menu *menu, bool knowledge_menu)

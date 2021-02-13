@@ -51,8 +51,6 @@ bool obj_can_activate(const struct object *obj);
 bool obj_can_refill(const struct object *obj);
 bool obj_kind_can_browse(const struct object_kind *kind);
 bool obj_can_browse(const struct object *obj);
-bool obj_can_cast_from(const struct object *obj);
-bool obj_can_study(const struct object *obj);
 bool obj_can_takeoff(const struct object *obj);
 bool obj_can_wear(const struct object *obj);
 bool obj_can_fire(const struct object *obj);

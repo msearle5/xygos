@@ -389,9 +389,6 @@ static void get_bonuses(void)
 
 	/* Fully healed */
 	player->chp = player->mhp;
-
-	/* Fully rested */
-	player->csp = player->msp;
 }
 
 

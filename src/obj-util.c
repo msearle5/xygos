@@ -802,19 +802,6 @@ bool obj_can_browse(const struct object *obj)
 	return obj_kind_can_browse(obj->kind);
 }
 
-bool obj_can_cast_from(const struct object *obj)
-{
-	return obj_can_browse(obj) &&
-			spell_book_count_spells(obj, spell_okay_to_cast) > 0;
-}
-
-bool obj_can_study(const struct object *obj)
-{
-	return obj_can_browse(obj) &&
-		spell_book_count_spells(obj, spell_okay_to_study) > 0;
-}
-
-
 /* Can only take off non-cursed items */
 bool obj_can_takeoff(const struct object *obj)
 {

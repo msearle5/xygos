@@ -545,16 +545,6 @@ lore-color-resist:Orange
 message-vis:{name} creates a tempest of wind and water.
 message-invis:Something chants fluidly.
 
-name:DRAIN_MANA
-hit:100
-effect:DRAIN_MANA
-dice:d$S
-expr:S:SPELL_POWER:/ 2 + 1
-lore:drain mana
-lore-color-base:Yellow
-message-vis:{name} drains your mana away.
-message-invis:Something moans.
-
 name:MIND_BLAST
 hit:100
 effect:DAMAGE

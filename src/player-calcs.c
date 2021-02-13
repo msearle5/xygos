@@ -868,51 +868,6 @@ static const int adj_mag_study[STAT_RANGE] =
 };
 
 /**
- * Stat Table (INT/WIS) -- extra 1/100 mana-points per level
- */
-static const int adj_mag_mana[STAT_RANGE] =
-{
-	  0	/* 3 */,
-	 10	/* 4 */,
-	 20	/* 5 */,
-	 30	/* 6 */,
-	 40	/* 7 */,
-	 50	/* 8 */,
-	 60	/* 9 */,
-	 70	/* 10 */,
-	 80	/* 11 */,
-	 90	/* 12 */,
-	100	/* 13 */,
-	110	/* 14 */,
-	120	/* 15 */,
-	130	/* 16 */,
-	140	/* 17 */,
-	150	/* 18/00-18/09 */,
-	160	/* 18/10-18/19 */,
-	170	/* 18/20-18/29 */,
-	180	/* 18/30-18/39 */,
-	190	/* 18/40-18/49 */,
-	200	/* 18/50-18/59 */,
-	225	/* 18/60-18/69 */,
-	250	/* 18/70-18/79 */,
-	300	/* 18/80-18/89 */,
-	350	/* 18/90-18/99 */,
-	400	/* 18/100-18/109 */,
-	450	/* 18/110-18/119 */,
-	500	/* 18/120-18/129 */,
-	550	/* 18/130-18/139 */,
-	600	/* 18/140-18/149 */,
-	650	/* 18/150-18/159 */,
-	700	/* 18/160-18/169 */,
-	750	/* 18/170-18/179 */,
-	800	/* 18/180-18/189 */,
-	800	/* 18/190-18/199 */,
-	800	/* 18/200-18/209 */,
-	800	/* 18/210-18/219 */,
-	800	/* 18/220+ */
-};
-
-/**
  * This table is used to help calculate the number of blows the player can
  * make in a single round of attacks (one player turn) with a normal weapon.
  *
@@ -1257,301 +1212,6 @@ static int average_spell_stat(struct player *p, struct player_state *state)
 	return (sum + count - 1) / count;
 }
 
-/**
- * Calculate number of spells player should have, and forget,
- * or remember, spells until that number is properly reflected.
- *
- * Note that this function induces various "status" messages,
- * which must be bypasses until the character is created.
- */
-static void calc_spells(struct player *p)
-{
-	int i, j, k, levels;
-	int num_allowed, num_known, num_total = p->class->magic.total_spells;
-	int percent_spells;
-
-	const struct class_spell *spell;
-
-	s16b old_spells;
-
-	/* Hack -- must be literate */
-	if (!p->class->magic.total_spells) return;
-
-	/* Hack -- wait for creation */
-	if (!character_generated) return;
-
-	/* Hack -- handle partial mode */
-	if (p->upkeep->only_partial) return;
-
-	/* Save the new_spells value */
-	old_spells = p->upkeep->new_spells;
-
-	/* Determine the number of spells allowed */
-	levels = p->lev - p->class->magic.spell_first + 1;
-
-	/* Hack -- no negative spells */
-	if (levels < 0) levels = 0;
-
-	/* Number of 1/100 spells per level (or something - needs clarifying) */
-	percent_spells = adj_mag_study[average_spell_stat(p, &p->state)];
-
-	/* Extract total allowed spells (rounded up) */
-	num_allowed = (((percent_spells * levels) + 50) / 100);
-
-	/* Assume none known */
-	num_known = 0;
-
-	/* Count the number of spells we know */
-	for (j = 0; j < num_total; j++)
-		if (p->spell_flags[j] & PY_SPELL_LEARNED)
-			num_known++;
-
-	/* See how many spells we must forget or may learn */
-	p->upkeep->new_spells = num_allowed - num_known;
-
-	/* Forget spells which are too hard */
-	for (i = num_total - 1; i >= 0; i--) {
-		/* Get the spell */
-		j = p->spell_order[i];
-
-		/* Skip non-spells */
-		if (j >= 99) continue;
-
-		/* Get the spell */
-		spell = spell_by_index(j);
-
-		/* Skip spells we are allowed to know */
-		if (spell->slevel <= p->lev) continue;
-
-		/* Is it known? */
-		if (p->spell_flags[j] & PY_SPELL_LEARNED) {
-			/* Mark as forgotten */
-			p->spell_flags[j] |= PY_SPELL_FORGOTTEN;
-
-			/* No longer known */
-			p->spell_flags[j] &= ~PY_SPELL_LEARNED;
-
-			/* Message */
-			msg("You have forgotten the %s of %s.", spell->realm->spell_noun,
-				spell->name);
-
-			/* One more can be learned */
-			p->upkeep->new_spells++;
-		}
-	}
-
-	/* Forget spells if we know too many spells */
-	for (i = num_total - 1; i >= 0; i--) {
-		/* Stop when possible */
-		if (p->upkeep->new_spells >= 0) break;
-
-		/* Get the (i+1)th spell learned */
-		j = p->spell_order[i];
-
-		/* Skip unknown spells */
-		if (j >= 99) continue;
-
-		/* Get the spell */
-		spell = spell_by_index(j);
-
-		/* Forget it (if learned) */
-		if (p->spell_flags[j] & PY_SPELL_LEARNED) {
-			/* Mark as forgotten */
-			p->spell_flags[j] |= PY_SPELL_FORGOTTEN;
-
-			/* No longer known */
-			p->spell_flags[j] &= ~PY_SPELL_LEARNED;
-
-			/* Message */
-			msg("You have forgotten the %s of %s.", spell->realm->spell_noun,
-				spell->name);
-
-			/* One more can be learned */
-			p->upkeep->new_spells++;
-		}
-	}
-
-	/* Check for spells to remember */
-	for (i = 0; i < num_total; i++) {
-		/* None left to remember */
-		if (p->upkeep->new_spells <= 0) break;
-
-		/* Get the next spell we learned */
-		j = p->spell_order[i];
-
-		/* Skip unknown spells */
-		if (j >= 99) break;
-
-		/* Get the spell */
-		spell = spell_by_index(j);
-
-		/* Skip spells we cannot remember */
-		if (spell->slevel > p->lev) continue;
-
-		/* First set of spells */
-		if (p->spell_flags[j] & PY_SPELL_FORGOTTEN) {
-			/* No longer forgotten */
-			p->spell_flags[j] &= ~PY_SPELL_FORGOTTEN;
-
-			/* Known once more */
-			p->spell_flags[j] |= PY_SPELL_LEARNED;
-
-			/* Message */
-			msg("You have remembered the %s of %s.", spell->realm->spell_noun,
-				spell->name);
-
-			/* One less can be learned */
-			p->upkeep->new_spells--;
-		}
-	}
-
-	/* Assume no spells available */
-	k = 0;
-
-	/* Count spells that can be learned */
-	for (j = 0; j < num_total; j++) {
-		/* Get the spell */
-		spell = spell_by_index(j);
-
-		/* Skip spells we cannot remember or don't exist */
-		if (!spell) continue;
-		if (spell->slevel > p->lev || spell->slevel == 0) continue;
-
-		/* Skip spells we already know */
-		if (p->spell_flags[j] & PY_SPELL_LEARNED)
-			continue;
-
-		/* Count it */
-		k++;
-	}
-
-	/* Cannot learn more spells than exist */
-	if (p->upkeep->new_spells > k) p->upkeep->new_spells = k;
-
-	/* Spell count changed */
-	if (old_spells != p->upkeep->new_spells) {
-		/* Message if needed */
-		if (p->upkeep->new_spells) {
-			int count;
-			struct magic_realm *r = class_magic_realms(p->class, &count), *r1;
-			char buf[120];
-
-			my_strcpy(buf, r->spell_noun, sizeof(buf));
-			if (p->upkeep->new_spells > 1) {
-				my_strcat(buf, "s", sizeof(buf));
-			}
-			r1 = r->next;
-			mem_free(r);
-			r = r1;
-			if (count > 1) {
-				while (r) {
-					count--;
-					if (count) {
-						my_strcat(buf, ", ", sizeof(buf));
-					} else {
-						my_strcat(buf, " or ", sizeof(buf));
-					}
-					my_strcat(buf, r->spell_noun, sizeof(buf));
-					if (p->upkeep->new_spells > 1) {
-						my_strcat(buf, "s", sizeof(buf));
-					}
-					r1 = r->next;
-					mem_free(r);
-					r = r1;
-				}
-			}
-			/* Message */
-			msg("You can learn %d more %s.", p->upkeep->new_spells, buf);
-		}
-
-		/* Redraw Study Status */
-		p->upkeep->redraw |= (PR_STUDY | PR_OBJECT);
-	}
-}
-
-
-/**
- * Calculate maximum mana.  You do not need to know any spells.
- * Note that mana is lowered by heavy (or inappropriate) armor.
- *
- * This function induces status messages.
- */
-static void calc_mana(struct player *p, struct player_state *state, bool update)
-{
-	int i, msp, levels, cur_wgt, max_wgt; 
-
-	/* Must be literate */
-	if (!p->class->magic.total_spells) {
-		p->msp = 0;
-		p->csp = 0;
-		p->csp_frac = 0;
-		return;
-	}
-
-	/* Extract "effective" player level */
-	levels = (p->lev - p->class->magic.spell_first) + 1;
-	if (levels > 0) {
-		msp = 1;
-		msp += adj_mag_mana[average_spell_stat(p, state)] * levels / 100;
-	} else {
-		levels = 0;
-		msp = 0;
-	}
-
-	/* Assume player not encumbered by armor */
-	state->cumber_armor = false;
-
-	/* Weigh the armor */
-	cur_wgt = 0;
-	for (i = 0; i < p->body.count; i++) {
-		struct object *obj_local = slot_object(p, i);
-
-		/* Ignore non-armor */
-		if (slot_type_is(i, EQUIP_WEAPON)) continue;
-		if (slot_type_is(i, EQUIP_GUN)) continue;
-		if (slot_type_is(i, EQUIP_RING)) continue;
-		if (slot_type_is(i, EQUIP_AMULET)) continue;
-		if (slot_type_is(i, EQUIP_LIGHT)) continue;
-
-		/* Add weight */
-		if (obj_local)
-			cur_wgt += obj_local->weight;
-	}
-
-	/* Determine the weight allowance */
-	max_wgt = p->class->magic.spell_weight;
-
-	/* Heavy armor penalizes mana */
-	if (((cur_wgt - max_wgt) / 10) > 0) {
-		/* Encumbered */
-		state->cumber_armor = true;
-
-		/* Reduce mana */
-		msp -= ((cur_wgt - max_wgt) / 10);
-	}
-
-	/* Mana can never be negative */
-	if (msp < 0) msp = 0;
-
-	/* Return if no updates */
-	if (!update) return;
-
-	/* Maximum mana has changed */
-	if (p->msp != msp) {
-		/* Save new limit */
-		p->msp = msp;
-
-		/* Enforce new limit */
-		if (p->csp >= msp) {
-			p->csp = msp;
-			p->csp_frac = 0;
-		}
-
-		/* Display mana later */
-		p->upkeep->redraw |= (PR_MANA);
-	}
-}
-
 
 /**
  * Calculate the players (maximal) hit points
@@ -1849,7 +1509,7 @@ static void apply_modifiers(struct player *p, struct player_state *state, s16b *
  * not only race/class intrinsics, but also objects being worn
  * and temporary spell effects.
  *
- * See also calc_mana() and calc_hitpoints().
+ * See also calc_hitpoints().
  *
  * The "weapon" and "gun" do *not* add to the bonuses to hit or to
  * damage, since that would affect non-combat things.  These values
@@ -2364,12 +2024,6 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		state->num_blows = calc_blows(p, NULL, state, extra_blows);
 	}
 
-	/* Mana */
-	calc_mana(p, state, update);
-	if (!p->msp) {
-		pf_on(state->pflags, PF_NO_MANA);
-	}
-
 	/* Movement speed */
 	state->num_moves = extra_moves;
 
@@ -2416,12 +2070,8 @@ static void update_bonuses(struct player *p)
 			/* Change in CON affects Hitpoints */
 			if (i == STAT_CON)
 				p->upkeep->update |= (PU_HP);
-
-			/* Change in stats may affect Mana/Spells */
-			p->upkeep->update |= (PU_MANA | PU_SPELLS);
 		}
 	}
-
 
 	/* Hack -- Telepathy Change */
 	if (of_has(state.flags, OF_TELEPATHY) !=
@@ -2629,18 +2279,6 @@ void update_stuff(struct player *p)
 		calc_hitpoints(p);
 	}
 
-	if (p->upkeep->update & (PU_MANA)) {
-		p->upkeep->update &= ~(PU_MANA);
-		calc_mana(p, &p->state, true);
-	}
-
-	if (p->upkeep->update & (PU_SPELLS)) {
-		p->upkeep->update &= ~(PU_SPELLS);
-		if (p->class->magic.total_spells > 0) {
-			calc_spells(p);
-		}
-	}
-
 	/* Character is not ready yet, no map updates */
 	if (!character_generated) return;
 
@@ -2692,14 +2330,12 @@ static const struct flag_event_trigger redraw_events[] =
 	{ PR_STATS,   EVENT_STATS },
 	{ PR_ARMOR,   EVENT_AC },
 	{ PR_HP,      EVENT_HP },
-	{ PR_MANA,    EVENT_MANA },
 	{ PR_GOLD,    EVENT_GOLD },
 	{ PR_HEALTH,  EVENT_MONSTERHEALTH },
 	{ PR_DEPTH,   EVENT_DUNGEONLEVEL },
 	{ PR_SPEED,   EVENT_PLAYERSPEED },
 	{ PR_STATE,   EVENT_STATE },
 	{ PR_STATUS,  EVENT_STATUS },
-	{ PR_STUDY,   EVENT_STUDYSTATUS },
 	{ PR_DTRAP,   EVENT_DETECTIONSTATUS },
 	{ PR_FEELING, EVENT_FEELING },
 	{ PR_LIGHT,   EVENT_LIGHT },

@@ -1373,101 +1373,6 @@ bool effect_handler_DRAIN_LIGHT(effect_handler_context_t *context)
 }
 
 /**
- * Drain mana from the player, healing the caster.
- */
-bool effect_handler_DRAIN_MANA(effect_handler_context_t *context)
-{
-	int drain = effect_calculate_value(context, false);
-	bool monster = context->origin.what != SRC_TRAP;
-	char m_name[80];
-	struct monster *mon = NULL;
-	struct monster *t_mon = monster_target_monster(context);
-	struct loc decoy = cave_find_decoy(cave);
-
-	context->ident = true;
-
-	if (monster) {
-		assert(context->origin.what == SRC_MONSTER);
-
-		mon = cave_monster(cave, context->origin.which.monster);
-
-		/* Get the monster name (or "it") */
-		monster_desc(m_name, sizeof(m_name), mon, MDESC_STANDARD);
-	}
-
-	/* Target is another monster - disenchant it */
-	if (t_mon) {
-		mon_inc_timed(t_mon, MON_TMD_DISEN, MAX(drain, 0), 0);
-		return true;
-	}
-
-	/* Target was a decoy - destroy it */
-	if (decoy.y && decoy.x) {
-		square_destroy_decoy(cave, decoy);
-		return true;
-	}
-
-	/* The player has no mana */
-	if (!player->csp) {
-		msg("The draining fails.");
-		if (monster) {
-			update_smart_learn(mon, player, 0, PF_NO_MANA, -1);
-		}
-		return true;
-	}
-
-	/* Drain the given amount if the player has that much, or all of it */
-	if (drain >= player->csp) {
-		drain = player->csp;
-		player->csp = 0;
-		player->csp_frac = 0;
-	} else {
-		player->csp -= drain;
-	}
-
-	/* Heal the monster */
-	if (monster) {
-		if (mon->hp < mon->maxhp) {
-			mon->hp += (6 * drain);
-			if (mon->hp > mon->maxhp)
-				mon->hp = mon->maxhp;
-
-			/* Redraw (later) if needed */
-			if (player->upkeep->health_who == mon)
-				player->upkeep->redraw |= (PR_HEALTH);
-
-			/* Special message */
-			if (monster_is_visible(mon))
-				msg("%s appears healthier.", m_name);
-		}
-	}
-
-	/* Redraw mana */
-	player->upkeep->redraw |= PR_MANA;
-
-	return true;
-}
-
-bool effect_handler_RESTORE_MANA(effect_handler_context_t *context)
-{
-	int amount = effect_calculate_value(context, false);
-	if (!amount) amount = player->msp;
-	if (player->csp < player->msp) {
-		player->csp += amount;
-		if (player->csp > player->msp) {
-			player->csp = player->msp;
-			player->csp_frac = 0;
-			msg("You feel your head clear.");
-		} else
-			msg("You feel your head clear somewhat.");
-		player->upkeep->redraw |= (PR_MANA);
-	}
-	context->ident = true;
-
-	return true;
-}
-
-/**
  * Attempt to uncurse an object
  */
 bool effect_handler_REMOVE_CURSE(effect_handler_context_t *context)
@@ -4641,9 +4546,6 @@ bool effect_handler_CURSE_ARMOR(effect_handler_context_t *context)
 		/* Recalculate bonuses */
 		player->upkeep->update |= (PU_BONUS);
 
-		/* Recalculate mana */
-		player->upkeep->update |= (PU_MANA);
-
 		/* Window stuff */
 		player->upkeep->redraw |= (PR_INVEN | PR_EQUIP);
 	}
@@ -4699,9 +4601,6 @@ bool effect_handler_CURSE_WEAPON(effect_handler_context_t *context)
 
 		/* Recalculate bonuses */
 		player->upkeep->update |= (PU_BONUS);
-
-		/* Recalculate mana */
-		player->upkeep->update |= (PU_MANA);
 
 		/* Window stuff */
 		player->upkeep->redraw |= (PR_INVEN | PR_EQUIP);
@@ -4848,126 +4747,6 @@ bool effect_handler_CREATE_ARROWS(effect_handler_context_t *context)
 	/* Make some arrows */
 	arrows = make_object(cave, player->lev, good, great, false, NULL, TV_AMMO_9);
 	drop_near(cave, &arrows, 0, player->grid, true, true);
-
-	return true;
-}
-
-/**
- * Draw energy from a magical device
- */
-bool effect_handler_TAP_DEVICE(effect_handler_context_t *context)
-{
-	int lev;
-	int energy = 0;
-	struct object *obj;
-	bool used = false;
-	int itemmode = (USE_INVEN | USE_FLOOR);
-	const char *q, *s;
-	char *item = "";
-
-	/* Get an item */
-	q = "Drain charges from which item? ";
-	s = "You have nothing to drain charges from.";
-	if (context->cmd) {
-		if (cmd_get_item(context->cmd, "tgtitem", &obj, q, s,
-				item_tester_hook_recharge, itemmode)) {
-			return used;
-		}
-	} else if (!get_item(&obj, q, s, 0, item_tester_hook_recharge,
-				  itemmode)) {
-		return (used);
-	}
-
-	/* Extract the object "level" */
-	lev = obj->kind->level;
-
-	/* Extract the object's energy and get its generic name. */
-	if (tval_is_staff(obj)) {
-		energy = (5 + lev) * 3 * obj->pval / 2;
-		item = "staff";
-	} else if (tval_is_wand(obj)) {
-		energy = (5 + lev) * 3 * obj->pval / 2;
-		item = "wand";
-	}
-
-	/* Turn energy into mana. */
-	if (energy < 36) {
-		/* Require a resonable amount of energy */
-		msg("That %s had no useable energy", item);
-	} else {
-		/* If mana below maximum, increase mana and drain object. */
-		if (player->csp < player->msp) {
-			/* Drain the object. */
-			obj->pval = 0;
-
-
-			/* Combine / Reorder the pack (later) */
-			player->upkeep->notice |= (PN_COMBINE);
-
-			/* Redraw stuff */
-			player->upkeep->redraw |= (PR_INVEN);
-
-			/* Increase mana. */
-			player->csp += energy / 6;
-			player->csp_frac = 0;
-			if (player->csp > player->msp) {
-				(player->csp = player->msp);
-			}
-
-			msg("You feel your head clear.");
-			used = true;
-
-			player->upkeep->redraw |= (PR_MANA);
-		} else {
-			char *cap = string_make(item);
-			my_strcap(cap);
-			msg("Your mana was already at its maximum.  %s not drained.", cap);
-			string_free(cap);
-		}
-	}
-
-	return (used);
-}
-
-/**
- * Draw energy from a nearby undead
- */
-bool effect_handler_TAP_UNLIFE(effect_handler_context_t *context)
-{
-	int amount = effect_calculate_value(context, false);
-	struct loc target;
-	struct monster *mon = NULL;
-	char m_name[80];
-	int drain = 0;
-	bool fear = false;
-	bool dead = false;
-
-	context->ident = true;
-
-	/* Closest living monster */
-	if (!target_set_closest(TARGET_KILL, monster_is_undead)) {
-		return false;
-	}
-	target_get(&target);
-	mon = target_get_monster();
-
-	/* Hurt the monster */
-	monster_desc(m_name, sizeof(m_name), mon, MDESC_TARG);
-	msg("You draw power from the %s.", m_name);
-	drain = MIN(mon->hp, amount) / 4;
-	dead = mon_take_hit(mon, amount, &fear, " is destroyed!");
-
-	/* Gain mana */
-	effect_simple(EF_RESTORE_MANA, context->origin, format("%d", drain), 0, 0,
-				  0, 0, 0, NULL);
-
-	/* Handle fear for surviving monsters */
-	if (!dead && monster_is_visible(mon)) {
-		message_pain(mon, amount);
-		if (fear) {
-			add_monster_message(mon, MON_MSG_FLEE_IN_TERROR, true);
-		}
-	}
 
 	return true;
 }

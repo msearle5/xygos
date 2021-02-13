@@ -769,10 +769,6 @@ int rd_player(void)
 	rd_s16b(&player->chp);
 	rd_u16b(&player->chp_frac);
 
-	rd_s16b(&player->msp);
-	rd_s16b(&player->csp);
-	rd_u16b(&player->csp_frac);
-
 	rd_u16b(&player->talent_points);
 	rd_s16b(&player->max_lev);
 	rd_s16b(&player->max_depth);

@@ -1058,18 +1058,23 @@ void do_cmd_refill(struct command *cmd)
 
 /**
  * ------------------------------------------------------------------------
- * Spell casting
+ * Intrinsic abilities
  * ------------------------------------------------------------------------
  */
 
 /**
- * Cast a spell from a book
+ * Use an intrinsic ability.
+ * Most should be accessible by a single keypress (you will typically not
+ * have too many to be immediately visible, and even in that case they
+ * would not all need to be behind a sub-menu) 
  */
 void do_cmd_cast(struct command *cmd)
 {
 	int spell_index, dir = 0;
-	const struct class_spell *spell;
 
+	/* Maybe some still work? Or even require a particular form?
+	 * Most should make this check, though.
+	 */
 	if (player_is_shapechanged(player)) {
 		if (get_check("Change back to your original form? " )) {
 			player_resume_normal_shape(player);
@@ -1077,15 +1082,14 @@ void do_cmd_cast(struct command *cmd)
 		return;
 	}
 
-	/* Check the player can cast spells at all */
+	/* Check the player can use abilities at all */
 	if (!player_can_cast(player, true))
 		return;
 
 	/* Get arguments */
-	if (cmd_get_spell(cmd, "spell", &spell_index,
-			/* Verb */   "cast",
-			/* Book */   obj_can_cast_from,
-			/* Error */  "There are no spells you can cast.",
+	if (cmd_get_spell(cmd, "ability", &spell_index,
+			/* Verb */   "use",
+			/* Error */  "There are no abilities you can use.",
 			/* Filter */ spell_okay_to_cast) != CMD_OK)
 		return;
 
@@ -1094,24 +1098,6 @@ void do_cmd_cast(struct command *cmd)
 			player_confuse_dir(player, &dir, false);
 		else
 			return;
-	}
-
-	/* Get the spell */
-	spell = spell_by_index(spell_index);
-
-	/* Verify "dangerous" spells */
-	if (spell->smana > player->csp) {
-		const char *verb = spell->realm->verb;
-		const char *noun = spell->realm->spell_noun;
-
-		/* Warning */
-		msg("You do not have enough mana to %s this %s.", verb, noun);
-
-		/* Flush input */
-		event_signal(EVENT_INPUT_FLUSH);
-
-		/* Verify */
-		if (!get_check("Attempt it anyway? ")) return;
 	}
 
 	/* Cast a spell */
@@ -1124,92 +1110,4 @@ void do_cmd_cast(struct command *cmd)
 		}
 	}
 	target_release();
-}
-
-
-/**
- * Gain a specific spell, specified by spell number (for mages).
- */
-void do_cmd_study_spell(struct command *cmd)
-{
-	int spell_index;
-
-	/* Check the player can study at all atm */
-	if (!player_can_study(player, true))
-		return;
-
-	if (cmd_get_spell(cmd, "spell", &spell_index,
-			/* Verb */   "study",
-			/* Book */   obj_can_study,
-			/* Error  */ "You cannot learn any new spells from the books you have.",
-			/* Filter */ spell_okay_to_study) != CMD_OK)
-		return;
-
-	spell_learn(spell_index);
-	player->upkeep->energy_use = z_info->move_energy;
-}
-
-/**
- * Gain a random spell from the given book (for priests)
- */
-void do_cmd_study_book(struct command *cmd)
-{
-	struct object *book_obj;
-	const struct class_book *book;
-	int spell_index = -1;
-	struct class_spell *spell;
-	int i, k = 0;
-
-	if (cmd_get_item(cmd, "item", &book_obj,
-			/* Prompt */ "Study which book? ",
-			/* Error  */ "You cannot learn any new spells from the books you have.",
-			/* Filter */ obj_can_study,
-			/* Choice */ USE_INVEN | USE_FLOOR) != CMD_OK)
-		return;
-
-	book = player_object_to_book(player, book_obj);
-	track_object(player->upkeep, book_obj);
-	handle_stuff(player);
-
-	/* Check the player can study at all atm */
-	if (!player_can_study(player, true))
-		return;
-
-	for (i = 0; i < book->num_spells; i++) {
-		spell = &book->spells[i];
-		if (!spell_okay_to_study(spell->sidx))
-			continue;
-		if ((++k > 1) && (randint0(k) != 0))
-			continue;
-		spell_index = spell->sidx;
-	}
-
-	if (spell_index < 0) {
-		msg("You cannot learn any %ss in that book.", book->realm->spell_noun);
-	} else {
-		spell_learn(spell_index);
-		player->upkeep->energy_use = z_info->move_energy;
-	}
-}
-
-/**
- * Choose the way to study.  Choose life.  Choose a career.  Choose family.
- * Choose a fucking big monster, choose orc shamans, kobolds, dark elven
- * druids, and Mim, Betrayer of Turin.
- */
-void do_cmd_study(struct command *cmd)
-{
-	if (player_is_shapechanged(player)) {
-		msg("You cannot do this while in %s form.",	player->shape->name);
-		if (get_check("Do you want to change back? " )) {
-			player_resume_normal_shape(player);
-		} else {
-			return;
-		}
-	}
-
-	if (player_has(player, PF_CHOOSE_SPELLS))
-		do_cmd_study_spell(cmd);
-	else
-		do_cmd_study_book(cmd);
 }

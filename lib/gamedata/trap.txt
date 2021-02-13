@@ -554,19 +554,6 @@ dice:100+1d100
 desc:A trap that envelops you in darkness.
 msg:Everything starts to fade...
 
-# mana drain
-
-name:trap:mana drain trap
-graphics:^:light purple
-appear:1:5:0
-visibility:50+d10
-flags:TRAP | FLOOR | MAGICAL
-effect:DRAIN_MANA
-dice:1d$D
-expr:D:DUNGEON_LEVEL:/ 2 + 1
-msg:You feel your energies sap away.
-desc:A trap that drains your mana.
-
 # whirling knives
 # XXX ideally this would have an effect that wasn't cured in one turn
 #   - maybe make CSW only heal 100 points of cuts?

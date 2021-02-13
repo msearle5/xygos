@@ -198,41 +198,19 @@ struct magic_realm *class_magic_realms(const struct player_class *c, int *count)
 	return r;
 }
 
-
-/**
- * Get the spellbook structure from any object which is a book
- */
-const struct class_book *object_kind_to_book(const struct object_kind *kind)
-{
-	struct player_class *class = classes;
-	while (class) {
-		int i;
-
-		for (i = 0; i < class->magic.num_books; i++)
-		if ((kind->tval == class->magic.books[i].tval) &&
-			(kind->sval == class->magic.books[i].sval)) {
-			return &class->magic.books[i];
-		}
-		class = class->next;
-	}
-
-	return NULL;
-}
-
 /**
  * Get the spellbook structure from an object which is a book the player can
  * cast from
  */
-const struct class_book *player_object_to_book(struct player *p,
-											   const struct object *obj)
+const struct class_book *player_object_to_book(struct player *p)
 {
+/*
 	int i;
-
 	for (i = 0; i < p->class->magic.num_books; i++)
 		if ((obj->tval == p->class->magic.books[i].tval) &&
 			(obj->sval == p->class->magic.books[i].sval))
 			return &p->class->magic.books[i];
-
+*/
 	return NULL;
 }
 
@@ -257,9 +235,9 @@ const struct class_spell *spell_by_index(int index)
  * Collect spells from a book into the spells[] array, allocating
  * appropriate memory.
  */
-int spell_collect_from_book(const struct object *obj, int **spells)
+int spell_collect_from_book(int **spells)
 {
-	const struct class_book *book = player_object_to_book(player, obj);
+	const struct class_book *book = player_object_to_book(player);
 	int i, n_spells = 0;
 
 	if (!book) {
@@ -284,10 +262,9 @@ int spell_collect_from_book(const struct object *obj, int **spells)
 /**
  * Return the number of castable spells in the spellbook 'obj'.
  */
-int spell_book_count_spells(const struct object *obj,
-		bool (*tester)(int spell))
+int spell_book_count_spells(bool (*tester)(int spell))
 {
-	const struct class_book *book = player_object_to_book(player, obj);
+	const struct class_book *book = player_object_to_book(player);
 	int i, n_spells = 0;
 
 	if (!book) {
@@ -324,17 +301,6 @@ bool spell_okay_list(bool (*spell_test)(int spell),
 bool spell_okay_to_cast(int spell)
 {
 	return (player->spell_flags[spell] & PY_SPELL_LEARNED);
-}
-
-/**
- * True if the spell can be studied.
- */
-bool spell_okay_to_study(int spell_index)
-{
-	const struct class_spell *spell = spell_by_index(spell_index);
-	if (!spell) return false;
-	return (spell->slevel <= player->lev) &&
-			!(player->spell_flags[spell_index] & PY_SPELL_LEARNED);
 }
 
 /**
@@ -390,10 +356,6 @@ s16b spell_chance(int spell_index)
 	/* Reduce failure rate by casting stat level adjustment */
 	chance -= fail_adjust(player, spell);
 
-	/* Not enough mana to cast */
-	if (spell->smana > player->csp)
-		chance += 5 * (spell->smana - player->csp);
-
 	/* Get the minimum failure rate for the casting stat level */
 	minfail = min_fail(player, spell);
 
@@ -437,41 +399,6 @@ s16b spell_chance(int spell_index)
 	return (chance);
 }
 
-
-/**
- * Learn the specified spell.
- */
-void spell_learn(int spell_index)
-{
-	int i;
-	const struct class_spell *spell = spell_by_index(spell_index);
-
-	/* Learn the spell */
-	player->spell_flags[spell_index] |= PY_SPELL_LEARNED;
-
-	/* Find the next open entry in "spell_order[]" */
-	for (i = 0; i < player->class->magic.total_spells; i++)
-		if (player->spell_order[i] == 99) break;
-
-	/* Add the spell to the known list */
-	player->spell_order[i] = spell_index;
-
-	/* Mention the result */
-	msgt(MSG_STUDY, "You have learned the %s of %s.", spell->realm->spell_noun,
-		 spell->name);
-
-	/* One less spell available */
-	player->upkeep->new_spells--;
-
-	/* Message if needed */
-	if (player->upkeep->new_spells)
-		msg("You can learn %d more %s%s.", player->upkeep->new_spells,
-			spell->realm->spell_noun, PLURAL(player->upkeep->new_spells));
-
-	/* Redraw Study Status */
-	player->upkeep->redraw |= (PR_STUDY | PR_OBJECT);
-}
-
 static int beam_chance(void)
 {
 	int plev = player->lev;
@@ -505,11 +432,6 @@ bool spell_cast(int spell_index, int dir, struct command *cmd)
 			return false;
 		}
 
-		/* Reward COMBAT_REGEN with small HP recovery */
-		if (player_has(player, PF_COMBAT_REGEN)) {
-			convert_mana_to_hp(player, spell->smana << 16);
-		}
-
 		/* A spell was cast */
 		sound(MSG_SPELL);
 
@@ -526,25 +448,6 @@ bool spell_cast(int spell_index, int dir, struct command *cmd)
 			player->upkeep->redraw |= (PR_OBJECT);
 		}
 	}
-
-	/* Sufficient mana? */
-	if (spell->smana <= player->csp) {
-		/* Use some mana */
-		player->csp -= spell->smana;
-	} else {
-		int oops = spell->smana - player->csp;
-
-		/* No mana left */
-		player->csp = 0;
-		player->csp_frac = 0;
-
-		/* Over-exert the player */
-		player_over_exert(player, PY_EXERT_FAINT, 100, 5 * oops + 1);
-		player_over_exert(player, PY_EXERT_CON, 50, 0);
-	}
-
-	/* Redraw mana */
-	player->upkeep->redraw |= (PR_MANA);
 
 	mem_free(ident);
 	return true;
