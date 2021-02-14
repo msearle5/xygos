@@ -286,7 +286,7 @@ min-weight:40
 strength-multiplier:2
 equip:sword:pocket knife:1:1
 
-magic:1:300:5
+magic:1:300
 book:[First Spells]
 spell:Magic Missile:1:22:4:1:4:10
 seffect:BOLT_OR_BEAM:MISSILE:0:-10

@@ -175,8 +175,8 @@ name:Foraging
 gain:You wonder for a moment what a spider tastes like.
 lose:You feel disgusted.
 brief:You have unusual foraging skills.
-desc:You have the skill to find food in the most unlikely places, and can get by with less food. Being used to going hungry, you won't easily feel weak or faint from lack of food.
-desc_future:you would have the skill to find food in the most unlikely places, to get by with less food, and to not easily feel weak or faint from lack of food.
+desc:You have the skill to find food in the most unlikely places, and can get by with less food. Being used to going hungry, you won't easily heal more slowly, feel weak or faint from lack of food.
+desc_future:you would have the skill to find food in the most unlikely places, to get by with less food, and to not easily heal more slowly, feel weak or faint from lack of food.
 flag:talent
 cost:1
 
@@ -184,7 +184,7 @@ name:Patience
 gain:You shuffle a deck of cards and deal a hand of Solitaire.
 lose:You put away your playing cards.
 brief:You will gain talents only at high level.
-desc:You give up all your immediate talents, and will gain no talents until half way through the game. You will then start to gain talents again - rapidly enough that you will end up with more than you would have had without.
+desc:you give up all your immediate talents, and will gain no talents until half way through the game. You will then start to gain talents again - rapidly enough that you will end up with more than you would have had without.
 flag:birth
 flag:talent
 forbid:Precocity
@@ -196,7 +196,7 @@ name:Precocity
 gain:You feel the need to hoard TP.
 lose:You no longer feel the need to hoard TP.
 brief:You will gain no more talents.
-desc:You get all your talent points available from the start. But that is all you will ever get, and by maximum level you will end up with less than you would without.
+desc:you get all your talent points available from the start. But that is all you will ever get, and by maximum level you will end up with less than you would without.
 flag:birth
 flag:talent
 forbid:Patience
@@ -207,7 +207,7 @@ name:Unknown_Talents
 gain:You are sure that you must have hidden talents, but no idea what they might be.
 lose:You are no longer so sure that you have hidden depths.
 brief:You will gain talents randomly.
-desc:Your hidden talents will become apparent at unknown points throughout the game. You have no choice, but they will include nothing harmful and in the end you will have more talents than you would otherwise.
+desc:your hidden talents will become apparent at unknown points throughout the game. You have no choice, but they will include nothing harmful and in the end you will have more talents than you would otherwise.
 flag:birth
 flag:talent
 forbid:Patience
@@ -234,7 +234,16 @@ lose:Your mouth feels normal again.
 brief:You are able to spit acid.
 desc:You are able to spit acid.
 flag:mutation
-flag:nasty
+
+book:[Spit]
+spell:Spit Acid:1:22:4:4:1:3d4
+seffect:BOLT_OR_BEAM:ACID:0:-10
+sdice:$Dd4
+sexpr:D:PLAYER_LEVEL:- 1 / 5 + 3
+sdesc:Spits a highly acidic loogie.
+sdesc: Sometimes you will be able to manage a continuous spray instead that hurts each monster
+sdesc: in its path - the chance to get a spray goes up with your character level.
+
 
 ## Skin muts ##
 

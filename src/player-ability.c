@@ -60,6 +60,8 @@ static enum parser_error parse_ability_name(struct parser *p) {
 	parser_setpriv(p, a);
 	a->name = string_make(parser_getstr(p, "name"));
 
+	parsing_magic = &(a->magic);
+
 	/* Determine which entry to accept */
 	#define PF(N) if (!my_stricmp(#N, a->name)) { ability[PF_##N] = a; return PARSE_ERROR_NONE; }
 	#include "list-player-flags.h"
@@ -307,6 +309,7 @@ struct parser *init_parse_ability(void) {
 	parser_reg(p, "obj-flags ?str flags", parse_ability_obj_flags);
 	parser_reg(p, "player-flags ?str flags", parse_ability_play_flags);
 	parser_reg(p, "values str values", parse_ability_values);
+	init_parse_magic(p);
 	return p;
 }
 
@@ -325,6 +328,7 @@ static void cleanup_ability(void)
 	for (idx = 0; idx < PF_MAX; idx++) {
 		if (ability[idx]) {
 			string_free(ability[idx]->name);
+			cleanup_magic(&(ability[idx]->magic));
 			mem_free(ability[idx]);
 		}
 	}
