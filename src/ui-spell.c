@@ -25,6 +25,7 @@
 #include "object.h"
 #include "player-calcs.h"
 #include "player-spell.h"
+#include "ui-display.h"
 #include "ui-menu.h"
 #include "ui-output.h"
 
@@ -113,8 +114,8 @@ static void spell_menu_display(struct menu *m, int oid, bool cursor,
 	}
 	strcat(randval, tag);
 
-	strnfmt(out, sizeof(out), "%-30s%2d %8s %3d%%%s", spell->name,
-			spell->slevel, randval, spell_chance(spell_index), comment);
+	strnfmt(out, sizeof(out), "%-26s%s %2d %8s %3d%%%s", spell->name,
+			stat_names[spell->stat], spell->slevel, randval, spell_chance(spell_index), comment);
 	c_prt(attr, illegible ? illegible : out, row, col);
 }
 
@@ -199,7 +200,7 @@ static struct menu *spell_menu_new(bool (*is_valid)(int spell_index))
 	menu_setpriv(m, d->n_spells, d);
 
 	/* Set flags */
-	m->header = "Name                             Lv     Cost Fail Info";
+	m->header = "Name                         Stat Lv    Cost Fail Info";
 	m->flags = MN_CASELESS_TAGS;
 	m->selections = lower_case;
 	m->browse_hook = spell_menu_browser;

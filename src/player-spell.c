@@ -441,7 +441,7 @@ bool spell_cast(int spell_index, int dir, struct command *cmd)
 			take_hit(player, randcalc(spell->hp, 0, RANDOMISE), "overexertion");
 		}
 		if (randcalc(spell->turns, 0, AVERAGE) != 0) {
-			player->cooldown[spell_index] += randcalc(spell->turns, 0, AVERAGE);
+			player->cooldown[spell_index] += randcalc(spell->turns, 0, RANDOMISE);
 		}
 
 		/* A spell was cast */
