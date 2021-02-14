@@ -1290,6 +1290,11 @@ void do_cmd_accept_character(struct command *cmd)
 	/* No quest in progress */
 	player->active_quest = -1;
 
+	/* Cooldowns at zero */
+	if (!player->cooldown)
+		player->cooldown = mem_alloc(sizeof(*player->cooldown) * total_spells);
+	memset(player->cooldown, 0, sizeof(*player->cooldown) * total_spells);
+
 	/* Class specific initialization */
 	player_hookz(init);
 

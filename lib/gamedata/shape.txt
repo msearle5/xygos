@@ -126,17 +126,6 @@ blow:crush
 blow:thump
 blow:strike
 
-magic:1:350:1
-book:nature book:town:[Lesser Charms]:6:nature
-book-graphics:?:y
-book-properties:25:40:1 to 100
-
-spell:Detect Life:1:1:23:2:2
-seffect:DETECT_LIVING_MONSTERS
-seffect-yx:22:40
-sdesc:Detects all living monsters in the immediate area, for one turn only.
-
-
 name:warg
 combat:5:5:0
 values:BLOWS[2]

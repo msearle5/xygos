@@ -315,8 +315,9 @@ struct class_spell {
 
 	int sidx;				/**< The index of this spell for this class */
 	int bidx;				/**< The index into the player's books array */
-	int slevel;				/**< Required level (to learn) */
-	int smana;				/**< Required mana (to cast) */
+	int slevel;				/**< Required level (to use) */
+	random_value hp;		/**< Required HP (to use) */
+	random_value turns;		/**< Cooldown */
 	int sfail;				/**< Base chance of failure */
 	int sexp;				/**< Encoded experience bonus */
 	int stat;				/**< Controlling stat */
@@ -624,6 +625,8 @@ struct player {
 	s32b wt_birth;						/* Birth Weight */
 
 	byte ability_pflags[PF_MAX];		/* Player flags from abilities */
+
+	s32b *cooldown;						/* Cooldowns, by spell index */
 
 	struct player_options opts;			/* Player options */
 	struct player_history hist;			/* Player history (see player-history.c) */

@@ -1071,7 +1071,7 @@ void do_cmd_refill(struct command *cmd)
 void do_cmd_cast(struct command *cmd)
 {
 	int spell_index, dir = 0;
-	const char *error = "You have no intrinsic abilities you can use.";
+	const char *error = "You have no techniques you can use.";
 
 	int n_spells = 0;
 	combine_books(&n_spells, NULL, NULL, NULL);
@@ -1093,10 +1093,16 @@ void do_cmd_cast(struct command *cmd)
 	}
 
 	/* Get arguments */
-	if (cmd_get_spell(cmd, "ability", &spell_index,
+	if (cmd_get_spell(cmd, "technique", &spell_index,
 			/* Verb */   "use",
 			/* Error */  error,
 			/* Filter */ NULL) != CMD_OK) { 
+		return;
+	}
+
+	/* Cool down? */
+	if (player->cooldown[spell_index] > 0) {
+		msg("You can't use that technique for another %d turns.", player->cooldown[spell_index]);
 		return;
 	}
 

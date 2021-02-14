@@ -393,9 +393,6 @@ s16b spell_chance(int spell_index)
 
 	const struct class_spell *spell;
 
-	/* Paranoia -- must be literate */
-	if (!player->class->magic.total_spells) return chance;
-
 	/* Get the spell */
 	spell = spell_by_index(spell_index);
 	if (!spell) return chance;
@@ -485,9 +482,18 @@ bool spell_cast(int spell_index, int dir, struct command *cmd)
 			return false;
 		}
 
+		/* The cost - HP, cooldown */
+		if (randcalc(spell->hp, 0, AVERAGE) != 0) {
+			take_hit(player, randcalc(spell->hp, 0, RANDOMISE), "overexertion");
+		}
+		if (randcalc(spell->turns, 0, AVERAGE) != 0) {
+			player->cooldown[spell_index] += randcalc(spell->turns, 0, AVERAGE);
+		}
+
 		/* A spell was cast */
 		sound(MSG_SPELL);
 
+		/* for the first time */
 		if (!(player->spell_flags[spell_index] & PY_SPELL_WORKED)) {
 			int e = spell->sexp;
 
@@ -514,8 +520,7 @@ bool spell_needs_aim(int spell_index)
 	return effect_aim(spell->effect);
 }
 
-static size_t append_random_value_string(char *buffer, size_t size,
-										 random_value *rv)
+size_t append_random_value_string(char *buffer, size_t size, const random_value *rv)
 {
 	size_t offset = 0;
 

@@ -497,6 +497,9 @@ void wr_player(void)
 	wr_s16b(player->energy);
 	wr_s16b(player->word_recall);
 
+	for (i = 0; i < total_spells; i++)
+		wr_s32b(player->cooldown[i]);
+
 	/* Find the number of timed effects */
 	wr_byte(TMD_MAX);
 

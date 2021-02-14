@@ -84,9 +84,37 @@ static void spell_menu_display(struct menu *m, int oid, bool cursor,
 		attr = COLOUR_L_GREEN;
 	}
 
-	/* Dump the spell --(-- */
-	strnfmt(out, sizeof(out), "%-30s%2d %4d %3d%%%s", spell->name,
-			spell->slevel, spell->smana, spell_chance(spell_index), comment);
+	/* Dump the spell --(-- 
+	 * 'Cost' - what was once 'Mana' - may be:
+	 * 	- (No cost)
+	 *  X HP (HP cost, where X may be a fixed number, dice, or normal ("~50") and may change with level)
+	 *  X t (Cooldown - X is as above. If the spell can't be cast because cooldown, change the colour and
+	 * 			display the number of turns remaining.)
+	 * If it has both display the HP (as more urgent) if it is available, the turns remainng otherwise
+	 **/
+	char randval[30];
+	*randval = 0;
+	const char *tag = "";
+	/* Cooldown in progress? */
+	if (player->cooldown[spell_index] > 0) {
+		attr = COLOUR_RED;
+		snprintf(randval, sizeof(randval), "%d", player->cooldown[spell_index]);
+	} else {
+		if (randcalc(spell->hp, 0, AVERAGE) == 0) {
+			/* Display cooldown */
+			append_random_value_string(randval, sizeof(randval), &spell->turns);
+		} else if (randcalc(spell->turns, 0, AVERAGE) == 0) {
+			tag = "-";
+		} else {
+			/* Display HP */
+			append_random_value_string(randval, sizeof(randval), &spell->hp);
+			tag = " HP";
+		}
+	}
+	strcat(randval, tag);
+
+	strnfmt(out, sizeof(out), "%-30s%2d %8s %3d%%%s", spell->name,
+			spell->slevel, randval, spell_chance(spell_index), comment);
 	c_prt(attr, illegible ? illegible : out, row, col);
 }
 
@@ -171,7 +199,7 @@ static struct menu *spell_menu_new(bool (*is_valid)(int spell_index))
 	menu_setpriv(m, d->n_spells, d);
 
 	/* Set flags */
-	m->header = "Name                             Lv Mana Fail Info";
+	m->header = "Name                             Lv     Cost Fail Info";
 	m->flags = MN_CASELESS_TAGS;
 	m->selections = lower_case;
 	m->browse_hook = spell_menu_browser;

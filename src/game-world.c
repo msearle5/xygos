@@ -279,7 +279,7 @@ void play_ambient_sound(void)
 }
 
 /**
- * Helper for process_world -- decrement player->timed[] and curse effect fields
+ * Helper for process_world -- decrement player->timed[], curse effect and technique cooldown fields
  */
 static void decrease_timeouts(void)
 {
@@ -369,6 +369,14 @@ static void decrease_timeouts(void)
 					}
 				}
 			}
+		}
+	}
+
+	/* Technique cooldowns */
+	if (player->cooldown) {
+		for(int i=0;i<total_spells;i++) {
+			if (player->cooldown[i] > 0)
+				player->cooldown[i]--;
 		}
 	}
 

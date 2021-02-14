@@ -3422,7 +3422,8 @@ static enum parser_error parse_class_spell(struct parser *p) {
 	m->total_spells++;
 	book->spells[book->num_spells].bidx = m->num_books - 1;
 	book->spells[book->num_spells].slevel = parser_getint(p, "level");
-	book->spells[book->num_spells].smana = parser_getint(p, "mana");
+	book->spells[book->num_spells].hp = parser_getrand(p, "hp");
+	book->spells[book->num_spells].turns = parser_getrand(p, "turns");
 	book->spells[book->num_spells].sfail = parser_getint(p, "fail");
 	book->spells[book->num_spells].sexp = parser_getint(p, "exp");
 	book->spells[book->num_spells].stat = parser_getint(p, "stat");
@@ -3604,7 +3605,7 @@ void init_parse_magic(struct parser *p)
 			   parse_class_book_graphics);
 	parser_reg(p, "book-properties int cost int common str minmax",
 			   parse_class_book_properties);
-	parser_reg(p, "spell sym name int level int mana int fail int exp int stat",
+	parser_reg(p, "spell sym name int level int fail int exp int stat rand hp rand turns",
 			   parse_class_spell);
 	parser_reg(p, "seffect sym eff ?sym type ?int radius ?int other", parse_class_effect);
 	parser_reg(p, "seffect-yx int y int x", parse_class_effect_yx);
