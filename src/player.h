@@ -315,6 +315,7 @@ struct class_spell {
 	int smana;				/**< Required mana (to cast) */
 	int sfail;				/**< Base chance of failure */
 	int sexp;				/**< Encoded experience bonus */
+	int stat;				/**< Controlling stat */
 };
 
 /**

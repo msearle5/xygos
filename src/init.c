@@ -3403,7 +3403,9 @@ static enum parser_error parse_class_spell(struct parser *p) {
 	book->spells[book->num_spells].slevel = parser_getint(p, "level");
 	book->spells[book->num_spells].smana = parser_getint(p, "mana");
 	book->spells[book->num_spells].sfail = parser_getint(p, "fail");
-	book->spells[book->num_spells++].sexp = parser_getint(p, "exp");
+	book->spells[book->num_spells].sexp = parser_getint(p, "exp");
+	book->spells[book->num_spells].stat = parser_getint(p, "stat");
+	book->num_spells++;
 	return PARSE_ERROR_NONE;
 }
 
@@ -3607,7 +3609,7 @@ struct parser *init_parse_class(void) {
 			   parse_class_book_graphics);
 	parser_reg(p, "book-properties int cost int common str minmax",
 			   parse_class_book_properties);
-	parser_reg(p, "spell sym name int level int mana int fail int exp",
+	parser_reg(p, "spell sym name int level int mana int fail int exp int stat",
 			   parse_class_spell);
 	parser_reg(p, "effect sym eff ?sym type ?int radius ?int other", parse_class_effect);
 	parser_reg(p, "effect-yx int y int x", parse_class_effect_yx);
