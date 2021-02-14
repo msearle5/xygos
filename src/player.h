@@ -313,10 +313,8 @@ struct class_spell {
  * A structure to hold class-dependent information on spell books.
  */
 struct class_book {
+	char *name;					/**< Name of this book */
 	struct class_spell *spells;			/**< Spells in the book*/
-	int tval;							/**< Item type of the book */
-	int sval;							/**< Item sub-type for book */
-	bool dungeon;						/**< Whether this is a dungeon book */
 	int num_spells;						/**< Number of spells in this book */
 };
 

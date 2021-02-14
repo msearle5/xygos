@@ -912,14 +912,6 @@ bool player_is_trapsafe(struct player *p)
  */
 bool player_can_cast(struct player *p, bool show_msg)
 {
-	/*
-	 * if (!p->class->magic.total_spells) {
-		if (show_msg) {
-			msg("You have no intrinsic abilities.");
-		}
-		return false;
-	}*/
-
 	if (p->timed[TMD_CONFUSED]) {
 		if (show_msg) {
 			msg("You are too confused!");

@@ -265,7 +265,7 @@ static void spell_menu_browse(struct menu *m, const char *noun)
 }
 
 /**
- * Browse intrinsic abilities
+ * Browse techniques
  */
 void textui_spell_browse(void)
 {
@@ -273,21 +273,21 @@ void textui_spell_browse(void)
 
 	m = spell_menu_new(spell_okay_to_browse);
 	if (m) {
-		spell_menu_browse(m, "intrinsic abilities");
+		spell_menu_browse(m, "technique");
 		spell_menu_destroy(m);
 	} else {
-		msg("You cannot browse that."); // have no intrinsic abilities?
+		msg("You know no techniques.");
 	}
 }
 
 /**
- * Get a intrinsic ability from specified book.
+ * Get a technique from specified book.
  */
 int textui_get_spell_from_book(const char *verb,
 							   const char *error,
 							   bool (*spell_filter)(int spell_index))
 {
-	const char *noun = "ability";
+	const char *noun = "technique";
 	struct menu *m;
 
 	handle_stuff(player);
@@ -303,7 +303,7 @@ int textui_get_spell_from_book(const char *verb,
 }
 
 /**
- * Get a intrinsic ability from the player.
+ * Get a technique from the player.
  */
 int textui_get_spell(const char *verb,
 					 cmd_code cmd, const char *error,

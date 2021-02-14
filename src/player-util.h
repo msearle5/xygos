@@ -104,7 +104,6 @@ bool player_can_cast_prereq(void);
 bool player_can_read_prereq(void);
 bool player_can_fire_prereq(void);
 bool player_can_refuel_prereq(void);
-bool player_book_has_unlearned_spells(struct player *p);
 bool player_confuse_dir(struct player *p, int *dir, bool too);
 bool player_resting_is_special(s16b count);
 bool player_is_resting(struct player *p);

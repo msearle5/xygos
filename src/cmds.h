@@ -69,9 +69,6 @@ void do_cmd_quaff_pill(struct command *cmd);
 void do_cmd_use(struct command *cmd);
 void do_cmd_refill(struct command *cmd);
 void do_cmd_cast(struct command *cmd);
-void do_cmd_study_spell(struct command *cmd);
-void do_cmd_study_book(struct command *cmd);
-void do_cmd_study(struct command *cmd);
 void do_cmd_use_printer(struct command *cmd);
 
 /* cmd-pickup.c */

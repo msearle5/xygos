@@ -1380,11 +1380,6 @@ static const grouper object_text_order[] =
 	{TV_ROD,			"Rod"			},
  	{TV_FOOD,			"Food"			},
  	{TV_MUSHROOM,		"Mushroom"		},
-	{TV_PRAYER_BOOK,	"Priest Book"	},
-	{TV_MAGIC_BOOK,		"Magic Book"	},
-	{TV_NATURE_BOOK,	"Nature Book"	},
-	{TV_SHADOW_BOOK,	"Shadow Book"	},
-	{TV_OTHER_BOOK,		"Mystery Book"	},
 	{TV_LIGHT,			"Light"			},
 	{TV_BATTERY,		"Battery"			},
 	{TV_SWORD,			"Sword"			},
@@ -1897,11 +1892,6 @@ static int o_cmp_tval(const void *a, const void *b)
 	switch (k_a->tval)
 	{
 		case TV_LIGHT:
-		case TV_MAGIC_BOOK:
-		case TV_PRAYER_BOOK:
-		case TV_NATURE_BOOK:
-		case TV_SHADOW_BOOK:
-		case TV_OTHER_BOOK:
 		case TV_DRAG_ARMOR:
 			/* leave sorted by sval */
 			break;
@@ -3032,56 +3022,6 @@ static void shape_lore_append_change_effects(textblock *tb,
 }
 
 
-static void shape_lore_append_triggering_spells(textblock *tb,
-	const struct player_shape *s)
-{
-	int n = 0;
-	struct player_class *c;
-
-	for (c = classes; c; c = c->next) {
-		int ibook;
-
-		for (ibook = 0; ibook < c->magic.num_books; ++ibook) {
-			const struct class_book *book = c->magic.books + ibook;
-			const struct object_kind *kind =
-				lookup_kind(book->tval, book->sval);
-			int ispell;
-
-			if (!kind || !kind->name) {
-				continue;
-			}
-			for (ispell = 0; ispell < book->num_spells; ++ispell) {
-				const struct class_spell *spell =
-					book->spells + ispell;
-				const struct effect *effect;
-
-				for (effect = spell->effect;
-					effect;
-					effect = effect->next) {
-					if (effect->index == EF_SHAPECHANGE &&
-						effect->subtype == s->sidx) {
-						if (n == 0) {
-							textblock_append(tb, "\n");
-						}
-						textblock_append(tb,
-							"The %s spell, %s, from %s triggers the shapechange.",
-							c->name,
-							spell->name,
-							kind->name
-						);
-						++n;
-					}
-				}
-			}
-		}
-	}
-
-	if (n > 0) {
-		textblock_append(tb, "\n");
-	}
-}
-
-
 /**
  * Display information about a shape change.
  */
@@ -3102,7 +3042,6 @@ static void shape_lore(const struct player_shape *s)
 	shape_lore_append_sustains(tb, s);
 	shape_lore_append_misc_flags(tb, s);
 	shape_lore_append_change_effects(tb, s);
-	shape_lore_append_triggering_spells(tb, s);
 
 	textui_textblock_show(tb, SCREEN_REGION, NULL);
 	textblock_free(tb);

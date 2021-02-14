@@ -185,16 +185,6 @@ typedef enum stat_code
 	ST_AWESOME_AMMO,
 	ST_SLAYEVIL_AMMO,
 	ST_HOLY_AMMO,
-	ST_BOOKS,
-	ST_1ST_BOOKS,
-	ST_2ND_BOOKS,
-	ST_3RD_BOOKS,
-	ST_4TH_BOOKS,
-	ST_5TH_BOOKS,
-	ST_6TH_BOOKS,
-	ST_7TH_BOOKS,
-	ST_8TH_BOOKS,
-	ST_9TH_BOOKS,
 	ST_END
 }	
 stat_code;
@@ -300,16 +290,6 @@ static const struct stat_data stat_message[] =
 	{ST_AWESOME_AMMO, " Awesome     "},//seeker, mithril + brand
 	{ST_SLAYEVIL_AMMO, " Slay evil   "},
 	{ST_HOLY_AMMO, " Holy might  "},
-	{ST_BOOKS, "\n ***BOOKS***     \n All:        "},
-	{ST_1ST_BOOKS, " Book 1      "},
-	{ST_2ND_BOOKS, " Book 2      "},
-	{ST_3RD_BOOKS, " Book 3      "},
-	{ST_4TH_BOOKS, " Book 4      "},
-	{ST_5TH_BOOKS, " Book 5      "},
-	{ST_6TH_BOOKS, " Book 6      "},
-	{ST_7TH_BOOKS, " Book 7      "},
-	{ST_8TH_BOOKS, " Book 8      "},
-	{ST_9TH_BOOKS, " Book 9      "},	
 };	
 
 double stat_all[ST_END][3][MAX_LVL];
@@ -326,15 +306,6 @@ typedef enum stat_first_find
 	ST_FF_RCONF,
 	ST_FF_RBLIND,
 	ST_FF_TELEP,
-	ST_FF_BOOK1,
-	ST_FF_BOOK2,
-	ST_FF_BOOK3,
-	ST_FF_BOOK4,
-	ST_FF_BOOK5,
-	ST_FF_BOOK6,
-	ST_FF_BOOK7,
-	ST_FF_BOOK8,
-	ST_FF_BOOK9,
 	ST_FF_END
 }	
 stat_first_find;
@@ -356,15 +327,6 @@ static const struct stat_ff_data stat_ff_message[] =
 	{ST_FF_RCONF,	ST_RCONF_EQUIPMENT,	"Rconf  \t"},
 	{ST_FF_RBLIND,	ST_RBLIND_EQUIPMENT,	"Rblind \t"},
 	{ST_FF_TELEP,	ST_TELEP_EQUIPMENT,	"Telep  \t"},
-	{ST_FF_BOOK1,	ST_1ST_BOOKS,	"Book1  \t"},
-	{ST_FF_BOOK2,	ST_2ND_BOOKS, 	"Book2  \t"},
-	{ST_FF_BOOK3,	ST_3RD_BOOKS,	"Book3  \t"},
-	{ST_FF_BOOK4,	ST_4TH_BOOKS,	"Book4  \t"},
-	{ST_FF_BOOK5,	ST_5TH_BOOKS,	"Book5  \t"},
-	{ST_FF_BOOK6,	ST_6TH_BOOKS,	"Book6  \t"},
-	{ST_FF_BOOK7,	ST_7TH_BOOKS,	"Book7  \t"},
-	{ST_FF_BOOK8,	ST_8TH_BOOKS,	"Book8	\t"},
-	{ST_FF_BOOK9,	ST_9TH_BOOKS,	"Book9  \t"},
 };
 
 int stat_ff_all[ST_FF_END][TRIES_SIZE];
@@ -921,81 +883,8 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 			}
 			break;
 		}
-
-		/* books have the same probability, only track one realm of them */
-		case TV_MAGIC_BOOK:{
-
-			switch(obj->sval){
-
-				/* svals begin at 0 and end at 8 */
-				case 0:{
-
-					add_stats(ST_1ST_BOOKS, vault, mon, number);
-					first_find(ST_FF_BOOK1);
-					break;
-				}
-
-				case 1:{
-
-					add_stats(ST_2ND_BOOKS, vault, mon, number);
-					first_find(ST_FF_BOOK2);
-					break;
-				}
-
-				case 2:{
-
-					add_stats(ST_3RD_BOOKS, vault, mon, number);
-					first_find(ST_FF_BOOK3);
-					break;
-				}
-
-				case 3:{
-
-					add_stats(ST_4TH_BOOKS, vault, mon, number);
-					first_find(ST_FF_BOOK4);
-					break;
-				}
-
-				case 4:{
-
-					add_stats(ST_5TH_BOOKS, vault, mon, number);
-					first_find(ST_FF_BOOK5);
-					break;
-				}
-
-				case 5:{
-
-					add_stats(ST_6TH_BOOKS, vault, mon, number);
-					first_find(ST_FF_BOOK6);
-					break;
-				}
-
-				case 6:{
-
-					add_stats(ST_7TH_BOOKS, vault, mon, number);
-					first_find(ST_FF_BOOK7);
-					break;
-				}
-
-				case 7:{
-
-					add_stats(ST_8TH_BOOKS, vault, mon, number);
-					first_find(ST_FF_BOOK8);
-					break;
-				}
-
-				case 8:{
-
-					add_stats(ST_9TH_BOOKS, vault, mon, number);
-					first_find(ST_FF_BOOK9);
-					break;
-				}
-
-
-			}
-			break;
-		}
 	}
+
 	/* check to see if we have an artifact */
 	if (obj->artifact){
 
@@ -1195,7 +1084,6 @@ static void print_heading(void)
 	file_putf(stats_log," Amulets:   Endgame amulets are trickery, weaponmaster and magi\n");
 	file_putf(stats_log," Armor:     Low resist armor may have more than one basic resist (acid, \n");
 	file_putf(stats_log,"		     elec, fire, cold) but not all. \n");
-	file_putf(stats_log," Books:     Prayer and Magic books have the same probability. \n");
 	file_putf(stats_log," Pills:   Aug counts as 5 pills, *enlight* as 2.  Healing pills are \n");
 	file_putf(stats_log,"			 only *Healing* and Life\n");
 	file_putf(stats_log," Scrolls:   Endgame scrolls include *Dest*, Rune, MBan and Ban \n");
@@ -1375,13 +1263,6 @@ static void post_process_stats(void)
 	mean_and_stdv(art_it);
 
 	/* Temporary stuff goes here */
-	/* Dungeon book totals for Eddie
-	file_putf(stats_log,"mb5: %f\n",total(b5_total));
-	file_putf(stats_log,"mb6: %f\n",total(b6_total));
-	file_putf(stats_log,"mb7: %f\n",total(b7_total));
-	file_putf(stats_log,"mb8: %f\n",total(b8_total));
-	file_putf(stats_log,"mb9: %f\n",total(b9_total));
-	*/
 }
 
 

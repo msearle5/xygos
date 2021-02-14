@@ -27,9 +27,7 @@
 # equip:tval:sval:min:max
 # player-flags:class flags
 # magic:spell_first:spell_weight:num_books
-# book:tval:quality:name:spells
-# book-graphics:symbol:color
-# book-properties:cost:commonness:min to max
+# book:name
 # spell:name:level:mana:fail:exp
 # seffect:seffect:subtype (if needed):radius (if needed):parameter (if needed)
 # sdice:dice string
@@ -72,19 +70,8 @@
 # 'magic' is for general magic info - level of the first spell, weight that
 # hurts spells, number of books used.
 
-# 'book' defines one of these books - object base, whether a town or a dungeon
-# book, name, number of spells.  A book needs to be defined for
-# each class which uses it, as otherwise it is not recognised as one of that
-# class's books.
-
-# 'book-graphics' is for symbol and color as used in object.txt.
-# 'book-graphics:' lines refer to the previous book line, and need not be
-# included if a book of the same name has been defined earlier.
-
-# 'book-properties' is for object properties of a book - cost, commonness,
-# and minimum and maximum depths of occurrence.
-# 'book-properties:' lines refer to the previous book line, and need not be
-# included if a book of the same name has been defined earlier.
+# 'book' names the following techniques as being part of a book. This is
+# not an actual object, just a way of classifying techniques.
 
 # 'spell' defines an individual spell - name, level, mana required,
 # fail-rate, experience for first casting.    'spell:' lines always refer to
@@ -328,12 +315,7 @@ title:Sorcerer
 title:Arch-Mage
 
 magic:1:300:5
-
-book:magic book:town:[First Spells]:7
-book-graphics:?:R
-book-properties:25:40:1 to 100
-equip:magic book:[First Spells]:1:1
-
+book:[First Spells]
 spell:Magic Missile:1:22:4:1:4:10
 seffect:BOLT_OR_BEAM:MISSILE:0:-10
 sdice:$Dd4
@@ -501,7 +483,6 @@ equip:food:random:1:3
 equip:sword:flick knife:1:1
 equip:soft armour:Soft Leather Armour:1:1
 equip:scroll:Word of Recall:1:1
-equip:magic book:[First Spells]:1:1
 player-flags:CHOOSE_SPELLS | STEAL
 title:Vagabond
 title:Cutpurse

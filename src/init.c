@@ -212,74 +212,6 @@ errr grab_effect_data(struct parser *p, struct effect *effect)
 	return PARSE_ERROR_NONE;
 }
 
-static enum parser_error write_book_kind(struct class_book *book,
-										 const char *name)
-{
-	struct object_kind *temp, *kind;
-	int i;
-
-	/* Check we haven't already made this book */
-	for (i = 0; i < z_info->k_max; i++) {
-		if (k_info[i].name && streq(name, k_info[i].name)) {
-			book->sval = k_info[i].sval;
-			return PARSE_ERROR_NONE;
-		}
-	}
-
-	/* Extend by 1 and realloc */
-	z_info->k_max += 1;
-	z_info->ordinary_kind_max += 1;
-	temp = mem_realloc(k_info, (z_info->k_max + 1) * sizeof(*temp));
-
-	/* Copy if no errors */
-	if (!temp) {
-		return PARSE_ERROR_INTERNAL;
-	} else {
-		k_info = temp;
-	}
-
-	/* Add this entry at the end */
-	kind = &k_info[z_info->k_max - 1];
-	memset(kind, 0, sizeof(*kind));
-
-	/* Copy the tval and base */
-	kind->tval = book->tval;
-	kind->base = &kb_info[kind->tval];
-
-	/* Make the name and index */
-	kind->name = string_make(name);
-	kind->kidx = z_info->k_max - 1;
-
-	/* Increase the sval count for this tval, set the new one to the max */
-	for (i = 0; i < TV_MAX; i++)
-		if (kb_info[i].tval == kind->tval) {
-			kb_info[i].num_svals++;
-			kind->sval = kb_info[i].num_svals;
-			break;
-		}
-	if (i == TV_MAX) return PARSE_ERROR_INTERNAL;
-
-	/* Copy the sval to the artifact info */
-	book->sval = kind->sval;
-
-	/* Set object defaults (graphics should be overwritten) */
-	kind->d_char = '*';
-	kind->d_attr = COLOUR_RED;
-	kind->dd = 1;
-	kind->ds = 1;
-	kind->weight = 1500;
-
-	/* Dungeon books get extra properties */
-	if (book->dungeon) {
-		for (i = ELEM_BASE_MIN; i < ELEM_BASE_MAX; i++) {
-			kind->el_info[i].flags |= EL_INFO_IGNORE;
-		}
-		kf_on(kind->kind_flags, KF_GOOD);
-	}
-
-	return PARSE_ERROR_NONE;
-}
-
 /**
  * Find the default paths to all of our important sub-directories.
  *
@@ -3223,87 +3155,25 @@ static enum parser_error parse_class_play_flags(struct parser *p) {
 
 static enum parser_error parse_class_magic(struct parser *p) {
 	struct class_magic *m = parsing_magic;
-	int num_books;
 
 	if (!m)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 	m->spell_first = parser_getuint(p, "first");
 	m->spell_weight = parser_getuint(p, "weight");
-	num_books = parser_getuint(p, "books");
-	m->books = mem_zalloc(num_books * sizeof(struct class_book));
+	m->books = NULL;
 	return PARSE_ERROR_NONE;
 }
 
 static enum parser_error parse_class_book(struct parser *p) {
 	struct class_magic *m = parsing_magic;
-	int tval, spells;
-	const char *name, *quality;
 
 	if (!m)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
-	tval = tval_find_idx(parser_getsym(p, "tval"));
-	if (tval < 0)
-		return PARSE_ERROR_UNRECOGNISED_TVAL;
-	m->books[m->num_books].tval = tval;
-
-	quality = parser_getsym(p, "quality");
-	if (streq(quality, "dungeon")) {
-		m->books[m->num_books].dungeon = true;
-	}
-	name = parser_getsym(p, "name");
-	write_book_kind(&m->books[m->num_books], name);
-
-	spells = parser_getuint(p, "spells");
-	m->books[m->num_books].spells =
-		mem_zalloc(spells * sizeof(struct class_spell));
+	m->books = mem_realloc(m->books, (m->num_books + 1) * sizeof(struct class_book));
+	memset(&(m->books[m->num_books]), 0, sizeof(struct class_book));
+	m->books[m->num_books].name = string_make(parser_getsym(p, "name"));
 	m->num_books++;
-
-	return PARSE_ERROR_NONE;
-}
-
-static enum parser_error parse_class_book_graphics(struct parser *p) {
-	struct class_magic *m = parsing_magic;
-
-	if (!m)
-		return PARSE_ERROR_MISSING_RECORD_HEADER;
-
-	struct class_book *b = &m->books[m->num_books - 1];
-	struct object_kind *k = lookup_kind(b->tval, b->sval);
-	wchar_t glyph = parser_getchar(p, "glyph");
-	const char *color = parser_getsym(p, "color");
-
-	k->d_char = glyph;
-	if (strlen(color) > 1) {
-		k->d_attr = color_text_to_attr(color);
-	} else {
-		k->d_attr = color_char_to_attr(color[0]);
-	}
-
-	return PARSE_ERROR_NONE;
-}
-
-static enum parser_error parse_class_book_properties(struct parser *p) {
-	struct class_magic *m = parsing_magic;
-
-	if (!m)
-		return PARSE_ERROR_MISSING_RECORD_HEADER;
-
-	struct class_book *b = &m->books[m->num_books - 1];
-	struct object_kind *k = lookup_kind(b->tval, b->sval);
-	const char *tmp;
-	int amin, amax;
-
-	assert(k);
-	k->cost = parser_getint(p, "cost");
-	k->alloc_prob = parser_getint(p, "common");
-
-	tmp = parser_getstr(p, "minmax");
-	if (sscanf(tmp, "%d to %d", &amin, &amax) != 2)
-		return PARSE_ERROR_INVALID_ALLOCATION;
-	k->level = amin;
-	k->alloc_min = amin;
-	k->alloc_max = amax;
 
 	return PARSE_ERROR_NONE;
 }
@@ -3314,6 +3184,9 @@ static enum parser_error parse_class_spell(struct parser *p) {
 
 	if (!m)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
+	book->spells = mem_realloc(book->spells, (book->num_spells + 1) * sizeof(struct class_spell));
+	memset(&(book->spells[book->num_spells]), 0, sizeof(struct class_spell));
 
 	book->spells[book->num_spells].name = string_make(parser_getsym(p, "name"));
 	book->spells[book->num_spells].sidx = total_spells++;
@@ -3496,13 +3369,8 @@ static enum parser_error parse_class_cdesc(struct parser *p) {
 
 void init_parse_magic(struct parser *p)
 {
-	parser_reg(p, "magic uint first uint weight uint books", parse_class_magic);
-	parser_reg(p, "book sym tval sym quality sym name uint spells",
-			   parse_class_book);
-	parser_reg(p, "book-graphics char glyph sym color",
-			   parse_class_book_graphics);
-	parser_reg(p, "book-properties int cost int common str minmax",
-			   parse_class_book_properties);
+	parser_reg(p, "magic uint first uint weight", parse_class_magic);
+	parser_reg(p, "book sym name", parse_class_book);
 	parser_reg(p, "spell sym name int level int fail int exp int stat rand hp rand turns",
 			   parse_class_spell);
 	parser_reg(p, "seffect sym eff ?sym type ?int radius ?int other", parse_class_effect);
@@ -3587,6 +3455,7 @@ void cleanup_magic(struct class_magic *magic)
 	int i, j;
 	for (i = 0; i < magic->num_books; i++) {
 		book = &magic->books[i];
+		string_free(book->name);
 		for (j = 0; j < book->num_spells; j++) {
 			spell = &book->spells[j];
 			string_free(spell->name);

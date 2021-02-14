@@ -1213,17 +1213,10 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
 			kind = lookup_kind(tval, sval);
 		}
 	} else {
-		/* Try to choose an object kind; reject most books the player can't read */
+		/* Try to choose an object kind */
 		while (tries) {
 			kind = get_obj_num(base, good || great, tval);
-			if (kind && tval_is_book_k(kind) && !obj_kind_can_browse(kind)) {
-				if (one_in_(5)) break;
-				kind = NULL;
-				tries--;
-				continue;
-			} else {
-				break;
-			}
+			break;
 		}
 	}
 	if (!kind)

@@ -59,17 +59,12 @@ void object_kind_name(char *buf, size_t max, const struct object_kind *kind,
 
 
 /**
- * A modifier string, put where '#' goes in the basename below.  The weird
- * games played with book names are to allow the non-essential part of the
- * name to be abbreviated when there is not much room to display.
+ * A modifier string, put where '#' goes in the basename below.
  */
 static const char *obj_desc_get_modstr(const struct object_kind *kind)
 {
 	if (tval_can_have_flavor_k(kind))
 		return kind->flavor ? kind->flavor->text : "";
-
-	if (tval_is_book_k(kind))
-		return kind->name;
 
 	return "";
 }
@@ -119,36 +114,6 @@ static const char *obj_desc_get_basename(const struct object *obj, bool aware,
 
 		case TV_SCROLL:
 			return (show_flavor ? "& Scroll~ titled #" : "& Scroll~");
-
-		case TV_MAGIC_BOOK:
-			if (terse)
-				return "& Book~ #";
-			else
-				return "& Book~ of Magic Spells #";
-
-		case TV_PRAYER_BOOK:
-			if (terse)
-				return "& Book~ #";
-			else
-				return "& Holy Book~ of Prayers #";
-
-		case TV_NATURE_BOOK:
-			if (terse)
-				return "& Book~ #";
-			else
-				return "& Book~ of Nature Magics #";
-
-		case TV_SHADOW_BOOK:
-			if (terse)
-				return "& Tome~ #";
-			else
-				return "& Necromantic Tome~ #";
-
-		case TV_OTHER_BOOK:
-			if (terse)
-				return "& Book~ #";
-			else
-				return "& Book of Mysteries~ #";
 
 		case TV_MUSHROOM:
 			return (show_flavor ? "& # Mushroom~" : "& Mushroom~");

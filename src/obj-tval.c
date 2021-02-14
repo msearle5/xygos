@@ -345,20 +345,6 @@ bool tval_can_have_flavor_k(const struct object_kind *kind)
 	}
 }
 
-bool tval_is_book_k(const struct object_kind *kind)
-{
-	switch (kind->tval) {
-		case TV_MAGIC_BOOK:
-		case TV_PRAYER_BOOK:
-		case TV_NATURE_BOOK:
-		case TV_SHADOW_BOOK:
-		case TV_OTHER_BOOK:
-			return true;
-		default:
-			return false;
-	}
-}
-
 bool tval_is_zapper(const struct object *obj)
 {
 	return obj->tval == TV_WAND || obj->tval == TV_STAFF;

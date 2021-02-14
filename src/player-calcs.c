@@ -909,12 +909,6 @@ bool earlier_object(struct object *orig, struct object *new, bool store)
 	if (!new) return false;
 	if (!orig) return true;
 
-	if (!store) {
-		/* Readable books always come first */
-		if (obj_can_browse(orig) && !obj_can_browse(new)) return false;
-		if (!obj_can_browse(orig) && obj_can_browse(new)) return true;
-	}
-
 	/* Usable ammo is before other ammo */
 	if (tval_is_ammo(orig) && tval_is_ammo(new)) {
 		/* First favour usable ammo */

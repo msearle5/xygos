@@ -774,17 +774,6 @@ static void mass_produce(struct object *obj)
 			break;
 		}
 
-		case TV_MAGIC_BOOK:
-		case TV_PRAYER_BOOK:
-		case TV_NATURE_BOOK:
-		case TV_SHADOW_BOOK:
-		case TV_OTHER_BOOK:
-		{
-			if (cost <= 50L) size += mass_roll(2, 3);
-			if (cost <= 500L) size += mass_roll(1, 3);
-			break;
-		}
-
 		case TV_SOFT_ARMOR:
 		case TV_HARD_ARMOR:
 		case TV_SHIELD:
