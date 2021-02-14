@@ -50,6 +50,8 @@
 
 # 'hitdie' is for additional average hitpoints gained at maximum level.
 
+# 'exp' is for percent of "standard" experience needed to gain a level.
+
 # 'info' is for extra info - max. hitpoints gained per level, experience
 # factor in percent.
 
@@ -114,6 +116,7 @@ skill-shoot:55:45
 skill-throw:55:45
 skill-dig:0:0
 hitdie:275
+exp:20
 max-attacks:6
 min-weight:30
 strength-multiplier:5
@@ -170,6 +173,7 @@ skill-melee:45:40
 skill-shoot:72:45
 skill-throw:66:30
 skill-dig:0:0
+exp:0
 hitdie:130
 max-attacks:5
 min-weight:40
@@ -206,6 +210,7 @@ skill-shoot:20:15
 skill-throw:20:15
 skill-dig:0:0
 hitdie:30
+exp:-30
 max-attacks:5
 min-weight:40
 strength-multiplier:4
@@ -227,6 +232,7 @@ stats:2:0:0:3:1:0:0
 hitdie:90
 max-attacks:5
 min-weight:40
+exp:5
 #Digger, climber, diver, explorer, mapper, pathfinder, cave finder...
 title:Spelunker
 title:Caver
@@ -249,6 +255,7 @@ title:Adept
 title:Knight
 title:Master
 title:Grand Master
+exp:20
 cdesc:Jedi are famous for skill with a lightsaber - you'll excel with melee energy weapons and do well with other melee weapons. Eventually you'll even be able to construct your own. Ranged weapons are not you, but you'll be supported by a number of subtle powers as you advance. There are also Dark Jedi... who are powerful, yes, but at a cost!
 
 ############### ENGINEER #####################
@@ -273,6 +280,7 @@ skill-shoot:20:15
 skill-throw:20:15
 skill-dig:0:0
 hitdie:0
+exp:0
 max-attacks:4
 min-weight:40
 strength-multiplier:2

@@ -2929,6 +2929,14 @@ static enum parser_error parse_class_talents(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_class_exp(struct parser *p) {
+	struct player_class *c = parser_priv(p);
+	if (!c)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	c->c_exp = parser_getint(p, "exp");
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_class_skill_disarm_phys(struct parser *p) {
 	struct player_class *c = parser_priv(p);
 	if (!c)
@@ -3411,6 +3419,7 @@ struct parser *init_parse_class(void) {
 	parser_reg(p, "player-flags ?str flags", parse_class_play_flags);
 	init_parse_magic(p);
 	parser_reg(p, "cdesc str cdesc", parse_class_cdesc);
+	parser_reg(p, "exp int exp", parse_class_exp);
 	return p;
 }
 
