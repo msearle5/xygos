@@ -2582,106 +2582,6 @@ static struct file_parser p_race_parser = {
 
 /**
  * ------------------------------------------------------------------------
- * Initialize player magic realms
- * ------------------------------------------------------------------------ */
-static enum parser_error parse_realm_name(struct parser *p) {
-	struct magic_realm *h = parser_priv(p);
-	struct magic_realm *realm = mem_zalloc(sizeof *realm);
-	const char *name = parser_getstr(p, "name");
-
-	realm->next = h;
-	parser_setpriv(p, realm);
-	realm->name = string_make(name);
-	return PARSE_ERROR_NONE;
-}
-
-static enum parser_error parse_realm_stat(struct parser *p) {
-	struct magic_realm *realm = parser_priv(p);
-
-	realm->stat = stat_name_to_idx(parser_getsym(p, "stat"));
-	if (realm->stat < 0)
-		return PARSE_ERROR_INVALID_SPELL_STAT;
-
-	return PARSE_ERROR_NONE;
-}
-
-static enum parser_error parse_realm_verb(struct parser *p) {
-	const char *verb = parser_getstr(p, "verb");
-	struct magic_realm *realm = parser_priv(p);
-	if (!realm)
-		return PARSE_ERROR_MISSING_RECORD_HEADER;
-
-	realm->verb = string_make(verb);
-	return PARSE_ERROR_NONE;
-}
-
-static enum parser_error parse_realm_spell_noun(struct parser *p) {
-	const char *spell = parser_getstr(p, "spell");
-	struct magic_realm *realm = parser_priv(p);
-	if (!realm)
-		return PARSE_ERROR_MISSING_RECORD_HEADER;
-
-	realm->spell_noun = string_make(spell);
-	return PARSE_ERROR_NONE;
-}
-
-static enum parser_error parse_realm_book_noun(struct parser *p) {
-	const char *book = parser_getstr(p, "book");
-	struct magic_realm *realm = parser_priv(p);
-	if (!realm)
-		return PARSE_ERROR_MISSING_RECORD_HEADER;
-
-	realm->book_noun = string_make(book);
-	return PARSE_ERROR_NONE;
-}
-
-struct parser *init_parse_realm(void) {
-	struct parser *p = parser_new();
-	parser_setpriv(p, NULL);
-	parser_reg(p, "name str name", parse_realm_name);
-	parser_reg(p, "stat sym stat", parse_realm_stat);
-	parser_reg(p, "verb str verb", parse_realm_verb);
-	parser_reg(p, "spell-noun str spell", parse_realm_spell_noun);
-	parser_reg(p, "book-noun str book", parse_realm_book_noun);
-	return p;
-}
-
-static errr run_parse_realm(struct parser *p) {
-	return parse_file_quit_not_found(p, "realm");
-}
-
-static errr finish_parse_realm(struct parser *p) {
-	realms = parser_priv(p);
-	parser_destroy(p);
-	return 0;
-}
-
-static void cleanup_realm(void)
-{
-	struct magic_realm *p = realms;
-	struct magic_realm *next;
-
-	while (p) {
-		next = p->next;
-		string_free(p->name);
-		string_free(p->verb);
-		string_free(p->spell_noun);
-		string_free(p->book_noun);
-		mem_free(p);
-		p = next;
-	}
-}
-
-static struct file_parser realm_parser = {
-	"realm",
-	init_parse_realm,
-	run_parse_realm,
-	finish_parse_realm,
-	cleanup_realm
-};
-
-/**
- * ------------------------------------------------------------------------
  * Intialize player shapechange shapes
  * ------------------------------------------------------------------------ */
 
@@ -3357,8 +3257,7 @@ static enum parser_error parse_class_book(struct parser *p) {
 	spells = parser_getuint(p, "spells");
 	m->books[m->num_books].spells =
 		mem_zalloc(spells * sizeof(struct class_spell));
-	m->books[m->num_books++].realm =
-		lookup_realm(parser_getstr(p, "realm"));
+	m->num_books++;
 
 	return PARSE_ERROR_NONE;
 }
@@ -3415,7 +3314,6 @@ static enum parser_error parse_class_spell(struct parser *p) {
 
 	if (!m)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
-	book->spells[book->num_spells].realm = book->realm;
 
 	book->spells[book->num_spells].name = string_make(parser_getsym(p, "name"));
 	book->spells[book->num_spells].sidx = total_spells++;
@@ -3599,7 +3497,7 @@ static enum parser_error parse_class_cdesc(struct parser *p) {
 void init_parse_magic(struct parser *p)
 {
 	parser_reg(p, "magic uint first uint weight uint books", parse_class_magic);
-	parser_reg(p, "book sym tval sym quality sym name uint spells str realm",
+	parser_reg(p, "book sym tval sym quality sym name uint spells",
 			   parse_class_book);
 	parser_reg(p, "book-graphics char glyph sym color",
 			   parse_class_book_graphics);
@@ -4008,7 +3906,6 @@ static struct {
 	{ "ui entries", &ui_entry_parser },
 	{ "timed effects", &player_timed_parser },
 	{ "player properties", &player_property_parser },
-	{ "magic realms", &realm_parser },
 	{ "abilities", &ability_parser },
 	{ "features", &feat_parser },
 	{ "object bases", &object_base_parser },

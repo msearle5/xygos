@@ -816,9 +816,11 @@ static void generate_stats(int stats[STAT_MAX], int points_spent[STAT_MAX],
 {
 	int step = 0;
 	bool maxed[STAT_MAX] = { 0 };
-	/* Hack - for now, just use stat of first book - NRM */
-	int spell_stat = player->class->magic.total_spells ?
-		player->class->magic.books[0].realm->stat : 0;
+	/* The assumption here is that techniques are distributed across all stats so there is no
+	 * reason to prefer one, but devices do require INT and they are more important that any
+	 * users of WIS. And more important to a weaker "caster" type than to a melee type.
+	 **/
+	int spell_stat = STAT_INT;
 	bool caster = player->class->max_attacks < 5 ? true : false;
 	bool warrior = player->class->max_attacks > 5 ? true : false;
 
@@ -925,18 +927,22 @@ static void generate_stats(int stats[STAT_MAX], int points_spent[STAT_MAX],
 
 			/* 
 			 * If there are any points left, spend as much as possible in 
-			 * order on DEX, and the non-spell-stat. 
+			 * order on speed, DEX, and the non-spell-stat. 
 			 */
 			case 4:{
 			
 				int next_stat;
 
-				if (!maxed[STAT_DEX]) {
+				if (!maxed[STAT_SPD]) {
+					next_stat = STAT_SPD;
+				} else if (!maxed[STAT_DEX]) {
 					next_stat = STAT_DEX;
 				} else if (!maxed[STAT_INT] && spell_stat != STAT_INT) {
 					next_stat = STAT_INT;
 				} else if (!maxed[STAT_WIS] && spell_stat != STAT_WIS) {
 					next_stat = STAT_WIS;
+				} else if (!maxed[STAT_CHR]) {
+					next_stat = STAT_CHR;
 				} else {
 					step++;
 					break;

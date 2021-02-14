@@ -291,19 +291,6 @@ struct start_item {
 };
 
 /**
- * Structure for magic realms
- */
-struct magic_realm {
-	struct magic_realm *next;
-	char *code;
-	char *name;
-	int stat;
-	char *verb;
-	char *spell_noun;
-	char *book_noun;
-};
-
-/**
  * A structure to hold class-dependent information on spells.
  */
 struct class_spell {
@@ -311,7 +298,6 @@ struct class_spell {
 	char *text;
 
 	struct effect *effect;	/**< The spell's effect */
-	const struct magic_realm *realm;	/**< The magic realm of this spell */
 
 	int sidx;				/**< The index of this spell for this class */
 	int bidx;				/**< The index into the player's books array */
@@ -327,7 +313,6 @@ struct class_spell {
  * A structure to hold class-dependent information on spell books.
  */
 struct class_book {
-	const struct magic_realm *realm;	/**< The magic realm of this book */
 	struct class_spell *spells;			/**< Spells in the book*/
 	int tval;							/**< Item type of the book */
 	int sval;							/**< Item sub-type for book */
@@ -656,7 +641,6 @@ extern struct player_race *races;
 extern struct player_shape *shapes;
 extern struct player_class *classes;
 extern struct player_ability *player_abilities;
-extern struct magic_realm *realms;
 
 extern const s32b player_exp[PY_MAX_LEVEL];
 extern struct player *player;
@@ -668,7 +652,6 @@ struct player_class *get_class_by_name(const char *name);
 /* player.c */
 int stat_name_to_idx(const char *name);
 const char *stat_idx_to_name(int type);
-const struct magic_realm *lookup_realm(const char *code);
 bool player_stat_inc(struct player *p, int stat);
 bool player_stat_dec(struct player *p, int stat, bool permanent);
 void player_exp_gain(struct player *p, s32b amount);

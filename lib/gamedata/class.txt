@@ -27,7 +27,7 @@
 # equip:tval:sval:min:max
 # player-flags:class flags
 # magic:spell_first:spell_weight:num_books
-# book:tval:quality:name:spells:realm
+# book:tval:quality:name:spells
 # book-graphics:symbol:color
 # book-properties:cost:commonness:min to max
 # spell:name:level:mana:fail:exp
@@ -73,7 +73,7 @@
 # hurts spells, number of books used.
 
 # 'book' defines one of these books - object base, whether a town or a dungeon
-# book, name, number of spells, book realm.  A book needs to be defined for
+# book, name, number of spells.  A book needs to be defined for
 # each class which uses it, as otherwise it is not recognised as one of that
 # class's books.
 
@@ -329,7 +329,7 @@ title:Arch-Mage
 
 magic:1:300:5
 
-book:magic book:town:[First Spells]:7:arcane
+book:magic book:town:[First Spells]:7
 book-graphics:?:R
 book-properties:25:40:1 to 100
 equip:magic book:[First Spells]:1:1

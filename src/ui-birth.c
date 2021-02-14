@@ -355,32 +355,6 @@ static void class_help(int i, void *db, const region *l)
 		text_out("\n");
 	}
 
-	if (c->magic.total_spells) {
-		int count;
-		struct magic_realm *realm = class_magic_realms(c, &count), *realm_next;
-		char buf[120];
-
-		my_strcpy(buf, realm->name, sizeof(buf));
-		realm_next = realm->next;
-		mem_free(realm);
-		realm = realm_next;
-		if (count > 1) {
-			while (realm) {
-				count--;
-				if (count) {
-					my_strcat(buf, ", ", sizeof(buf));
-				} else {
-					my_strcat(buf, " and ", sizeof(buf));
-				}
-				my_strcat(buf, realm->name, sizeof(buf));
-				realm_next = realm->next;
-				mem_free(realm);
-				realm = realm_next;
-			}
-		}
-		text_out_e("\nLearns %s magic", buf);
-	}
-
 	for (ability = player_abilities; ability; ability = ability->next) {
 		if (n_flags >= flag_space) break;
 		if (streq(ability->type, "object") &&

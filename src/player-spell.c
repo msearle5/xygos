@@ -152,52 +152,6 @@ void player_spells_free(struct player *p)
 	mem_free(p->spell_order);
 }
 
-/**
- * Make a list of the spell realms the player's class has books from
- */
-struct magic_realm *class_magic_realms(const struct player_class *c, int *count)
-{
-	int i;
-	struct magic_realm *r = mem_zalloc(sizeof(struct magic_realm));
-
-	*count = 0;
-
-	if (!c->magic.total_spells) {
-		mem_free(r);
-		return NULL;
-	}
-
-	for (i = 0; i < c->magic.num_books; i++) {
-		struct magic_realm *r_test = r;
-		struct class_book *book = &c->magic.books[i];
-		bool found = false;
-
-		/* Test for first realm */
-		if (r->name == NULL) {
-			memcpy(r, book->realm, sizeof(struct magic_realm));
-			r->next = NULL;
-			(*count)++;
-			continue;
-		}
-
-		/* Test for already recorded */
-		while (r_test) {
-			if (streq(r_test->name, book->realm->name)) {
-				found = true;
-			}
-			r_test = r_test->next;
-		}
-		if (found) continue;
-
-		/* Add it */
-		r_test = mem_zalloc(sizeof(struct magic_realm));
-		r_test->next = r;
-		r = r_test;
-		(*count)++;
-	}
-
-	return r;
-}
 
 /**
  * Collect spells from a book into the spells[] array (if spells is non-null).
