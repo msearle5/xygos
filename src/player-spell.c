@@ -26,6 +26,7 @@
 #include "obj-tval.h"
 #include "obj-util.h"
 #include "object.h"
+#include "player-ability.h"
 #include "player-calcs.h"
 #include "player-spell.h"
 #include "player-timed.h"
@@ -128,7 +129,7 @@ static const int adj_mag_stat[STAT_RANGE] =
  */
 void player_spells_init(struct player *p)
 {
-	int i, num_spells = p->class->magic.total_spells;
+	int i, num_spells = total_spells;
 
 	/* None */
 	if (!num_spells) return;
@@ -238,10 +239,32 @@ void combine_class_books(struct class_magic *cmagic, int *count, int *spells, in
 
 /**
  * Collect spells from all books into the spells[] array.
+ * This looks at class, race, shapechange, abilities, and equipment.
+ * It currently assumes that shapechange prevents everything not derived from the change.
  */
 void combine_books(int *count, int *spells, int *maxidx, struct class_spell **spellps)
 {
-	combine_class_books(&player->class->magic, count, spells, maxidx, spellps);
+	if (player_is_shapechanged(player)) {
+		combine_class_books(&player->shape->magic, count, spells, maxidx, spellps);
+	} else {
+		combine_class_books(&player->class->magic, count, spells, maxidx, spellps);
+		combine_class_books(&player->race->magic, count, spells, maxidx, spellps);
+		
+		for(int i=0;i<PF_MAX;i++) {
+			if (ability[i] && player_has(player, i)) {
+				combine_class_books(&ability[i]->magic, count, spells, maxidx, spellps);
+			}
+		}
+		for (struct object *obj = player->gear; obj; obj = obj->next) {
+			if (object_is_equipped(player->body, obj)) {
+				combine_class_books(&obj->kind->magic, count, spells, maxidx, spellps);
+				if (obj->ego)
+					combine_class_books(&obj->ego->magic, count, spells, maxidx, spellps);
+				if (obj->artifact)
+					combine_class_books(&obj->artifact->magic, count, spells, maxidx, spellps);
+			}
+		}
+	}
 }
 
 static int collect_from_book(int **spells, struct class_spell ***spellps, int *n_i)

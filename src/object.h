@@ -5,11 +5,11 @@
 #ifndef INCLUDED_OBJECT_H
 #define INCLUDED_OBJECT_H
 
+#include "obj-properties.h"
 #include "z-type.h"
 #include "z-quark.h"
 #include "z-bitflag.h"
 #include "z-dice.h"
-#include "obj-properties.h"
 
 
 /*** Game constants ***/
@@ -45,6 +45,17 @@ enum {
 
 
 /*** Structures ***/
+
+/**
+ * Information about class magic knowledge
+ */
+struct class_magic {
+	struct class_book *books;	/**< Details of spellbooks */
+	int spell_first;			/**< Level of first spell */
+	int spell_weight;			/**< Max armor weight to avoid mana penalties */
+	int num_books;				/**< Number of spellbooks */
+	int total_spells;			/**< Number of spells for this class */
+};
 
 /**
  * Effect
@@ -246,6 +257,8 @@ struct object_kind {
 
 	struct flavor *flavor;	/**< Special object flavor (or zero) */
 
+	struct class_magic magic;		/**< Intrinsic abilities */
+
 	/** Also saved in savefile **/
 
 	quark_t note_aware; 	/**< Autoinscription quark number */
@@ -318,6 +331,8 @@ struct artifact {
 	struct activation *activation;	/**< Artifact activation */
 	char *alt_msg;
 
+	struct class_magic magic;	/**< Intrinsic abilities */
+
 	random_value time;	/**< Recharge time (if appropriate) */
 };
 
@@ -346,7 +361,7 @@ struct ego_item {
 
 	u32b eidx;
 
-	int cost;						/* Ego-item "cost" */
+	int cost;						/**< Ego-item "cost" */
 
 	bitflag flags[OF_SIZE];			/**< Flags */
 	bitflag flags_off[OF_SIZE];		/**< Flags to remove */
@@ -360,7 +375,7 @@ struct ego_item {
 	bool *slays;
 	int *curses;			/**< Array of curse powers */
 
-	int rating;			/* Level rating boost */
+	int rating;				/**< Level rating boost */
 	int alloc_prob; 		/** Chance of being generated (i.e. rarity) */
 	int alloc_min;			/** Minimum depth (can appear earlier) */
 	int alloc_max;			/** Maximum depth (will NEVER appear deeper) */
@@ -380,6 +395,8 @@ struct ego_item {
 	struct effect *effect;	/**< Effect this item produces (effects.c) */
 	char *effect_msg;
 	random_value time;		/**< Recharge time (rods/activation) */
+
+	struct class_magic magic;	/**< Intrinsic abilities */
 
 	bool everseen;			/* Do not spoil ignore menus */
 };

@@ -70,6 +70,7 @@
 #include "mon-make.h"
 #include "mon-spell.h"
 #include "mon-util.h"
+#include "player-quest.h"
 #include "player-util.h"
 #include "store.h"
 #include "trap.h"

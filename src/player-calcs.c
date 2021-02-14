@@ -825,48 +825,6 @@ static const int adj_con_mhp[STAT_RANGE] =
 	1250	/* 18/220+ */
 };
 
-static const int adj_mag_study[STAT_RANGE] =
-{
-	  0	/* 3 */,
-	  0	/* 4 */,
-	 10	/* 5 */,
-	 20	/* 6 */,
-	 30	/* 7 */,
-	 40	/* 8 */,
-	 50	/* 9 */,
-	 60	/* 10 */,
-	 70	/* 11 */,
-	 80	/* 12 */,
-	 85	/* 13 */,
-	 90	/* 14 */,
-	 95	/* 15 */,
-	100	/* 16 */,
-	105	/* 17 */,
-	110	/* 18/00-18/09 */,
-	115	/* 18/10-18/19 */,
-	120	/* 18/20-18/29 */,
-	130	/* 18/30-18/39 */,
-	140	/* 18/40-18/49 */,
-	150	/* 18/50-18/59 */,
-	160	/* 18/60-18/69 */,
-	170	/* 18/70-18/79 */,
-	180	/* 18/80-18/89 */,
-	190	/* 18/90-18/99 */,
-	200	/* 18/100-18/109 */,
-	210	/* 18/110-18/119 */,
-	220	/* 18/120-18/129 */,
-	230	/* 18/130-18/139 */,
-	240	/* 18/140-18/149 */,
-	250	/* 18/150-18/159 */,
-	250	/* 18/160-18/169 */,
-	250	/* 18/170-18/179 */,
-	250	/* 18/180-18/189 */,
-	250	/* 18/190-18/199 */,
-	250	/* 18/200-18/209 */,
-	250	/* 18/210-18/219 */,
-	250	/* 18/220+ */
-};
-
 /**
  * This table is used to help calculate the number of blows the player can
  * make in a single round of attacks (one player turn) with a normal weapon.
@@ -1190,28 +1148,6 @@ static void update_inventory(struct player *p)
 {
 	calc_inventory(p->upkeep, p->gear, p->body);
 }
-
-/**
- * Average of the player's spell stats across all the realms they can cast
- * from, rounded up
- *
- * If the player can only cast from a single realm, this is simple the stat
- * for that realm
- */
-static int average_spell_stat(struct player *p, struct player_state *state)
-{
-	int i, count, sum = 0;
-	struct magic_realm *realm = class_magic_realms(p->class, &count), *r_next;
-
-	for (i = count; i > 0; i--) {
-		sum += state->stat_ind[realm->stat];
-		r_next = realm->next;
-		mem_free(realm);
-		realm = r_next;
-	}
-	return (sum + count - 1) / count;
-}
-
 
 /**
  * Calculate the players (maximal) hit points

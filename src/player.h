@@ -231,6 +231,8 @@ struct player_race {
 
 	struct element_info el_info[ELEM_MAX]; /**< Resists */
 
+	struct class_magic magic;	/**< Intrinsic abilities */
+
 	void *state;				/**< Saved state */
 	void (*init)(void);			/**< Late-init hook */
 	void (*free)(void);			/**< Finish with character hook */
@@ -268,6 +270,8 @@ struct player_shape {
 	struct element_info el_info[ELEM_MAX]; /**< Resists */
 
 	struct effect *effect;	/**< Effect on taking this shape (effects.c) */
+
+	struct class_magic magic;	/**< Intrinsic abilities */
 
 	struct player_blow *blows;
 	int num_blows;
@@ -322,23 +326,12 @@ struct class_spell {
  * A structure to hold class-dependent information on spell books.
  */
 struct class_book {
+	const struct magic_realm *realm;	/**< The magic realm of this book */
+	struct class_spell *spells;			/**< Spells in the book*/
 	int tval;							/**< Item type of the book */
 	int sval;							/**< Item sub-type for book */
 	bool dungeon;						/**< Whether this is a dungeon book */
 	int num_spells;						/**< Number of spells in this book */
-	const struct magic_realm *realm;	/**< The magic realm of this book */
-	struct class_spell *spells;			/**< Spells in the book*/
-};
-
-/**
- * Information about class magic knowledge
- */
-struct class_magic {
-	int spell_first;			/**< Level of first spell */
-	int spell_weight;			/**< Max armor weight to avoid mana penalties */
-	int num_books;				/**< Number of spellbooks */
-	struct class_book *books;	/**< Details of spellbooks */
-	int total_spells;			/**< Number of spells for this class */
 };
 
 /**
@@ -373,7 +366,7 @@ struct player_class {
 
 	struct start_item *start_items; /**< Starting inventory */
 
-	struct class_magic magic;	/**< Magic spells */
+	struct class_magic magic;	/**< Intrinsic abilities */
 
 	void *state;				/**< Saved state */
 	void (*init)(void);			/**< Late-init hook */
@@ -389,12 +382,12 @@ struct player_class {
  */
 struct player_ability {
 	struct player_ability *next;
-	u16b index;			/* PF_*, OF_* or element index */
-	char *type;			/* Ability type */
-	char *name;			/* Ability name */
-	char *desc;			/* Ability description */
-	int group;			/* Ability group (set locally when viewing) */
-	int value;			/* Resistance value for elements */
+	u16b index;					/**< PF_*, OF_* or element index */
+	char *type;					/**< Ability type */
+	char *name;					/**< Ability name */
+	char *desc;					/**< Ability description */
+	int group;					/**< Ability group (set locally when viewing) */
+	int value;					/**< Resistance value for elements */
 };
 
 /**

@@ -29,6 +29,7 @@ struct ability {
 	s16b maxlevel;
 	s16b cost;
 	int ac;
+	struct class_magic magic;
 	bool forbid[PF_MAX];
 	bool require[PF_MAX];
 	int a_adj[STAT_MAX];

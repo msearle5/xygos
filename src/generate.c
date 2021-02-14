@@ -44,6 +44,7 @@
 #include "obj-util.h"
 #include "object.h"
 #include "player-history.h"
+#include "player-quest.h"
 #include "player-util.h"
 #include "trap.h"
 #include "z-queue.h"

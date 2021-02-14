@@ -25,6 +25,7 @@
 #include "obj-pile.h"
 #include "obj-util.h"
 #include "object.h"
+#include "player-quest.h"
 #include "player-timed.h"
 #include "trap.h"
 

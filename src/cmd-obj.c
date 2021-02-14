@@ -1071,27 +1071,34 @@ void do_cmd_refill(struct command *cmd)
 void do_cmd_cast(struct command *cmd)
 {
 	int spell_index, dir = 0;
+	const char *error = "You have no intrinsic abilities you can use.";
 
-	/* Maybe some still work? Or even require a particular form?
+	int n_spells = 0;
+	combine_books(&n_spells, NULL, NULL, NULL);
+
+	/* Maybe some still work?
 	 * Most should make this check, though.
 	 */
 	if (player_is_shapechanged(player)) {
-		if (get_check("Change back to your original form? " )) {
-			player_resume_normal_shape(player);
+		/* Count the abilities - if you don't have any, prompt to change back */
+		if (n_spells == 0) {
+			if (get_check("Change back to your original form? " )) {
+				player_resume_normal_shape(player);
+			}
+			return;
 		}
+	} else if (n_spells == 0) {
+		msg(error);
 		return;
 	}
-
-	/* Check the player can use abilities at all */
-	if (!player_can_cast(player, true))
-		return;
 
 	/* Get arguments */
 	if (cmd_get_spell(cmd, "ability", &spell_index,
 			/* Verb */   "use",
-			/* Error */  "There are no abilities you can use.",
-			/* Filter */ NULL/*spell_okay_to_cast*/) != CMD_OK)
+			/* Error */  error,
+			/* Filter */ NULL) != CMD_OK) { 
 		return;
+	}
 
 	if (spell_needs_aim(spell_index)) {
 		if (cmd_get_target(cmd, "target", &dir) == CMD_OK)

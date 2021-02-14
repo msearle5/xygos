@@ -109,7 +109,7 @@ skill-melee:-1
 skill-shoot:5
 skill-throw:5
 skill-dig:0
-hitdie:10
+hitdie:240
 exp:120
 infravision:2
 history:4

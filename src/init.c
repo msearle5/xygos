@@ -73,6 +73,12 @@
 
 bool play_again = false;
 
+/* Currently parsed class_magic */
+struct class_magic *parsing_magic;
+
+/* Over all books */
+int total_spells;
+
 /**
  * Structure (not array) of game constants
  */
@@ -2191,6 +2197,7 @@ static enum parser_error parse_p_race_name(struct parser *p) {
 
 	r->next = h;
 	r->name = string_make(parser_getstr(p, "name"));
+	parsing_magic = &r->magic;
 	/* Default body is humanoid */
 	r->body = 0;
 	parser_setpriv(p, r);
@@ -2514,6 +2521,7 @@ struct parser *init_parse_p_race(void) {
 	parser_reg(p, "player-flags ?str flags", parse_p_race_play_flags);
 	parser_reg(p, "values str values", parse_p_race_values);
 	parser_reg(p, "desc str desc", parse_p_race_desc);
+	init_parse_magic(p);
 	return p;
 }
 
@@ -2558,6 +2566,7 @@ static void cleanup_p_race(void)
 	while (p) {
 		next = p->next;
 		string_free((char *)p->name);
+		cleanup_magic(&p->magic);
 		mem_free(p);
 		p = next;
 	}
@@ -2684,6 +2693,7 @@ static enum parser_error parse_shape_name(struct parser *p) {
 	shape->name = string_make(parser_getstr(p, "name"));
 	parser_setpriv(p, shape);
 	shape->sidx = z_info->shape_max++;
+	parsing_magic = &shape->magic;
 	return PARSE_ERROR_NONE;
 }
 
@@ -3003,6 +3013,7 @@ struct parser *init_parse_shape(void) {
 	parser_reg(p, "expr sym name sym base str expr", parse_shape_expr);
 	parser_reg(p, "effect-msg str text", parse_shape_effect_msg);
 	parser_reg(p, "blow str blow", parse_shape_blow);
+	init_parse_magic(p);
 	return p;
 }
 
@@ -3032,6 +3043,7 @@ static void cleanup_shape(void)
 			mem_free(blow);
 			blow = next;
 		}
+		cleanup_magic(&shape->magic);
 		mem_free(shape);
 		shape = next;
 	}
@@ -3055,6 +3067,7 @@ static enum parser_error parse_class_name(struct parser *p) {
 	struct player_class *c = mem_zalloc(sizeof *c);
 	c->name = string_make(parser_getstr(p, "name"));
 	c->next = h;
+	parsing_magic = &c->magic;
 	parser_setpriv(p, c);
 	return PARSE_ERROR_NONE;
 }
@@ -3309,50 +3322,54 @@ static enum parser_error parse_class_play_flags(struct parser *p) {
 }
 
 static enum parser_error parse_class_magic(struct parser *p) {
-	struct player_class *c = parser_priv(p);
+	struct class_magic *m = parsing_magic;
 	int num_books;
 
-	if (!c)
+	if (!m)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
-	c->magic.spell_first = parser_getuint(p, "first");
-	c->magic.spell_weight = parser_getuint(p, "weight");
+	m->spell_first = parser_getuint(p, "first");
+	m->spell_weight = parser_getuint(p, "weight");
 	num_books = parser_getuint(p, "books");
-	c->magic.books = mem_zalloc(num_books * sizeof(struct class_book));
+	m->books = mem_zalloc(num_books * sizeof(struct class_book));
 	return PARSE_ERROR_NONE;
 }
 
 static enum parser_error parse_class_book(struct parser *p) {
-	struct player_class *c = parser_priv(p);
+	struct class_magic *m = parsing_magic;
 	int tval, spells;
 	const char *name, *quality;
 
-	if (!c)
+	if (!m)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
 	tval = tval_find_idx(parser_getsym(p, "tval"));
 	if (tval < 0)
 		return PARSE_ERROR_UNRECOGNISED_TVAL;
-	c->magic.books[c->magic.num_books].tval = tval;
+	m->books[m->num_books].tval = tval;
 
 	quality = parser_getsym(p, "quality");
 	if (streq(quality, "dungeon")) {
-		c->magic.books[c->magic.num_books].dungeon = true;
+		m->books[m->num_books].dungeon = true;
 	}
 	name = parser_getsym(p, "name");
-	write_book_kind(&c->magic.books[c->magic.num_books], name);
+	write_book_kind(&m->books[m->num_books], name);
 
 	spells = parser_getuint(p, "spells");
-	c->magic.books[c->magic.num_books].spells =
+	m->books[m->num_books].spells =
 		mem_zalloc(spells * sizeof(struct class_spell));
-	c->magic.books[c->magic.num_books++].realm =
+	m->books[m->num_books++].realm =
 		lookup_realm(parser_getstr(p, "realm"));
 
 	return PARSE_ERROR_NONE;
 }
 
 static enum parser_error parse_class_book_graphics(struct parser *p) {
-	struct player_class *c = parser_priv(p);
-	struct class_book *b = &c->magic.books[c->magic.num_books - 1];
+	struct class_magic *m = parsing_magic;
+
+	if (!m)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
+	struct class_book *b = &m->books[m->num_books - 1];
 	struct object_kind *k = lookup_kind(b->tval, b->sval);
 	wchar_t glyph = parser_getchar(p, "glyph");
 	const char *color = parser_getsym(p, "color");
@@ -3368,8 +3385,12 @@ static enum parser_error parse_class_book_graphics(struct parser *p) {
 }
 
 static enum parser_error parse_class_book_properties(struct parser *p) {
-	struct player_class *c = parser_priv(p);
-	struct class_book *b = &c->magic.books[c->magic.num_books - 1];
+	struct class_magic *m = parsing_magic;
+
+	if (!m)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
+	struct class_book *b = &m->books[m->num_books - 1];
 	struct object_kind *k = lookup_kind(b->tval, b->sval);
 	const char *tmp;
 	int amin, amax;
@@ -3389,17 +3410,17 @@ static enum parser_error parse_class_book_properties(struct parser *p) {
 }
 
 static enum parser_error parse_class_spell(struct parser *p) {
-	struct player_class *c = parser_priv(p);
-	struct class_book *book = &c->magic.books[c->magic.num_books - 1];
+	struct class_magic *m = parsing_magic;
+	struct class_book *book = &m->books[m->num_books - 1];
 
-	if (!c)
+	if (!m)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 	book->spells[book->num_spells].realm = book->realm;
 
 	book->spells[book->num_spells].name = string_make(parser_getsym(p, "name"));
-	book->spells[book->num_spells].sidx = c->magic.total_spells;
-	c->magic.total_spells++;
-	book->spells[book->num_spells].bidx = c->magic.num_books - 1;
+	book->spells[book->num_spells].sidx = total_spells++;
+	m->total_spells++;
+	book->spells[book->num_spells].bidx = m->num_books - 1;
 	book->spells[book->num_spells].slevel = parser_getint(p, "level");
 	book->spells[book->num_spells].smana = parser_getint(p, "mana");
 	book->spells[book->num_spells].sfail = parser_getint(p, "fail");
@@ -3410,13 +3431,13 @@ static enum parser_error parse_class_spell(struct parser *p) {
 }
 
 static enum parser_error parse_class_effect(struct parser *p) {
-	struct player_class *c = parser_priv(p);
-	struct class_book *book = &c->magic.books[c->magic.num_books - 1];
+	struct class_magic *m = parsing_magic;
+	struct class_book *book = &m->books[m->num_books - 1];
 	struct class_spell *spell = &book->spells[book->num_spells - 1];
 	struct effect *effect;
 	struct effect *new_effect = mem_zalloc(sizeof(*effect));
 
-	if (!c)
+	if (!m)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
 	/* Go to the next vacant effect and set it to the new one  */
@@ -3433,12 +3454,12 @@ static enum parser_error parse_class_effect(struct parser *p) {
 }
 
 static enum parser_error parse_class_effect_yx(struct parser *p) {
-	struct player_class *c = parser_priv(p);
-	struct class_book *book = &c->magic.books[c->magic.num_books - 1];
+	struct class_magic *m = parsing_magic;
+	struct class_book *book = &m->books[m->num_books - 1];
 	struct class_spell *spell = &book->spells[book->num_spells - 1];
 	struct effect *effect = spell->effect;
 
-	if (!c)
+	if (!m)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
 	/* If there is no effect, assume that this is human and not parser error. */
@@ -3453,14 +3474,14 @@ static enum parser_error parse_class_effect_yx(struct parser *p) {
 }
 
 static enum parser_error parse_class_dice(struct parser *p) {
-	struct player_class *c = parser_priv(p);
-	struct class_book *book = &c->magic.books[c->magic.num_books - 1];
+	struct class_magic *m = parsing_magic;
+	struct class_book *book = &m->books[m->num_books - 1];
 	struct class_spell *spell = &book->spells[book->num_spells - 1];
 	struct effect *effect = spell->effect;
 	dice_t *dice = NULL;
 	const char *string = NULL;
 
-	if (!c)
+	if (!m)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
 	/* If there is no effect, assume that this is human and not parser error. */
@@ -3488,8 +3509,8 @@ static enum parser_error parse_class_dice(struct parser *p) {
 }
 
 static enum parser_error parse_class_expr(struct parser *p) {
-	struct player_class *c = parser_priv(p);
-	struct class_book *book = &c->magic.books[c->magic.num_books - 1];
+	struct class_magic *m = parsing_magic;
+	struct class_book *book = &m->books[m->num_books - 1];
 	struct class_spell *spell = &book->spells[book->num_spells - 1];
 	struct effect *effect = spell->effect;
 	expression_t *expression = NULL;
@@ -3498,7 +3519,7 @@ static enum parser_error parse_class_expr(struct parser *p) {
 	const char *base;
 	const char *expr;
 
-	if (!c)
+	if (!m)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
 	/* If there is no effect, assume that this is human and not parser error. */
@@ -3535,12 +3556,12 @@ static enum parser_error parse_class_expr(struct parser *p) {
 }
 
 static enum parser_error parse_class_effect_msg(struct parser *p) {
-	struct player_class *c = parser_priv(p);
-	struct class_book *book = &c->magic.books[c->magic.num_books - 1];
+	struct class_magic *m = parsing_magic;
+	struct class_book *book = &m->books[m->num_books - 1];
 	struct class_spell *spell = &book->spells[book->num_spells - 1];
 	struct effect *effect = spell->effect;
 
-	if (!c)
+	if (!m)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
 	/* If there is no effect, assume that this is human and not parser error. */
@@ -3554,11 +3575,11 @@ static enum parser_error parse_class_effect_msg(struct parser *p) {
 }
 
 static enum parser_error parse_class_desc(struct parser *p) {
-	struct player_class *c = parser_priv(p);
-	struct class_book *book = &c->magic.books[c->magic.num_books - 1];
+	struct class_magic *m = parsing_magic;
+	struct class_book *book = &m->books[m->num_books - 1];
 	struct class_spell *spell = &book->spells[book->num_spells - 1];
 
-	if (!c)
+	if (!m)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
 	spell->text = string_append(spell->text, parser_getstr(p, "desc"));
@@ -3572,6 +3593,25 @@ static enum parser_error parse_class_cdesc(struct parser *p) {
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 	c->desc = string_make(parser_getstr(p, "cdesc"));
 	return PARSE_ERROR_NONE;
+}
+
+void init_parse_magic(struct parser *p)
+{
+	parser_reg(p, "magic uint first uint weight uint books", parse_class_magic);
+	parser_reg(p, "book sym tval sym quality sym name uint spells str realm",
+			   parse_class_book);
+	parser_reg(p, "book-graphics char glyph sym color",
+			   parse_class_book_graphics);
+	parser_reg(p, "book-properties int cost int common str minmax",
+			   parse_class_book_properties);
+	parser_reg(p, "spell sym name int level int mana int fail int exp int stat",
+			   parse_class_spell);
+	parser_reg(p, "seffect sym eff ?sym type ?int radius ?int other", parse_class_effect);
+	parser_reg(p, "seffect-yx int y int x", parse_class_effect_yx);
+	parser_reg(p, "sdice str dice", parse_class_dice);
+	parser_reg(p, "sexpr sym name sym base str expr", parse_class_expr);
+	parser_reg(p, "seffect-msg str text", parse_class_effect_msg);
+	parser_reg(p, "sdesc str desc", parse_class_desc);
 }
 
 struct parser *init_parse_class(void) {
@@ -3602,21 +3642,7 @@ struct parser *init_parse_class(void) {
 			   parse_class_equip);
 	parser_reg(p, "obj-flags ?str flags", parse_class_obj_flags);
 	parser_reg(p, "player-flags ?str flags", parse_class_play_flags);
-	parser_reg(p, "magic uint first uint weight uint books", parse_class_magic);
-	parser_reg(p, "book sym tval sym quality sym name uint spells str realm",
-			   parse_class_book);
-	parser_reg(p, "book-graphics char glyph sym color",
-			   parse_class_book_graphics);
-	parser_reg(p, "book-properties int cost int common str minmax",
-			   parse_class_book_properties);
-	parser_reg(p, "spell sym name int level int mana int fail int exp int stat",
-			   parse_class_spell);
-	parser_reg(p, "effect sym eff ?sym type ?int radius ?int other", parse_class_effect);
-	parser_reg(p, "effect-yx int y int x", parse_class_effect_yx);
-	parser_reg(p, "dice str dice", parse_class_dice);
-	parser_reg(p, "expr sym name sym base str expr", parse_class_expr);
-	parser_reg(p, "effect-msg str text", parse_class_effect_msg);
-	parser_reg(p, "desc str desc", parse_class_desc);
+	init_parse_magic(p);
 	parser_reg(p, "cdesc str cdesc", parse_class_cdesc);
 	return p;
 }
@@ -3655,14 +3681,30 @@ static errr finish_parse_class(struct parser *p) {
 	return 0;
 }
 
+void cleanup_magic(struct class_magic *magic)
+{
+	struct class_spell *spell;
+	struct class_book *book;
+	int i, j;
+	for (i = 0; i < magic->num_books; i++) {
+		book = &magic->books[i];
+		for (j = 0; j < book->num_spells; j++) {
+			spell = &book->spells[j];
+			string_free(spell->name);
+			string_free(spell->text);
+			free_effect(spell->effect);
+		}
+		mem_free(book->spells);
+	}
+	mem_free(magic->books);
+}
+
 static void cleanup_class(void)
 {
 	struct player_class *c = classes;
 	struct player_class *next;
 	struct start_item *item, *item_next;
-	struct class_spell *spell;
-	struct class_book *book;
-	int i, j;
+	int i;
 
 	while (c) {
 		next = c->next;
@@ -3672,17 +3714,7 @@ static void cleanup_class(void)
 			mem_free(item);
 			item = item_next;
 		}
-		for (i = 0; i < c->magic.num_books; i++) {
-			book = &c->magic.books[i];
-			for (j = 0; j < book->num_spells; j++) {
-				spell = &book->spells[j];
-				string_free(spell->name);
-				string_free(spell->text);
-				free_effect(spell->effect);
-			}
-			mem_free(book->spells);
-		}
-		mem_free(c->magic.books);
+		cleanup_magic(&c->magic);
 		for (i = 0; i < (int)c->titles; i++) {
 			string_free((char *)c->title[i]);
 		}
@@ -3975,6 +4007,7 @@ static struct {
 	{ "ui entries", &ui_entry_parser },
 	{ "timed effects", &player_timed_parser },
 	{ "player properties", &player_property_parser },
+	{ "magic realms", &realm_parser },
 	{ "abilities", &ability_parser },
 	{ "features", &feat_parser },
 	{ "object bases", &object_base_parser },
@@ -3991,7 +4024,6 @@ static struct {
 	{ "history charts", &history_parser },
 	{ "bodies", &body_parser },
 	{ "player races", &p_race_parser },
-	{ "magic realms", &realm_parser },
 	{ "player classes", &class_parser },
 	{ "artifacts", &artifact_parser },
 	{ "object properties", &object_property_parser },

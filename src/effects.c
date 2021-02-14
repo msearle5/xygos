@@ -46,6 +46,7 @@
 #include "player-ability.h"
 #include "player-calcs.h"
 #include "player-history.h"
+#include "player-quest.h"
 #include "player-spell.h"
 #include "player-timed.h"
 #include "player-util.h"

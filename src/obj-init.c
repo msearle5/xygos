@@ -1554,6 +1554,7 @@ static enum parser_error parse_object_name(struct parser *p) {
 	k->next = h;
 	parser_setpriv(p, k);
 	k->name = string_make(name);
+	parsing_magic = &(k->magic);
 	return PARSE_ERROR_NONE;
 }
 
@@ -2036,6 +2037,7 @@ struct parser *init_parse_object(void) {
 	parser_reg(p, "brand str code", parse_object_brand);
 	parser_reg(p, "curse sym name int power", parse_object_curse);
 	parser_reg(p, "material sym name", parse_object_material);
+	init_parse_magic(p);
 	return p;
 }
 
@@ -2094,6 +2096,7 @@ static void cleanup_object(void)
 		mem_free(kind->slays);
 		mem_free(kind->curses);
 		free_effect(kind->effect);
+		cleanup_magic(&kind->magic);
 	}
 	mem_free(k_info);
 }
@@ -2119,6 +2122,7 @@ static enum parser_error parse_ego_name(struct parser *p) {
 	e->next = h;
 	parser_setpriv(p, e);
 	e->name = string_make(name);
+	parsing_magic = &(e->magic);
 	return PARSE_ERROR_NONE;
 }
 
@@ -2509,6 +2513,7 @@ struct parser *init_parse_ego(void) {
 	parser_reg(p, "slay str code", parse_ego_slay);
 	parser_reg(p, "brand str code", parse_ego_brand);
 	parser_reg(p, "curse sym name int power", parse_ego_curse);
+	init_parse_magic(p);
 	return p;
 }
 
@@ -2569,6 +2574,7 @@ static void cleanup_ego(void)
 			mem_free(poss);
 			poss = next;
 		}
+		cleanup_magic(&ego->magic);
 	}
 	mem_free(e_info);
 }
@@ -2595,7 +2601,7 @@ static enum parser_error parse_artifact_name(struct parser *p) {
 	a->next = h;
 	parser_setpriv(p, a);
 	a->name = string_make(name);
-
+	parsing_magic = &(a->magic);
 	/* Ignore all base elements */
 	for (i = ELEM_BASE_MIN; i < ELEM_HIGH_MIN; i++)
 		a->el_info[i].flags |= EL_INFO_IGNORE;
@@ -2897,6 +2903,7 @@ struct parser *init_parse_artifact(void) {
 	parser_reg(p, "slay str code", parse_artifact_slay);
 	parser_reg(p, "brand str code", parse_artifact_brand);
 	parser_reg(p, "curse sym name int power", parse_artifact_curse);
+	init_parse_magic(p);
 	return p;
 }
 
@@ -2957,6 +2964,7 @@ static void cleanup_artifact(void)
 		mem_free(art->brands);
 		mem_free(art->slays);
 		mem_free(art->curses);
+		cleanup_magic(&art->magic);
 	}
 	mem_free(a_info);
 }

@@ -39,6 +39,7 @@
 #include "mon-make.h"
 #include "mon-spell.h"
 #include "obj-tval.h"
+#include "player-quest.h"
 #include "trap.h"
 #include "z-queue.h"
 #include "z-type.h"

@@ -33,6 +33,7 @@
 #include "obj-pile.h"
 #include "obj-tval.h"
 #include "obj-util.h"
+#include "player-quest.h"
 #include "player-util.h"
 #include "trap.h"
 #include "z-queue.h"

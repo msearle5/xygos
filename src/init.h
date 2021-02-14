@@ -182,6 +182,9 @@ extern struct file_parser flavor_parser;
 
 extern const char *player_info_flags[];
 
+extern struct class_magic *parsing_magic;
+extern int total_spells;
+
 errr grab_effect_data(struct parser *p, struct effect *effect);
 extern void init_file_paths(const char *config, const char *lib, const char *data);
 extern void init_game_constants(void);
@@ -189,5 +192,8 @@ extern void init_arrays(void);
 extern void create_needed_dirs(void);
 extern bool init_angband(void);
 extern void cleanup_angband(void);
+extern void init_parse_magic(struct parser *p);
+extern void cleanup_magic(struct class_magic *magic);
+
 
 #endif /* INCLUDED_INIT_H */

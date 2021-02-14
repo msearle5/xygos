@@ -28,9 +28,10 @@ bool spell_okay_to_cast(int spell_index);
 bool spell_okay_to_browse(int spell_index);
 s16b spell_chance(int spell_index);
 bool spell_cast(int spell_index, int dir, struct command *cmd);
+void combine_books(int *count, int *spells, int *maxidx, struct class_spell **spellps);
 
 extern void get_spell_info(int index, char *buf, size_t len);
 extern bool cast_spell(int tval, int index, int dir);
 extern bool spell_needs_aim(int spell_index);
 extern expression_base_value_f spell_value_base_by_name(const char *name);
-
+extern int spell_collect_from_book(int **spells);
