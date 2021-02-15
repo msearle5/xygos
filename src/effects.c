@@ -5937,6 +5937,74 @@ bool effect_handler_MUTATE(effect_handler_context_t *context)
 	return (true);
 }
 
+/**
+ * How much danger would you be in if nearby monsters were aggravated?
+ */
+int stealth_danger(void)
+{
+	int monsters = 0;
+	int losmonsters = 0;
+	int level = 0;
+
+	/* Check everyone nearby */
+	for (int i = 1; i < cave_monster_max(cave); i++) {
+		struct monster *mon = cave_monster(cave, i);
+		if (mon->race) {
+			int radius = z_info->max_sight * 2;
+			int dist = distance(player->grid, mon->grid);
+
+			/* Skip monsters too far away */
+			if ((dist < radius) && mon->m_timed[MON_TMD_SLEEP]) {
+				// Count, get the highest level
+				monsters++;
+				int mlevel = mon->race->level;
+				// Much less threatening if not in LOS
+				if (!los(cave, player->grid, mon->grid)) {
+					mlevel -= dist;
+					mlevel /= 2;
+				} else {
+					mlevel -= dist / 2;
+					losmonsters++;
+				}
+				
+				if (mlevel > level)
+					level = mlevel;
+			}
+		}
+	}
+
+	/* Danger factor = monster 'total level' (highest level, + a bit for more monsters)
+	 * 				vs player 'safe level' derived from HP (not actual level).
+	 */
+
+	int monlevel = MIN(200, MAX(1, level + MIN(losmonsters, level / 2) + MIN(monsters / 2, level / 4)));
+	int ulevel = MAX(1, player->chp);
+
+	int danger = (monlevel * monlevel * 10000) / (ulevel * ulevel);
+	return MIN(danger, 1000);
+}
+
+/**
+ * Hoooonk
+ */
+bool effect_handler_HORNS(effect_handler_context_t *context)
+{
+	int danger = stealth_danger();
+	if (randint0(danger + 50) < danger) {
+		/* Honk message */
+		static const char *honk[] =		{ "honk", "blare", "blast", "hoot", "call", "sing", "trumpet", "bray" };
+		static const char *music[] =	{ "musically", "tunefully", "mournfully", "a fanfare",
+										"a loud trill", "two notes", "a long note", "three notes",
+										"a challenge", "loudly", "unexpectedly", " a flourish", "shrilly" };
+		msg("Your horns %s out %s!", honk[randint0(sizeof(honk)/sizeof(*honk))], music[randint0(sizeof(music)/sizeof(*music))]);
+		
+		/* Aggro */
+		effect_handler_WAKE(context);
+	}
+	/* Done */
+	return (true);
+}
+
 
 
 /**

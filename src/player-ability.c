@@ -325,6 +325,35 @@ static enum parser_error parse_ability_blow(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_ability_random_effect(struct parser *p) {
+	struct ability *a = parser_priv(p);
+	assert(a);
+
+	a->effect_randomly = parser_getint(p, "delay");
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_ability_effect(struct parser *p) {
+	struct ability *a = parser_priv(p);
+	struct effect *effect;
+	struct effect *new_effect = mem_zalloc(sizeof(*new_effect));
+	assert(a);
+
+	/* Go to the next vacant effect and set it to the new one  */
+	if (a->effect) {
+		effect = a->effect;
+		while (effect->next)
+			effect = effect->next;
+		effect->next = new_effect;
+	} else
+		a->effect = new_effect;
+
+	/* Fill in the detail */
+	return grab_effect_data(p, new_effect);
+	return PARSE_ERROR_NONE;
+}
+
+
 struct parser *init_parse_ability(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
@@ -347,6 +376,8 @@ struct parser *init_parse_ability(void) {
 	parser_reg(p, "player-flags ?str flags", parse_ability_play_flags);
 	parser_reg(p, "values str values", parse_ability_values);
 	parser_reg(p, "blow sym msg rand damage ?sym type", parse_ability_blow);
+	parser_reg(p, "random-effect int delay", parse_ability_random_effect);
+	parser_reg(p, "effect sym eff ?sym type ?int radius ?int other", parse_ability_effect);
 	init_parse_magic(p);
 	return p;
 }

@@ -372,6 +372,14 @@ static void decrease_timeouts(void)
 		}
 	}
 
+	/* Check for abilities with random activation */
+	for(int i=0;i<PF_MAX;i++) {
+		if (ability[i] && ability[i]->effect_randomly && one_in_(ability[i]->effect_randomly)) {
+			bool ident;
+			effect_do(ability[i]->effect, source_player(), NULL, &ident, true, 0, 0, 0, NULL);
+		}
+	}
+
 	/* Technique cooldowns */
 	if (player->cooldown) {
 		for(int i=0;i<total_spells;i++) {

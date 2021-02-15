@@ -37,6 +37,8 @@ struct ability {
 	s16b cost;
 	int ac;
 	struct class_magic magic;
+	int effect_randomly;
+	struct effect *effect;
 	int nattacks;
 	struct attack *attacks;
 	bool forbid[PF_MAX];
