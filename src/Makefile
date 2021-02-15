@@ -13,6 +13,7 @@ ifneq (${VERSION},)
 endif
 
 CFLAGS += -I. -fPIC -std=c99 -O0 -g2 -W -Wall -Wextra
+#CFLAGS += -I. -fPIC -std=c99 -O3 -flto -g2 -W -Wall -Wextra
 # -Wold-style-definition -Wmissing-declarations -Wredundant-decls -Wpointer-arith -Wcast-align -Wwrite-strings -Winline -Wformat-security -Winit-self -Wmissing-include-dirs -Wundef -Wmissing-format-attribute -Wnested-externs -Wunreachable-code -Wno-unused-parameter -Wno-missing-field-initializers
 
 # Replace above line with the two below and then look at gmon.out

@@ -669,7 +669,7 @@ static struct object *make_artifact_special(int level, int tval)
  *
  * Note -- see "make_artifact_special()" and "apply_magic()"
  */
-static bool make_artifact(struct object *obj)
+bool make_artifact(struct object *obj)
 {
 	int i;
 
@@ -693,15 +693,18 @@ static bool make_artifact(struct object *obj)
 		/* Make sure the kind was found */
 		if (!kind) continue;
 
-		/* Skip special artifacts */
-		if (kf_has(kind->kind_flags, KF_INSTA_ART)) continue;
+		/* Must have the correct fields */
+		if (art->tval != obj->tval) continue;
+		if (art->sval != obj->sval) continue;
+
+		/* Enforce maximum depth (strictly) */
+		if (art->alloc_max < player->depth) continue;
 
 		/* Cannot make an artifact twice */
 		if (art->created) continue;
 
-		/* Must have the correct fields */
-		if (art->tval != obj->tval) continue;
-		if (art->sval != obj->sval) continue;
+		/* Skip special artifacts */
+		if (kf_has(kind->kind_flags, KF_INSTA_ART)) continue;
 
 		/* XXX XXX Enforce minimum "depth" (loosely) */
 		if (art->alloc_min > player->depth)
@@ -712,9 +715,6 @@ static bool make_artifact(struct object *obj)
 			/* Roll for out-of-depth creation */
 			if (randint0(d) != 0) continue;
 		}
-
-		/* Enforce maximum depth (strictly) */
-		if (art->alloc_max < player->depth) continue;
 
 		/* We must make the "rarity roll" */
 		if (randint1(100) > art->alloc_prob) continue;

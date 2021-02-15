@@ -25,6 +25,7 @@
 #include "mon-make.h"
 #include "monster.h"
 #include "obj-init.h"
+#include "obj-make.h"
 #include "obj-pile.h"
 #include "obj-randart.h"
 #include "obj-tval.h"
@@ -1359,6 +1360,69 @@ static void revive_uniques(void)
 	}
 }
 
+/* Generate non-special artifacts at each level 1-100 (by steps).
+ * Record the number of each generated.
+ */
+static void artifact_stats(void)
+{
+	static const byte levels[] = {
+		1, 2, 3, 4, 5, 6,
+		8, 10, 12, 14, 16, 18, 20,
+		25, 30, 35, 40, 45, 50,
+		60, 70, 80, 90, 98, 127
+	};
+	struct object *obj;
+	int *count = mem_zalloc(sizeof(int) * z_info->a_max * sizeof(levels));
+	int *artifacts = mem_zalloc(sizeof(int) * sizeof(levels));
+	int *objects = mem_zalloc(sizeof(int) * sizeof(levels));
+	int depth = player->depth;
+	for(size_t i=0;i<sizeof(levels);i++) {
+		int lev = levels[i];
+		player->depth = lev;
+		msg("Level %d...", lev);
+		/* Show the level to check on status */
+		do_cmd_redraw();
+		int *levcount = count + (z_info->a_max * i);
+		do {
+			objects[i]++;
+			/* Make a non-artifact object */
+			obj = make_object(cave, lev, false, false, false, NULL, 0);
+			bool ok = make_artifact(obj);
+			if (ok) {
+				obj->artifact->created = false;
+				artifacts[i]++;
+				int a_idx = obj->artifact - a_info;
+				levcount[a_idx]++;
+			}
+		} while (artifacts[i] < 10000);
+		fprintf(stderr,"Level %d, %d arts, %d objs\n", lev, artifacts[i], objects[i]);
+	}
+	char buf[1024];
+	char num[32];
+	strcpy(buf, "            Artifact Name            ");
+	for(size_t l=0;l<sizeof(levels);l++) {
+		strcat(buf+31,"Level ");
+		sprintf(num, "%d%s  ", levels[l], levels[l] < 10 ? " " : "" );
+		strcat(buf, num);
+	}
+	strcat(buf, "\n");
+	file_putf(stats_log, buf);
+	for(size_t a=1;a<z_info->a_max;a++) {
+		memset(buf, ' ', 32);
+		strcpy(buf + (30 - strlen(a_info[a].name)), a_info[a].name);
+		for(int i=0;i<30;i++)
+			buf[i] = ((buf[i] >= ' ') && (buf[i] <= 'z')) ? buf[i] : '-';
+		for(int l=0;l<sizeof(levels);l++) {
+			int *levcount = count + (z_info->a_max * l);
+			strnfmt(num, sizeof(num), "%9d ", levcount[a]);
+			strcat(buf+30, num);
+		}
+		strcat(buf, "\n");
+		file_putf(stats_log, buf);
+	}
+	player->depth = depth;
+}
+
 /**
  * This function loops through the level and does N iterations of
  * the stat calling function, assuming diving style.
@@ -1486,7 +1550,7 @@ static int stats_prompt(void)
 	addval = 1.0 / tries;
 
 	/* Get info on what type of run to do */
-	strnfmt(prompt, sizeof(prompt), "Type of Sim: Diving (1) or Clearing (2) ");
+	strnfmt(prompt, sizeof(prompt), "Type of Sim: Diving (1), Clearing (2), Artifacts (3) ");
 
 	/* Set default */
 	strnfmt(tmp_val, sizeof(tmp_val), "%d", simtype);
@@ -1497,7 +1561,7 @@ static int stats_prompt(void)
 	temp = atoi(tmp_val);
 
 	/* Make sure that the type is good */
-	if ((temp == 1) || (temp == 2))
+	if ((temp >= 1) && (temp <= 3))
 		simtype = temp;
 	else
 		return 0;
@@ -1520,20 +1584,27 @@ void stats_collect(void)
 {
 	static int simtype;
 	static bool auto_flag;
+	bool artifacts = false;
 	char buf[1024];
 
 	/* Prompt the user for sim params */
 	simtype = stats_prompt();
 
 	/* Make sure the results are good! */
-	if (!((simtype == 1) || (simtype == 2)))
+	if (!((simtype >= 1) && (simtype <= 3)))
 		return; 
 
 	/* Are we in diving or clearing mode */
-	if (simtype == 2)
-		clearing = true;
-	else
-		clearing = false;
+	switch(simtype) {
+		case 1:
+			clearing = false;
+			break;
+		case 2:
+			clearing = true;
+			break;
+		case 3:
+			artifacts = true;
+	}
 
 	/* Open log file */
 	path_build(buf, sizeof(buf), ANGBAND_DIR_USER, "stats.log");
@@ -1567,11 +1638,15 @@ void stats_collect(void)
 	/* Make sure all stats are 0 */
 	init_stat_vals();
 
-	/* Select diving option */
-	if (!clearing) diving_stats();
+	if (artifacts) {
+		artifact_stats();
+	} else {
+		/* Select diving option */
+		if (!clearing) diving_stats();
 
-	/* Select clearing option */
-	if (clearing) clearing_stats();
+		/* Select clearing option */
+		if (clearing) clearing_stats();
+	}
 
 	/* Turn auto-more back off */
 	if (auto_flag) option_set(option_name(OPT_auto_more), false);
