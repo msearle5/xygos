@@ -484,7 +484,7 @@ void write_elements(ang_file *fff, const struct element_info *el_info)
 	int pointer = 0;
 
 	static const char *element_names[] = {
-		#define ELEM(a) #a,
+		#define ELEM(a, ...) #a,
 		#include "list-elements.h"
 		#undef ELEM
 		NULL

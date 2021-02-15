@@ -475,7 +475,7 @@ static void project_object_handler_MON_CRUSH(project_object_handler_context_t *c
 }
 
 static const project_object_handler_f object_handlers[] = {
-	#define ELEM(a) project_object_handler_##a,
+	#define ELEM(a, ...) project_object_handler_##a,
 	#include "list-elements.h"
 	#undef ELEM
 	#define PROJ(a) project_object_handler_##a,

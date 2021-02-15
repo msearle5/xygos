@@ -18,6 +18,7 @@
 
 #include "angband.h"
 #include "datafile.h"
+#include "effects.h"
 #include "init.h"
 #include "obj-init.h"
 #include "player.h"
@@ -288,6 +289,42 @@ static enum parser_error parse_ability_values(struct parser *p) {
 	return t ? PARSE_ERROR_INVALID_VALUE : PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_ability_blow(struct parser *p) {
+	struct ability *a = parser_priv(p);
+
+	if (!a)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
+	a->attacks = mem_realloc(a->attacks, (a->nattacks + 1) * sizeof(a->attacks[0]));
+
+	struct attack *att = &(a->attacks[a->nattacks]);
+
+	att->msg = string_make(parser_getsym(p, "msg"));
+	att->damage = parser_getrand(p, "damage");
+
+	/* Read an element name. If present it must be valid - for a blow without an element,
+	 * the field must be missing.
+	 */
+	if (parser_hasval(p, "type")) {
+		const char *type = parser_getsym(p, "type");
+
+		if (type == NULL)
+			return PARSE_ERROR_UNRECOGNISED_PARAMETER;
+
+		/* Check for a value */
+		int val = code_index_in_array(list_element_names, type);
+		if (val < 0)
+			return PARSE_ERROR_INVALID_VALUE;
+		else
+			att->element = val;
+	} else {
+		att->element = -1;
+	}
+
+	a->nattacks++;
+	return PARSE_ERROR_NONE;
+}
+
 struct parser *init_parse_ability(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
@@ -309,6 +346,7 @@ struct parser *init_parse_ability(void) {
 	parser_reg(p, "obj-flags ?str flags", parse_ability_obj_flags);
 	parser_reg(p, "player-flags ?str flags", parse_ability_play_flags);
 	parser_reg(p, "values str values", parse_ability_values);
+	parser_reg(p, "blow sym msg rand damage ?sym type", parse_ability_blow);
 	init_parse_magic(p);
 	return p;
 }

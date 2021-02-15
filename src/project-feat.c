@@ -664,7 +664,7 @@ static void project_feature_handler_MON_CRUSH(project_feature_handler_context_t 
 }
 
 static const project_feature_handler_f feature_handlers[] = {
-	#define ELEM(a) project_feature_handler_##a,
+	#define ELEM(a, ...) project_feature_handler_##a,
 	#include "list-elements.h"
 	#undef ELEM
 	#define PROJ(a) project_feature_handler_##a,

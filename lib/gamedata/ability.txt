@@ -39,6 +39,8 @@
 #						-	nasty		- This talent may be considered harmful (for at least some characters)
 # stats:<7 stats>		- List of stats bonuses
 # ac:<bonus to ac>
+# blow:<verb>:<damage>:[<element>]	- Add a melee blow, using this verb instead of "hit", the random value for damage (e.g. 3d6)
+#									  and an optional element.
 
 ### - flags - ###
 # obj-flags:object flags	- add one or more object flags
@@ -244,8 +246,17 @@ sdesc:Spits a highly acidic loogie.
 sdesc: Sometimes you will be able to manage a continuous spray instead that hurts each monster
 sdesc: in its path - the chance to get a spray goes up with your character level.
 
+# Add a melee blow (and random activation)
+# Hats don't fit?
+name:Horns
+gain:You grow a pair of evil-looking sharp black horns on your head.
+lose:Your horns shrivel away.
+blow:butt:3d6
+flag:mutation
+flag:nasty
 
 ## Skin muts ##
+
 
 name:Elephant_Hide
 gain:You grow a thick grey wrinkled elephant-like hide.

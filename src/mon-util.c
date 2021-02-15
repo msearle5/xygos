@@ -1255,6 +1255,10 @@ bool mon_take_nonplayer_hit(int dam, struct monster *t_mon,
  **/
 bool mon_take_hit(struct monster *mon, int dam, bool *fear, const char *note)
 {
+	bool dummy;
+	if (!fear)
+		fear = &dummy;
+
 	/* Redraw (later) if needed */
 	if (player->upkeep->health_who == mon)
 		player->upkeep->redraw |= (PR_HEALTH);

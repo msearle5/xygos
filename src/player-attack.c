@@ -39,6 +39,7 @@
 #include "obj-slays.h"
 #include "obj-tval.h"
 #include "obj-util.h"
+#include "player-ability.h"
 #include "player-attack.h"
 #include "player-calcs.h"
 #include "player-timed.h"
@@ -78,7 +79,7 @@ int breakage_chance(const struct object *obj, bool hit_target) {
 }
 
 /**
- * Return the player's chance to hit with a particular weapon.
+ * Return the player's chance to hit with a particular weapon (or none).
  */
 int chance_of_melee_hit(const struct player *p, const struct object *weapon)
 {
@@ -607,24 +608,97 @@ static const struct hit_types melee_hit_types[] = {
 	{ MSG_HIT_HI_SUPERB, "It was a *SUPERB* hit!" },
 };
 
+bool py_attack_hit(struct player *p, struct loc grid, struct monster *mon, int dmg, char *verb, u32b msg_type, int splash, bool do_quake, bool *fear)
+{
+	int drain = 0;
+	bool stop = false;
+	char m_name[80];
+
+	/* Extract monster name (or "it") */
+	monster_desc(m_name, sizeof(m_name), mon, MDESC_TARG);
+
+	/* Apply the player damage bonuses */
+	if (!OPT(p, birth_percent_damage)) {
+		dmg += player_damage_bonus(&p->state);
+	}
+
+	/* Substitute shape-specific blows for shapechanged players */
+	if (player_is_shapechanged(p)) {
+		int choice = randint0(p->shape->num_blows);
+		struct player_blow *blow = p->shape->blows;
+		while (choice--) {
+			blow = blow->next;
+		}
+		my_strcpy(verb, blow->name, sizeof(verb));
+	}
+
+	/* No negative damage; change verb if no damage done */
+	if (dmg <= 0) {
+		dmg = 0;
+		msg_type = MSG_MISS;
+		my_strcpy(verb, "fail to harm", sizeof(verb));
+	}
+
+	for (int i = 0; i < (int)N_ELEMENTS(melee_hit_types); i++) {
+		const char *dmg_text = "";
+
+		if (msg_type != melee_hit_types[i].msg_type)
+			continue;
+
+		if (OPT(p, show_damage))
+			dmg_text = format(" (%d)", dmg);
+
+		if (melee_hit_types[i].text)
+			msgt(msg_type, "You %s %s%s. %s", verb, m_name, dmg_text,
+					melee_hit_types[i].text);
+		else
+			msgt(msg_type, "You %s %s%s.", verb, m_name, dmg_text);
+	}
+
+	/* Pre-damage side effects */
+	blow_side_effects(p, mon);
+
+	/* Damage, check for hp drain, fear and death */
+	drain = MIN(mon->hp, dmg);
+	stop = mon_take_hit(mon, dmg, fear, NULL);
+
+	/* Small chance of bloodlust side-effects */
+	if (p->timed[TMD_BLOODLUST] && one_in_(50)) {
+		msg("You feel something give way!");
+		player_over_exert(p, PY_EXERT_CON, 20, 0);
+	}
+
+	if (!stop) {
+		if (p->timed[TMD_ATT_VAMP] && monster_is_living(mon)) {
+			effect_simple(EF_HEAL_HP, source_player(), format("%d", drain),
+						  0, 0, 0, 0, 0, NULL);
+		}
+	}
+
+	if (stop && fear)
+		(*fear) = false;
+
+	/* Post-damage effects */
+	if (blow_after_effects(grid, dmg, splash, fear, do_quake))
+		stop = true;
+
+	return stop;
+}
+
 /**
  * Attack the monster at the given location with a single blow.
  */
 bool py_attack_real(struct player *p, struct loc grid, bool *fear)
 {
-	size_t i;
-
 	/* Information about the target of the attack */
 	struct monster *mon = square_monster(cave, grid);
 	char m_name[80];
-	bool stop = false;
 
 	/* The weapon used */
 	struct object *obj = equipped_item_by_slot_name(p, "weapon");
 
 	/* Information about the attack */
 	int chance = chance_of_melee_hit(p, obj);
-	int drain = 0;
 	int splash = 0;
 	bool do_quake = false;
 	bool success = false;
@@ -711,72 +785,7 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear)
 	/* Learn by use */
 	equip_learn_on_melee_attack(p);
 
-	/* Apply the player damage bonuses */
-	if (!OPT(p, birth_percent_damage)) {
-		dmg += player_damage_bonus(&p->state);
-	}
-
-	/* Substitute shape-specific blows for shapechanged players */
-	if (player_is_shapechanged(p)) {
-		int choice = randint0(p->shape->num_blows);
-		struct player_blow *blow = p->shape->blows;
-		while (choice--) {
-			blow = blow->next;
-		}
-		my_strcpy(verb, blow->name, sizeof(verb));
-	}
-
-	/* No negative damage; change verb if no damage done */
-	if (dmg <= 0) {
-		dmg = 0;
-		msg_type = MSG_MISS;
-		my_strcpy(verb, "fail to harm", sizeof(verb));
-	}
-
-	for (i = 0; i < N_ELEMENTS(melee_hit_types); i++) {
-		const char *dmg_text = "";
-
-		if (msg_type != melee_hit_types[i].msg_type)
-			continue;
-
-		if (OPT(p, show_damage))
-			dmg_text = format(" (%d)", dmg);
-
-		if (melee_hit_types[i].text)
-			msgt(msg_type, "You %s %s%s. %s", verb, m_name, dmg_text,
-					melee_hit_types[i].text);
-		else
-			msgt(msg_type, "You %s %s%s.", verb, m_name, dmg_text);
-	}
-
-	/* Pre-damage side effects */
-	blow_side_effects(p, mon);
-
-	/* Damage, check for hp drain, fear and death */
-	drain = MIN(mon->hp, dmg);
-	stop = mon_take_hit(mon, dmg, fear, NULL);
-
-	/* Small chance of bloodlust side-effects */
-	if (p->timed[TMD_BLOODLUST] && one_in_(50)) {
-		msg("You feel something give way!");
-		player_over_exert(p, PY_EXERT_CON, 20, 0);
-	}
-
-	if (!stop) {
-		if (p->timed[TMD_ATT_VAMP] && monster_is_living(mon)) {
-			effect_simple(EF_HEAL_HP, source_player(), format("%d", drain),
-						  0, 0, 0, 0, 0, NULL);
-		}
-	}
-
-	if (stop)
-		(*fear) = false;
-
-	/* Post-damage effects */
-	if (blow_after_effects(grid, dmg, splash, fear, do_quake))
-		stop = true;
-
-	return stop;
+	return py_attack_hit(p, grid, mon, dmg, verb, msg_type, splash, do_quake, fear);
 }
 
 
@@ -866,6 +875,82 @@ bool attempt_shield_bash(struct player *p, struct monster *mon, bool *fear)
 }
 
 /**
+ * Returns (in a buffer 'list' passed in by the caller of 'length' entries)
+ * a list of all extra attacks available as pointers to struct attacks. The
+ * number of entries is returned, and the list is terminated by a NULL pointer.
+ */
+int get_extra_attacks(struct attack **list, int length)
+{
+	int attacks = 0;
+
+	for(int i=0; i<PF_MAX; i++) {
+		if ((ability[i]) && (player_has(player, i))) {
+			for(int j=0; j<ability[i]->nattacks; j++) {
+				if (attacks < length-1)
+					list[attacks++] = &(ability[i]->attacks[j]);
+			}
+		}
+	}
+
+	list[attacks] = NULL;
+	return attacks;
+}
+
+/**
+ * Attempt a 'extra' attack against the specified monster. Return true if the
+ * attack killed the target.
+ */
+bool py_attack_extra(struct player *p, struct loc grid, struct monster *mon, struct attack *att)
+{
+	char m_name[80];
+
+	int chance = chance_of_melee_hit(p, NULL);
+	int dmg = randcalc(att->damage, 0, RANDOMISE);
+
+	/* See if the player hit */
+	bool success = test_hit(chance, mon->race->ac, monster_is_visible(mon));
+
+	/* Extract monster name (or "it") */
+	monster_desc(m_name, sizeof(m_name), mon, MDESC_TARG);
+
+	/* If a miss, skip this hit */
+	if (!success) {
+		msgt(MSG_MISS, "You miss %s.", m_name);
+		return false;
+	}
+
+	/* You hit.
+	 * Extra attacks are not influenced by equipment slays, brands etc.
+	 * They do however have an element.
+	 **/
+	if (att->element >= 0) {
+		#define RF_0 0
+		static const int immune[] = {
+		#define ELEM(a, b, ...)  RF_##b,
+		#include "list-elements.h"
+		#undef ELEM
+			RF_IM_ACID
+		};
+		static const int vulnerable[] = {
+		#define ELEM(a, b, c)  RF_##c,
+		#include "list-elements.h"
+		#undef ELEM
+			RF_IM_ACID
+		};
+		#undef RF_0
+		int imm = immune[att->element];
+		if (imm)
+			if (rf_has(mon->race->flags, imm))
+				dmg /= 6 + randint0(6);
+		int vuln = vulnerable[att->element];
+		if (vuln)
+			if (rf_has(mon->race->flags, vuln))
+				dmg = (dmg * rand_range(200, 500)) / 100;
+	} 
+	return py_attack_hit(p, grid, mon, dmg, att->msg, MSG_HIT, 0, false, NULL);
+}
+
+/**
  * Attack the monster at the given location
  *
  * We get blows until energy drops below that required for another blow, or
@@ -905,6 +990,19 @@ void py_attack(struct player *p, struct loc grid)
 	while (avail_energy - p->upkeep->energy_use >= blow_energy && !slain) {
 		slain = py_attack_real(p, grid, &fear);
 		p->upkeep->energy_use += blow_energy;
+	}
+
+	/* Extra attacks, from mutations, equipment etc.
+	 * These are 'free' (take no energy).
+	 * Still should skip if the target's dead.
+	 */
+	struct attack *att[256];
+	int attacks = get_extra_attacks(att, 256);
+	fprintf(stderr,"%d attacks\n", attacks);
+	for(int i=0; i<attacks; i++) {
+		if (slain)
+			break;
+		slain = py_attack_extra(p, grid, mon, att[i]);
 	}
 
 	/* Hack - delay fear messages */

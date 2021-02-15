@@ -16,6 +16,13 @@
  *    are included in all such copies.  Other copyrights may also apply.
  */
 
+ 
+struct attack {
+	char *msg;								/**< "You "smack" the foo */
+	random_value damage;						/**< for 6d6 of */
+	int element;							/**< fire damage */
+};
+ 
 struct ability {
 	char *name;
 	char *gain;
@@ -30,6 +37,8 @@ struct ability {
 	s16b cost;
 	int ac;
 	struct class_magic magic;
+	int nattacks;
+	struct attack *attacks;
 	bool forbid[PF_MAX];
 	bool require[PF_MAX];
 	int a_adj[STAT_MAX];

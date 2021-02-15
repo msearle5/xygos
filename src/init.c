@@ -133,7 +133,7 @@ const char *obj_mods[] = {
 };
 
 const char *list_element_names[] = {
-	#define ELEM(a) #a,
+	#define ELEM(a, ...) #a,
 	#include "list-elements.h"
 	#undef ELEM
 	NULL

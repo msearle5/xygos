@@ -734,7 +734,7 @@ static int project_player_handler_MON_CRUSH(project_player_handler_context_t *co
 }
 
 static const project_player_handler_f player_handlers[] = {
-	#define ELEM(a) project_player_handler_##a,
+	#define ELEM(a, ...) project_player_handler_##a,
 	#include "list-elements.h"
 	#undef ELEM
 	#define PROJ(a) project_player_handler_##a,

@@ -70,7 +70,7 @@ static const char *kind_flags[] = {
 };
 
 static const char *element_names[] = {
-	#define ELEM(a) #a,
+	#define ELEM(a, ...) #a,
 	#include "list-elements.h"
 	#undef ELEM
 	NULL

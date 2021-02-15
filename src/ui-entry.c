@@ -1490,7 +1490,7 @@ static const char *get_dummy_param_name(int i)
 
 /* These are for handling of entries parameterized by the element name. */
 static const char *element_names[] = {
-	#define ELEM(x) #x,
+	#define ELEM(x, ...) #x,
 	#include "list-elements.h"
 	#undef ELEM
 };
