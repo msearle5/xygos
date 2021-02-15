@@ -151,10 +151,6 @@ static bool describe_faults(textblock *tb, const struct object *obj,
 			textblock_append(tb, ".\n");
 		}
 	}
-	/* Say if fault removal has been tried */
-	if (of_has(obj->flags, OF_FRAGILE)) {
-		textblock_append(tb, "Attempting to repair it again may destroy it.\n");
-	}
 
 	return true;
 }
