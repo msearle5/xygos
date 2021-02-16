@@ -336,6 +336,7 @@ sleepiness:1
 depth:5
 rarity:5
 experience:10
+deathspells:EXPLODE
 blow:HIT:HURT:1d3
 flags:MALE | FEMALE | COLD_BLOOD | WEIRD_MIND
 flags:NO_FEAR
@@ -359,7 +360,7 @@ flags:RAND_25 | RAND_50
 flags:NO_SLEEP | NO_CONF | NO_FEAR
 spell-freq:3
 spell-power:0
-spells:S_KIN | SHRIEK
+spells:S_KIN
 desc:A lemming painted in gaudy designs, waving a carved staff. Where it leads hordes follow.
 
 name:bungee lemming

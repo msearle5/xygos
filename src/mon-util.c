@@ -1000,6 +1000,16 @@ void monster_death(struct monster *mon, bool stats)
 	if (mon->race->light != 0)
 		player->upkeep->update |= PU_UPDATE_VIEW;
 
+	/* Remove it from the level */
+	square_set_mon(cave, mon->grid, 0);
+
+	/* Fire off any death-spells */
+	for(int i=FLAG_START;i<RSF_MAX;i++) {
+		if (rsf_has(mon->race->death_spell_flags, i)) {
+			do_mon_spell(i, mon, visible);
+		}
+	}
+
 	/* Check if we finished a quest */
 	quest_check(mon);
 }

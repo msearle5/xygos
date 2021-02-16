@@ -3809,6 +3809,12 @@ bool effect_handler_SPOT(effect_handler_context_t *context)
 			}
 		}
 		flg |= PROJECT_JUMP;
+	} else if (context->origin.what == SRC_MONSTER) {
+		int midx = context->origin.which.monster;
+		struct monster *mon = midx > 0 ? cave_monster(cave, midx) : NULL;
+		if (mon) {
+			pgrid = mon->grid;
+		}
 	}
 
 	/* Aim at the target, explode */
