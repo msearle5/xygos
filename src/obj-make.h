@@ -43,6 +43,6 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
 void acquirement(struct loc grid, int level, int num, bool great);
 struct object_kind *money_kind(const char *name, int value);
 struct object *make_gold(int lev, char *coin_type);
-bool make_artifact(struct object *obj);
+struct object *make_artifact(int lev, int tval);
 
 #endif /* OBJECT_MAKE_H */

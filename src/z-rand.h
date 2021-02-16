@@ -147,6 +147,13 @@ void Rand_init(void);
 u32b Rand_div(u32b m);
 
 /**
+ * Generates a random double X where "0 <= X < M" holds.
+ *
+ * The value X falls along a uniform distribution.
+ */
+double Rand_double(double m);
+
+/**
  * Generate a signed random integer within `stand` standard deviations of
  * `mean`, following a normal distribution.
  */

@@ -1360,6 +1360,8 @@ static void revive_uniques(void)
 	}
 }
 
+double *wiz_stats_prob;
+
 /* Generate non-special artifacts at each level 1-100 (by steps).
  * Record the number of each generated.
  */
@@ -1371,6 +1373,7 @@ static void artifact_stats(void)
 		25, 30, 35, 40, 45, 50,
 		60, 70, 80, 90, 98, 127
 	};
+	double *prob[sizeof(levels)];
 	struct object *obj;
 	int *count = mem_zalloc(sizeof(int) * z_info->a_max * sizeof(levels));
 	int *artifacts = mem_zalloc(sizeof(int) * sizeof(levels));
@@ -1386,15 +1389,24 @@ static void artifact_stats(void)
 		do {
 			objects[i]++;
 			/* Make a non-artifact object */
-			obj = make_object(cave, lev, false, false, false, NULL, 0);
-			bool ok = make_artifact(obj);
+			obj = make_artifact(lev, 0);
+			bool ok = (obj != NULL);
 			if (ok) {
 				obj->artifact->created = false;
 				artifacts[i]++;
 				int a_idx = obj->artifact - a_info;
 				levcount[a_idx]++;
+				object_delete(&obj);
 			}
-		} while (artifacts[i] < 10000);
+		} while (artifacts[i] < 100);
+		prob[i] = mem_alloc(sizeof(double) * z_info->a_max);
+		memcpy(prob[i], wiz_stats_prob, sizeof(double) * z_info->a_max);
+		double sum = 0.0;
+		/* Normalize */
+		for(int j=0;j<z_info->a_max;j++)
+			sum += prob[i][j];
+		for(int j=0;j<z_info->a_max;j++)
+			prob[i][j] = (prob[i][j] * 100.0) / sum;
 		fprintf(stderr,"Level %d, %d arts, %d objs\n", lev, artifacts[i], objects[i]);
 	}
 	char buf[1024];
@@ -1412,13 +1424,23 @@ static void artifact_stats(void)
 		strcpy(buf + (30 - strlen(a_info[a].name)), a_info[a].name);
 		for(int i=0;i<30;i++)
 			buf[i] = ((buf[i] >= ' ') && (buf[i] <= 'z')) ? buf[i] : '-';
-		for(int l=0;l<sizeof(levels);l++) {
+		for(size_t l=0;l<sizeof(levels);l++) {
 			int *levcount = count + (z_info->a_max * l);
 			strnfmt(num, sizeof(num), "%9d ", levcount[a]);
 			strcat(buf+30, num);
 		}
 		strcat(buf, "\n");
 		file_putf(stats_log, buf);
+
+		memset(buf, ' ', 32);
+		buf[32] = 0;
+		for(size_t l=0;l<sizeof(levels);l++) {
+			strnfmt(num, sizeof(num), (prob[l][a] < 10.0) ? "%.07lf " : "%.06lf ", prob[l][a]);
+			strcat(buf+30, num);
+		}
+		strcat(buf, "\n");
+		file_putf(stats_log, buf);
+
 	}
 	player->depth = depth;
 }

@@ -176,6 +176,21 @@ void Rand_init(void)
 	}
 }
 
+/** Random double.
+ * Produce two 32-bit integers, scale by r*2^-32 and r*2^-64 and add
+ * to give a uniform variate between 0 (inc.) and r (exc.)
+ */
+#define M_RAN_INVM32    2.32830643653869628906e-010
+double Rand_double(double r)
+{
+	u32b low = WELLRNG1024a();
+	u32b high = WELLRNG1024a();
+	double dh = high;
+	dh *= (M_RAN_INVM32 * r);
+	double dl = low;
+	dl *= ((M_RAN_INVM32 * M_RAN_INVM32) * r);
+	return dh + dl;
+}
 
 /**
  * Extract a "random" number from 0 to m - 1, via division.

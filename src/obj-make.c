@@ -33,6 +33,9 @@
 #include "obj-util.h"
 #include <math.h>
 
+/** Let the stats see into the artifact probability table */
+extern double *wiz_stats_prob;
+
 /**
  * Stores cumulative probability distribution for objects at each level.  The
  * value at ilv * (z_info->k_max + 1) + itm is the probablity, out of
@@ -572,120 +575,15 @@ void copy_artifact_data(struct object *obj, const struct artifact *art)
 	}
 }
 
-
-/**
- * Mega-Hack -- Attempt to create one of the "Special Objects".
- *
- * We are only called from "make_object()"
- *
- * Note -- see "make_artifact()" and "apply_magic()".
- *
- * We *prefer* to create the special artifacts in order, but this is
- * normally outweighed by the "rarity" rolls for those artifacts.
- */
-static struct object *make_artifact_special(int level, int tval)
+static double make_artifact_probs(double *prob, int lev, int tval, bool max)
 {
-	int i;
-	struct object *new_obj;
-
-	/* No artifacts, do nothing */
-	if (OPT(player, birth_no_artifacts)) return NULL;
-
-	/* No artifacts in the town */
-	if (!player->depth) return NULL;
-
-	/* Check the special artifacts */
-	for (i = 0; i < z_info->a_max; ++i) {
+	double total = 0.0;
+	for (int i = 0; i < z_info->a_max; i++) {
 		struct artifact *art = &a_info[i];
 		struct object_kind *kind = lookup_kind(art->tval, art->sval);
 
-		/* Skip "empty" artifacts */
-		if (!art->name) continue;
-
-		/* Make sure the kind was found */
-		if (!kind) continue;
-
-		/* Make sure it's the right tval (if given) */
-		if (tval && (tval != art->tval)) continue;
-
-		/* Skip non-special artifacts */
-		if (!kf_has(kind->kind_flags, KF_INSTA_ART)) continue;
-
-		/* Cannot make an artifact twice */
-		if (art->created) continue;
-
-		/* Enforce minimum "depth" (loosely) */
-		if (art->alloc_min > player->depth) {
-			/* Get the "out-of-depth factor" */
-			int d = (art->alloc_min - player->depth) * 2;
-
-			/* Roll for out-of-depth creation */
-			if (randint0(d) != 0) continue;
-		}
-
-		/* Enforce maximum depth (strictly) */
-		if (art->alloc_max < player->depth) continue;
-
-		/* Artifact "rarity roll" */
-		if (randint1(100) > art->alloc_prob) continue;
-
-		/* Enforce minimum "object" level (loosely) */
-		if (kind->level > level) {
-			/* Get the "out-of-depth factor" */
-			int d = (kind->level - level) * 5;
-
-			/* Roll for out-of-depth creation */
-			if (randint0(d) != 0) continue;
-		}
-
-		/* Assign the template */
-		new_obj = object_new();
-		object_prep(new_obj, kind, art->alloc_min, RANDOMISE);
-
-		/* Mark the item as an artifact */
-		new_obj->artifact = art;
-
-		/* Copy across all the data from the artifact struct */
-		copy_artifact_data(new_obj, art);
-
-		/* Mark the artifact as "created" */
-		art->created = true;
-
-		/* Success */
-		return new_obj;
-	}
-
-	/* Failure */
-	return NULL;
-}
-
-
-/**
- * Attempt to change an object into an artifact.  If the object is already
- * set to be an artifact, use that, or otherwise use a suitable randomly-
- * selected artifact.
- *
- * This routine should only be called by "apply_magic()"
- *
- * Note -- see "make_artifact_special()" and "apply_magic()"
- */
-bool make_artifact(struct object *obj)
-{
-	int i;
-
-	/* Make sure birth no artifacts isn't set */
-	if (OPT(player, birth_no_artifacts)) return false;
-
-	/* No artifacts in the town */
-	if (!player->depth) return false;
-
-	/* Paranoia -- no "plural" artifacts */
-	if (obj->number != 1) return false;
-
-	/* Check the artifact list (skip the "specials") */
-	for (i = 0; !obj->artifact && i < z_info->a_max; i++) {
-		struct artifact *art = &a_info[i];
-		struct object_kind *kind = lookup_kind(art->tval, art->sval);
+		/* No chance by default */
+		prob[i] = 0.0;
 
 		/* Skip "empty" items */
 		if (!art->name) continue;
@@ -693,43 +591,116 @@ bool make_artifact(struct object *obj)
 		/* Make sure the kind was found */
 		if (!kind) continue;
 
-		/* Must have the correct fields */
-		if (art->tval != obj->tval) continue;
-		if (art->sval != obj->sval) continue;
-
-		/* Enforce maximum depth (strictly) */
-		if (art->alloc_max < player->depth) continue;
-
 		/* Cannot make an artifact twice */
 		if (art->created) continue;
 
-		/* Skip special artifacts */
-		if (kf_has(kind->kind_flags, KF_INSTA_ART)) continue;
+		/* Must have the correct tval, if one is provided */
+		if ((tval != 0) && (art->tval != tval)) continue;
 
-		/* XXX XXX Enforce minimum "depth" (loosely) */
-		if (art->alloc_min > player->depth)
-		{
-			/* Get the "out-of-depth factor" */
-			int d = (art->alloc_min - player->depth) * 2;
+		/* Rarity - sets the basic probability */
+		prob[i] = art->alloc_prob;
 
-			/* Roll for out-of-depth creation */
-			if (randint0(d) != 0) continue;
+		/* Enforce maximum depth (strictly, if max mode is set) */
+		if (art->alloc_max < player->depth) {
+			if (max) {
+				prob[i] = 0.0;
+			} else {
+				/* Get the "out-of-depth factor" */
+				prob[i] /= ((player->depth - art->alloc_max) + 1) * 10;
+			}
 		}
 
-		/* We must make the "rarity roll" */
-		if (randint1(100) > art->alloc_prob) continue;
+		/* Enforce minimum "depth" (loosely) */
+		else if (art->alloc_min > player->depth) {
+			/* Get the "out-of-depth factor" */
+			prob[i] /= 1.0 + ((art->alloc_min - player->depth) * (art->alloc_min - player->depth) * 0.1);
+		}
 
-		/* Mark the item as an artifact */
-		obj->artifact = art;
+		/* If in depth, reduce probability at higher levels */
+		else {
+			prob[i] *= (art->alloc_max + 1) - player->depth;
+			prob[i] /= (art->alloc_max + 1) - art->alloc_min;
+		}
+
+		total += prob[i];
+	}
+	return total;
+}
+
+/**
+ * Attempt to create an artifact.
+ *
+ * With the exceptions of being in town or having artifacts turned
+ * off, this will always create an artifact if there are any artifacts
+ * left to create - or if tval is specified, any artifacts left of
+ * that tval. This means that even though the maximum depth is
+ * otherwise enforced strictly, if this is the only way to produce
+ * an artifact then the max depth will be treated as a soft limit.
+ *
+ * This routine should only be called by "apply_magic()" and stats.
+ *
+ * Note -- see "apply_magic()"
+ */
+struct object *make_artifact(int lev, int tval)
+{
+	static int prev_lev = -1;
+	static int prev_tval = -1;
+	static double *prob;
+	static double total;
+
+	if (!prob)
+		prob = mem_zalloc(z_info->a_max * sizeof(double));
+
+	wiz_stats_prob = prob;
+
+	struct object *obj = NULL;
+
+	/* Make sure birth no artifacts isn't set */
+	if (OPT(player, birth_no_artifacts)) return NULL;
+
+	/* No artifacts in the town */
+	if (!player->depth) return NULL;
+
+	/* Check the artifact list */
+	if ((lev != prev_lev) || (tval != prev_tval)) {
+		total = make_artifact_probs(prob, lev, tval, true);
+		if (total == 0.0) {
+			/* No matches. Try with loose maximum depth */
+			total = make_artifact_probs(prob, lev, tval, false);
+		}
 	}
 
-	if (obj->artifact) {
-		copy_artifact_data(obj, obj->artifact);
-		obj->artifact->created = true;
-		return true;
-	}
+	/* Still nothing - give up */
+	if (total == 0.0)
+		return NULL;
 
-	return false;
+	/* Select an artifact.
+	 * Generate a random value between 0 and the total probability, scan the array until
+	 * the running sum exceeds it.
+	 **/
+	double rand = Rand_double(total);
+	double sum = 0.0;
+	int a_idx = 0;
+	for (a_idx=0;a_idx<z_info->a_max;a_idx++) {
+		sum += prob[a_idx];
+		if (rand < sum) {
+			break;
+		}
+	}
+	assert(a_idx < z_info->a_max);
+
+	/* Generate the base item */
+	struct artifact *art = &a_info[a_idx];
+	struct object_kind *kind = lookup_kind(art->tval, art->sval);
+	obj = object_new();
+	object_prep(obj, kind, art->alloc_min, RANDOMISE);
+
+	/* Mark the item as an artifact */
+	obj->artifact = art;
+	copy_artifact_data(obj, obj->artifact);
+	obj->artifact->created = true;
+
+	return obj;
 }
 
 
@@ -939,7 +910,6 @@ static int apply_curse(struct object *obj, int lev)
 int apply_magic(struct object *obj, int lev, bool allow_artifacts, bool good,
 				bool great, bool extra_roll)
 {
-	int i;
 	s16b power = 0;
 
 	/* Chance of being `good` and `great` */
@@ -964,24 +934,6 @@ int apply_magic(struct object *obj, int lev, bool allow_artifacts, bool good,
 		/* Roll for "great" */
 		if (great || (randint0(100) < great_chance))
 			power = 2;
-	}
-
-	/* Roll for artifact creation */
-	if (allow_artifacts) {
-		int rolls = 0;
-
-		/* Get one roll if excellent */
-		if (power >= 2) rolls = 1;
-
-		/* Get two rolls if forced great */
-		if (great) rolls = 2;
-		
-		/* Give some extra rolls for uniques and acq scrolls */
-		if (extra_roll) rolls += 2;
-
-		/* Roll for artifacts if allowed */
-		for (i = 0; i < rolls; i++)
-			if (make_artifact(obj)) return 3;
 	}
 
 	/* Try to make an ego item */
@@ -1159,6 +1111,32 @@ struct object_kind *get_obj_num(int level, bool good, int tval)
 	return objkind_byid(item);
 }
 
+static double artifact_prob(double depth)
+{
+	/* Debug: print the artifact generation probability table */
+	static bool first = false;
+	if (first) {
+		first = false;
+		for(int i=1;i<=100;i++) {
+			double d = artifact_prob(i);
+			fprintf(stderr,"l%d, prob %lf\n", i, d);
+		}
+	}
+	
+	/* The following weird math is a combination of two ease curves (S shape, 3x^2-2x^3).
+	 * 'Full' gives the overall shape.
+	 * 'Mid' gives some boost at midlevels centered at 'midpoint'.
+	 *  Finally there is a small constant addition to make things more generous at low levels.
+	 */
+	double x = MIN(depth, 100) * 0.01;
+	double full = ((x*x)*3)-((x*x*x)*2);
+	double midpoint = 0.1;
+	double midlin = (x < midpoint) ? (x / midpoint) : (1.0 - x) / (1.0 - midpoint);
+	double mid = ((midlin*midlin)*3)-((midlin*midlin*midlin)*2);
+	double chance = (full + (mid * 0.5)) / 140;
+	chance += 0.0002;
+	return chance;
+}
 
 /**
  * Attempt to make an object
@@ -1179,57 +1157,76 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
 {
 	int base, tries = 3;
 	struct object_kind *kind = NULL;
-	struct object *new_obj;
+	struct object *new_obj = NULL;
 
-	/* Try to make a special artifact */
-	if (one_in_(good ? 10 : 1000)) {
-		new_obj = make_artifact_special(lev, tval);
-		if (new_obj) {
-			if (value) *value = object_value_real(new_obj, 1);
-			return new_obj;
-		}
+	/* Try to make an artifact.
+	 * There are no artifacts in the town, more are generated at depth and
+	 * the chances go up for good, great or extra.
+	 **/
+	if ((!name) && (player->depth)) {
+		double depth = player->depth;
+		if (extra_roll)
+			depth = (depth * 1.15) + 20;
+		else if (great)
+			depth = (depth * 1.1) + 15;
+		else if (good)
+			depth = (depth * 1.05) + 5;
+		double chance = artifact_prob(depth);
 
-		/* If we failed to make an artifact, the player gets a good item */
-		good = true;
-	}
-
-	/* Base level for the object */
-	base = (good ? (lev + 10) : lev);
-
-	if (name) {
-		/* Use the given name, and either the given tval or try all */
-		int sval = -1;
-
-		if (tval) {
-			sval = lookup_sval(tval, name);
-		} else {
-			for(tval=0; tval<TV_MAX; tval++) {
-				sval = lookup_sval(tval, name);
-				if (sval >= 0)
-					break;
+		if (Rand_double(1.0) < chance) {
+			/* This will always create an artifact if there are any artifacts
+			 * left to create - or if tval is specified, any artifacts left of
+			 * that tval.
+			 **/
+			new_obj = make_artifact(lev, tval);
+			if (!new_obj) {
+				good = true;
+				great = true;
+			} else {
+				kind = new_obj->kind;
 			}
 		}
-		if (sval >= 0) {
-			kind = lookup_kind(tval, sval);
-		}
-	} else {
-		/* Try to choose an object kind */
-		while (tries) {
-			kind = get_obj_num(base, good || great, tval);
-			break;
-		}
 	}
-	if (!kind)
-		return NULL;
 
-	/* Make the object, prep it and apply magic */
-	new_obj = object_new();
-	object_prep(new_obj, kind, lev, RANDOMISE);
-	apply_magic(new_obj, lev, true, good, great, extra_roll);
+	if (!new_obj) {
+		/* Base level for the object */
+		base = (good ? (lev + 10) : lev);
 
-	/* Generate multiple items */
-	if (!new_obj->artifact && kind->gen_mult_prob >= randint1(100))
-		new_obj->number = randcalc(kind->stack_size, lev, RANDOMISE);
+		if (name) {
+			/* Use the given name, and either the given tval or try all */
+			int sval = -1;
+
+			if (tval) {
+				sval = lookup_sval(tval, name);
+			} else {
+				for(tval=0; tval<TV_MAX; tval++) {
+					sval = lookup_sval(tval, name);
+					if (sval >= 0)
+						break;
+				}
+			}
+			if (sval >= 0) {
+				kind = lookup_kind(tval, sval);
+			}
+		} else {
+			/* Try to choose an object kind */
+			while (tries) {
+				kind = get_obj_num(base, good || great, tval);
+				break;
+			}
+		}
+		if (!kind)
+			return NULL;
+
+		/* Make the object, prep it and apply magic */
+		new_obj = object_new();
+		object_prep(new_obj, kind, lev, RANDOMISE);
+		apply_magic(new_obj, lev, true, good, great, extra_roll);
+
+		/* Generate multiple items */
+		if (!new_obj->artifact && kind->gen_mult_prob >= randint1(100))
+			new_obj->number = randcalc(kind->stack_size, lev, RANDOMISE);
+	}
 
 	if (new_obj->number > new_obj->kind->base->max_stack)
 		new_obj->number = new_obj->kind->base->max_stack;

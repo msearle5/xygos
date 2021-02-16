@@ -998,7 +998,6 @@ void py_attack(struct player *p, struct loc grid)
 	 */
 	struct attack *att[256];
 	int attacks = get_extra_attacks(att, 256);
-	fprintf(stderr,"%d attacks\n", attacks);
 	for(int i=0; i<attacks; i++) {
 		if (slain)
 			break;
