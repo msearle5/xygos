@@ -43,6 +43,7 @@ enum monster_sex {
 	MON_SEX_NEUTER = 0,
 	MON_SEX_MALE,
 	MON_SEX_FEMALE,
+	MON_SEX_EITHER,
 	MON_SEX_MAX,
 };
 
@@ -681,7 +682,9 @@ void lore_multiplier_speed(textblock *tb, const struct monster_race *race)
  */
 static monster_sex_t lore_monster_sex(const struct monster_race *race)
 {
-	if (rf_has(race->flags, RF_FEMALE))
+	if (rf_has(race->flags, RF_FEMALE) && rf_has(race->flags, RF_MALE))
+		return MON_SEX_EITHER;
+	else if (rf_has(race->flags, RF_FEMALE))
 		return MON_SEX_FEMALE;
 	else if (rf_has(race->flags, RF_MALE))
 		return MON_SEX_MALE;
@@ -705,6 +708,7 @@ static const char *lore_pronoun_nominative(monster_sex_t sex, bool title_case)
 		{"it", "It"},
 		{"he", "He"},
 		{"she", "She"},
+		{"they", "They"},
 	};
 
 	int pronoun_index = MON_SEX_NEUTER, case_index = 0;
@@ -734,6 +738,7 @@ static const char *lore_pronoun_possessive(monster_sex_t sex, bool title_case)
 		{"its", "Its"},
 		{"his", "His"},
 		{"her", "Her"},
+		{"their", "Their"},
 	};
 
 	int pronoun_index = MON_SEX_NEUTER, case_index = 0;

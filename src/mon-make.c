@@ -1029,6 +1029,20 @@ s16b place_monster(struct chunk *c, struct loc grid, struct monster *mon,
 		mon_create_mimicked_object(c, new_mon, m_idx);
 	}
 
+	/* Select male/female */
+	bool male = rf_has(new_mon->race->flags, RF_MALE);
+	bool female = rf_has(new_mon->race->flags, RF_FEMALE);
+	if (male && female) {
+		if (one_in_(2))
+			male = false;
+		else
+			female = false;
+	}
+	if (male)
+		mflag_on(mon->mflag, MFLAG_MALE);
+	else if (female)
+		mflag_on(mon->mflag, MFLAG_FEMALE);
+
 	/* Result */
 	return m_idx;
 }
