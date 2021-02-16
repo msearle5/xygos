@@ -33,6 +33,7 @@ extern void roll_hp(void);
 void do_cmd_birth_init(struct command *cmd);
 void do_cmd_birth_reset(struct command *cmd);
 void do_cmd_choose_race(struct command *cmd);
+void do_cmd_choose_race_ext(struct command *cmd);
 void do_cmd_choose_class(struct command *cmd);
 void do_cmd_buy_stat(struct command *cmd);
 void do_cmd_sell_stat(struct command *cmd);

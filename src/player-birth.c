@@ -1101,6 +1101,17 @@ void do_cmd_choose_race(struct command *cmd)
 	rolled_stats = false;
 }
 
+void do_cmd_choose_race_ext(struct command *cmd)
+{
+	int choice;
+	cmd_get_arg_choice(cmd, "choice", &choice);
+	player_generate(player, player_id2race(choice), NULL, false);
+
+	reset_stats(stats, points_spent, &points_left, false);
+	generate_stats(stats, points_spent, &points_left);
+	rolled_stats = false;
+}
+
 void do_cmd_choose_class(struct command *cmd)
 {
 	int choice;

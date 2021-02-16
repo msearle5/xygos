@@ -198,6 +198,8 @@ struct player_race {
 	const char *name;
 	const char *desc;			/**< Description */
 
+	const char *exts;			/**< Extensions */
+
 	unsigned int ridx;
 
 	int r_mhp;					/**< Hit-dice modifier */
@@ -224,6 +226,8 @@ struct player_race {
 
 	bitflag flags[OF_SIZE];		/**< Racial (object) flags */
 	bitflag pflags[PF_SIZE];	/**< Racial (player) flags */
+
+	bool extension;
 
 	struct history_chart *history;
 

@@ -2136,6 +2136,21 @@ static enum parser_error parse_p_race_name(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_p_race_ext(struct parser *p) {
+	parse_p_race_name(p);
+	struct player_race *h = parser_priv(p);
+	h->extension = true;
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_p_race_exts(struct parser *p) {
+	struct player_race *r = parser_priv(p);
+	if (!r)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	r->exts = string_make(parser_getstr(p, "exts"));
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_p_race_stats(struct parser *p) {
 	struct player_race *r = parser_priv(p);
 	if (!r)
@@ -2428,6 +2443,8 @@ struct parser *init_parse_p_race(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
 	parser_reg(p, "name str name", parse_p_race_name);
+	parser_reg(p, "ext str name", parse_p_race_ext);
+	parser_reg(p, "exts str exts", parse_p_race_exts);
 	parser_reg(p, "stats int str int int int wis int dex int con int chr int spd", parse_p_race_stats);
 	parser_reg(p, "talents uint base uint max", parse_p_race_talents);
 	parser_reg(p, "skill-disarm-phys int disarm", parse_p_race_skill_disarm_phys);
