@@ -5972,7 +5972,7 @@ int stealth_danger(void)
 					mlevel -= dist / 2;
 					losmonsters++;
 				}
-				
+
 				if (mlevel > level)
 					level = mlevel;
 			}
@@ -5987,7 +5987,7 @@ int stealth_danger(void)
 	int ulevel = MAX(1, player->chp);
 
 	int danger = (monlevel * monlevel * 10000) / (ulevel * ulevel);
-	return MIN(danger, 1000);
+	return MIN(danger, MIN(1000, player->depth * 20));
 }
 
 /**
@@ -6003,7 +6003,7 @@ bool effect_handler_HORNS(effect_handler_context_t *context)
 										"a loud trill", "two notes", "a long note", "three notes",
 										"a challenge", "loudly", "unexpectedly", " a flourish", "shrilly" };
 		msg("Your horns %s out %s!", honk[randint0(sizeof(honk)/sizeof(*honk))], music[randint0(sizeof(music)/sizeof(*music))]);
-		
+
 		/* Aggro */
 		effect_handler_WAKE(context);
 	}

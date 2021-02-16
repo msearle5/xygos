@@ -410,11 +410,12 @@ flags:SPIRIT | CLEAR_WEB
 desc:Townsfolk
 
 # Lemmings - essentially humanoid rodents.
+# They are fearless and ignore hostile terrain.
 name:lemming
 glyph:l
 pain:4
-flags:ANIMAL | CLEAR_WEB | OPEN_DOOR | BASH_DOOR | CLEAR_WEB | SPIRIT
-flags:NO_FEAR
+flags:ANIMAL | CLEAR_WEB | OPEN_DOOR | BASH_DOOR | SPIRIT
+flags:NO_FEAR | ALL_TERRAIN
 desc:Lemming
 
 # High hitpoints and armor class

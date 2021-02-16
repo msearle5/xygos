@@ -188,6 +188,10 @@ static bool monster_can_move(struct chunk *c, struct monster *mon,
 static bool monster_hates_grid(struct chunk *c, struct monster *mon,
 							   struct loc grid)
 {
+	/* Some creatures ignore damaging terrain */
+	if (rf_has(mon->race->flags, RF_ALL_TERRAIN))
+		return false;
+
 	/* Only some creatures can handle damaging terrain */
 	if (square_isdamaging(c, grid) &&
 		!rf_has(mon->race->flags, square_feat(c, grid)->resist_flag)) {

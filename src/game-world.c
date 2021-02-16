@@ -374,7 +374,7 @@ static void decrease_timeouts(void)
 
 	/* Check for abilities with random activation */
 	for(int i=0;i<PF_MAX;i++) {
-		if (ability[i] && ability[i]->effect_randomly && one_in_(ability[i]->effect_randomly)) {
+		if (ability[i] && player_has(player, i) && ability[i]->effect_randomly && one_in_(ability[i]->effect_randomly)) {
 			bool ident;
 			effect_do(ability[i]->effect, source_player(), NULL, &ident, true, 0, 0, 0, NULL);
 		}
@@ -793,6 +793,8 @@ void process_world(struct chunk *c)
 								 * to get low level ones - when very low food
 								 **/
 								bool shroom = (randint0(PY_FOOD_HUNGRY * 3) < player->timed[TMD_FOOD]);
+								if (square_isradioactive(cave, player->grid))
+									shroom = true;
 								bool hilevel = (randint0(PY_FOOD_HUNGRY * 2) < player->timed[TMD_FOOD]);
 								int level = player->depth;
 								if (hilevel) {

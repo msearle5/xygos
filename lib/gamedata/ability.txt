@@ -254,7 +254,7 @@ lose:Your horns shrivel away.
 blow:butt:3d6
 flag:mutation
 flag:nasty
-random-effect:5
+random-effect:10
 effect:HORNS
 ## Skin muts ##
 

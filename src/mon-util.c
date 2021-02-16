@@ -1348,6 +1348,20 @@ void monster_take_terrain_damage(struct monster *mon)
 		if (fear && monster_is_visible(mon)) {
 			add_monster_message(mon, MON_MSG_FLEE_IN_TERROR, true);
 		}
+	}
+
+	/* Damage the monster */
+	if (square_isradioactive(cave, mon->grid)) {
+		bool fear = false;
+
+		if (!rf_has(mon->race->flags, RF_IM_RADIATION)) {
+			mon_take_nonplayer_hit(100 + randint1(100), mon, MON_MSG_LOOKS_SICK,
+								   MON_MSG_COLLAPSES);
+		}
+
+		if (fear && monster_is_visible(mon)) {
+			add_monster_message(mon, MON_MSG_FLEE_IN_TERROR, true);
+		}
 	}	
 }
 
