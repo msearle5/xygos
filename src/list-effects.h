@@ -67,8 +67,7 @@ EFFECT(TELEPORT,					false,	"range",	2,		EFINFO_TELE,	"teleports %s randomly %s"
 EFFECT(TELEPORT_TO,					false,	NULL,		0,		EFINFO_NONE,	"teleports toward a target")
 EFFECT(TELEPORT_LEVEL,				false,	NULL,		0,		EFINFO_NONE,	"teleports you one level up or down")
 EFFECT(RUBBLE,						false,	NULL,		0,		EFINFO_NONE,	"causes rubble to fall around you")
-EFFECT(GRANITE,						false,	NULL,
-0,		EFINFO_NONE,	"causes a granite wall to fall behind you")
+EFFECT(GRANITE,						false,	NULL,		0,		EFINFO_NONE,	"causes a granite wall to fall behind you")
 EFFECT(DESTRUCTION,					false,	NULL,		1,		EFINFO_QUAKE,	"destroys an area around you in the shape of a circle radius %d, and blinds you for 1d10+10 turns")
 EFFECT(EARTHQUAKE,					false,	NULL,		1,		EFINFO_QUAKE,	"causes an earthquake around you of radius %d")
 EFFECT(LIGHT_LEVEL,					false,	NULL,		0,		EFINFO_NONE,	"completely lights up and magically maps the level")
@@ -116,4 +115,5 @@ EFFECT(HABANERO,					false, "dam",		3,		EFINFO_NONE,	"may make you resist cold f
 EFFECT(SNOZZCUMBER,					false, NULL,		0,		EFINFO_NONE,	"may turn you into a giant")
 EFFECT(PRINT,						false, NULL,		2,		EFINFO_NONE,	"creates an item") 
 EFFECT(MUTATE,						false, NULL,		0,		EFINFO_NONE,	"causes you to mutate strangely (or perhaps lose a mutation)")
-EFFECT(HORNS,						false, NULL,		0,		EFINFO_NONE,	"causes a loud honk that wakes naerby monsters")  
+EFFECT(HORNS,						false, NULL,		0,		EFINFO_NONE,	"causes a loud honk that wakes nearby monsters")  
+EFFECT(FORCE_REGEN,					false, NULL,		0,		EFINFO_NONE,	"forces regeneration")

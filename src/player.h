@@ -669,4 +669,7 @@ void player_cleanup_members(struct player *p);
 struct player_race *player_id2race(guid id);
 struct player_race *get_race_by_name(const char *name);
 
+/* r_timelord.c */
+void timelord_force_regen(void);
+
 #endif /* !PLAYER_H */

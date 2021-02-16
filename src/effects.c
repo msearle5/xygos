@@ -6001,7 +6001,7 @@ bool effect_handler_HORNS(effect_handler_context_t *context)
 		static const char *honk[] =		{ "honk", "blare", "blast", "hoot", "call", "sing", "trumpet", "bray" };
 		static const char *music[] =	{ "musically", "tunefully", "mournfully", "a fanfare",
 										"a loud trill", "two notes", "a long note", "three notes",
-										"a challenge", "loudly", "unexpectedly", " a flourish", "shrilly" };
+										"a challenge", "loudly", "unexpectedly", " a flourish", "shrilly", "reveille" };
 		msg("Your horns %s out %s!", honk[randint0(sizeof(honk)/sizeof(*honk))], music[randint0(sizeof(music)/sizeof(*music))]);
 
 		/* Aggro */
@@ -6011,7 +6011,14 @@ bool effect_handler_HORNS(effect_handler_context_t *context)
 	return (true);
 }
 
-
+/**
+ * Time Lord regeneration
+ **/
+bool effect_handler_FORCE_REGEN(effect_handler_context_t *context)
+{
+	timelord_force_regen();
+	return (true);
+}
 
 /**
  * ------------------------------------------------------------------------

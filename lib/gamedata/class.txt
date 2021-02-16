@@ -28,7 +28,7 @@
 # player-flags:class flags
 # magic:spell_first:spell_weight:num_books
 # book:name
-# spell:name:level:mana:fail:exp
+# spell:name:level:fail:exp:stat:hp:cooldown
 # seffect:seffect:subtype (if needed):radius (if needed):parameter (if needed)
 # sdice:dice string
 # sexpr:dice expression

@@ -150,6 +150,14 @@ weightmod:200
 obj-flags:SUST_CON | REGEN
 desc:Time Lords take a human form, which changes when they regenerate. They can regenerate as many as 12 times, but it is always chancy - especially for the less experienced, and experience is not so easily gained (they have seen it all before). But spacetime is yours to command, with more tricks available as you advance, and that's the way to avoid needing to take that chance.
 
+book:[Time-Lord]
+# spell:name:level:fail:exp:stat:hp:cooldown
+spell:Force Regeneration:25:22:40:2:2d4:1
+seffect:FORCE_REGEN
+sdesc:Forces your body into regeneration by an effort of will. This is just as chancy as regeneration at death is, though and failure means losing a regeneration as well as some brief but nasty mental effects.
+
+
+
 ext:Mutant
 stats:-1:-1:0:-1:-1:-3:0
 hitdie:-15

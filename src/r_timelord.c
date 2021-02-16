@@ -1,3 +1,4 @@
+#include "game-input.h"
 #include "message.h"
 #include "player.h"
 #include "player-birth.h"
@@ -56,17 +57,29 @@ static const char *once[] = {
 	"ten times", "eleven times", "twelve times"
 };
 
-/* Cheat death? Return true to avoid death.
+static void timelord_regen_status(void)
+{
+	struct player *p = player;
+
+	p->timed[TMD_STUN] = damroll(2, 4);
+	p->timed[TMD_AMNESIA] = damroll(3, 8);
+	p->timed[TMD_CONFUSED] = damroll(3, 12);
+	p->timed[TMD_SCRAMBLE] = damroll(3, 16);
+}
+
+/* Regenerate (on death or forced).
+ * Cheat death? Return true to avoid death.
  * First, calculate the number of regenerations allowed at your (max) level and determine
  * whether you have one left.
  * If so, use the max level to get a chance of survival. If you pass, re-roll the character
  * (height, weight, HP), scramble the stats, and put you in town in a weakened state (but not
  * so much that the denizens are much more dangerous to you - so remove all mobs?)
  **/
-static void timelord_death(bool *success)
+static void timelord_do_regen(bool *success, bool *tried)
 {
 	struct timelord_state *state = (struct timelord_state *)player->race->state;
 	*success = false;
+	*tried = false;
 
 	s32b allowed_regens = regens[player->max_lev];
 	if (state->regenerations >= allowed_regens) {
@@ -84,6 +97,7 @@ static void timelord_death(bool *success)
 	 * This is a chance per 10000 of success.
 	 */
 	s32b chance = ((player->max_lev * 9375) / PY_MAX_LEVEL) - 875;
+	*tried = true;
 	if (randint0(10000) > chance) {
 		// explain
 		msg("You attempt to regenerate into a new form, but are unsuccessful.");
@@ -123,10 +137,7 @@ static void timelord_death(bool *success)
 	p->timed[TMD_FOOD] = PY_FOOD_FULL - 1;
 
 	/* But confuse, etc. Not for long - this is more for appearance than to present a real threat */
-	p->timed[TMD_STUN] = damroll(2, 4);
-	p->timed[TMD_AMNESIA] = damroll(3, 8);
-	p->timed[TMD_CONFUSED] = damroll(3, 12);
-	p->timed[TMD_SCRAMBLE] = damroll(3, 16);
+	timelord_regen_status();
 
 	/* Experience is drained, including a small permanent loss */
 	player_exp_lose(p, p->max_exp / (40 + randint0(20)), true); // ~2%
@@ -148,6 +159,40 @@ static void timelord_death(bool *success)
 	/* Saved! */
 	*success = true;
 	return;
+}
+
+/* Regenerate - on death
+ **/
+static void timelord_death(bool *success)
+{
+	bool dummy;
+	timelord_do_regen(success, &dummy);
+}
+
+/* Regeneration - forced
+ */
+void timelord_force_regen(void)
+{
+	assert(streq(player->race->name, "Time-Lord"));
+
+	/* First check (as this is risky) */
+	if (!get_check("Are you sure you want to force regeneration? " ))
+		return;
+
+	/* Try to regen */
+	bool success = false;
+	bool tried = false;
+	timelord_do_regen(&success, &tried);
+
+	/* Failure => statuses.
+	 * If you failed because of having no regenerations left, this doesn't happen
+	 * (you didn't really start trying to do anything).
+	 **/
+	if (tried && !success) {
+		struct timelord_state *state = (struct timelord_state *)player->race->state;
+		timelord_regen_status();
+		state->regenerations++;
+	}
 }
 
 static void timelord_levelup(int from, int to)
