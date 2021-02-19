@@ -914,7 +914,7 @@ void compute_ui_entry_values_for_player(const struct ui_entry *entry,
 			}
 		} else if (streq(entry->p_abilities[i].ability->type,
 			"element")) {
-			int v = p->race->el_info[ind].res_level;
+			int v = MAX(p->race->el_info[ind].res_level, p->extension->el_info[ind].res_level);
 			int a;
 
 			if (entry->flags & ENTRY_FLAG_TIMED_AUX) {
@@ -1015,7 +1015,7 @@ void compute_ui_entry_values_for_player(const struct ui_entry *entry,
 			 * separately.
 			 */
 			if (ind == OBJ_MOD_INFRA) {
-				v = p->race->infra;
+				v = p->race->infra + p->extension->infra;
 				a = 0;
 				if (entry->obj_props[i].isaux) {
 					int t = v;

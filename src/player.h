@@ -48,8 +48,8 @@ enum
 	PF_MAX
 };
 
-#define player_hookz(X)			if (player->class->X) { player->class->X(); } if (player->race->X) { player->race->X(); }
-#define player_hook(X, ...)		if (player->class->X) { player->class->X(__VA_ARGS__); } if (player->race->X) player->race->X(__VA_ARGS__);
+#define player_hookz(X)			if (player->class->X) { player->class->X(); } if (player->race->X) { player->race->X(); } if (player->extension->X) { player->extension->X(); }
+#define player_hook(X, ...)		if (player->class->X) { player->class->X(__VA_ARGS__); } if (player->race->X) player->race->X(__VA_ARGS__); if (player->extension->X) player->extension->X(__VA_ARGS__);
 
 #define PF_SIZE                FLAG_SIZE(PF_MAX)
 
@@ -190,6 +190,8 @@ struct player_body {
 	struct equip_slot *slots;
 };
 
+struct player_state;
+
 /**
  * Player race info
  */
@@ -243,6 +245,7 @@ struct player_race {
 	void (*levelup)(int, int);	/**< Levelup hook */
 	void (*building)(int, bool, bool *);/**< Building hook */
 	void (*loadsave)(bool);		/**< Load/save hook */
+	void (*calc)(struct player_state *);		/**< Bonus calc hook */
 	void (*death)(bool *);		/**< Death hook */
 };
 
@@ -362,6 +365,7 @@ struct player_class {
 	void (*levelup)(int, int);	/**< Levelup hook */
 	void (*building)(int, bool, bool *);/**< Building hook */
 	void (*loadsave)(bool);		/**< Load/save hook */
+	void (*calc)(struct player_state *);		/**< Bonus calc hook */
 	void (*death)(bool *);		/**< Death hook */
 };
 
@@ -538,6 +542,7 @@ struct player_upkeep {
  */
 struct player {
 	struct player_race *race;
+	struct player_race *extension;
 	struct player_class *class;
 
 	struct loc grid;/* Player location */
@@ -640,6 +645,7 @@ struct player {
 
 extern struct player_body *bodies;
 extern struct player_race *races;
+extern struct player_race *extensions;
 extern struct player_shape *shapes;
 extern struct player_class *classes;
 extern struct player_ability *player_abilities;
@@ -667,6 +673,7 @@ void player_cleanup_members(struct player *p);
 
 /* player-race.c */
 struct player_race *player_id2race(guid id);
+struct player_race *player_id2ext(guid id);
 struct player_race *get_race_by_name(const char *name);
 
 /* r_timelord.c */

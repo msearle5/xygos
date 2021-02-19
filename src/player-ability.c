@@ -19,6 +19,7 @@
 #include "angband.h"
 #include "datafile.h"
 #include "effects.h"
+#include "game-input.h"
 #include "init.h"
 #include "obj-init.h"
 #include "player.h"
@@ -29,6 +30,8 @@
 #include "ui-input.h"
 #include "ui-output.h"
 #include "z-textblock.h"
+
+static const char *ability_name(int a);
 
 /** The list of abilities (indexed by player flag) */
 struct ability *ability[PF_MAX];
@@ -575,17 +578,33 @@ static bool gain_talent(int a, bool birth) {
  * other (although forbidding each other is OK).
  */
 bool mutate(void) {
+	return get_mutation(AF_MUTATION);
+}
 
+/* Get a mutation meeting the specified flags.
+ */
+bool get_mutation(unsigned long flags)
+{
 	/* Androids cannot mutate */
-	if (streq(player->race->name, "Android"))
+	if (player_has(player, PF_NO_MUTATIONS)) {
 		return false;
+	}
+
+	/* Mutants may be abe to pick and choose */
+	bool reject = false;
+	if (player_has(player, PF_REROLL_MUTATIONS)) {
+		if (player->lev >= 5) {
+			int chance = 25 + player->lev;	/* 30% at level 5 rising to 75% at level 50 */
+			reject = (randint0(100) < chance);
+		}
+	}
 
 	/* Are any mutations available to gain or lose? */
 	bool ok = false;
 	for(int i=0;i<PF_MAX;i++) {
 		if (ability[i]) {
-			if (ability[i]->flags & AF_MUTATION) {
-				if ((player_has(player, i)) || (can_gain_ability(i, false))) {
+			if ((ability[i]->flags & flags) == flags) {
+				if ((player_has(player, i)) || (can_gain_ability(i, true))) {
 					ok = true;
 					break;
 				}
@@ -602,19 +621,41 @@ bool mutate(void) {
 	do {
 		mut = randint0(PF_MAX);
 		if (ability[mut]) {
-			if (ability[mut]->flags & AF_MUTATION) {
-				if ((player_has(player, mut)) || (can_gain_ability(mut, false))) {
+			if ((ability[mut]->flags & flags) == flags) {
+				if ((player_has(player, mut)) || (can_gain_ability(mut, true))) {
 					break;
 				}
 			}
 		}
 	} while (true);
 
+	if (reject) {
+		char buf[256];
+		const char *name = ability_name(mut);
+		const char *gain = "gain the";
+		const char *accept = "accept the mutation";
+		const char *reject = "fight the mutation off";
+		const char *accit = "accept";
+		if (player_has(player, mut)) {
+			gain = "lose your";
+			accept = "accept losing your mutation";
+			reject = "hold on to the mutation";
+			accit = "accept losing";
+		}
+		strnfmt(buf, sizeof(buf), "You feel about to %s %s mutation... %s it? ", gain, name, accit);
+		if (!get_check(buf)) {
+			msg("You %s.", reject);
+			return get_mutation(flags);
+		} else {
+			msg("You %s.", accept);
+		}
+	}
+
 	/* If you already have it, remove it - otherwise gain it */
 	if (player_has(player, mut))
 		lose_ability(mut);
 	else
-		gain_ability(mut, false);
+		gain_ability(mut, true);
 
 	return true;
 }

@@ -161,14 +161,18 @@ bool view_ability_menu(void)
 			I2A(0), I2A(num_abilities - 1));
 
 	/* Set up the menu */
-	menu_init(&menu, MN_SKIN_SCROLL, &menu_f);
-	menu.header = buf;
-	menu_setpriv(&menu, num_abilities, ability_list);
-	loc.page_rows = num_abilities + 1;
-	menu.flags = MN_DBL_TAP;
-	menu.browse_hook = view_ability_menu_browser;
-	region_erase_bordered(&loc);
-	menu_layout(&menu, &loc);
+	if (num_abilities) {
+		menu_init(&menu, MN_SKIN_SCROLL, &menu_f);
+		menu.header = buf;
+		menu_setpriv(&menu, num_abilities, ability_list);
+		loc.page_rows = num_abilities + 1;
+		menu.flags = MN_DBL_TAP;
+		menu.browse_hook = view_ability_menu_browser;
+		region_erase_bordered(&loc);
+		menu_layout(&menu, &loc);
+	} else {
+		return true;
+	}
 
 	do {
 		ui_event ev = menu_select(&menu, EVT_KBRD, false);
@@ -205,6 +209,15 @@ static bool view_abilities(void)
 	/* Count the number of race powers we have */
 	for (ability = player_abilities; ability; ability = ability->next) {
 		if (race_has_ability(player->race, ability)) {
+			memcpy(&ability_list[num_abilities], ability,
+				   sizeof(struct player_ability));
+			ability_list[num_abilities++].group = PLAYER_FLAG_RACE;
+		}
+	}
+
+	/* Count the number of ext powers we have */
+	for (ability = player_abilities; ability; ability = ability->next) {
+		if (race_has_ability(player->extension, ability)) {
 			memcpy(&ability_list[num_abilities], ability,
 				   sizeof(struct player_ability));
 			ability_list[num_abilities++].group = PLAYER_FLAG_RACE;

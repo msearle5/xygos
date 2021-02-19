@@ -531,6 +531,13 @@ static void prt_race(int row, int col) {
 		prt_field(player->race->name, row, col);
 	}
 }
+static void prt_ext(int row, int col) {
+	if (player_is_shapechanged(player) || (streq(player->extension->name, "None"))) {
+		prt_field("", row, col);
+	} else {
+		prt_field(player->extension->name, row, col);
+	}
+}
 static void prt_class(int row, int col) {
 	if (player_is_shapechanged(player)) {
 		prt_field("", row, col);
@@ -735,6 +742,7 @@ static const struct side_handler_t
 	int priority;		 /* 1 is most important (always displayed) */
 	game_event_type type;	 /* PR_* flag this corresponds to */
 } side_handlers[] = {
+	{ prt_ext,     19, EVENT_RACE_CLASS },
 	{ prt_race,    19, EVENT_RACE_CLASS },
 	{ prt_title,   18, EVENT_PLAYERTITLE },
 	{ prt_class,   22, EVENT_RACE_CLASS },
@@ -1940,6 +1948,7 @@ static void update_player_compact_subwindow(game_event_type type,
 	Term_activate(inv_term);
 
 	/* Race and Class */
+	prt_field(player->extension->name, row++, col);
 	prt_field(player->race->name, row++, col);
 	prt_field(player->class->name, row++, col);
 

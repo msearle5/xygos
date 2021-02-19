@@ -23,6 +23,7 @@
 #include "game-event.h"
 #include "game-input.h"
 #include "game-world.h"
+#include "h-basic.h"
 #include "init.h"
 #include "mon-msg.h"
 #include "mon-util.h"
@@ -1470,27 +1471,31 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	/* Reset */
 	memset(state, 0, sizeof *state);
 
+	/* Run special hooks */
+	player_hook(calc, state);
+
 	/* Set various defaults */
 	state->speed = 110;
 	state->num_blows = 100;
 
 	/* Extract race/class info */
-	state->see_infra = p->race->infra;
+	state->see_infra = p->race->infra + p->extension->infra;
 	for (i = 0; i < SKILL_MAX; i++) {
-		state->skills[i] = p->race->r_skills[i]	+ p->class->c_skills[i];
+		state->skills[i] = p->race->r_skills[i]	+ p->extension->r_skills[i] + p->class->c_skills[i];
 	}
 	for (i = 0; i < ELEM_MAX; i++) {
 		vuln[i] = false;
-		if (p->race->el_info[i].res_level == -1) {
+		if (p->race->el_info[i].res_level + p->extension->el_info[i].res_level < -1) {
 			vuln[i] = true;
 		} else {
-			state->el_info[i].res_level = p->race->el_info[i].res_level;
+			state->el_info[i].res_level = MAX(p->race->el_info[i].res_level , p->extension->el_info[i].res_level);
 		}
 	}
 
 	/* Base pflags */
 	pf_wipe(state->pflags);
 	pf_copy(state->pflags, p->race->pflags);
+	pf_union(state->pflags, p->extension->pflags);
 	pf_union(state->pflags, p->class->pflags);
 	pf_union(state->pflags, p->ability_pflags);
 
@@ -1673,7 +1678,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		int add, use, ind;
 
 		add = state->stat_add[i];
-		add += (p->race->r_adj[i] + p->class->c_adj[i]);
+		add += (p->race->r_adj[i] + p->extension->r_adj[i] + p->class->c_adj[i]);
 		add += ability_to_stat(i);
 		state->stat_top[i] =  modify_stat_value(p->stat_max[i], add);
 		use = modify_stat_value(p->stat_cur[i], add);

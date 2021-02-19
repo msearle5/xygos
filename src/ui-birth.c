@@ -62,6 +62,7 @@ enum birth_stage
 	BIRTH_RESET = 0,
 	BIRTH_QUICKSTART,
 	BIRTH_RACE_CHOICE,
+	BIRTH_EXT_CHOICE,
 	BIRTH_CLASS_CHOICE,
 	BIRTH_ROLLER_CHOICE,
 	BIRTH_POINTBASED,
@@ -137,13 +138,13 @@ static enum birth_stage textui_birth_quickstart(void)
 /**
  * ------------------------------------------------------------------------
  * The various "menu" bits of the birth process - namely choice of race,
- * class, and roller type.
+ * extension, class, and roller type.
  * ------------------------------------------------------------------------ */
 
 /**
  * The various menus
  */
-static struct menu race_menu, class_menu, roller_menu;
+static struct menu race_menu, ext_menu, class_menu, roller_menu;
 
 /**
  * Locations of the menus, etc. on the screen
@@ -181,6 +182,7 @@ static struct menu race_menu, class_menu, roller_menu;
  * upper left column and row, width, and lower column
  */
 static region race_region = {RACE_COL, TABLE_ROW, 17, MENU_ROWS};
+static region ext_region = {RACE_COL, TABLE_ROW, 17, MENU_ROWS};
 static region class_region = {CLASS_COL, TABLE_ROW, 17, MENU_ROWS};
 static region roller_region = {ROLLER_COL, TABLE_ROW, 30, ROLLER_ROWS};
 
@@ -248,10 +250,9 @@ static void skill_help(const int r_skills[], const int c_skills[], int mhp, int 
 		text_out_e("\n");
 }
 
-static void race_help(int i, void *db, const region *l)
+static void race_ext_help(int i, void *db, const region *l, struct player_race *r)
 {
 	int j;
-	struct player_race *r = player_id2race(i);
 	int len = (STAT_MAX + 1) / 2;
 
 	struct player_ability *ability;
@@ -318,6 +319,16 @@ static void race_help(int i, void *db, const region *l)
 
 	/* Reset text_out() indentation */
 	text_out_indent = 0;
+}
+
+static void ext_help(int i, void *db, const region *l)
+{
+	race_ext_help(i, db, l, player_id2ext(i));
+}
+
+static void race_help(int i, void *db, const region *l)
+{
+	race_ext_help(i, db, l, player_id2race(i));
 }
 
 static void class_help(int i, void *db, const region *l)
@@ -450,16 +461,32 @@ static void setup_menus(void)
 
 	/* Count the races */
 	n = 0;
-	for (r = races; r; r = r->next) n++;
+	for (r = races; !r->extension; r = r->next) n++;
 
 	/* Race menu. */
 	init_birth_menu(&race_menu, n, player->race ? player->race->ridx : 0,
 	                &race_region, true, race_help);
 	mdata = race_menu.menu_data;
 
-	for (i = 0, r = races; r; r = r->next, i++)
+	for (i = 0, r = races; !r->extension; r = r->next, i++)
 		mdata->items[r->ridx] = r->name;
 	mdata->hint = "Race affects stats and skills, and may confer resistances and abilities.";
+
+	/* Count the extensions */
+	n = 0;
+	for (r = extensions; r; r = r->next)
+		if ((!player->race) || (strstr(player->race->exts, r->name)))
+			n++;
+
+	/* Extension menu. */
+	init_birth_menu(&ext_menu, n, player->extension ? player->extension->ridx : 0,
+	                &ext_region, true, ext_help);
+	mdata = ext_menu.menu_data;
+
+	for (i = 0, r = extensions; r; r = r->next, i++)
+		if ((!player->race) || (strstr(player->race->exts, r->name)))
+			mdata->items[r->ridx] = r->name;
+	mdata->hint = "Extensions modify your race's stats, skills, resistances and abilities.";
 
 	/* Count the classes */
 	n = 0;
@@ -500,6 +527,7 @@ static void free_birth_menus(void)
 {
 	/* We don't need these any more. */
 	free_birth_menu(&race_menu);
+	free_birth_menu(&ext_menu);
 	free_birth_menu(&class_menu);
 	free_birth_menu(&roller_menu);
 }
@@ -573,7 +601,7 @@ static enum birth_stage menu_question(enum birth_stage current,
 
 		/* As all the menus are displayed in "hierarchical" style, we allow
 		   use of "back" (left arrow key or equivalent) to step back in 
-		   the proces as well as "escape". */
+		   the process as well as "escape". */
 		if (cx.type == EVT_ESCAPE) {
 			next = BIRTH_BACK;
 		} else if (cx.type == EVT_SELECT) {
@@ -586,7 +614,7 @@ static enum birth_stage menu_question(enum birth_stage current,
 					/* 
 					 * Make sure we've got a point-based char to play with. 
 					 * We call point_based_start here to make sure we get
-					 * an update on the points totals before trying to
+					 * an upda  te on the points totals before trying to
 					 * display the screen.  The call to CMD_RESET_STATS
 					 * forces a rebuying of the stats to give us up-to-date
 					 * totals.  This is, it should go without saying, a hack.
@@ -658,7 +686,7 @@ static enum birth_stage roller_command(bool first_call)
 	/* Prompt and get a command */
 	ch = inkey();
 
-	/* Analyse the command */
+ 	/* Analyse the command */
 	if (ch.code == ESCAPE) {
 		/* Back out */
 		next = BIRTH_BACK;
@@ -703,7 +731,7 @@ static enum birth_stage roller_command(bool first_call)
 static void point_based_stats(game_event_type type, game_event_data *data,
 							  void *user)
 {
-	display_player_stat_info();
+	display_player_stat_info(true);
 }
 
 /**
@@ -754,7 +782,7 @@ static void point_based_start(void)
 
 	/* Display the player */
 	display_player_xtra_info();
-	display_player_stat_info();
+	display_player_stat_info(true);
 
 	prt(prompt, Term->hgt - 1, Term->wid / 2 - strlen(prompt) / 2);
 
@@ -1177,6 +1205,7 @@ int textui_do_birth(void)
 
 			case BIRTH_CLASS_CHOICE:
 			case BIRTH_RACE_CHOICE:
+			case BIRTH_EXT_CHOICE:
 			case BIRTH_ROLLER_CHOICE:
 			{
 				struct menu *menu = &race_menu;
@@ -1187,6 +1216,21 @@ int textui_do_birth(void)
 
 				if (current_stage > BIRTH_RACE_CHOICE) {
 					menu_refresh(&race_menu, false);
+					/* Reset the menus, as the extensions available depend on
+					 * the race selected
+					 **/
+					setup_menus();
+					if (ext_menu.count <= 1) {
+						command = CMD_CHOOSE_CLASS;
+						menu = &class_menu;
+					} else {
+						command = CMD_CHOOSE_EXT;
+						menu = &ext_menu;
+					}
+				}
+
+				if (current_stage > BIRTH_EXT_CHOICE) {
+					menu_refresh(&ext_menu, false);
 					menu = &class_menu;
 					command = CMD_CHOOSE_CLASS;
 				}

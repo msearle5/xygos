@@ -236,6 +236,7 @@ lose:Your mouth feels normal again.
 brief:You are able to spit acid.
 desc:You are able to spit acid.
 flag:mutation
+flag:birth
 
 book:[Spit]
 spell:Spit Acid:1:22:4:4:1:3d4
@@ -254,6 +255,7 @@ lose:Your horns shrivel away.
 blow:butt:3d6
 flag:mutation
 flag:nasty
+flag:birth
 random-effect:10
 effect:HORNS
 
@@ -269,6 +271,7 @@ brief:Your skin is a thick grey wrinkled elephant-like hide.
 desc:You have thick grey wrinkled skin, like an elephant. This is very protective, but also makes you clumsy.
 flag:mutation
 flag:nasty
+flag:birth
 stats:0:0:0:-3:0:-2:0
 ac:40
 forbid:Steel_Skin
@@ -282,6 +285,7 @@ brief:Your skin is covered with hundreds of sparkling crystals.
 desc:You are covered with hundreds of sparkling crystals. This offers some additional protection, but a living diamond is hard to miss and you are not so stealthy.
 flag:mutation
 flag:nasty
+flag:birth
 ac:30
 values:STEALTH[-3]
 forbid:Steel_Skin
@@ -295,6 +299,7 @@ brief:You have reptilian skin - dull green and covered with thin, overlapping sc
 desc:You have reptilian skin - dull green and covered with thin, overlapping scales. This adds a little protection, but makes you susceptible to cold.
 flag:mutation
 flag:nasty
+flag:birth
 stats:0:0:0:-1:0:-2:0
 ac:20
 values:RES_COLD[-1]
@@ -308,6 +313,7 @@ lose:Your skin no longer looks metallic.
 brief:You have shiny metallic skin. This is very protective in general and especially effective against shards, but clumsy and vulnerable to electric shocks.
 flag:mutation
 flag:nasty
+flag:birth
 stats:0:0:0:-2:0:-1:0
 ac:50
 values:RES_SHARD[1]

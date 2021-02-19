@@ -2497,8 +2497,14 @@ static errr finish_parse_p_race(struct parser *p) {
 	struct player_race *r;
 	int num = 0;
 	races = parser_priv(p);
-	for (r = races; r; r = r->next) num++;
-	for (r = races; r; r = r->next, num--) {
+	for (r = races; !r->extension; r = r->next) num++;
+	extensions = r;
+	for (r = races; !r->extension; r = r->next, num--) {
+		assert(num);
+		r->ridx = num - 1;
+	}
+	for (r = extensions; r; r = r->next) num++;
+	for (r = extensions; r; r = r->next, num--) {
 		assert(num);
 		r->ridx = num - 1;
 	}

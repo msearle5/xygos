@@ -19,7 +19,7 @@
  
 struct attack {
 	char *msg;								/**< "You "smack" the foo */
-	random_value damage;						/**< for 6d6 of */
+	random_value damage;					/**< for 6d6 of */
 	int element;							/**< fire damage */
 };
  
@@ -66,4 +66,5 @@ int setup_talents(void);
 int cmd_abilities(struct player *p, bool birth, int selected, bool *flip);
 int ability_to_stat(int stat);
 void init_talent(int tp);
+bool get_mutation(unsigned long flags);
 bool mutate(void);

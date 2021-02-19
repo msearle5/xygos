@@ -94,6 +94,7 @@ typedef struct birther /*lovely*/ birther; /*sometimes we think she's a dream*/
 struct birther
 {
 	struct player_race *race;
+	struct player_race *ext;
 	struct player_class *class;
 
 	s16b age;
@@ -149,6 +150,7 @@ static void save_roller_data(birther *tosave)
 
 	/* Save the data */
 	tosave->race = player->race;
+	tosave->ext = player->extension;
 	tosave->class = player->class;
 	tosave->age = player->age;
 	tosave->wt = player->wt_birth;
@@ -192,6 +194,7 @@ static void load_roller_data(birther *saved, birther *prev_player)
 
 	/* Load previous data */
 	player->race     = saved->race;
+	player->extension = saved->ext;
 	player->class    = saved->class;
 	player->age      = saved->age;
 	player->wt       = player->wt_birth = player->wt;
@@ -260,7 +263,7 @@ static void get_stats(int stat_use[STAT_MAX])
 		player->stat_max[i] = j;
 
 		/* Obtain a "bonus" for "race" and "class" */
-		bonus = player->race->r_adj[i] + player->class->c_adj[i];
+		bonus = player->race->r_adj[i] + player->extension->r_adj[i] + player->class->c_adj[i];
 
 		/* Start fully healed */
 		player->stat_cur[i] = player->stat_max[i];
@@ -420,8 +423,8 @@ char *get_history(struct history_chart *chart)
 void get_height_weight(struct player *p)
 {
 	/* Calculate the height/weight */
-	p->ht = p->ht_birth = Rand_normal(p->race->base_hgt, p->race->mod_hgt);
-	p->wt = p->wt_birth = Rand_normal(p->race->base_wgt, p->race->mod_wgt);
+	p->ht = p->ht_birth = Rand_normal(p->race->base_hgt + p->extension->base_hgt, p->race->mod_hgt + p->extension->mod_hgt);
+	p->wt = p->wt_birth = Rand_normal(p->race->base_wgt + p->extension->base_wgt, p->race->mod_wgt + p->extension->mod_wgt);
 }
 
 /**
@@ -430,7 +433,7 @@ void get_height_weight(struct player *p)
 static void get_ahw(struct player *p)
 {
 	/* Calculate the age */
-	p->age = p->race->b_age + randint1(p->race->m_age);
+	p->age = p->race->b_age + p->extension->b_age + randint1(p->race->m_age + p->extension->m_age);
 	get_height_weight(p);
 }
 
@@ -525,6 +528,7 @@ void player_init(struct player *p)
 
 	/* Default to the first race/class in the edit file */
 	p->race = races;
+	p->extension = extensions;
 	p->class = classes;
 
 	/* Player starts unshapechanged */
@@ -660,6 +664,7 @@ static void player_outfit(struct player *p)
 	/* Give the player starting equipment */
 	add_start_items(p, p->class->start_items, (!OPT(p, birth_start_kit)), true, ORIGIN_BIRTH);
 	add_start_items(p, p->race->start_items, (!OPT(p, birth_start_kit)), true, ORIGIN_BIRTH);
+	add_start_items(p, p->extension->start_items, (!OPT(p, birth_start_kit)), true, ORIGIN_BIRTH);
 
 	/* Sanity check */
 	if (p->au < 0)
@@ -975,7 +980,7 @@ static void generate_stats(int stats[STAT_MAX], int points_spent[STAT_MAX],
  * This fleshes out a full player based on the choices currently made,
  * and so is called whenever things like race or class are chosen.
  */
-void player_generate(struct player *p, struct player_race *r,
+void player_generate(struct player *p, struct player_race *r, struct player_race *e,
 					 struct player_class *c, bool old_history)
 {
 	int i;
@@ -984,18 +989,21 @@ void player_generate(struct player *p, struct player_race *r,
 		c = p->class;
 	if (!r)
 		r = p->race;
+	if (!e)
+		e = p->extension;
 
 	p->class = c;
 	p->race = r;
+	p->extension = e;
 
 	/* Level 1 */
 	p->max_lev = p->lev = 1;
 
 	/* Experience factor */
-	p->expfact = p->race->r_exp + p->class->c_exp;
+	p->expfact = p->race->r_exp + p->extension->r_exp + p->class->c_exp;
 
 	/* Hitdice */
-	p->hitdie = p->race->r_mhp + p->class->c_mhp;
+	p->hitdie = p->race->r_mhp + p->extension->r_mhp + p->class->c_mhp;
 
 	/* Pre-calculate level 1 hitdice */
 	p->player_hp[0] = (p->hitdie * 2) / PY_MAX_LEVEL;
@@ -1037,7 +1045,7 @@ static void do_birth_reset(bool use_quickstart, birther *quickstart_prev_local)
 	if (use_quickstart && quickstart_prev_local)
 		load_roller_data(quickstart_prev_local, NULL);
 
-	player_generate(player, NULL, NULL, use_quickstart && quickstart_prev_local);
+	player_generate(player, NULL, NULL, NULL, use_quickstart && quickstart_prev_local);
 
 	player->depth = 0;
 
@@ -1074,7 +1082,7 @@ void do_cmd_birth_init(struct command *cmd)
 		save_roller_data(&quickstart_prev);
 		quickstart_allowed = true;
 	} else {
-		player_generate(player, player_id2race(0), player_id2class(0), false);
+		player_generate(player, player_id2race(0), player_id2ext(0), player_id2class(0), false);
 		quickstart_allowed = false;
 	}
 
@@ -1094,18 +1102,18 @@ void do_cmd_choose_race(struct command *cmd)
 {
 	int choice;
 	cmd_get_arg_choice(cmd, "choice", &choice);
-	player_generate(player, player_id2race(choice), NULL, false);
+	player_generate(player, player_id2race(choice), NULL, NULL, false);
 
 	reset_stats(stats, points_spent, &points_left, false);
 	generate_stats(stats, points_spent, &points_left);
 	rolled_stats = false;
 }
 
-void do_cmd_choose_race_ext(struct command *cmd)
+void do_cmd_choose_ext(struct command *cmd)
 {
 	int choice;
 	cmd_get_arg_choice(cmd, "choice", &choice);
-	player_generate(player, player_id2race(choice), NULL, false);
+	player_generate(player, NULL, player_id2ext(choice), NULL, false);
 
 	reset_stats(stats, points_spent, &points_left, false);
 	generate_stats(stats, points_spent, &points_left);
@@ -1116,7 +1124,7 @@ void do_cmd_choose_class(struct command *cmd)
 {
 	int choice;
 	cmd_get_arg_choice(cmd, "choice", &choice);
-	player_generate(player, NULL, player_id2class(choice), false);
+	player_generate(player, NULL, NULL, player_id2class(choice), false);
 
 	reset_stats(stats, points_spent, &points_left, false);
 	generate_stats(stats, points_spent, &points_left);

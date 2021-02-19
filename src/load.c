@@ -675,6 +675,21 @@ int rd_player(void)
 		return -1;
 	}
 
+	/* Player ext */
+	rd_string(buf, sizeof(buf));
+	for (r = extensions; r; r = r->next) {
+		if (streq(r->name, buf)) {
+			player->extension = r;
+			break;
+		}
+	}
+
+	/* Verify player race */
+	if (!player->extension) {
+		note(format("Invalid player extension (%s).", buf));
+		return -1;
+	}
+
 	/* Player shape */
 	rd_string(buf, sizeof(buf));
 	for (s = shapes; s; s = s->next) {

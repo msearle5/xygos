@@ -5,3 +5,6 @@
 
 PR(ANDROID)
 PR(TIMELORD)
+
+/* extensions */
+PR(MUTANT) 

@@ -145,6 +145,7 @@ ANGFILES = \
 	option.o \
 	parser.o \
 	r_android.o \
+	r_mutant.o \
 	r_timelord.o \
 	randname.o \
 	player-ability.o \

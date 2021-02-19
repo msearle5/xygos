@@ -22,7 +22,7 @@
 #include "cmd-core.h"
 
 extern void player_init(struct player *p);
-extern void player_generate(struct player *p, struct player_race *r,
+extern void player_generate(struct player *p, struct player_race *r, struct player_race *e,
                             struct player_class *c, bool old_history);
 extern char *get_history(struct history_chart *h);
 extern void add_start_items(struct player *p, const struct start_item *si, bool skip, bool pay, int origin);
@@ -33,7 +33,7 @@ extern void roll_hp(void);
 void do_cmd_birth_init(struct command *cmd);
 void do_cmd_birth_reset(struct command *cmd);
 void do_cmd_choose_race(struct command *cmd);
-void do_cmd_choose_race_ext(struct command *cmd);
+void do_cmd_choose_ext(struct command *cmd);
 void do_cmd_choose_class(struct command *cmd);
 void do_cmd_buy_stat(struct command *cmd);
 void do_cmd_sell_stat(struct command *cmd);

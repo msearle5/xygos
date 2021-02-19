@@ -443,7 +443,7 @@ static void display_player_flag_info(void)
 /**
  * Special display, part 2b
  */
-void display_player_stat_info(void)
+void display_player_stat_info(bool generating)
 {
 	int i, row, col;
 
@@ -455,10 +455,14 @@ void display_player_stat_info(void)
 
 	/* Column */
 	col = 39;
+	if (!generating) {
+		col += 4;
+	}
 
 	/* Print out the labels for the columns */
-	c_put_str(COLOUR_WHITE, "  Self", row-1, col+5);
-	c_put_str(COLOUR_WHITE, " RB", row-1, col+11);
+	c_put_str(COLOUR_WHITE, "  Self", row-1, col+1);
+	c_put_str(COLOUR_WHITE, " RB", row-1, col+7);
+	c_put_str(COLOUR_WHITE, " XB", row-1, col+11);
 	c_put_str(COLOUR_WHITE, " AB", row-1, col+15);
 	c_put_str(COLOUR_WHITE, " CB", row-1, col+19);
 	c_put_str(COLOUR_WHITE, " EB", row-1, col+23);
@@ -467,23 +471,44 @@ void display_player_stat_info(void)
 	/* Display the stats */
 	for (i = 0; i < STAT_MAX; i++) {
 		/* Reduced or normal */
+		int statcol = col;
+		if (generating)
+			statcol -= 1;
+		else
+			statcol -= 5;
+
 		if (player->stat_cur[i] < player->stat_max[i])
 			/* Use lowercase stat name */
-			put_str(stat_names_reduced[i], row+i, col);
+			put_str(stat_names_reduced[i], row+i, statcol);
 		else
 			/* Assume uppercase stat name */
-			put_str(stat_names[i], row+i, col);
+			put_str(stat_names[i], row+i, statcol);
 
 		/* Indicate natural maximum */
 		if (player->stat_max[i] == 18+100)
-			put_str("!", row+i, col+10);
+			put_str("!", row+i, statcol+3);
+		else
+			put_str(":", row+i, statcol+3);
 
-		/* Internal "natural" maximum value */
-		cnv_stat(player->stat_max[i], buf, sizeof(buf));
-		c_put_str(COLOUR_L_GREEN, buf, row+i, col+4);
+		/* Internal "natural" maximum value
+		 * When doing character generation it is possible to
+		 * assume that this will be 10..18 to save the space
+		 * that would be used to display 18/xxx by cnv_stat()
+		 **/
+		if (generating) {
+			strnfmt(buf, sizeof(buf), " %2d", player->stat_max[i]);
+			c_put_str(COLOUR_L_GREEN, buf, row+i, col+3) ;
+		} else {
+			cnv_stat(player->stat_max[i], buf, sizeof(buf));
+			c_put_str(COLOUR_L_GREEN, buf, row+i, col);
+		}
 
 		/* Race Bonus */
 		strnfmt(buf, sizeof(buf), "%+3d", player->race->r_adj[i]);
+		c_put_str(COLOUR_L_BLUE, buf, row+i, col+7);
+
+		/* Extension Bonus */
+		strnfmt(buf, sizeof(buf), "%+3d", player->extension->r_adj[i]);
 		c_put_str(COLOUR_L_BLUE, buf, row+i, col+11);
 
 		/* Ability Bonus */
@@ -505,7 +530,7 @@ void display_player_stat_info(void)
 		/* Only display stat_use if there has been draining */
 		if (player->stat_cur[i] < player->stat_max[i]) {
 			cnv_stat(player->state.stat_use[i], buf, sizeof(buf));
-			c_put_str(COLOUR_YELLOW, buf, row+i, col+31);
+			c_put_str(COLOUR_YELLOW, buf, row+i, col+35);
 		}
 	}
 }
@@ -696,6 +721,8 @@ static struct panel *get_panel_topleft(void) {
 	struct panel *p = panel_allocate(6);
 
 	panel_line(p, COLOUR_L_BLUE, "Name", "%s", player->full_name);
+	if (!streq(player->extension->name, "None"))
+		panel_line(p, COLOUR_L_BLUE, "Extend",	"%s", player->extension->name);
 	panel_line(p, COLOUR_L_BLUE, "Race",	"%s", player->race->name);
 	panel_line(p, COLOUR_L_BLUE, "Class", "%s", player->class->name);
 	panel_line(p, COLOUR_L_BLUE, "Title", "%s", show_title());
@@ -907,7 +934,7 @@ void display_player(int mode)
 	}
 
 	/* Stat info */
-	display_player_stat_info();
+	display_player_stat_info(false);
 }
 
 
