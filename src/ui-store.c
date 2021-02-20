@@ -522,12 +522,9 @@ static void store_redraw(struct store_context *ctx)
 	}
 }
 
-static bool store_get_check(const char *prompt)
+static bool store_do_check(void)
 {
 	struct keypress ch;
-
-	/* Prompt for it */
-	prt(prompt, 0, 0);
 
 	/* Get an answer */
 	ch = inkey();
@@ -540,6 +537,43 @@ static bool store_get_check(const char *prompt)
 
 	/* Success */
 	return (true);
+}
+
+static bool store_get_check(const char *prompt)
+{
+	/* Prompt for it */
+	prt(prompt, 0, 0);
+
+	return store_do_check();
+}
+
+static bool store_get_long_check(struct store_context *ctx, const char *prompt)
+{
+	/* Print a long (multi line, formatted) prompt */
+	unsigned long flags = ctx->flags;
+
+	/* Where the help text goes */
+	ctx->flags |= (STORE_SHOW_HELP);
+	store_display_recalc(ctx);
+	int help_loc = ctx->scr_places_y[LOC_HELP_PROMPT];
+
+	/* Clear */
+	clear_from(ctx->scr_places_y[LOC_HELP_CLEAR]);
+
+	/* Prepare hooks */
+	text_out_hook = text_out_to_screen;
+	text_out_indent = 1;
+	Term_gotoxy(1, help_loc);
+
+	/* Print it */
+	text_out(prompt);
+	text_out_c(COLOUR_L_BLUE, " [yn]");
+	text_out_indent = 0;
+
+	/* Clean up and return your response */
+	ctx->flags = flags;
+	store_display_recalc(ctx);
+	return store_do_check();
 }
 
 /*
@@ -1489,7 +1523,7 @@ static void store_quest(struct store_context *ctx)
 			if (!(q->flags & (QF_ACTIVE | QF_FAILED | QF_SUCCEEDED | QF_UNREWARDED))) {
 				/* Take new quest - ask first */
 				screen_save();
-				int response = store_get_check(q->intro);
+				int response = store_get_long_check(ctx, q->intro);
 				screen_load();
 				if (response) {
 					/* Accepted TODO message */

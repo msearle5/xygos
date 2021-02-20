@@ -2213,12 +2213,12 @@ static void display_quest(int col, int row, bool cursor, int oid )
 				player->quests[oid].race->name,
 				player->quests[oid].cur_num,
 				player->quests[oid].max_num);
-			c_put_str(COLOUR_RED, buf, row, 26);
+			c_put_str(COLOUR_RED, buf, row, 30);
 		} else {
-			c_put_str(COLOUR_RED, quests[oid].desc, row, 26);
+			c_put_str(COLOUR_RED, quests[oid].desc, row, 30);
 		}
 	} else {
-		c_put_str(COLOUR_GREEN, quests[oid].desc, row, 26);
+		c_put_str(COLOUR_GREEN, quests[oid].desc, row, 30);
 	}
 }
 
