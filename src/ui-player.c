@@ -413,7 +413,7 @@ static void display_resistance_panel(int ipart, struct char_sheet_config *config
 
 		render_details.label_position.y = row;
 		render_details.value_position.y = row;
-		render_details.known_rune = is_ui_entry_for_known_rune(entry, player);
+		render_details.known_icon = is_ui_entry_for_known_icon(entry, player);
 		ui_entry_renderer_apply(get_ui_entry_renderer_index(entry), config->resists_by_region[ipart][i].label, config->res_nlabel, vals, auxs, player->body.count + 1, &render_details);
 	}
 
@@ -576,7 +576,7 @@ static void display_player_sust_info(struct char_sheet_config *config)
 	render_details.combined_position = loc(0, 0);
 	render_details.vertical_label = false;
 	render_details.alternate_color_first = false;
-	render_details.known_rune = true;
+	render_details.known_icon = true;
 	render_details.show_combined = false;
 	for (i = 0; i < config->n_stat_mod_entries; i++) {
 		const struct ui_entry *entry = config->stat_mod_entries[i];

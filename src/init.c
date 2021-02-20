@@ -3924,7 +3924,7 @@ static struct init_module late_arrays_module = {
 
 extern struct init_module z_quark_module;
 extern struct init_module generate_module;
-extern struct init_module rune_module;
+extern struct init_module icon_module;
 extern struct init_module obj_make_module;
 extern struct init_module ignore_module;
 extern struct init_module mon_make_module;
@@ -3942,7 +3942,7 @@ static struct init_module *modules[] = {
 	&arrays_module,
 	&player_module,
 	&generate_module,
-	&rune_module,
+	&icon_module,
 	&obj_make_module,
 	&ignore_module,
 	&mon_make_module,

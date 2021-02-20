@@ -487,9 +487,9 @@ int get_ui_entry_renderer_index(const struct ui_entry *entry)
 
 /**
  * Returns true if the properties/abilities bound to a user interface entry
- * correspond to a known rune.  Otherwise, returns false.
+ * correspond to a known icon.  Otherwise, returns false.
  */
-bool is_ui_entry_for_known_rune(const struct ui_entry *entry,
+bool is_ui_entry_for_known_icon(const struct ui_entry *entry,
 	const struct player *p)
 {
 	bool result = true;
@@ -535,7 +535,7 @@ bool is_ui_entry_for_known_rune(const struct ui_entry *entry,
 
 		if (streq(entry->p_abilities[i].ability->type, "player")) {
 			/*
-			 * Not so easy to associate with a rune so don't let
+			 * Not so easy to associate with a icon so don't let
 			 * it change the result.
 			 */
 			continue;

@@ -47,7 +47,7 @@ void get_ui_entry_label(const struct ui_entry *entry, int length,
 	bool pad_left, wchar_t *label);
 int get_ui_entry_combiner_index(const struct ui_entry *entry);
 int get_ui_entry_renderer_index(const struct ui_entry *entry);
-bool is_ui_entry_for_known_rune(const struct ui_entry *entry,
+bool is_ui_entry_for_known_icon(const struct ui_entry *entry,
 	const struct player *p);
 void compute_ui_entry_values_for_object(const struct ui_entry *entry,
 	const struct object *obj, const struct player *p,

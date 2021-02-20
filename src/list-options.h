@@ -91,7 +91,7 @@ OP(birth_start_kit,       "Start with a kit of useful gear",
 BIRTH, true)
 OP(birth_ai_learn,        "Monsters learn from their mistakes",
 BIRTH, true)
-OP(birth_know_runes,      "Know all runes on birth",
+OP(birth_know_icons,      "Know all icons on birth",
 BIRTH, false)
 OP(birth_know_flavors,    "Know all flavors on birth",
 BIRTH, false)

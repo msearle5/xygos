@@ -48,7 +48,7 @@ EFFECT(DETECT_LIVING_MONSTERS,		false,	NULL,		0,		EFINFO_NONE,	"detects living c
 EFFECT(DETECT_VISIBLE_MONSTERS,		false,	NULL,		0,		EFINFO_NONE,	"detects visible creatures nearby")
 EFFECT(DETECT_INVISIBLE_MONSTERS,	false,	NULL,		0,		EFINFO_NONE,	"detects invisible creatures nearby")
 EFFECT(DETECT_FEARFUL_MONSTERS,		false,	NULL,		0,		EFINFO_NONE,	"detects creatures nearby which are susceptible to fear")
-EFFECT(IDENTIFY,					false,	NULL,		0,		EFINFO_NONE,	"identifies a single unknown rune on a selected item")
+EFFECT(IDENTIFY,					false,	NULL,		0,		EFINFO_NONE,	"identifies a single unknown icon on a selected item")
 EFFECT(DETECT_EVIL,					false,	NULL,		0,		EFINFO_NONE,	"detects evil creatures nearby")
 EFFECT(DETECT_SOUL,					false,	NULL,		0,		EFINFO_NONE,	"detects creatures with a spirit nearby")
 EFFECT(CREATE_STAIRS,				false,	NULL,		0,		EFINFO_NONE,	"creates a staircase beneath your feet")

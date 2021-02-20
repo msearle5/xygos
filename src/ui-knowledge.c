@@ -2055,13 +2055,13 @@ void textui_browse_object_knowledge(const char *name, int row)
 
 /**
  * ------------------------------------------------------------------------
- * OBJECT RUNES
+ * OBJECT ICONS
  * ------------------------------------------------------------------------ */
 
 /**
- * Description of each rune group.
+ * Description of each icon group.
  */
-static const char *rune_group_text[] =
+static const char *icon_group_text[] =
 {
 	"Combat",
 	"Modifiers",
@@ -2074,14 +2074,14 @@ static const char *rune_group_text[] =
 };
 
 /**
- * Display the runes in a group.
+ * Display the icons in a group.
  */
-static void display_rune(int col, int row, bool cursor, int oid )
+static void display_icon(int col, int row, bool cursor, int oid )
 {
 	byte attr = curs_attrs[CURS_KNOWN][(int)cursor];
-	const char *inscrip = quark_str(rune_note(oid));
+	const char *inscrip = quark_str(icon_note(oid));
 
-	c_prt(attr, rune_name(oid), row, col);
+	c_prt(attr, icon_name(oid), row, col);
 
 	/* Show autoinscription if around */
 	if (inscrip)
@@ -2089,25 +2089,25 @@ static void display_rune(int col, int row, bool cursor, int oid )
 }
 
 
-static const char *rune_var_name(int gid)
+static const char *icon_var_name(int gid)
 {
-	return rune_group_text[gid];
+	return icon_group_text[gid];
 }
 
-static int rune_var(int oid)
+static int icon_var(int oid)
 {
-	return (int) rune_variety(oid);
+	return (int) icon_variety(oid);
 }
 
-static void rune_lore(int oid)
+static void icon_lore(int oid)
 {
 	textblock *tb = textblock_new();
-	char *title = string_make(rune_name(oid));
+	char *title = string_make(icon_name(oid));
 
 	my_strcap(title);
 	textblock_append_c(tb, COLOUR_L_BLUE, "%s", title);
 	textblock_append(tb, "\n");
-	textblock_append(tb, "%s", rune_desc(oid));
+	textblock_append(tb, "%s", icon_desc(oid));
 	textblock_append(tb, "\n");
 	textui_textblock_show(tb, SCREEN_REGION, NULL);
 	textblock_free(tb);
@@ -2116,25 +2116,25 @@ static void rune_lore(int oid)
 }
 
 /**
- * Display special prompt for rune inscription.
+ * Display special prompt for icon inscription.
  */
-static const char *rune_xtra_prompt(int oid)
+static const char *icon_xtra_prompt(int oid)
 {
 	const char *no_insc = ", 'r'ecall, '{'";
 	const char *with_insc = ", 'r'ecall, '{', '}'";
 
 	/* Appropriate prompt */
-	return rune_note(oid) ? with_insc : no_insc;
+	return icon_note(oid) ? with_insc : no_insc;
 }
 
 /**
- * Special key actions for rune inscription.
+ * Special key actions for icon inscription.
  */
-static void rune_xtra_act(struct keypress ch, int oid)
+static void icon_xtra_act(struct keypress ch, int oid)
 {
 	/* Uninscribe */
 	if (ch.code == '}') {
-		rune_set_note(oid, NULL);
+		icon_set_note(oid, NULL);
 	} else if (ch.code == '{') {
 		/* Inscribe */
 		char note_text[80] = "";
@@ -2146,19 +2146,19 @@ static void rune_xtra_act(struct keypress ch, int oid)
 		prt("Inscribe with: ", 0, 0);
 
 		/* Default note */
-		if (rune_note(oid))
+		if (icon_note(oid))
 			strnfmt(note_text, sizeof(note_text), "%s",
-					quark_str(rune_note(oid)));
+					quark_str(icon_note(oid)));
 
 		/* Get an inscription */
 		if (askfor_aux(note_text, sizeof(note_text), NULL)) {
 			/* Remove old inscription if existent */
-			if (rune_note(oid))
-				rune_set_note(oid, NULL);
+			if (icon_note(oid))
+				icon_set_note(oid, NULL);
 
 			/* Add the autoinscription */
-			rune_set_note(oid, note_text);
-			rune_autoinscribe(oid);
+			icon_set_note(oid, note_text);
+			icon_autoinscribe(oid);
 
 			/* Redraw gear */
 			player->upkeep->redraw |= (PR_INVEN | PR_EQUIP);
@@ -2252,36 +2252,36 @@ static void do_cmd_knowledge_quests(const char *name, int row)
 }
 
 /**
- * Display rune knowledge.
+ * Display icon knowledge.
  */
-static void do_cmd_knowledge_runes(const char *name, int row)
+static void do_cmd_knowledge_icons(const char *name, int row)
 {
-	group_funcs rune_var_f = {rune_var_name, NULL, rune_var, 0,
-							  N_ELEMENTS(rune_group_text), false};
+	group_funcs icon_var_f = {icon_var_name, NULL, icon_var, 0,
+							  N_ELEMENTS(icon_group_text), false};
 
-	member_funcs rune_f = {display_rune, rune_lore, NULL, NULL,
-						   rune_xtra_prompt, rune_xtra_act, 0};
+	member_funcs icon_f = {display_icon, icon_lore, NULL, NULL,
+						   icon_xtra_prompt, icon_xtra_act, 0};
 
-	int *runes;
-	int rune_max = max_runes();
+	int *icons;
+	int icon_max = max_icons();
 	int count = 0;
 	int i;
 	char buf[30];
 
-	runes = mem_zalloc(rune_max * sizeof(int));
+	icons = mem_zalloc(icon_max * sizeof(int));
 
-	for (i = 0; i < rune_max; i++) {
-		/* Ignore unknown runes */
-		if (!player_knows_rune(player, i))
+	for (i = 0; i < icon_max; i++) {
+		/* Ignore unknown icons */
+		if (!player_knows_icon(player, i))
 			continue;
 
-		runes[count++] = i;
+		icons[count++] = i;
 	}
 
-	my_strcpy(buf, format("runes (%d unknown)", rune_max - count), sizeof(buf));
+	my_strcpy(buf, format("icons (%d unknown)", icon_max - count), sizeof(buf));
 
-	display_knowledge(buf, runes, count, rune_var_f, rune_f, "Inscribed");
-	mem_free(runes);
+	display_knowledge(buf, icons, count, icon_var_f, icon_f, "Inscribed");
+	mem_free(icons);
 }
 
 /**
@@ -2461,7 +2461,7 @@ static void do_cmd_knowledge_features(const char *name, int row)
  */
 static const char *trap_group_text[] =
 {
-	"Runes",
+	"Icons",
 	"Locks",
 	"Traps",
 	"Other",
@@ -3243,7 +3243,7 @@ static bool handle_store_shortcuts(struct menu *m, const ui_event *ev, int oid)
 static menu_action knowledge_actions[] =
 {
 { 0, 0, "Display object knowledge",   	   textui_browse_object_knowledge },
-{ 0, 0, "Display rune knowledge",   	   do_cmd_knowledge_runes },
+{ 0, 0, "Display icon knowledge",   	   do_cmd_knowledge_icons },
 { 0, 0, "Display artifact knowledge", 	   do_cmd_knowledge_artifacts },
 { 0, 0, "Display ego item knowledge", 	   do_cmd_knowledge_ego_items },
 { 0, 0, "Display monster knowledge",  	   do_cmd_knowledge_monsters  },
@@ -3314,13 +3314,13 @@ void textui_knowledge_init(void)
  */
 void textui_browse_knowledge(void)
 {
-	int i, rune_max = max_runes();
+	int i, icon_max = max_icons();
 	region knowledge_region = { 0, 0, -1, 2 + (int)N_ELEMENTS(knowledge_actions) };
 
-	/* Runes */
+	/* Icons */
 	knowledge_actions[1].flags = MN_ACT_GRAYED;
-	for (i = 0; i < rune_max; i++) {
-		if (player_knows_rune(player, i) || OPT(player, cheat_xtra)) {
+	for (i = 0; i < icon_max; i++) {
+		if (player_knows_icon(player, i) || OPT(player, cheat_xtra)) {
 			knowledge_actions[1].flags = 0;
 		    break;
 		}

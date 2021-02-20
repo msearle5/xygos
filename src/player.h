@@ -80,7 +80,7 @@ enum
  * Player constants
  */
 #define PY_MAX_EXP		99999999L	/* Maximum exp */
-#define PY_KNOW_LEVEL	30			/* Level to know all runes */
+#define PY_KNOW_LEVEL	30			/* Level to know all icons */
 #define PY_MAX_LEVEL	50			/* Maximum level */
 
 /**
@@ -629,7 +629,7 @@ struct player {
 	struct object *gear;				/* Real gear */
 	struct object *gear_k;				/* Known gear */
 
-	struct object *obj_k;				/* Object knowledge ("runes") */
+	struct object *obj_k;				/* Object knowledge ("icons") */
 	struct chunk *cave;					/* Known version of current level */
 
 	struct player_state state;			/* Calculatable state */

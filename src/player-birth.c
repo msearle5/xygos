@@ -1273,11 +1273,11 @@ void do_cmd_accept_character(struct command *cmd)
 	/* Initialise the spells */
 	player_spells_init(player);
 
-	/* Know all runes for ID on walkover */
-	if (OPT(player, birth_know_runes))
-		player_learn_all_runes(player);
+	/* Know all icons for ID on walkover */
+	if (OPT(player, birth_know_icons))
+		player_learn_all_icons(player);
 
-	/* Hack - player knows all combat runes.  Maybe make them not runes? NRM */
+	/* Hack - player knows all combat icons.  Maybe make them not icons? NRM */
 	player->obj_k->to_a = 1;
 	player->obj_k->to_h = 1;
 	player->obj_k->to_d = 1;
@@ -1286,7 +1286,7 @@ void do_cmd_accept_character(struct command *cmd)
 	store_reset();
 	chunk_list_max = 0;
 
-	/* Player learns innate runes */
+	/* Player learns innate icons */
 	player_learn_innate(player);
 
 	/* Restore the standard artifacts (randarts may have been loaded) */

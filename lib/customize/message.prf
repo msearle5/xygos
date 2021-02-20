@@ -401,8 +401,8 @@ message:WIELD:w
 # MSG_CURSED
 message:CURSED:w
 
-# MSG_RUNE
-message:RUNE:w
+# MSG_ICON
+message:ICON:w
 
 # MSG_HUNGRY
 message:HUNGRY:w

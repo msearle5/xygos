@@ -339,7 +339,7 @@ void death_knowledge(struct player *p)
 		p->au += 10000000L;
 	}
 
-	player_learn_all_runes(p);
+	player_learn_all_icons(p);
 	for (obj = p->gear; obj; obj = obj->next) {
 		object_flavor_aware(obj);
 		obj->known->effect = obj->effect;

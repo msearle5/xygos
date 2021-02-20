@@ -228,12 +228,12 @@ static void soldier_building(int store, bool entering, bool *do_default)
 				obj->known->effect = obj->effect;
 				obj->known->notice |= OBJ_NOTICE_ASSESSED;
 				inven_carry(player, obj, true, false);
-				int rune;
+				int icon;
 				do {
-					rune = object_find_unknown_rune(player, obj);
-					if (rune >= 0)
-						player_learn_rune(player, rune, false);
-				} while (rune >= 0);
+					icon = object_find_unknown_icon(player, obj);
+					if (icon >= 0)
+						player_learn_icon(player, icon, false);
+				} while (icon >= 0);
 				update_player_object_knowledge(player);
 				obj->kind->everseen = true;
 			}

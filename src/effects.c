@@ -333,11 +333,11 @@ static bool uncurse_object(struct object *obj, int strength, char *dice_string)
 }
 
 /**
- * Selects items that have at least one unknown rune.
+ * Selects items that have at least one unknown icon.
  */
 static bool item_tester_unknown(const struct object *obj)
 {
-    return object_runes_known(obj) ? false : true;
+    return object_icons_known(obj) ? false : true;
 }
 
 /**
@@ -2217,7 +2217,7 @@ bool effect_handler_DETECT_SOUL(effect_handler_context_t *context)
 }
 
 /**
- * Identify an unknown rune of an item.
+ * Identify an unknown icon of an item.
  */
 bool effect_handler_IDENTIFY(effect_handler_context_t *context)
 {
@@ -2240,7 +2240,7 @@ bool effect_handler_IDENTIFY(effect_handler_context_t *context)
 		return used;
 
 	/* Identify the object */
-	object_learn_unknown_rune(player, obj);
+	object_learn_unknown_icon(player, obj);
 
 	return true;
 }

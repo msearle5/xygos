@@ -950,17 +950,17 @@ int rd_ignore(void)
 		k->note_unaware = quark_add(tmp);
 	}
 
-	/* Read the current number of rune auto-inscriptions */
+	/* Read the current number of icon auto-inscriptions */
 	rd_u16b(&inscriptions);
 
-	/* Read the rune autoinscriptions array */
+	/* Read the icon autoinscriptions array */
 	for (i = 0; i < inscriptions; i++) {
 		char tmp[80];
-		s16b runeid;
+		s16b iconid;
 
-		rd_s16b(&runeid);
+		rd_s16b(&iconid);
 		rd_string(tmp, sizeof(tmp));
-		rune_set_note(runeid, tmp);
+		icon_set_note(iconid, tmp);
 	}
 
 	return 0;

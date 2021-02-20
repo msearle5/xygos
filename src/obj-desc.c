@@ -357,10 +357,10 @@ static size_t obj_desc_combat(const struct object *obj, char *buf, size_t max,
 		/* Special treatment for body armor with only a to-hit penalty */
 		strnfcat(buf, max, &end, " (%+d)", obj->to_h);
 	} else if (obj->to_d != 0 && player->obj_k->to_d) {
-		/* To-dam rune known only */
+		/* To-dam icon known only */
 		strnfcat(buf, max, &end, " (%+d)", obj->to_d);
 	} else if (obj->to_h != 0 && player->obj_k->to_h) {
-		/* To-hit rune known only */
+		/* To-hit icon known only */
 		strnfcat(buf, max, &end, " (%+d)", obj->to_h);
 	}
 
@@ -509,7 +509,7 @@ static size_t obj_desc_inscrip(const struct object *obj, char *buf,
 		u[n++] = "special";
 
 	/* Note unknown properties */
-	if (!object_runes_known(obj) && (obj->known->notice & OBJ_NOTICE_ASSESSED))
+	if (!object_icons_known(obj) && (obj->known->notice & OBJ_NOTICE_ASSESSED))
 		u[n++] = "??";
 
 	if (n) {
@@ -538,7 +538,7 @@ static size_t obj_desc_aware(const struct object *obj, char *buf, size_t max,
 {
 	if (!object_flavor_is_aware(obj)) {
 		strnfcat(buf, max, &end, " {unseen}");
-	} else if (!object_runes_known(obj)) {
+	} else if (!object_icons_known(obj)) {
 		strnfcat(buf, max, &end, " {??}");
 	} else if (obj->known->curses) {
 		strnfcat(buf, max, &end, " {trapped}");

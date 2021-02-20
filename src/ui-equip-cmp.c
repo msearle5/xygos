@@ -2406,7 +2406,7 @@ static int display_page(struct equipable_summary *s, const struct player *p,
 		for (j = 0; j < s->propcats[i].nvw[s->iview]; ++j) {
 			int joff = j + s->propcats[i].ivw[s->iview];
 
-			rdetails.known_rune = is_ui_entry_for_known_rune(
+			rdetails.known_icon = is_ui_entry_for_known_icon(
 				s->propcats[i].entries[joff], p);
 			ui_entry_renderer_apply(get_ui_entry_renderer_index(
 				s->propcats[i].entries[joff]),

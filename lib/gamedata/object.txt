@@ -3245,7 +3245,7 @@ power:6
 effect:DETECT_INVISIBLE_MONSTERS
 effect-yx:22:40
 
-name:Identify Rune
+name:Identify Icon
 type:scroll
 graphics:?:w
 level:1

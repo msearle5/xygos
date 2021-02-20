@@ -588,7 +588,7 @@ static bool store_will_buy(struct store *store, const struct object *obj)
 	/* Ignore apparently worthless items, except no-selling {??} items */
 	if (object_value(obj, 1) <= 0 && !(OPT(player, birth_no_selling) &&
 									   tval_has_variable_power(obj) &&
-									   !object_runes_known(obj))) {
+									   !object_icons_known(obj))) {
 		return false;
 	}
 
@@ -1825,11 +1825,11 @@ void do_cmd_buy(struct command *cmd)
 	object_copy(known_obj, obj->known);
 	bought->known = known_obj;
 
-	/* Learn flavor, any effect and all the runes */
+	/* Learn flavor, any effect and all the icons */
 	object_flavor_aware(bought);
 	bought->known->effect = bought->effect;
 	while (!object_fully_known(bought)) {
-		object_learn_unknown_rune(player, bought);
+		object_learn_unknown_icon(player, bought);
 		player_know_object(player, bought);
 	}
 
@@ -2027,7 +2027,7 @@ void do_cmd_sell(struct command *cmd)
 	object_flavor_aware(obj);
 	obj->known->effect = obj->effect;
 	while (!object_fully_known(obj)) {
-		object_learn_unknown_rune(player, obj);
+		object_learn_unknown_icon(player, obj);
 		player_know_object(player, obj);
 	}
 
