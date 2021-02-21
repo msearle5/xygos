@@ -170,7 +170,7 @@ owner:10000:Wizzle the Chaotic (Hobbit)
 owner:15000:Ga-nat the Greedy (Gnome)
 owner:15000:Vella the Slender (Human)
 owner:0:-
-slots:4:10
+slots:4:6
 turnover:2
 danger:70:90
 always:pill:Cure Light Wounds

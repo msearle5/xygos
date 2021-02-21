@@ -159,9 +159,9 @@ void shuffle_sized(void *arr, int n, int size)
     void *k = alloca(size);
     for (i = 0; i < n; i++) {
 		j = randint0(n - i) + i;
-		memcpy(k, arr + (j * size), size);
-		memcpy(arr + (j * size), arr + (i * size), size);
-		memcpy(arr + (i * size), k, size);
+		memcpy(k, (char *)arr + (j * size), size);
+		memcpy((char *)arr + (j * size), (char *)arr + (i * size), size);
+		memcpy((char *)arr + (i * size), k, size);
     }
 }
 

@@ -583,24 +583,24 @@ static double make_artifact_probs(double *prob, int lev, int tval, bool max)
 		prob[i] = art->alloc_prob;
 
 		/* Enforce maximum depth (strictly, if max mode is set) */
-		if (art->alloc_max < player->depth) {
+		if (art->alloc_max <= lev) {
 			if (max) {
 				prob[i] = 0.0;
 			} else {
 				/* Get the "out-of-depth factor" */
-				prob[i] /= ((player->depth - art->alloc_max) + 1) * 10;
+				prob[i] /= ((lev - art->alloc_max) + 1) * 10;
 			}
 		}
 
 		/* Enforce minimum "depth" (loosely) */
-		else if (art->alloc_min > player->depth) {
+		else if (art->alloc_min > lev) {
 			/* Get the "out-of-depth factor" */
-			prob[i] /= 1.0 + ((art->alloc_min - player->depth) * (art->alloc_min - player->depth) * 0.1);
+			prob[i] /= 1.0 + ((art->alloc_min - lev) * (art->alloc_min - lev) * 0.1);
 		}
 
 		/* If in depth, reduce probability at higher levels */
 		else {
-			prob[i] *= (art->alloc_max + 1) - player->depth;
+			prob[i] *= (art->alloc_max + 1) - lev;
 			prob[i] /= (art->alloc_max + 1) - art->alloc_min;
 		}
 
@@ -1125,13 +1125,50 @@ static double ego_prob(double depth, bool good, bool great)
 	 * are created deeper.
 	 * This change is meant to go in conjunction with the changes
 	 * to ego item allocation levels. (-fizzix)
+	 *
+	 * 4.2.x:   great = 30, great = 10% at level 0 .. 30% at level 66+;
+	 *
+	 * (MS) New ego generation needs lower chances, as every ego asked for
+	 * is obtained. This also means that great = 1.0 would disqualify
+	 * any item that can't be made into an ego item - including !oExp
+	 * and similar valuables.
+	 *
+	 * To mimic the original odds would need to reduce to 0.274 at level 1,
+	 * 0.280 at level 33, 0.342 at level 70, 0.377 at level 98. But this
+	 * is only a rough guideline (it will change with the ego and item
+	 * lists, and is based on egos-per-depth generated, not actual levels.
+	 * The original is also probably too ego heavy later on.)
+	 *
+	 * Using 'diving' instead:
+	 * Level	Original	New 1/.3/.1	Ratio	.8/.125/.025	.8/.15/.0325
+	 * 5		0.765		2.165		2.83		0.568		0.765
+	 * 10		1.202		3.117		2.593		0.786		1.074
+	 * 20		2.230		5.399		2.421		1.712		2.087
+	 * 40		5.254		13.584		2.459		4.190		5.474
+	 * 70		16.56		33.25		2.007		8.752		10.560
+	 * 95		36.70		65.86		1.794		15.076		18.997
+	 * 
+	 * What proportion of 'great' items should be 'ego' should probably depend
+	 * on what the character is likely to want at that point.
+	 * 	- at level 1, any ego item is a big win
+	 *  - at level 15, you might have something better already, but chances are still good.
+	 *  - at level 30, you have a few artifacts and the rest mostly egos. And you want stat gain pills.
+	 *  - at level 50, you have mostly artifacts. There are only a few ego items which would be an improvement. But you want gain/heal pills.
+	 *  - at level 90, you have probably all good artifacts. Almost all ego items are chaff. But you want endgame consumables.
+	 * 
+	 * The same may apply to some extent for good and normal treasures - but this is going against wanting less egos early.
+	 * (The majority of early egos are from the floor. The majority of late ones are from monsters.)
+	 * 
+	 * The following chances are a close match to original results based on diving sims below level 40.
+	 * They then reduce, until being only about half as generous below level 95.
+	 * Both these are (probably) Good Things.
 	 */
 	if (great)
-		return 1.0;
+		return 0.8 - (MIN(depth, 95.0) / (0.6 / 95.0));		/* 80% at level 0, 20% at level 95+ */
 	else if (good)
-		return 0.3;
+		return 0.15;										/* 15% */
 	else
-		return 0.1 + (MIN(depth / 333, 0.2));
+		return 0.0325 + ((MIN(depth, 40) / 40.0) * 0.0675);	/* 3.25% at level 0, 10% at level 40+ */
 }
 
 /**
@@ -1163,7 +1200,7 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
 	 * the chances go up for good, great or extra.
 	 **/
 	if ((!name) && (player->depth)) {
-		double depth = player->depth;
+		double depth = lev;
 		if (extra_roll)
 			depth = (depth * 1.15) + 20;
 		else if (great)
