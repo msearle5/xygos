@@ -1449,12 +1449,21 @@ static void artifact_stats(void)
  * Record the number of each generated.
  */
 static void ego_stats(void)
-{
+{/*
 	static const byte levels[] = {
 		1, 2, 3, 4, 5, 6,
 		8, 10, 12, 14, 16, 18, 20,
 		25, 30, 35, 40, 45, 50,
 		60, 70, 80, 90, 98, 127
+	};*/
+	static const byte levels[] = {
+		1, 2, 3, 4, 5, 6,
+		7, 8, 9, 10, 11, 12,
+		14, 16, 18, 20, 22, 24,
+		26, 28, 30, 32, 34, 36,
+		38, 40, 42, 45, 50, 55,
+		60, 65, 70, 75, 80, 85,
+		90, 95, 98, 100, 110, 127
 	};
 	double *prob[sizeof(levels)];
 	struct object *obj;
@@ -1511,7 +1520,7 @@ static void ego_stats(void)
 	}
 	strcat(buf, "\n");
 	file_putf(stats_log, buf);
-	for(size_t a=1;a<z_info->e_max - 1;a++) {
+	for(size_t a=1;a<(size_t)(z_info->e_max - 1);a++) {
 		memset(buf, ' ', 32);
 		strcpy(buf + (30 - strlen(e_info[a].name)), e_info[a].name);
 		for(int i=0;i<30;i++)

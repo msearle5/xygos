@@ -292,6 +292,27 @@ static int binary_search_probtable(const u32b *tbl, int n, u32b p)
 	}
 }
 
+/**
+ * Randomly select from a table of probabilities
+ * prob is a table of doubles, total is the sum of these values
+ * Returns an index into the table
+ */
+ static int select_random_table(double total, double *prob, int length) {
+	double value = Rand_double(total);
+	int last = -1;
+	for (int i=0;i<length; i++) {
+		if (prob[i] > 0.0) {
+			last = i;
+			if (value < prob[i]) {
+				return i;
+			} else {
+				value -= prob[i];
+			}
+		}
+	}
+	assert(last >= 0);
+	return last;
+}
 
 /**
  * Select a base item for an ego.
@@ -309,69 +330,63 @@ static struct object_kind *select_ego_kind(struct ego_item *ego, int level)
 	}
 
 	/* No possibilities */
-	if (total == 0.0)
+	if (total == 0.0) {
+		mem_free(prob);
 		return NULL;
+	}
 
 	/* Select at random */
-	double value = Rand_double(total);
-	int last = -1;
-	for (int i=0;i<z_info->k_max; i++) {
-		if (prob[i] > 0.0) {
-			last = i;
-			if (value < prob[i]) {
-				return k_info + i;
-			} else {
-				value -= prob[i];
-			}
-		}
-	}
-	assert(last >= 0);
-	return k_info + last;
+	int idx = select_random_table(total, prob, z_info->k_max);
+	mem_free(prob);
+	return k_info + idx;
 }
 
 /**
- * Select an ego-item that fits the object's tval and sval.
+ * Select an ego-item at random, based on the level.
  */
 static struct ego_item *ego_find_random(int level)
 {
 	int i;
-	long total = 0L;
+	double *prob = mem_zalloc(sizeof(*prob) * z_info->e_max);
+	struct alloc_entry *table = alloc_ego_table;
+	double total = 0.0;
 
-	alloc_entry *table = alloc_ego_table;
-
-	/* Go through all possible ego items and find ones which fit this item */
+	/* Go through all possible ego items and find ones which are possible */
 	for (i = 0; i < z_info->e_max; i++) {
 		struct ego_item *ego = &e_info[i];
-
-		/* Reset any previous probability of this type being picked */
-		table[i].prob3 = 0;
+		double p = 0.0;
 
 		if (level <= ego->alloc_max) {
-			int ood_chance = MAX(2, (ego->alloc_min - level) / 3);
-			if (level >= ego->alloc_min || one_in_(ood_chance)) {
-
-				table[i].prob3 = table[i].prob2;
-
-				/* Total */
-				total += table[i].prob3;
-			}
-		}
-	}
-
-	if (total) {
-		long value = randint0(total);
-		for (i = 0; i < z_info->e_max; i++) {
-			/* Found the entry */
-			if (value < table[i].prob3) {
-				return &e_info[i];
+			p = table[i].prob2;
+			if (level >= ego->alloc_min) {
+				/* Between min and max levels - scale linearly
+				 * from maximum probability at native depth to
+				 * zero at maximum depth + 1
+				 **/
+				p *= (ego->alloc_max + 1) - level;
+				p /= (ego->alloc_max + 1) - ego->alloc_min;
 			} else {
-				/* Decrement */
-				value = value - table[i].prob3;
+				/* Out of depth.
+				 * Divide by the # of levels OOD, * a constant
+				 **/
+				p /= 1.0 + (((double)(ego->alloc_min - level)) / 3.0);
 			}
 		}
+
+		prob[i] = p;
+		total += prob[i];
 	}
 
-	return NULL;
+	/* No possibilities */
+	if (total == 0.0) {
+		mem_free(prob);
+		return NULL;
+	}
+
+	/* Select at random */
+	int idx = select_random_table(total, prob, z_info->e_max);
+	mem_free(prob);
+	return e_info + idx;
 }
 
 
@@ -1101,13 +1116,13 @@ static double ego_prob(double depth, bool good, bool great)
 
 	/* Chance of being `good` and `great` */
 	/* This has changed over the years:
-	 * 3.0.0:   good = MIN(75, lev + 10);      great = MIN(20, lev / 2); 
+	 * 3.0.0:   good = MIN(75, lev + 10);      great = MIN(20, lev / 2);
 	 * 3.3.0:   good = (lev + 2) * 3;          great = MIN(lev / 4 + lev, 50);
 	 * 3.4.0:   good = (2 * lev) + 5
 	 * 3.4 was in between 3.0 and 3.3, 3.5 attempts to keep the same
 	 * area under the curve as 3.4, but make the generation chances
 	 * flatter.  This depresses good items overall since more items
-	 * are created deeper. 
+	 * are created deeper.
 	 * This change is meant to go in conjunction with the changes
 	 * to ego item allocation levels. (-fizzix)
 	 */
@@ -1238,10 +1253,11 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
 		/* Make the object, prep it and apply magic */
 		new_obj = object_new();
 		object_prep(new_obj, kind, lev, RANDOMISE);
+
 		/* Actually apply the ego template to the item */
 		if (ego) {
 			assert(!new_obj->ego);
-			new_obj->ego = ego; 
+			new_obj->ego = ego;
 			ego_apply_magic(new_obj, lev);
 		}
 		apply_magic(new_obj, lev, true, good, great, extra_roll);
