@@ -661,17 +661,17 @@ bool quest_item_check(const struct object *obj) {
 	 * 'at least X' (where X is commonly 1)
 	 * 'all still remaining' (i.e. destroyed items are OK)
 	 * 'all that were there at the start' (so not OK)
-	 * 
+	 *
 	 * There is also 'quest flag' vs item name XXX
-	 * 
+	 *
 	 * What if you un-complete a quest? (by destroying items, or leaving them behind?)
 	 * A quest might complete immediately, or only when leaving the quest level, or only when
 	 * visiting the questgiver - add flags.
-	 * 
+	 *
 	 * Might also be possible to *fail* a quest - by destroying the wrong object, or killing the wrong monster...
-	 * 
+	 *
 	 * Combinations of these ("all still remaining, but at least 2")
-	 * 
+	 *
 	 * A "minimum found" and "maximum remaining" is useful, though.
 	 **/
 	if (gear_items >= q->min_found) {

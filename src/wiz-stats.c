@@ -960,7 +960,7 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 
 /* 
  * A rewrite of monster death that gets rid of some features
- * That we don't want to deal with.  Namely, no notifying the
+ * that we don't want to deal with.  Namely, no notifying the
  * player and no generation of Morgoth artifacts
  * 
  * It also replaces drop near with a new function that drops all 
@@ -1398,7 +1398,7 @@ static void artifact_stats(void)
 				levcount[a_idx]++;
 				object_delete(&obj);
 			}
-		} while (artifacts[i] < 100);
+		} while (artifacts[i] < tries);
 		prob[i] = mem_alloc(sizeof(double) * z_info->a_max);
 		memcpy(prob[i], wiz_stats_prob, sizeof(double) * z_info->a_max);
 		double sum = 0.0;
@@ -1426,6 +1426,98 @@ static void artifact_stats(void)
 			buf[i] = ((buf[i] >= ' ') && (buf[i] <= 'z')) ? buf[i] : '-';
 		for(size_t l=0;l<sizeof(levels);l++) {
 			int *levcount = count + (z_info->a_max * l);
+			strnfmt(num, sizeof(num), "%9d ", levcount[a]);
+			strcat(buf+30, num);
+		}
+		strcat(buf, "\n");
+		file_putf(stats_log, buf);
+
+		memset(buf, ' ', 32);
+		buf[32] = 0;
+		for(size_t l=0;l<sizeof(levels);l++) {
+			strnfmt(num, sizeof(num), (prob[l][a] < 10.0) ? "%.07lf " : "%.06lf ", prob[l][a]);
+			strcat(buf+30, num);
+		}
+		strcat(buf, "\n");
+		file_putf(stats_log, buf);
+
+	}
+	player->depth = depth;
+}
+
+/* Generate ego items at each level 1-100 (by steps).
+ * Record the number of each generated.
+ */
+static void ego_stats(void)
+{
+	static const byte levels[] = {
+		1, 2, 3, 4, 5, 6,
+		8, 10, 12, 14, 16, 18, 20,
+		25, 30, 35, 40, 45, 50,
+		60, 70, 80, 90, 98, 127
+	};
+	double *prob[sizeof(levels)];
+	struct object *obj;
+	int *count = mem_zalloc(sizeof(int) * z_info->e_max * sizeof(levels));
+	int *egos = mem_zalloc(sizeof(int) * sizeof(levels));
+	int *objects = mem_zalloc(sizeof(int) * sizeof(levels));
+	int depth = player->depth;
+	for(size_t i=0;i<sizeof(levels);i++) {
+		int lev = levels[i];
+		player->depth = lev;
+		msg("Level %d...", lev);
+		/* Show the level to check on status */
+		do_cmd_redraw();
+		int *levcount = count + (z_info->e_max * i);
+		do {
+			s32b value;
+			objects[i]++;
+			/* Make a (normal) object */
+			obj = make_object(cave, lev, false, false, false, &value, 0);
+			bool ok = (obj && obj->ego);
+			if (ok) {
+				egos[i]++;
+				int e_idx = obj->ego - e_info;
+				levcount[e_idx]++;
+			}
+			if (obj)
+				object_delete(&obj);
+		} while (egos[i] < tries);
+		prob[i] = mem_alloc(sizeof(double) * z_info->e_max);
+		
+		// no theoreticals - yet
+		//memcpy(prob[i], wiz_stats_prob, sizeof(double) * z_info->e_max);
+		
+		// so just convert to %
+		for(int j=0;j<z_info->e_max;j++) {
+			prob[i][j] = levcount[j];
+		}
+		
+		double sum = 0.0;
+		/* Normalize */
+		for(int j=0;j<z_info->e_max;j++)
+			sum += prob[i][j];
+		for(int j=0;j<z_info->e_max;j++)
+			prob[i][j] = (prob[i][j] * 100.0) / sum;
+		fprintf(stderr,"Level %d, %d egos, %d objs\n", lev, egos[i], objects[i]);
+	}
+	char buf[1024];
+	char num[32];
+	strcpy(buf, "                 Ego Name       ");
+	for(size_t l=0;l<sizeof(levels);l++) {
+		strcat(buf+31,"Level ");
+		sprintf(num, "%d%s  ", levels[l], levels[l] < 10 ? " " : "" );
+		strcat(buf, num);
+	}
+	strcat(buf, "\n");
+	file_putf(stats_log, buf);
+	for(size_t a=1;a<z_info->e_max - 1;a++) {
+		memset(buf, ' ', 32);
+		strcpy(buf + (30 - strlen(e_info[a].name)), e_info[a].name);
+		for(int i=0;i<30;i++)
+			buf[i] = ((buf[i] >= ' ') && (buf[i] <= 'z')) ? buf[i] : '-';
+		for(size_t l=0;l<sizeof(levels);l++) {
+			int *levcount = count + (z_info->e_max * l);
 			strnfmt(num, sizeof(num), "%9d ", levcount[a]);
 			strcat(buf+30, num);
 		}
@@ -1548,7 +1640,7 @@ static int stats_prompt(void)
 {
 	static int temp,simtype = 1;
 	static char tmp_val[100];
-	static char prompt[50];
+	static char prompt[80];
 
 	/* This is the prompt for no. of tries*/
 	strnfmt(prompt, sizeof(prompt), "Num of simulations: ");
@@ -1572,7 +1664,7 @@ static int stats_prompt(void)
 	addval = 1.0 / tries;
 
 	/* Get info on what type of run to do */
-	strnfmt(prompt, sizeof(prompt), "Type of Sim: Diving (1), Clearing (2), Artifacts (3) ");
+	strnfmt(prompt, sizeof(prompt), "Type of Sim: Diving (1), Clearing (2), Artifacts (3), Egos (4) ");
 
 	/* Set default */
 	strnfmt(tmp_val, sizeof(tmp_val), "%d", simtype);
@@ -1583,7 +1675,7 @@ static int stats_prompt(void)
 	temp = atoi(tmp_val);
 
 	/* Make sure that the type is good */
-	if ((temp >= 1) && (temp <= 3))
+	if ((temp >= 1) && (temp <= 4))
 		simtype = temp;
 	else
 		return 0;
@@ -1607,13 +1699,14 @@ void stats_collect(void)
 	static int simtype;
 	static bool auto_flag;
 	bool artifacts = false;
+	bool egos = false;
 	char buf[1024];
 
 	/* Prompt the user for sim params */
 	simtype = stats_prompt();
 
 	/* Make sure the results are good! */
-	if (!((simtype >= 1) && (simtype <= 3)))
+	if (!((simtype >= 1) && (simtype <= 4)))
 		return; 
 
 	/* Are we in diving or clearing mode */
@@ -1626,6 +1719,10 @@ void stats_collect(void)
 			break;
 		case 3:
 			artifacts = true;
+			break;
+		case 4:
+			egos = true;
+			break;
 	}
 
 	/* Open log file */
@@ -1662,6 +1759,8 @@ void stats_collect(void)
 
 	if (artifacts) {
 		artifact_stats();
+	} else if (egos) {
+		ego_stats();
 	} else {
 		/* Select diving option */
 		if (!clearing) diving_stats();
