@@ -601,24 +601,24 @@ static double make_artifact_probs(double *prob, int lev, int tval, bool max)
 		prob[i] = art->alloc_prob;
 
 		/* Enforce maximum depth (strictly, if max mode is set) */
-		if (art->alloc_max < player->depth) {
+		if (art->alloc_max <= lev) {
 			if (max) {
 				prob[i] = 0.0;
 			} else {
 				/* Get the "out-of-depth factor" */
-				prob[i] /= ((player->depth - art->alloc_max) + 1) * 10;
+				prob[i] /= ((lev - art->alloc_max) + 1) * 10;
 			}
 		}
 
 		/* Enforce minimum "depth" (loosely) */
-		else if (art->alloc_min > player->depth) {
+		else if (art->alloc_min > lev) {
 			/* Get the "out-of-depth factor" */
-			prob[i] /= 1.0 + ((art->alloc_min - player->depth) * (art->alloc_min - player->depth) * 0.1);
+			prob[i] /= 1.0 + ((art->alloc_min - lev) * (art->alloc_min - lev) * 0.1);
 		}
 
 		/* If in depth, reduce probability at higher levels */
 		else {
-			prob[i] *= (art->alloc_max + 1) - player->depth;
+			prob[i] *= (art->alloc_max + 1) - lev;
 			prob[i] /= (art->alloc_max + 1) - art->alloc_min;
 		}
 
@@ -1114,7 +1114,7 @@ struct object_kind *get_obj_num(int level, bool good, int tval)
 static double artifact_prob(double depth)
 {
 	/* Debug: print the artifact generation probability table */
-	static bool first = false;
+	static bool first = true;
 	if (first) {
 		first = false;
 		for(int i=1;i<=100;i++) {
@@ -1138,6 +1138,53 @@ static double artifact_prob(double depth)
 	return chance;
 }
 
+#ifdef undef
+static double ego_prob(double depth, bool good, bool great)
+{
+	/* Debug: print the ego generation probability table */
+	static bool first = false;
+	if (first) {
+		first = false;
+		for(int i=1;i<=100;i++) {
+			double d = ego_prob(i, false, false);
+			fprintf(stderr,"l%d, prob %lf\n", i, d);
+		}
+	}
+
+	/* Chance of being `good` and `great` */
+	/* This has changed over the years:
+	 * 3.0.0:   good = MIN(75, lev + 10);      great = MIN(20, lev / 2);
+	 * 3.3.0:   good = (lev + 2) * 3;          great = MIN(lev / 4 + lev, 50);
+	 * 3.4.0:   good = (2 * lev) + 5
+	 * 3.4 was in between 3.0 and 3.3, 3.5 attempts to keep the same
+	 * area under the curve as 3.4, but make the generation chances
+	 * flatter.  This depresses good items overall since more items
+	 * are created deeper.
+	 * This change is meant to go in conjunction with the changes
+	 * to ego item allocation levels. (-fizzix)
+	 *
+	 * 4.2.x:   great = 30, great = 10% at level 0 .. 30% at level 66+;
+	 *
+	 * (MS) New ego generation needs lower chances, as every ego asked for
+	 * is obtained. This also means that great = 1.0 would disqualify
+	 * any item that can't be made into an ego item - including !oExp
+	 * and similar valuables.
+	 *
+	 * To mimic the original odds would need to reduce to 0.274 at level 1,
+	 * 0.280 at level 33, 0.342 at level 70, 0.377 at level 98. But this
+	 * is only a rough guideline (it will change with the ego and item
+	 * lists, and is based on egos-per-depth generated, not actual levels)
+	 *
+	 */
+	if (great)
+		return 1.0;
+	else if (good)
+		return 0.3;
+	else
+		return 0.1 + (MIN(depth / 333, 0.2));
+}
+
+#endif
 /**
  * Attempt to make an object
  *
