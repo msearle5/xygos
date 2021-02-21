@@ -2548,7 +2548,6 @@ static errr finish_parse_ego(struct parser *p) {
 			e_info[eidx].next = NULL;
 		mem_free(e);
 	}
-	z_info->e_max += 1;
 
 	parser_destroy(p);
 	return 0;
