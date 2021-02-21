@@ -406,6 +406,8 @@ flavor:237:Magenta-Pink:becalp|in
 flavor:238:Magenta-Pink:mateng|ane
 flavor:239:Magenta-Pink:poletn|ate
 flavor:240:Magenta-Pink:layak|anol
+flavor:241:Magenta-Pink:banan|adine
+flavor:242:Magenta-Pink:stanfor|imine
 
 ##### Scrolls #####
 
