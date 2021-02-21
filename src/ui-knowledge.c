@@ -30,8 +30,9 @@
 #include "monster.h"
 #include "obj-desc.h"
 #include "obj-ignore.h"
-#include "obj-knowledge.h"
+#include "obj-gear.h"
 #include "obj-info.h"
+#include "obj-knowledge.h"
 #include "obj-make.h"
 #include "obj-pile.h"
 #include "obj-tval.h"
@@ -1433,27 +1434,49 @@ static void display_artifact(int col, int row, bool cursor, int oid)
 	c_prt(attr, o_name, row, col);
 }
 
-/**
- * Look for an artifact
- */
-static struct object *find_artifact(struct artifact *artifact)
+static struct object *object_is_artifact(struct object *obj, void *av)
 {
-	int y, x, i;
+	struct artifact *artifact = (struct artifact *)av;
+	return (obj->artifact == artifact) ? obj : NULL;
+}
+
+static void do_remove_object(struct object **obj)
+{
+	if ((*obj)->known)
+		object_delete(&((*obj)->known));
+	object_delete(obj);
+}
+
+/**
+ * Remove an object from anywhere, return true if found
+ */
+bool remove_object(struct object *target)
+{
+	bool dummy;
+	struct object *rm = NULL;
 	struct object *obj;
+	int x, y, i;
 
 	/* Ground objects */
 	for (y = 1; y < cave->height; y++) {
 		for (x = 1; x < cave->width; x++) {
 			struct loc grid = loc(x, y);
 			for (obj = square_object(cave, grid); obj; obj = obj->next) {
-				if (obj->artifact == artifact) return obj;
+				if (obj == target) {
+					square_delete_object(cave, grid, obj, true, true);
+					return true;
+				}
 			}
 		}
 	}
 
 	/* Player objects */
 	for (obj = player->gear; obj; obj = obj->next) {
-		if (obj->artifact == artifact) return obj;
+		if (obj == target) {
+			rm = gear_object_for_use(obj, obj->number, false, &dummy);
+			do_remove_object(&rm);
+			return true;
+		}
 	}
 
 	/* Monster objects */
@@ -1462,7 +1485,12 @@ static struct object *find_artifact(struct artifact *artifact)
 		obj = mon ? mon->held_obj : NULL;
 
 		while (obj) {
-			if (obj->artifact == artifact) return obj;
+			if (obj == target) {
+				obj->held_m_idx = 0;
+				pile_excise(&mon->held_obj, obj);
+				do_remove_object(&obj);
+				return true;
+			}
 			obj = obj->next;
 		}
 	}
@@ -1471,7 +1499,10 @@ static struct object *find_artifact(struct artifact *artifact)
 	for (i = 0; i < MAX_STORES; i++) {
 		struct store *s = &stores[i];
 		for (obj = s->stock; obj; obj = obj->next) {
-			if (obj->artifact == artifact) return obj;
+			if (obj == target) {
+				store_delete(s, obj, obj->number);
+				return true;
+			}
 		}
 	}
 
@@ -1486,7 +1517,10 @@ static struct object *find_artifact(struct artifact *artifact)
 			for (x = 1; x < c->width; x++) {
 				struct loc grid = loc(x, y);
 				for (obj = square_object(c, grid); obj; obj = obj->next) {
-					if (obj->artifact == artifact) return obj;
+					if (obj == target) {
+						square_delete_object(c, grid, obj, true, true);
+						return true;
+					}
 				}
 			}
 		}
@@ -1497,13 +1531,99 @@ static struct object *find_artifact(struct artifact *artifact)
 			obj = mon ? mon->held_obj : NULL;
 
 			while (obj) {
-				if (obj->artifact == artifact) return obj;
+				if (obj == target) {
+					obj->held_m_idx = 0;
+					pile_excise(&mon->held_obj, obj);
+					do_remove_object(&obj);
+					return true;
+				}
+				obj = obj->next;
+			}
+		}
+	}
+	return false;
+}
+
+/**
+ * Look for an object
+ */
+struct object *find_object(struct object * (*fn )(struct object *, void *), void *data)
+{
+	int y, x, i;
+	struct object *obj;
+	struct object *result = NULL;
+
+	/* Ground objects */
+	for (y = 1; y < cave->height; y++) {
+		for (x = 1; x < cave->width; x++) {
+			struct loc grid = loc(x, y);
+			for (obj = square_object(cave, grid); obj; obj = obj->next) {
+				if ((result = fn(obj, data))) return result;
+			}
+		}
+	}
+
+	/* Player objects */
+	for (obj = player->gear; obj; obj = obj->next) {
+		if ((result = fn(obj, data))) return result;
+	}
+
+	/* Monster objects */
+	for (i = cave_monster_max(cave) - 1; i >= 1; i--) {
+		struct monster *mon = cave_monster(cave, i);
+		obj = mon ? mon->held_obj : NULL;
+
+		while (obj) {
+			if ((result = fn(obj, data))) return result;
+			obj = obj->next;
+		}
+	}
+
+	/* Store objects */
+	for (i = 0; i < MAX_STORES; i++) {
+		struct store *s = &stores[i];
+		for (obj = s->stock; obj; obj = obj->next) {
+			if ((result = fn(obj, data))) return result;
+		}
+	}
+
+	/* Stored chunk objects */
+	for (i = 0; i < chunk_list_max; i++) {
+		struct chunk *c = chunk_list[i];
+		int j;
+		if (strstr(c->name, "known")) continue;
+
+		/* Ground objects */
+		for (y = 1; y < c->height; y++) {
+			for (x = 1; x < c->width; x++) {
+				struct loc grid = loc(x, y);
+				for (obj = square_object(c, grid); obj; obj = obj->next) {
+					if ((result = fn(obj, data))) return result;
+				}
+			}
+		}
+
+		/* Monster objects */
+		for (j = cave_monster_max(c) - 1; j >= 1; j--) {
+			struct monster *mon = cave_monster(c, j);
+			obj = mon ? mon->held_obj : NULL;
+
+			while (obj) {
+				if ((result = fn(obj, data))) return result;
 				obj = obj->next;
 			}
 		}
 	}	
 
 	return NULL;
+}
+
+/**
+ * Look for an artifact
+ */
+static struct object *find_artifact(struct artifact *artifact)
+{
+	return find_object(object_is_artifact, artifact);
 }
 
 /**

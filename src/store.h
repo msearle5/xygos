@@ -100,6 +100,7 @@ struct store {
 
 extern struct store *stores;
 
+void store_delete(struct store *s, struct object *obj, int amt);
 struct store *get_store_by_idx(int idx);
 struct store *get_store_by_name(const char *name);
 bool you_own(struct store *store);

@@ -20,6 +20,13 @@
 # succeed:<text>		Message to get when you successfully complete a quest.
 # failure:<text>		Message when you @£$! it up
 # unlock:<quest name>	Another quest unlocked by this.
+# object:<object name>	The object which is the object of the quest. It might be an object name (as known, e.g.
+# 						"whizz pill" not "fubazine pill") or a substring (e.g. "pill" will match *pill*).
+# flags:				Some combination of the following flags:
+#						active		Active from the start of the game
+#						locked		Not available until unlocked
+#						essential	Needed to win the game
+#
 
 name:Rats
 level:6
@@ -48,6 +55,19 @@ desc:Retrieve the rare booze from the volcanic cave
 succeed:Well done. A reward? Isn't the thrill of exploration its own reward? No? Well, OK.
 failure:Defeated by a mouse. How heroic!
 flags:locked
+
+name:Msing Pills
+level:15
+object:pill
+store:Pharmacy
+entrymin:20
+# You must pick up every pill you can see (max-remaining 0) and return a reasonable number (of the ~200) but if there is some accidental destruction that's OK.
+min-found:120
+max-remaining:0
+intro:Most of my stock has been stolen. I don't know who did it, or where they have been taken - I couldn't get a straight answer from the witness. He just babbled on about a glowing maze filled with ghosts - he must have popped a few pills himself! But you will be well rewarded if you can bring it all back.
+desc:Find the pills and return them to the pharmacy
+succeed:Well done - you are going to like these, I'm sure.
+failure:Oh well - I realise that I didn't give you much to go on.
 
 name:Sauron
 level:99

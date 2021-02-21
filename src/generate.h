@@ -319,6 +319,7 @@ extern byte get_angle_to_grid[41][41];
 int grid_to_i(struct loc grid, int w);
 void i_to_grid(int i, int w, struct loc *grid);
 void shuffle(int *arr, int n);
+void shuffle_sized(void *arr, int n, int size);
 bool cave_find(struct chunk *c, struct loc *grid, square_predicate pred);
 bool find_empty(struct chunk *c, struct loc *grid);
 bool find_empty_range(struct chunk *c, struct loc *grid, struct loc top_left,

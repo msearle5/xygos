@@ -145,10 +145,13 @@ struct quest
 	s16b entry_min;				/* Minimum questgiver-to-entrance distance */
 	s16b entry_max;				/* Maximum questgiver-to-entrance distance */
 	s16b entry_feature;			/* Nearby feature to the entrance */
+	u16b min_found;				/* The minimum number of items found to complete the quest */
+	u16b max_remaining;			/* The maximum number of items remaining to complete the quest */
 	s32b cur_num;				/* Number killed (unused) */
 	s32b max_num;				/* Number required (unused) */
 	s32b store;					/* Store the quest is given from; can be STORE_NONE (-1) */
 	u32b flags;
+	char *target_item;			/* Item (or item class) considered a target of the quest */
 	char *intro;				/* Description given when you choose whether to take it */
 	char *desc;					/* Description given in a list of known quests */
 	char *succeed;				/* Message given on success */

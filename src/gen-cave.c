@@ -2545,6 +2545,8 @@ struct chunk *quest_chunk(struct player *p)
 		/* Build the vault in it */
 		build_vault(c, loc(v->wid / 2, v->hgt / 2), v);
 
+		/* Do quest specific setup */
+		quest_enter_level(c);
 		return c;
 	}
 }

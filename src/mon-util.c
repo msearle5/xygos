@@ -936,7 +936,8 @@ struct monster *choose_nearby_injured_kin(struct chunk *c,
  * Checks for "Quest" completion when a quest monster is killed.
  *
  * Note that only the player can induce "monster_death()" on Uniques.
- * Thus (for now) all Quest monsters should be Uniques.
+ * Thus (for now) all Quest monsters should either be Uniques, or quest completion
+ * should not care whether the monster was killed by (and so next to) the player.
  *
  * If `stats` is true, then we skip updating the monster memory. This is
  * used by stats-generation code, for efficiency.

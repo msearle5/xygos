@@ -87,18 +87,8 @@ void do_cmd_go_up(struct command *cmd)
 			if (!(quest->flags & QF_SUCCEEDED))
 				if (!get_check("Leaving now will fail your task. Sure? "))
 					return;
-			/*	else
-					quest->flags |= QF_FAILED;
-			} else {
-				quest->flags |= QF_UNREWARDED;
-			}
-			quest->flags &= ~QF_ACTIVE;
-			maze = "You return to the town.";
+
 			ascend_to = 0;
-*/
-ascend_to = 0;
-			/* Not generating or in a quest any more */
-			//player->active_quest = -1;
 		}
 	} else {
 		if (ascend_to == player->depth) {

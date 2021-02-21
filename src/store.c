@@ -592,6 +592,10 @@ static bool store_will_buy(struct store *store, const struct object *obj)
 		return false;
 	}
 
+	/* Don't buy quest items */
+	if (of_has(obj->flags, OF_QUEST_SPECIAL))
+		return false;
+
 	/* No buy list means we buy anything */
 	if (!store->buy) return true;
 

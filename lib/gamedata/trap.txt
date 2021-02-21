@@ -218,14 +218,26 @@ visibility:0
 
 # rune -- teleport
 
-name:strange rune:teleport rune
+name:strange markings:portal
+graphics:^:r
+appear:1:1:0
+visibility:30+d30
+flags:TRAP | FLOOR | MAGICAL
+effect:PORTAL
+dice:M80
+desc:A hidden device which teleports you to another portal.
+msg:You stepped through a portal!
+
+# rune -- teleport
+
+name:strange markings:teleport trap
 graphics:^:o
 appear:1:1:0
 visibility:30+d30
 flags:TRAP | FLOOR | MAGICAL
 effect:TELEPORT
 dice:M80
-desc:A magical rune which teleports you to a random location.
+desc:A hidden device which teleports you to a random location.
 msg:You hit a teleport trap!
 
 # spot -- fire

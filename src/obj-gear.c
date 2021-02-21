@@ -29,6 +29,7 @@
 #include "obj-tval.h"
 #include "obj-util.h"
 #include "player-calcs.h"
+#include "player-quest.h"
 #include "player-util.h"
 
 static const struct slot_info {
@@ -698,6 +699,9 @@ void inven_carry(struct player *p, struct object *obj, bool absorb,
 
 	if (object_is_in_quiver(p, obj))
 		sound(MSG_QUIVER);
+
+	/* Handle quests for objects */
+	quest_item_check(obj);
 }
 
 

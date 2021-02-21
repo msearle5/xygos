@@ -17,15 +17,21 @@
  */
 #include "angband.h"
 #include "datafile.h"
+#include "generate.h"
 #include "init.h"
+#include "mon-make.h"
 #include "mon-util.h"
 #include "monster.h"
+#include "obj-desc.h"
+#include "obj-make.h"
 #include "obj-pile.h"
 #include "obj-util.h"
 #include "player-birth.h"
 #include "player-calcs.h"
 #include "player-quest.h"
 #include "store.h"
+#include "trap.h"
+#include "ui-knowledge.h"
 
 /**
  * Array of quests
@@ -99,6 +105,14 @@ static enum parser_error parse_quest_unlock(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_quest_object(struct parser *p) {
+	struct quest *q = parser_priv(p);
+	assert(q);
+
+	q->target_item = string_make(parser_getstr(p, "object"));
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_quest_entrymin(struct parser *p) {
 	struct quest *q = parser_priv(p);
 	assert(q);
@@ -112,6 +126,22 @@ static enum parser_error parse_quest_entrymax(struct parser *p) {
 	assert(q);
 
 	q->entry_max = parser_getuint(p, "max");
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_quest_min_found(struct parser *p) {
+	struct quest *q = parser_priv(p);
+	assert(q);
+
+	q->min_found = parser_getuint(p, "min");
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_quest_max_remaining(struct parser *p) {
+	struct quest *q = parser_priv(p);
+	assert(q);
+
+	q->max_remaining = parser_getuint(p, "max");
 	return PARSE_ERROR_NONE;
 }
 
@@ -188,6 +218,7 @@ struct parser *init_parse_quest(void) {
 	parser_reg(p, "race str race", parse_quest_race);
 	parser_reg(p, "number uint number", parse_quest_number);
 	parser_reg(p, "store str store", parse_quest_store);
+	parser_reg(p, "object str object", parse_quest_object);
 	parser_reg(p, "entrymin uint min", parse_quest_entrymin);
 	parser_reg(p, "entrymax uint max", parse_quest_entrymax);
 	parser_reg(p, "entryfeature sym feature", parse_quest_entryfeature);
@@ -196,6 +227,8 @@ struct parser *init_parse_quest(void) {
 	parser_reg(p, "succeed str text", parse_quest_succeed);
 	parser_reg(p, "failure str text", parse_quest_failure);
 	parser_reg(p, "unlock str text", parse_quest_unlock);
+	parser_reg(p, "min-found uint min", parse_quest_min_found);
+	parser_reg(p, "max-remaining uint max", parse_quest_max_remaining);
 	parser_reg(p, "flags str flags", parse_quest_flags);
 	return p;
 }
@@ -285,6 +318,7 @@ void player_quests_reset(struct player *p)
 		p->quests[i].failure = string_make(quests[i].failure);
 		p->quests[i].intro = string_make(quests[i].intro);
 		p->quests[i].desc = string_make(quests[i].desc);
+		p->quests[i].target_item = string_make(quests[i].target_item);
 		p->quests[i].level = quests[i].level;
 		p->quests[i].race = quests[i].race;
 		p->quests[i].max_num = quests[i].max_num;
@@ -293,6 +327,8 @@ void player_quests_reset(struct player *p)
 		p->quests[i].unlock = quests[i].unlock;
 		p->quests[i].entry_min = quests[i].entry_min;
 		p->quests[i].entry_max= quests[i].entry_max;
+		p->quests[i].min_found = quests[i].min_found;
+		p->quests[i].max_remaining = quests[i].max_remaining;
 		p->quests[i].entry_feature = quests[i].entry_feature;
 	}
 }
@@ -310,6 +346,7 @@ void player_quests_free(struct player *p)
 		string_free(p->quests[i].failure);
 		string_free(p->quests[i].intro);
 		string_free(p->quests[i].desc);
+		string_free(p->quests[i].target_item);
 	}
 	mem_free(p->quests);
 }
@@ -392,6 +429,135 @@ static void add_item(struct start_item *si, int tval, const char *name, int min,
 		prev->next = si;
 }
 
+/** Drop an item on the floor at the specified place, mark it as a quest item */
+static void quest_item_at(struct chunk *c, struct loc xy, struct object *obj)
+{
+	bool dummy;
+	obj->origin = ORIGIN_SPECIAL;
+	obj->origin_depth = player->depth;
+	of_on(obj->flags, OF_QUEST_SPECIAL);
+	floor_carry(c, xy, obj, &dummy);
+}
+
+/** Enter a quest level. This is called after the vault is generated.
+ * At this point cave may not be set - so use the passed in chunk.
+ **/
+void quest_enter_level(struct chunk *c)
+{
+	assert(player->active_quest >= 0);
+	struct quest *q = &player->quests[player->active_quest];
+	const char *n = q->name;
+	s32b value;
+
+	 if (streq(n, "Msing Pills")) {
+		/* Traps:
+		 * Place a portal at each side first.
+		 */
+		struct trap_kind *glyph = lookup_trap("portal");
+		if (glyph) {
+			int tidx = glyph->tidx;
+			place_trap(c, loc(1, 9), tidx, 0);
+			place_trap(c, loc(c->width-2, 9), tidx, 0);
+		}
+
+		/* Items:
+		 * Place one piece of fruit next to where you start, and
+		 * one of each other type in random clear positions.
+		 */
+
+		char *fruit[] = {
+			 "apple", "pear", "orange", "satsuma", "banana",
+			 "pineapple", "melon", "pepper", "habanero", "choke-apple",
+			 "snozzcumber"
+		};
+		const int nfruit = sizeof(fruit)/sizeof(fruit[0]);
+
+		shuffle_sized(fruit, nfruit, sizeof(fruit[0]));
+		for(int i=0;i<nfruit;i++) {
+			struct loc xy = loc(13, 14);	// left of the <
+			if (i > 0) {
+				/* Find a space (avoiding the unreachable center) */
+				do {
+					xy = loc(randint1(c->width - 1), randint1(c->height - 1));
+				} while ((xy.y == 9) || (!square_isempty(c, xy)));
+			}
+			struct object *obj = make_object_named(c, 1, false, false, false, &value, TV_FOOD, fruit[i]);
+			bool dummy;
+			obj->origin = ORIGIN_SPECIAL;
+			obj->origin_depth = player->depth;
+			obj->number = 1;
+			floor_carry(c, xy, obj, &dummy);
+		}
+
+		/*
+		 * Fill every other clear position (outside the central area)
+		 * with random non-useless but typically low-level pills - total ~200.
+		 */
+
+		for(int x=1;x<c->width;x++) {
+			for(int y=1;y<c->height;y++) {
+				struct loc xy = loc(x, y);
+				if ((y != 9) || (x == 5) || (x == 22)) {
+					if (square_isempty(c, xy)) {
+						struct object *obj = NULL;
+						do {
+							if (obj)
+								object_delete(&obj);
+							obj = make_object_named(c, 1, false, false, false, &value, TV_PILL, NULL);
+						} while ((!obj) || (value <= 5) || (obj->number > 1));	/* not a nasty or sugar */
+						quest_item_at(c, xy, obj);
+					}
+				}
+			}
+		}
+
+		/* Monsters:
+		 * 4 uniques.
+		 * Resurrect centrally when killed? This seems too mean, though.
+		 */
+
+		struct monster_group_info info = { 0, 0 };
+		place_new_monster(c, loc(1, 1), lookup_monster("Inky"), false, false, info, ORIGIN_DROP);
+		place_new_monster(c, loc(c->width-2, 1), lookup_monster("Blinky"), false, false, info, ORIGIN_DROP);
+		place_new_monster(c, loc(1, c->height - 2), lookup_monster("Pinky"), false, false, info, ORIGIN_DROP);
+		place_new_monster(c, loc(c->width-2, c->height - 2), lookup_monster("Clyde"), false, false, info, ORIGIN_DROP);
+	 }
+}
+
+static struct object * has_special_flag(struct object *obj, void *data)
+{
+	return (of_has(obj->flags, OF_QUEST_SPECIAL)) ? obj : NULL;
+}
+
+/**
+ * Remove the QUEST_SPECIAL flag on all items - they are now ordinary items which can e.g. be sold.
+ * Must at least check your home, your gear and the level.
+ * This usually happens when you fail a quest - but some quests might allow you to keep the stuff when you succeed as well.
+ */
+static void quest_remove_flags(void)
+{
+	struct object *obj;
+	do {
+		obj = find_object(has_special_flag, NULL);
+		if (obj)
+			of_off(obj->flags, OF_QUEST_SPECIAL);
+	} while (obj);
+}
+
+/** Delete all items with the QUEST_SPECIAL flag.
+ * Must at least check your home, your gear and the level.
+ * This usually happens when you succeed.
+ */
+static void quest_remove_specials(void)
+{
+	struct object *obj;
+	do {
+		obj = find_object(has_special_flag, NULL);
+		if (obj)
+			remove_object(obj);
+	} while (obj);
+}
+
 /**
  * Generate a reward for completing a quest.
  * Passed true if the quest was completed successfully.
@@ -408,13 +574,114 @@ void quest_reward(const struct quest *q, bool success)
 		if (streq(n, "Rats")) {
 			add_item(si, TV_FOOD, "cheese", 6, 9);
 			au = 200;
+		} else if (streq(n, "Msing Pills")) {
+			add_item(si, TV_PILL, "augmentation", 2, 2);
 		}
+		quest_remove_specials();
+	} else {
+		quest_remove_flags();
 	}
 
 	if (si[0].max) {
 		add_start_items(player, si, false, false, ORIGIN_REWARD);
 	}
 	player->au += au;
+}
+
+/** Return true if the item is a target of the quest */
+static bool item_is_target(const struct quest *q, const struct object *obj) {
+	char oname[64];
+	object_desc(oname, sizeof(oname), obj, ODESC_SPOIL | ODESC_BASE);
+	if ((!q) || (!obj))
+		return false;
+	if (!q->target_item)
+		return false;
+	if (!of_has(obj->flags, OF_QUEST_SPECIAL))
+		return false;
+	return (my_stristr(oname, q->target_item) != NULL);
+}
+
+/** Complete the current quest, successfully */
+static void quest_succeed(void) {
+	assert(player->active_quest >= 0);
+	struct quest *q = &player->quests[player->active_quest];
+	if (!(q->flags & QF_SUCCEEDED))
+		msgt(MSG_LEVEL, "Your task is complete!");
+	q->flags |= QF_SUCCEEDED;
+	q->flags &= ~QF_FAILED;
+}
+
+/** Complete the current quest, unsuccessfully */
+static void quest_fail(void) {
+	assert(player->active_quest >= 0);
+	struct quest *q = &player->quests[player->active_quest];
+	if (!(q->flags & QF_FAILED))
+		msgt(MSG_LEVEL, "You have failed in your task!");
+	q->flags |= QF_FAILED;
+	q->flags &= ~QF_SUCCEEDED;
+}
+
+/**
+ * You picked up an item.
+ * Check if that completes your quest.
+ */
+bool quest_item_check(const struct object *obj) {
+	/* If you aren't in a quest, or it doesn't have a quest item,
+	 * or the item picked up is not a quest item, bail out early.
+	 **/
+	if (player->active_quest < 0)
+		return false;
+	struct quest *q = &player->quests[player->active_quest];
+	if (!item_is_target(q, obj))
+		return false;
+
+	/* Find the number of targets carried */
+	int gear_items = 0;
+	struct object *gear_obj = player->gear;
+	while (gear_obj) {
+		if (item_is_target(q, gear_obj))
+			gear_items += gear_obj->number;
+		gear_obj = gear_obj->next;
+	};
+
+	/* And the number on the level (including monster held) */
+	int level_items = 0;
+	for (int y = 1; y < cave->height; y++) {
+		for (int x = 1; x < cave->width; x++) {
+			struct loc grid = loc(x, y);
+			for (struct object *obj = square_object(cave, grid); obj; obj = obj->next) {
+				if (item_is_target(q, obj))
+					level_items += obj->number;
+			}
+		}
+	}
+
+	/* Does this meet the quest conditions?
+	 * Possible conditions include
+	 * 'at least X' (where X is commonly 1)
+	 * 'all still remaining' (i.e. destroyed items are OK)
+	 * 'all that were there at the start' (so not OK)
+	 * 
+	 * There is also 'quest flag' vs item name XXX
+	 * 
+	 * What if you un-complete a quest? (by destroying items, or leaving them behind?)
+	 * A quest might complete immediately, or only when leaving the quest level, or only when
+	 * visiting the questgiver - add flags.
+	 * 
+	 * Might also be possible to *fail* a quest - by destroying the wrong object, or killing the wrong monster...
+	 * 
+	 * Combinations of these ("all still remaining, but at least 2")
+	 * 
+	 * A "minimum found" and "maximum remaining" is useful, though.
+	 **/
+	if (gear_items >= q->min_found) {
+		if (level_items <= q->max_remaining) {
+			quest_succeed();
+			return true;
+		}
+	}
+
+	return false;
 }
 
 /**
@@ -432,8 +699,7 @@ bool quest_check(const struct monster *m) {
 				q->cur_num++;
 				if (q->cur_num == q->max_num) {
 					/* You've killed the last quest target */
-					q->flags |= QF_SUCCEEDED;
-					msgt(MSG_LEVEL, "Your task is complete!");
+					quest_succeed();
 				}
 			}
 		}

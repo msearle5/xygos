@@ -243,6 +243,86 @@ desc:it against burglars such as yourself.
 
 ##### Monster races proper #####
 
+##### HOLOGRAMS #####
+
+name:Inky
+base:hologram
+color:Blue
+speed:110
+hit-points:200
+hearing:2
+smell:2
+armor-class:30
+sleepiness:0
+depth:20
+rarity:1
+experience:200
+blow:TOUCH:BLIND:3d10
+blow:TOUCH:HURT:2d10
+spell-freq:8
+spells:DARKNESS
+desc:A dark shape hangs in the air, with little detail discernible besides the pair of huge white eyes. It reaches out a tendril of darkness towards you...
+flags:UNIQUE | SPECIAL_GEN
+
+name:Blinky
+base:hologram
+color:Green
+speed:110
+hit-points:200
+hearing:2
+smell:2
+armor-class:30
+sleepiness:0
+depth:20
+rarity:1
+experience:200
+blow:TOUCH:CONFUSE:3d10
+blow:TOUCH:HURT:2d10
+spell-freq:5
+spells:BLINK | CONF
+desc:A vague green shape that twists and twirls strangely. It's continually fading in and out of visibility, with the white pop-eyes always being the last to disappear.
+flags:UNIQUE | SPECIAL_GEN
+
+name:Pinky
+base:hologram
+color:Magenta-Pink
+speed:110
+hit-points:200
+hearing:2
+smell:2
+armor-class:30
+sleepiness:0
+depth:20
+rarity:1
+experience:200
+blow:TOUCH:TERRIFY
+blow:TOUCH:HURT:2d10
+desc:A bright pink balloon-like shape, fading into translucency below and behind and with a pair of big white eyes. It looks more like a cartoon ghost than anything, but if it's really so harmless why do you suddenly feel so apprehensive?
+spell-freq:8
+spells:SCARE
+flags:UNIQUE | SPECIAL_GEN
+
+name:Clyde
+base:hologram
+color:Red
+speed:110
+hit-points:200
+hearing:2
+smell:2
+armor-class:30
+sleepiness:0
+depth:20
+rarity:1
+experience:200
+spell-freq:5
+spells:TELE_TO
+blow:TOUCH:FIRE:2d10
+blow:TOUCH:FIRE:2d10
+desc:A glowing fiery red flame-shape in the air, with a trail of smoke and sparks - you can hear it crackling and feel the heat radiating off it from some way off. Wide white eyes stare at you as if you were a fuel.
+spell-freq:5
+spells:BR_FIRE | BO_FIRE
+flags:UNIQUE | SPECIAL_GEN
+
 ##### HUMANS #####
 
 name:Nijel, the Rat

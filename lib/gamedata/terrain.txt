@@ -197,7 +197,7 @@ look-in-preposition:at
 desc:A quiet, reflective place of refuge, lined with shelves of 
 desc:mystical tomes.
 
-name:Alchemy Shop
+name:Pharmacy
 graphics:5:b
 priority:20
 flags:SHOP | PROJECT | PASSABLE | PERMANENT | INTERESTING | EASY

@@ -34,5 +34,7 @@ void do_cmd_query_symbol(void);
 void do_cmd_center_map(void);
 void do_cmd_monlist(void);
 void do_cmd_itemlist(void);
+struct object *find_object(struct object * (*fn )(struct object *, void *), void *data);
+void remove_object(struct object *obj);
 
 #endif /* UI_KNOWLEDGE_H */

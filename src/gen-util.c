@@ -132,7 +132,7 @@ void i_to_grid(int i, int w, struct loc *grid)
 }
 
 /**
- * Shuffle an array using Knuth's shuffle.
+ * Shuffle an array of ints using Knuth's shuffle.
  * \param arr array
  * \param n number of shuffle moves
  */
@@ -147,6 +147,23 @@ void shuffle(int *arr, int n)
     }
 }
 
+/**
+ * Shuffle an array of any type using Knuth's shuffle.
+ * \param arr array
+ * \param n number of shuffle moves (elements in the array)
+ * \param size size of each element, bytes
+ */
+void shuffle_sized(void *arr, int n, int size)
+{
+    int i, j;
+    void *k = alloca(size);
+    for (i = 0; i < n; i++) {
+		j = randint0(n - i) + i;
+		memcpy(k, arr + (j * size), size);
+		memcpy(arr + (j * size), arr + (i * size), size);
+		memcpy(arr + (i * size), k, size);
+    }
+}
 
 /**
  * Locate a square in a rectangle which satisfies the given predicate.

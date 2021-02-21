@@ -2822,6 +2822,106 @@ bool effect_handler_PROBE(effect_handler_context_t *context)
 	return true;
 }
 
+/** Teleport player to the nearest portal in the level, if
+ * there is one. If there isn't behaves as TELEPORT.
+ */
+bool effect_handler_PORTAL(effect_handler_context_t *context)
+{
+	struct loc start = loc(context->x, context->y);
+	struct monster *t_mon = monster_target_monster(context);
+	bool is_player = (context->origin.what != SRC_MONSTER || context->subtype);
+	int dis = context->value.base;
+
+	/* No teleporting in arena levels */
+	if (player->upkeep->arena_level) return true;
+
+	/* Establish the coordinates to teleport from, if we don't know already */
+	if (!loc_is_zero(start)) {
+		/* We're good */
+	} else if (t_mon) {
+		/* Monster targeting another monster */
+		start = t_mon->grid;
+	} else if (is_player) {
+		/* Decoys get destroyed */
+		struct loc decoy = cave_find_decoy(cave);
+		if (!loc_is_zero(decoy) && context->subtype) {
+			square_destroy_decoy(cave, decoy);
+			return true;
+		}
+
+		start = player->grid;
+
+		/* Check for a no teleport grid */
+		if (square_isno_teleport(cave, start) &&
+			((dis > 10) || (dis == 0))) {
+			msg("Teleportation forbidden!");
+			return true;
+		}
+
+		/* Check for a no teleport curse */
+		if (player_of_has(player, OF_NO_TELEPORT)) {
+			equip_learn_flag(player, OF_NO_TELEPORT);
+			msg("Teleportation forbidden!");
+			return true;
+		}
+	} else {
+		assert(context->origin.what == SRC_MONSTER);
+		struct monster *mon = cave_monster(cave, context->origin.which.monster);
+		start = mon->grid;
+	}
+
+	/* Find the closest portal */
+	struct loc target;
+	struct loc grid;
+	int best = -1;
+	struct trap_kind *portal = lookup_trap("portal");
+	bool found = false;
+	for (grid.y = 1; grid.y < cave->height - 1; grid.y++) {
+		for (grid.x = 1; grid.x < cave->width - 1; grid.x++) {
+			/* Not this portal */
+			if ((grid.x == start.x) && (grid.y == start.y))
+				continue;
+			/* Not a portal */
+			if (!square_trap_specific(cave, grid, portal->tidx))
+				continue;
+			int d = distance(grid, start);
+			if (!found) {
+				found = true;
+				best = d;
+				target = grid;
+			} else {
+				if (d < best) {
+					best = d;
+					target = grid;
+				}
+			}
+		}
+	}
+
+	/* If there is none, teleport instead */
+	if (!found) {
+		return effect_handler_TELEPORT(context);
+	} else {
+		/* Sound */
+		sound(is_player ? MSG_TELEPORT : MSG_TPOTHER);
+
+		/* Move player */
+		monster_swap(start, target);
+
+		/* Clear any projection marker to prevent double processing */
+		sqinfo_off(square(cave, target)->info, SQUARE_PROJECT);
+
+		/* Clear monster target if it's no longer visible */
+		if (!target_able(target_get_monster())) {
+			target_set_monster(NULL);
+		}
+
+		/* Lots of updates after monster_swap */
+		handle_stuff(player);
+	}
+	return true;
+}
+
 /**
  * Teleport player or monster up to context->value.base grids away.
  *
