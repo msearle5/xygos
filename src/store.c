@@ -771,7 +771,7 @@ static void mass_produce(struct object *obj)
 		}
 
 		case TV_PILL:
-		case TV_SCROLL:
+		case TV_CARD:
 		{
 			if (cost <= 60L) size += mass_roll(3, 5);
 			if (cost <= 240L) size += mass_roll(1, 5);
@@ -1167,7 +1167,7 @@ static void store_delete_random(struct store *store)
  * - Thrown weapons (TODO)
  * - Most armor (avoid items that aren't really armor)
  * - Most lights, food rations
- * - Some pills, scrolls? (TODO)
+ * - Some pills, cards? (TODO)
  */
 static bool hq_ok(const struct object *obj)
 {
@@ -1635,11 +1635,11 @@ int find_inven(const struct object *obj)
 				return 0;
 			}
 
-			/* Food and Pills and Scrolls */
+			/* Food and Pills and Cards */
 			case TV_FOOD:
 			case TV_MUSHROOM:
 			case TV_PILL:
-			case TV_SCROLL:
+			case TV_CARD:
 			{
 				/* Assume okay */
 				break;

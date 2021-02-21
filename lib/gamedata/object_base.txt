@@ -159,7 +159,7 @@ graphics:light purple
 # max-stack:5
 flags:HATES_ELEC | EASY_KNOW
 
-name:scroll:Scroll~
+name:card:Card~
 graphics:white
 # max-stack:20
 flags:HATES_ACID | HATES_FIRE | EASY_KNOW

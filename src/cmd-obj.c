@@ -646,9 +646,9 @@ static void use_aux(struct command *cmd, struct object *obj, enum use use,
 
 
 /**
- * Read a scroll
+ * Read a card
  */
-void do_cmd_read_scroll(struct command *cmd)
+void do_cmd_read_card(struct command *cmd)
 {
 	struct object *obj;
 
@@ -661,15 +661,15 @@ void do_cmd_read_scroll(struct command *cmd)
 		}
 	}
 
-	/* Check player can use scroll */
+	/* Check player can use card */
 	if (!player_can_read(player, true))
 		return;
 
-	/* Get the scroll */
+	/* Get the card */
 	if (cmd_get_item(cmd, "item", &obj,
-			"Read which scroll? ",
-			"You have no scrolls to read.",
-			tval_is_scroll,
+			"Read which card? ",
+			"You have no cards to read.",
+			tval_is_card,
 			USE_INVEN | USE_FLOOR) != CMD_OK) return;
 
 	use_aux(cmd, obj, USE_SINGLE, MSG_GENERIC);
@@ -934,7 +934,7 @@ void do_cmd_use(struct command *cmd)
 	else if (tval_is_rod(obj))			do_cmd_zap_rod(cmd);
 	else if (tval_is_wand(obj))			do_cmd_aim_wand(cmd);
 	else if (tval_is_staff(obj))		do_cmd_use_staff(cmd);
-	else if (tval_is_scroll(obj))		do_cmd_read_scroll(cmd);
+	else if (tval_is_card(obj))		do_cmd_read_card(cmd);
 	else if (tval_is_printer(obj))		do_cmd_use_printer(cmd);
 	else if (obj_can_refill(obj))		do_cmd_refill(cmd);
 	else if (obj_is_activatable(obj)) {

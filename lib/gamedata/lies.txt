@@ -160,6 +160,7 @@ R:Go bake some brownies.
 R:Go on Goon! But there will be not sufficient time to flee any farther.
 R:Go outside and get some fresh air.
 R:Go read a goddamn book!
+R:Go Team Ant!
 R:Gone insane from the pain that sure they know: for who the flange sound?
 R:Gu kibum kelkum-ishi, burzum-ishi. Akha - gum-ishi ashi gurum.
 R:Hackers do it with bugs.
@@ -393,6 +394,7 @@ R:They say that a diamond dog is everybody's best friend.
 R:They say that a mind is a terrible thing to waste.
 R:They say that a mine is a terrible thing to waste.
 R:They say that a mint is a terrible thing to waste.
+R:They say that a pineapple is like a hand grenade.
 R:They say that a waist is a terrible thing to mind.
 R:They say that a waste is a terrible thing to mind.
 R:They say that all property is theft, except mine.
@@ -465,6 +467,7 @@ R:They say that there was once a soldier named Toasty.
 R:They say that there was once a wizard named Billy.
 R:They say that there was once a wizard named Tricky.
 R:They say that there's a rat under your desk, right now.
+R:They say that there's a spider on your arm, right now.
 R:They say that there's lots more ways to die than win.
 R:They say that there's slime all over the walls.
 R:They say that there's work to be done, and no rest this side of Heaven.

@@ -151,17 +151,17 @@ owner:0:-
 slots:0:2
 turnover:9
 danger:60:75
-always:scroll:Word of Recall
-always:scroll:Phase Door
-always:scroll:Remove Curse
-normal:scroll:Monster Confusion
-normal:scroll:Magic Mapping
-normal:scroll:Detect Invisible
-normal:scroll:Recharging
-normal:scroll:Remove Hunger
-normal:scroll:Blessing
-normal:scroll:Holy Chant
-buy:scroll
+always:card:Word of Recall
+always:card:Phase Door
+always:card:Remove Curse
+normal:card:Monster Confusion
+normal:card:Magic Mapping
+normal:card:Detect Invisible
+normal:card:Recharging
+normal:card:Remove Hunger
+normal:card:Blessing
+normal:card:Holy Chant
+buy:card
 
 # Pharmacy
 store:5:Pharmacy

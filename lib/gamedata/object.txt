@@ -85,7 +85,7 @@
 # The latter accepts randomized values.
 
 # 'alloc' is for allocation - frequency and range of levels found. It is used to
-# ensure that certain vital items such as food and recall scrolls
+# ensure that certain vital items such as food and recall cards
 # are found throughout the dungeon. The "allocation" depth need not
 # match the level as specified in the "level:" line, but is likely similar.
 
@@ -3165,12 +3165,12 @@ values:SPD[-3+1d2]
 
 
 
-##### Scrolls #####
+##### Cards #####
 
 ### Teleportation ###
 
 name:Phase Door
-type:scroll
+type:card
 graphics:?:w
 level:1
 weight:5
@@ -3182,7 +3182,7 @@ effect:TELEPORT
 dice:10
 
 name:Teleportation
-type:scroll
+type:card
 graphics:?:w
 level:10
 weight:5
@@ -3194,7 +3194,7 @@ effect:TELEPORT
 dice:M60
 
 name:Teleport Level
-type:scroll
+type:card
 graphics:?:w
 level:20
 weight:5
@@ -3208,7 +3208,7 @@ effect:TELEPORT_LEVEL
 ### Detection ###
 
 name:Magic Mapping
-type:scroll
+type:card
 graphics:?:w
 level:5
 weight:5
@@ -3220,7 +3220,7 @@ effect:MAP_AREA
 effect-yx:22:40
 
 name:Treasure Detection
-type:scroll
+type:card
 graphics:?:w
 level:0
 weight:5
@@ -3234,7 +3234,7 @@ effect:SENSE_OBJECTS
 effect-yx:22:40
 
 name:Detect Invisible
-type:scroll
+type:card
 graphics:?:w
 level:1
 weight:5
@@ -3246,7 +3246,7 @@ effect:DETECT_INVISIBLE_MONSTERS
 effect-yx:22:40
 
 name:Identify Icon
-type:scroll
+type:card
 graphics:?:w
 level:1
 weight:5
@@ -3259,7 +3259,7 @@ effect:IDENTIFY
 ### Enchantments ###
 
 name:Enchant Weapon To-Hit
-type:scroll
+type:card
 graphics:?:w
 level:15
 weight:5
@@ -3271,7 +3271,7 @@ effect:ENCHANT:TOHIT
 dice:1
 
 name:Enchant Weapon To-Dam
-type:scroll
+type:card
 graphics:?:w
 level:15
 weight:5
@@ -3283,7 +3283,7 @@ effect:ENCHANT:TODAM
 dice:1
 
 name:Enchant Armour
-type:scroll
+type:card
 graphics:?:w
 level:15
 weight:5
@@ -3295,7 +3295,7 @@ effect:ENCHANT:TOAC
 dice:1
 
 name:*Enchant Weapon*
-type:scroll
+type:card
 graphics:?:w
 level:50
 weight:5
@@ -3308,7 +3308,7 @@ dice:1d3
 
 
 name:*Enchant Armour*
-type:scroll
+type:card
 graphics:?:w
 level:50
 weight:5
@@ -3321,7 +3321,7 @@ dice:2+1d3
 
 
 name:Remove Curse
-type:scroll
+type:card
 graphics:?:w
 level:10
 weight:5
@@ -3334,7 +3334,7 @@ dice:20+d20
 
 
 name:*Remove Curse*
-type:scroll
+type:card
 graphics:?:w
 level:50
 weight:5
@@ -3348,7 +3348,7 @@ dice:50+d50
 ### Summoning ###
 
 name:Summon Monster
-type:scroll
+type:card
 graphics:?:w
 level:1
 weight:5
@@ -3360,7 +3360,7 @@ effect:SUMMON:ANY
 dice:1d3
 
 name:Summon Undead
-type:scroll
+type:card
 graphics:?:w
 level:15
 weight:5
@@ -3372,7 +3372,7 @@ effect:SUMMON:UNDEAD
 dice:1d3
 
 name:Acquirement
-type:scroll
+type:card
 graphics:?:w
 level:20
 weight:5
@@ -3383,7 +3383,7 @@ effect:ACQUIRE
 dice:1
 
 name:*Acquirement*
-type:scroll
+type:card
 graphics:?:w
 level:60
 weight:5
@@ -3394,10 +3394,10 @@ effect:ACQUIRE
 dice:1+1d2
 
 
-### Killing scrolls ###
+### Killing cards ###
 
 name:Dispel Undead
-type:scroll
+type:card
 graphics:?:w
 level:40
 weight:5
@@ -3409,7 +3409,7 @@ effect:PROJECT_LOS:DISP_UNDEAD:0:1
 dice:60
 
 name:Banishment
-type:scroll
+type:card
 graphics:?:w
 level:40
 weight:5
@@ -3419,7 +3419,7 @@ power:20
 effect:BANISH
 
 name:Mass Banishment
-type:scroll
+type:card
 graphics:?:w
 level:50
 weight:5
@@ -3432,7 +3432,7 @@ effect:MASS_BANISH
 ### Utility ###
 
 name:Remove Hunger
-type:scroll
+type:card
 graphics:?:w
 level:5
 weight:5
@@ -3444,7 +3444,7 @@ effect:NOURISH:INC_TO
 dice:50
 
 name:Light
-type:scroll
+type:card
 graphics:?:w
 level:0
 weight:5
@@ -3457,7 +3457,7 @@ effect:SPOT:LIGHT_WEAK:2
 dice:2d8
 
 name:Word of Recall
-type:scroll
+type:card
 graphics:?:w
 level:5
 weight:5
@@ -3468,7 +3468,7 @@ power:15
 effect:RECALL
 
 name:Recharging
-type:scroll
+type:card
 graphics:?:w
 level:40
 weight:5
@@ -3480,7 +3480,7 @@ effect:RECHARGE
 dice:6
 
 name:Door Destruction
-type:scroll
+type:card
 graphics:?:w
 level:10
 weight:5
@@ -3491,7 +3491,7 @@ power:6
 effect:TOUCH:KILL_DOOR
 
 name:Deep Descent
-type:scroll
+type:card
 graphics:?:w
 level:10
 weight:5
@@ -3505,7 +3505,7 @@ effect:DEEP_DESCENT
 ### "Holy" spells ###
 
 name:Blessing
-type:scroll
+type:card
 graphics:?:w
 level:1
 weight:5
@@ -3517,7 +3517,7 @@ effect:TIMED_INC:BLESSED
 dice:6+1d12
 
 name:Holy Chant
-type:scroll
+type:card
 graphics:?:w
 level:10
 weight:5
@@ -3529,7 +3529,7 @@ effect:TIMED_INC:BLESSED
 dice:12+1d24
 
 name:Holy Prayer
-type:scroll
+type:card
 graphics:?:w
 level:25
 weight:5
@@ -3541,7 +3541,7 @@ effect:TIMED_INC:BLESSED
 dice:24+1d48
 
 name:Protection from Evil
-type:scroll
+type:card
 graphics:?:w
 level:30
 weight:5
@@ -3557,7 +3557,7 @@ expr:B:PLAYER_LEVEL:* 3
 ### Misc. ###
 
 name:Monster Confusion
-type:scroll
+type:card
 graphics:?:w
 level:5
 weight:5
@@ -3569,7 +3569,7 @@ effect:TIMED_INC:ATT_CONF
 dice:10000
 
 name:Rune of Protection
-type:scroll
+type:card
 graphics:?:w
 level:60
 weight:5
@@ -3579,7 +3579,7 @@ power:20
 effect:GLYPH:WARDING
 
 name:*Destruction*
-type:scroll
+type:card
 graphics:?:w
 level:40
 weight:5
@@ -3588,10 +3588,10 @@ alloc:30:40 to 100
 power:12
 effect:DESTRUCTION:LIGHT:15
 
-### Bad scrolls ###
+### Bad cards ###
 
 name:Aggravate Monster
-type:scroll
+type:card
 graphics:?:w
 level:5
 weight:5
@@ -3605,7 +3605,7 @@ effect:PROJECT_LOS:MON_SPEED
 dice:25
 
 name:Curse Weapon
-type:scroll
+type:card
 graphics:?:w
 level:50
 weight:5
@@ -3616,7 +3616,7 @@ power:0
 effect:CURSE_WEAPON
 
 name:Curse Armour
-type:scroll
+type:card
 graphics:?:w
 level:50
 weight:5
@@ -3627,7 +3627,7 @@ power:0
 effect:CURSE_ARMOR
 
 name:Darkness
-type:scroll
+type:card
 graphics:?:w
 level:1
 weight:5
@@ -3640,7 +3640,7 @@ effect:BALL:DARK_WEAK:3
 dice:10
 
 name:Trap Creation
-type:scroll
+type:card
 graphics:?:w
 level:10
 weight:5

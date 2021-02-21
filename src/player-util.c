@@ -923,7 +923,7 @@ bool player_can_cast(struct player *p, bool show_msg)
 }
 
 /**
- * Return true if the player can read scrolls or books.
+ * Return true if the player can read cards or books.
  *
  * \param p is the player
  * \param show_msg should be set to true if a failure message should be

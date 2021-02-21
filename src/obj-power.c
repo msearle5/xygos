@@ -814,7 +814,7 @@ static int object_value_base(const struct object *obj)
 		case TV_MUSHROOM:
 			return 5;
 		case TV_PILL:
-		case TV_SCROLL:
+		case TV_CARD:
 			return 20;
 		case TV_RING:
 		case TV_AMULET:

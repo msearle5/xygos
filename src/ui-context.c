@@ -686,10 +686,10 @@ int context_menu_object(struct object *obj)
 			menu_row_validity_t valid = (obj_has_charges(obj)) ?
 				MN_ROW_VALID : MN_ROW_INVALID;
 			ADD_LABEL("Use", CMD_USE_STAFF, valid);
-		} else if (tval_is_scroll(obj)) {
+		} else if (tval_is_card(obj)) {
 			menu_row_validity_t valid = (player_can_read(player, false)) ?
 				MN_ROW_VALID : MN_ROW_INVALID;
-			ADD_LABEL("Read", CMD_READ_SCROLL, valid);
+			ADD_LABEL("Read", CMD_READ_CARD, valid);
 		} else if (tval_is_pill(obj)) {
 			ADD_LABEL("Quaff", CMD_QUAFF, MN_ROW_VALID);
 		} else if (tval_is_edible(obj)) {
@@ -824,7 +824,7 @@ int context_menu_object(struct object *obj)
 		case CMD_USE_WAND:
 		case CMD_USE_ROD:
 		case CMD_USE_STAFF:
-		case CMD_READ_SCROLL:
+		case CMD_READ_CARD:
 		case CMD_QUAFF:
 		case CMD_EAT:
 		case CMD_ACTIVATE:

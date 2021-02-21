@@ -148,9 +148,9 @@ typedef enum stat_code
 	ST_GAINSTAT_PILLS,
 	ST_HEALING_PILLS,
 	ST_BIGHEAL_PILLS,
-	ST_SCROLLS,
-	ST_ENDGAME_SCROLLS,
-	ST_ACQUIRE_SCROLLS,
+	ST_CARDS,
+	ST_ENDGAME_CARDS,
+	ST_ACQUIRE_CARDS,
 	ST_RODS,
 	ST_UTILITY_RODS,
 	ST_TELEPOTHER_RODS,
@@ -253,9 +253,9 @@ static const struct stat_data stat_message[] =
 	{ST_GAINSTAT_PILLS, " Gain stat   "},//includes *enlight*
 	{ST_HEALING_PILLS, " Healing     "},
 	{ST_BIGHEAL_PILLS, " Big heal    "},//*heal* and life
-	{ST_SCROLLS, "\n ***SCROLLS***   \n All:        "},
-	{ST_ENDGAME_SCROLLS, " Endgame     "},// destruction, banish, mass banish, rune
-	{ST_ACQUIRE_SCROLLS, " Acquire.    "},
+	{ST_CARDS, "\n ***CARDS***   \n All:        "},
+	{ST_ENDGAME_CARDS, " Endgame     "},// destruction, banish, mass banish, rune
+	{ST_ACQUIRE_CARDS, " Acquire.    "},
 	{ST_RODS, "\n ***RODS***      \n All:        "},
 	{ST_UTILITY_RODS, " Utility     "},//dtrap, dstairs, dobj, light, illum
 	{ST_TELEPOTHER_RODS, " Tele Other  "},
@@ -727,22 +727,22 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 			break;
 		}
 
-		/* scrolls */
-		case TV_SCROLL:{
+		/* cards */
+		case TV_CARD:{
 
 			/* add total amounts */
-			add_stats(ST_SCROLLS, vault, mon, number);
+			add_stats(ST_CARDS, vault, mon, number);
 
 			if (strstr(obj->kind->name, "Banishment") ||
 				strstr(obj->kind->name, "Mass Banishment") ||
 				strstr(obj->kind->name, "Rune of Protection") ||
 				strstr(obj->kind->name, "*Destruction*")) {
-				add_stats(ST_ENDGAME_SCROLLS, vault, mon, number);
+				add_stats(ST_ENDGAME_CARDS, vault, mon, number);
 			} else if (strstr(obj->kind->name, "Acquirement")) {
-				add_stats(ST_ACQUIRE_SCROLLS, vault, mon, number);
+				add_stats(ST_ACQUIRE_CARDS, vault, mon, number);
 			} else if (strstr(obj->kind->name, "*Acquirement*")) {
 				/* do the effect of 2 acquires */
-				add_stats(ST_ACQUIRE_SCROLLS, vault, mon, number * 2);
+				add_stats(ST_ACQUIRE_CARDS, vault, mon, number * 2);
 			}
 			break;
 		}
@@ -1137,8 +1137,8 @@ static void print_heading(void)
 	file_putf(stats_log,"		     elec, fire, cold) but not all. \n");
 	file_putf(stats_log," Pills:   Aug counts as 5 pills, *enlight* as 2.  Healing pills are \n");
 	file_putf(stats_log,"			 only *Healing* and Life\n");
-	file_putf(stats_log," Scrolls:   Endgame scrolls include *Dest*, Rune, MBan and Ban \n");
-	file_putf(stats_log,"    		 *Acq* counts as two Acq scrolls");
+	file_putf(stats_log," Cards:   Endgame cards include *Dest*, Rune, MBan and Ban \n");
+	file_putf(stats_log,"    		 *Acq* counts as two Acq cards");
 	file_putf(stats_log," Rods: 	 Utility rods: d-obj, d-stairs, d-traps, light, illum \n");
 	file_putf(stats_log,"    		 Endgame rods: Speed, Healing \n");
 	file_putf(stats_log," Staves: 	 Kill staves: dispel evil, power, holiness. \n");

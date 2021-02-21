@@ -46,9 +46,9 @@ bool tval_is_pill(const struct object *obj)
 	return obj->tval == TV_PILL;
 }
 
-bool tval_is_scroll(const struct object *obj)
+bool tval_is_card(const struct object *obj)
 {
-	return obj->tval == TV_SCROLL;
+	return obj->tval == TV_CARD;
 }
 
 bool tval_is_food(const struct object *obj)
@@ -183,7 +183,7 @@ bool tval_is_useable(const struct object *obj)
 		case TV_ROD:
 		case TV_WAND:
 		case TV_STAFF:
-		case TV_SCROLL:
+		case TV_CARD:
 		case TV_PILL:
 		case TV_FOOD:
 		case TV_MUSHROOM:
@@ -338,7 +338,7 @@ bool tval_can_have_flavor_k(const struct object_kind *kind)
 		case TV_ROD:
 		case TV_PILL:
 		case TV_MUSHROOM:
-		case TV_SCROLL:
+		case TV_CARD:
 			return true;
 		default:
 			return false;

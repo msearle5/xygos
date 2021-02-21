@@ -409,11 +409,11 @@ flavor:240:Magenta-Pink:layak|anol
 flavor:241:Magenta-Pink:banan|adine
 flavor:242:Magenta-Pink:stanfor|imine
 
-##### Scrolls #####
+##### Cards #####
 
-# Scroll names are generated from randomly combined syllables
+# Card names are generated from randomly combined syllables
 
-kind:scroll:?
+kind:card:?
 
 flavor:252:White
 flavor:253:White

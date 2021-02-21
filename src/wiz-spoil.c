@@ -87,43 +87,43 @@ static void spoiler_underline(const char *str, char c)
 static const grouper group_item[] =
 {
 	{ TV_AMMO_6,		"Ammo" },
-	{ TV_AMMO_9,		  NULL },
-	{ TV_AMMO_12,		  NULL },
+	{ TV_AMMO_9,		NULL },
+	{ TV_AMMO_12,		NULL },
 
-	{ TV_GUN,		"Guns" },
+	{ TV_GUN,			"Guns" },
 
-	{ TV_SWORD,		"Weapons" },
-	{ TV_POLEARM,	  NULL },
-	{ TV_HAFTED,	  NULL },
-	{ TV_DIGGING,	  NULL },
+	{ TV_SWORD,			"Weapons" },
+	{ TV_POLEARM,		NULL },
+	{ TV_HAFTED,		NULL },
+	{ TV_DIGGING,		NULL },
 
 	{ TV_SOFT_ARMOR,	"Armour (Body)" },
-	{ TV_HARD_ARMOR,	  NULL },
-	{ TV_DRAG_ARMOR,	  NULL },
+	{ TV_HARD_ARMOR,	NULL },
+	{ TV_DRAG_ARMOR,	NULL },
 
-	{ TV_CLOAK,		"Armour (Misc)" },
-	{ TV_BELT,		  NULL },
-	{ TV_SHIELD,	  NULL },
-	{ TV_HELM,		  NULL },
-	{ TV_CROWN,		  NULL },
-	{ TV_GLOVES,	  NULL },
-	{ TV_BOOTS,		  NULL },
+	{ TV_CLOAK,			"Armour (Misc)" },
+	{ TV_BELT,			NULL },
+	{ TV_SHIELD,		NULL },
+	{ TV_HELM,			NULL },
+	{ TV_CROWN,			NULL },
+	{ TV_GLOVES,		NULL },
+	{ TV_BOOTS,			NULL },
 
-	{ TV_AMULET,	"Amulets" },
-	{ TV_RING,		"Rings" },
+	{ TV_AMULET,		"Amulets" },
+	{ TV_RING,			"Rings" },
 
-	{ TV_SCROLL,	"Scrolls" },
-	{ TV_PILL,		"Pills" },
-	{ TV_FOOD,		"Food" },
-	{ TV_MUSHROOM,	"Mushrooms" },
+	{ TV_CARD,			"Cards" },
+	{ TV_PILL,			"Pills" },
+	{ TV_FOOD,			"Food" },
+	{ TV_MUSHROOM,		"Mushrooms" },
 
-	{ TV_ROD,		"Rods" },
-	{ TV_WAND,		"Wands" },
-	{ TV_STAFF,		"Staffs" },
+	{ TV_ROD,			"Rods" },
+	{ TV_WAND,			"Wands" },
+	{ TV_STAFF,			"Staffs" },
 
-	{ TV_CHEST,		"Containers" },
+	{ TV_CHEST,			"Containers" },
 
-	{ TV_LIGHT,		  "Lights" },
+	{ TV_LIGHT,			"Lights" },
 	{ TV_BATTERY,		"Batteries" },
 
 	{ 0, "" }

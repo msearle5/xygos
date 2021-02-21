@@ -1634,7 +1634,7 @@ static bool obj_known_effect(const struct object *obj, struct effect **effect,
 		*max_recharge = randcalc(timeout, 0, MAXIMISE);
 	}
 
-	if (tval_is_edible(obj) || tval_is_pill(obj) || tval_is_scroll(obj)) {
+	if (tval_is_edible(obj) || tval_is_pill(obj) || tval_is_card(obj)) {
 		*failure_chance = 0;
 	} else {
 		*failure_chance = get_use_device_chance(obj);
@@ -1673,7 +1673,7 @@ static bool describe_effect(textblock *tb, const struct object *obj,
 			textblock_append(tb, "It can be eaten.\n");
 		} else if (tval_is_pill(obj)) {
 			textblock_append(tb, "It can be drunk.\n");
-		} else if (tval_is_scroll(obj)) {
+		} else if (tval_is_card(obj)) {
 			textblock_append(tb, "It can be read.\n");
 		} else if (aimed) {
 			textblock_append(tb, "It can be aimed.\n");
@@ -1701,7 +1701,7 @@ static bool describe_effect(textblock *tb, const struct object *obj,
 			prefix = "When eaten, it ";
 		else if (tval_is_pill(obj))
 			prefix = "When quaffed, it ";
-		else if (tval_is_scroll(obj))
+		else if (tval_is_card(obj))
 			prefix = "When read, it ";
 		else
 			prefix = "When activated, it ";

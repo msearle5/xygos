@@ -1219,7 +1219,7 @@ blow:TOUCH:EAT_GOLD
 flags:MALE | EVIL
 flags:DROP_40
 flags:OPEN_DOOR | TAKE_ITEM
-drop:scroll:Phase Door:35:1:3
+drop:card:Phase Door:35:1:3
 friends-base:20:1d3:person
 friends-base:40:1d3:person
 friends-base:80:1d3:person
@@ -4557,7 +4557,7 @@ flags:DROP_1
 flags:OPEN_DOOR | TAKE_ITEM
 innate-freq:8
 spells:SHOT
-drop:scroll:Phase Door:70:2:6
+drop:card:Phase Door:70:2:6
 friends:50:1d2:Illusionist
 friends:50:1d2:Priest
 friends:50:1d2:warrior
@@ -5558,7 +5558,7 @@ innate-freq:4
 spells:BR_ELEC
 desc:It is a glowing blue bat with a sharp tail.
 
-name:scroll mimic
+name:card mimic
 base:mimic
 glyph:?
 color:w
@@ -5579,14 +5579,14 @@ spell-freq:5
 spells:BO_FIRE
 spells:S_MONSTER
 spells:BLIND | WOUND | CONF | SCARE
-desc:A strange creature that disguises itself as a discarded scroll to lure
+desc:A strange creature that disguises itself as a discarded card to lure
 desc: unsuspecting adventurers within reach of its venomous claws.
-mimic:scroll:Banishment
-mimic:scroll:Mass Banishment
-mimic:scroll:Teleport Level
-mimic:scroll:Acquirement
-mimic:scroll:*Acquirement*
-mimic:scroll:*Destruction*
+mimic:card:Banishment
+mimic:card:Mass Banishment
+mimic:card:Teleport Level
+mimic:card:Acquirement
+mimic:card:*Acquirement*
+mimic:card:*Destruction*
 
 name:fire vortex
 plural:fire vortices

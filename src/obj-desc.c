@@ -41,7 +41,7 @@ void object_base_name(char *buf, size_t max, int tval, bool plural)
 /**
  * Puts a very stripped-down version of an object's name into buf.
  * If easy_know is true, then the IDed names are used, otherwise
- * flavours, scroll names, etc will be used.
+ * flavours, card names, etc will be used.
  *
  * Just truncates if the buffer isn't big enough.
  */
@@ -112,8 +112,8 @@ static const char *obj_desc_get_basename(const struct object *obj, bool aware,
 		case TV_PILL:
 			return (show_flavor ? "& # pill~" : "& pill~");
 
-		case TV_SCROLL:
-			return (show_flavor ? "& Scroll~ titled #" : "& Scroll~");
+		case TV_CARD:
+			return (show_flavor ? "& Card~ titled #" : "& Card~");
 
 		case TV_MUSHROOM:
 			return (show_flavor ? "& # Mushroom~" : "& Mushroom~");
@@ -285,7 +285,7 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 	else if ((obj->known->ego && obj->ego && !(mode & ODESC_NOEGO)) || (obj->ego && store))
 		strnfcat(buf, max, &end, " %s", obj->ego->name);
 	/*else if (aware && !obj->artifact &&
-			 (obj->kind->flavor || obj->kind->tval == TV_SCROLL)) {
+			 (obj->kind->flavor || obj->kind->tval == TV_CARD)) {
 		if (!mimic) {
 			if (terse)
 				strnfcat(buf, max, &end, " '%s'", obj->kind->name);

@@ -21,7 +21,7 @@
 
 #include "obj-ignore.h"
 
-/* Maximum number of scroll titles generated */
+/* Maximum number of card titles generated */
 #define MAX_TITLES	 50
 
 /* An item's pval (for charges, amount of gold, etc) is limited to s16b */

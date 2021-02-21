@@ -82,11 +82,11 @@ static int ex_offset;
 /**
  * Determine if the attr and char should consider the item's flavor
  *
- * Identified scrolls should use their own tile.
+ * Identified cards should use their own tile.
  */
 static bool use_flavor_glyph(const struct object_kind *kind)
 {
-	return kind->flavor && !(kind->tval == TV_SCROLL && kind->aware);
+	return kind->flavor && !(kind->tval == TV_CARD && kind->aware);
 }
 
 /**
@@ -1526,7 +1526,7 @@ bool textui_get_item(struct object **choice, const char *pmt, const char *str,
 
 /**
  * This draws the Object Recall subwindow when displaying a particular object
- * (e.g. a helmet in the backpack, or a scroll on the ground)
+ * (e.g. a helmet in the backpack, or a card on the ground)
  */
 void display_object_recall(struct object *obj)
 {

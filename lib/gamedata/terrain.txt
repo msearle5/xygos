@@ -204,7 +204,7 @@ flags:SHOP | PROJECT | PASSABLE | PERMANENT | INTERESTING | EASY
 info:5:0
 look-prefix:the entrance to the
 look-in-preposition:at
-desc:A dim, scented room where potions and scrolls are traded.
+desc:A dim, scented room where potions and cards are traded.
 
 name:Magic Shop
 graphics:6:r

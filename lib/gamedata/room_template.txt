@@ -8947,7 +8947,7 @@ rating:3
 rows:7
 columns:11
 doors:1
-tval:scroll
+tval:card
 D:%%%%%%%%%%%
 D:%.........%
 D:#^###^###^#
@@ -9037,13 +9037,13 @@ D:##.x^^#^^x.##
 D: ###..+..### 
 D:   #%%#%%#   
 
-name:Scroll shelves
+name:Card shelves
 type:1
 rating:3
 rows:11
 columns:13
 doors:1
-tval:scroll
+tval:card
 D:#%##%%#%%##%#
 D:%.##..(..##.%
 D:%.....x.....%

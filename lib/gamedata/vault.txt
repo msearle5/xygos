@@ -56,7 +56,7 @@
 #    = - ring up to 3 levels OOD
 #    " - amulet up to 3 levels OOD
 #    ! - potion up to 3 levels OOD
-#    ? - scroll up to 3 levels OOD
+#    ? - card up to 3 levels OOD
 #    _ - staff up to 3 levels OOD
 #    - - rod or wand up to 3 levels OOD
 #    , - food up to 3 levels OOD

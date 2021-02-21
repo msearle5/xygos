@@ -50,9 +50,9 @@ struct ego_item *e_info;
 struct flavor *flavors;
 
 /**
- * Hold the titles of scrolls, 6 to 14 characters each, plus quotes.
+ * Hold the titles of cards, 6 to 14 characters each, plus quotes.
  */
-static char scroll_adj[MAX_TITLES][18];
+static char card_adj[MAX_TITLES][18];
 
 /**
  * Hold the titles of pills, 6 to 14 characters each, plus quotes.
@@ -107,8 +107,8 @@ static void flavor_assign_random(byte tval)
 				f->sval = k_info[i].sval;
 				if (tval == TV_PILL)
 					f->text = pill_adj[k_info[i].sval];
-				if (tval == TV_SCROLL)
-					f->text = scroll_adj[k_info[i].sval];
+				if (tval == TV_CARD)
+					f->text = card_adj[k_info[i].sval];
 				flavor_count--;
 				break;
 			}
@@ -143,14 +143,14 @@ void flavor_reset_fixed(void)
  * For the most part, flavors are assigned randomly each game.
  *
  * Initialize descriptions for the "colored" objects, including:
- * Rings, Amulets, Staffs, Wands, Rods, Mushrooms, Pills, Scrolls.
+ * Rings, Amulets, Staffs, Wands, Rods, Mushrooms, Pills, Cards.
  *
- * Scroll titles are always between 6 and 14 letters long.  This is
+ * Card titles are always between 6 and 14 letters long.  This is
  * ensured because every title is composed of whole words, where every
- * word is from 2 to 8 letters long, and that no scroll is finished
+ * word is from 2 to 8 letters long, and that no card is finished
  * until it attempts to grow beyond 15 letters.  The first time this
  * can happen is when the current title has 6 letters and the new word
- * has 8 letters, which would result in a 6 letter scroll title.
+ * has 8 letters, which would result in a 6 letter card title.
  *
  * Hack -- make sure everything stays the same for each saved game
  * This is accomplished by the use of a saved "random seed", as in
@@ -234,7 +234,7 @@ void flavor_init(void)
 	}
 	flavor_assign_random(TV_PILL);
 
-	/* Scrolls (random titles, always white) */
+	/* Cards (random titles, always white) */
 	for (i = 0; i < MAX_TITLES; i++) {
 		char buf[26];
 		char *end = buf + 1;
@@ -243,32 +243,32 @@ void flavor_init(void)
 		bool okay = true;
 
 		my_strcpy(buf, "\"", 2);
-		wordlen = randname_make(RANDNAME_SCROLL, 2, 8, end, 24, name_sections);
-		while (titlelen + wordlen < (int)(sizeof(scroll_adj[0]) - 3)) {
+		wordlen = randname_make(RANDNAME_CARD, 2, 8, end, 24, name_sections);
+		while (titlelen + wordlen < (int)(sizeof(card_adj[0]) - 3)) {
 			end[wordlen] = ' ';
 			titlelen += wordlen + 1;
 			end += wordlen + 1;
-			wordlen = randname_make(RANDNAME_SCROLL, 2, 8, end, 24 - titlelen,
+			wordlen = randname_make(RANDNAME_CARD, 2, 8, end, 24 - titlelen,
 									name_sections);
 		}
 		buf[titlelen] = '"';
 		buf[titlelen+1] = '\0';
 
-		/* Check the scroll name hasn't already been generated */
+		/* Check the card name hasn't already been generated */
 		for (j = 0; j < i; j++) {
-			if (streq(buf, scroll_adj[j])) {
+			if (streq(buf, card_adj[j])) {
 				okay = false;
 				break;
 			}
 		}
 
 		if (okay)
-			my_strcpy(scroll_adj[i], buf, sizeof(scroll_adj[0]));
+			my_strcpy(card_adj[i], buf, sizeof(card_adj[0]));
 		else
 			/* Have another go at making a name */
 			i--;
 	}
-	flavor_assign_random(TV_SCROLL);
+	flavor_assign_random(TV_CARD);
 
 	/* Hack -- Use the "complex" RNG */
 	Rand_quick = false;

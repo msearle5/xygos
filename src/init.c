@@ -3614,7 +3614,7 @@ static void cleanup_flavor(void)
 	while(f) {
 		next = f->next;
 		/* Hack - some items get randomly-generated names */
-		if ((f->tval != TV_SCROLL) && (f->tval != TV_PILL))
+		if ((f->tval != TV_CARD) && (f->tval != TV_PILL))
 			mem_free(f->text);
 		mem_free(f);
 		f = next;

@@ -95,7 +95,7 @@ static const struct command_info game_cmds[] =
 	{ CMD_USE_ROD, "zap", do_cmd_zap_rod, false, 0 },
 	{ CMD_USE_STAFF, "use", do_cmd_use_staff, false, 0 },
 	{ CMD_USE_WAND, "aim", do_cmd_aim_wand, false, 0 },
-	{ CMD_READ_SCROLL, "read", do_cmd_read_scroll, false, 0 },
+	{ CMD_READ_CARD, "read", do_cmd_read_card, false, 0 },
 	{ CMD_ACTIVATE, "activate", do_cmd_activate, false, 0 },
 	{ CMD_REFILL, "refuel with", do_cmd_refill, false, 0 },
 	{ CMD_FIRE, "fire", do_cmd_fire, false, 0 },
