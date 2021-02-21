@@ -84,8 +84,9 @@ bool clearing = false;
 bool regen = false;
 
 /*** These are items to track for each iteration ***/
-/* total number of artifacts found */
+/* total number of artifacts, egos found */
 static int art_it[TRIES_SIZE];
+static int ego_it[TRIES_SIZE];
 
 /*** handle gold separately ***/
 /* gold */
@@ -345,6 +346,16 @@ static double art_mon[MAX_LVL], art_uniq[MAX_LVL], art_floor[MAX_LVL], art_vault
 
 
 
+/* basic ego info */
+static double ego_total[MAX_LVL];
+
+/* ego level info */
+static double ego_shal[MAX_LVL], ego_ave[MAX_LVL], ego_ood[MAX_LVL];
+
+/* where egos come from */
+static double ego_mon[MAX_LVL], ego_uniq[MAX_LVL], ego_floor[MAX_LVL], ego_vault[MAX_LVL], ego_mon_vault[MAX_LVL];
+
+
 /* monster info */
 static double mon_total[MAX_LVL], mon_ood[MAX_LVL], mon_deadly[MAX_LVL];
 
@@ -389,7 +400,7 @@ static bool first_find(stat_first_find st)
 }
 
 /*
- * Add the number of drops for a specifci stat
+ * Add the number of drops for a specific stat
  */
 static void add_stats(stat_code st, bool vault, bool mon, int number)
 {
@@ -885,6 +896,44 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 			break;
 		}
 	}
+	/* check to see if we have an ego */
+	if (obj->ego){
+
+		/* add to ego level total */
+		ego_total[lvl] += addval;
+
+		/* add to the ego iteration total */
+		if (iter < TRIES_SIZE) ego_it[iter]++;
+
+		/* Obtain the ego info */
+		struct ego_item *ego = obj->ego;
+
+		/* ego is shallow */
+		if (ego->alloc_min < (player->depth / 2)) ego_shal[lvl] += addval;
+
+		/* artifact is close to the player depth */
+		if ((ego->alloc_min >= player->depth / 2) &&
+			(ego->alloc_min <= player->depth )) ego_ave[lvl] += addval;
+
+		/* artifact is out of depth */
+		if (ego->alloc_min > (player->depth)) ego_ood[lvl] += addval;
+
+		/* did it come from a monster? */
+		if (mon) ego_mon[lvl] += addval;
+
+		/* did it come from a unique? */
+		if (uniq) ego_uniq[lvl] += addval;
+
+		/* was it in a vault? */
+		if (vault){
+			/* did a monster drop it ?*/
+			if ((mon) || (uniq)) ego_mon_vault[lvl] += addval;
+			else ego_vault[lvl] += addval;
+		} else {
+			/* was it just lyin' on the floor? */
+			if ((!uniq) && (!mon)) ego_floor[lvl] += addval;
+		}
+	}
 
 	/* check to see if we have an artifact */
 	if (obj->artifact){
@@ -1078,6 +1127,7 @@ static void print_heading(void)
 	file_putf(stats_log,"            10 levels deep \n");
 	file_putf(stats_log," Artifacts: info on artifact location (vault, floor, etc) \n");
 	file_putf(stats_log,"		     do not include special artifacts, only weapons and armor \n");
+	file_putf(stats_log," Ego items: info on ego location (vault, floor, etc) \n");
 	file_putf(stats_log," Weapons  : Big dice weapons are either BoC, SoS, or Mod.  Uber \n");
 	file_putf(stats_log,"            weapons, are one of the above with xblows or slay evil\n");
 	file_putf(stats_log," Launchers: xtra shots and xtra might are only logged for x3 or\n");
@@ -1119,7 +1169,18 @@ static void print_stats(int lvl)
 				uniq_total[lvl], uniq_ood[lvl], uniq_deadly[lvl]);
 	/* print artifact heading */
 
-	
+	file_putf(stats_log,"\n EGO-ITEM INFO \n");
+
+	/* basic ego info */
+	file_putf(stats_log,"Total egos: %f  Shallow: %f  Average: %f  Ood: %f \n",
+		ego_total[lvl], ego_shal[lvl],ego_ave[lvl],ego_ood[lvl]);
+
+	/* more advanced info */
+	file_putf(stats_log,"From vaults: %f  From floor (no vault): %f \n",
+		ego_vault[lvl],ego_floor[lvl]);
+	file_putf(stats_log,"Uniques: %f  Monsters: %f  Vault denizens: %f \n",
+		ego_uniq[lvl], ego_mon[lvl], ego_mon_vault[lvl]);
+
 
 	file_putf(stats_log,"\n ARTIFACT INFO \n");
 
@@ -1449,14 +1510,14 @@ static void artifact_stats(void)
  * Record the number of each generated.
  */
 static void ego_stats(void)
-{/*
+{
 	static const byte levels[] = {
 		1, 2, 3, 4, 5, 6,
 		8, 10, 12, 14, 16, 18, 20,
 		25, 30, 35, 40, 45, 50,
 		60, 70, 80, 90, 98, 127
-	};*/
-	static const byte levels[] = {
+	};
+	/*static const byte levels[] = {
 		1, 2, 3, 4, 5, 6,
 		7, 8, 9, 10, 11, 12,
 		14, 16, 18, 20, 22, 24,
@@ -1464,7 +1525,7 @@ static void ego_stats(void)
 		38, 40, 42, 45, 50, 55,
 		60, 65, 70, 75, 80, 85,
 		90, 95, 98, 100, 110, 127
-	};
+	};*/
 	double *prob[sizeof(levels)];
 	struct object *obj;
 	int *count = mem_zalloc(sizeof(int) * z_info->e_max * sizeof(levels));
