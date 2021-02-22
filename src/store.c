@@ -675,6 +675,20 @@ int price_item(struct store *store, const struct object *obj,
 		/* The black market is always a worse deal (for the rest of them) */
 		if (store->sidx == STORE_B_MARKET)
 			adjust = (adjust * 2) + 50;
+		else {
+			/* Expensive stuff gets a further hike.
+			 * 'Expensive' is based on the max cost.
+			 * It's still always better than the BM, though
+			 **/
+			int value = object_value_real(obj, 1);
+			int costly = proprietor->max_cost / 30;
+			int scale = proprietor->max_cost / 250;
+			int chscale = proprietor->max_cost / 7500;
+			if (value > costly) {
+				int markup = adjust + ((object_value_real(obj, 1) - costly) / (scale + (chscale * player->state.stat_ind[STAT_CHR])));
+				adjust = MIN(((adjust * 2) + 30), markup); 
+			}
+		}
 	}
 
 	/* Shop is buying */
