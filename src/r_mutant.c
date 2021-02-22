@@ -48,7 +48,7 @@ static void mutant_init(void)
 
 	/* Add a mutation immediately */
 	for(int i=0;i<mutations;i++)
-		get_mutation(AF_MUTATION | AF_BIRTH);
+		get_mutation(AF_MUTATION | AF_BIRTH, false);
 
 	/* Mutate later */
 	for(int i=0;i<later;i++) {
@@ -80,13 +80,16 @@ static void mutant_levelup(int from, int to)
 
 	/* Mutate if one is scheduled for this level.
 	 * If possible, these are the not-entirely-nasty ones allowed at birth,
-	 * but it is possible that none of these are left.
+	 * but it is possible that none of these are left. Also try to avoid
+	 * losing mutations.
 	 **/
 	for(int i=from; i<=to; i++) {
 		if (state->mutate[i]) {
 			state->mutate[i] = false;
-			if (!get_mutation(AF_MUTATION | AF_BIRTH)) {
-				get_mutation(AF_MUTATION);
+			if (!get_mutation(AF_MUTATION | AF_BIRTH, false)) {
+				if (!get_mutation(AF_MUTATION, false)) {
+					get_mutation(AF_MUTATION, true);
+				}
 			}
 		}
 	}

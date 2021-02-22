@@ -379,6 +379,7 @@ R:They say that 19 grey mushroom patches have stolen my sword.
 R:They say that 43% of statistics are made up on the spot.
 R:They say that 5 green molds have captured a Princess.
 R:They say that Elf shot the food.
+R:They say that Evil Iggy is more evil than the Balrog.
 R:They say that Koffing is just a huge bag of farts.
 R:They say that Leeroy Jenkins is like Forrest Gump.
 R:They say that Magikarp is Magikrap.
@@ -454,6 +455,7 @@ R:They say that the random number generator hates you.
 R:They say that the random number generator isn't.
 R:They say that the military laser is the key to the game.
 R:They say that the turtle moves.
+R:They say that the word "gullible" is wrtten on your ceiling, right now.
 R:They say that the worms are the source of all spice...
 R:They say that the worms crawl in and the worms crawl out.
 R:They say that the writing's on the wall.

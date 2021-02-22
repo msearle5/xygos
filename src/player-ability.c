@@ -578,12 +578,12 @@ static bool gain_talent(int a, bool birth) {
  * other (although forbidding each other is OK).
  */
 bool mutate(void) {
-	return get_mutation(AF_MUTATION);
+	return get_mutation(AF_MUTATION, true);
 }
 
 /* Get a mutation meeting the specified flags.
  */
-bool get_mutation(unsigned long flags)
+bool get_mutation(unsigned long flags, bool allow_loss)
 {
 	/* Androids cannot mutate */
 	if (player_has(player, PF_NO_MUTATIONS)) {
@@ -604,7 +604,7 @@ bool get_mutation(unsigned long flags)
 	for(int i=0;i<PF_MAX;i++) {
 		if (ability[i]) {
 			if ((ability[i]->flags & flags) == flags) {
-				if ((player_has(player, i)) || (can_gain_ability(i, true))) {
+				if ((player_has(player, i) && allow_loss) || (can_gain_ability(i, true))) {
 					ok = true;
 					break;
 				}
@@ -622,7 +622,7 @@ bool get_mutation(unsigned long flags)
 		mut = randint0(PF_MAX);
 		if (ability[mut]) {
 			if ((ability[mut]->flags & flags) == flags) {
-				if ((player_has(player, mut)) || (can_gain_ability(mut, true))) {
+				if ((player_has(player, mut) && allow_loss) || (can_gain_ability(mut, true))) {
 					break;
 				}
 			}
@@ -645,7 +645,7 @@ bool get_mutation(unsigned long flags)
 		strnfmt(buf, sizeof(buf), "You feel about to %s %s mutation... %s it? ", gain, name, accit);
 		if (!get_check(buf)) {
 			msg("You %s.", reject);
-			return get_mutation(flags);
+			return get_mutation(flags, allow_loss);
 		} else {
 			msg("You %s.", accept);
 		}
@@ -679,6 +679,10 @@ static const char *ability_name(int a) {
  */
 int setup_talents(void) {
 	player->talent_points = player->race->tp_base + player->class->tp_base;
+	
+	/* These must take all your TP */
+	ability[PF_PATIENCE]->cost = ability[PF_UNKNOWN_TALENTS]->cost = player->talent_points;
+	
 	return player->race->tp_max + player->class->tp_max;
 }
 
@@ -702,41 +706,42 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 	if (flip)
 		*flip = false;
 
-	/* Clear the screen, print the unchanging parts */
-	Term_clear();
-
-	/* Build the top message */
-	const char *tops = "\nThis is a list of all your abilities (including talents and abilities gained through other means, such as mutations), plus any additional talents which you can currently gain. Existing abilities are displayed in grey, gainable talents in green";
-	const char *tops_b = ", and talents which can only be gained at character creation in orange";
-	if (!birth)
-		tops_b = "";
-	const char *tops_e = ". The currently selected talent is highlighted. To browse through the list of abilities and see what each does, use the arrow keys. To gain the selected talent, select one and press Enter to gain it. To see your race and class abilities, press A. Press Space to exit. You have";
-	if (p->talent_points)
-		strnfmt(ntp, sizeof(ntp), "%d", p->talent_points);
-	else
-		my_strcpy(ntp, "no", sizeof(ntp));
-	const char *ntp2 = "s";
-	if (p->talent_points == 1)
-		ntp2 = "";
-
-	/* Format and output it */
-	struct textblock *tb = textblock_new();
-	textblock_append_c(tb, COLOUR_L_YELLOW, "%s%s%s %s talent point%s remaining.", tops, tops_b, tops_e, ntp, ntp2);
-	size_t *line_starts = NULL;
-	size_t *line_lengths = NULL;
-	int w, h;
-	Term_get_size(&w, &h);
-	int top = textblock_calculate_lines(tb, &line_starts, &line_lengths, w) + 2;
-	textui_textblock_place(tb, SCREEN_REGION, NULL);
-	textblock_free(tb);
-
-	/* Loop: print the changing parts, read the keyboard and act on it until exiting (ESC, return). */
-	bool leaving = false;
-	int avail[PF_MAX];
+	bool leaving = false; 
 	int navail;
-	bool gain[PF_MAX];
-
 	do {
+		/* Clear the screen, print the unchanging parts */
+		Term_clear();
+
+		/* Build the top message */
+		const char *tops = "\nThis is a list of all your abilities (including talents and abilities gained through other means, such as mutations), plus any additional talents which you can currently gain. Existing abilities are displayed in grey, gainable talents in green";
+		const char *tops_b = ", and talents which can only be gained at character creation in orange";
+		if (!birth)
+			tops_b = "";
+		const char *tops_e = ". The currently selected talent is highlighted. To browse through the list of abilities and see what each does, use the arrow keys. To gain the selected talent, select one and press Space to gain it. To see your race and class abilities, press A. Press Enter to exit. You have";
+		if (p->talent_points)
+			strnfmt(ntp, sizeof(ntp), "%d", p->talent_points);
+		else
+			my_strcpy(ntp, "no", sizeof(ntp));
+		const char *ntp2 = "s";
+		if (p->talent_points == 1)
+			ntp2 = "";
+
+		/* Format and output it */
+		struct textblock *tb = textblock_new();
+		textblock_append_c(tb, COLOUR_L_YELLOW, "%s%s%s %s talent point%s remaining.", tops, tops_b, tops_e, ntp, ntp2);
+		size_t *line_starts = NULL;
+		size_t *line_lengths = NULL;
+		int w, h;
+		Term_get_size(&w, &h);
+		int top = textblock_calculate_lines(tb, &line_starts, &line_lengths, w) + 2;
+		textui_textblock_place(tb, SCREEN_REGION, NULL);
+		textblock_free(tb);
+
+		/* Loop: print the changing parts, read the keyboard and act on it until exiting (ESC, return). */
+		leaving = false;
+		int avail[PF_MAX];
+		bool gain[PF_MAX];
+
 		navail = 0;
 		/* Scan for abilities */
 		for (int i = 0; i < PF_MAX; i++) {
@@ -825,7 +830,7 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 			if (gain[selected])
 				textblock_append_c(tb, COLOUR_SLATE, "With this talent %s", ability[avail[selected]]->desc_future ? ability[avail[selected]]->desc_future : ability[avail[selected]]->desc);
 			else
-				textblock_append_c(tb, COLOUR_SLATE, "%s", ability[avail[selected]]->desc);
+				textblock_append_c(tb, COLOUR_SLATE, "%c%s", toupper(ability[avail[selected]]->desc[0]), ability[avail[selected]]->desc + 1);
 
 			/* Stats, AC, skills, etc */
 			for(int i=0;i<STAT_MAX;i++) {
@@ -907,7 +912,7 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 			break;
 
 			/* Select */
-			case KC_ENTER: {
+			case ' ': {
 				/* Prompt to confirm.
 				 * If not wanted, continue otherwise exit.
 				 * (This must attract attention. Use a pop up?)
@@ -944,7 +949,7 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 			/* Leave */
 			case ESCAPE:
 			case 'Q':
-			case ' ':
+			case KC_ENTER:
 			leaving = true;
 			break;
 		}
@@ -957,7 +962,7 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
  * This must be done after birth talents (including Patience etc.) have been fixed.
  **/
 void init_talent(int tp) {
-	int bp = player->talent_points;
+	int bp = player->race->tp_base + player->class->tp_base;
 	memset(player->talent_gain, 0, sizeof(player->talent_gain));
 
 	/* Distribute fairly evenly between level 2 and maximum.

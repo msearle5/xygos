@@ -110,6 +110,7 @@ H:If stores will not buy your items, check your birth options.
 H:If you can blind or confuse a monster, it won't be able to do much.
 H:If you can fall like a feather, you need not care about gravity.
 H:If you can't beat it, leave it alone!
+H:If you can't find your house, you may need to ask around.
 H:If you can't see it, you might still be able to hurt it...
 H:If you don't know what a monster can do, use a rod of probing on it.
 H:If you have more than 99 items in your quiver, it will take up more slots.
