@@ -152,13 +152,13 @@ slots:0:2
 turnover:9
 danger:60:75
 always:card:Word of Recall
-always:card:Phase Door
-always:card:Remove Curse
+always:card:blinking
+always:card:repair
 normal:card:Monster Confusion
 normal:card:Magic Mapping
 normal:card:Detect Invisible
 normal:card:Recharging
-normal:card:Remove Hunger
+normal:card:nutria
 normal:card:Blessing
 normal:card:Holy Chant
 buy:card

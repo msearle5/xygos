@@ -50,14 +50,18 @@ struct ego_item *e_info;
 struct flavor *flavors;
 
 /**
- * Hold the titles of cards, 6 to 14 characters each, plus quotes.
+ * Hold the titles of cards, up to 31 characters each.
+ * Longest "Simple" prefix is 6
+ * Longest "Creator" suffix is 7
+ * Longest "-" infix is 1
+ * Longest " XX 1.2.3" version is 9
  */
-static char card_adj[MAX_TITLES][18];
+static char card_adj[MAX_TITLES][32];
 
 /**
- * Hold the titles of pills, 6 to 14 characters each, plus quotes.
+ * Hold the titles of pills, 6 to 28 characters each, plus quotes.
  */
-static char pill_adj[MAX_TITLES][18];
+static char pill_adj[MAX_TITLES][32];
 
 static void flavor_assign_fixed(void)
 {
@@ -159,7 +163,7 @@ void flavor_reset_fixed(void)
  */
 void flavor_init(void)
 {
-	int i, j;
+	int i;
 
 	/* Hack -- Use the "simple" RNG */
 	Rand_quick = true;
@@ -235,38 +239,104 @@ void flavor_init(void)
 	flavor_assign_random(TV_PILL);
 
 	/* Cards (random titles, always white) */
-	for (i = 0; i < MAX_TITLES; i++) {
-		char buf[26];
-		char *end = buf + 1;
-		int titlelen = 0;
-		int wordlen;
-		bool okay = true;
-
-		my_strcpy(buf, "\"", 2);
-		wordlen = randname_make(RANDNAME_CARD, 2, 8, end, 24, name_sections);
-		while (titlelen + wordlen < (int)(sizeof(card_adj[0]) - 3)) {
-			end[wordlen] = ' ';
-			titlelen += wordlen + 1;
-			end += wordlen + 1;
-			wordlen = randname_make(RANDNAME_CARD, 2, 8, end, 24 - titlelen,
-									name_sections);
+	int cards = 0;
+	for (struct flavor *f = flavors; f; f = f->next) {
+		if (f->tval == TV_CARD && f->sval == SV_UNKNOWN) {
+			char *suffix = strchr(f->text, '|');
+			assert(suffix);
+			suffix++;
+			strncpy(suff[cards++], suffix, sizeof(suff[0]));
 		}
-		buf[titlelen] = '"';
-		buf[titlelen+1] = '\0';
+	}
 
-		/* Check the card name hasn't already been generated */
-		for (j = 0; j < i; j++) {
-			if (streq(buf, card_adj[j])) {
-				okay = false;
-				break;
+	/* And combine them */
+	i = 0;
+	for (struct flavor *f = flavors; f; f = f->next) {
+		if (f->tval == TV_CARD && f->sval == SV_UNKNOWN) {
+			char base[11];
+			char ext[11];
+			strncpy(base, f->text, sizeof(base));
+			base[sizeof(base)-1] = 0;
+			char *suffix = strchr(base, '|');
+			assert(suffix);
+			*suffix = 0;
+			strncpy(ext, suff[randint0(cards)], sizeof(ext));
+			/* Determine capitalization */
+			titlecase(base);
+			titlecase(ext);
+			/* Determine separator */
+			char *sep = "";
+			switch(randint0(20)) {
+				case 0:
+					sep = ".";
+					break;
+				case 1:
+					sep = "/";
+					break;
+				case 2:
+					sep = ":";
+					break;
+				case 3:
+					sep = ".";
+					break;
+				case 4:
+				case 5:
+				case 6:
+					sep = "-";
+					break;
+				case 7:
+				case 8:
+				case 9:
+					sep = " ";
+					break;
 			}
+			/* Determine suffix */
+			char suff[8];
+			strcpy(suff, "");
+			int rn1 = randint1(9);
+			int rn2 = randint0(randint0(9));
+			int rn3 = randint0(randint0(randint0(9)));
+			switch(randint0(12)) {
+				case 0:
+					switch(randint0(6)) {
+						default:
+							strcpy(suff, " X");
+							break;
+						case 1:
+							strcpy(suff, " Z");
+							break;
+						case 2:
+							strcpy(suff, " ZX");
+							break;
+						case 3:
+							strcpy(suff, " Q");
+							break;
+						case 4:
+							strcpy(suff, " XX");
+							break;
+					}
+					if (!one_in_(3))
+						break;
+					// fall through
+				case 5:
+					sprintf(suff + strlen(suff), " %d", rn1);
+					break;
+				case 1:
+				case 2:
+				case 3:
+					sprintf(suff, " %d.%d", rn1, rn2);
+					break;
+				case 4:
+					sprintf(suff, " %d%d", rn1, rn2);
+					break;
+				case 6:
+					sprintf(suff, " %d.%d.%d", rn1, rn2, rn3);
+					break;
+			}
+			snprintf(card_adj[i], sizeof(card_adj[i]), "%s%s%s%s", base, sep, ext, suff);
+			card_adj[i][sizeof(card_adj[i])-1] = 0;
+			i++;
 		}
-
-		if (okay)
-			my_strcpy(card_adj[i], buf, sizeof(card_adj[0]));
-		else
-			/* Have another go at making a name */
-			i--;
 	}
 	flavor_assign_random(TV_CARD);
 

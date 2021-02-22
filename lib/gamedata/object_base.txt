@@ -160,9 +160,9 @@ graphics:light purple
 flags:HATES_ELEC | EASY_KNOW
 
 name:card:Card~
-graphics:white
+graphics:deep light blue
 # max-stack:20
-flags:HATES_ACID | HATES_FIRE | EASY_KNOW
+flags:HATES_ACID | HATES_FIRE | HATES_ELEC | EASY_KNOW
 
 name:pill:Pill~
 graphics:magenta-pink

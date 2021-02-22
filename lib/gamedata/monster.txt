@@ -1219,7 +1219,7 @@ blow:TOUCH:EAT_GOLD
 flags:MALE | EVIL
 flags:DROP_40
 flags:OPEN_DOOR | TAKE_ITEM
-drop:card:Phase Door:35:1:3
+drop:card:blinking:35:1:3
 friends-base:20:1d3:person
 friends-base:40:1d3:person
 friends-base:80:1d3:person
@@ -4557,7 +4557,7 @@ flags:DROP_1
 flags:OPEN_DOOR | TAKE_ITEM
 innate-freq:8
 spells:SHOT
-drop:card:Phase Door:70:2:6
+drop:card:blinking:70:2:6
 friends:50:1d2:Illusionist
 friends:50:1d2:Priest
 friends:50:1d2:warrior
@@ -5584,8 +5584,8 @@ desc: unsuspecting adventurers within reach of its venomous claws.
 mimic:card:Banishment
 mimic:card:Mass Banishment
 mimic:card:Teleport Level
-mimic:card:Acquirement
-mimic:card:*Acquirement*
+mimic:card:acquisition
+mimic:card:mass acquisition
 mimic:card:*Destruction*
 
 name:fire vortex

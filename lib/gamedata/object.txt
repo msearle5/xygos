@@ -3169,11 +3169,11 @@ values:SPD[-3+1d2]
 
 ### Teleportation ###
 
-name:Phase Door
+name:blinking
 type:card
 graphics:?:w
 level:1
-weight:5
+weight:5g
 cost:15
 alloc:50:1 to 100
 pile:100:2d3
@@ -3181,11 +3181,11 @@ power:5
 effect:TELEPORT
 dice:10
 
-name:Teleportation
+name:teleport
 type:card
 graphics:?:w
 level:10
-weight:5
+weight:5g
 cost:40
 alloc:40:10 to 100
 pile:25:2
@@ -3193,11 +3193,11 @@ power:6
 effect:TELEPORT
 dice:M60
 
-name:Teleport Level
+name:level-teleport
 type:card
 graphics:?:w
 level:20
-weight:5
+weight:5g
 cost:800
 alloc:16:20 to 100
 pile:10:2
@@ -3207,11 +3207,11 @@ effect:TELEPORT_LEVEL
 
 ### Detection ###
 
-name:Magic Mapping
+name:mapping
 type:card
 graphics:?:w
 level:5
-weight:5
+weight:5g
 cost:65
 alloc:50:5 to 100
 pile:70:1d3
@@ -3223,7 +3223,7 @@ name:Treasure Detection
 type:card
 graphics:?:w
 level:0
-weight:5
+weight:5g
 cost:70
 alloc:50:0 to 70
 pile:40:1d5
@@ -3237,7 +3237,7 @@ name:Detect Invisible
 type:card
 graphics:?:w
 level:1
-weight:5
+weight:5g
 cost:15
 alloc:50:1 to 70
 pile:70:1d3
@@ -3245,11 +3245,11 @@ power:6
 effect:DETECT_INVISIBLE_MONSTERS
 effect-yx:22:40
 
-name:Identify Icon
+name:identity
 type:card
 graphics:?:w
 level:1
-weight:5
+weight:5g
 cost:200
 alloc:50:5 to 100
 pile:70:1d4
@@ -3262,7 +3262,7 @@ name:Enchant Weapon To-Hit
 type:card
 graphics:?:w
 level:15
-weight:5
+weight:5g
 cost:125
 alloc:40:15 to 70
 pile:25:2
@@ -3274,7 +3274,7 @@ name:Enchant Weapon To-Dam
 type:card
 graphics:?:w
 level:15
-weight:5
+weight:5g
 cost:125
 alloc:40:15 to 70
 pile:25:2
@@ -3286,7 +3286,7 @@ name:Enchant Armour
 type:card
 graphics:?:w
 level:15
-weight:5
+weight:5g
 cost:125
 alloc:40:15 to 70
 pile:25:2
@@ -3298,7 +3298,7 @@ name:*Enchant Weapon*
 type:card
 graphics:?:w
 level:50
-weight:5
+weight:5g
 cost:500
 alloc:40:50 to 100
 pile:25:2
@@ -3311,7 +3311,7 @@ name:*Enchant Armour*
 type:card
 graphics:?:w
 level:50
-weight:5
+weight:5g
 cost:500
 alloc:40:50 to 100
 pile:25:2
@@ -3320,11 +3320,11 @@ effect:ENCHANT:TOAC
 dice:2+1d3
 
 
-name:Remove Curse
+name:repair
 type:card
 graphics:?:w
 level:10
-weight:5
+weight:5g
 cost:100
 alloc:16:10 to 100
 pile:25:2
@@ -3333,11 +3333,11 @@ effect:REMOVE_CURSE
 dice:20+d20
 
 
-name:*Remove Curse*
+name:major repair
 type:card
 graphics:?:w
 level:50
-weight:5
+weight:5g
 cost:8000
 alloc:16:50 to 100
 pile:25:2
@@ -3351,7 +3351,7 @@ name:Summon Monster
 type:card
 graphics:?:w
 level:1
-weight:5
+weight:5g
 cost:0
 alloc:10:1 to 100
 pile:70:1d3
@@ -3363,7 +3363,7 @@ name:Summon Undead
 type:card
 graphics:?:w
 level:15
-weight:5
+weight:5g
 cost:0
 alloc:10:15 to 100
 pile:70:1d3
@@ -3371,22 +3371,22 @@ power:0
 effect:SUMMON:UNDEAD
 dice:1d3
 
-name:Acquirement
+name:acquisition
 type:card
 graphics:?:w
 level:20
-weight:5
+weight:5g
 cost:5000
 alloc:10:20 to 100
 power:20000
 effect:ACQUIRE
 dice:1
 
-name:*Acquirement*
+name:mass acquisition
 type:card
 graphics:?:w
 level:60
-weight:5
+weight:5g
 cost:10000
 alloc:5:60 to 100
 power:20000
@@ -3400,7 +3400,7 @@ name:Dispel Undead
 type:card
 graphics:?:w
 level:40
-weight:5
+weight:5g
 cost:200
 alloc:40:40 to 100
 pile:25:2
@@ -3412,7 +3412,7 @@ name:Banishment
 type:card
 graphics:?:w
 level:40
-weight:5
+weight:5g
 cost:2500
 alloc:25:40 to 100
 power:20
@@ -3422,7 +3422,7 @@ name:Mass Banishment
 type:card
 graphics:?:w
 level:50
-weight:5
+weight:5g
 cost:3000
 alloc:20:50 to 100
 power:25
@@ -3431,11 +3431,11 @@ effect:MASS_BANISH
 
 ### Utility ###
 
-name:Remove Hunger
+name:nutria
 type:card
 graphics:?:w
 level:5
-weight:5
+weight:5g
 cost:10
 alloc:60:5 to 100
 pile:100:2d3
@@ -3443,11 +3443,11 @@ power:7
 effect:NOURISH:INC_TO
 dice:50
 
-name:Light
+name:lighting
 type:card
 graphics:?:w
 level:0
-weight:5
+weight:5g
 cost:15
 alloc:50:0 to 60
 pile:35:2d3
@@ -3460,7 +3460,7 @@ name:Word of Recall
 type:card
 graphics:?:w
 level:5
-weight:5
+weight:5g
 cost:125
 alloc:50:5 to 100
 pile:35:2d3
@@ -3471,7 +3471,7 @@ name:Recharging
 type:card
 graphics:?:w
 level:40
-weight:5
+weight:5g
 cost:200
 alloc:40:40 to 100
 pile:12:2d3
@@ -3483,18 +3483,18 @@ name:Door Destruction
 type:card
 graphics:?:w
 level:10
-weight:5
+weight:5g
 cost:50
 alloc:40:10 to 60
 pile:25:2d3
 power:6
 effect:TOUCH:KILL_DOOR
 
-name:Deep Descent
+name:descent
 type:card
 graphics:?:w
 level:10
-weight:5
+weight:5g
 cost:250
 alloc:20:1 to 100
 pile:20:2
@@ -3508,7 +3508,7 @@ name:Blessing
 type:card
 graphics:?:w
 level:1
-weight:5
+weight:5g
 cost:15
 alloc:50:1 to 50
 pile:70:1d3
@@ -3520,7 +3520,7 @@ name:Holy Chant
 type:card
 graphics:?:w
 level:10
-weight:5
+weight:5g
 cost:40
 alloc:40:10 to 70
 pile:25:2
@@ -3532,7 +3532,7 @@ name:Holy Prayer
 type:card
 graphics:?:w
 level:25
-weight:5
+weight:5g
 cost:80
 alloc:40:50 to 100
 pile:25:2
@@ -3544,7 +3544,7 @@ name:Protection from Evil
 type:card
 graphics:?:w
 level:30
-weight:5
+weight:5g
 cost:50
 alloc:40:30 to 100
 pile:25:2
@@ -3560,7 +3560,7 @@ name:Monster Confusion
 type:card
 graphics:?:w
 level:5
-weight:5
+weight:5g
 cost:30
 alloc:16:5 to 60
 pile:25:2
@@ -3572,7 +3572,7 @@ name:Rune of Protection
 type:card
 graphics:?:w
 level:60
-weight:5
+weight:5g
 cost:500
 alloc:30:70 to 100
 power:20
@@ -3582,7 +3582,7 @@ name:*Destruction*
 type:card
 graphics:?:w
 level:40
-weight:5
+weight:5g
 cost:1000
 alloc:30:40 to 100
 power:12
@@ -3590,11 +3590,11 @@ effect:DESTRUCTION:LIGHT:15
 
 ### Bad cards ###
 
-name:Aggravate Monster
+name:annoyance
 type:card
 graphics:?:w
 level:5
-weight:5
+weight:5g
 cost:0
 alloc:10:5 to 70
 pile:70:1d3
@@ -3604,22 +3604,22 @@ effect:WAKE
 effect:PROJECT_LOS:MON_SPEED
 dice:25
 
-name:Curse Weapon
+name:blast weapon
 type:card
 graphics:?:w
 level:50
-weight:5
+weight:5g
 cost:0
 #A:10:50 to 100
 pile:70:1d3
 power:0
 effect:CURSE_WEAPON
 
-name:Curse Armour
+name:blast armour
 type:card
 graphics:?:w
 level:50
-weight:5
+weight:5g
 cost:0
 #A:10:50 to 100
 pile:70:1d3
@@ -3630,7 +3630,7 @@ name:Darkness
 type:card
 graphics:?:w
 level:1
-weight:5
+weight:5g
 cost:0
 alloc:10:1 to 70
 pile:70:1d3
@@ -3643,7 +3643,7 @@ name:Trap Creation
 type:card
 graphics:?:w
 level:10
-weight:5
+weight:5g
 cost:0
 alloc:10:10 to 70
 pile:70:1d3

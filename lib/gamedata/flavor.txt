@@ -411,58 +411,63 @@ flavor:242:Magenta-Pink:stanfor|imine
 
 ##### Cards #####
 
-# Card names are generated from randomly combined syllables
+# Card names are generated from randomly combined buzzwords
 
-kind:card:?
+kind:card:-
 
-flavor:252:White
-flavor:253:White
-flavor:254:White
-flavor:255:White
-flavor:256:White
-flavor:257:White
-flavor:258:White
-flavor:259:White
-flavor:260:White
-flavor:261:White
-flavor:262:White
-flavor:263:White
-flavor:264:White
-flavor:265:White
-flavor:266:White
-flavor:267:White
-flavor:268:White
-flavor:269:White
-flavor:270:White
-flavor:271:White
-flavor:272:White
-flavor:273:White
-flavor:274:White
-flavor:275:White
-flavor:276:White
-flavor:277:White
-flavor:278:White
-flavor:279:White
-flavor:280:White
-flavor:281:White
-flavor:282:White
-flavor:283:White
-flavor:284:White
-flavor:285:White
-flavor:286:White
-flavor:287:White
-flavor:288:White
-flavor:289:White
-flavor:290:White
-flavor:291:White
-flavor:292:White
-flavor:293:White
-flavor:294:White
-flavor:295:White
-flavor:296:White
-flavor:297:White
-flavor:298:White
-flavor:299:White
-flavor:300:White
-flavor:301:White
-flavor:302:White
+flavor:252:Deep Light Blue:Speedy|Max
+flavor:253:Deep Light Blue:Net|Wumpus
+flavor:254:Deep Light Blue:Ulti|Run
+flavor:255:Deep Light Blue:KEWL|ware
+flavor:256:Deep Light Blue:Zap|extra
+flavor:257:Deep Light Blue:Cyber|plus
+flavor:258:Deep Light Blue:info|Share
+flavor:259:Deep Light Blue:Data|way
+flavor:260:Deep Light Blue:Expert|Jet
+flavor:261:Deep Light Blue:Net|flyer
+flavor:262:Deep Light Blue:techno|surfer
+flavor:263:Deep Light Blue:Pro|perfect
+flavor:264:Deep Light Blue:Go|deck
+flavor:265:Deep Light Blue:Power|Works
+flavor:266:Deep Light Blue:Alpha|Track
+flavor:267:Deep Light Blue:Gold|Clue
+flavor:268:Deep Light Blue:Micro|lux
+flavor:269:Deep Light Blue:Active|Suite
+flavor:270:Deep Light Blue:Mega|stream
+flavor:271:Deep Light Blue:Giga|gate
+flavor:272:Deep Light Blue:tera|path
+flavor:273:Deep Light Blue:Visual|system
+flavor:274:Deep Light Blue:Easy|Magic
+flavor:275:Deep Light Blue:Simple|Impact
+flavor:276:Deep Light Blue:Nova|Lite
+flavor:277:Deep Light Blue:Quick|boost
+flavor:278:Deep Light Blue:Turbo|byte
+flavor:279:Deep Light Blue:Master|leap
+flavor:280:Deep Light Blue:Star|flyer
+flavor:281:Deep Light Blue:Multi|Dream
+flavor:282:Deep Light Blue:Inter|Matic
+flavor:283:Deep Light Blue:Digi|Flash
+flavor:284:Deep Light Blue:Elite|Wise
+flavor:285:Deep Light Blue:Infini|Smart
+flavor:286:Deep Light Blue:Simple|Creator
+flavor:287:Deep Light Blue:Cyber|Dream
+flavor:288:Deep Light Blue:Super|Plus
+flavor:289:Deep Light Blue:Ultra|Con
+flavor:290:Deep Light Blue:Auto|Zap
+flavor:291:Deep Light Blue:Rocket|Line
+flavor:292:Deep Light Blue:Idio|Box
+flavor:293:Deep Light Blue:Flashy|Lemming
+flavor:294:Deep Light Blue:Shiny|Blocks
+flavor:295:Deep Light Blue:Gloss|Bridge
+flavor:296:Deep Light Blue:Intra|Defense
+flavor:297:Deep Light Blue:Entro|Shield
+flavor:298:Deep Light Blue:Rapid|Ex
+flavor:299:Deep Light Blue:Fast|Extend
+flavor:300:Deep Light Blue:Logi|Star
+flavor:301:Deep Light Blue:Think|Words
+flavor:302:Deep Light Blue:Brain|Storm
+# Adjust|Climber
+# Master|Wipe
+# Detona|Clone
+# Fire|Pocket
+# Pyro|Socket
