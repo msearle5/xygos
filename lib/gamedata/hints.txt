@@ -21,7 +21,7 @@ H:A wounded enemy's spells are as strong as a healthy one's.
 H:Acid can destroy your stuff - fight acid users at a distance if possible.
 H:Acid can destroy your stuff - watch out for water hounds and water vortices.
 H:Acid damage can destroy items in your inventory.
-H:Acquisition cards produce better items if you read them deeper down.
+H:Acquisition cards produce better items if you run them deeper down.
 H:Afraid of your money getting stolen? Invest it!
 H:Afraid of your valuables getting stolen? Carry more junk!
 H:Always carry around an escape that you can use while blind and confused.

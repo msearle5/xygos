@@ -76,7 +76,7 @@ typedef enum cmd_code {
 	CMD_ACTIVATE,
 	CMD_EAT,
 	CMD_QUAFF,
-	CMD_READ_CARD,
+	CMD_RUN_CARD,
 	CMD_REFILL,
 	CMD_USE,
 	CMD_FIRE,

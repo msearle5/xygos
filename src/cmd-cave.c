@@ -1614,7 +1614,7 @@ void do_cmd_mon_command(struct command *cmd)
 	monster_desc(m_name, sizeof(m_name), mon, MDESC_CAPITAL | MDESC_IND_HID);
 
 	switch (cmd->code) {
-		case CMD_READ_CARD: {
+		case CMD_RUN_CARD: {
 			/* Actually 'r'elease monster */
 			mon_clear_timed(mon, MON_TMD_COMMAND, MON_TMD_FLG_NOTIFY);
 			player_clear_timed(player, TMD_COMMAND, true);

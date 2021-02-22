@@ -923,13 +923,13 @@ bool player_can_cast(struct player *p, bool show_msg)
 }
 
 /**
- * Return true if the player can read cards or books.
+ * Return true if the player can run cards.
  *
  * \param p is the player
  * \param show_msg should be set to true if a failure message should be
  * displayed.
  */
-bool player_can_read(struct player *p, bool show_msg)
+bool player_can_run(struct player *p, bool show_msg)
 {
 	if (p->timed[TMD_BLIND]) {
 		if (show_msg)
@@ -938,23 +938,16 @@ bool player_can_read(struct player *p, bool show_msg)
 		return false;
 	}
 
-	if (no_light()) {
-		if (show_msg)
-			msg("You have no light to read by.");
-
-		return false;
-	}
-
 	if (p->timed[TMD_CONFUSED]) {
 		if (show_msg)
-			msg("You are too confused to read!");
+			msg("You are too confused!");
 
 		return false;
 	}
 
 	if (p->timed[TMD_AMNESIA]) {
 		if (show_msg)
-			msg("You can't remember how to read!");
+			msg("You can't remember how!");
 
 		return false;
 	}
@@ -1016,9 +1009,9 @@ bool player_can_cast_prereq(void)
 /**
  * Prerequiste function for command. See struct cmd_info in cmd-process.c.
  */
-bool player_can_read_prereq(void)
+bool player_can_run_prereq(void)
 {
-	return player_can_read(player, true);
+	return player_can_run(player, true);
 }
 
 /**
