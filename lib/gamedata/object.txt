@@ -3171,7 +3171,7 @@ values:SPD[-3+1d2]
 
 name:blinking
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:1
 weight:5g
 cost:15
@@ -3183,7 +3183,7 @@ dice:10
 
 name:teleport
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:10
 weight:5g
 cost:40
@@ -3193,9 +3193,9 @@ power:6
 effect:TELEPORT
 dice:M60
 
-name:level-teleport
+name:vertical teleport
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:20
 weight:5g
 cost:800
@@ -3209,7 +3209,7 @@ effect:TELEPORT_LEVEL
 
 name:mapping
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:5
 weight:5g
 cost:65
@@ -3221,7 +3221,7 @@ effect-yx:22:40
 
 name:Treasure Detection
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:0
 weight:5g
 cost:70
@@ -3235,7 +3235,7 @@ effect-yx:22:40
 
 name:Detect Invisible
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:1
 weight:5g
 cost:15
@@ -3247,7 +3247,7 @@ effect-yx:22:40
 
 name:identity
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:1
 weight:5g
 cost:200
@@ -3258,9 +3258,10 @@ effect:IDENTIFY
 
 ### Enchantments ###
 
+#precision/power?
 name:Enchant Weapon To-Hit
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:15
 weight:5g
 cost:125
@@ -3272,7 +3273,7 @@ dice:1
 
 name:Enchant Weapon To-Dam
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:15
 weight:5g
 cost:125
@@ -3284,7 +3285,7 @@ dice:1
 
 name:Enchant Armour
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:15
 weight:5g
 cost:125
@@ -3296,7 +3297,7 @@ dice:1
 
 name:*Enchant Weapon*
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:50
 weight:5g
 cost:500
@@ -3309,7 +3310,7 @@ dice:1d3
 
 name:*Enchant Armour*
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:50
 weight:5g
 cost:500
@@ -3322,7 +3323,7 @@ dice:2+1d3
 
 name:repair
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:10
 weight:5g
 cost:100
@@ -3335,7 +3336,7 @@ dice:20+d20
 
 name:major repair
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:50
 weight:5g
 cost:8000
@@ -3349,7 +3350,7 @@ dice:50+d50
 
 name:Summon Monster
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:1
 weight:5g
 cost:0
@@ -3361,7 +3362,7 @@ dice:1d3
 
 name:Summon Undead
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:15
 weight:5g
 cost:0
@@ -3373,7 +3374,7 @@ dice:1d3
 
 name:acquisition
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:20
 weight:5g
 cost:5000
@@ -3384,7 +3385,7 @@ dice:1
 
 name:mass acquisition
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:60
 weight:5g
 cost:10000
@@ -3398,7 +3399,7 @@ dice:1+1d2
 
 name:Dispel Undead
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:40
 weight:5g
 cost:200
@@ -3410,7 +3411,7 @@ dice:60
 
 name:Banishment
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:40
 weight:5g
 cost:2500
@@ -3420,7 +3421,7 @@ effect:BANISH
 
 name:Mass Banishment
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:50
 weight:5g
 cost:3000
@@ -3433,7 +3434,7 @@ effect:MASS_BANISH
 
 name:nutria
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:5
 weight:5g
 cost:10
@@ -3445,7 +3446,7 @@ dice:50
 
 name:lighting
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:0
 weight:5g
 cost:15
@@ -3456,9 +3457,9 @@ effect:LIGHT_AREA
 effect:SPOT:LIGHT_WEAK:2
 dice:2d8
 
-name:Word of Recall
+name:recall
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:5
 weight:5g
 cost:125
@@ -3467,9 +3468,9 @@ pile:35:2d3
 power:15
 effect:RECALL
 
-name:Recharging
+name:recharging
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:40
 weight:5g
 cost:200
@@ -3481,7 +3482,7 @@ dice:6
 
 name:Door Destruction
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:10
 weight:5g
 cost:50
@@ -3492,7 +3493,7 @@ effect:TOUCH:KILL_DOOR
 
 name:descent
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:10
 weight:5g
 cost:250
@@ -3506,7 +3507,7 @@ effect:DEEP_DESCENT
 
 name:Blessing
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:1
 weight:5g
 cost:15
@@ -3518,7 +3519,7 @@ dice:6+1d12
 
 name:Holy Chant
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:10
 weight:5g
 cost:40
@@ -3530,7 +3531,7 @@ dice:12+1d24
 
 name:Holy Prayer
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:25
 weight:5g
 cost:80
@@ -3542,7 +3543,7 @@ dice:24+1d48
 
 name:Protection from Evil
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:30
 weight:5g
 cost:50
@@ -3556,9 +3557,22 @@ expr:B:PLAYER_LEVEL:* 3
 
 ### Misc. ###
 
+name:info
+type:card
+graphics:-:Deep Light Blue
+level:0
+weight:5g
+cost:5
+alloc:16:0 to 60
+pile:75:1d5
+power:1
+effect:RUMOR
+dice:50
+desc:An update on the latest buzz - a hint, although not always a useful one.
+
 name:Monster Confusion
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:5
 weight:5g
 cost:30
@@ -3570,7 +3584,7 @@ dice:10000
 
 name:Rune of Protection
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:60
 weight:5g
 cost:500
@@ -3580,7 +3594,7 @@ effect:GLYPH:WARDING
 
 name:*Destruction*
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:40
 weight:5g
 cost:1000
@@ -3592,7 +3606,7 @@ effect:DESTRUCTION:LIGHT:15
 
 name:annoyance
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:5
 weight:5g
 cost:0
@@ -3606,7 +3620,7 @@ dice:25
 
 name:blast weapon
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:50
 weight:5g
 cost:0
@@ -3617,7 +3631,7 @@ effect:CURSE_WEAPON
 
 name:blast armour
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:50
 weight:5g
 cost:0
@@ -3626,9 +3640,9 @@ pile:70:1d3
 power:0
 effect:CURSE_ARMOR
 
-name:Darkness
+name:darkness
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:1
 weight:5g
 cost:0
@@ -3641,7 +3655,7 @@ dice:10
 
 name:Trap Creation
 type:card
-graphics:?:w
+graphics:-:Deep Light Blue
 level:10
 weight:5g
 cost:0

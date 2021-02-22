@@ -113,7 +113,7 @@ static const char *obj_desc_get_basename(const struct object *obj, bool aware,
 			return (show_flavor ? "& # pill~" : "& pill~");
 
 		case TV_CARD:
-			return (show_flavor ? "& Card~ titled #" : "& Card~");
+			return (show_flavor ? "& card~ titled #" : "& card~");
 
 		case TV_MUSHROOM:
 			return (show_flavor ? "& # Mushroom~" : "& Mushroom~");

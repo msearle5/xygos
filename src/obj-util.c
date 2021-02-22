@@ -149,13 +149,6 @@ void flavor_reset_fixed(void)
  * Initialize descriptions for the "colored" objects, including:
  * Rings, Amulets, Staffs, Wands, Rods, Mushrooms, Pills, Cards.
  *
- * Card titles are always between 6 and 14 letters long.  This is
- * ensured because every title is composed of whole words, where every
- * word is from 2 to 8 letters long, and that no card is finished
- * until it attempts to grow beyond 15 letters.  The first time this
- * can happen is when the current title has 6 letters and the new word
- * has 8 letters, which would result in a 6 letter card title.
- *
  * Hack -- make sure everything stays the same for each saved game
  * This is accomplished by the use of a saved "random seed", as in
  * "town_gen()".  Since no other functions are called while the special
@@ -238,7 +231,7 @@ void flavor_init(void)
 	}
 	flavor_assign_random(TV_PILL);
 
-	/* Cards (random titles, always white) */
+	/* Cards (random titles, always blue) */
 	int cards = 0;
 	for (struct flavor *f = flavors; f; f = f->next) {
 		if (f->tval == TV_CARD && f->sval == SV_UNKNOWN) {
