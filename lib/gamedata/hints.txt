@@ -245,6 +245,10 @@ H:They say that in the big picture money is only small change.
 H:They say that lemmings are fearless.
 H:They say that mold can be bad for your health.
 H:They say that once a truly special item is lost, it is lost for ever.
+H:They say that if you think you are playing Pacman, you might be confused.
+H:They say that if you think you are playing Pacman, you should run away.
+H:They say that if you think you are playing Pacman, you should chill out.
+H:They say that if you think you are playing Pacman, you must be blind.
 H:They say that peppers are hot stuff.
 H:They say that playing Worms might be helpful.
 H:They say that radiation isn't always bad for your health.
