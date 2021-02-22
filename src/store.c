@@ -1458,7 +1458,6 @@ void store_maint(struct store *s)
 			quit_fmt("Unable to (de-)stock store %d. Please report this bug",
 					 s->sidx + 1);
 	} else {
-		/* For the Bookseller, occasionally sell a book */
 		if (s->always_num && s->stock_num) {
 			int sales = randint1(s->stock_num);
 			while (sales--) {
@@ -1475,12 +1474,10 @@ void store_maint(struct store *s)
 			struct object *obj = store_find_kind(s, kind);
 
 			/* Create the item if it doesn't exist */
-			if (!obj)
+			if (!obj) {
 				obj = store_create_item(s, kind);
-
-			/* Ensure a full stack */
-			obj->number = obj->kind->base->max_stack;
-			obj->known->number = obj->kind->base->max_stack;
+				mass_produce(obj);
+			}
 		}
 	}
 
