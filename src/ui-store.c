@@ -137,7 +137,7 @@ static const char *random_line(struct hint *hints)
 /* Return a random hint from the global hints or lies lists
  * <real>% of ths time, it's a hint.
  **/
-static const char *random_rumor(s32b real)
+const char *random_rumor(s32b real)
 {
 	struct hint *h = lies;
 	if (randint0(100) < real)

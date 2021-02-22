@@ -57,6 +57,7 @@
 #include "ui-display.h"
 #include "ui-input.h"
 #include "ui-output.h"
+#include "ui-store.h"
 #include "z-textblock.h"
 
 #include <math.h>
@@ -6117,6 +6118,17 @@ bool effect_handler_HORNS(effect_handler_context_t *context)
 bool effect_handler_FORCE_REGEN(effect_handler_context_t *context)
 {
 	timelord_force_regen();
+	return (true);
+}
+
+/**
+ * Rumor. 
+ * This is true X% of the time (taken from the value) 
+ */
+bool effect_handler_RUMOR(effect_handler_context_t *context)
+{
+	int die = effect_calculate_value(context, false);
+	msg(random_rumor(die));
 	return (true);
 }
 
