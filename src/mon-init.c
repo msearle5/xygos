@@ -1766,52 +1766,56 @@ static errr finish_parse_monster(struct parser *p) {
 	return 0;
 }
 
+void cleanup_one_monster(struct monster_race *r)
+{
+	struct monster_drop *d;
+	struct monster_friends *f;
+	struct monster_friends_base *fb;
+	struct monster_mimic *m;
+	struct monster_shape *s;
+
+	d = r->drops;
+	while (d) {
+		struct monster_drop *dn = d->next;
+		mem_free(d);
+		d = dn;
+	}
+	f = r->friends;
+	while (f) {
+		struct monster_friends *fn = f->next;
+		mem_free(f);
+		f = fn;
+	}
+	fb = r->friends_base;
+	while (fb) {
+		struct monster_friends_base *fbn = fb->next;
+		mem_free(fb);
+		fb = fbn;
+	}		
+	m = r->mimic_kinds;
+	while (m) {
+		struct monster_mimic *mn = m->next;
+		mem_free(m);
+		m = mn;
+	}
+	s = r->shapes;
+	while (s) {
+		struct monster_shape *sn = s->next;
+		mem_free(s);
+		s = sn;
+	}
+	string_free(r->plural);
+	string_free(r->text);
+	string_free(r->name);
+	mem_free(r->blow);
+}
+
 static void cleanup_monster(void)
 {
 	int ridx;
 
 	for (ridx = 0; ridx < z_info->r_max; ridx++) {
-		struct monster_race *r = &r_info[ridx];
-		struct monster_drop *d;
-		struct monster_friends *f;
-		struct monster_friends_base *fb;
-		struct monster_mimic *m;
-		struct monster_shape *s;
-
-		d = r->drops;
-		while (d) {
-			struct monster_drop *dn = d->next;
-			mem_free(d);
-			d = dn;
-		}
-		f = r->friends;
-		while (f) {
-			struct monster_friends *fn = f->next;
-			mem_free(f);
-			f = fn;
-		}
-		fb = r->friends_base;
-		while (fb) {
-			struct monster_friends_base *fbn = fb->next;
-			mem_free(fb);
-			fb = fbn;
-		}		
-		m = r->mimic_kinds;
-		while (m) {
-			struct monster_mimic *mn = m->next;
-			mem_free(m);
-			m = mn;
-		}
-		s = r->shapes;
-		while (s) {
-			struct monster_shape *sn = s->next;
-			mem_free(s);
-			s = sn;
-		}
-		string_free(r->plural);
-		string_free(r->text);
-		string_free(r->name);
-		mem_free(r->blow);
+		cleanup_one_monster(&r_info[ridx]);
 	}
 
 	mem_free(r_info);

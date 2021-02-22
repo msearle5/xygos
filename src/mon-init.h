@@ -32,4 +32,6 @@ extern struct file_parser pit_parser;
 extern struct file_parser pain_parser;
 
 
+void cleanup_one_monster(struct monster_race *r);
+
 #endif /* MONSTER_INIT_H_ */

@@ -81,6 +81,7 @@ WINMAINFILES = \
 X11MAINFILES = main-x11.o
 
 ANGFILES = \
+	bones.o \
 	c_soldier.o \
 	c_tourist.o \
 	cave.o \

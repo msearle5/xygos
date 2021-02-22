@@ -106,6 +106,7 @@ char *ANGBAND_DIR_SAVE;
 char *ANGBAND_DIR_SCORES;
 char *ANGBAND_DIR_INFO;
 char *ANGBAND_DIR_ARCHIVE;
+char *ANGBAND_DIR_BONES;
 
 static const char *slots[] = {
 	#define EQUIP(a, b, c, d, e, f) #a,
@@ -326,6 +327,7 @@ void init_file_paths(const char *configpath, const char *libpath, const char *da
 	BUILD_DIRECTORY_PATH(ANGBAND_DIR_SCORES, userpath, "scores");
 	BUILD_DIRECTORY_PATH(ANGBAND_DIR_SAVE, userpath, "save");
 	BUILD_DIRECTORY_PATH(ANGBAND_DIR_ARCHIVE, userpath, "archive");
+	BUILD_DIRECTORY_PATH(ANGBAND_DIR_BONES, userpath, "bones");
 
 #undef BUILD_DIRECTORY_PATH
 }

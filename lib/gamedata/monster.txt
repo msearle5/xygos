@@ -219,7 +219,7 @@ color:w
 
 ##### Special case: the randomizable race #####
 
-name:Randy, the Random With A Longer Name Than Anyone
+name:Randy, the Random
 base:townsfolk
 color:p
 speed:110

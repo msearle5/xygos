@@ -877,7 +877,7 @@ static char *store_fullname(struct store_context *ctx)
 static bool store_do_fight(struct store_context *ctx)
 {
 	/* Pick the randomizable monster race */
-	struct monster_race *race = lookup_monster("Randy, the Random With A Longer Name Than Anyone");
+	struct monster_race *race = lookup_monster("Randy, the Random");
 	assert(race);
 
 	/* Build a random unique based on your level and the store owner's name, race etc. */
