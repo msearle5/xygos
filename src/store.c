@@ -229,54 +229,48 @@ static enum parser_error parse_closed(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-static enum parser_error parse_normal(struct parser *p) {
-	struct store *s = parser_priv(p);
+static enum parser_error parse_item_table(struct parser *p, size_t *num, size_t *size, struct store_entry **table) {
 	int tval = tval_find_idx(parser_getsym(p, "tval"));
 	int sval = lookup_sval(tval, parser_getsym(p, "sval"));
+	random_value rarity = { 10000, 0, 0, 0 };
 
 	struct object_kind *kind = lookup_kind(tval, sval);
 	if (!kind)
 		return PARSE_ERROR_UNRECOGNISED_SVAL;
 
 	/* Expand if necessary */
-	if (!s->normal_num) {
-		s->normal_size = 16;
-		s->normal_table = mem_zalloc(s->normal_size * sizeof *s->normal_table);
-	} else if (s->normal_num >= s->normal_size) {
-		s->normal_size += 8; 
-		s->normal_table = mem_realloc(s->normal_table, s->normal_size * sizeof *s->normal_table);
+	if (!(*num)) {
+		*size = 16;
+		*table = mem_zalloc(*size * sizeof *table);
+	} else if (num >= size) {
+		*size += 8; 
+		*table = mem_realloc(*table, *size * sizeof *table);
 	}
 
-	s->normal_table[s->normal_num++] = kind;
+	/* Read rarity is present */
+	if (parser_hasval(p, "rarity")) {
+		rarity = parser_getrand(p, "rarity");
+		/* Negative base in this case doesn't mean that the number is negative, only that the base is.
+		 */
+		if (rarity.base < 0)
+			rarity.base += (rarity.m_bonus + (rarity.dice * (rarity.sides + 1)));
+	}
+
+	(*table)[*num].rarity = rarity;
+	(*table)[*num].kind = kind;
+	(*num)++;
 
 	return PARSE_ERROR_NONE;
 }
 
 static enum parser_error parse_always(struct parser *p) {
 	struct store *s = parser_priv(p);
-	int tval = tval_find_idx(parser_getsym(p, "tval"));
-	struct object_kind *kind = NULL;
+	return parse_item_table(p, &s->always_num, &s->always_size, &s->always_table);
+}
 
-	if (parser_hasval(p, "sval")) {
-		int sval = lookup_sval(tval, parser_getsym(p, "sval"));
-		kind = lookup_kind(tval, sval);
-		if (!kind) {
-			return PARSE_ERROR_UNRECOGNISED_SVAL;
-		}
-
-		/* Expand if necessary */
-		if (!s->always_num) {
-			s->always_size = 8;
-			s->always_table = mem_zalloc(s->always_size * sizeof *s->always_table);
-		} else if (s->always_num >= s->always_size) {
-			s->always_size += 8;
-			s->always_table = mem_realloc(s->always_table, s->always_size * sizeof *s->always_table);
-		}
-
-		s->always_table[s->always_num++] = kind;
-	}
-
-	return PARSE_ERROR_NONE;
+static enum parser_error parse_normal(struct parser *p) {
+	struct store *s = parser_priv(p);
+	return parse_item_table(p, &s->normal_num, &s->normal_size, &s->normal_table);
 }
 
 static enum parser_error parse_owner(struct parser *p) {
@@ -343,8 +337,8 @@ struct parser *init_parse_stores(void) {
 	parser_reg(p, "turnover uint turnover", parse_turnover);
 	parser_reg(p, "size uint max", parse_max);
 	parser_reg(p, "closed", parse_closed);
-	parser_reg(p, "normal sym tval sym sval", parse_normal);
-	parser_reg(p, "always sym tval ?sym sval", parse_always);
+	parser_reg(p, "normal sym tval sym sval ?rand rarity", parse_normal);
+	parser_reg(p, "always sym tval sym sval ?rand rarity", parse_always);
 	parser_reg(p, "buy str base", parse_buy);
 	parser_reg(p, "buy-flag sym flag str base", parse_buy_flag);
 	parser_reg(p, "danger uint low uint high", parse_danger);
@@ -445,7 +439,7 @@ static bool store_is_staple(struct store *s, struct object_kind *k) {
 	assert(k);
 
 	for (i = 0; i < s->always_num; i++) {
-		struct object_kind *l = s->always_table[i];
+		struct object_kind *l = s->always_table[i].kind;
 		if (k == l)
 			return true;
 	}
@@ -460,7 +454,7 @@ static bool store_can_carry(struct store *store, struct object_kind *kind) {
 	size_t i;
 
 	for (i = 0; i < store->normal_num; i++) {
-		if (store->normal_table[i] == kind)
+		if (store->normal_table[i].kind == kind)
 			return true;
 	}
 
@@ -1248,7 +1242,18 @@ static bool black_market_ok(const struct object *obj)
 static struct object_kind *store_get_choice(struct store *store)
 {
 	/* Choose a random entry from the store's table */
-	return store->normal_table[randint0(store->normal_num)];
+	do {
+		struct store_entry *item = store->normal_table + randint0(store->normal_num);
+
+		/* Produce a randomized value - parts in 10000 - based on the maximum dungeon level */
+		int rarity = randcalc(item->rarity, player->max_depth, RANDOMISE);
+		if (rarity != 10000) {
+			if (randint0(10000) >= rarity)
+				continue;
+		}
+		return item->kind;
+	} while (true);
+	return NULL;
 }
 
 
@@ -1470,11 +1475,18 @@ void store_maint(struct store *s)
 	if (s->always_num) {
 		size_t i;
 		for (i = 0; i < s->always_num; i++) {
-			struct object_kind *kind = s->always_table[i];
+			struct store_entry *item = s->always_table + i;
+			struct object_kind *kind = item->kind;
 			struct object *obj = store_find_kind(s, kind);
 
 			/* Create the item if it doesn't exist */
 			if (!obj) {
+				/* Produce a randomized value - parts in 10000 - based on the maximum dungeon level */
+				int rarity = randcalc(item->rarity, player->max_depth, RANDOMISE);
+				if (rarity != 10000) {
+					if (randint0(10000) >= rarity)
+						continue;
+				}
 				obj = store_create_item(s, kind);
 				mass_produce(obj);
 			}

@@ -3,16 +3,22 @@
 # Syntax for this file:
 
 # store: store number : store name
-# owner: max purse : name			- as many or few as you like >1
-# turnover: turnover				- how many items the store turns over
-# slots: min : max					- number of 'normal' slots to keep stocked
-# size: max							- initial maximum number of items (defaults to store_inven_max constant)
-# normal: type name : item name : ?rarity		- for the normal stocking list
-# closed							- initially closed (stores are open by default)
-# always: type name : ?item name	- for things to always stock
-# buy: type name					- base types the store will buy
-# buy-flag: flag : type name		- types to buy if the flag is present
-# danger: min : max					- danger level at which the store is destroyed
+# owner: max purse : name					- as many or few as you like >1
+# turnover: turnover						- how many items the store turns over
+# slots: min : max							- number of 'normal' slots to keep stocked
+# size: max									- initial maximum number of items (defaults to store_inven_max constant)
+# normal: type name : item name : ?rarity	- for the normal stocking list
+# closed									- initially closed (stores are open by default)
+# always: type name : item name : ?rarity	- for things to always stock
+# buy: type name							- base types the store will buy
+# buy-flag: flag : type name				- types to buy if the flag is present
+# danger: min : max							- danger level at which the store is destroyed
+#
+# The rarities are random values (base + XdY + level-dependent), producing a chance in 10000 of the item
+# being present. A leading - applies only to the base, not the entire value, unlike typical random values.
+# (For example, an item with -1000+M2000 would give -1000 at level 0, 0 at level 63 and 1000 at level 127.
+# So it would not appear until yuo had reach a maximum dungeon level of 63 and then would increase, to a
+# maximum of 10% of the time at dungeon level 127.
 
 
 # General store
@@ -184,6 +190,10 @@ normal:pill:Restore Life Levels
 normal:pill:Neutralize Poison
 normal:pill:Cure Serious Wounds
 normal:pill:Cure Critical Wounds
+normal:pill:Resist Poison:200+M2500
+normal:pill:Healing:M2000
+normal:pill:*Healing*:-500+M1000
+normal:pill:Life:-900+M1000
 normal:wand:Heal Monster
 buy:pill
 

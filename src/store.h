@@ -49,10 +49,15 @@ struct object_buy {
 };
 
 struct owner {
-	unsigned int oidx;
 	struct owner *next;
 	char *name;
+	unsigned int oidx;
 	s32b max_cost;
+};
+
+struct store_entry {
+	struct object_kind *kind;
+	random_value rarity;
 };
 
 struct store {
@@ -83,12 +88,12 @@ struct store {
 	/* Always stock these items */
 	size_t always_size;
 	size_t always_num;
-	struct object_kind **always_table;
+	struct store_entry *always_table;
 
 	/* Select a number of these items to stock */
 	size_t normal_size;
 	size_t normal_num;
-	struct object_kind **normal_table;
+	struct store_entry *normal_table;
 
 	/* Buy these items */
 	struct object_buy *buy;
