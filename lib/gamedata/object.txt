@@ -3372,7 +3372,19 @@ power:0
 effect:SUMMON:UNDEAD
 dice:1d3
 
-name:acquisition
+name:local acquisition
+type:card
+graphics:-:Deep Light Blue
+level:8
+weight:5g
+cost:2700
+alloc:5:8 to 100
+power:20000
+effect:LOCAL_ACQUIRE
+dice:1
+desc:It's a form of teleportation. It grabs the most valuable item on the level and leaves it at your feet.
+
+name:remote acquisition
 type:card
 graphics:-:Deep Light Blue
 level:20
@@ -3382,6 +3394,7 @@ alloc:10:20 to 100
 power:20000
 effect:ACQUIRE
 dice:1
+desc:It's a form of teleportation. It grabs an item - hopefully a valuable one - from some unknown distant location.
 
 name:mass acquisition
 type:card
@@ -3393,7 +3406,7 @@ alloc:5:60 to 100
 power:20000
 effect:ACQUIRE
 dice:1+1d2
-
+desc:It's a form of teleportation. It grabs a few items - hopefully valuable ones - from some unknown distant location.
 
 ### Killing cards ###
 

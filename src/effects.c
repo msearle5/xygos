@@ -2555,6 +2555,42 @@ bool effect_handler_ACQUIRE(effect_handler_context_t *context)
 	return true;
 }
 
+bool effect_handler_LOCAL_ACQUIRE(effect_handler_context_t *context)
+{
+	struct object *best = NULL;
+	struct object *obj;
+	int bestprice = -1;
+	 
+	/* All objects on the ground */
+	for (int y = 1; y < cave->height; y++) {
+		for (int x = 1; x < cave->width; x++) {
+			struct loc grid = loc(x, y);
+			for (obj = square_object(cave, grid); obj; obj = obj->next) {
+				int val = object_value_real(obj, obj->number);
+				if (val > bestprice) {
+					best = obj;
+					bestprice = val;
+				}
+			}
+		}
+	}
+
+	if (!best) {
+		/* Almost impossible, but could happen if there were no objects on the level */
+		return effect_handler_ACQUIRE(context);
+	}
+
+	/* Remove it */
+	bool dummy;
+	struct object *removed = floor_object_for_use(best, best->number, false, &dummy);
+
+	/* And replace it */
+	drop_near(cave, &removed, 0, player->grid, true, true);
+
+	context->ident = true;
+	return true;
+}
+
 /**
  * Wake up all monsters in line of sight
  */
