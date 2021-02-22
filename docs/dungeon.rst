@@ -37,7 +37,7 @@ Features that do not block line of sight
 ``.``   A floor space              ``1``    Entrance to General Store
 ``.``   A trap (hidden)            ``2``    Entrance to Armoury
 ``^``   A trap (known)             ``3``    Entrance to Weapon Smith
-``;``   A glyph of warding         ``4``    Entrance to Bookseller
+``;``   A glyph of warding         ``4``    Entrance to Electronics
 ``'``   An open door               ``5``    Entrance to Alchemy Shop
 ``'``   A broken door              ``6``    Entrance to Magic Shop
 ``<``   A staircase up             ``7``    Entrance to the Black Market
@@ -189,12 +189,13 @@ The Weaponsmith's Shop (``3``)
   bolts, and shots. As with the armoury, not all weapon types will be
   stocked here, unless they are sold to the shop by the player first.
 
-The Bookseller (``4``)
-  The Bookseller holds supplies of the simpler books needed by magic users,
-  and will buy the more advanced books which can be found in the dungeon.
+The Electronics Outlet (``4``)
+  The Electronics Outlet holds supplies of software cards, and sometimes
+  more bulky items. They will buy most cards and also 3D printers and
+  the blocks for them.
 
-The Alchemy shop (``5``)
-  The Alchemy Shop deals in all types of potions and scrolls.
+The Pharmacy (``5``)
+  The Pharmacy deals in all types of pills, and a few related devices.
 
 The Magic User's Shop (``6``)
   The Magic User's Shop deals in all sorts of rings, wands, amulets, and

@@ -7,7 +7,7 @@
 # turnover: turnover				- how many items the store turns over
 # slots: min : max					- number of 'normal' slots to keep stocked
 # size: max							- initial maximum number of items (defaults to store_inven_max constant)
-# normal: type name : item name		- for the normal stocking list
+# normal: type name : item name : ?rarity		- for the normal stocking list
 # closed							- initially closed (stores are open by default)
 # always: type name : ?item name	- for things to always stock
 # buy: type name					- base types the store will buy
@@ -141,8 +141,8 @@ buy:polearm
 buy:hafted
 
 
-# Bookseller
-store:4:Bookseller
+# Electronics Outlet
+store:4:Electronics
 owner:15000:Ludwig the Humble (Human)
 owner:20000:Gunnar the Paladin (Human)
 owner:25000:Delilah the Pure (Elf)
@@ -162,6 +162,8 @@ normal:card:nutria
 normal:card:Blessing
 normal:card:Holy Chant
 buy:card
+buy:printer
+buy:block
 
 # Pharmacy
 store:5:Pharmacy
@@ -182,6 +184,7 @@ normal:pill:Restore Life Levels
 normal:pill:Neutralize Poison
 normal:pill:Cure Serious Wounds
 normal:pill:Cure Critical Wounds
+normal:wand:Heal Monster
 buy:pill
 
 # Magic-user's
