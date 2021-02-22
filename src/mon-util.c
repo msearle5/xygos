@@ -1015,12 +1015,60 @@ void monster_death(struct monster *mon, bool stats)
 	quest_check(mon);
 }
 
+/** Experience gained by killing a monster
+ * This is modified based on the monster's level vs. yours
+ */
+double mon_exp_value(const struct monster_race *race)
+{
+	/* Experience to gain at equal level */
+	double gain = race->mexp;
+
+	/* Player level */
+	double div = player->lev;
+
+	/* Monster level */
+	double mul = race->level;
+
+	/* Calculate and return value of experience */
+	return (gain * mul) / div;
+}
+
+/**
+ * Gain experience related to a monster.
+ * This is modified based on the monster's level vs. yours
+ */
+static void gain_mon_exp(const struct monster *mon)
+{
+	/* Experience to gain */
+	double new_exp = mon_exp_value(mon->race);
+
+	/* Convert back to integer and fractional components */
+	s32b int_exp = new_exp;
+	assert(int_exp >= 0);
+	double rem_exp = new_exp;
+	rem_exp -= int_exp;
+	rem_exp *= 65536.0;
+	assert(rem_exp < 65536.0);
+	u32b frac_exp = rem_exp;
+
+	/* Gain experience (fractional) */
+	u32b old_exp_frac = player->exp_frac;
+	u32b new_exp_frac = frac_exp + old_exp_frac;
+	if (new_exp_frac >= 0x10000L) {
+		int_exp++;
+		new_exp_frac -= 0x10000L;
+	}
+	player->exp_frac = new_exp_frac;
+
+	/* Gain experience (integer) */
+	player_exp_gain(player, int_exp);
+}
+
 /**
  * Handle the consequences of the killing of a monster by the player
  */
 static void player_kill_monster(struct monster *mon, const char *note)
 {
-	s32b div, new_exp, new_exp_frac;
 	struct monster_lore *lore = get_lore(mon->race);
 	char m_name[80];
 	char buf[80];
@@ -1075,23 +1123,8 @@ static void player_kill_monster(struct monster *mon, const char *note)
 			msgt(soundfx, "You have slain %s.", m_name);
 	}
 
-	/* Player level */
-	div = player->lev;
-
 	/* Give some experience for the kill */
-	new_exp = ((long)mon->race->mexp * mon->race->level) / div;
-
-	/* Handle fractional experience */
-	new_exp_frac = ((((long)mon->race->mexp * mon->race->level) % div)
-					* 0x10000L / div) + player->exp_frac;
-
-	/* Keep track of experience */
-	if (new_exp_frac >= 0x10000L) {
-		new_exp++;
-		player->exp_frac = (u16b)(new_exp_frac - 0x10000L);
-	} else {
-		player->exp_frac = (u16b)new_exp_frac;
-	}
+	gain_mon_exp(mon);
 
 	/* When the player kills a Unique, it stays dead */
 	if (rf_has(mon->race->flags, RF_UNIQUE)) {
@@ -1110,9 +1143,6 @@ static void player_kill_monster(struct monster *mon, const char *note)
 		strnfmt(buf, sizeof(buf), "Killed %s", unique_name);
 		history_add(player, buf, HIST_SLAY_UNIQUE);
 	}
-
-	/* Gain experience */
-	player_exp_gain(player, new_exp);
 
 	/* Generate treasure */
 	monster_death(mon, false);

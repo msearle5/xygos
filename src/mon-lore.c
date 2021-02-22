@@ -1114,7 +1114,6 @@ void lore_append_exp(textblock *tb, const struct monster_race *race,
 {
 	const char *ordinal, *article;
 	char buf[20] = "";
-	long exp_integer, exp_fraction;
 	s16b level;
 
 	/* Check legality and that this is a placeable monster */
@@ -1129,22 +1128,18 @@ void lore_append_exp(textblock *tb, const struct monster_race *race,
 
 	textblock_append(tb, " this creature");
 
-	/* calculate the integer exp part */
-	exp_integer = (long)race->mexp * race->level / player->lev;
-
-	/* calculate the fractional exp part scaled by 100, must use long
-	 * arithmetic to avoid overflow */
-	exp_fraction = ((((long)race->mexp * race->level % player->lev) *
-					 (long)1000 / player->lev + 5) / 10);
+	double exp_value = mon_exp_value(race);
+	long exp_int = exp_value;
 
 	/* Calculate textual representation */
-	strnfmt(buf, sizeof(buf), "%d", exp_integer);
-	if (exp_fraction)
-		my_strcat(buf, format(".%02d", exp_fraction), sizeof(buf));
+	if (exp_int == exp_value)
+		strnfmt(buf, sizeof(buf), "%d", exp_int);
+	else
+		strnfmt(buf, sizeof(buf), "%.2lf", exp_value);
 
 	/* Mention the experience */
 	textblock_append(tb, " is worth ");
-	textblock_append_c(tb, COLOUR_BLUE, format("%s point%s", buf, PLURAL((exp_integer == 1) && (exp_fraction == 0))));
+	textblock_append_c(tb, COLOUR_BLUE, format("%s point%s", buf, PLURAL(exp_value == 1.0)));
 
 	/* Take account of annoying English */
 	ordinal = "th";
