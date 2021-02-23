@@ -169,7 +169,7 @@ H:If you're in a bad situation, take a breather and "I"nspect all your gear.
 H:When a character dies, memories of monsters she has fought are passed on.
 H:Even the most powerful characters can be made useless by blindness.
 H:Even the most powerful characters can be made useless by confusion.
-H:Finding a way to resist blindness and confusion are critical to survival.
+H:Finding a way to resist blindness and confusion is critical to survival.
 H:Pills are available which can will protect you from being scared.
 H:Probing an enemy to learn its abilities is always useful.
 H:Quivers can hold different types of ammo in one inventory slot (max. 40).

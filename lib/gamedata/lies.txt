@@ -380,6 +380,7 @@ R:They say that 43% of statistics are made up on the spot.
 R:They say that 5 green molds have captured a Princess.
 R:They say that Elf shot the food.
 R:They say that Evil Iggy is more evil than the Balrog.
+R:They say that Elf shot the a.out.
 R:They say that Koffing is just a huge bag of farts.
 R:They say that Leeroy Jenkins is like Forrest Gump.
 R:They say that Magikarp is Magikrap.
@@ -526,6 +527,7 @@ R:They sure don't dislike them.
 R:They tend to lose their masters.
 R:Thieves are more likely to appear if you are carrying a lot of money.
 R:Thinking is dangerous.  It leads to ideas.
+R:THIS.
 R:This dungeon is owned and operated by Frobozz Magic Co., Ltd.
 R:This game was NOT made on drugs.
 R:This is a joke.
