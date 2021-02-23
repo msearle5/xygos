@@ -58,6 +58,12 @@ union bones_header {
 	char pad[32];
 };
 
+/* File in the bonedir */
+struct bones_entry {
+	char filename[62];
+	s16b level;
+};
+
 /* True if this is a 64 bit long system */
 static bool host_64(void) {
 	return (sizeof(unsigned long) == 8);
@@ -182,6 +188,89 @@ static enum parser_error parse_bones_name(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+/* Read the bones directory, return all files in a mem_alloced array of bones_entry, sorted by level??????????????. Returns the number of entries through the count ptr.
+ * This may be null on error or if empty.
+ * Files are assumed to have Nethack bonefile style names ("bonX0.L", where L is the level and X is A-Z).
+ **/
+static struct bones_entry *bones_read_dir(int *countp)
+{
+	struct bones_entry *ent = NULL;
+	int count = 0;
+	ang_dir *dir = my_dopen(ANGBAND_DIR_BONES);
+	if (dir) {
+		struct bones_entry newent;
+		memset(&newent, 0, sizeof(newent));
+		bool success;
+		do {
+			success = /* and so well named */ my_dread(dir, newent.filename, sizeof(newent.filename));
+			if (success) {
+				/* Determine level */
+				if (strlen(newent.filename) < 7)
+					continue;
+				int level = atoi(newent.filename + 6);
+				if ((level <= 0) || (level >= 128))
+					continue;
+				newent.level = level;
+
+				/* Add it to the list */
+				ent = mem_realloc(ent, sizeof(struct bones_entry) * (count + 1));
+				memcpy(ent+count, &newent, sizeof(newent));
+				count++;
+			}
+		} while (success);
+		my_dclose(dir);
+	}
+	*countp = count;
+	return ent;
+}
+
+/* Find a bones file suitable for this level.
+ * Ideally this is of the same level, but some variation is allowed - more at greater depths, and less when there are more choices available.
+ * May return null if there are no close-enough files.
+ */
+static void bones_find_file(int level, char *name, int length)
+{
+	int count = 0;
+	char *filename = NULL;
+
+	assert(length > 0);
+	*name = 0;
+
+	struct bones_entry *ent = bones_read_dir(&count);
+	if (!count)
+		return;
+
+	// How far off is ok? This is +- max
+	int variation = 1 + (level / 10);
+	int nok = 0;
+	for(int i=0; i<count; i++) {
+		if (ABS(ent[i].level - level) <= variation) {
+			nok++;
+		}
+	}
+
+	// There is at least one ok
+	if (nok) {
+		int idx;
+		bool ok = false;
+		do {
+			idx = randint0(count);
+			if (ABS(ent[idx].level - level) <= variation) {
+				// Still try to prefer nearer levels
+				if ((ent[idx].level == level) || (one_in_(1+(ABS(ent[idx].level - level))))) {
+					ok = true;
+				}
+			}
+		} while(ok);
+
+		// idx is now the wanted entry
+		filename = ent[idx].filename;
+	}
+
+	strncpy(name, filename, length);
+	mem_free(ent);
+}
+
 /* Read a bones file.
  * This replaces the current Randy Random monster with a new one, read from
  * the file.
@@ -251,3 +340,11 @@ errr bones_read(const char *filename)
 	return r;
 }
 
+/* Write a bones file.
+ * This is usually a monster based on the one that killed the player (a 'champion').
+ * Rarely, it may be be the player itself (a 'cyberpsycho')
+ */
+void bones_write(bool from_player)
+{
+	
+}
