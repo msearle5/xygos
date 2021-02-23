@@ -189,6 +189,27 @@ bool player_stat_dec(struct player *p, int stat, bool permanent)
 	return res;
 }
 
+/* Experience needed to gain the given level.
+ * (The -2 is because the first entry in the table, player_exp[0], is the requirement to gain level 2.)
+ */ 
+static s32b exp_to_gain(s32b level)
+{
+	return (player_exp[level-2] * player->expfact) / 100L;
+}
+
+
+/* Convert experience to level
+ */ 
+static s32b exp_to_lev(s32b exp)
+{
+	s32b lev = 1;
+	while ((lev < PY_MAX_LEVEL) &&
+	       (exp >= exp_to_gain(lev))) {
+		lev++;
+	}
+	return lev;
+}
+
 static void adjust_level(struct player *p, bool verbose)
 {
 	if (p->exp < 0)
@@ -213,12 +234,12 @@ static void adjust_level(struct player *p, bool verbose)
 	handle_stuff(p);
 
 	while ((p->lev > 1) &&
-	       (p->exp < (player_exp[p->lev-2] * p->expfact / 100L)))
+	       (p->exp < (exp_to_gain(p->lev))))
 		p->lev--;
 
 
 	while ((p->lev < PY_MAX_LEVEL) &&
-	       (p->exp >= (player_exp[p->lev-1] * p->expfact / 100L))) {
+	       (p->exp >= exp_to_gain(p->lev+1))) {
 		char buf[80];
 
 		p->lev++;
@@ -241,7 +262,7 @@ static void adjust_level(struct player *p, bool verbose)
 	}
 
 	while ((p->max_lev < PY_MAX_LEVEL) &&
-	       (p->max_exp >= (player_exp[p->max_lev-1] * p->expfact / 100L)))
+	       (p->max_exp >= (exp_to_gain(p->max_lev+1))))
 		p->max_lev++;
 
 	if (p->max_lev > max_from) {
@@ -254,11 +275,65 @@ static void adjust_level(struct player *p, bool verbose)
 	handle_stuff(p);
 }
 
+/* Cap large experience gains.
+ * The first level gained is free (as you might be very close to it already), but at each
+ * following level gain the remaining exp is halved. Recovery from drain (levels gained
+ * below your maximum level) is always free.
+ * At level 49-50, this doesn't apply.
+ * Still need to take care of gaining levels into 50 from below.
+ */
+s32b player_exp_scale(s32b amount)
+{
+	struct player *p = player;
+	
+	/* Two levels above your maximum (one level above would be the amount needed to gain the next level)
+	 * is the first point to care about
+	 */
+	if (p->max_lev >= PY_MAX_LEVEL - 1)
+		return amount;
+
+	/* This much exp is free */
+	s32b free_gain = exp_to_gain(p->max_lev + 2) - p->exp;
+	if (amount <= free_gain)
+		return amount;
+
+	s32b sum = free_gain;
+	s32b remainder = amount - sum;
+	s32b level = 1;
+	while ((exp_to_lev(p->exp + sum) != exp_to_lev(p->exp + sum + remainder)) && (level < PY_MAX_LEVEL)) { 
+		/* Divide the rest by 2, until no longer gaining levels */
+		s32b level = exp_to_lev(p->exp + sum);
+		s32b thislevel = exp_to_gain(level);
+		s32b nextlevel = exp_to_gain(level+1);
+		s32b gain = nextlevel - thislevel;
+		if (gain > remainder) {
+			gain = remainder;
+		}
+		remainder -= gain;
+		remainder /= 2;
+		sum += gain;
+	}; 
+
+	return sum + remainder;
+}
+
 void player_exp_gain(struct player *p, s32b amount)
 {
 	p->exp += amount;
 	if (p->exp < p->max_exp)
 		p->max_exp += amount / 10;
+	adjust_level(p, true);
+}
+
+void player_exp_gain_scaled(struct player *p, s32b amount)
+{
+	amount = player_exp_scale(amount);
+	if (p->exp + amount < p->max_exp) {
+		p->exp += amount;
+		p->max_exp += player_exp_scale(amount / 10);
+	} else {
+		p->exp += player_exp_scale(amount);
+	}
 	adjust_level(p, true);
 }
 

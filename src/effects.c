@@ -1343,7 +1343,7 @@ bool effect_handler_GAIN_EXP(effect_handler_context_t *context)
 	int amount = effect_calculate_value(context, false);
 	if (player->exp < PY_MAX_EXP) {
 		msg("You feel more experienced.");
-		player_exp_gain(player, amount / 2);
+		player_exp_gain_scaled(player, amount / 2);
 	}
 	context->ident = true;
 

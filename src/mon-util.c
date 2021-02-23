@@ -1061,7 +1061,7 @@ static void gain_mon_exp(const struct monster *mon)
 	player->exp_frac = new_exp_frac;
 
 	/* Gain experience (integer) */
-	player_exp_gain(player, int_exp);
+	player_exp_gain_scaled(player, int_exp);
 }
 
 /**
