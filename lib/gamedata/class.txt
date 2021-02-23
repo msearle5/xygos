@@ -205,9 +205,9 @@ skill-device:36:13
 skill-save:30:9
 skill-stealth:2:0
 skill-search:10:12
-skill-melee:35:15
+skill-melee:15:25
 skill-shoot:20:15
-skill-throw:20:15
+skill-throw:25:35
 skill-dig:0:0
 hitdie:30
 exp:-30
@@ -229,20 +229,40 @@ equip:soft armor:loud shirt:1:1
 ############### SPELUNKER ###############
 name:Spelunker
 stats:2:0:0:3:1:0:0
-hitdie:90
+hitdie:190
 max-attacks:5
 min-weight:40
 exp:5
 #Digger, climber, diver, explorer, mapper, pathfinder, cave finder...
+title:Climber
 title:Spelunker
 title:Caver
 title:Speleologist
+skill-disarm-phys:25:20
+skill-disarm-magic:20:10
+skill-device:20:10
+skill-save:28:10
+skill-stealth:2:2
+skill-search:30:22
+skill-melee:40:35
+skill-shoot:25:45
+skill-throw:55:45
+skill-dig:20:20
 equip:helm:hard hat (lamp):1:1
 equip:light:glowstick:2:4
 equip:light:electric torch:1:1
 equip:battery:alkaline battery:4:6
 # FF clothes?
 # spikes have disappeared
+
+magic:1:300
+book:[Spelunker]
+# spell:name:level:fail:exp:stat:hp:cooldown
+spell:Climb:5:80:4:0:1:10
+seffect:CLIMBING
+sdesc:When next to a rock face, climb up it to the level above. 
+sdesc:Failing can hurt - Feather Falling is recommended.
+
 cdesc:You are trained and equipped for underground exploration, can avoid falls and will gain powerful abilities to dig, climb, map, detect and find hidden passages. Your combat ability is middling - fitness helps but only so much without having practiced much. However you can become an effective tactical fighter through your positioning abilities.
 
 ############### JEDI #####################
@@ -287,7 +307,7 @@ strength-multiplier:2
 equip:sword:pocket knife:1:1
 
 magic:1:300
-book:[First Spells]
+book:[Engineer]
 spell:Magic Missile:1:22:4:1:4:10
 seffect:BOLT_OR_BEAM:MISSILE:0:-10
 sdice:$Dd4

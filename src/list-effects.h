@@ -120,3 +120,4 @@ EFFECT(MUTATE,						false, NULL,		0,		EFINFO_NONE,	"causes you to mutate strange
 EFFECT(HORNS,						false, NULL,		0,		EFINFO_NONE,	"causes a loud honk that wakes nearby monsters")  
 EFFECT(FORCE_REGEN,					false, NULL,		0,		EFINFO_NONE,	"forces regeneration")
 EFFECT(RUMOR,						false, NULL,		0, 		EFINFO_NONE,	"displays a rumor")
+EFFECT(CLIMBING,					false, NULL,		0, 		EFINFO_NONE,	"climbs the wall to the level above")

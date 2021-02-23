@@ -6169,6 +6169,20 @@ bool effect_handler_RUMOR(effect_handler_context_t *context)
 }
 
 /**
+ * Climbing
+ */
+bool effect_handler_CLIMBING(effect_handler_context_t *context)
+{
+	int fail = effect_calculate_value(context, false);
+	if (fail > 0) {
+		msg("Failed");
+	} else {
+		msg("Success");
+	}
+	return (true);
+}
+
+/**
  * ------------------------------------------------------------------------
  * Properties of effects
  * ------------------------------------------------------------------------ */
