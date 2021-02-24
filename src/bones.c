@@ -225,8 +225,9 @@ static struct bones_entry *bones_read_dir(int *countp)
 }
 
 /* Find a bones file suitable for this level.
+ * Pass it the level to generate for, a buffer to receive the filename and its length. 
  * Ideally this is of the same level, but some variation is allowed - more at greater depths, and less when there are more choices available.
- * May return null if there are no close-enough files.
+ * May return an empty string if there are no close-enough files.
  */
 static void bones_find_file(int level, char *name, int length)
 {
@@ -340,11 +341,33 @@ errr bones_read(const char *filename)
 	return r;
 }
 
-/* Write a bones file.
- * This is usually a monster based on the one that killed the player (a 'champion').
- * Rarely, it may be be the player itself (a 'cyberpsycho')
- */
-void bones_write(bool from_player)
+void bones_make_race(struct monster_race *to, struct monster_race *from)
 {
-	
+	/* What level should it be found at?
+	 * Could use the current level, but that risks OOD monsters making OOD champions.
+	 * It's fairer to use the monster race's level.
+	 * Players are harder to estimate, but an average of the maximum depth and twice the character level is reasonable.
+	 */
+
+}
+
+/* Write a bones file.
+ * This is usually a monster based on the one that killed the player (a 'champion') - passed in.
+ * Rarely, it may be be the player itself (a 'cyberpsycho') - if the passed monster is null.
+ */
+void bones_write(struct monster_race *from)
+{
+	/* Make a header */
+	union bones_header header;
+	bones_new(&header);
+
+	/* Make the monster (don't use Randy - it's possible to be killed by a champion, after all) */
+	monster_race race;
+	bones_make_race(&race, from);
+
+	/* Build a text block */
+	char text[4096];
+	bones_print_mon(&race, text, sizeof(text));
+
+	/* */
 }
