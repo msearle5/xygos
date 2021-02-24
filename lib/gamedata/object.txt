@@ -3850,7 +3850,7 @@ desc:A colony of the most advanced nanites, compressed into a pill which thoroug
 
 # INT, WIS, CHR restored; 
 name:remind nano-
-effect:graphics:!:d
+graphics:!:d
 level:26
 weight:1g
 cost:1600
@@ -3861,10 +3861,6 @@ power:2000
 effect:RESTORE_STAT:INT
 effect:RESTORE_STAT:WIS
 effect:RESTORE_STAT:CHR
-
-effect:RESTORE_STAT:STR
-effect:RESTORE_STAT:DEX
-effect:RESTORE_STAT:CON
 
 name:Experience
 type:pill
