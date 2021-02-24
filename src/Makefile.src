@@ -214,6 +214,7 @@ ANGFILES = \
 	wiz-debug.o \
 	wiz-spoil.o \
 	wiz-stats.o \
+	world.o \
 
 STATSMAINFILES = main-stats.o \
         stats/db.o
