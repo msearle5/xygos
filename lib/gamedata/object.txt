@@ -937,6 +937,8 @@ effect:RESTORE_STAT:INT
 effect:RESTORE_STAT:WIS
 effect:RESTORE_STAT:DEX
 effect:RESTORE_STAT:CON
+effect:RESTORE_STAT:CHR
+effect:RESTORE_STAT:SPD
 effect:NOURISH:INC_BY
 dice:5
 
@@ -3445,18 +3447,6 @@ effect:MASS_BANISH
 
 ### Utility ###
 
-name:nutria
-type:card
-graphics:-:Deep Light Blue
-level:5
-weight:5g
-cost:10
-alloc:60:5 to 100
-pile:100:2d3
-power:7
-effect:NOURISH:INC_TO
-dice:50
-
 name:lighting
 type:card
 graphics:-:Deep Light Blue
@@ -3666,7 +3656,7 @@ effect:DARKEN_AREA
 effect:BALL:DARK_WEAK:3
 dice:10
 
-name:Trap Creation
+name:entrapment
 type:card
 graphics:-:Deep Light Blue
 level:10
@@ -3683,9 +3673,25 @@ effect:TOUCH:MAKE_TRAP:3
 
 ##### Pills #####
 
+# Moved from satisfy-hunger card
+# You should usually be using real food, so this is relatively rare and expensive.
+name:nutria
+type:pill
+graphics:!:d
+level:5
+weight:1g
+cost:150
+alloc:20:5 to 100
+pile:20:1d3
+power:3
+effect:NOURISH:INC_TO
+dice:90
+desc:A wonder of nanotechnology - food for a day in a single pill.
+
 ### Statgain ###
 
-name:Strength
+# Permanent stat buffs, first-rank
+name:strength nano-
 type:pill
 graphics:!:d
 level:30
@@ -3696,8 +3702,9 @@ pile:10:2
 power:20000
 effect:RESTORE_STAT:STR
 effect:GAIN_STAT:STR
+desc:A colony of nanites, compressed into a pill which rebuilds your muscles, immediately and permanently increasing your strength.
 
-name:Intelligence
+name:intelligence nano-
 type:pill
 graphics:!:d
 level:30
@@ -3708,8 +3715,9 @@ pile:10:2
 power:20000
 effect:RESTORE_STAT:INT
 effect:GAIN_STAT:INT
+desc:A colony of nanites, compressed into a pill which rebuilds your brain, immediately and permanently increasing your intelligence.
 
-name:Wisdom
+name:wisdom nano-
 type:pill
 graphics:!:d
 level:30
@@ -3720,8 +3728,10 @@ pile:10:2
 power:20000
 effect:RESTORE_STAT:WIS
 effect:GAIN_STAT:WIS
+desc:A colony of nanites, compressed into a pill which rebuilds your brain, immediately and permanently increasing your wisdom.
 
-name:Dexterity
+# names? dextro, mentalo etc. ?
+name:dexterity nano-
 type:pill
 graphics:!:d
 level:30
@@ -3732,8 +3742,9 @@ pile:10:2
 power:20000
 effect:RESTORE_STAT:DEX
 effect:GAIN_STAT:DEX
+desc:A colony of nanites, compressed into a pill which rebuilds your nerves, immediately and permanently increasing your dexterity.
 
-name:Constitution
+name:constitution nano-
 type:pill
 graphics:!:d
 level:30
@@ -3744,8 +3755,9 @@ pile:10:2
 power:20000
 effect:RESTORE_STAT:CON
 effect:GAIN_STAT:CON
+desc:A colony of nanites, compressed into a pill which rebuilds your body, immediately and permanently making you tougher.
 
-name:Charisma
+name:charisma nano-
 type:pill
 graphics:!:d
 level:24
@@ -3756,11 +3768,51 @@ pile:10:2
 power:4000
 effect:RESTORE_STAT:CHR
 effect:GAIN_STAT:CHR
+desc:A colony of nanites, compressed into a pill which rebuilds your body, immediately and permanently improving your looks.
+
+# Permanent stat buffs, second-rank
+# INT-DEX 'precision' WIS-CHA 'persona' STR-CON 'perform'? 
+# or INT-WIS-CHA 'persona' / STR-DEX-CON 'performa' 
+name:persona nano-
+type:pill
+graphics:!:d
+level:36
+weight:1g
+cost:32000
+alloc:20:36 to 100
+pile:3:2
+power:20000
+effect:RESTORE_STAT:INT
+effect:GAIN_STAT:INT
+effect:RESTORE_STAT:WIS
+effect:GAIN_STAT:WIS
+effect:RESTORE_STAT:CHR
+effect:GAIN_STAT:CHR
+desc:A colony of advanced nanites, compressed into a pill which deeply rebuilds your brain, permanently enhancing your intelligence, wisdom and charisma.
+
+name:performa nano-
+type:pill
+graphics:!:d
+level:39
+weight:1g
+cost:38000
+alloc:20:39 to 100
+pile:3:2
+power:20000
+effect:RESTORE_STAT:DEX
+effect:GAIN_STAT:DEX
+effect:RESTORE_STAT:STR
+effect:GAIN_STAT:STR
+effect:RESTORE_STAT:CON
+effect:GAIN_STAT:CON
+desc:A colony of advanced nanites, compressed into a pill which deeply rebuilds your body, permanently enhancing your strength, toughness and dexterity.
+
+# Permanent stat buffs, top-rank
 
 name:speed nano-
 type:pill
 graphics:!:d
-level:38
+level:42
 weight:1g
 cost:28000
 alloc:20:38 to 100
@@ -3768,13 +3820,13 @@ power:20000
 effect:RESTORE_STAT:SPD
 effect:GAIN_STAT:SPD
 
-name:Augmentation
+name:augmenta nano-
 type:pill
 graphics:!:d
-level:40
+level:46
 weight:1g
 cost:50000
-alloc:20:40 to 100
+alloc:15:45 to 100
 attack:1d1:0:0
 armor:0:0
 power:20000
@@ -3790,6 +3842,29 @@ effect:RESTORE_STAT:CON
 effect:GAIN_STAT:CON
 effect:RESTORE_STAT:CHR
 effect:GAIN_STAT:CHR
+desc:A colony of the most advanced nanites, compressed into a pill which thoroughly rebuilds your body and mind, permanently increasing all your abilities.
+
+#################
+# Restorations.
+# Since you get this at level up and from shrooms etc these should be high level or rare, but do more?
+
+# INT, WIS, CHR restored; 
+name:remind nano-
+effect:graphics:!:d
+level:26
+weight:1g
+cost:1600
+alloc:15:26 to 100
+attack:1d1:0:0
+armor:0:0
+power:2000
+effect:RESTORE_STAT:INT
+effect:RESTORE_STAT:WIS
+effect:RESTORE_STAT:CHR
+
+effect:RESTORE_STAT:STR
+effect:RESTORE_STAT:DEX
+effect:RESTORE_STAT:CON
 
 name:Experience
 type:pill
@@ -3956,7 +4031,7 @@ effect:RESTORE_EXP
 
 ### Gain one/lose one pills ###
 
-name:Brawn
+name:brawn
 type:pill
 graphics:!:d
 level:3
@@ -3968,8 +4043,9 @@ power:30
 effect:RESTORE_STAT:STR
 effect:GAIN_STAT:STR
 effect:LOSE_RANDOM_STAT:STR
+desc:A cheap knock-off, built from last-generation nanotechnology. It can be relied on to permanently buff your strength - but unlike the latest nano-pills, it has some nasty and unpredictable side-effects.
 
-name:Intellect
+name:intellect
 type:pill
 graphics:!:d
 level:20
@@ -3981,8 +4057,9 @@ power:25
 effect:RESTORE_STAT:INT
 effect:GAIN_STAT:INT
 effect:LOSE_RANDOM_STAT:INT
+desc:A cheap knock-off, built from last-generation nanotechnology. It can be relied on to permanently boost your brainpower - but unlike the latest nano-pills, it has some nasty and unpredictable side-effects.
 
-name:Contemplation
+name:contemplation
 type:pill
 graphics:!:d
 level:20
@@ -3994,8 +4071,9 @@ power:25
 effect:RESTORE_STAT:WIS
 effect:GAIN_STAT:WIS
 effect:LOSE_RANDOM_STAT:WIS
+desc:A cheap knock-off, built from last-generation nanotechnology. It can be relied on to permanently deepen your mind - but unlike the latest nano-pills, it has some nasty and unpredictable side-effects.
 
-name:Nimbleness
+name:nimbleness
 type:pill
 graphics:!:d
 level:5
@@ -4007,8 +4085,9 @@ power:25
 effect:RESTORE_STAT:DEX
 effect:GAIN_STAT:DEX
 effect:LOSE_RANDOM_STAT:DEX
+desc:A cheap knock-off, built from last-generation nanotechnology. It can be relied on to permanently sharpen your reflexes - but unlike the latest nano-pills, it has some nasty and unpredictable side-effects.
 
-name:Toughness
+name:toughness
 type:pill
 graphics:!:d
 level:10
@@ -4020,6 +4099,47 @@ power:30
 effect:RESTORE_STAT:CON
 effect:GAIN_STAT:CON
 effect:LOSE_RANDOM_STAT:CON
+desc:A cheap knock-off, built from last-generation nanotechnology. It can be relied on to permanently toughen your body - but unlike the latest nano-pills, it has some nasty and unpredictable side-effects.
+
+# more generous than others as chr is less useful
+name:vanity
+type:pill
+graphics:!:d
+level:3
+weight:1g
+cost:600
+alloc:30:20 to 40
+pile:10:2
+power:10
+effect:RESTORE_STAT:CHR
+effect:GAIN_STAT:CHR
+effect:RANDOM
+dice:3
+effect:GAIN_STAT:CHR
+effect:RESTORE_STAT:CHR
+effect:LOSE_RANDOM_STAT:CHR
+desc:A cheap knock-off, built from last-generation nanotechnology. It can be relied on to permanently improve your looks - but unlike the latest nano-pills, it sometimes has some nasty and unpredictable side-effects.
+
+# less generous as speed is more useful. 'athletics'?
+name:sprinting
+type:pill
+graphics:!:d
+level:24
+weight:1g
+cost:1800
+alloc:30:25 to 45
+pile:5:2
+power:35
+effect:RESTORE_STAT:SPD
+effect:LOSE_RANDOM_STAT:SPD
+effect:TIMED_INC:FAST:0:5
+dice:20+2d10
+effect:RANDOM
+dice:3
+effect:GAIN_STAT:SPD
+effect:RESTORE_STAT:SPD
+effect:LOSE_RANDOM_STAT:SPD
+desc:A cheap knock-off, built from last-generation nanotechnology. It will sometimes permanently boost your speed - but unlike the latest nano-pills, it also has some nasty and unpredictable side-effects.
 
 
 ### Knowledge ###
@@ -4182,6 +4302,7 @@ dice:100+4d25
 
 ### Useless buggers ###
 
+# Well, OK this one is not entirely useless
 name:mutagen
 type:pill
 graphics:!:d
@@ -4193,6 +4314,7 @@ pile:10:1d3
 power:2
 effect:MUTATE
 dice:1
+desc:You will undergo a freakish metamorphosis, and likely end up permanently transformed.  Such mutations are not necessarily harmful, but many are...
 
 name:sugar
 type:pill
@@ -4205,13 +4327,14 @@ pile:70:2d3
 power:0
 effect:NOURISH:INC_BY
 dice:1
+desc:A plain sugar pill that won't do anything.
 
 name:sleeping
 type:pill
 graphics:!:d
 level:0
 weight:1g
-cost:0
+cost:10
 alloc:10:0 to 10
 pile:70:2d3
 attack:3d4:0:0
@@ -4221,8 +4344,9 @@ effect:TIMED_INC:PARALYZED
 dice:5+1d5
 effect:NOURISH:INC_BY
 dice:1
+desc:A pill that will instantly put you to sleep.
 
-name:Blindness
+name:blindness
 type:pill
 graphics:!:d
 level:0
@@ -4235,8 +4359,10 @@ armor:0:0
 power:0
 effect:TIMED_INC:BLIND
 dice:75+4d25
+desc:A nasty pill that will temporarily blind you.
 
-name:Confusion
+# give it a more interesting name?
+name:confusion
 type:pill
 graphics:!:d
 level:0
@@ -4251,8 +4377,9 @@ effect:TIMED_INC:CONFUSED
 dice:10+4d5
 effect:NOURISH:INC_BY
 dice:1
+desc:A pill that will confuse you for a while.
 
-name:Poison
+name:poison
 type:pill
 graphics:!:d
 level:3
@@ -4265,6 +4392,22 @@ armor:0:0
 power:0
 effect:TIMED_INC:POISONED
 dice:10+2d7
+desc:A toxic pill, which can be fatal if you are already weakened.
+
+name:slow poison
+type:pill
+graphics:!:d
+level:10
+weight:1g
+cost:0
+alloc:2:8 to 20
+pile:40:2d3
+attack:3d4:0:0
+armor:0:0
+power:0
+effect:TIMED_INC:POISONED
+dice:30+2d20
+desc:Now why would anyone see something labelled 'Slow Poison', and eat it?
 
 name:Slowness
 type:pill
