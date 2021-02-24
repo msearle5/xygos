@@ -164,7 +164,6 @@ normal:card:Monster Confusion
 normal:card:Magic Mapping
 normal:card:Detect Invisible
 normal:card:Recharging
-normal:card:nutria
 normal:card:Blessing
 normal:card:Holy Chant
 buy:card
@@ -192,6 +191,7 @@ normal:pill:Cure Serious Wounds
 normal:pill:Cure Critical Wounds
 normal:pill:Resist Poison:200+M2500
 normal:pill:Healing:M2000
+normal:pill:nutria:1500
 normal:pill:*Healing*:-500+M1000
 normal:pill:Life:-900+M1000
 normal:wand:Heal Monster
