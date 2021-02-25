@@ -1,0 +1,135 @@
+# File: town-names.txt
+
+# This file is used to initialize the town names for the game.
+
+# Do not modify this file unless you know exactly what you are doing
+# unless you wish to risk possible system crashes and broken savefiles.
+
+# They are not required by the game to be in any order.
+
+# Format: 
+# S:Single word town name
+# F:Front of a town name
+# B:Back of a town name
+
+S:Bad Smell
+S:Bean Hill
+S:Big Smoke
+S:Bit Me
+S:Blackwater
+S:Bottlecaps
+S:Brilliance
+S:Brimstone
+S:Caution
+S:Cloudmaker
+S:Collapsed Mine
+S:Corpselight
+S:Crossroads
+S:Dangerous Bend
+S:Dead Cow
+S:Derrick
+S:Drywall
+S:Doornail
+S:Fallout
+S:Fallover
+S:Fenceline
+S:Firetop
+S:Fiveroads
+S:Friendly
+S:Green Slime
+S:Greywater
+S:Haystacks
+S:Highway
+S:Itchy Scratchy
+S:Landfill
+S:Leadmine
+S:Marshlight
+S:Millstones
+S:Moonpond
+S:Mouldering
+S:New Sun
+S:No Name
+S:Ominous
+S:Pothole
+S:Poundcake
+S:Power Cable
+S:Pumpkins
+S:Sentinel
+S:Skid Mark
+S:Silograd
+S:Slippery Hollow
+S:Spring Green
+S:Swamplands
+S:Tapwater
+S:Threeroads
+S:Treaclemine
+S:Vapour Trail
+S:Wirefence
+S:Williewaw
+S:Witchford
+S:Witt's End
+
+F:Atomic
+F:Broken
+F:Boggy
+F:Boulder
+F:Bubble
+F:Bug
+F:Burning
+F:Crater
+F:Double
+F:False
+F:Filthy
+F:Foggy
+F:Fool's
+F:Frog
+F:Ghost
+F:Glass
+F:Glowing
+F:Hot
+F:Klaxon
+F:Midge
+F:Mucky
+F:Muddy
+F:Oil
+F:Poison
+F:Quicksand
+F:Rainbow
+F:Rhinestone
+F:Rocket
+F:Rotten
+F:Rubble
+F:Rusty
+F:Scary
+F:Sewage
+F:Smokey
+F:Snail
+F:Steamy
+F:Slab
+F:Slimy
+F:Stinking
+F:Triple
+F:Toadstool
+F:Turtle
+F:Whiskey
+
+B:Crag
+B:Creek
+B:Falls
+B:Fountain
+B:Hill
+B:Lake
+B:Marsh
+B:Point
+B:Pool
+B:Pond
+B:Pump
+B:Rapids
+B:River
+B:Rock
+B:Spray
+B:Springs
+B:Stream
+B:Swamp
+B:Water
+B:Well

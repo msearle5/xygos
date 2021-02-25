@@ -90,16 +90,17 @@ struct angband_constants
 	u16b level_pit_max;		/**< Maximum number of pits on a level */
 
 	/* World shape constants, read from constants.txt */
-	u16b max_depth;		/* Maximum dungeon level */
-	u16b day_length;	/* Number of turns from dawn to dawn */
+	u16b max_depth;		/**< Maximum dungeon level */
+	u16b day_length;	/**< Number of turns from dawn to dawn */
 	u16b dungeon_hgt;	/**< Maximum number of vertical grids on a level */
 	u16b dungeon_wid;	/**< Maximum number of horizontical grids on a level */
-	u16b town_hgt;	/**< Maximum number of vertical grids in the town */
-	u16b town_wid;	/**< Maximum number of horizontical grids in the town */
-	u16b feeling_total;	/* Total number of feeling squares per level */
-	u16b feeling_need;	/* Squares needed to see to get first feeling */
-    u16b stair_skip;    /* Number of levels to skip for each down stair */
-	u16b move_energy;	/* Energy the player or monster needs to move */
+	u16b town_hgt;		/**< Maximum number of vertical grids in the town */
+	u16b town_wid;		/**< Maximum number of horizontical grids in the town */
+	u16b feeling_total;	/**< Total number of feeling squares per level */
+	u16b feeling_need;	/**< Squares needed to see to get first feeling */
+    u16b stair_skip;    /**< Number of levels to skip for each down stair */
+	u16b move_energy;	/**< Energy the player or monster needs to move */
+	u16b town_max;		/**< Total number of towns in t_info[], set by world_init_towns */
 
 	/* Carrying capacity constants, read from constants.txt */
 	u16b pack_size;		/**< Maximum number of pack slots */

@@ -247,7 +247,7 @@ owner:0:Your home
 owner:0:Your home
 owner:0:Your home
 size:23
-danger:90:99
+danger:90:98
 
 store:9:Field HQ
 closed
@@ -257,5 +257,11 @@ owner:0:Space Marines Field HQ
 owner:0:Space Marines Field HQ
 slots:6:18
 turnover:9
-#normal:boots:0
-danger:96:99
+danger:96:98
+
+store:10:Airport
+owner:0:ApocalAir
+owner:0:InterVault
+owner:0:Atomic Airlines
+owner:0:Titanium Dragon
+danger:99:99

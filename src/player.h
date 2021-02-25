@@ -559,6 +559,7 @@ struct player {
 
 	s32b au;		/* Current Gold */
 
+	struct town *town;	/* Current town */
 	s16b max_depth;	/* Max depth */
 	s16b recall_depth;	/* Recall depth */
 	s16b depth;		/* Cur depth */

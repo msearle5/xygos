@@ -3711,6 +3711,7 @@ static struct {
 	struct file_parser *parser;
 } pl[] = {
 	{ "world", &world_parser },
+	{ "town names", &town_names_parser },
 	{ "projections", &projection_parser },
 	{ "ui renderers", &ui_entry_renderer_parser },
 	{ "ui entries", &ui_entry_parser },
