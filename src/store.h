@@ -31,15 +31,16 @@
 enum {
 	STORE_NONE      = -1,
 	STORE_GENERAL	= 0,
-	STORE_ARMOR	= 1,
+	STORE_ARMOR		= 1,
 	STORE_WEAPON	= 2,
 	STORE_TEMPLE	= 3,
 	STORE_ALCHEMY	= 4,
-	STORE_MAGIC	= 5,
+	STORE_MAGIC		= 5,
 	STORE_B_MARKET	= 6,
-	STORE_HOME	= 7,
-	STORE_HQ	= 8,
-	MAX_STORES	= 9
+	STORE_HOME		= 7,
+	STORE_HQ		= 8,
+	STORE_AIR		= 9,
+	MAX_STORES		= 10
 };
 
 struct object_buy {

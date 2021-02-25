@@ -54,6 +54,7 @@
 #include "ui-spell.h"
 #include "ui-command.h"
 #include "ui-store.h"
+#include "world.h"
 #include "z-debug.h"
 #include "z-rand.h"
 
@@ -330,41 +331,49 @@ static void store_display_entry(struct menu *menu, int oid, bool cursor, int row
 	struct store *store = ctx->store;
 	assert(store);
 
-	/* Get the object */
-	obj = ctx->list[oid];
-
-	/* Describe the object - preserving inscriptions in the home */
-	if (store->sidx == STORE_HOME) {
-		desc |= ODESC_FULL;
+	if (store->sidx == STORE_AIR) {
+		/* Airports display tickets, but these aren't actual items */
+		colour = COLOUR_SLATE;
+		strnfmt(out_val, sizeof out_val, "%9d    ", 42);
+		c_put_str(colour, out_val, row, col);
 	} else {
-		desc |= ODESC_FULL | ODESC_STORE;
-	}
-	object_desc(o_name, sizeof(o_name), obj, desc);
 
-	/* Display the object */
-	c_put_str(obj->kind->base->attr, o_name, row, col);
+		/* Get the object */
+		obj = ctx->list[oid];
 
-	/* Show weights */
-	colour = curs_attrs[CURS_KNOWN][(int)cursor];
-	strnfmt(out_val, sizeof out_val, fmt_weight(obj->weight, NULL));
-	c_put_str(colour, out_val, row, ctx->scr_places_x[LOC_WEIGHT]);
+		/* Describe the object - preserving inscriptions in the home */
+		if (store->sidx == STORE_HOME) {
+			desc |= ODESC_FULL;
+		} else {
+			desc |= ODESC_FULL | ODESC_STORE;
+		}
+		object_desc(o_name, sizeof(o_name), obj, desc);
 
-	/* Describe an object (fully) in a store */
-	if (store->sidx != STORE_HOME) {
-		/* Extract the "minimum" price */
-		x = price_item(store, obj, false, 1);
+		/* Display the object */
+		c_put_str(obj->kind->base->attr, o_name, row, col);
 
-		/* Make sure the player can afford it */
-		if ((int) player->au < (int) x)
-			colour = curs_attrs[CURS_UNKNOWN][(int)cursor];
+		/* Show weights */
+		colour = curs_attrs[CURS_KNOWN][(int)cursor];
+		strnfmt(out_val, sizeof out_val, fmt_weight(obj->weight, NULL));
+		c_put_str(colour, out_val, row, ctx->scr_places_x[LOC_WEIGHT]);
 
-		/* Actually draw the price */
-		if (tval_can_have_charges(obj) && (obj->number > 1))
-			strnfmt(out_val, sizeof out_val, "%9d avg", x);
-		else
-			strnfmt(out_val, sizeof out_val, "%9d    ", x);
+		/* Describe an object (fully) in a store */
+		if (store->sidx != STORE_HOME) {
+			/* Extract the "minimum" price */
+			x = price_item(store, obj, false, 1);
 
-		c_put_str(colour, out_val, row, ctx->scr_places_x[LOC_PRICE]);
+			/* Make sure the player can afford it */
+			if ((int) player->au < (int) x)
+				colour = curs_attrs[CURS_UNKNOWN][(int)cursor];
+
+			/* Actually draw the price */
+			if (tval_can_have_charges(obj) && (obj->number > 1))
+				strnfmt(out_val, sizeof out_val, "%9d avg", x);
+			else
+				strnfmt(out_val, sizeof out_val, "%9d    ", x);
+
+			c_put_str(colour, out_val, row, ctx->scr_places_x[LOC_PRICE]);
+		}
 	}
 }
 
@@ -1699,7 +1708,10 @@ static void store_menu_set_selections(struct menu *menu, bool knowledge_menu)
 static void store_menu_recalc(struct menu *m)
 {
 	struct store_context *ctx = menu_priv(m);
-	menu_setpriv(m, ctx->store->stock_num, ctx);
+	int entries = ctx->store->stock_num;
+	if (ctx->store->sidx == STORE_AIR)
+		entries = world_connections(player->town);
+	menu_setpriv(m, entries, ctx);
 }
 
 /**
