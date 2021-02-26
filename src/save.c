@@ -425,8 +425,6 @@ void rdwr_world(void)
 			t_info[i].connect = mem_zalloc(sizeof(t_info[i].connect[0]) * t_info[i].connections);
 		for(int j=0; j<(int)t_info[i].connections; j++) {
 			RDWR_PTR(&t_info[i].connect[j], t_info);
-			
-			fprintf(stderr,"foo\n");
 		}
 	}
 }

@@ -89,6 +89,7 @@ H:Flee while you can. Any decent adventurer has to honour the priorities.
 H:For any remedy there is a misery.
 H:Foraging for dessert in the desert is more useful than it first appears.
 H:Forget your childlike lore: mushrooms are not tasty but awholotta challenge!
+H:Frequent fliers should beware of getting clubbed: keep your eyes on the clock!
 H:Guaranteed heal self - scenario: o'@, type c4c4c4c4
 H:Ha, treasures! Like all vaults it was full of depths and dangers.
 H:Half the treasures of a vault could be crushed by an earthquake.
@@ -272,6 +273,7 @@ H:They say that you should not slow down in your final fight.
 H:They say that you should watch out for heavy breathers.
 H:They say that you shouldn't avoid the black market.
 H:They say that you shouldn't bring a knife to a gun fight.
+H:They say that you won't grow big unless you eat your greens.
 H:They say that you will need to be cool and still warm - basically, insulated.
 H:Those who seek knowledge of the sources must be experienced hunters of hints.
 H:Time attacks are not mitigated by sustains.
