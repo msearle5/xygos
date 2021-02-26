@@ -74,6 +74,7 @@
 #include "player-util.h"
 #include "store.h"
 #include "trap.h"
+#include "world.h"
 #include "z-queue.h"
 #include "z-type.h"
 
@@ -1869,13 +1870,14 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 	struct loc grid;
 	int residents = is_daytime() ? z_info->town_monsters_day :
 		z_info->town_monsters_night;
-	struct chunk *c_new, *c_old = chunk_find_name("Town");
+	struct chunk *c_new, *c_old = chunk_find_name(player->town->name);
 
 	/* Make a new chunk */
 	c_new = cave_new(z_info->town_hgt, z_info->town_wid);
 
 	/* First time */
 	if (!c_old) {
+		fprintf(stderr,"!old (name '%s')\n", player->town->name);
 		c_new->depth = danger_depth(player);
 
 		/* Build stuff */
@@ -1915,15 +1917,23 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 		if (!chunk_copy(c_new, c_old, 0, 0, 0, 0))
 			quit_fmt("chunk_copy() level bounds failed!");
 		if (!modded) {
-			chunk_list_remove("Town");
+			chunk_list_remove(player->town->name);
 			cave_free(c_old);
 		}
 
 		/* Find the stairs (lame) */
+		fprintf(stderr,"finding?\n");
 		if (!found) {
+			int feat = FEAT_MORE;
+			fprintf(stderr,"finding!\n");
+			if (player->upkeep->flight_level) {
+				feat = FEAT_AIRPORT;
+				player->upkeep->flight_level = false;
+				fprintf(stderr,"finding!!!\n");
+			}
 			for (grid.y = 0; grid.y < c_new->height; grid.y++) {
 				for (grid.x = 0; grid.x < c_new->width; grid.x++) {
-					if (square_feat(c_new, grid)->fidx == FEAT_MORE) {
+					if (square_feat(c_new, grid)->fidx == feat) {
 						found = true;
 						break;
 					}

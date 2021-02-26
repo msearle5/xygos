@@ -56,6 +56,7 @@ int FEAT_GRANITE;
 int FEAT_PERM;
 int FEAT_LAVA;
 int FEAT_FALLOUT;
+int FEAT_AIRPORT;
 
 /**
  * Global array for looping through the "keypad directions".
@@ -348,6 +349,7 @@ void set_terrain(void)
 	FEAT_PERM = lookup_feat("permanent wall");
 	FEAT_LAVA = lookup_feat("lava");
 	FEAT_FALLOUT = lookup_feat("fallout");
+	FEAT_AIRPORT = lookup_feat("Airport");
 }
 
 /**
