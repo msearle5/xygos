@@ -59,6 +59,7 @@
 #include "ui-term.h"
 #include "ui-visuals.h"
 #include "wizard.h"
+#include "world.h"
 
 /**
  * There are a few functions installed to be triggered by several 
@@ -491,7 +492,7 @@ static void prt_speed(int row, int col)
 static int fmt_depth(char buf[], int max)
 {
 	if (!player->depth)
-		my_strcpy(buf, "Town", max);
+		my_strcpy(buf, player->town ? player->town->name : "Town", max);
 	else
 		strnfmt(buf, max, "%dm (L%d)",
 		        player->depth * 50, danger_depth(player));
@@ -763,7 +764,6 @@ static const struct side_handler_t
 	{ NULL,        21, 0 },
 	{ prt_health,  12, EVENT_MONSTERHEALTH },
 	{ NULL,        20, 0 },
-	{ NULL,        22, 0 },
 	{ prt_speed,   13, EVENT_PLAYERSPEED }, /* Slow (-NN) / Fast (+NN) */
 	{ prt_depth,   14, EVENT_DUNGEONLEVEL }, /* Lev NNN / NNNN ft */
 };

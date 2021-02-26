@@ -20,14 +20,28 @@
  *
  */
 
-struct town;
+struct town {
+	struct town **connect;		/* Array of connected towns */
+	u32b connections;			/* Total number of connected towns */
+	char *name;					/* Name of town */
+};
 
 /* The world contains z->town_max towns, in this array */
 extern struct town *t_info;
+
+extern u32b world_town_seed;
 
 extern struct file_parser world_parser;
 extern struct file_parser town_names_parser;
 
 extern int world_connections(struct town *t);
-
 extern void world_init_towns(void);
+extern void world_cleanup_towns(void);
+void world_change_town(struct town *t);
+void world_connect_towns(struct town *a, struct town *b);
+int world_departure_time(struct town *from, struct town *to);
+int world_between(struct town *from, struct town *to);
+int world_airline_fare(struct town *from, struct town *to);
+int world_flight_time(struct town *from, struct town *to);
+void world_build_distances(void);
+char *world_describe_town(struct town *t);

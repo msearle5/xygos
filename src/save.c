@@ -41,6 +41,7 @@
 #include "player-timed.h"
 #include "trap.h"
 #include "ui-term.h"
+#include "world.h"
 
 
 /**
@@ -414,11 +415,33 @@ void rdwr_quests(void)
 	}
 }
 
+void rdwr_world(void)
+{
+	rdwr_u32b(&world_town_seed);
+	for(int i=0;i<z_info->town_max;i++) {
+		rdwr_u32b(&t_info[i].connections);
+		rdwr_string(&t_info[i].name);
+		if ((!(t_info[i].connect)) && (t_info[i].connections))
+			t_info[i].connect = mem_zalloc(sizeof(t_info[i].connect[0]) * t_info[i].connections);
+		for(int j=0; j<(int)t_info[i].connections; j++) {
+			RDWR_PTR(&t_info[i].connect[j], t_info);
+			
+			fprintf(stderr,"foo\n");
+		}
+	}
+}
+
 void wr_quests(void)
 {
 	/* Dump the quests */
 	rdwr_u16b(&z_info->quest_max);
 	rdwr_quests();
+}
+
+void wr_world(void)
+{
+	wr_u16b(z_info->town_max);
+	rdwr_world();
 }
 
 void wr_player(void)
@@ -486,6 +509,8 @@ void wr_player(void)
 	wr_s16b(player->max_depth);
 	wr_s16b(player->recall_depth);
 	wr_s16b(player->danger);
+
+	RDWR_PTR(&(player->town), t_info);
 
 	/* More info */
 	wr_s16b(0);	/* oops */

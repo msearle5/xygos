@@ -47,5 +47,7 @@ void process_world(struct chunk *c);
 void on_new_level(void);
 void process_player(void);
 void run_game_loop(void);
+char *format_time(int turns);
+char *format_duration(int turns);
 
 #endif /* !GAME_WORLD_H */

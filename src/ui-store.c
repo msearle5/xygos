@@ -40,6 +40,7 @@
 #include "player-calcs.h"
 #include "player-history.h"
 #include "player-quest.h"
+#include "player-timed.h"
 #include "player-util.h"
 #include "store.h"
 #include "target.h"
@@ -333,9 +334,22 @@ static void store_display_entry(struct menu *menu, int oid, bool cursor, int row
 
 	if (store->sidx == STORE_AIR) {
 		/* Airports display tickets, but these aren't actual items */
-		colour = COLOUR_SLATE;
-		strnfmt(out_val, sizeof out_val, "%9d    ", 42);
-		c_put_str(colour, out_val, row, col);
+		
+		/* Destination */
+		colour = (oid & 1) ? COLOUR_L_BLUE : COLOUR_DEEP_L_BLUE;
+		c_put_str(colour, player->town->connect[oid]->name, row, col);
+
+		/* Airline */
+		c_put_str(colour, "ApocalAir", row, 30);
+
+		/* Travel Time */
+		c_put_str(colour, format_duration(world_flight_time(player->town, player->town->connect[oid])), row, 48);
+
+		/* Departure Time */
+		c_put_str(colour, format_time(world_departure_time(player->town, player->town->connect[oid])), row, ctx->scr_places_x[LOC_WEIGHT]);
+
+		/* Price */
+		c_put_str(colour, format("%d", world_airline_fare(player->town, player->town->connect[oid])), row, ctx->scr_places_x[LOC_PRICE] + 4);
 	} else {
 
 		/* Get the object */
@@ -378,6 +392,7 @@ static void store_display_entry(struct menu *menu, int oid, bool cursor, int row
 }
 
 
+
 /**
  * Display store (after clearing screen)
  */
@@ -409,18 +424,40 @@ static void store_display_frame(struct store_context *ctx)
 		/* Put the owner name */
 		put_str(owner_name, ctx->scr_places_y[LOC_OWNER], 1);
 
-		/* Show the max price in the store (above prices) */
-		strnfmt(buf, sizeof(buf), proprietor->max_cost ? "%s (%d)" : "%s", store_name,
-				proprietor->max_cost);
+		if (store->sidx == STORE_AIR) {
+			/* Label the object descriptions */
+			put_str("Destination", ctx->scr_places_y[LOC_HEADER], 4);
+
+			put_str("Airline", ctx->scr_places_y[LOC_HEADER], 30);
+
+			/* Showing time label */
+			put_str("Length", ctx->scr_places_y[LOC_HEADER], 48);
+
+			/* Showing time label */
+			put_str("Departs", ctx->scr_places_y[LOC_HEADER], ctx->scr_places_x[LOC_WEIGHT]);
+
+			/* Show the time */
+			prt("Airport (", ctx->scr_places_y[LOC_OWNER], 30);
+
+			c_prt(COLOUR_ORANGE, format_time(turn), ctx->scr_places_y[LOC_OWNER], 39);
+			prt(")", ctx->scr_places_y[LOC_OWNER], 44);
+
+			strcpy(buf, "Departures");
+		} else { 
+			/* Label the object descriptions */
+			put_str("Store Inventory", ctx->scr_places_y[LOC_HEADER], 1);
+
+			/* Showing weight label */
+			put_str("Weight", ctx->scr_places_y[LOC_HEADER],
+					ctx->scr_places_x[LOC_WEIGHT]);
+
+			/* Show the max price in the store (above prices) */
+			strnfmt(buf, sizeof(buf), proprietor->max_cost ? "%s (%d)" : "%s", store_name,
+					proprietor->max_cost);
+		}
+
 		prt(buf, ctx->scr_places_y[LOC_OWNER],
 			ctx->scr_places_x[LOC_OWNER] - strlen(buf));
-
-		/* Label the object descriptions */
-		put_str("Store Inventory", ctx->scr_places_y[LOC_HEADER], 1);
-
-		/* Showing weight label */
-		put_str("Weight", ctx->scr_places_y[LOC_HEADER],
-				ctx->scr_places_x[LOC_WEIGHT]);
 
 		/* Label the asking price (in stores) */
 		put_str("Price", ctx->scr_places_y[LOC_HEADER], ctx->scr_places_x[LOC_PRICE] + 4);
@@ -437,6 +474,7 @@ static void store_display_help(struct store_context *ctx)
 	int help_loc = ctx->scr_places_y[LOC_HELP_PROMPT];
 	bool is_home = (store->sidx == STORE_HOME) ? true : false;
 	bool is_hq = (store->sidx == STORE_HQ) ? true : false;
+	bool is_air = (store->sidx == STORE_AIR) ? true : false;
 
 	/* Clear */
 	clear_from(ctx->scr_places_y[LOC_HELP_CLEAR]);
@@ -459,11 +497,14 @@ static void store_display_help(struct store_context *ctx)
 		if (is_home) text_out(" picks up");
 		else text_out(" purchases");
 	}
-	text_out(" the selected item. ");
+	if (is_air)
+		text_out(" the selected ticket. ");
+	else
+		text_out(" the selected item. ");
 	text_out_c(COLOUR_L_GREEN, "Space");
-	text_out(" pages through off-screen items. ");
+	text_out(" pages through off-screen tickets. ");
 
-	if (!is_hq) {
+	if ((!is_hq) && (!is_air)) {
 		if (!ctx->inspect_only) {
 			if (OPT(player, birth_no_selling)) {
 				text_out_c(COLOUR_L_GREEN, "d");
@@ -480,7 +521,7 @@ static void store_display_help(struct store_context *ctx)
 		}
 	}
 
-	if ((!is_home) && (!is_hq)) {
+	if ((!is_home) && (!is_hq) && (!is_air)) {
 		text_out_c(COLOUR_L_GREEN, "H");
 		text_out(" holds an item (you pay 10%% now to keep it in stock. If you buy it the same day, you'll only pay the remaining 90%% - but each extra day will add 10%% more.) ");
 		text_out_c(COLOUR_L_GREEN, "S");
@@ -734,70 +775,128 @@ static bool store_purchase(struct store_context *ctx, int item, bool single)
 	msg_flag = false;
 	prt("", 0, 0);
 
-
-	/*** Check the player can get any at all ***/
-
-	/* Get an amount if we weren't given one */
-	if (single) {
-		amt = 1;
-
-		/* Check if the player can afford any at all */
-		if (store->sidx != STORE_HOME &&
-				(int)player->au < (int)price_item(store, obj, false, 1)) {
-			msg("You do not have enough money for this item.");
+	if (store->sidx == STORE_AIR) {
+		/* Check if the player can afford it */
+		if ((int)player->au < world_airline_fare(player->town, player->town->connect[item])) {
+			msg("You do not have enough money for this ticket.");
 			return false;
 		}
+
+		/* Check if they have statuses (because otherwise they would be expected to wear off)
+		 **/
+		for (int i = 0; i < TMD_MAX; i++) {
+			if ((player->timed[i]) && (timed_effects[TMD_MAX].flag_general & PG_NASTY)) {
+				msg("I am afraid you can't fly with us in that condition!");
+				return false;
+			}
+		}
+
+		/* Check if they are sure */
+		if (store_get_check(format("Fly to %s? [ESC, any other key to accept]", player->town->connect[item]->name))) {
+			
+			/* Deduct payment */
+			player->au -= world_airline_fare(player->town, player->town->connect[item]);
+
+			int departs = world_departure_time(player->town, player->town->connect[item]);
+
+			/* Describe the flight */
+			msg("You wait until the %s flight, take off and land in %s.",
+				format_time(departs), player->town->connect[item]->name);
+
+			/* Take time */
+			int turns;
+			int timeofday = (turn % (10L * z_info->day_length));
+			if (departs >= timeofday) {
+				/* Departs today */
+				turns = departs - timeofday;
+			} else {
+				/* Tomorrow */
+				turns = (departs + (10L * z_info->day_length)) - timeofday;
+			}
+			turns += world_flight_time(player->town, player->town->connect[item]);
+			turn += turns;
+
+			/* Feed */
+			player->timed[TMD_FOOD] = PY_FOOD_FULL - 1;
+
+			/* Heal */
+			player->chp = player->mhp;
+
+			/* Move to the new town */
+			world_change_town(player->town->connect[item]);
+		}
+
+		/* Update the display */
+		ctx->flags |= STORE_GOLD_CHANGE;
+
+		return false;
+
 	} else {
-		if (store->sidx == STORE_HOME) {
-			amt = obj->number;
-		} else {
-			/* Price of one */
-			price = price_item(store, obj, false, 1);
+
+		/*** Check the player can get any at all ***/
+
+		/* Get an amount if we weren't given one */
+		if (single) {
+			amt = 1;
 
 			/* Check if the player can afford any at all */
-			if ((u32b)player->au < (u32b)price) {
+			if (store->sidx != STORE_HOME &&
+					(int)player->au < (int)price_item(store, obj, false, 1)) {
 				msg("You do not have enough money for this item.");
 				return false;
 			}
+		} else {
+			if (store->sidx == STORE_HOME) {
+				amt = obj->number;
+			} else {
+				/* Price of one */
+				price = price_item(store, obj, false, 1);
 
-			/* Work out how many the player can afford */
-			if (price == 0)
-				amt = obj->number; /* Prevent division by zero */
+				/* Check if the player can afford any at all */
+				if ((u32b)player->au < (u32b)price) {
+					msg("You do not have enough money for this item.");
+					return false;
+				}
+
+				/* Work out how many the player can afford */
+				if (price == 0)
+					amt = obj->number; /* Prevent division by zero */
+				else
+					amt = player->au / price;
+
+				if (amt > obj->number) amt = obj->number;
+
+				/* Double check for wands/staves */
+				if ((player->au >= price_item(store, obj, false, amt+1)) &&
+					(amt < obj->number))
+					amt++;
+			}
+
+			/* Limit to the number that can be carried */
+			amt = MIN(amt, inven_carry_num(obj, false));
+
+			/* Fail if there is no room */
+			if ((amt <= 0) || (!object_flavor_is_aware(obj) && pack_is_full())) {
+				msg("You cannot carry that many items.");
+				return false;
+			}
+
+			/* Find the number of this item in the inventory */
+			if (!object_flavor_is_aware(obj))
+				num = 0;
 			else
-				amt = player->au / price;
+				num = find_inven(obj);
 
-			if (amt > obj->number) amt = obj->number;
+			strnfmt(o_name, sizeof o_name, "%s how many%s? (max %d) ",
+					(store->sidx == STORE_HOME) ? "Take" : "Buy",
+					num ? format(" (you have %d)", num) : "", amt);
 
-			/* Double check for wands/staves */
-			if ((player->au >= price_item(store, obj, false, amt+1)) &&
-				(amt < obj->number))
-				amt++;
+			/* Get a quantity */
+			amt = get_quantity(o_name, amt);
+
+			/* Allow user abort */
+			if (amt <= 0) return false;
 		}
-
-		/* Limit to the number that can be carried */
-		amt = MIN(amt, inven_carry_num(obj, false));
-
-		/* Fail if there is no room */
-		if ((amt <= 0) || (!object_flavor_is_aware(obj) && pack_is_full())) {
-			msg("You cannot carry that many items.");
-			return false;
-		}
-
-		/* Find the number of this item in the inventory */
-		if (!object_flavor_is_aware(obj))
-			num = 0;
-		else
-			num = find_inven(obj);
-
-		strnfmt(o_name, sizeof o_name, "%s how many%s? (max %d) ",
-				(store->sidx == STORE_HOME) ? "Take" : "Buy",
-				num ? format(" (you have %d)", num) : "", amt);
-
-		/* Get a quantity */
-		amt = get_quantity(o_name, amt);
-
-		/* Allow user abort */
-		if (amt <= 0) return false;
 	}
 
 	/* Get desired object */
@@ -886,7 +985,7 @@ static char *store_fullname(struct store_context *ctx)
 static bool store_do_fight(struct store_context *ctx)
 {
 	/* Pick the randomizable monster race */
-	struct monster_race *race = lookup_monster("Randy, the Random With A Longer Name Than Anyone");
+	struct monster_race *race = lookup_monster("Randy, the Random");
 	assert(race);
 
 	/* Build a random unique based on your level and the store owner's name, race etc. */
@@ -1176,7 +1275,7 @@ static int store_price_all(struct store *s)
 }
 
 /* Round up, to 2 decimals if < 1000, 3 decimals if >= 1000, < 1000000, to 1000 if >= 1000000. */
-static int store_roundup(int exact)
+int store_roundup(int exact)
 {
 	if (exact < 100) {
 		return exact;
@@ -1659,22 +1758,28 @@ static void store_examine(struct store_context *ctx, int item)
 
 	if (item < 0) return;
 
-	/* Get the actual object */
-	obj = ctx->list[item];
-
-	/* Items in the home get less description */
-	if (ctx->store->sidx == STORE_HOME) {
-		odesc_flags |= ODESC_CAPITAL;
+	if (ctx->store->sidx == STORE_AIR) {
+		sprintf(header, "Fly to %s!", player->town->connect[item]->name);
+		tb = textblock_new();
+		textblock_append(tb, world_describe_town(player->town->connect[item]));
 	} else {
-		odesc_flags |= ODESC_STORE;
+		/* Get the actual object */
+		obj = ctx->list[item];
+
+		/* Items in the home get less description */
+		if (ctx->store->sidx == STORE_HOME) {
+			odesc_flags |= ODESC_CAPITAL;
+		} else {
+			odesc_flags |= ODESC_STORE;
+		}
+
+		/* Hack -- no flush needed */
+		msg_flag = false;
+
+		/* Show full info in most stores, but normal info in player home */
+		tb = object_info(obj, OINFO_NONE);
+		object_desc(header, sizeof(header), obj, odesc_flags);
 	}
-
-	/* Hack -- no flush needed */
-	msg_flag = false;
-
-	/* Show full info in most stores, but normal info in player home */
-	tb = object_info(obj, OINFO_NONE);
-	object_desc(header, sizeof(header), obj, odesc_flags);
 
 	textui_textblock_show(tb, area, header);
 	textblock_free(tb);
@@ -1971,8 +2076,10 @@ static bool store_menu_handle(struct menu *m, const ui_event *event, int oid, bo
 				/* use the old way of purchasing items */
 				msg_flag = false;
 				if (store->sidx != STORE_HOME) {
-					prt("Purchase which item? (ESC to cancel, Enter to select)",
-						0, 0);
+					if (store->sidx == STORE_AIR)
+						prt("Purchase which ticket? (ESC to cancel, Enter to select)", 0, 0);
+					else
+						prt("Purchase which item? (ESC to cancel, Enter to select)", 0, 0);
 				} else {
 					prt("Get which item? (Esc to cancel, Enter to select)",
 						0, 0);
@@ -1987,7 +2094,7 @@ static bool store_menu_handle(struct menu *m, const ui_event *event, int oid, bo
 			case 'x':
 				/* use the old way of examining items */
 				msg_flag = false;
-				prt("Examine which item? (ESC to cancel, Enter to select)",
+				prt(format("Examine which %s? (ESC to cancel, Enter to select)", (store->sidx == STORE_AIR) ? "ticket" : "item"),
 					0, 0);
 				oid = store_get_stock(m, oid);
 				prt("", 0, 0);
@@ -2171,7 +2278,7 @@ void use_store(game_event_type type, game_event_data *data, void *user)
 	store_menu_init(&ctx, store, false);
 
 	/* Say a friendly hello - or collect some loot. */
-	if ((store->sidx != STORE_HOME) && (store->sidx != STORE_HQ)) {
+	if ((store->sidx != STORE_HOME) && (store->sidx != STORE_HQ) && (store->sidx != STORE_AIR)) {
 		if (you_own(store)) {
 			collect_from_store(store);
 		} else {

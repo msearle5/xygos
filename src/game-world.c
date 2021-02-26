@@ -135,6 +135,45 @@ bool is_daytime(void)
 }
 
 /**
+ * Return, in a static buffer, a time (turns) given as HH:MM, 24-hour clock.
+ */
+static char *do_format_time(int turns, const char *fmt)
+{
+	static char buf[8];
+	int hh, mm;
+	/* There are 24*60 minutes, and 10L * z_info->day_length turns, in a day
+	 * and the first half of a day is daytime.
+	 */
+	turns %= (10L * z_info->day_length);
+	turns *= (24 * 60);
+	turns /= (10L * z_info->day_length);
+	
+	/* Convert minutes to hours and minutes */
+	mm = turns % 60;
+	hh = turns / 60;
+	sprintf(buf, "%02d:%02d", hh, mm);
+	return buf;
+}
+
+/**
+ * Return, in a static buffer, the time of day (turns) given as HH:MM, 24-hour clock.
+ * The offset is so that the sun rises at 6am, not midnight.
+ */
+char *format_time(int turns)
+{
+	return do_format_time(turns + ((10L * z_info->day_length) / 4), "%02d:%02d");
+}
+
+/**
+ * Return, in a static buffer, a duration (turns) given as HH:MM, 24-hour clock.
+ * Unlike times of day, there is no offset and leading zeroes are suppressed.
+ */
+char *format_duration(int turns)
+{
+	return do_format_time(turns, "%d:%02d");
+}
+
+/**
  * The amount of energy gained in a turn by a player or monster
  */
 int turn_energy(int speed)
