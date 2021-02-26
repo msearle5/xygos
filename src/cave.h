@@ -252,6 +252,8 @@ extern int FEAT_PERM;
 extern int FEAT_LAVA;
 extern int FEAT_FALLOUT;
 
+/* Stores */
+extern int FEAT_AIRPORT;
 
 /* Current level */
 extern struct chunk *cave;

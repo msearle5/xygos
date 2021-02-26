@@ -47,6 +47,7 @@
 #include "player-quest.h"
 #include "player-util.h"
 #include "trap.h"
+#include "world.h"
 #include "z-queue.h"
 #include "z-type.h"
 
@@ -1234,7 +1235,7 @@ void prepare_next_level(struct chunk **c, struct player *p)
 			}
 		} else {
 			/* Save the town */
-			if (!((*c)->depth) && !chunk_find_name("Town")) {
+			if (!((*c)->depth) && !chunk_find_name(player->town->name)) {
 				cave_store(*c, false, false);
 			}
 

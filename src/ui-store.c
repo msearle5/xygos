@@ -822,14 +822,23 @@ static bool store_purchase(struct store_context *ctx, int item, bool single)
 			/* Heal */
 			player->chp = player->mhp;
 
+			/* Signal to move to outside the Airport */
+			player->upkeep->flight_level = true;
+
 			/* Move to the new town */
 			world_change_town(player->town->connect[item]);
+
+			/* Take a turn */
+			player->upkeep->energy_use = z_info->move_energy;
+	
+			/* Change level */
+			dungeon_change_level(player, 0);
 		}
 
 		/* Update the display */
 		ctx->flags |= STORE_GOLD_CHANGE;
 
-		return false;
+		return true;
 
 	} else {
 
