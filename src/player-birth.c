@@ -47,6 +47,7 @@
 #include "player-util.h"
 #include "savefile.h"
 #include "store.h"
+#include "world.h"
 
 /**
  * Overview
@@ -1244,12 +1245,18 @@ void do_cmd_accept_character(struct command *cmd)
 {
 	options_init_cheat();
 
+	/* Reseed the RNG - this avoids world_init_towns() using the same distances */
+	Rand_init();
+
 	roll_hp();
 
 	/* Prompt for birth talents and roll out per-level talent points */
 	int level_tp = setup_talents();
 	cmd_abilities(player, true, player->talent_points, NULL);
 	init_talent(level_tp);
+
+	/* Make a world: towns */
+	world_init_towns();
 
 	ignore_birth_init();
 

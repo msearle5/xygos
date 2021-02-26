@@ -50,6 +50,7 @@
 #include "store.h"
 #include "trap.h"
 #include "ui-term.h"
+#include "world.h"
 
 /**
  * Setting this to 1 and recompiling gives a chance to recover a savefile 
@@ -641,6 +642,15 @@ int rd_quests(void)
 	return 0;
 }
 
+int rd_world(void)
+{
+	world_cleanup_towns();
+	rd_u16b(&z_info->town_max);
+	t_info = mem_zalloc(sizeof(*t_info) * z_info->town_max);
+	rdwr_world();
+	world_build_distances();
+	return 0;
+}
 
 /**
  * Read the player information
@@ -789,6 +799,10 @@ int rd_player(void)
 	rd_s16b(&player->max_depth);
 	rd_s16b(&player->recall_depth);
 	rd_s16b(&player->danger);
+
+	/* Player town */
+	RDWR_PTR(&player->town, t_info);
+	world_change_town(player->town);
 
 	/* Hack -- Repair maximum player level */
 	if (player->max_lev < player->lev) player->max_lev = player->lev;

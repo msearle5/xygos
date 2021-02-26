@@ -67,6 +67,10 @@ void rdwr_u32b(u32b *v);
 void rdwr_s32b(s32b *v);
 void rdwr_string(char **str);
 
+/* Read/Write pointer. Give a pointer to pointer, and the base of the array (it converts it to an offset to this base) */
+#define RDWR_PTR(P, B) if (saving) { wr_u32b((*(P)) - ((B))); } else { u32b offset; rd_u32b(&offset); *(P) = ((B)) + offset; }
+
+
 /* Writing bits */
 void wr_bool(bool v);
 void wr_byte(byte v);
@@ -98,6 +102,7 @@ int rd_object_memory(void);
 int rd_quests(void);
 int rd_artifacts(void);
 int rd_player(void);
+int rd_world(void);
 int rd_ignore(void);
 int rd_misc(void);
 int rd_player_hp(void);
@@ -122,6 +127,8 @@ void wr_monster_memory(void);
 void wr_object_memory(void);
 void rdwr_quests(void);
 void wr_quests(void);
+void rdwr_world(void);
+void wr_world(void);
 void wr_artifacts(void);
 void wr_player(void);
 void wr_ignore(void);

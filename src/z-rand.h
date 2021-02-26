@@ -25,6 +25,11 @@
 #include "h-basic.h"
 
 /**
+ * Simple RNG, implemented with a linear congruent algorithm.
+ */
+#define LCRNG(X) ((X) * 1103515245 + 12345)
+
+/**
  * Assumed maximum dungeon level.  This value is used for various 
  * calculations involving object and monster creation.  It must be at least 
  * 100. Setting it below 128 may prevent the creation of some objects.
@@ -138,6 +143,11 @@ void Rand_state_init(u32b seed);
  * Initialise the RNG
  */
 void Rand_init(void);
+
+/**
+ * Generates a random unsigned 32-bit integer X, 0 <= X < 2^32 
+ */
+u32b Rand_u32b(void);
 
 /**
  * Generates a random unsigned long integer X where "0 <= X < M" holds.

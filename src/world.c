@@ -23,18 +23,24 @@
  * "lib/gamedata" directory.
  */
 
+#include <math.h>
+
 #include "game-world.h"
 #include "init.h"
+#include "player.h"
+#include "ui-store.h"
 #include "world.h"
+#include "z-rand.h"
+#include "z-util.h"
 #include "z-virt.h"
 
-struct town {
-	struct town **connect;		/* Array of connected towns */
-	u32b connections;			/* Total number of connected towns */
-	char *name;					/* Name of town */
-};
-
 struct town *t_info;
+
+/* Array of distances between pairs of towns */
+static int *world_distance;
+
+/* Seeds the RNG to produce town distance arrays */
+u32b world_town_seed;
 
 /* Arrays of names from town-names.txt */
 static char **town_full_name;
@@ -43,6 +49,95 @@ static char **town_front_name;
 static int town_front_names;
 static char **town_back_name;
 static int town_back_names;
+
+/** Clean up towns and related world objects
+ */
+void world_cleanup_towns(void)
+{
+	for(int i=0;i<z_info->town_max;i++) {
+		struct town *t = t_info + i;
+		mem_free(t->name);
+		mem_free(t->connect);
+		t->connect = NULL;
+	}
+	mem_free(t_info);
+	t_info = NULL;
+	z_info->town_max = 0;
+}
+
+/**
+ * Change the player's current town
+ */
+void world_change_town(struct town *t)
+{
+	player->town = t;
+	
+}
+
+/**
+ * Add a connection in both directions between two towns
+ * By this point all towns must have been created
+ */
+void world_connect_towns(struct town *a, struct town *b)
+{
+	a->connections++;
+	a->connect = mem_realloc(a->connect, sizeof(*(a->connect)) * a->connections);
+	a->connect[a->connections - 1] = b;
+	b->connections++;
+	b->connect = mem_realloc(b->connect, sizeof(*(b->connect)) * b->connections);
+	b->connect[b->connections - 1] = a;
+}
+
+/** Return the time of day that the daily flight leaves (as a turn-of-day)
+ */
+int world_departure_time(struct town *from, struct town *to)
+{
+	// In a flight to Soviet Russia, you seed the timer from the RNG
+	u32b fi = from - t_info;
+	u32b ti = to - t_info;
+	u32b shook = (ti + (fi * z_info->town_max));
+	shook = LCRNG(shook);
+	shook %= ((60 * 24) / z_info->town_max);
+
+	// Fill in the rest to make sure there are no same minute departures
+	shook *= z_info->town_max;
+	shook += ti;
+
+	// Convert from minutes to turns
+	double out = shook;
+	out *= (10L * z_info->day_length);
+	out /= (24 * 60);
+	return out;
+}
+
+
+/** Return the distance between two towns (m)
+ */
+int world_between(struct town *from, struct town *to)
+{
+	return world_distance[(from - t_info)+((to-t_info) * z_info->town_max)];
+}
+
+/** Return the price to fly between two towns
+ */
+int world_airline_fare(struct town *from, struct town *to)
+{
+	int d = world_between(from, to);
+	int fare = 500 + (d / 200) + ((d / 15000) * (d / 15000));
+	return store_roundup(fare);
+}
+
+/** Return the time taken to fly between two towns (in turns)
+ */
+int world_flight_time(struct town *from, struct town *to)
+{
+	int d = world_between(from, to);
+	int minutes = 15 + (d / 5000); // 300km/h, cruising - plus a bit.
+	double turns = minutes;
+	turns *= (10L * z_info->day_length);
+	turns /= (24 * 60);
+	return turns;
+}
 
 /**
  * Return the number of flight connections from a town
@@ -57,7 +152,7 @@ int world_connections(struct town *t)
 struct town *get_town_by_name(const char *name)
 {
 	for(int i=0; i<z_info->town_max; i++) {
-		if (streq(t_info[i].name, name)) {
+		if (t_info[i].name && streq(t_info[i].name, name)) {
 			return t_info + i;
 		}
 	}
@@ -70,7 +165,7 @@ static char *world_random_text(char **array, int length)
 	return array[randint0(length)];
 }
 
-/** Generate a random name in static buffer
+/** Generate a random name in static buffer. No more than 12 chars, to fit on the left panel.
  */
 static char *world_random_name(void)
 {
@@ -79,18 +174,21 @@ static char *world_random_name(void)
 	char *mid;
 	char *back;
 
-	/* 1 in 5 are single names. The rest are combined from two halves. */
-	if (one_in_(5)) {
-		front = world_random_text(town_full_name, town_full_names);
-		mid = "";
-		back = "";
-	} else {
-		front = world_random_text(town_front_name, town_front_names);
-		mid = " ";
-		back = world_random_text(town_back_name, town_back_names);
-	}
+	do {
+		/* 1 in 5 are single names. The rest are combined from two halves. */
+		if (one_in_(5)) {
+			front = world_random_text(town_full_name, town_full_names);
+			mid = "";
+			back = "";
+		} else {
+			front = world_random_text(town_front_name, town_front_names);
+			mid = " ";
+			back = world_random_text(town_back_name, town_back_names);
+		}
 
-	strnfmt(buf, sizeof(buf), "%s%s%s", front, mid, back);
+		strnfmt(buf, sizeof(buf), "%s%s%s", front, mid, back);
+	} while (strlen(buf) > 12);
+	
 	return buf;
 }
 
@@ -115,8 +213,80 @@ static void world_name_town(struct town *t, char *name)
 	t->name = name;
 }
 
+/** Describe a town.
+ * If this town has been visited, this should give some information (what shops are there).
+ * If not, just gush! (Mention surroundings etc, maybe nearest town)
+ * The result is returned in a static buffer.
+ ***/
+char *world_describe_town(struct town *t)
+{
+	static char buf[256];
+
+	#define GUFF(N) guff_##N[0]
+
+	static const char *guff_really[] = {
+		"intensely",
+		"startlingly",
+		"especially",
+		"unusually",
+		"uniquely",
+		"spectacularly",
+		"amazingly",
+		"stunningly",
+		"terrifically",
+		"sparklingly",
+	};
+	static const char *guff_pretty[] = {
+		"pretty",
+		"handsome",
+		"attractive",
+		"striking",
+		"picturesque",
+	};
+	static const char *guff_town[] = {
+		"town",
+		"little town",
+		"village",
+		"old town",
+		"hamlet",
+		", bustling town",
+	};
+	static const char *guff_sits[] = {
+		"nestles",
+		"sits",
+		"is sited",
+		"is situated",
+		"is placed",
+		"is centered",
+		"completes",
+	};
+	static const char *guff_dramatic[] = {
+		"dramatic",
+		"wonderful",
+		"superb",
+		"extraordinary",
+		"fairy-tale",
+		"authentic",
+	};
+	static const char *guff_surround[] = {
+		"surroundings",
+		"embrace",
+		"setting",
+		"vista",
+		"view",
+	};
+
+	sprintf(buf, "This %s %s %s %s in the %s %s of ... blah, blah, blah.",
+		GUFF(really), GUFF(pretty), GUFF(town), GUFF(sits), GUFF(dramatic), GUFF(surround));
+
+	#undef GUFF
+
+	return buf;
+}
+
 /**
  * Add and return an empty town. Has a random name.
+ * Note that as this uses realloc, it invalidates all existing pointers to towns.
  */
 static struct town *world_new_town(void)
 {
@@ -126,6 +296,69 @@ static struct town *world_new_town(void)
 	memset(ret, 0, sizeof(*ret));
 	world_name_town(ret, world_make_name());
 	return ret;
+}
+
+/** Build town-town distances - save the seed used so it can be restored
+*/
+void world_build_distances(void)
+{
+	if (world_distance)
+		mem_free(world_distance);
+	world_distance = mem_zalloc(sizeof(*world_distance) *  z_info->town_max * z_info->town_max);
+	{
+		int *tx = mem_zalloc(sizeof(int) * z_info->town_max);
+		int *ty = mem_zalloc(sizeof(int) * z_info->town_max);
+
+		// Repeat until nowhere is too close to anywhere else
+		bool ok;
+		int size = 1399399;
+		int reps = 0;
+		do {
+			if (world_town_seed == 0)
+				world_town_seed = Rand_u32b() | 1;
+			u32b rng = world_town_seed;
+
+			for(int i=0;i<z_info->town_max;i++) {
+				rng = LCRNG(rng);
+				tx[i] = rng % size;
+				rng = LCRNG(rng);
+				ty[i] = rng % size;
+			}
+			ok = true;
+			for(int i=0;i<z_info->town_max;i++) {
+				for(int j=0;j<z_info->town_max;j++) {
+					if (i != j) {
+						u32b dist = ((abs(tx[i] - tx[j])) + (abs(ty[i] - ty[j])));
+						if (dist < 80000) {
+							ok = false;
+							break;
+						}
+					}
+				}
+			}
+			if (!ok) {
+				size += 9973;
+				world_town_seed = Rand_u32b() | 1;
+			}
+			reps++;
+		} while (!ok);
+
+		// Fill distance array
+		for(int i=0;i<z_info->town_max;i++) {
+			for(int j=0;j<z_info->town_max;j++) {
+				double xc1 = tx[i];
+				double yc1 = ty[i];
+				double xc2 = tx[j];
+				double yc2 = ty[j];
+				world_distance[j + (i * z_info->town_max)] =
+					sqrt(((xc1 - xc2) * (xc1 - xc2)) + ((yc1 - yc2) * (yc1 - yc2)));
+			}
+		}
+
+		// and clean up 
+		mem_free(tx);
+		mem_free(ty);
+	}
 }
 
 /**
@@ -139,8 +372,23 @@ void world_init_towns(void)
 		t_info = NULL;
 	}
 	z_info->town_max = 0;
+	Rand_quick = false;
 
-	struct town *t = world_new_town();
+	/* New seed */
+	world_town_seed = Rand_u32b() | 1;
+
+	/* Create towns */
+	char *fort = world_new_town()->name;
+	char *outer = world_new_town()->name;
+
+	/* Find the player's town */
+	player->town = get_town_by_name(outer);
+
+	/* Make connections */
+	world_connect_towns(get_town_by_name(outer), get_town_by_name(fort));
+
+	/* Generate distances */
+	world_build_distances();
 }
 
 /**
