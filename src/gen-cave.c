@@ -325,6 +325,24 @@ static void build_tunnel(struct chunk *c, struct loc grid1, struct loc grid2)
     }
 }
 
+/* Return the first feature on the level with the given feature.
+ * If none is present the original grid is unchanged, and returns false.
+ * If present, returns true
+ */
+static bool grid_find_feat(struct chunk *c, int feat, struct loc *loc)
+{
+	struct loc grid;
+	for (grid.y = 0; grid.y < c->height; grid.y++) {
+		for (grid.x = 0; grid.x < c->width; grid.x++) {
+			if (square_feat(c, grid)->fidx == feat) {
+				*loc = grid;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 /**
  * Count the number of corridor grids adjacent to the given grid.
  *
@@ -1829,6 +1847,10 @@ static void town_gen_layout(struct chunk *c, struct player *p)
 	square_set_feat(c, pgrid, FEAT_MORE);
 
 	/* Place the player */
+	if (p->upkeep->flight_level) {
+		grid_find_feat(c, FEAT_AIRPORT, &pgrid);
+		p->upkeep->flight_level = false;
+	}
 	player_place(c, p, pgrid);
 }
 
@@ -1856,6 +1878,26 @@ void destroy_store(struct chunk *c, int store)
 	}
 }
 
+/** Generate all towns */
+struct chunk *town_gen_all(struct player *p, int height, int width)
+{
+	struct town *town = p->town;
+	struct chunk *ptchunk = NULL;
+	for(int i=0; i < z_info->town_max; i++) {
+		p->town = t_info + i;
+		struct chunk *c = cave_generate(p, height, width);
+		if (p->town == town) {
+			ptchunk = c;
+		}
+		if (!c->name) {
+			c->name = string_make(p->town->name);
+		}
+		chunk_list_add(c);
+	}
+	p->town = town;
+	return ptchunk;
+}
+
 /**
  * Town logic flow for generation of new town.
  * \param p is the player
@@ -1877,14 +1919,12 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 
 	/* First time */
 	if (!c_old) {
-		fprintf(stderr,"!old (name '%s')\n", player->town->name);
 		c_new->depth = danger_depth(player);
 
 		/* Build stuff */
 		town_gen_layout(c_new, p);
 	} else {
 		/* If any stores are scheduled to be destroyed, do it now */
-		bool modded = false;
 		bool found = false;
 
 		for(int i=0;i<MAX_STORES;i++) {
@@ -1892,7 +1932,6 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 				destroy_store(c_old, i);
 				stores[i].destroy = false;
 				stores[i].open = false;
-				modded = true;
 			}
 		}
 
@@ -1907,7 +1946,6 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 					grid.y = p->quests[i].y;
 					square_set_feat(c_old, grid, FEAT_FLOOR);
 					found = true;
-					modded = true;
 					break;
 				}
 			}
@@ -1916,20 +1954,13 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 		/* Copy from the chunk list, remove the old one */
 		if (!chunk_copy(c_new, c_old, 0, 0, 0, 0))
 			quit_fmt("chunk_copy() level bounds failed!");
-		if (!modded) {
-			chunk_list_remove(player->town->name);
-			cave_free(c_old);
-		}
 
 		/* Find the stairs (lame) */
-		fprintf(stderr,"finding?\n");
 		if (!found) {
 			int feat = FEAT_MORE;
-			fprintf(stderr,"finding!\n");
 			if (player->upkeep->flight_level) {
 				feat = FEAT_AIRPORT;
 				player->upkeep->flight_level = false;
-				fprintf(stderr,"finding!!!\n");
 			}
 			for (grid.y = 0; grid.y < c_new->height; grid.y++) {
 				for (grid.x = 0; grid.x < c_new->width; grid.x++) {

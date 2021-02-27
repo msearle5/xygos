@@ -936,7 +936,8 @@ static void cave_store(struct chunk *c, bool known, bool keep_all)
 	if (stored->name) {
 		string_free(stored->name);
 	}
-	stored->name = string_make(level_by_depth(c->depth)->name);
+	assert(c->name);
+	stored->name = string_make(c->name);
 	if (known) {
 		stored->name = string_append(stored->name, " known");
 	}
@@ -965,7 +966,7 @@ static void cave_clear(struct chunk *c, struct player *p)
  * \param p is the current player struct, in practice the global player
  * \return a pointer to the new level
  */
-static struct chunk *cave_generate(struct player *p, int height, int width)
+struct chunk *cave_generate(struct player *p, int height, int width)
 {
 	const char *error = "no generation";
 	int i, tries = 0;
@@ -1236,7 +1237,14 @@ void prepare_next_level(struct chunk **c, struct player *p)
 		} else {
 			/* Save the town */
 			if (!((*c)->depth) && !chunk_find_name(player->town->name)) {
+				assert(player->town->name);
+				char *oldname = player->upkeep->last_level;
+				if (!oldname) {
+					oldname = player->upkeep->last_level = player->town->name;
+				}
+				(*c)->name = string_make(oldname);
 				cave_store(*c, false, false);
+				player->upkeep->last_level  = player->town->name;
 			}
 
 			/* Forget knowledge of old level */

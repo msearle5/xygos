@@ -466,6 +466,7 @@ R:They say that that these are only some of the benefits of an all-cheese diet.
 R:They say that there are many ways to die, and just as many ways to win.
 R:They say that there are ninnies, simpletons. And they never come back.
 R:They say that there is a trap on this level!
+R:They say that there is no lumber cabal.
 R:They say that there is no such thing as free advice.
 R:They say that there was once a barbarian named Cohen.
 R:They say that there was once a soldier named Toasty.
