@@ -1636,16 +1636,32 @@ struct owner *store_ownerbyidx(struct store *s, unsigned int idx) {
 	return 0; /* Needed to avoid Windows compiler warning */
 }
 
+/* Return the store (in any town) whose current owner is o, or NULL if none are */
+static struct store *store_by_owner(struct owner *o) {
+	for(int t=0; t<z_info->town_max; t++) {
+		for(int s=0; s<MAX_STORES; s++) {
+			if (t_info[t].stores[s].owner == o) {
+				return &t_info[t].stores[s];
+			}
+		}
+	}
+	return NULL;
+}
+
+/* Choose an owner that is not used by any shop, in any town */
 static struct owner *store_choose_owner(struct store *s) {
 	struct owner *o;
-	unsigned int n = 0;
 
-	for (o = s->owners; o; o = o->next) {
-		n++;
-	}
+	do {
+		unsigned int n = 0;
+		for (o = s->owners; o; o = o->next) {
+			n++;
+		}
 
-	n = randint1(n-1);
-	return store_ownerbyidx(s, n);
+		n = randint1(n-1);
+		o = store_ownerbyidx(s, n);
+	} while (store_by_owner(o));
+	return o;
 }
 
 /**
