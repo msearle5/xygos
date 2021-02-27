@@ -340,7 +340,7 @@ static void store_display_entry(struct menu *menu, int oid, bool cursor, int row
 		c_put_str(colour, player->town->connect[oid]->name, row, col);
 
 		/* Airline */
-		c_put_str(colour, "ApocalAir", row, 30);
+		c_put_str(colour, player->town->connect[oid]->stores[STORE_AIR].owner->name, row, 30);
 
 		/* Travel Time */
 		c_put_str(colour, format_duration(world_flight_time(player->town, player->town->connect[oid])), row, 48);

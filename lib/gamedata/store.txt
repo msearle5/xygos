@@ -266,8 +266,17 @@ turnover:9
 danger:96:98
 
 store:10:Airport
+# Should not be longer   -V-    than this
 owner:0:0:ApocalAir
 owner:0:0:InterVault
 owner:0:0:Atomic Airlines
 owner:0:0:Titanium Dragon
+owner:0:0:Plannit
+owner:0:0:Travelator
+owner:0:0:Kerbalair
+owner:0:0:Orbit Express
+owner:0:0:Litefast
+owner:0:0:Mercury Rising
+owner:0:0:Starhopper
+owner:0:0:Bounce Air
 danger:99:99
