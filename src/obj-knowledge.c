@@ -35,6 +35,7 @@
 #include "player-util.h"
 #include "project.h"
 #include "store.h"
+#include "world.h"
 
 /**
  * Overview
@@ -560,11 +561,13 @@ bool object_is_in_store(const struct object *obj)
 	struct object *obj1;
 
 	/* Check all the store objects */
-	for (i = 0; i < MAX_STORES; i++) {
-		struct store *s = &stores[i];
-		if (s->sidx == STORE_HOME) continue;
-		for (obj1 = s->stock; obj1; obj1 = obj1->next)
-			if (obj1 == obj) return true;
+	for (int t=0; t<z_info->town_max; t++) {
+		for (i = 0; i < MAX_STORES; i++) {
+			struct store *s = &t_info[t].stores[i];
+			if (s->sidx == STORE_HOME) continue;
+			for (obj1 = s->stock; obj1; obj1 = obj1->next)
+				if (obj1 == obj) return true;
+		}
 	}
 
 	return false;
@@ -1177,10 +1180,12 @@ void update_player_object_knowledge(struct player *p)
 		player_know_object(p, obj);
 
 	/* Store objects */
-	for (i = 0; i < MAX_STORES; i++) {
-		struct store *s = &stores[i];
-		for (obj = s->stock; obj; obj = obj->next)
-			player_know_object(p, obj);
+	for (int t=0; t<z_info->town_max; t++) {
+		for (i = 0; i < MAX_STORES; i++) {
+			struct store *s = &t_info[t].stores[i];
+			for (obj = s->stock; obj; obj = obj->next)
+				player_know_object(p, obj);
+		}
 	}
 
 	/* Fault objects */
@@ -2238,10 +2243,12 @@ void object_flavor_aware(struct object *obj)
 		object_set_base_known(obj1);
 
 	/* Store objects */
-	for (i = 0; i < MAX_STORES; i++) {
-		struct store *s = &stores[i];
-		for (obj1 = s->stock; obj1; obj1 = obj1->next)
-			object_set_base_known(obj1);
+	for (int t=0; t<z_info->town_max; t++) {
+		for (i = 0; i < MAX_STORES; i++) {
+			struct store *s = &t_info[t].stores[i];
+			for (obj1 = s->stock; obj1; obj1 = obj1->next)
+				object_set_base_known(obj1);
+		}
 	}
 
 	/* Quit if no dungeon yet */

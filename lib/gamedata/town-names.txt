@@ -58,6 +58,7 @@ S:Moonpond
 S:Mouldering
 S:New Sun
 S:No Name
+S:Old Geyser
 S:Ominous
 S:Pothole
 S:Poundcake

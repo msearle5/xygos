@@ -105,6 +105,7 @@ struct store {
 };
 
 extern struct store *stores;
+extern struct store *stores_init;
 
 void store_delete(struct store *s, struct object *obj, int amt);
 struct store *get_store_by_idx(int idx);
@@ -126,6 +127,7 @@ int price_item(struct store *store, const struct object *obj,
 bool store_will_buy_tester(const struct object *obj);
 bool store_check_num(struct store *store, const struct object *obj);
 int find_inven(const struct object *obj);
+void stores_copy(struct store *src);
 
 extern struct owner *store_ownerbyidx(struct store *s, unsigned int idx);
 

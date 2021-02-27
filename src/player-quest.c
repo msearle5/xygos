@@ -32,6 +32,7 @@
 #include "store.h"
 #include "trap.h"
 #include "ui-knowledge.h"
+#include "world.h"
 
 /**
  * Array of quests
@@ -188,10 +189,10 @@ static enum parser_error parse_quest_store(struct parser *p) {
 	assert(name);
 
 	/* Find the store */
-	assert(stores);
+	assert(stores_init);
 	for (int i = 0; i < MAX_STORES; i++) {
 		/* Get the store */
-		struct store *store = &stores[i];
+		struct store *store = &stores_init[i];
 		assert(store->name);
 		if (!strcmp(store->name, name)) {
 			q->store = i;

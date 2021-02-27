@@ -26,6 +26,7 @@
 #include <math.h>
 
 #include "game-world.h"
+#include "generate.h"
 #include "init.h"
 #include "player.h"
 #include "ui-store.h"
@@ -58,8 +59,10 @@ void world_cleanup_towns(void)
 		struct town *t = t_info + i;
 		mem_free(t->name);
 		mem_free(t->connect);
+		mem_free(t->stores);
 		t->connect = NULL;
 	}
+	stores = NULL;
 	mem_free(t_info);
 	t_info = NULL;
 	z_info->town_max = 0;
@@ -77,6 +80,7 @@ void world_change_town(struct town *t)
 	prepare_next_level(&cave, player);*/
 	player->upkeep->last_level = player->town->name;
 	player->town = t;
+	stores = player->town->stores;
 }
 
 /**
@@ -372,18 +376,13 @@ void world_build_distances(void)
 	}
 }
 
-struct chunk *town_gen_all(struct player *p, int min_height, int min_width);
 /**
  * Generate towns
  */
 void world_init_towns(void)
 {
 	/* Clear */
-	if (t_info) {
-		mem_free(t_info);
-		t_info = NULL;
-	}
-	z_info->town_max = 0;
+	world_cleanup_towns();
 	Rand_quick = false;
 
 	/* New seed */
@@ -396,14 +395,21 @@ void world_init_towns(void)
 	/* Find the player's town */
 	player->town = get_town_by_name(outer);
 
+	/* Enter first town */
+	world_change_town(player->town);
+
 	/* Make connections */
 	world_connect_towns(get_town_by_name(outer), get_town_by_name(fort));
 
 	/* Generate distances */
 	world_build_distances();
 
+	/* Generate stores and contents */
+	store_reset();
+
 	assert(player);
 	town_gen_all(player, z_info->town_wid, z_info->town_hgt);
+
 }
 
 /**
@@ -449,8 +455,14 @@ static errr finish_parse_town_names(struct parser *p) {
 
 static void cleanup_town_names(void)
 {
+	for(int i=0;i<town_full_names;i++)
+		mem_free(town_full_name[i]);
 	mem_free(town_full_name);
+	for(int i=0;i<town_front_names;i++)
+		mem_free(town_front_name[i]);
 	mem_free(town_front_name);
+	for(int i=0;i<town_back_names;i++)
+		mem_free(town_back_name[i]);
 	mem_free(town_back_name);
 }
 

@@ -24,6 +24,7 @@ struct town {
 	struct town **connect;		/* Array of connected towns */
 	u32b connections;			/* Total number of connected towns */
 	char *name;					/* Name of town */
+	struct store *stores;		/* Stores */
 };
 
 /* The world contains z->town_max towns, in this array */

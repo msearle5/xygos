@@ -61,6 +61,7 @@
 #include "ui-store.h"
 #include "ui-target.h"
 #include "wizard.h"
+#include "world.h"
 
 /**
  * The first part of this file contains the knowledge menus.  Generic display
@@ -1496,12 +1497,14 @@ bool remove_object(struct object *target)
 	}
 
 	/* Store objects */
-	for (i = 0; i < MAX_STORES; i++) {
-		struct store *s = &stores[i];
-		for (obj = s->stock; obj; obj = obj->next) {
-			if (obj == target) {
-				store_delete(s, obj, obj->number);
-				return true;
+	for (int t=0; t<z_info->town_max; t++) {
+		for (i = 0; i < MAX_STORES; i++) {
+			struct store *s = &t_info[t].stores[i];
+			for (obj = s->stock; obj; obj = obj->next) {
+				if (obj == target) {
+					store_delete(s, obj, obj->number);
+					return true;
+				}
 			}
 		}
 	}
@@ -1580,10 +1583,12 @@ struct object *find_object(struct object * (*fn )(struct object *, void *), void
 	}
 
 	/* Store objects */
-	for (i = 0; i < MAX_STORES; i++) {
-		struct store *s = &stores[i];
-		for (obj = s->stock; obj; obj = obj->next) {
-			if ((result = fn(obj, data))) return result;
+	for (int t=0; t<z_info->town_max; t++) {
+		for (i = 0; i < MAX_STORES; i++) {
+			struct store *s = &t_info[t].stores[i];
+			for (obj = s->stock; obj; obj = obj->next) {
+				if ((result = fn(obj, data))) return result;
+			}
 		}
 	}
 

@@ -248,6 +248,7 @@ extern struct vault *vaults;
 extern struct room_template *room_templates;
 
 /* gen-cave.c */
+struct chunk *town_gen_all(struct player *p, int min_height, int min_width);
 struct chunk *town_gen(struct player *p, int min_height, int min_width);
 struct chunk *classic_gen(struct player *p, int min_height, int min_width);
 struct chunk *labyrinth_gen(struct player *p, int min_height, int min_width);

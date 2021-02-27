@@ -1227,66 +1227,79 @@ static int rd_stores_aux(rd_item_t rd_item_version)
 
 	/* Read the stores */
 	rd_u16b(&tmp16u);
-	for (i = 0; i < tmp16u; i++) {
-		struct store *store = &stores[i];
+	assert(z_info->town_max);
+	for(int t=0; t<z_info->town_max; t++) {
+		if (t_info[t].stores)
+			mem_free(t_info[t].stores);
+		t_info[t].stores = mem_zalloc(MAX_STORES * sizeof(*t_info[t].stores));
+		memcpy(t_info[t].stores, stores_init, MAX_STORES * sizeof(*t_info[t].stores));
+	}
 
-		byte own;
-		u16b num;
+	stores = player->town->stores;
+	stores_copy(stores_init);
 
-		/* Read the basic info */
-		rd_byte(&own);
-		rd_u16b(&num);
-		rd_s16b(&store->stock_size);
+	for(int t=0; t<z_info->town_max; t++) {
+		for (i = 0; i < tmp16u; i++) {
+			struct store *store = &t_info[t].stores[i];
 
-		/* XXX: refactor into store.c */
-		store->owner = store_ownerbyidx(store, own);
+			byte own;
+			u16b num;
 
-		/* Read the items */
-		for (; num; num--) {
-			/* Read the known item */
-			struct object *obj, *known_obj = (*rd_item_version)();
-			if (!known_obj) {
-				note("Error reading known item");
-				return (-1);
+			/* Read the basic info */
+			rd_byte(&own);
+			rd_u16b(&num);
+			rd_s16b(&store->stock_size);
+
+			/* XXX: refactor into store.c */
+			store->owner = store_ownerbyidx(store, own);
+
+			/* Read the items */
+			for (; num; num--) {
+				/* Read the known item */
+				struct object *obj, *known_obj = (*rd_item_version)();
+				if (!known_obj) {
+					note("Error reading known item");
+					return (-1);
+				}
+
+				/* Read the item */
+				obj = (*rd_item_version)();
+				if (!obj) {
+					note("Error reading item");
+					return (-1);
+				}
+				obj->known = known_obj;
+
+				/* Accept any valid items */
+				if (store->stock_num < z_info->store_inven_max && obj->kind) {
+					if (store->sidx == STORE_HOME)
+						home_carry(obj);
+					else
+						store_carry(store, obj);
+				}
 			}
 
-			/* Read the item */
-			obj = (*rd_item_version)();
-			if (!obj) {
-				note("Error reading item");
-				return (-1);
-			}
-			obj->known = known_obj;
+			/* Read the entrance position */
+			rd_u16b(&store->x);
+			rd_u16b(&store->y);
 
-			/* Accept any valid items */
-			if (store->stock_num < z_info->store_inven_max && obj->kind) {
-				if (store->sidx == STORE_HOME)
-					home_carry(obj);
-				else
-					store_carry(store, obj);
+			/* Read the ban days and reason */
+			rd_u32b(&store->bandays);
+			{
+				char buf[128];
+				rd_string(buf, sizeof(buf));
+				store->banreason = buf[0] ? strdup(buf) : NULL;
 			}
+
+			/* Read the layaway index and day */
+			rd_s32b(&store->layaway_idx);
+			rd_s32b(&store->layaway_day);
+
+			/* Destroyed flag and danger */
+			rd_bool(&store->destroy);
+			rd_bool(&store->open);
+			rd_s32b(&store->max_danger);
 		}
-
-		/* Read the entrance position */
-		rd_u16b(&store->x);
-		rd_u16b(&store->y);
-
-		/* Read the ban days and reason */
-		rd_u32b(&store->bandays);
-		{
-			char buf[128];
-			rd_string(buf, sizeof(buf));
-			store->banreason = buf[0] ? strdup(buf) : NULL;
-		}
-
-		/* Read the layaway index and day */
-		rd_s32b(&store->layaway_idx);
-		rd_s32b(&store->layaway_day);
-
-		/* Destroyed flag and danger */
-		rd_bool(&store->destroy);
-		rd_bool(&store->open);
-		rd_s32b(&store->max_danger);
 	}
 
 	return 0;
