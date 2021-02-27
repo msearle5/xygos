@@ -20,6 +20,7 @@
 #include "angband.h"
 #include "cave.h"
 #include "cmds.h"
+#include "debug.h"
 #include "game-event.h"
 #include "game-world.h"
 #include "hint.h"
@@ -42,7 +43,7 @@
 #include "store.h"
 #include "target.h"
 #include "ui-display.h"
-#include "debug.h"
+#include "world.h"
 
 /**
  * ------------------------------------------------------------------------
@@ -51,14 +52,14 @@
 
 
 /**
- * Array[MAX_STORES] of stores
+ * Array[MAX_STORES] of stores in the current town
  */
 struct store *stores;
 
 /**
  * Array[MAX_STORES] of stores as originally read from the config file
  */
-static struct store *stores_init;
+struct store *stores_init;
 
 /**
  * The hints array
@@ -134,34 +135,31 @@ void cleanup_stores(void)
 	struct object_buy *buy, *buy_next;
 	int i;
 
-	if (!stores)
-		return;
+	for (int t=0; t<z_info->town_max; t++) {
+		/* Free the store inventories */
+		for (i = 0; i < MAX_STORES; i++) {
+			/* Get the store */
+			struct store *store = &t_info[t].stores[i];
 
-	/* Free the store inventories */
-	for (i = 0; i < MAX_STORES; i++) {
-		/* Get the store */
-		struct store *store = &stores[i];
-
-		/* Free the store inventory */
-		object_pile_free(store->stock_k);
-		object_pile_free(store->stock);
-		mem_free(store->always_table);
-		mem_free(store->normal_table);
-
-		for (o = store->owners; o; o = o_next) {
-			o_next = o->next;
-			string_free(o->name);
-			mem_free(o);
+			/* Free the store inventory */
+			object_pile_free(store->stock_k);
+			object_pile_free(store->stock);
+			if (store->always_table) {
+				mem_free(store->always_table);
+				store->always_table = NULL;
+			}
+			if (store->normal_table) {
+				mem_free(store->normal_table);
+				store->always_table = NULL;
+			}
+			string_free((void *)store->name);
+			store->name = NULL;
 		}
 
-		for (buy = store->buy; buy; buy = buy_next) {
-			buy_next = buy->next;
-			mem_free(buy);
-		}
-
-		string_free((void *)store->name);
+		mem_free(t_info[t].stores);
+		t_info[t].stores = NULL;
 	}
-	mem_free(stores);
+	stores = NULL;
 }
 
 
@@ -241,10 +239,10 @@ static enum parser_error parse_item_table(struct parser *p, size_t *num, size_t 
 	/* Expand if necessary */
 	if (!(*num)) {
 		*size = 16;
-		*table = mem_zalloc(*size * sizeof *table);
+		*table = mem_zalloc(*size * sizeof **table);
 	} else if (num >= size) {
 		*size += 8; 
-		*table = mem_realloc(*table, *size * sizeof *table);
+		*table = mem_realloc(*table, *size * sizeof **table);
 	}
 
 	/* Read rarity is present */
@@ -393,31 +391,70 @@ void store_init(void)
 {
 	event_signal_message(EVENT_INITSTATUS, 0, "Initializing stores...");
 	if (run_parser(&store_parser)) quit("Can't initialize stores");
-	stores = flatten_stores(stores);
-	stores_init = mem_alloc(MAX_STORES * sizeof(*stores));
-	memcpy(stores_init, stores, MAX_STORES * sizeof(*stores));
+	stores_init = flatten_stores(stores);
 }
 
+void stores_copy(struct store *src)
+{
+	for (int t = 0; t<z_info->town_max; t++) {
+		struct store *stores = t_info[t].stores;
+		for (int i = 0; i < MAX_STORES; i++) {
+			struct store *s;
+			s = &stores[i];
+
+			s->name = string_make(src[i].name);
+
+			s->stock = NULL;
+			s->stock_k = NULL;
+
+			struct store_entry *always_table = mem_alloc(sizeof(struct store_entry) * src[i].always_size);
+			memcpy(always_table, src[i].always_table, (sizeof(struct store_entry) * src[i].always_size));
+			s->always_table = always_table;
+			struct store_entry *normal_table = mem_alloc(sizeof(struct store_entry) * src[i].normal_size);
+			memcpy(normal_table, src[i].normal_table, (sizeof(struct store_entry) * src[i].normal_size));
+			s->normal_table = normal_table;
+		}
+	}
+}
+
+/* Reset the stores to the initial state.
+ * The stores_init array contains one entry per store, as read from store.txt.
+ * This must be duplicated per town.
+ */
 void store_reset(void) {
 	int i, j;
 	struct store *s;
 
-	memcpy(stores, stores_init, MAX_STORES * sizeof(*stores));
-	for (i = 0; i < MAX_STORES; i++) {
-		s = &stores[i];
-		s->banreason = "";
-		s->layaway_idx = -1;
-		s->max_danger = s->low_danger + randint0(1 + s->high_danger - s->low_danger);
-		store_shuffle(s);
-		object_pile_free(s->stock);
-		s->stock = NULL;
-		if (i == STORE_HOME)
-			continue;
-		for (j = 0; j < 10; j++)
-			store_maint(s);
+	assert(t_info);
+	assert(z_info->town_max);
+	for (int t = 0; t<z_info->town_max; t++)
+	{
+		if (!t_info[t].stores)
+			t_info[t].stores = mem_alloc(MAX_STORES * sizeof(*stores));
+		stores = t_info[t].stores;
+		memcpy(stores, stores_init, MAX_STORES * sizeof(*stores));
+	}
+
+	stores_copy(stores_init);
+
+	for (int t = 0; t<z_info->town_max; t++) {
+		stores = t_info[t].stores;
+		for (i = 0; i < MAX_STORES; i++) {
+			s = &stores[i];
+			s->banreason = "";
+			s->layaway_idx = -1;
+
+			s->max_danger = s->low_danger + randint0(1 + s->high_danger - s->low_danger);
+			store_shuffle(s);
+			object_pile_free(s->stock);
+			s->stock = NULL;
+			if (i == STORE_HOME)
+				continue;
+			for (j = 0; j < 10; j++)
+				store_maint(s);
+		}
 	}
 }
-
 
 struct init_module store_module = {
 	.name = "store",
@@ -1546,36 +1583,40 @@ void store_update(void)
 	while (daycount--) {
 		int n;
 
-		/* Maintain each shop (except home) */
-		for (n = 0; n < MAX_STORES; n++) {
-			/* Skip the home */
-			if (n == STORE_HOME) continue;
+		for (int t=0; t<z_info->town_max; t++) {
+			struct store *stores = t_info[t].stores;
 
-			if (stores[n].bandays > 0) {
-				stores[n].bandays--;
-				if (stores[n].bandays == 0) {
-					free((void *)stores[n].banreason);
-					stores[n].banreason = NULL;
+			/* Maintain each shop (except home) */
+			for (n = 0; n < MAX_STORES; n++) {
+				/* Skip the home */
+				if (n == STORE_HOME) continue;
+
+				if (stores[n].bandays > 0) {
+					stores[n].bandays--;
+					if (stores[n].bandays == 0) {
+						free((void *)stores[n].banreason);
+						stores[n].banreason = NULL;
+					}
 				}
+
+				/* Maintain */
+				store_maint(&stores[n]);
 			}
 
-			/* Maintain */
-			store_maint(&stores[n]);
-		}
+			/* Sometimes, shuffle the shop-keepers */
+			if (one_in_(z_info->store_shuffle)) {
+				/* Message */
+				if (OPT(player, cheat_xtra)) msg("Shuffling a Shopkeeper...");
 
-		/* Sometimes, shuffle the shop-keepers */
-		if (one_in_(z_info->store_shuffle)) {
-			/* Message */
-			if (OPT(player, cheat_xtra)) msg("Shuffling a Shopkeeper...");
+				/* Pick a random shop (except home) */
+				while (1) {
+					n = randint0(MAX_STORES);
+					if (n != STORE_HOME) break;
+				}
 
-			/* Pick a random shop (except home) */
-			while (1) {
-				n = randint0(MAX_STORES);
-				if (n != STORE_HOME) break;
+				/* Shuffle it */
+				store_shuffle(&stores[n]);
 			}
-
-			/* Shuffle it */
-			store_shuffle(&stores[n]);
 		}
 	}
 	daycount = 0;

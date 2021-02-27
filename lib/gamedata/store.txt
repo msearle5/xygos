@@ -17,11 +17,11 @@
 # The rarities are random values (base + XdY + level-dependent), producing a chance in 10000 of the item
 # being present. A leading - applies only to the base, not the entire value, unlike typical random values.
 # (For example, an item with -1000+M2000 would give -1000 at level 0, 0 at level 63 and 1000 at level 127.
-# So it would not appear until yuo had reach a maximum dungeon level of 63 and then would increase, to a
+# So it would not appear until you had reach a maximum dungeon level of 63 and then would increase, to a
 # maximum of 10% of the time at dungeon level 127.
 
 
-# General store
+# General ('convenience'?) store
 store:1:General Store
 owner:5000:Bilbo the Friendly (Hobbit)
 owner:10000:Rincewind the Chicken (Human)

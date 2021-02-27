@@ -781,39 +781,41 @@ void wr_stores(void)
 	int i;
 
 	wr_u16b(MAX_STORES);
-	for (i = 0; i < MAX_STORES; i++) {
-		const struct store *store = &stores[i];
-		struct object *obj;
+	for(int t=0; t<z_info->town_max; t++) {
+		for (i = 0; i < MAX_STORES; i++) {
+			const struct store *store = &t_info[t].stores[i];
+			struct object *obj;
 
-		/* Save the current owner */
-		wr_byte(store->owner->oidx);
+			/* Save the current owner */
+			wr_byte(store->owner->oidx);
 
-		/* Save the current and maximum stock size */
-		wr_u16b(store->stock_num);
-		wr_s16b(store->stock_size);
+			/* Save the current and maximum stock size */
+			wr_u16b(store->stock_num);
+			wr_s16b(store->stock_size);
 
-		/* Save the stock */
-		for (obj = store->stock; obj; obj = obj->next) {
-			wr_item(obj->known);
-			wr_item(obj);
+			/* Save the stock */
+			for (obj = store->stock; obj; obj = obj->next) {
+				wr_item(obj->known);
+				wr_item(obj);
+			}
+
+			/* Save the entrance position */
+			wr_u16b(store->x);
+			wr_u16b(store->y);
+
+			/* Save the ban days and reason */
+			wr_u32b(store->bandays);
+			wr_string(store->banreason ? store->banreason : "");
+
+			/* Save the layaway index and day */
+			wr_s32b(store->layaway_idx);
+			wr_s32b(store->layaway_day);
+
+			/* Destroyed flag and danger */
+			wr_bool(store->destroy);
+			wr_bool(store->open);
+			wr_s32b(store->max_danger);
 		}
-
-		/* Save the entrance position */
-		wr_u16b(store->x);
-		wr_u16b(store->y);
-
-		/* Save the ban days and reason */
-		wr_u32b(store->bandays);
-		wr_string(store->banreason ? store->banreason : "");
-
-		/* Save the layaway index and day */
-		wr_s32b(store->layaway_idx);
-		wr_s32b(store->layaway_day);
-
-		/* Destroyed flag and danger */
-		wr_bool(store->destroy);
-		wr_bool(store->open);
-		wr_s32b(store->max_danger);
 	}
 }
 
