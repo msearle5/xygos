@@ -1461,6 +1461,8 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		if (ability[i]) {
 			if (player_has(p, i)) {
 				state->ac += ability[i]->ac;
+				state->to_h += ability[i]->tohit;
+				state->to_d += ability[i]->todam;
 				pf_union(state->pflags, ability[i]->pflags);
 				of_union(collect_f, ability[i]->oflags);
 
@@ -1556,6 +1558,15 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 
 	/* Apply the collected flags */
 	of_union(state->flags, collect_f);
+
+	/* Remove flags, where abilities have a remove set */
+	for (i = 0; i < PF_MAX; i++) {
+		if (ability[i]) {
+			if (player_has(p, i)) {
+				of_diff(state->flags, ability[i]->oflags_off);
+			}
+		}
+	}
 
 	/* Now deal with vulnerabilities */
 	for (i = 0; i < ELEM_MAX; i++) {

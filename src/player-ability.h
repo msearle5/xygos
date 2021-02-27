@@ -36,6 +36,8 @@ struct ability {
 	s16b maxlevel;
 	s16b cost;
 	int ac;
+	int tohit;
+	int todam;
 	struct class_magic magic;
 	int effect_randomly;
 	struct effect *effect;
@@ -45,6 +47,7 @@ struct ability {
 	bool require[PF_MAX];
 	int a_adj[STAT_MAX];
 	bitflag oflags[OF_SIZE];				/**< Racial (object) flags */
+	bitflag oflags_off[OF_SIZE];			/**< Racial (object) flags (turn off) */
 	bitflag pflags[PF_SIZE];				/**< Racial (player) flags */
 	struct element_info el_info[ELEM_MAX];	/**< Resists */
 	s16b modifiers[OBJ_MOD_MAX];

@@ -39,11 +39,14 @@
 #						-	nasty		- This talent may be considered harmful (for at least some characters)
 # stats:<7 stats>		- List of stats bonuses
 # ac:<bonus to ac>
+# tohit:<bonus to hit>
+# todam:<bonus to dmg>
 # blow:<verb>:<damage>:[<element>]	- Add a melee blow, using this verb instead of "hit", the random value for damage (e.g. 3d6)
 #									  and an optional element.
 
 ### - flags - ###
 # obj-flags:object flags	- add one or more object flags
+# obj-flags-off:object flags	- prevent one or more object flags
 # player-flags:player flags	- add one or more player flags
 # values:					values is for object modifiers which take a value
 
@@ -224,7 +227,7 @@ name:Puking
 gain:You don't feel very well.
 lose:You feel less queasy.
 brief:You will randomly puke.
-desc:At unpredicable times you will puke - preventing you from doing anything else that turn, and leaving you weak with hunger. Try to keep some food with you at all times!
+desc:At unpredictable times you will puke - preventing you from doing anything else that turn, and leaving you weak with hunger. Try to keep some food with you at all times!
 flag:mutation
 flag:nasty
 
@@ -252,6 +255,8 @@ sdesc: in its path - the chance to get a spray goes up with your character level
 name:Horns
 gain:You grow a pair of evil-looking sharp black horns on your head.
 lose:Your horns shrivel away.
+# keep the random effect a surprise, though!
+desc:You have a pair of evil-looking sharp black horns on your head, and some extra nut attacks in melee.
 blow:butt:3d6
 flag:mutation
 flag:nasty
@@ -260,8 +265,58 @@ random-effect:10
 effect:HORNS
 
 
+## Eyes mutations ##
 
-## Skin muts ##
+name:Compound_Eyes
+gain:Your eys transform into faceted black insectile compound eyes.
+lose:Your eyes return to normal.
+brief:You have faceted black compound eyes.
+desc:You have faceted black insectile compound eyes. This protects you from blindness, and the wider field of view makes you more perceptive. But it can be difficult to make sense of what you see, and so you are vulnerable to confusion.
+flag:mutation
+flag:nasty
+flag:birth
+stats:0:0:0:0:0:-2:0
+values:SEARCH[4]
+obj-flags:PROT_BLIND
+obj-flags-off:PROT_CONF
+forbid:Wide_Eyes
+forbid:Cat_Eyes
+
+name:Wide_Eyes
+gain:Your eys expand into wide, staring, lidless pools.
+lose:Your eyes return to normal.
+brief:You have wide lidless eyes.
+desc:You have wide lidless eyes. They are sensitive, seeing in the infra-red and further into the darkness - but you are also more easily hurt by bright light.
+flag:mutation
+flag:nasty
+flag:birth
+stats:0:0:0:0:0:-1:0
+values:LIGHT[1]
+values:INFRA[3]
+values:RES_LIGHT[-1]
+forbid:Compound_Eyes
+forbid:Cat_Eyes
+
+name:Cat_Eyes
+gain:You blink, and then blink again.
+lose:You blink, and your eyes return to normal.
+brief:You have reflective, slitted, cat-like eyes.
+desc:You have reflective, slitted, cat-like eyes. They grant improved depth perception and as a result, combat proficiency. They stand out in the darkness though, making you a more noticeable target.
+flag:mutation
+flag:nasty
+flag:birth
+stats:0:0:0:0:0:-1:0
+tohit:8
+values:STEALTH[-1]
+forbid:Compound_Eyes
+forbid:Wide_Eyes
+
+# pin = light res, blind res, -1 light, -3 infra?
+# third eye (telpathy)?
+# blank eyes
+# dazzling?
+
+## Skin mutations ##
 
 
 name:Elephant_Hide

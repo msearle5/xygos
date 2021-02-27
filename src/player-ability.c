@@ -196,6 +196,22 @@ static enum parser_error parse_ability_ac(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_ability_tohit(struct parser *p) {
+	struct ability *a = parser_priv(p);
+	assert(a);
+
+	a->tohit = parser_getint(p, "tohit");
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_ability_todam(struct parser *p) {
+	struct ability *a = parser_priv(p);
+	assert(a);
+
+	a->todam = parser_getint(p, "todam");
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_ability_flag(struct parser *p) {
 	struct ability *a = parser_priv(p);
 
@@ -235,6 +251,26 @@ static enum parser_error parse_ability_obj_flags(struct parser *p) {
 	s = strtok(flags, " |");
 	while (s) {
 		if (grab_flag(a->oflags, OF_SIZE, list_obj_flag_names, s))
+			break;
+		s = strtok(NULL, " |");
+	}
+	mem_free(flags);
+	return s ? PARSE_ERROR_INVALID_FLAG : PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_ability_obj_flags_off(struct parser *p) {
+	struct ability *a = parser_priv(p);
+	char *flags;
+	char *s;
+
+	if (!a)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	if (!parser_hasval(p, "flags"))
+		return PARSE_ERROR_NONE;
+	flags = string_make(parser_getstr(p, "flags"));
+	s = strtok(flags, " |");
+	while (s) {
+		if (grab_flag(a->oflags_off, OF_SIZE, list_obj_flag_names, s))
 			break;
 		s = strtok(NULL, " |");
 	}
@@ -370,12 +406,15 @@ struct parser *init_parse_ability(void) {
 	parser_reg(p, "desc str desc", parse_ability_desc);
 	parser_reg(p, "class str class", parse_ability_class);
 	parser_reg(p, "ac int ac", parse_ability_ac);
+	parser_reg(p, "tohit int tohit", parse_ability_tohit);
+	parser_reg(p, "todam int todam", parse_ability_todam);
 	parser_reg(p, "desc_future str desc_future", parse_ability_desc_future);
 	parser_reg(p, "cost int cost", parse_ability_cost);
 	parser_reg(p, "maxlevel int max", parse_ability_maxlevel);
 	parser_reg(p, "minlevel int min", parse_ability_minlevel);
 	parser_reg(p, "flag str flag", parse_ability_flag);
 	parser_reg(p, "obj-flags ?str flags", parse_ability_obj_flags);
+	parser_reg(p, "obj-flags-off ?str flags", parse_ability_obj_flags_off);
 	parser_reg(p, "player-flags ?str flags", parse_ability_play_flags);
 	parser_reg(p, "values str values", parse_ability_values);
 	parser_reg(p, "blow sym msg rand damage ?sym type", parse_ability_blow);
@@ -840,6 +879,10 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 			}
 			if (ability[avail[selected]]->ac)
 				textblock_append_c(tb, COLOUR_YELLOW, " (%+d to AC)", ability[avail[selected]]->ac);
+			if (ability[avail[selected]]->tohit)
+				textblock_append_c(tb, COLOUR_YELLOW, " (%+d to hit)", ability[avail[selected]]->tohit);
+			if (ability[avail[selected]]->todam)
+				textblock_append_c(tb, COLOUR_YELLOW, " (%+d to damage)", ability[avail[selected]]->todam);
 			for(int i=0;i<ELEM_MAX;i++) {
 				if (ability[avail[selected]]->el_info[i].res_level) {
 					textblock_append_c(tb, COLOUR_YELLOW, " (%+d vs %s)", ability[avail[selected]]->el_info[i].res_level, projections[i].name);
