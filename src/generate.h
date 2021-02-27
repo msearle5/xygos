@@ -311,6 +311,7 @@ bool build_room_of_chambers(struct chunk *c, struct loc centre, int rating);
 bool build_huge(struct chunk *c, struct loc centre, int rating);
 bool room_build(struct chunk *c, int by0, int bx0, struct room_profile profile,
 	bool finds_own_space);
+struct chunk *cave_generate(struct player *p, int height, int width);
 
 
 /* gen-util.c */

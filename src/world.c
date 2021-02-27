@@ -70,8 +70,13 @@ void world_cleanup_towns(void)
  */
 void world_change_town(struct town *t)
 {
+	/*struct town *prev = player->town;
 	player->town = t;
 	
+	player->town = prev;
+	prepare_next_level(&cave, player);*/
+	player->upkeep->last_level = player->town->name;
+	player->town = t;
 }
 
 /**
@@ -235,6 +240,7 @@ char *world_describe_town(struct town *t)
 		"stunningly",
 		"terrifically",
 		"sparklingly",
+		"supremely",
 	};
 	static const char *guff_pretty[] = {
 		"pretty",
@@ -242,6 +248,7 @@ char *world_describe_town(struct town *t)
 		"attractive",
 		"striking",
 		"picturesque",
+		"eye-catching",
 	};
 	static const char *guff_town[] = {
 		"town",
@@ -250,10 +257,13 @@ char *world_describe_town(struct town *t)
 		"old town",
 		"hamlet",
 		", bustling town",
+		", quiet town",
+		", unspoiled town",
 	};
 	static const char *guff_sits[] = {
 		"nestles",
 		"sits",
+		"lies",
 		"is sited",
 		"is situated",
 		"is placed",
@@ -267,6 +277,7 @@ char *world_describe_town(struct town *t)
 		"extraordinary",
 		"fairy-tale",
 		"authentic",
+		"famous",
 	};
 	static const char *guff_surround[] = {
 		"surroundings",
@@ -361,6 +372,7 @@ void world_build_distances(void)
 	}
 }
 
+struct chunk *town_gen_all(struct player *p, int min_height, int min_width);
 /**
  * Generate towns
  */
@@ -389,6 +401,9 @@ void world_init_towns(void)
 
 	/* Generate distances */
 	world_build_distances();
+
+	assert(player);
+	town_gen_all(player, z_info->town_wid, z_info->town_hgt);
 }
 
 /**

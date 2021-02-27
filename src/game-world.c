@@ -113,6 +113,8 @@ struct level *level_by_name(char *name)
  */
 struct level *level_by_depth(int depth)
 {
+	assert(player);
+	assert(player->town);
 	struct level *lev = world;
 	while (lev) {
 		if (lev->depth == depth) {

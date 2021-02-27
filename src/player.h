@@ -491,6 +491,7 @@ struct player_upkeep {
 	bool only_partial;		/* True if only partial updates are needed */
 	bool dropping;			/* True if auto-drop is in progress */
 	bool flight_level;		/* True if reached this level through the airport */
+	char *last_level;		/* Last level name */
 
 	int energy_use;			/* Energy use this turn */
 	int new_spells;			/* Number of spells available */
