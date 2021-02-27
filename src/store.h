@@ -54,6 +54,7 @@ struct owner {
 	char *name;
 	unsigned int oidx;
 	s32b max_cost;
+	s32b greed;
 };
 
 struct store_entry {
@@ -76,8 +77,7 @@ struct store {
 	s32b low_danger;
 	s32b high_danger;
 	bool destroy;				/* Destroy when next entering the town */
-	bool open;					/* Is currently open (has an entrance). Destroyed stores must be closed (unless
-									you want an entrance in the ruin!) */
+	bool open;					/* Is currently open (has an entrance). Destroyed stores must be closed (unless you want an entrance in the ruin!) */
 	u16b x;						/* Position in the level, this should be valid even if closed or destroyed */
 	u16b y;
 

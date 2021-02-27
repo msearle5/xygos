@@ -131,8 +131,6 @@ struct store *get_store_by_name(const char *name) {
  */
 void cleanup_stores(void)
 {
-	struct owner *o, *o_next;
-	struct object_buy *buy, *buy_next;
 	int i;
 
 	for (int t=0; t<z_info->town_max; t++) {
@@ -274,6 +272,7 @@ static enum parser_error parse_normal(struct parser *p) {
 static enum parser_error parse_owner(struct parser *p) {
 	struct store *s = parser_priv(p);
 	unsigned int maxcost = parser_getuint(p, "purse");
+	unsigned int greed = parser_getuint(p, "greed");
 	char *name = string_make(parser_getstr(p, "name"));
 	struct owner *o;
 
@@ -285,6 +284,7 @@ static enum parser_error parse_owner(struct parser *p) {
 	o->next = s->owners;
 	o->name = name;
 	o->max_cost = maxcost;
+	o->greed = greed;
 	s->owners = o;
 	return PARSE_ERROR_NONE;
 }
@@ -330,7 +330,7 @@ struct parser *init_parse_stores(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
 	parser_reg(p, "store uint index str name", parse_store);
-	parser_reg(p, "owner uint purse str name", parse_owner);
+	parser_reg(p, "owner uint greed uint purse str name", parse_owner);
 	parser_reg(p, "slots uint min uint max", parse_slots);
 	parser_reg(p, "turnover uint turnover", parse_turnover);
 	parser_reg(p, "size uint max", parse_max);
@@ -677,7 +677,7 @@ bool you_own(struct store *store)
 int price_item(struct store *store, const struct object *obj,
 			   bool store_buying, int qty)
 {
-	int adjust = 110;
+	int adjust = 100;
 	int price;
 	struct owner *proprietor;
 
@@ -699,15 +699,17 @@ int price_item(struct store *store, const struct object *obj,
 		return 0;
 	}
 
-	if (!you_own(store) && (store->sidx != STORE_HQ)) {
+	if (store->sidx == STORE_HQ) {
+		adjust = 110;
+	} else if (!you_own(store)) {
 		/* This adjusts the price (in either direction) based on CHA
 		 * and level, with CHA being more important at low level and
 		 * the proportion that is dependent on level increasing at high
 		 * level (that is, at level 25 less than half of the advantage
 		 * of high level has occurred).
 		 */
-		adjust += (3000 - (player->lev * player->lev)) /
-			((3 + player->state.stat_ind[STAT_CHR]) * 10);
+		adjust += ((3000 - (player->lev * player->lev)) /
+			((3 + player->state.stat_ind[STAT_CHR]) * 10)) + store->owner->greed;
 
 		/* The black market is always a worse deal (for the rest of them) */
 		if (store->sidx == STORE_B_MARKET)
