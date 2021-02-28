@@ -20,6 +20,7 @@
 #define GAME_WORLD_H
 
 #include "cave.h"
+#include "z-rand.h"
 
 struct level {
 	int depth;
@@ -27,6 +28,13 @@ struct level {
 	char *up;
 	char *down;
 	struct level *next;
+};
+
+struct dungeon {
+	random_value min;
+	random_value max;
+	char *name;
+	struct dungeon *next;
 };
 
 extern u16b daycount;
