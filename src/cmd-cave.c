@@ -1100,15 +1100,19 @@ void move_player(int dir, bool disarm)
 		struct feature *feat = square_feat(cave, grid);
 		int dam_taken = player_check_terrain_damage(player, grid);
 
-		/* Check if running, or going to cost more than a third of hp */
-		if (player->upkeep->running && dam_taken) {
-			if (!get_check(feat->run_msg)) {
-				player->upkeep->running = 0;
-				step = false;
-			}
-		} else {
-			if (dam_taken > player->chp / 3) {
-				step = get_check(feat->walk_msg);
+		/* Check if running, or going to cost more than a third of hp.
+		 * Confused players go woopsie daisy
+		 **/
+		if (!player->timed[TMD_CONFUSED]) {
+			if (player->upkeep->running && dam_taken) {
+				if (!get_check(feat->run_msg)) {
+					player->upkeep->running = 0;
+					step = false;
+				}
+			} else {
+				if (dam_taken > player->chp / 3) {
+					step = get_check(feat->walk_msg);
+				}
 			}
 		}
 
