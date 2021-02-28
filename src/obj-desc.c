@@ -100,14 +100,14 @@ static const char *obj_desc_get_basename(const struct object *obj, bool aware,
 		case TV_RING:
 			return (show_flavor ? "& # Ring~" : "& Ring~");
 
-		case TV_STAFF:
-			return (show_flavor ? "& # Sta|ff|ves|" : "& Sta|ff|ves|");
+		case TV_DEVICE:
+			return (show_flavor ? "& # device~" : "&~");
 
 		case TV_WAND:
-			return (show_flavor ? "& # Wand~" : "& Wand~");
+			return (show_flavor ? "& # gun~" : "&~");
 
 		case TV_ROD:
-			return (show_flavor ? "& # Rod~" : "& Rod~");
+			return (show_flavor ? "& # gadget~" : "&~");
 
 		case TV_PILL:
 			return (show_flavor ? "& # pill~" : "& pill~");
@@ -267,10 +267,13 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 	if (aware && obj->kind->flavor && obj->tval != TV_FOOD && obj->tval != TV_LIGHT) {
 		const char *space = " ";
 
-		/* Contract "foo- pill" into "foo-pill" */
+		/* Contract "foo- pill" into "foo-pill", and don't put a space between an item name
+		 * and suffix when it doesn't take a class name
+		 **/
 		const char *spacename = obj->kind->name;
-		if (!isalpha(spacename[strlen(spacename)-1]))
-			space = "";
+		if ((obj->tval == TV_WAND) || (obj->tval == TV_DEVICE) || (obj->tval == TV_ROD) ||
+			(!isalpha(spacename[strlen(spacename)-1])))
+				space = "";
 
 		strnfcat(buf, max, &end, "%s%s", obj->kind->name, space);
 	}
@@ -443,7 +446,7 @@ static size_t obj_desc_charges(const struct object *obj, char *buf, size_t max,
 {
 	bool aware = object_flavor_is_aware(obj) || (mode & ODESC_STORE);
 
-	/* Wands and staffs have charges, others may be charging */
+	/* Wands and devices have charges, others may be charging */
 	if (aware && tval_can_have_charges(obj)) {
 		strnfcat(buf, max, &end, " (%d charge%s)", obj->pval,
 				 PLURAL(obj->pval));

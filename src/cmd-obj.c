@@ -48,7 +48,7 @@
  */
 
 /**
- * Check to see if the player can use a rod/wand/staff/activatable object.
+ * Check to see if the player can use a rod/wand/device/activatable object.
  */
 static int check_devices(struct object *obj)
 {
@@ -63,9 +63,9 @@ static int check_devices(struct object *obj)
 	} else if (tval_is_wand(obj)) {
 		action = "use the wand";
 		what = "wand";
-	} else if (tval_is_staff(obj)) {
-		action = "use the staff";
-		what = "staff";
+	} else if (tval_is_device(obj)) {
+		action = "use the device";
+		what = "device";
 	} else {
 		action = "activate it";
 		activated = true;
@@ -81,7 +81,7 @@ static int check_devices(struct object *obj)
 		return false;
 	}
 
-	/* Notice empty staffs */
+	/* Notice empty devices */
 	if (what && obj->pval <= 0) {
 		event_signal(EVENT_INPUT_FLUSH);
 		msg("The %s has no charges left.", what);
@@ -676,9 +676,9 @@ void do_cmd_run_card(struct command *cmd)
 }
 
 /**
- * Use a staff 
+ * Use a device
  */
-void do_cmd_use_staff(struct command *cmd)
+void do_cmd_use_device(struct command *cmd)
 {
 	struct object *obj;
 
@@ -693,17 +693,17 @@ void do_cmd_use_staff(struct command *cmd)
 
 	/* Get an item */
 	if (cmd_get_item(cmd, "item", &obj,
-			"Use which staff? ",
-			"You have no staves to use.",
-			tval_is_staff,
+			"Use which device? ",
+			"You have no devices to use.",
+			tval_is_device,
 			USE_INVEN | USE_FLOOR | SHOW_FAIL) != CMD_OK) return;
 
 	if (!obj_has_charges(obj)) {
-		msg("That staff has no charges.");
+		msg("That device has no charges.");
 		return;
 	}
 
-	use_aux(cmd, obj, USE_CHARGE, MSG_USE_STAFF);
+	use_aux(cmd, obj, USE_CHARGE, MSG_USE_DEVICE);
 }
 
 /**
@@ -933,7 +933,7 @@ void do_cmd_use(struct command *cmd)
 	else if (tval_is_edible(obj))		do_cmd_eat_food(cmd);
 	else if (tval_is_rod(obj))			do_cmd_zap_rod(cmd);
 	else if (tval_is_wand(obj))			do_cmd_aim_wand(cmd);
-	else if (tval_is_staff(obj))		do_cmd_use_staff(cmd);
+	else if (tval_is_device(obj))		do_cmd_use_device(cmd);
 	else if (tval_is_card(obj))			do_cmd_run_card(cmd);
 	else if (tval_is_printer(obj))		do_cmd_use_printer(cmd);
 	else if (obj_can_refill(obj))		do_cmd_refill(cmd);

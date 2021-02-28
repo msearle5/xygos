@@ -168,63 +168,36 @@ flavor:67:Light Slate:Mother-of-Pearl
 # Serpentine
 # Porcelain
 
-##### Staves #####
-# These are wooden
+##### Devices #####
+# These are described by what they do, or how you use them.
+# Light, sound, movement.
 
-kind:staff:_
+kind:device:_
 
-flavor:68:Light Umber:Aspen
-flavor:69:Light Umber:Balsa
-flavor:70:Light Umber:Banyan
-flavor:71:Light Umber:Birch
-flavor:72:Light Umber:Cedar
-flavor:73:Light Umber:Cottonwood
-flavor:74:Light Umber:Cypress
-flavor:75:Light Umber:Dogwood
-flavor:76:Light Umber:Elm
-flavor:77:Light Umber:Eucalyptus
-flavor:78:Light Umber:Hemlock
-flavor:79:Light Umber:Hickory
-flavor:80:Umber:Ironwood
-flavor:81:Light Umber:Locust
-flavor:82:Umber:Mahogany
-flavor:83:Umber:Maple
-flavor:84:Umber:Mulberry
-flavor:85:Umber:Oak
-flavor:86:Umber:Pine
-flavor:87:Red:Redwood
-flavor:88:Red:Rosewood
-flavor:89:Light Umber:Spruce
-flavor:90:Light Umber:Sycamore
-flavor:91:Light Umber:Teak
-flavor:92:Umber:Walnut
-flavor:93:Green:Mistletoe
-flavor:94:Light Umber:Hawthorn
-flavor:95:Light Umber:Bamboo
-flavor:96:Light Slate:Silver Birch
-flavor:97:Umber:Hazel
-flavor:98:Yellow:Golden
-flavor:99:Slate:Blackthorn
-flavor:100:Light Umber:Gnarled
-flavor:101:White:Ivory
-flavor:102:Light Umber:Willow
+flavor:68:White:flashing
+flavor:69:Blue:beeping
+flavor:70:White:strobing
+flavor:71:Slate:mechanical
+flavor:72:Slate:telescoping
+flavor:73:Green:humming
+flavor:74:Light Dark:warm
+flavor:75:White:pulsating
+flavor:76:Slate:whining
+flavor:77:White:illuminated
+flavor:78:Light Blue:flickering
+flavor:79:Light Blue:flaring
+flavor:80:Yellow:glowing
+flavor:81:Slate:whirring
+flavor:82:Light Yellow:blinking
+flavor:83:Light Blue:twinkling
+flavor:84:Light Umber:buzzing
+flavor:85:Red:spinning
+flavor:86:Yellow:oscillating
+flavor:87:Green:twisting
+flavor:88:Orange:twirling
+flavor:89:Yellow:revolving
+flavor:90:Light Yellow:rotating
 
-# Alder
-# Applewood
-# Ash
-# Cherry
-# Driftwood
-# Elder
-# Fir
-# Olive
-# Mallorn
-# Poplar
-# Rowan
-# Mirkwood
-# Chestnut
-# Ebony
-# Yew
-# Metal Shod
 
 ##### Wands #####
 # These are finishes, materials, coverings, shapes.

@@ -60,7 +60,7 @@ void do_cmd_takeoff(struct command *cmd);
 void do_cmd_wield(struct command *cmd);
 void do_cmd_drop(struct command *cmd);
 void do_cmd_run_card(struct command *cmd);
-void do_cmd_use_staff(struct command *cmd);
+void do_cmd_use_device(struct command *cmd);
 void do_cmd_aim_wand(struct command *cmd);
 void do_cmd_zap_rod(struct command *cmd);
 void do_cmd_activate(struct command *cmd);

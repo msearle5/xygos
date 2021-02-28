@@ -441,7 +441,7 @@ flags:NO_SLEEP | NO_CONF | NO_FEAR
 spell-freq:3
 spell-power:0
 spells:S_KIN
-desc:A lemming painted in gaudy designs, waving a carved staff. Where it leads hordes follow.
+desc:A lemming painted in gaudy designs, waving a carved device. Where it leads hordes follow.
 
 name:bungee lemming
 base:lemming

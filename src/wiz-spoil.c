@@ -119,7 +119,7 @@ static const grouper group_item[] =
 
 	{ TV_ROD,			"Rods" },
 	{ TV_WAND,			"Wands" },
-	{ TV_STAFF,			"Staffs" },
+	{ TV_DEVICE,			"Devices" },
 
 	{ TV_CHEST,			"Containers" },
 

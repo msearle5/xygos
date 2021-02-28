@@ -877,7 +877,7 @@ static void store_object_absorb(struct object *old, struct object *new)
 	if (tval_can_have_timeout(old) && (!tval_is_light(old)))
 		old->timeout += new->timeout;
 
-	/* If wands/staves are stacking, combine the charges */
+	/* If wands/devices are stacking, combine the charges */
 	if (tval_can_have_charges(old))
 		old->pval += new->pval;
 
@@ -1143,7 +1143,7 @@ static void store_delete_random(struct store *store)
 			/* 25% of the time, destroy all objects */
 			else num = obj->number;
 
-			/* Hack -- decrement the total charges of staves and wands. */
+			/* Hack -- decrement the total charges of devices and wands. */
 			if (tval_can_have_charges(obj))
 				obj->pval -= num * obj->pval / obj->number;
 		}
@@ -1668,8 +1668,8 @@ int find_inven(const struct object *obj)
 				break;
 			}
 
-			/* Staves and Wands */
-			case TV_STAFF:
+			/* Devices and Wands */
+			case TV_DEVICE:
 			case TV_WAND:
 			{
 				/* Assume okay */
@@ -1935,7 +1935,7 @@ void do_cmd_retrieve(struct command *cmd)
 		return;
 	}
 
-	/* Distribute charges of wands, staves, or rods */
+	/* Distribute charges of wands, devices, or rods */
 	distribute_charges(obj, picked_item, amt);
 
 	/* Make a known object */

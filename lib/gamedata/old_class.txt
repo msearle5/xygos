@@ -160,10 +160,10 @@ spell:Lesser Recharging:9:7:75:10
 effect:RECHARGE
 dice:$B
 expr:B:PLAYER_LEVEL:/ 10 + 2
-desc:Adds charges to a stack of wands or staves.
+desc:Adds charges to a stack of wands or devices.
 desc:  Chance of success and number of charges gained increase with your
-desc: level and decrease with level of wand or staff and number of charges.
-desc:  A failed attempt to recharge destroys one wand or staff from the stack.
+desc: level and decrease with level of wand or device and number of charges.
+desc:  A failed attempt to recharge destroys one wand or device from the stack.
 
 spell:Turn Stone to Mud:9:7:44:8
 effect:LINE:KILL_WALL
@@ -399,11 +399,11 @@ spell:Greater Recharging:30:30:95:100
 effect:RECHARGE
 dice:$B
 expr:B:PLAYER_LEVEL:/ 5 + 5
-desc:Adds charges to a stack of wands or staves.
+desc:Adds charges to a stack of wands or devices.
 desc:  Chance of success and number of charges gained increase with your
-desc: level and decrease with level of wand or staff and number of charges,
+desc: level and decrease with level of wand or device and number of charges,
 desc: but are overall much better than for the spell Lesser Recharging.
-desc:  A failed attempt to recharge destroys one wand or staff from the stack.
+desc:  A failed attempt to recharge destroys one wand or device from the stack.
 
 spell:Elemental Brand:32:60:95:120
 effect:BRAND_AMMO
@@ -895,10 +895,10 @@ spell:Recharging:15:20:80:25
 effect:RECHARGE
 dice:$B
 expr:B:PLAYER_LEVEL:/ 5 + 2
-desc:Adds charges to a stack of wands or staves.
+desc:Adds charges to a stack of wands or devices.
 desc:  Chance of success and number of charges gained increase with your
-desc: level and decrease with level of wand or staff and number of charges.
-desc:  A failed attempt to recharge destroys one wand or staff from the stack.
+desc: level and decrease with level of wand or device and number of charges.
+desc:  A failed attempt to recharge destroys one wand or device from the stack.
 
 spell:Dispel Curse:25:40:80:160
 effect:REMOVE_CURSE
@@ -1089,10 +1089,10 @@ spell:Lesser Recharging:27:15:99:1
 effect:RECHARGE
 dice:$B
 expr:B:PLAYER_LEVEL:/ 10 + 2
-desc:Adds charges to a stack of wands or staves.
+desc:Adds charges to a stack of wands or devices.
 desc:  Chance of success and number of charges gained increase with your
-desc: level and decrease with level of wand or staff and number of charges.
-desc:  A failed attempt to recharge destroys one wand or staff from the stack.
+desc: level and decrease with level of wand or device and number of charges.
+desc:  A failed attempt to recharge destroys one wand or device from the stack.
 
 spell:Turn Stone to Mud:24:11:70:1
 effect:LINE:KILL_WALL
@@ -1258,11 +1258,11 @@ spell:Greater Recharging:35:40:95:100
 effect:RECHARGE
 dice:$B
 expr:B:PLAYER_LEVEL:/ 5 + 5
-desc:Adds charges to a stack of wands or staves.
+desc:Adds charges to a stack of wands or devices.
 desc:  Chance of success and number of charges gained increase with your
-desc: level and decrease with level of wand or staff and number of charges,
+desc: level and decrease with level of wand or device and number of charges,
 desc: but are overall much better than for the spell Lesser Recharging.
-desc:  A failed attempt to recharge destroys one wand or staff from the stack.
+desc:  A failed attempt to recharge destroys one wand or device from the stack.
 
 spell:Elemental Brand:37:60:80:120
 effect:BRAND_AMMO
@@ -1440,10 +1440,10 @@ spell:Lesser Recharging:29:17:90:4
 effect:RECHARGE
 dice:$B
 expr:B:PLAYER_LEVEL:/ 10 + 2
-desc:Adds charges to a stack of wands or staves.
+desc:Adds charges to a stack of wands or devices.
 desc:  Chance of success and number of charges gained increase with your
-desc: level and decrease with level of wand or staff and number of charges.
-desc:  A failed attempt to recharge destroys one wand or staff from the stack.
+desc: level and decrease with level of wand or device and number of charges.
+desc:  A failed attempt to recharge destroys one wand or device from the stack.
 
 spell:Turn Stone to Mud:15:13:50:4
 effect:LINE:KILL_WALL
@@ -1680,11 +1680,11 @@ spell:Greater Recharging:35:50:95:115
 effect:RECHARGE
 dice:$B
 expr:B:PLAYER_LEVEL:/ 5 + 5
-desc:Adds charges to a stack of wands or staves.
+desc:Adds charges to a stack of wands or devices.
 desc:  Chance of success and number of charges gained increase with your
-desc: level and decrease with level of wand or staff and number of charges,
+desc: level and decrease with level of wand or device and number of charges,
 desc: but are overall much better than for the spell Lesser Recharging.
-desc:  A failed attempt to recharge destroys one wand or staff from the stack.
+desc:  A failed attempt to recharge destroys one wand or device from the stack.
 
 spell:Elemental Brand:31:60:95:180
 effect:BRAND_AMMO
@@ -2065,10 +2065,10 @@ spell:Recharging:25:30:80:15
 effect:RECHARGE
 dice:$B
 expr:B:PLAYER_LEVEL:/ 5 + 2
-desc:Adds charges to a stack of wands or staves.
+desc:Adds charges to a stack of wands or devices.
 desc:  Chance of success and number of charges gained increase with your
-desc: level and decrease with level of wand or staff and number of charges.
-desc:  A failed attempt to recharge destroys one wand or staff from the stack.
+desc: level and decrease with level of wand or device and number of charges.
+desc:  A failed attempt to recharge destroys one wand or device from the stack.
 
 spell:Enchant Weapon:40:70:80:200
 effect:ENCHANT:TOBOTH

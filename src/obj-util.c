@@ -147,7 +147,7 @@ void flavor_reset_fixed(void)
  * For the most part, flavors are assigned randomly each game.
  *
  * Initialize descriptions for the "colored" objects, including:
- * Rings, Amulets, Staffs, Wands, Rods, Mushrooms, Pills, Cards.
+ * Rings, Amulets, Devices, Wands, Rods, Mushrooms, Pills, Cards.
  *
  * Hack -- make sure everything stays the same for each saved game
  * This is accomplished by the use of a saved "random seed", as in
@@ -186,7 +186,7 @@ void flavor_init(void)
 	flavor_assign_random(TV_LIGHT);
 	flavor_assign_random(TV_RING);
 	flavor_assign_random(TV_AMULET);
-	flavor_assign_random(TV_STAFF);
+	flavor_assign_random(TV_DEVICE);
 	flavor_assign_random(TV_WAND);
 	flavor_assign_random(TV_ROD);
 	flavor_assign_random(TV_MUSHROOM);
@@ -1015,7 +1015,7 @@ int get_use_device_chance(const struct object *obj)
 
 
 /**
- * Distribute charges of rods, staves, or wands.
+ * Distribute charges of rods, devices, or wands.
  *
  * \param source is the source item
  * \param dest is the target item, must be of the same type as source
@@ -1026,7 +1026,7 @@ void distribute_charges(struct object *source, struct object *dest, int amt)
 	int charge_time = randcalc(source->time, 0, AVERAGE), max_time;
 
 	/*
-	 * Hack -- If rods, staves, or wands are dropped, the total maximum
+	 * Hack -- If rods, devices, or wands are dropped, the total maximum
 	 * timeout or charges need to be allocated between the two stacks.
 	 * If all the items are being dropped, it makes for a neater message
 	 * to leave the original stack's pval alone. -LM-

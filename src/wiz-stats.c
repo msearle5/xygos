@@ -156,11 +156,11 @@ typedef enum stat_code
 	ST_TELEPOTHER_RODS,
 	ST_DETECTALL_RODS,
 	ST_ENDGAME_RODS,
-	ST_STAVES,
-	ST_SPEED_STAVES,
-	ST_DESTRUCTION_STAVES,
-	ST_KILL_STAVES,
-	ST_ENDGAME_STAVES,
+	ST_DEVICES,
+	ST_SPEED_DEVICES,
+	ST_DESTRUCTION_DEVICES,
+	ST_KILL_DEVICES,
+	ST_ENDGAME_DEVICES,
 	ST_WANDS,
 	ST_TELEPOTHER_WANDS,
 	ST_RINGS,
@@ -261,11 +261,11 @@ static const struct stat_data stat_message[] =
 	{ST_TELEPOTHER_RODS, " Tele Other  "},
 	{ST_DETECTALL_RODS, " Detect all  "},
 	{ST_ENDGAME_RODS, " Endgame     "},//speed, healing
-	{ST_STAVES, "\n ***STAVES***    \n All:        "},
-	{ST_SPEED_STAVES, " Speed       "},
-	{ST_DESTRUCTION_STAVES, " Destruction "},
-	{ST_KILL_STAVES, " Kill        "},//dispel evil, power, holiness
-	{ST_ENDGAME_STAVES, " Endgame     "},//healing, magi, banishment
+	{ST_DEVICES, "\n ***DEVICES***    \n All:        "},
+	{ST_SPEED_DEVICES, " Speed       "},
+	{ST_DESTRUCTION_DEVICES, " Destruction "},
+	{ST_KILL_DEVICES, " Kill        "},//dispel evil, power, holiness
+	{ST_ENDGAME_DEVICES, " Endgame     "},//healing, magi, banishment
 	{ST_WANDS, "\n ***WANDS***     \n All:        "},
 	{ST_TELEPOTHER_WANDS, " Tele Other  "},
 	{ST_RINGS, "\n ***RINGS***     \n All:        "},
@@ -770,23 +770,23 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 			break;
 		}
 
-		/* staves */
-		case TV_STAFF:{
+		/* devices */
+		case TV_DEVICE:{
 
-			add_stats(ST_STAVES, vault, mon, number);
+			add_stats(ST_DEVICES, vault, mon, number);
 
 			if (strstr(obj->kind->name, "Speed")) {
-				add_stats(ST_SPEED_STAVES, vault, mon, number);
+				add_stats(ST_SPEED_DEVICES, vault, mon, number);
 			} else if (strstr(obj->kind->name, "*Destruction*")) {
-				add_stats(ST_DESTRUCTION_STAVES, vault, mon, number);
+				add_stats(ST_DESTRUCTION_DEVICES, vault, mon, number);
 			} else if (strstr(obj->kind->name, "Dispel Evil") ||
 					   strstr(obj->kind->name, "Power") ||
 					   strstr(obj->kind->name, "Holiness")) {
-				add_stats(ST_KILL_STAVES, vault, mon, number);
+				add_stats(ST_KILL_DEVICES, vault, mon, number);
 			} else if (strstr(obj->kind->name, "Healing") ||
 					   strstr(obj->kind->name, "Banishment") ||
 					   strstr(obj->kind->name, "the Magi")) {
-				add_stats(ST_ENDGAME_STAVES, vault, mon, number);
+				add_stats(ST_ENDGAME_DEVICES, vault, mon, number);
 			}
 			break;
 		}
@@ -1141,8 +1141,8 @@ static void print_heading(void)
 	file_putf(stats_log,"    		 *Acq* counts as two Acq cards");
 	file_putf(stats_log," Rods: 	 Utility rods: d-obj, d-stairs, d-traps, light, illum \n");
 	file_putf(stats_log,"    		 Endgame rods: Speed, Healing \n");
-	file_putf(stats_log," Staves: 	 Kill staves: dispel evil, power, holiness. \n");
-	file_putf(stats_log,"    		 Power staves: healing, magi, banishment \n");
+	file_putf(stats_log," Devices: 	 Kill devices: dispel evil, power, holiness. \n");
+	file_putf(stats_log,"    		 Power devices: healing, magi, banishment \n");
 }
 
 /**

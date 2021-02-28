@@ -219,14 +219,14 @@ normal:wand:pixilator
 normal:wand:mini-missile launcher
 normal:wand:cloudmaker
 normal:wand:mining rig
-normal:staff:Teleportation
-normal:staff:Light
-normal:staff:Mapping
-normal:staff:Detect Invisible
-normal:staff:Detect Evil
+normal:device:teleporter
+normal:device:Light
+normal:device:mapping
+normal:device:Detect Invisible
+normal:device:Detect Evil
 buy:amulet
 buy:ring
-buy:staff
+buy:device
 buy:wand
 buy:rod
 

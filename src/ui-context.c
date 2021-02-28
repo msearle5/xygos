@@ -682,10 +682,10 @@ int context_menu_object(struct object *obj)
 			menu_row_validity_t valid = (obj_can_zap(obj)) ?
 				MN_ROW_VALID : MN_ROW_INVALID;
 			ADD_LABEL("Zap", CMD_USE_ROD, valid);
-		} else if (tval_is_staff(obj)) {
+		} else if (tval_is_device(obj)) {
 			menu_row_validity_t valid = (obj_has_charges(obj)) ?
 				MN_ROW_VALID : MN_ROW_INVALID;
-			ADD_LABEL("Use", CMD_USE_STAFF, valid);
+			ADD_LABEL("Use", CMD_USE_DEVICE, valid);
 		} else if (tval_is_card(obj)) {
 			menu_row_validity_t valid = (player_can_run(player, false)) ?
 				MN_ROW_VALID : MN_ROW_INVALID;
@@ -823,7 +823,7 @@ int context_menu_object(struct object *obj)
 		case CMD_THROW:
 		case CMD_USE_WAND:
 		case CMD_USE_ROD:
-		case CMD_USE_STAFF:
+		case CMD_USE_DEVICE:
 		case CMD_RUN_CARD:
 		case CMD_QUAFF:
 		case CMD_EAT:

@@ -759,7 +759,7 @@ static bool store_purchase(struct store_context *ctx, int item, bool single)
 
 			if (amt > obj->number) amt = obj->number;
 
-			/* Double check for wands/staves */
+			/* Double check for wands/devices */
 			if ((player->au >= price_item(store, obj, false, amt+1)) &&
 				(amt < obj->number))
 				amt++;

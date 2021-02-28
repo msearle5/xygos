@@ -814,7 +814,7 @@ void object_prep(struct object *obj, struct object_kind *k, int lev,
 	for (i = 0; i < OBJ_MOD_MAX; i++)
 		obj->modifiers[i] = randcalc(k->modifiers[i], lev, rand_aspect);
 
-	/* Assign charges (wands/staves only) */
+	/* Assign charges (wands/devices only) */
 	if (tval_can_have_charges(obj))
 		obj->pval = randcalc(k->charge, lev, rand_aspect);
 

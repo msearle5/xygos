@@ -57,7 +57,7 @@
 #    " - amulet up to 3 levels OOD
 #    ! - potion up to 3 levels OOD
 #    ? - card up to 3 levels OOD
-#    _ - staff up to 3 levels OOD
+#    _ - device up to 3 levels OOD
 #    - - rod or wand up to 3 levels OOD
 #    , - food up to 3 levels OOD
 

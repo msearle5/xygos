@@ -462,7 +462,7 @@ static void do_cmd_wiz_change(void)
  * Note -- You do not have to specify "pval" and other item-properties
  * directly. Just apply magic until you are satisfied with the item.
  *
- * Note -- For some items (such as wands, staffs, some rings, etc), you
+ * Note -- For some items (such as wands, devices, some rings, etc), you
  * must apply magic, or you will get "broken" or "uncharged" objects.
  *
  * Note -- Redefining artifacts via "do_cmd_wiz_play()" may destroy

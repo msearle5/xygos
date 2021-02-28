@@ -63,7 +63,7 @@ Objects
 ``?``    A scroll (or book)             ``|``    An edged weapon
 ``,``    A mushroom (or food)           ``\``    A hafted weapon
 ``-``    A wand or rod                  ``}``    A sling, bow, or x-bow
-``_``    A staff                        ``{``    A shot, arrow, or bolt
+``_``    A device                        ``{``    A shot, arrow, or bolt
 ``=``    A ring                         ``(``    Soft armour
 ``"``    An amulet                      ``[``    Hard armour
 ``$``    Gold or gems                   ``]``    Misc. armour
@@ -199,7 +199,7 @@ The Pharmacy (``5``)
 
 The Magic User's Shop (``6``)
   The Magic User's Shop deals in all sorts of rings, wands, amulets, and
-  staves.
+  devices.
 
 The Black Market (``7``)
   The Black Market will sell and buy anything at extortionate prices.
@@ -286,7 +286,7 @@ if you do not mind being slow. Your weight "limit" is determined by your
 strength.
 
 Many objects found within the dungeon have special commands for their use.
-Wands must be Aimed, staves must be Used, scrolls must be Read, and potions
+Wands must be Aimed, devices must be Used, scrolls must be Read, and potions
 must be Quaffed. You may, in general, not only use items in your pack, but
 also items on the ground, if you are standing on top of them. At the
 beginning of the game all items are assigned a random 'flavor'. For example
@@ -323,7 +323,7 @@ inscriptions containing any text of the form '@#' or '@x#' or '!x' or
 
 The game provides some "fake" inscriptions to help you keep track of your 
 possessions. Weapons, armor and jewellery which have properties you don't
-know about yet will get a '{??}' label.  Wands, staves and rods can get a 
+know about yet will get a '{??}' label.  Wands, devices and rods can get a 
 '{tried}' label after use, particularly if they have an effect on a monster
 and were tested in the absence of monsters.
 
@@ -371,9 +371,9 @@ simply kill monsters and discover items in the dungeon to sell, than to
 walk around digging for treasure. But, early on, mineral veins can be a
 wonderful source of easy treasure.
 
-If the character has a scroll, staff, or spell of treasure location, they can
-immediately locate all strikes of treasure within a vein shown on the
-screen. This makes mining much easier and more profitable.
+If the character has a card, device, or other means of treasure location,
+they can immediately locate all strikes of treasure within a vein shown
+on the screen. This makes mining much easier and more profitable.
 
 Note that a character with high strength and/or a heavy weapon does not
 need a shovel/pick to dig, but even the strongest character will benefit

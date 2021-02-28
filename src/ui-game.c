@@ -85,7 +85,7 @@ struct cmd_info cmd_item[] =
 	{ "Examine an item", { 'I' }, CMD_NULL, textui_obj_examine, NULL },
 	{ "Drop an item", { 'd' }, CMD_DROP, NULL, NULL },
 	{ "Fire your gun", { 'f', 't' }, CMD_FIRE, NULL, player_can_fire_prereq },
-	{ "Use a staff", { 'u', 'Z' }, CMD_USE_STAFF, NULL, NULL },
+	{ "Use a device", { 'u', 'Z' }, CMD_USE_DEVICE, NULL, NULL },
 	{ "Aim a wand", {'a', 'z'}, CMD_USE_WAND, NULL, NULL },
 	{ "Zap a rod", {'z', 'a'}, CMD_USE_ROD, NULL, NULL },
 	{ "Activate an object", {'A' }, CMD_ACTIVATE, NULL, NULL },

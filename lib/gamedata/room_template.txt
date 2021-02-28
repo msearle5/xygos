@@ -9147,13 +9147,13 @@ D: ##...#######...##
 D:  ###.........###  
 D:    #%%%%%%%%%#    
 
-name:Staff chamber
+name:Device chamber
 type:1
 rating:3
 rows:9
 columns:23
 doors:2
-tval:staff
+tval:device
 D:%%%%%#############%%%%%
 D:%....#....+.+....#....%
 D:%....#....#^#....#....%

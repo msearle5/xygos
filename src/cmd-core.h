@@ -70,7 +70,7 @@ typedef enum cmd_code {
 	CMD_BROWSE_SPELL,
 	CMD_STUDY,
 	CMD_CAST, /* Casting a spell /or/ praying. */
-	CMD_USE_STAFF,
+	CMD_USE_DEVICE,
 	CMD_USE_WAND,
 	CMD_USE_ROD,
 	CMD_ACTIVATE,

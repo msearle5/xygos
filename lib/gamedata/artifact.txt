@@ -831,7 +831,7 @@ values:INT[4] | WIS[4] | LIGHT[1] | RES_LIGHT[1]
 slay:EVIL_2
 act:DETECT_OBJECTS
 time:50+d50
-desc:The radiant golden staff of an Istar of legend, this wizard's companion
+desc:The radiant golden device of an Istar of legend, this wizard's companion
 desc: grants keen sight and clear knowledge of many hidden things.
 
 name:of Olórin
@@ -851,7 +851,7 @@ slay:TROLL_3
 slay:ORC_3
 act:PROBING
 time:20
-desc:A staff tall and sturdy, borne of old by Gandalf.  Rough-hewn runes that
+desc:A device tall and sturdy, borne of old by Gandalf.  Rough-hewn runes that
 desc: invoke the element of Earth stand bold upon its gnarled surface, and no
 desc: creature who lives in the shadow of mountains can withstand the blows it
 desc: deals.

@@ -58,7 +58,7 @@ bool tval_is_pill(const struct object *obj);
 bool tval_is_ring(const struct object *obj);
 bool tval_is_rod(const struct object *obj);
 bool tval_is_card(const struct object *obj);
-bool tval_is_staff(const struct object *obj);
+bool tval_is_device(const struct object *obj);
 bool tval_is_useable(const struct object *obj);
 bool tval_is_wand(const struct object *obj);
 bool tval_is_weapon(const struct object *obj);

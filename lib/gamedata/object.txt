@@ -71,7 +71,7 @@
 # 'type' is for the base type of item, from object_base.txt.
 
 # 'level' defines how "advanced" the object is, when determining how easy it
-# is to use a wand, staff or rod.
+# is to use a wand, device or rod.
 
 # 'weight' is in tenth-pounds.
 
@@ -89,7 +89,7 @@
 # are found throughout the dungeon. The "allocation" depth need not
 # match the level as specified in the "level:" line, but is likely similar.
 
-# 'charges' is for charges (wands and staves only).  This field accepts
+# 'charges' is for charges (wands and devices only).  This field accepts
 # randomized values.
 
 # 'pile' is for piling behaviour - how likely the item is to be found in a
@@ -4947,12 +4947,13 @@ dice:100
 
 
 
-##### Staffs #####
+##### Devices #####
 
-### Bad staffs ###
+### Bad devices ###
 
+#attractor? bionic acquisitor?
 name:Summoning
-type:staff
+type:device
 graphics:_:d
 level:10
 weight:50
@@ -4965,8 +4966,8 @@ power:0
 effect:SUMMON:ANY
 dice:1d3
 
-name:Haste Monsters
-type:staff
+name:energizing field
+type:device
 graphics:_:d
 level:10
 weight:50
@@ -4979,8 +4980,8 @@ power:0
 effect:PROJECT_LOS:MON_SPEED
 dice:50
 
-name:Darkness
-type:staff
+name:etheric strobe
+type:device
 graphics:_:d
 level:5
 weight:50
@@ -4996,8 +4997,8 @@ dice:10
 
 ### Destruction ###
 
-name:Earthquakes
-type:staff
+name:seismic shaker
+type:device
 graphics:_:d
 level:40
 weight:50
@@ -5009,8 +5010,8 @@ charges:3+d5
 power:5
 effect:EARTHQUAKE:NONE:10
 
-name:*Destruction*
-type:staff
+name:disinto device
+type:device
 graphics:_:d
 level:50
 weight:50
@@ -5024,8 +5025,8 @@ effect:DESTRUCTION:LIGHT:15
 
 ### Monster-affecting ###
 
-name:Confuse Monsters
-type:staff
+name:pixilator field
+type:device
 graphics:_:d
 level:10
 weight:50
@@ -5038,8 +5039,8 @@ power:10
 effect:PROJECT_LOS_AWARE:MON_CONF
 dice:5+1d5
 
-name:Slow Monsters
-type:staff
+name:molasso field
+type:device
 graphics:_:d
 level:10
 weight:50
@@ -5052,8 +5053,8 @@ power:7
 effect:PROJECT_LOS:MON_SLOW
 dice:10+1d10
 
-name:Sleep Monsters
-type:staff
+name:dozifier field
+type:device
 graphics:_:d
 level:10
 weight:50
@@ -5071,7 +5072,7 @@ expr:B:PLAYER_LEVEL:* 10 + 500
 ### Detect ###
 
 name:Detect Invisible
-type:staff
+type:device
 graphics:_:d
 level:5
 weight:50
@@ -5085,7 +5086,7 @@ effect:DETECT_INVISIBLE_MONSTERS
 effect-yx:22:40
 
 name:Detect Evil
-type:staff
+type:device
 graphics:_:d
 level:20
 weight:50
@@ -5098,8 +5099,9 @@ power:6
 effect:DETECT_EVIL
 effect-yx:22:40
 
-name:Mapping
-type:staff
+#navigation module?
+name:mapping device
+type:device
 graphics:_:d
 level:20
 weight:50
@@ -5116,7 +5118,7 @@ effect-yx:22:40
 ### Healing ###
 
 name:Curing
-type:staff
+type:device
 graphics:_:d
 level:25
 weight:50
@@ -5133,7 +5135,7 @@ effect:CURE:STUN
 effect:CURE:CONFUSED
 
 name:Cure Light Wounds
-type:staff
+type:device
 graphics:_:d
 level:5
 weight:50
@@ -5152,7 +5154,7 @@ effect:TIMED_DEC:CONFUSED
 dice:20
 
 name:Healing
-type:staff
+type:device
 graphics:_:d
 level:70
 weight:50
@@ -5172,10 +5174,10 @@ effect:CURE:AMNESIA
 effect:CURE:CONFUSED
 
 
-### Killing staffs ###
+### Killing devices ###
 
 name:Dispel Evil
-type:staff
+type:device
 graphics:_:d
 level:50
 weight:50
@@ -5189,7 +5191,7 @@ effect:PROJECT_LOS:DISP_EVIL:0:1
 dice:60
 
 name:Banishment
-type:staff
+type:device
 graphics:_:d
 level:70
 weight:50
@@ -5202,7 +5204,7 @@ power:20
 effect:BANISH
 
 name:Power
-type:staff
+type:device
 graphics:_:d
 level:70
 weight:50
@@ -5216,7 +5218,7 @@ effect:PROJECT_LOS:DISP_ALL:0:1
 dice:120
 
 name:Holiness
-type:staff
+type:device
 graphics:_:d
 level:70
 weight:50
@@ -5248,7 +5250,7 @@ effect:CURE:AMNESIA
 ### Utility ###
 
 name:Light
-type:staff
+type:device
 graphics:_:d
 level:5
 weight:50
@@ -5262,8 +5264,8 @@ effect:LIGHT_AREA
 effect:SPOT:LIGHT_WEAK:2
 dice:2d8
 
-name:Starlight
-type:staff
+name:starlight laser show
+type:device
 graphics:_:d
 level:20
 weight:50
@@ -5276,8 +5278,8 @@ power:5
 effect:STAR:LIGHT
 dice:6d8
 
-name:Teleportation
-type:staff
+name:teleporter
+type:device
 graphics:_:d
 level:20
 weight:50
@@ -5291,7 +5293,7 @@ effect:TELEPORT
 dice:M60
 
 name:Speed
-type:staff
+type:device
 graphics:_:d
 level:40
 weight:50
@@ -5304,8 +5306,8 @@ power:10
 effect:TIMED_INC:FAST:0:5
 dice:20+2d10
 
-name:Remove Curse
-type:staff
+name:repair module
+type:device
 graphics:_:d
 level:40
 weight:50
@@ -5323,7 +5325,7 @@ dice:20+d20
 
 ### Detection ###
 
-name:Treasure Location
+name:metal detector
 type:rod
 graphics:-:d
 level:5
@@ -5337,7 +5339,7 @@ effect:SENSE_OBJECTS
 effect-yx:22:40
 time:50
 
-name:Detection
+name:universal detector
 type:rod
 graphics:-:d
 level:30

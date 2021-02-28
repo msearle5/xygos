@@ -821,7 +821,7 @@ static int object_value_base(const struct object *obj)
 			return 45;
 		case TV_WAND:
 			return 50;
-		case TV_STAFF:
+		case TV_DEVICE:
 			return 70;
 		case TV_ROD:
 			return 90;
@@ -834,7 +834,7 @@ static int object_value_base(const struct object *obj)
 /**
  * Return the real price of a known (or partly known) item.
  *
- * Wand and staffs get cost for each charge.
+ * Wand and devices get cost for each charge.
  *
  * Wearable items (weapons, launchers, jewelry, lights, armour) and ammo
  * are priced according to their power rating. All ammo, and normal (non-ego)

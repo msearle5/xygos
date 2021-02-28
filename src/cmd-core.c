@@ -93,7 +93,7 @@ static const struct command_info game_cmds[] =
 	{ CMD_EAT, "eat", do_cmd_eat_food, false, 0 },
 	{ CMD_QUAFF, "quaff", do_cmd_quaff_pill, false, 0 },
 	{ CMD_USE_ROD, "zap", do_cmd_zap_rod, false, 0 },
-	{ CMD_USE_STAFF, "use", do_cmd_use_staff, false, 0 },
+	{ CMD_USE_DEVICE, "use", do_cmd_use_device, false, 0 },
 	{ CMD_USE_WAND, "aim", do_cmd_aim_wand, false, 0 },
 	{ CMD_RUN_CARD, "run", do_cmd_run_card, false, 0 },
 	{ CMD_ACTIVATE, "activate", do_cmd_activate, false, 0 },

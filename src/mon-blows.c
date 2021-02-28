@@ -614,7 +614,7 @@ static void melee_effect_handler_DRAIN_CHARGES(melee_effect_handler_context_t *c
 		/* Skip non-objects */
 		if (obj == NULL) continue;
 
-		/* Drain charged wands/staves */
+		/* Drain charged wands/devices */
 		if (tval_can_have_charges(obj)) {
 			/* Charged? */
 			if (obj->pval) {

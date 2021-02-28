@@ -193,7 +193,7 @@ H:Sing Pythons: "Always look on the bright side of death." Only a breath away!
 H:Some pills (combat, heroism and boldness) will protect you from being scared.
 H:Someone's been spiking the pits!
 H:Stairway creation may be slower than level teleportation, but it's safer...
-H:Staves can be used even when confused and blinded.
+H:Devices can be used even when confused and blinded.
 H:Staying on a level too long can cause awake random monsters to spawn.
 H:Stealth is very helpful against sleeping monsters but not against alert ones.
 H:Strength always matters, not just for fighters. You can only carry so much!
@@ -289,7 +289,7 @@ H:Unique opponents will recover their health faster than other creatures.
 H:Uniques remain mostly impervious to your attempts to confuse them.
 H:Use '=' to check out the options and customize your game.
 H:Walking around with lots of heavy weapons is not necessarily a good idea.
-H:Wands and staves sell for a good price even with 0 charges.
+H:Wands and devices sell for a good price even with 0 charges.
 H:Weak dangers? You may be overwhelmed by sheer numbers.
 H:Wear armor, going naked seems to offend public decency in here.
 H:When a character dies, memories of monsters she has fought are passed on.

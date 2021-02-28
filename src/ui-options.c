@@ -1515,7 +1515,7 @@ typedef struct
  */
 static tval_desc sval_dependent[] =
 {
-	{ TV_STAFF,			"Staffs" },
+	{ TV_DEVICE,			"Devices" },
 	{ TV_WAND,			"Wands" },
 	{ TV_ROD,			"Rods" },
 	{ TV_CARD,			"Cards" },

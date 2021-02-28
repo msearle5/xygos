@@ -544,7 +544,7 @@ power:11
 msg:Your {kind} glow{s} bright yellow...
 effect:RECHARGE
 dice:10
-desc:tries to recharge a wand or staff, destroying the wand or staff on failure
+desc:tries to recharge a wand or device, destroying the wand or device on failure
 
 name:BANISHMENT
 aim:0
@@ -1140,7 +1140,7 @@ effect:BREATH:POIS:0:30
 dice:160
 desc:shoots a large cone of one of the base elements for 120-200 damage
 
-name:STAFF_HOLY
+name:DEVICE_HOLY
 aim:0
 power:12
 effect:PROJECT_LOS:DISP_EVIL:0:1

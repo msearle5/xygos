@@ -21,9 +21,9 @@
 #include "z-type.h"
 #include "z-util.h"
 
-bool tval_is_staff(const struct object *obj)
+bool tval_is_device(const struct object *obj)
 {
-	return obj->tval == TV_STAFF;
+	return obj->tval == TV_DEVICE;
 }
 
 bool tval_is_wand(const struct object *obj)
@@ -119,7 +119,7 @@ bool tval_can_have_nourishment(const struct object *obj)
 
 bool tval_can_have_charges(const struct object *obj)
 {
-	return obj->tval == TV_STAFF || obj->tval == TV_WAND;
+	return obj->tval == TV_DEVICE || obj->tval == TV_WAND;
 }
 
 bool tval_can_have_timeout(const struct object *obj)
@@ -182,7 +182,7 @@ bool tval_is_useable(const struct object *obj)
 	switch (obj->tval) {
 		case TV_ROD:
 		case TV_WAND:
-		case TV_STAFF:
+		case TV_DEVICE:
 		case TV_CARD:
 		case TV_PILL:
 		case TV_FOOD:
@@ -197,7 +197,7 @@ bool tval_is_useable(const struct object *obj)
 bool tval_can_have_failure(const struct object *obj)
 {
 	switch (obj->tval) {
-		case TV_STAFF:
+		case TV_DEVICE:
 		case TV_WAND:
 		case TV_ROD:
 			return true;
@@ -333,7 +333,7 @@ bool tval_can_have_flavor_k(const struct object_kind *kind)
 	switch (kind->tval) {
 		case TV_AMULET:
 		case TV_RING:
-		case TV_STAFF:
+		case TV_DEVICE:
 		case TV_WAND:
 		case TV_ROD:
 		case TV_PILL:
@@ -347,7 +347,7 @@ bool tval_can_have_flavor_k(const struct object_kind *kind)
 
 bool tval_is_zapper(const struct object *obj)
 {
-	return obj->tval == TV_WAND || obj->tval == TV_STAFF;
+	return obj->tval == TV_WAND || obj->tval == TV_DEVICE;
 }
 
 /**

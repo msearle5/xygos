@@ -250,7 +250,7 @@ struct object_kind {
 	char *effect_msg;
 	char *vis_msg;
 	random_value time;		/**< Recharge time (rods/activation) */
-	random_value charge;	/**< Number of charges (staves/wands) */
+	random_value charge;	/**< Number of charges (devices/wands) */
 
 	int gen_mult_prob;		/**< Probability of generating more than one */
 	random_value stack_size;/**< Number to generate */

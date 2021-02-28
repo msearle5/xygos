@@ -598,7 +598,7 @@ bool inven_carry_okay(const struct object *obj)
  */
 void inven_item_charges(struct object *obj)
 {
-	/* Require staff/wand */
+	/* Require device/wand */
 	if (tval_can_have_charges(obj) && object_flavor_is_aware(obj)) {
 		msg("You have %d charge%s remaining.",
 				obj->pval,
@@ -677,7 +677,7 @@ void inven_carry(struct player *p, struct object *obj, bool absorb,
 		p->upkeep->total_weight += (obj->number * obj->weight);
 		p->upkeep->notice |= (PN_COMBINE);
 
-		/* Hobbits ID mushrooms on pickup, gnomes ID wands and staffs on pickup */
+		/* Hobbits ID mushrooms on pickup, gnomes ID wands and devices on pickup */
 		if (!object_flavor_is_aware(obj)) {
 			if (player_has(player, PF_KNOW_MUSHROOM) && tval_is_mushroom(obj)) {
 				object_flavor_aware(obj);

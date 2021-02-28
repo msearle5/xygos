@@ -1407,9 +1407,9 @@ bool build_vault(struct chunk *c, struct loc centre, struct vault *v)
 					/* Card. */
 				case '?': place_object(c, grid, c->depth + 3, one_in_(4), false,
 									   ORIGIN_VAULT, TV_CARD); break;
-					/* Staff. */
+					/* Device. */
 				case '_': place_object(c, grid, c->depth + 3, one_in_(4), false,
-									   ORIGIN_VAULT, TV_STAFF); break;
+									   ORIGIN_VAULT, TV_DEVICE); break;
 					/* Wand or rod. */
 				case '-': place_object(c, grid, c->depth + 3, one_in_(4), false,
 									   ORIGIN_VAULT,

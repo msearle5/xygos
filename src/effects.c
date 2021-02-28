@@ -604,18 +604,18 @@ void brand_object(struct object *obj, const char *name)
  */
 static bool item_tester_hook_recharge(const struct object *obj)
 {
-	/* Recharge staves and wands */
+	/* Recharge devices and wands */
 	if (tval_can_have_charges(obj)) return true;
 
 	return false;
 }
 
 /**
- * Hook to specify a staff
+ * Hook to specify a device
  */
-static bool item_tester_hook_staff(const struct object *obj)
+static bool item_tester_hook_device(const struct object *obj)
 {
-	return obj->tval == TV_STAFF;
+	return obj->tval == TV_DEVICE;
 }
 
 /**
@@ -2397,7 +2397,7 @@ bool effect_handler_ENCHANT(effect_handler_context_t *context)
  * Returns N which is the 1 in N chance for recharging to fail.
  */
 int recharge_failure_chance(const struct object *obj, int strength) {
-	/* Ease of recharge ranges from 9 down to 4 (wands) or 3 (staffs) */
+	/* Ease of recharge ranges from 9 down to 4 (wands) or 3 (devices) */
 	int ease_of_recharge = (100 - obj->kind->level) / 10;
 	int raw_chance = strength + ease_of_recharge
 		- 2 * (obj->pval / obj->number);
@@ -2405,7 +2405,7 @@ int recharge_failure_chance(const struct object *obj, int strength) {
 }
 
 /**
- * Recharge a wand or staff from the pack or on the floor.  Recharge strength
+ * Recharge a wand or device from the pack or on the floor.  Recharge strength
  * is context->value.base.
  *
  * It is harder to recharge high level, and highly charged wands.
@@ -4844,26 +4844,26 @@ bool effect_handler_BRAND_BOLTS(effect_handler_context_t *context)
 
 
 /**
- * Turn a staff into arrows
+ * Turn a device into arrows
  */
 bool effect_handler_CREATE_ARROWS(effect_handler_context_t *context)
 {
 	int lev;
-	struct object *obj, *staff, *arrows;
+	struct object *obj, *device, *arrows;
 	const char *q, *s;
 	int itemmode = (USE_INVEN | USE_FLOOR);
 	bool good = false, great = false;
 	bool none_left = false;
 
 	/* Get an item */
-	q = "Make arrows from which staff? ";
-	s = "You have no staff to use.";
+	q = "Make arrows from which device? ";
+	s = "You have no device to use.";
 	if (context->cmd) {
 		if (cmd_get_item(context->cmd, "tgtitem", &obj, q, s,
-				item_tester_hook_staff, itemmode)) {
+				item_tester_hook_device, itemmode)) {
 			return false;
 		}
-	} else if (!get_item(&obj, q, s, 0, item_tester_hook_staff,
+	} else if (!get_item(&obj, q, s, 0, item_tester_hook_device,
 				  itemmode)) {
 		return false;
 	}
@@ -4880,17 +4880,17 @@ bool effect_handler_CREATE_ARROWS(effect_handler_context_t *context)
 		}
 	}
 
-	/* Destroy the staff */
+	/* Destroy the device */
 	if (object_is_carried(player, obj)) {
-		staff = gear_object_for_use(obj, 1, true, &none_left);
+		device = gear_object_for_use(obj, 1, true, &none_left);
 	} else {
-		staff = floor_object_for_use(obj, 1, true, &none_left);
+		device = floor_object_for_use(obj, 1, true, &none_left);
 	}
 
-	if (staff->known) {
-		object_delete(&staff->known);
+	if (device->known) {
+		object_delete(&device->known);
 	}
-	object_delete(&staff);
+	object_delete(&device);
 
 	/* Make some arrows */
 	arrows = make_object(cave, player->lev, good, great, false, NULL, TV_AMMO_9);
