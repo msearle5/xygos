@@ -222,7 +222,7 @@ normal:wand:mining rig
 normal:device:teleporter
 normal:device:Light
 normal:device:mapping
-normal:device:Detect Invisible
+normal:device:anti-stealth radar
 normal:device:Detect Evil
 buy:amulet
 buy:ring

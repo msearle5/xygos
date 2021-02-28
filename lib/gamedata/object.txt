@@ -4826,7 +4826,7 @@ expr:B:PLAYER_LEVEL:/ 5
 
 ### Dragons' wands ###
 
-name:Dragon's Flame
+name:melta belta
 type:wand
 graphics:-:d
 level:50
@@ -4841,7 +4841,7 @@ power:13
 effect:ARC:FIRE:0:30
 dice:200
 
-name:Dragon's Frost
+name:cryonic projector
 type:wand
 graphics:-:d
 level:50
@@ -4856,7 +4856,7 @@ power:12
 effect:ARC:COLD:0:30
 dice:160
 
-name:Dragon's Breath
+name:multi-thrower
 type:wand
 graphics:-:d
 level:60
@@ -4930,7 +4930,7 @@ power:0
 effect:BOLT_STATUS:MON_HEAL
 dice:4d6
 
-name:Haste Monster
+name:energy beamer
 type:wand
 graphics:-:d
 level:3
@@ -5071,7 +5071,7 @@ expr:B:PLAYER_LEVEL:* 10 + 500
 
 ### Detect ###
 
-name:Detect Invisible
+name:anti-stealth radar
 type:device
 graphics:_:d
 level:5
@@ -5085,6 +5085,7 @@ power:6
 effect:DETECT_INVISIBLE_MONSTERS
 effect-yx:22:40
 
+# remove or replace?
 name:Detect Evil
 type:device
 graphics:_:d
@@ -5176,6 +5177,7 @@ effect:CURE:CONFUSED
 
 ### Killing devices ###
 
+#remove or replace?
 name:Dispel Evil
 type:device
 graphics:_:d
@@ -5249,7 +5251,7 @@ effect:CURE:AMNESIA
 
 ### Utility ###
 
-name:Light
+name:floodlight
 type:device
 graphics:_:d
 level:5
