@@ -51,6 +51,15 @@ static int town_front_names;
 static char **town_back_name;
 static int town_back_names;
 
+/* List of dungeons */
+static struct dungeon *dungeons;
+
+/* Initial world */
+static struct level *world_init;
+
+static void cleanup_levels(struct level **world);
+static struct level *dup_levels(struct level *src);
+
 /** Clean up towns and related world objects
  */
 void world_cleanup_towns(void)
@@ -376,11 +385,99 @@ void world_build_distances(void)
 	}
 }
 
+static char *lev_or_none(const char *level) {
+	return streq(level, "None") ? NULL : string_make(level);
+}
+
+/**
+ * Add a level entry to the world
+ * Parameters: depth, name, up to, down to
+ */
+static void add_level(int depth, const char *name, const char *up, const char *down)
+{
+	struct level *lev = mem_zalloc(sizeof(struct level));
+	lev->depth = depth;
+	lev->name = string_make(name);
+	lev->up = lev_or_none(up);
+	lev->down = lev_or_none(down);
+	lev->next = world;
+	world = lev;
+}
+
+/**
+ * Generate dungeons
+ */
+static void world_init_dungeons(void)
+{
+	/* Start with a clear world */
+	cleanup_levels(&world);
+
+	/* Copy in any levels defined directly in the file */
+	world = dup_levels(world_init);
+
+	/* For each dungeon, generate a random depth for min and max.
+	 * Then for each level, create a level entry.
+	 * Link it to the directly above or below entries.
+	 **/
+	struct dungeon *d = dungeons;
+	while (d) {
+		char name[80];
+		char up[80];
+		char down[80];
+		int min = randcalc(d->min, 0, RANDOMISE);
+		int max = randcalc(d->max, 0, RANDOMISE);
+		for(int l=min; l<=max; l++) {
+			strnfmt(name, sizeof(name), "%s %d", d->name, l);
+			if (l == min)
+				strcpy(up, "None");
+			else
+				strnfmt(up, sizeof(up), "%s %d", d->name, l-1);
+			if (l == max)
+				strcpy(down, "None");
+			else
+				strnfmt(down, sizeof(down), "%s %d", d->name, l+1);
+			add_level(l, name, up, down);
+		}
+		d = d->next;
+	}
+
+	/* World structure is complete.
+	 * Can now check that all levels referred to exist
+	 **/
+	struct level *level_check;
+	for (level_check = world; level_check; level_check = level_check->next) {
+		struct level *level_find = world;
+
+		/* Check upwards */
+		if (level_check->up) {
+			while (level_find && !streq(level_check->up, level_find->name)) {
+				level_find = level_find->next;
+			}
+			if (!level_find) {
+				quit_fmt("Invalid level reference %s", level_check->up);
+			}
+		}
+
+		/* Check downwards */
+		level_find = world;
+		if (level_check->down) {
+			while (level_find && !streq(level_check->down, level_find->name)) {
+				level_find = level_find->next;
+			}
+			if (!level_find) {
+				quit_fmt("Invalid level reference %s", level_check->down);
+			}
+		}
+	}
+}
+
 /**
  * Generate towns
  */
 void world_init_towns(void)
 {
+	world_init_dungeons();
+
 	/* Clear */
 	world_cleanup_towns();
 	Rand_quick = false;
@@ -493,9 +590,25 @@ static enum parser_error parse_world_level(struct parser *p) {
 	}
 	lev->depth = depth;
 	lev->name = string_make(name);
-	lev->up = streq(up, "None") ? NULL : string_make(up);
-	lev->down = streq(down, "None") ? NULL : string_make(down);
+	lev->up = lev_or_none(up);
+	lev->down = lev_or_none(down);
 	parser_setpriv(p, lev);
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_world_dungeon(struct parser *p) {
+	struct dungeon *last = parser_priv(p);
+	struct dungeon *d = mem_zalloc(sizeof *d);
+
+	if (last) {
+		last->next = d;
+	} else {
+		dungeons = d;
+	}
+	d->min = parser_getrand(p, "min");
+	d->max = parser_getrand(p, "max");
+	d->name = string_make(parser_getsym(p, "name"));
+	parser_setpriv(p, d);
 	return PARSE_ERROR_NONE;
 }
 
@@ -504,6 +617,8 @@ struct parser *init_parse_world(void) {
 
 	parser_reg(p, "level int depth sym name sym up sym down",
 			   parse_world_level);
+	parser_reg(p, "dungeon rand min rand max sym name",
+			   parse_world_dungeon);
 	return p;
 }
 
@@ -512,41 +627,28 @@ static errr run_parse_world(struct parser *p) {
 }
 
 static errr finish_parse_world(struct parser *p) {
-	struct level *level_check;
-
-	/* Check that all levels referred to exist */
-	for (level_check = world; level_check; level_check = level_check->next) {
-		struct level *level_find = world;
-
-		/* Check upwards */
-		if (level_check->up) {
-			while (level_find && !streq(level_check->up, level_find->name)) {
-				level_find = level_find->next;
-			}
-			if (!level_find) {
-				quit_fmt("Invalid level reference %s", level_check->up);
-			}
-		}
-
-		/* Check downwards */
-		level_find = world;
-		if (level_check->down) {
-			while (level_find && !streq(level_check->down, level_find->name)) {
-				level_find = level_find->next;
-			}
-			if (!level_find) {
-				quit_fmt("Invalid level reference %s", level_check->down);
-			}
-		}
-	}
-
+	world_init = dup_levels(world);
 	parser_destroy(p);
 	return 0;
 }
 
-static void cleanup_world(void)
-{
-	struct level *level = world;
+static struct level *dup_levels(struct level *src) {
+	struct level *last = NULL;
+	struct level *lev = NULL;
+	while (src) {
+		lev = mem_zalloc(sizeof(struct level));
+		memcpy(lev, src, sizeof(struct level));
+		lev->name = string_make(lev->name);
+		lev->up = string_make(lev->up);
+		lev->down = string_make(lev->down);
+		lev->next = last;
+		last = lev;
+	};
+	return lev;
+}
+
+static void cleanup_levels(struct level **world) {
+	struct level *level = *world;
 	while (level) {
 		struct level *old = level;
 		string_free(level->name);
@@ -555,6 +657,13 @@ static void cleanup_world(void)
 		level = level->next;
 		mem_free(old);
 	}
+	*world = NULL;
+}
+
+static void cleanup_world(void)
+{
+	cleanup_levels(&world_init);
+	cleanup_levels(&world);
 }
 
 struct file_parser world_parser = {
