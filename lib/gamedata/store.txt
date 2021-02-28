@@ -180,7 +180,7 @@ owner:0:-
 slots:4:6
 turnover:2
 danger:70:90
-always:pill:Cure Light Wounds
+always:pill:healing
 normal:pill:Boldness
 normal:pill:Berserk Strength
 normal:pill:Resist Heat
@@ -194,7 +194,7 @@ normal:pill:Healing:M2000
 normal:pill:nutria:1500
 normal:pill:*Healing*:-500+M1000
 normal:pill:Life:-900+M1000
-normal:wand:Heal Monster
+normal:wand:healing ray
 buy:pill
 
 # Magic-user's
@@ -213,12 +213,12 @@ normal:ring:Protection
 normal:ring:Open Wounds
 normal:amulet:Slow Digestion
 normal:amulet:Resist Acid
-normal:wand:Light
-normal:wand:Slow Monster
-normal:wand:Confuse Monster
-normal:wand:Magic Missile
-normal:wand:Stinking Cloud
-normal:wand:Stone to Mud
+normal:wand:beamlight
+normal:wand:molasso ray
+normal:wand:pixilator
+normal:wand:mini-missile launcher
+normal:wand:cloudmaker
+normal:wand:mining rig
 normal:staff:Teleportation
 normal:staff:Light
 normal:staff:Mapping

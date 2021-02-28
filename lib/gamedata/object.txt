@@ -3573,7 +3573,7 @@ effect:RUMOR
 dice:50
 desc:An update on the latest buzz - a hint, although not always a useful one.
 
-name:Monster Confusion
+name:confusion
 type:card
 graphics:-:Deep Light Blue
 level:5
@@ -3585,7 +3585,7 @@ power:8
 effect:TIMED_INC:ATT_CONF
 dice:10000
 
-name:Rune of Protection
+name:protection
 type:card
 graphics:-:Deep Light Blue
 level:60
@@ -3595,7 +3595,7 @@ alloc:30:70 to 100
 power:20
 effect:GLYPH:WARDING
 
-name:*Destruction*
+name:destruction
 type:card
 graphics:-:Deep Light Blue
 level:40
@@ -3862,7 +3862,7 @@ effect:RESTORE_STAT:INT
 effect:RESTORE_STAT:WIS
 effect:RESTORE_STAT:CHR
 
-name:Experience
+name:experia nano-
 type:pill
 graphics:!:d
 level:65
@@ -3875,7 +3875,7 @@ dice:200000
 
 ### Healings ###
 
-name:Cure Light Wounds
+name:healing
 type:pill
 graphics:!:d
 level:0
@@ -4027,7 +4027,7 @@ effect:RESTORE_EXP
 
 ### Gain one/lose one pills ###
 
-name:brawn
+name:brawn nano-
 type:pill
 graphics:!:d
 level:3
@@ -4041,7 +4041,7 @@ effect:GAIN_STAT:STR
 effect:LOSE_RANDOM_STAT:STR
 desc:A cheap knock-off, built from last-generation nanotechnology. It can be relied on to permanently buff your strength - but unlike the latest nano-pills, it has some nasty and unpredictable side-effects.
 
-name:intellect
+name:intellect nano-
 type:pill
 graphics:!:d
 level:20
@@ -4055,7 +4055,7 @@ effect:GAIN_STAT:INT
 effect:LOSE_RANDOM_STAT:INT
 desc:A cheap knock-off, built from last-generation nanotechnology. It can be relied on to permanently boost your brainpower - but unlike the latest nano-pills, it has some nasty and unpredictable side-effects.
 
-name:contemplation
+name:contemplation nano-
 type:pill
 graphics:!:d
 level:20
@@ -4069,7 +4069,7 @@ effect:GAIN_STAT:WIS
 effect:LOSE_RANDOM_STAT:WIS
 desc:A cheap knock-off, built from last-generation nanotechnology. It can be relied on to permanently deepen your mind - but unlike the latest nano-pills, it has some nasty and unpredictable side-effects.
 
-name:nimbleness
+name:nimbleness nano-
 type:pill
 graphics:!:d
 level:5
@@ -4083,7 +4083,7 @@ effect:GAIN_STAT:DEX
 effect:LOSE_RANDOM_STAT:DEX
 desc:A cheap knock-off, built from last-generation nanotechnology. It can be relied on to permanently sharpen your reflexes - but unlike the latest nano-pills, it has some nasty and unpredictable side-effects.
 
-name:toughness
+name:toughness nano-
 type:pill
 graphics:!:d
 level:10
@@ -4098,7 +4098,7 @@ effect:LOSE_RANDOM_STAT:CON
 desc:A cheap knock-off, built from last-generation nanotechnology. It can be relied on to permanently toughen your body - but unlike the latest nano-pills, it has some nasty and unpredictable side-effects.
 
 # more generous than others as chr is less useful
-name:vanity
+name:vanity nano-
 type:pill
 graphics:!:d
 level:3
@@ -4116,8 +4116,8 @@ effect:RESTORE_STAT:CHR
 effect:LOSE_RANDOM_STAT:CHR
 desc:A cheap knock-off, built from last-generation nanotechnology. It can be relied on to permanently improve your looks - but unlike the latest nano-pills, it sometimes has some nasty and unpredictable side-effects.
 
-# less generous as speed is more useful. 'athletics'?
-name:sprinting
+# less generous as speed is more useful. 'athleti[a cs]'?
+name:sprinting nano-
 type:pill
 graphics:!:d
 level:24
@@ -4135,7 +4135,7 @@ dice:3
 effect:GAIN_STAT:SPD
 effect:RESTORE_STAT:SPD
 effect:LOSE_RANDOM_STAT:SPD
-desc:A cheap knock-off, built from last-generation nanotechnology. It will sometimes permanently boost your speed - but unlike the latest nano-pills, it also has some nasty and unpredictable side-effects.
+desc:A cheap knock-off, built from last-generation nanotechnology. It will sometimes permanently boost your speed as advertised - but unlike the latest nano-pills, it also has some nasty and unpredictable side-effects.
 
 
 ### Knowledge ###
@@ -4310,7 +4310,7 @@ pile:10:1d3
 power:2
 effect:MUTATE
 dice:1
-desc:You will undergo a freakish metamorphosis, and likely end up permanently transformed.  Such mutations are not necessarily harmful, but many are...
+desc:You will undergo a freakish metamorphosis, and will likely end up permanently transformed.  Such mutations are not necessarily harmful, but many are...
 
 name:sugar
 type:pill
@@ -4421,7 +4421,7 @@ dice:15+1d25
 effect:NOURISH:INC_BY
 dice:1
 
-name:Surprise
+name:mystery
 type:pill
 graphics:!:d
 level:10
@@ -4482,7 +4482,7 @@ dice:80
 
 ### Bolts ###
 
-name:Magic Missile
+name:mini-missile launcher
 type:wand
 graphics:-:d
 level:3
@@ -4496,7 +4496,7 @@ power:3
 effect:BOLT_OR_BEAM:MISSILE
 dice:3d4
 
-name:Lightning Bolts
+name:beam taser
 type:wand
 graphics:-:d
 level:15
@@ -4510,7 +4510,7 @@ power:5
 effect:BEAM:ELEC
 dice:6d6
 
-name:Frost Bolts
+name:icer
 type:wand
 graphics:-:d
 level:20
@@ -4524,7 +4524,7 @@ power:4
 effect:BOLT:COLD
 dice:12d8
 
-name:Fire Bolts
+name:flame thrower
 type:wand
 graphics:-:d
 level:30
@@ -4538,7 +4538,7 @@ power:7
 effect:BOLT_OR_BEAM:FIRE
 dice:12d8
 
-name:Acid Bolts
+name:squirt gun
 type:wand
 graphics:-:d
 level:30
@@ -4555,7 +4555,7 @@ dice:10d8
 
 ### Balls ###
 
-name:Stinking Cloud
+name:cloudmaker
 type:wand
 graphics:-:d
 level:5
@@ -4569,7 +4569,7 @@ power:3
 effect:BALL:POIS:3
 dice:12
 
-name:Lightning Balls
+name:mass-tazer
 type:wand
 graphics:-:d
 level:35
@@ -4584,7 +4584,7 @@ power:9
 effect:BALL:ELEC:2
 dice:64
 
-name:Cold Balls
+name:cryosplat gun
 type:wand
 graphics:-:d
 level:40
@@ -4599,7 +4599,7 @@ power:10
 effect:BALL:COLD:2
 dice:100
 
-name:Fire Balls
+name:fireballista
 type:wand
 graphics:-:d
 level:50
@@ -4614,7 +4614,7 @@ power:11
 effect:BALL:FIRE:2
 dice:144
 
-name:Acid Balls
+name:super soaker
 type:wand
 graphics:-:d
 level:50
@@ -4632,7 +4632,7 @@ dice:120
 
 ### Monster status changing ###
 
-name:Slow Monster
+name:molasso ray
 type:wand
 graphics:-:d
 level:5
@@ -4646,7 +4646,7 @@ power:3
 effect:BOLT_AWARE:MON_SLOW
 dice:10+1d20
 
-name:Confuse Monster
+name:pixilator
 type:wand
 graphics:-:d
 level:5
@@ -4660,7 +4660,7 @@ power:3
 effect:BOLT_AWARE:MON_CONF
 dice:5+1d5
 
-name:Hold Monster
+name:paralator
 type:wand
 graphics:-:d
 level:5
@@ -4674,7 +4674,7 @@ power:3
 effect:BOLT_AWARE:MON_HOLD
 dice:3+1d5
 
-name:Stun Monster
+name:stun gun
 type:wand
 graphics:-:d
 level:5
@@ -4688,7 +4688,7 @@ power:3
 effect:BOLT_AWARE:MON_STUN
 dice:5+1d5
 
-name:Scare Monster
+name:terrorizer
 type:wand
 graphics:-:d
 level:10
@@ -4705,7 +4705,8 @@ dice:10
 
 ### Utility ###
 
-name:Light
+#remove or upgrade to LIGHT?
+name:beamlight
 type:wand
 graphics:-:d
 level:3
@@ -4720,7 +4721,7 @@ power:6
 effect:LINE:LIGHT_WEAK
 dice:6d8
 
-name:Stone to Mud
+name:mining rig
 type:wand
 graphics:-:d
 level:10
@@ -4734,7 +4735,7 @@ power:6
 effect:LINE:KILL_WALL
 dice:20+1d30
 
-name:Polymorph
+name:transmogrificator
 type:wand
 graphics:-:d
 level:20
@@ -4749,7 +4750,7 @@ effect:BOLT_AWARE:MON_POLY
 dice:$B
 expr:B:PLAYER_LEVEL:+ 0
 
-name:Darkness
+name:etheric beamlight
 type:wand
 graphics:-:d
 level:3
@@ -4763,7 +4764,7 @@ power:4
 effect:LINE:DARK_WEAK
 dice:6d8
 
-name:Clone Monster
+name:replicator beam
 type:wand
 graphics:-:d
 level:15
@@ -4776,7 +4777,7 @@ charges:3+d5
 power:0
 effect:BOLT_STATUS:MON_CLONE
 
-name:Teleport Other
+name:transporter beam
 type:wand
 graphics:-:d
 level:20
@@ -4791,7 +4792,7 @@ effect:BOLT_STATUS:AWAY_ALL
 dice:$B
 expr:B:MAX_SIGHT:* 5
 
-name:Disable Traps
+name:deboobilizer
 type:wand
 graphics:-:d
 level:20
@@ -4803,8 +4804,9 @@ armor:0:0
 charges:4+d5
 power:7
 effect:ALTER:KILL_TRAP
+desc:Makes traps safe.
 
-name:Wonder
+name:omniprojector
 type:wand
 graphics:-:d
 level:3
@@ -4882,7 +4884,7 @@ dice:160
 
 ### Drain lifes ###
 
-name:Drain Life
+name:death ray
 type:wand
 graphics:-:d
 level:50
@@ -4896,7 +4898,7 @@ power:11
 effect:BOLT_STATUS_DAM:MON_DRAIN
 dice:150
 
-name:Annihilation
+name:annihilator
 type:wand
 graphics:-:d
 level:60
@@ -4914,7 +4916,7 @@ dice:250
 
 ### Rubbish ###
 
-name:Heal Monster
+name:healing ray
 type:wand
 graphics:-:d
 level:3

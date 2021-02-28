@@ -227,55 +227,48 @@ flavor:102:Light Umber:Willow
 # Metal Shod
 
 ##### Wands #####
-# These are allsorts
+# These are finishes, materials, coverings, shapes.
 
 kind:wand:-
 
-flavor:103:Light Blue:Aluminium
-flavor:104:Light Dark:Cast Iron
-flavor:105:White:Chromium
-flavor:106:Light Umber:Copper
-flavor:107:Yellow:Gold
-flavor:108:Slate:Iron
-flavor:109:Light Slate:Magnesium
-flavor:110:Light Slate:Molybdenum
-flavor:111:Light Umber:Nickel
-flavor:112:Red:Rusty
-flavor:113:Light Slate:Silver
-flavor:114:Light Slate:Steel
-flavor:115:Light Slate:Tin
-flavor:116:White:Titanium
-flavor:117:White:Tungsten
-flavor:118:Light Slate:Zirconium
-flavor:119:Light Slate:Zinc
-flavor:120:Light Blue:Aluminium-Plated
-flavor:121:Light Umber:Copper-Plated
-flavor:122:Yellow:Gold-Plated
-flavor:123:Light Umber:Nickel-Plated
-flavor:124:Light Slate:Silver-Plated
-flavor:125:Light Slate:Steel-Plated
-flavor:126:Light Slate:Tin-Plated
-flavor:127:Light Slate:Zinc-Plated
-flavor:128:Light Blue:Mithril-Plated
-flavor:129:Light Blue:Mithril
-flavor:130:Umber:Runed
-flavor:131:Light Umber:Bronze
-flavor:132:Light Umber:Brass
-flavor:133:White:Platinum
-flavor:134:Slate:Lead
-flavor:135:Slate:Lead-Plated
-flavor:136:White:Ivory
-flavor:137:Slate:Pewter
+flavor:103:Orange:coiled
+flavor:104:Slate:pointed
+flavor:105:Light Slate:forked
+flavor:106:Light Slate:decorative
+flavor:107:Light Slate:ornate
+flavor:108:Slate:tapered
+flavor:109:Blue:knobbed
+flavor:110:Light Slate:spiral
+flavor:111:Red:streaked
+flavor:112:Light Blue:translucent
+flavor:113:White:chromed
+flavor:114:Light Blue:glassy
+flavor:115:Light Blue:crystalline
+flavor:116:Light Dark:rubbery
+flavor:117:Green:gel covered
+flavor:118:Light Slate:metallic
+flavor:119:Light Dark:dull black
+flavor:120:White:glossy white
+flavor:121:White:polished
+flavor:122:White:silvery
+flavor:123:Red:rusty metal
+flavor:124:Light Slate:cracked plastic
+flavor:125:Light Slate:faded
+flavor:126:Light Slate:sighted
+flavor:127:Yellow:golden
+flavor:128:Slate:tarnished
+flavor:129:Blue:blued
+flavor:130:White:gleaming
+flavor:131:Slate:grayish
+flavor:132:Light Slate:knurled
+flavor:133:Light Slate:ribbed
+flavor:134:White:shiny
+flavor:135:Blue:sheathed
+flavor:136:Light Slate:angular
+flavor:137:Light Slate:smooth
 
-# Adamantium
-# Antimony
-# Blackened
-# Cobalt
-# Corroded
-# Damascened Steel
-# Electrum
-# Jeweled
-# Stubby
+#flavor:138:Yellow:brassy
+
 
 ##### Rods #####
 # These are metals
