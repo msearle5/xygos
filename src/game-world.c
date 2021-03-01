@@ -1161,12 +1161,12 @@ void process_player(void)
 	notice_stuff(player);
 }
 
-/**
- * Housekeeping on arriving on a new level
- */
-void on_new_level(void)
+/** Handle timed danger.
+ * If the timie limit is active and sufficient time has passed,
+ * increase the danger level and mark stores for destruction.
+ **/
+void increase_danger_level(void)
 {
-	/* Handle timed danger */
 	if (OPT(player,birth_time_limit)) {
 		int danger = 0;
 		int pturn = turn / 10;
@@ -1189,6 +1189,15 @@ void on_new_level(void)
 			}
 		}
 	}
+}
+
+/**
+ * Housekeeping on arriving on a new level
+ */
+void on_new_level(void)
+{
+	/* Handle timed danger */
+	increase_danger_level();
 
 	/* Arena levels are not really a level change */
 	if (!player->upkeep->arena_level) {
