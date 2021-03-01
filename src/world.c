@@ -29,6 +29,7 @@
 #include "generate.h"
 #include "init.h"
 #include "player.h"
+#include "player-util.h"
 #include "ui-store.h"
 #include "world.h"
 #include "z-rand.h"
@@ -142,6 +143,15 @@ int world_airline_fare(struct town *from, struct town *to)
 {
 	int d = world_between(from, to);
 	int fare = 500 + (d / 200) + ((d / 15000) * (d / 15000));
+	
+	/* It gets increasingly expensive to fly as the danger level increases */
+	int markup = danger_depth(player);
+	markup *= markup;
+	markup /= 10;
+	markup += 100;
+	fare *= markup;
+	fare /= 100;
+
 	return store_roundup(fare);
 }
 
@@ -475,12 +485,11 @@ static void world_init_dungeons(void)
  */
 static void world_town_level(struct town *town, const char *dungeon)
 {
-	char *d = dungeon;
 	if (town->downto)
 		string_free(town->downto);
-	if (d)
-		d = string_make(d);
-	town->downto = d;
+	town->downto = NULL;
+	if (dungeon)
+		town->downto = string_make(dungeon);
 }
 
 /**

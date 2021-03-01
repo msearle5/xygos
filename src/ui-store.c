@@ -819,6 +819,9 @@ static bool store_purchase(struct store_context *ctx, int item, bool single)
 			turns += world_flight_time(player->town, player->town->connect[item]);
 			turn += turns;
 
+			/* Change the danger level (for prices, if nothing else) */
+			increase_danger_level();
+
 			/* Feed */
 			player->timed[TMD_FOOD] = PY_FOOD_FULL - 1;
 
@@ -837,7 +840,7 @@ static bool store_purchase(struct store_context *ctx, int item, bool single)
 			/* Change level */
 			dungeon_change_level(player, 0);
 
-			/* Update the store context */
+			/* Update the store context (as you are now in a different airport, in a new town!) */
 			ctx->store = get_store_by_idx(STORE_AIR);
 		}
 
