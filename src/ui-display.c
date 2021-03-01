@@ -491,8 +491,13 @@ static void prt_speed(int row, int col)
 
 static int fmt_depth(char buf[], int max)
 {
-	if (!player->depth)
-		my_strcpy(buf, player->town ? player->town->name : "Town", max);
+	if (!player->depth) {
+		if (danger_depth(player) > 0) {
+			strnfmt(buf, max, "(L%d)", danger_depth(player));
+		} else {
+			my_strcpy(buf, player->town ? player->town->name : "Town", max);
+		}
+	}
 	else
 		strnfmt(buf, max, "%dm (L%d)",
 		        player->depth * 50, danger_depth(player));
@@ -512,7 +517,21 @@ static void prt_depth(int row, int col)
 	put_str(format("%-13s", depths), row, col);
 }
 
-
+/**
+ * Prints dungeon in stat area
+ */
+static void prt_dungeon(int row, int col)
+{
+	char dungeon[80];
+	if (player->depth && player->town && player->town->downto) {
+		my_strcpy(dungeon, player->town->downto, sizeof(dungeon));
+		char *s = strchr(dungeon, ' ');
+		if (s)
+			*s = 0;
+		/* Right-Adjust the "name", and clear old values */
+		put_str(format("%-13s", dungeon), row, col);
+	}
+}
 
 
 /**
@@ -743,29 +762,31 @@ static const struct side_handler_t
 	int priority;		 /* 1 is most important (always displayed) */
 	game_event_type type;	 /* PR_* flag this corresponds to */
 } side_handlers[] = {
-	{ prt_ext,     19, EVENT_RACE_CLASS },
-	{ prt_race,    19, EVENT_RACE_CLASS },
-	{ prt_title,   18, EVENT_PLAYERTITLE },
-	{ prt_class,   22, EVENT_RACE_CLASS },
-	{ prt_level,   10, EVENT_PLAYERLEVEL },
-	{ prt_exp,     16, EVENT_EXPERIENCE },
+	{ prt_ext,     21, EVENT_RACE_CLASS },
+	{ prt_race,    20, EVENT_RACE_CLASS },
+	{ prt_title,   16, EVENT_PLAYERTITLE },
+	{ prt_class,   19, EVENT_RACE_CLASS },
+	{ prt_level,   12, EVENT_PLAYERLEVEL },
+	{ prt_exp,     10, EVENT_EXPERIENCE },
 	{ prt_gold,    11, EVENT_GOLD },
-	{ prt_equippy, 17, EVENT_EQUIPMENT },
-	{ prt_str,      8, EVENT_STATS },
-	{ prt_int,      7, EVENT_STATS },
-	{ prt_wis,      6, EVENT_STATS },
-	{ prt_dex,      5, EVENT_STATS },
-	{ prt_con,      4, EVENT_STATS },
-	{ prt_chr,      3, EVENT_STATS },
-	{ prt_spd,      2, EVENT_STATS },
-	{ NULL,        15, 0 },
-	{ prt_ac,       7, EVENT_AC },
+	{ prt_equippy, 18, EVENT_EQUIPMENT },
+	{ NULL,        23, 0 },
+	{ prt_str,      4, EVENT_STATS },
+	{ prt_int,      6, EVENT_STATS },
+	{ prt_wis,      5, EVENT_STATS },
+	{ prt_dex,      3, EVENT_STATS },
+	{ prt_con,      2, EVENT_STATS },
+	{ prt_chr,      7, EVENT_STATS },
+	{ prt_spd,      1, EVENT_STATS },
+	{ NULL,        22, 0 },
+	{ prt_ac,       9, EVENT_AC },
 	{ prt_hp,       8, EVENT_HP },
-	{ NULL,        21, 0 },
-	{ prt_health,  12, EVENT_MONSTERHEALTH },
-	{ NULL,        20, 0 },
-	{ prt_speed,   13, EVENT_PLAYERSPEED }, /* Slow (-NN) / Fast (+NN) */
-	{ prt_depth,   14, EVENT_DUNGEONLEVEL }, /* Lev NNN / NNNN ft */
+	{ NULL,        25, 0 },
+	{ prt_health,  17, EVENT_MONSTERHEALTH },
+	{ NULL,        24, 0 },
+	{ prt_speed,   15, EVENT_PLAYERSPEED }, /* Slow (-NN) / Fast (+NN) */
+	{ prt_dungeon, 14, EVENT_DUNGEONLEVEL }, /* Fortress */
+	{ prt_depth,   13, EVENT_DUNGEONLEVEL }, /* Lev NNN / NNNN ft */
 };
 
 
@@ -776,6 +797,10 @@ static const struct side_handler_t
  * Each row is given a priority; the least important higher numbers and the most
  * important lower numbers.  As the screen gets smaller, the rows start to
  * disappear in the order of lowest to highest importance.
+ *
+ * For this to behave as expected, lines in the structure above must be numbered
+ * incrementally - 1 as the lowest and each additional line 1 more, with no gaps
+ * (numbers with no matching line) or duplicates (numbers with more than one line).
  */
 static void update_sidebar(game_event_type type, game_event_data *data,
 						   void *user)

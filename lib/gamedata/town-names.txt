@@ -102,6 +102,7 @@ F:Bug
 F:Burning
 F:Coffee
 F:Crater
+F:Crazy
 F:Crud
 F:Dirty
 F:Double

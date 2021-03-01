@@ -471,6 +471,42 @@ static void world_init_dungeons(void)
 	}
 }
 
+/** Connect a town to a level. NULL (to disconnect) is allowed.
+ */
+static void world_town_level(struct town *town, const char *dungeon)
+{
+	char *d = dungeon;
+	if (town->downto)
+		string_free(town->downto);
+	if (d)
+		d = string_make(d);
+	town->downto = d;
+}
+
+/**
+ * Connect a town to a dungeon. Dungeon name must be non-null, but strings
+ * which are not prefixes of any level are allowed (they disconnect the town
+ * from all levels, like passing NULL to world_town_level)
+ */
+static void world_town_dungeon(struct town *town, const char *dungeon)
+{
+	/* Find the lowest depth */
+	struct level *lev = world;
+	int bestdepth = 1000000;
+	const char *bestname = NULL;
+	do {
+		if (!strncmp(lev->name, dungeon, strlen(dungeon))) {
+			int depth = atoi(lev->name + strlen(dungeon));
+			if (depth < bestdepth) {
+				bestdepth = depth;
+				bestname = lev->name;
+			}
+		}
+		lev = lev->next;
+	} while (lev);
+	world_town_level(town, bestname);
+}
+
 /**
  * Generate towns
  */
@@ -497,6 +533,8 @@ void world_init_towns(void)
 
 	/* Make connections */
 	world_connect_towns(get_town_by_name(outer), get_town_by_name(fort));
+	world_town_dungeon(get_town_by_name(fort), "Fortress");
+	world_town_dungeon(get_town_by_name(outer), "Sewer");
 
 	/* Generate distances */
 	world_build_distances();
@@ -597,18 +635,16 @@ static enum parser_error parse_world_level(struct parser *p) {
 }
 
 static enum parser_error parse_world_dungeon(struct parser *p) {
-	struct dungeon *last = parser_priv(p);
 	struct dungeon *d = mem_zalloc(sizeof *d);
 
-	if (last) {
-		last->next = d;
-	} else {
-		dungeons = d;
+	if (dungeons) {
+		d->next = dungeons;
 	}
+	dungeons = d;
 	d->min = parser_getrand(p, "min");
 	d->max = parser_getrand(p, "max");
-	d->name = string_make(parser_getsym(p, "name"));
-	parser_setpriv(p, d);
+	const char *name = parser_getsym(p, "name");
+	d->name = string_make(name);
 	return PARSE_ERROR_NONE;
 }
 
@@ -643,6 +679,7 @@ static struct level *dup_levels(struct level *src) {
 		lev->down = string_make(lev->down);
 		lev->next = last;
 		last = lev;
+		src = src->next;
 	};
 	return lev;
 }
