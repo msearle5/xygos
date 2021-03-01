@@ -652,7 +652,7 @@ static bool store_sell(struct store_context *ctx)
 
 	assert(store);
 
-	if (store->sidx == STORE_HQ) {
+	if ((store->sidx == STORE_HQ) || (store->sidx == STORE_AIR)) {
 		msg("We don't buy used goods.");
 		return false;
 	}
@@ -1158,6 +1158,11 @@ static void store_steal(struct store_context *ctx, bool *exit)
 		return;
 	}
 
+	if (ctx->store->sidx == STORE_AIR) {
+		msg("You don't think you could fit an airplane in your pocket.");
+		return;
+	}
+
 	/* Confirm as it is risky */
 	screen_save();
 	int response = store_get_check(format("Sure you want to try to steal something? [ESC, any other key to accept]"));
@@ -1260,7 +1265,7 @@ static void store_fight(struct store_context *ctx, bool *exit)
 		return;
 	}
 
-	if (ctx->store->sidx == STORE_HQ) {
+	if ((ctx->store->sidx == STORE_HQ) || (ctx->store->sidx == STORE_AIR)) {
 		msg("You decide that would be a bad move.");
 		return;
 	}
@@ -1324,6 +1329,11 @@ static void store_newstock(struct store_context *ctx)
 		return;
 	}
 
+	if (ctx->store->sidx == STORE_AIR) {
+		msg("We only run the daily scheduled flights you see.");
+		return;
+	}
+
 	int price = store_roundup((store_price_all(ctx->store) / 4) + (ctx->store->owner->max_cost / 20) + 200);
 
 	/* Confirm if they really wanted it */
@@ -1373,6 +1383,11 @@ static void store_replace(struct store_context *ctx, bool *exit)
 
 	if (ctx->store->sidx == STORE_HQ) {
 		msg("You decide that would be a bad move.");
+		return;
+	}
+
+	if (ctx->store->sidx == STORE_AIR) {
+		msg("The cashier doesn't have any way to do that.");
 		return;
 	}
 
@@ -1454,6 +1469,11 @@ static void store_buy(struct store_context *ctx, bool *exit)
 	struct store *store = ctx->store;
 	if (ctx->store->sidx == STORE_HQ) {
 		msg("You decide that would be a bad move.");
+		return;
+	}
+
+	if (ctx->store->sidx == STORE_AIR) {
+		msg("There isn't any way to do that.");
 		return;
 	}
 
@@ -1636,6 +1656,12 @@ static void store_quest(struct store_context *ctx)
 	if ((store->sidx == STORE_HOME) || (you_own(store))) {
 		// not if it's you? May depend on the quest - some may make sense if differently worded, or should move to another store.
 		msg("You question yourself extensively, but see no gain in WIS.");
+		return;
+	}
+
+	// The std message is misleading, given that it's not in the help
+	if (ctx->store->sidx == STORE_AIR) {
+		msg("There isn't anything that needs to be done here.");
 		return;
 	}
 
