@@ -424,19 +424,22 @@ static void store_display_frame(struct store_context *ctx)
 		/* Put the owner name */
 		put_str(owner_name, ctx->scr_places_y[LOC_OWNER], 1);
 
+		/* Airport */
 		if (store->sidx == STORE_AIR) {
-			/* Label the object descriptions */
+			/* Label the ticket destinations */
 			put_str("Destination", ctx->scr_places_y[LOC_HEADER], 4);
 
+			/* Just decoration */
 			put_str("Airline", ctx->scr_places_y[LOC_HEADER], 30);
 
-			/* Showing time label */
+			/* Showing time label (length of flight) */
 			put_str("Length", ctx->scr_places_y[LOC_HEADER], 48);
 
-			/* Showing time label */
+			/* Showing time label (departure time) */
 			put_str("Departs", ctx->scr_places_y[LOC_HEADER], ctx->scr_places_x[LOC_WEIGHT]);
 
-			/* Show the time */
+			/* Show the time and this location */
+			prt(player->town->name, ctx->scr_places_y[LOC_OWNER], 30 - (strlen(player->town->name) + 1));
 			prt("Airport (", ctx->scr_places_y[LOC_OWNER], 30);
 
 			c_prt(COLOUR_ORANGE, format_time(turn), ctx->scr_places_y[LOC_OWNER], 39);
@@ -833,10 +836,14 @@ static bool store_purchase(struct store_context *ctx, int item, bool single)
 	
 			/* Change level */
 			dungeon_change_level(player, 0);
+
+			/* Update the store context */
+			ctx->store = get_store_by_idx(STORE_AIR);
 		}
 
 		/* Update the display */
-		ctx->flags |= STORE_GOLD_CHANGE;
+		ctx->flags |= STORE_GOLD_CHANGE | STORE_FRAME_CHANGE;
+		store_redraw(ctx);
 
 		return true;
 

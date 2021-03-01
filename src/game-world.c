@@ -41,6 +41,7 @@
 #include "store.h"
 #include "target.h"
 #include "trap.h"
+#include "world.h"
 #include "z-queue.h"
 
 u16b daycount = 0;
@@ -110,6 +111,7 @@ struct level *level_by_name(char *name)
 
 /**
  * Find a level by its depth
+ * If it is the surface, or it matches your current town
  */
 struct level *level_by_depth(int depth)
 {
@@ -118,7 +120,10 @@ struct level *level_by_depth(int depth)
 	struct level *lev = world;
 	while (lev) {
 		if (lev->depth == depth) {
-			break;
+			if (lev->depth == 0)
+				break;
+			if ((player->town->downto) && (!streq(player->town->downto, lev->name)))
+				break;
 		}
 		lev = lev->next;
 	}
