@@ -25,7 +25,7 @@ struct town {
 	u32b connections;			/* Total number of connected towns */
 	char *name;					/* Name of town */
 	struct store *stores;		/* Stores */
-	const char *downto;				/* Go down to this level */
+	char *downto;				/* Go down to this level */
 };
 
 /* The world contains z->town_max towns, in this array */
@@ -37,7 +37,7 @@ extern struct file_parser world_parser;
 extern struct file_parser town_names_parser;
 
 extern int world_connections(struct town *t);
-extern void world_init_towns(void);
+extern bool world_init_towns(void);
 extern void world_cleanup_towns(void);
 void world_change_town(struct town *t);
 void world_connect_towns(struct town *a, struct town *b);

@@ -28,7 +28,9 @@
 #include "game-world.h"
 #include "generate.h"
 #include "init.h"
+#include "message.h"
 #include "player.h"
+#include "player-quest.h"
 #include "player-util.h"
 #include "ui-store.h"
 #include "world.h"
@@ -179,8 +181,24 @@ int world_connections(struct town *t)
  */
 struct town *get_town_by_name(const char *name)
 {
+	if (!name)
+		return NULL;
 	for(int i=0; i<z_info->town_max; i++) {
 		if (t_info[i].name && streq(t_info[i].name, name)) {
+			return t_info + i;
+		}
+	}
+	return NULL;
+}
+
+/** Return any town matching the name, or NULL if none do.
+ */
+static struct town *get_town_by_dungeon(const char *name)
+{
+	if (!name)
+		return NULL;
+	for(int i=0; i<z_info->town_max; i++) {
+		if (t_info[i].downto && strstr(t_info[i].downto, name)) {
 			return t_info + i;
 		}
 	}
@@ -516,11 +534,163 @@ static void world_town_dungeon(struct town *town, const char *dungeon)
 	world_town_level(town, bestname);
 }
 
-/**
- * Generate towns
- */
-void world_init_towns(void)
+/** Assign a location (town and store) to quests.
+ * 
+ * The 'location' may be a town name (so convert with get_town_by_name),
+ * or a quest name (convert by get_quest_by_name and extract the destination).
+ * Then convert into a town and store index.
+ * The order of quests should not matter, though. So if a quest can't be found,
+ * repeat until no more progress can be made.
+ * 
+ * If all quests with references are now found, continue - otherwise error.
+ * 
+ * Finally for each town, select one quest randomly.
+ * 
+ * Returns true if successful
+ */ 
+bool world_locate_quests(void)
 {
+	/* Clear */
+	for (int i = 0; i < z_info->quest_max; i++) {
+		struct quest *q = &player->quests[i];
+		q->town = q->store = -1;
+		for(int l = 0; l < q->quests; l++) {
+			q->loc[l].store = q->loc[l].town = -1;
+		}
+	}
+
+	/* Select randomly */
+	int *select = mem_zalloc(sizeof(int) * z_info->quest_max);
+	for (int i = 0; i < z_info->quest_max; i++) {
+		struct quest *q = &player->quests[i];
+		if (q->quests)
+			select[i] = randint0(q->quests);
+	}
+
+	/* Quests with town names - must also have a store name */
+	for (int i = 0; i < z_info->quest_max; i++) {
+		struct quest *q = &player->quests[i];
+
+		for(int l = 0; l < q->quests; l++) {
+			struct town *town = get_town_by_dungeon(q->loc[l].location);
+			struct store *store = get_store_by_name(q->loc[l].storename);
+			if (town) {
+				if (!store) {
+					quit(format("Unable to find quest: town %s has no store %s",
+						q->loc[l].location, q->loc[l].storename));
+					return false;
+				} else {
+					q->loc[l].town = town - t_info;
+					q->loc[l].store = store->sidx;
+
+					/* Are all locations of this quest now known?
+					 * If so, fill in town and store
+					 **/
+					bool ok = true;
+					for(int k=0; k<q->quests; k++) {
+						if ((q->loc[l].store < 0) || (q->loc[l].town < 0)) {
+							ok = false;
+							break;
+						}
+					}
+					if (ok) {
+						q->town = q->loc[select[i]].town;
+						q->store = q->loc[select[i]].store;
+					}
+				}
+			}
+		}
+	}
+
+	/* Quests with quest names.
+	 * Repeat until no more progress can be made
+	 **/
+	bool missing;
+	bool found;
+	bool unknown;
+	char *badname = "";
+	do {
+		missing = found = unknown = false;
+		for (int i = 0; i < z_info->quest_max; i++) {
+		struct quest *q = &player->quests[i];
+			for(int l = 0; l < q->quests; l++) {
+				/* Not yet found */
+				if (q->loc[l].town < 0) {
+					struct quest *src = get_quest_by_name(q->loc[l].location);
+					missing = true;
+					if (!(*badname))
+						badname = q->loc[l].location;
+
+					/* It's a known quest */
+					if (src) {
+						/* It has a known location */
+						if ((src->town >= 0) && (src->store >= 0)) {
+							/* Place this quest there */
+							q->loc[l].town = src->town;
+							found = true;
+							missing = false;
+
+							/* Assign store if needed */
+							if (q->loc[l].storename) {
+								
+								struct store *store = get_store_by_name(q->loc[l].storename);
+								if (!store) {
+									quit(format("Unable to find quest: town %s has no store %s",
+										q->loc[l].location, q->loc[l].storename));
+									return false;
+								}
+								q->loc[l].store = store->sidx;
+							} else {
+								q->loc[l].store = src->store;
+							}
+
+							/* Are all locations of this quest now known?
+							 * If so, fill in town and store
+							 **/
+							bool ok = true;
+							for(int k=0; k<q->quests; k++) {
+								if ((q->loc[l].store < 0) || (q->loc[l].town < 0)) {
+									ok = false;
+									break;
+								}
+							}
+							if (ok) {
+								q->town = q->loc[select[i]].town;
+								q->store = q->loc[select[i]].store;
+							}
+						}
+					} else {
+						/* Unrecognized name */
+						unknown = true;
+						badname = q->loc[l].location;
+					}
+				}
+			}
+		}
+	} while (found);
+
+	/* At this point if missing == true, at least one quest's location is unknown.
+	 * If unknown is also true, at least one quest's name was unrecognized.
+	 */
+	if (missing) {
+		if (unknown) {
+			quit(format("Unable to find quest: '%s' unrecognised", badname));
+		} else {
+			quit(format("Unable to find quest: circular reference to '%s'?", badname));
+		}
+		return false;
+	}
+	return true;
+}
+
+/**
+ * Generate towns, etc.
+ * Returns true if successful.
+ */
+bool world_init_towns(void)
+{
+	bool success = true;
+
 	world_init_dungeons();
 
 	/* Clear */
@@ -551,9 +721,13 @@ void world_init_towns(void)
 	/* Generate stores and contents */
 	store_reset();
 
+	/* Place quests */
+	success = world_locate_quests();
+
 	assert(player);
 	town_gen_all(player, z_info->town_wid, z_info->town_hgt);
 
+	return success;
 }
 
 /**

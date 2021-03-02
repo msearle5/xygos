@@ -50,7 +50,8 @@ static enum parser_error parse_quest_name(struct parser *p) {
 	q->next = h;
 	parser_setpriv(p, q);
 	q->name = string_make(name);
-	q->store = STORE_NONE;
+	q->quests = 0;
+	q->town = q->store = -1;
 	q->entry_min = -1;
 	q->entry_max = -1;
 	q->entry_feature = FEAT_NONE;
@@ -185,22 +186,24 @@ static enum parser_error parse_quest_store(struct parser *p) {
 	struct quest *q = parser_priv(p);
 	assert(q);
 
-	const char *name = parser_getstr(p, "store");
-	assert(name);
+	/* Read a town index, as a town name or the name of another quest */
+	const char *location = parser_getsym(p, "town");
 
-	/* Find the store */
-	assert(stores_init);
-	for (int i = 0; i < MAX_STORES; i++) {
-		/* Get the store */
-		struct store *store = &stores_init[i];
-		assert(store->name);
-		if (!strcmp(store->name, name)) {
-			q->store = i;
-			return PARSE_ERROR_NONE;
-		}
-	}
+	if (!location)
+		return PARSE_ERROR_INVALID_VALUE;
 
-	return PARSE_ERROR_INVALID_VALUE;
+	const char *name = NULL;
+	if (parser_hasval(p, "store"))
+		name = parser_getsym(p, "store");
+
+	q->loc = mem_realloc(q->loc, sizeof(struct quest_location) * (1 + q->quests));
+	struct quest_location *ql = q->loc + q->quests;
+	q->quests++;
+	ql->town = ql->store = -1;
+	ql->location = string_make(location);
+	ql->storename = string_make(name);
+
+	return PARSE_ERROR_NONE;
 }
 
 static enum parser_error parse_quest_number(struct parser *p) {
@@ -218,7 +221,7 @@ struct parser *init_parse_quest(void) {
 	parser_reg(p, "level uint level", parse_quest_level);
 	parser_reg(p, "race str race", parse_quest_race);
 	parser_reg(p, "number uint number", parse_quest_number);
-	parser_reg(p, "store str store", parse_quest_store);
+	parser_reg(p, "store sym town ?sym store", parse_quest_store);
 	parser_reg(p, "object str object", parse_quest_object);
 	parser_reg(p, "entrymin uint min", parse_quest_entrymin);
 	parser_reg(p, "entrymax uint max", parse_quest_entrymax);
@@ -324,7 +327,11 @@ void player_quests_reset(struct player *p)
 		p->quests[i].race = quests[i].race;
 		p->quests[i].max_num = quests[i].max_num;
 		p->quests[i].flags = quests[i].flags;
+		p->quests[i].quests = quests[i].quests;
+		p->quests[i].town = quests[i].town;
 		p->quests[i].store = quests[i].store;
+		p->quests[i].loc = mem_alloc(quests[i].quests * sizeof(struct quest_location));
+		memcpy(p->quests[i].loc,  quests[i].loc,  quests[i].quests * sizeof(struct quest_location));
 		p->quests[i].unlock = quests[i].unlock;
 		p->quests[i].entry_min = quests[i].entry_min;
 		p->quests[i].entry_max= quests[i].entry_max;
@@ -348,6 +355,7 @@ void player_quests_free(struct player *p)
 		string_free(p->quests[i].intro);
 		string_free(p->quests[i].desc);
 		string_free(p->quests[i].target_item);
+		mem_free(p->quests[i].loc);
 	}
 	mem_free(p->quests);
 }
@@ -405,6 +413,8 @@ struct quest *get_quest_by_grid(struct loc grid)
  */
 struct quest *get_quest_by_name(const char *name)
 {
+	if (!name)
+		return NULL;
 	for (int i = 0; i < z_info->quest_max; i++) {
 		struct quest *q = &player->quests[i];
 		if (streq(q->name, name))

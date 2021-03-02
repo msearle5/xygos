@@ -1917,10 +1917,13 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 	/* Make a new chunk */
 	c_new = cave_new(z_info->town_hgt, z_info->town_wid);
 
+	fprintf(stderr,"town_gen %s\n", player->town->name);
+
 	/* First time */
 	if (!c_old) {
 		c_new->depth = danger_depth(player);
-
+		
+		fprintf(stderr,"town_gen %s, new build\n", player->town->name);
 		/* Build stuff */
 		town_gen_layout(c_new, p);
 	} else {

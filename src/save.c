@@ -412,6 +412,8 @@ void rdwr_quests(void)
 		rdwr_u32b(&player->quests[i].flags);
 		rdwr_u16b(&player->quests[i].x);
 		rdwr_u16b(&player->quests[i].y);
+		rdwr_s32b(&player->quests[i].town);
+		rdwr_s32b(&player->quests[i].store);
 	}
 }
 
