@@ -1054,7 +1054,7 @@ static void display_knowledge(const char *title, int *obj_list, int o_count,
 
 		/* Recall on screen */
 		if (recall) {
-			if (oid >= 0)
+			if ((oid >= 0) && (o_funcs.lore))
 				o_funcs.lore(oid);
 
 			redraw = true;
@@ -1389,7 +1389,7 @@ static const grouper object_text_order[] =
 	{TV_HAFTED,			"Hafted Weapon" },
 	{TV_GUN,			"9mm"			},
 	{TV_AMMO_9,			"Ammunition"	},
-	{TV_AMMO_12,			NULL		},
+	{TV_AMMO_12,		NULL			},
 	{TV_AMMO_6,			NULL			},
 	{TV_SHIELD,			"Shield"		},
 	{TV_CROWN,			"Crown"			},
@@ -2347,6 +2347,69 @@ static void display_quest(int col, int row, bool cursor, int oid )
 	}
 }
 
+static void quest_lore(int oid)
+{
+	struct quest *q = &player->quests[oid];
+	bool active = (oid == player->active_quest);
+
+	textblock *tb = textblock_new();
+
+	textblock_append_c(tb, COLOUR_L_BLUE, "%s", q->name);
+	textblock_append(tb, "\n");
+	textblock_append_c(tb, COLOUR_GREEN, "A level %d task: %s.\n", q->level, q->desc);
+
+	// From a store
+	if ((q->store >= 0) && (q->town >= 0)) {
+		char short_name[80];
+		const char *owner_name = t_info[q->town].stores[q->store].owner->name;
+
+		/* Get the full name of the store owner (stop before the first bracket) */
+		int j;
+		for (j = 0; owner_name[j] && owner_name[j] != '('; j++)
+			short_name[j] = owner_name[j];
+
+		/* Truncate the name */
+		short_name[j] = '\0';
+		if ((j) && (short_name[j-1] == ' '))
+			short_name[j-1] = '\0';
+
+		textblock_append_c(tb, COLOUR_SLATE, "You were asked: \"%s\" by %s in the %s in %s. ", q->intro,
+			short_name, t_info[q->town].stores[q->store].name, t_info[q->town].name);
+	} else if (q->intro) {
+		/* Non-store quests may still have a description */
+		textblock_append_c(tb, COLOUR_SLATE, "%s\n", q->intro);
+	}
+
+	int qv = quest_var(oid);
+	switch (qv) {
+		case QV_FAILED:
+			if (active)
+				textblock_append_c(tb, COLOUR_RED, "You are currently still within this task, but have failed. ");
+			else
+				textblock_append_c(tb, COLOUR_RED, "You have failed this task. ");
+			break;
+		case QV_SUCCEEDED:
+			if (active)
+				textblock_append_c(tb, COLOUR_L_GREEN, "You are still within this task, but have succeeded in it. ");
+			else
+				textblock_append_c(tb, COLOUR_L_GREEN, "You have succeeded in this task. ");
+			break;
+		case QV_UNREWARDED:
+			if (active)
+				textblock_append_c(tb, COLOUR_YELLOW, "You are still within this task, but have succeeded in it and may be able to collect a reward. ");
+			else
+				textblock_append_c(tb, COLOUR_YELLOW, "You have succeeded in this task. You may be able to collect a reward.");
+			break;
+		case QV_ACTIVE:
+			if (!active)
+				textblock_append_c(tb, COLOUR_WHITE, "This task remains available for you to attempt. ");
+			break;
+	}
+	textblock_append(tb, "\n");
+	textui_textblock_show(tb, SCREEN_REGION, NULL);
+	textblock_free(tb);
+}
+
 /**
  * Display quests knowledge.
  */
@@ -2354,7 +2417,7 @@ static void do_cmd_knowledge_quests(const char *name, int row)
 {
 	group_funcs task_var_f = {quest_name, NULL, quest_var, 0, 0, false};
 
-	member_funcs task_f = {display_quest, NULL, NULL, NULL,
+	member_funcs task_f = {display_quest, quest_lore, NULL, NULL,
 						   NULL, NULL, 0};
 
 	int *tasks;

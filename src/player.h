@@ -130,6 +130,14 @@ enum {
 	SKILL_MAX
 };
 
+struct quest_location
+{
+	s32b town;					/* Town the quest is given from; can be none (-1) */
+	s32b store;					/* Store the quest is given from; can be STORE_NONE (-1) */
+	char *location;				/* Town or quest name */
+	char *storename;			/* In this town */
+};
+
 /**
  * Structure for the "quests"
  */
@@ -149,7 +157,10 @@ struct quest
 	u16b max_remaining;			/* The maximum number of items remaining to complete the quest */
 	s32b cur_num;				/* Number killed (unused) */
 	s32b max_num;				/* Number required (unused) */
+	s32b town;					/* Town the quest is given from; can be none (-1) */
 	s32b store;					/* Store the quest is given from; can be STORE_NONE (-1) */
+	struct quest_location *loc;	/* List of locations to start a quest from */
+	s32b quests;				/* Number of quests */
 	u32b flags;
 	char *target_item;			/* Item (or item class) considered a target of the quest */
 	char *intro;				/* Description given when you choose whether to take it */

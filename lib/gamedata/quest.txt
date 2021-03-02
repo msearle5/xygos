@@ -32,7 +32,8 @@ name:Rats
 level:6
 race:giant grey rat
 number:12
-store:General Store
+store:Sewer:General Store
+store:Fortress:General Store
 entrymin:2
 entrymax:5
 entryfeature:permanent wall
@@ -40,13 +41,13 @@ intro:There's a cellar out back. It's full of rats. Are you up for cleaning them
 desc:Deal with the rats in the cellar
 succeed:So you've cleaned them out? Great. Maybe some day Nijel - who is not exactly a little kid any more after all - will learn to muck out his own pets. But as you clearly care about animals I hope you will appreciate some rat treats along with the $200 cash.
 failure:So you were defeated by a mouse? How heroic! Brave Sir Robin would be proud.
-unlock:Cave
+unlock:Whiskey Cave
 
 name:Whiskey Cave
 level:15
 #race:giant grey rat
 #number:12
-store:General Store
+store:Rats
 entrymin:2
 entrymax:12
 entryfeature:lava
@@ -59,7 +60,7 @@ flags:locked
 name:Msing Pills
 level:15
 object:pill
-store:Pharmacy
+store:Fortress:Pharmacy
 entrymin:20
 # You must pick up every pill you can see (max-remaining 0) and return a reasonable number (of the ~200) but if there is some accidental destruction that's OK.
 min-found:120
@@ -73,6 +74,7 @@ name:Sauron
 level:99
 race:Sauron, the Sorcerer
 desc:Get rid of the big bad p
+intro:Foo
 number:1
 flags:active | essential
 

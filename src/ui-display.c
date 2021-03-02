@@ -530,6 +530,8 @@ static void prt_dungeon(int row, int col)
 			*s = 0;
 		/* Right-Adjust the "name", and clear old values */
 		put_str(format("%-13s", dungeon), row, col);
+	} else if (danger_depth(player) > 0) {
+		put_str(format("%-13s", player->town ? player->town->name : "Town"), row, col);
 	}
 }
 

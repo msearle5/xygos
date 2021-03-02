@@ -1672,7 +1672,7 @@ static void store_quest(struct store_context *ctx)
 	for(int i=0;i<z_info->quest_max;i++)
 	{
 		struct quest *q = &player->quests[i];
-		if ((q->store == (int)store->sidx) && (!(q->flags & QF_LOCKED))) {
+		if ((q->town == (player->town - t_info)) && (q->store == (int)store->sidx) && (!(q->flags & QF_LOCKED))) {
 			if (!(q->flags & (QF_ACTIVE | QF_FAILED | QF_SUCCEEDED | QF_UNREWARDED))) {
 				/* Take new quest - ask first */
 				screen_save();
