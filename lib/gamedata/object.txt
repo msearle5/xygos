@@ -1901,7 +1901,7 @@ cost:35
 alloc:10:4 to 100
 attack:1d1:1:0
 armor:2:0
-desc:Lightweight grippy boots . They aren't armored as such but are still a notch more protective than trainers.
+desc:Lightweight grippy boots. They aren't armored as such but are still a notch more protective than trainers.
 material:leather
 
 name:& pair~ of work boots
@@ -3875,7 +3875,7 @@ dice:200000
 
 ### Healings ###
 
-name:healing
+name:curing
 type:pill
 graphics:!:d
 level:0
@@ -3891,10 +3891,9 @@ effect:TIMED_DEC:CUT
 dice:20
 effect:TIMED_DEC:CONFUSED
 dice:20
-effect:NOURISH:INC_BY
-dice:1
+desc:First aid, in a pill - this rapidly restores you to health, healing wounds, blindness and confusion. It's not the most powerful remedy of this kind, but it is cheap and widely available - don't go adventuring without it!
 
-name:Cure Serious Wounds
+name:extra-curing
 type:pill
 graphics:!:d
 level:3
@@ -3908,10 +3907,9 @@ dice:40
 effect:CURE:BLIND
 effect:CURE:CUT
 effect:CURE:CONFUSED
-effect:NOURISH:INC_BY
-dice:1
+desc:It's a more powerful relative of the common healing pill. Twice as effective at healing and will always immediately heal blindness, wounds and confusion.
 
-name:Cure Critical Wounds
+name:critical curing
 type:pill
 graphics:!:d
 level:5
@@ -3928,10 +3926,9 @@ effect:CURE:POISONED
 effect:CURE:STUN
 effect:CURE:AMNESIA
 effect:CURE:CONFUSED
-effect:NOURISH:INC_BY
-dice:1
+desc:The most powerful widely available healing pill. Heals as well as three curing pills, and immediately heals blindness, wounds, stunning, amnesia and confusion.
 
-name:Healing
+name:healing
 type:pill
 graphics:!:d
 level:15
@@ -3948,10 +3945,12 @@ effect:CURE:POISONED
 effect:CURE:STUN
 effect:CURE:AMNESIA
 effect:CURE:CONFUSED
-effect:NOURISH:INC_BY
-dice:1
+effect:CURE:IMAGE
+effect:TIMED_DEC:RAD
+dice:10d4
+desc:A valuable remedy that instantly heals serious wounds and deadly poison of all kinds including blindness, stunning, amnesia, hallucination and confusion. It even has some effect against radiation sickness.
 
-name:*Healing*
+name:mega-healing
 type:pill
 graphics:!:d
 level:40
@@ -3962,15 +3961,19 @@ attack:1d1:0:0
 armor:0:0
 power:18
 effect:HEAL_HP
-dice:1200
+dice:600+m70
 effect:CURE:BLIND
 effect:CURE:CUT
 effect:CURE:POISONED
 effect:CURE:STUN
 effect:CURE:AMNESIA
 effect:CURE:CONFUSED
+effect:CURE:IMAGE
+effect:TIMED_DEC:RAD
+dice:10d50
+desc:A rare and precious remedy that instantly heals severe wounds and deadly poison of all kinds including blindness, stunning, amnesia, hallucination and confusion, and all but the most severe radiation sickness.
 
-name:Life
+name:life
 type:pill
 graphics:!:d
 level:60
@@ -3989,15 +3992,19 @@ effect:CURE:STUN
 effect:CURE:AMNESIA
 effect:CURE:CONFUSED
 effect:CURE:IMAGE
+effect:CURE:RAD
 effect:RESTORE_STAT:STR
 effect:RESTORE_STAT:INT
 effect:RESTORE_STAT:WIS
 effect:RESTORE_STAT:DEX
 effect:RESTORE_STAT:CON
+effect:RESTORE_STAT:SPD
+effect:RESTORE_STAT:CHR
 effect:HEAL_HP
 dice:5000
+desc:The most effective healing pill ever made.  Capable of bringing you back from the edge of death to full strength, instantly.  It cures wounds, all forms of poison including radiation sickness and drained abilities and experience.  These are scarce - save them for when they are really needed!
 
-name:Neutralize Poison
+name:anti-toxin
 type:pill
 graphics:!:d
 level:5
@@ -4007,7 +4014,7 @@ alloc:60:1 to 35
 pile:25:2
 power:1
 effect:CURE:POISONED
-
+desc:An antidote to most common forms of poison, including those causing blindness, confusion and hallucination. One pill is the usual dose, but especially bad cases of poisoning may require more.
 
 ### Stat restore ###
 
@@ -4207,6 +4214,7 @@ effect:CURE:AFRAID
 effect:TIMED_INC:HERO
 dice:25+1d25
 
+#combat drugs?
 name:Berserk Strength
 type:pill
 graphics:!:d
@@ -4233,7 +4241,7 @@ pile:25:2
 power:2
 effect:CURE:AFRAID
 
-name:Resist Heat
+name:fireproofing
 type:pill
 graphics:!:d
 level:30
@@ -4245,7 +4253,7 @@ power:4
 effect:TIMED_INC:OPP_FIRE
 dice:50+1d10
 
-name:Resist Cold
+name:polarizing
 type:pill
 graphics:!:d
 level:30
@@ -4257,7 +4265,7 @@ power:4
 effect:TIMED_INC:OPP_COLD
 dice:50+1d10
 
-name:Resist Poison
+name:antitoxin
 type:pill
 graphics:!:d
 level:20
@@ -4270,7 +4278,7 @@ effect:TIMED_INC:OPP_POIS
 dice:50+1d10
 effect:CURE:POISONED
 
-name:True Seeing
+name:X-vision
 type:pill
 graphics:!:d
 level:3
@@ -4283,7 +4291,7 @@ effect:CURE:BLIND
 effect:TIMED_INC:SINVIS
 dice:50+2d6
 
-name:Infravision
+name:infravision
 type:pill
 graphics:!:d
 level:3
@@ -4405,7 +4413,7 @@ effect:TIMED_INC:POISONED
 dice:30+2d20
 desc:Now why would anyone see something labelled 'Slow Poison', and eat it?
 
-name:Slowness
+name:slowness
 type:pill
 graphics:!:d
 level:1
@@ -5362,7 +5370,7 @@ effect:DETECT_VISIBLE_MONSTERS
 effect-yx:22:40
 time:100
 
-name:mapping
+name:galactic map
 type:rod
 graphics:-:d
 level:65
@@ -5376,7 +5384,7 @@ effect:MAP_AREA
 effect-yx:33:55
 time:100
 
-name:Probing
+name:tricorder
 type:rod
 graphics:-:d
 level:35

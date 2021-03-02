@@ -438,6 +438,7 @@ R:They say that snake oil is a worthless waste of your money.
 R:They say that snake oil is the most powerful cure-all in existence.
 R:They say that something mysterious will happen if you hit the reset button.
 R:They say that spice is the plural of spouse.
+R:They say that stupid is as stupid does.
 R:They say that the Computer is Your Friend.
 R:They say that the Dark Wheel doesn't really exist.
 R:They say that the Lost Triangle of Zinthar is the key to the Ultimate Ending.
