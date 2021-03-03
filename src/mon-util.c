@@ -1386,12 +1386,20 @@ void monster_take_terrain_damage(struct monster *mon)
 		bool fear = false;
 
 		if (!rf_has(mon->race->flags, RF_IM_RADIATION)) {
-			mon_take_nonplayer_hit(100 + randint1(100), mon, MON_MSG_LOOKS_SICK,
+			mon_take_nonplayer_hit(20 + randint1(40), mon, MON_MSG_LOOKS_SICK,
 								   MON_MSG_COLLAPSES);
 		}
 
 		if (fear && monster_is_visible(mon)) {
 			add_monster_message(mon, MON_MSG_FLEE_IN_TERROR, true);
+		}
+	}
+
+	/* Damage the monster */
+	if (square_iswater(cave, mon->grid)) {
+		if (!rf_has(mon->race->flags, RF_IM_WATER)) {
+			mon_take_nonplayer_hit(10 + randint1(20), mon, MON_MSG_STRUGGLES,
+								   MON_MSG_DROWNS);
 		}
 	}	
 }

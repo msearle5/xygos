@@ -423,6 +423,10 @@ void rdwr_world(void)
 	for(int i=0;i<z_info->town_max;i++) {
 		rdwr_u32b(&t_info[i].connections);
 		rdwr_string(&t_info[i].name);
+		rdwr_string(&t_info[i].geography);
+		rdwr_string(&t_info[i].underground);
+		rdwr_bool(&t_info[i].lake);
+		rdwr_byte(&t_info[i].lava_num);
 		if ((!(t_info[i].connect)) && (t_info[i].connections))
 			t_info[i].connect = mem_zalloc(sizeof(t_info[i].connect[0]) * t_info[i].connections);
 		for(int j=0; j<(int)t_info[i].connections; j++) {
