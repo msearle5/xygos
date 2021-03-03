@@ -251,6 +251,7 @@ extern int FEAT_PERM;
 /* Hostile terrain */
 extern int FEAT_LAVA;
 extern int FEAT_FALLOUT;
+extern int FEAT_WATER;
 
 /* Stores */
 extern int FEAT_AIRPORT;
@@ -302,6 +303,7 @@ bool feat_is_torch(int feat);
 bool feat_is_bright(int feat);
 bool feat_is_fiery(int feat);
 bool feat_is_radioactive(int feat);
+bool feat_is_water(int feat);
 bool feat_is_no_flow(int feat);
 bool feat_is_no_scent(int feat);
 bool feat_is_smooth(int feat);
@@ -369,6 +371,7 @@ bool square_isstrongwall(struct chunk *c, struct loc grid);
 bool square_isbright(struct chunk *c, struct loc grid);
 bool square_isfiery(struct chunk *c, struct loc grid);
 bool square_isradioactive(struct chunk *c, struct loc grid);
+bool square_iswater(struct chunk *c, struct loc grid);
 bool square_islit(struct chunk *c, struct loc grid);
 bool square_islitwall(struct chunk *c, struct loc grid);
 bool square_isdamaging(struct chunk *c, struct loc grid);

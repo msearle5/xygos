@@ -439,11 +439,11 @@ static void store_display_frame(struct store_context *ctx)
 			put_str("Departs", ctx->scr_places_y[LOC_HEADER], ctx->scr_places_x[LOC_WEIGHT]);
 
 			/* Show the time and this location */
-			prt(player->town->name, ctx->scr_places_y[LOC_OWNER], 30 - (strlen(player->town->name) + 1));
-			prt("Airport (", ctx->scr_places_y[LOC_OWNER], 30);
+			prt(player->town->name, ctx->scr_places_y[LOC_OWNER], 36 - (strlen(player->town->name) + 1));
+			prt("Airport (", ctx->scr_places_y[LOC_OWNER], 36);
 
-			c_prt(COLOUR_ORANGE, format_time(turn), ctx->scr_places_y[LOC_OWNER], 39);
-			prt(")", ctx->scr_places_y[LOC_OWNER], 44);
+			c_prt(COLOUR_ORANGE, format_time(turn), ctx->scr_places_y[LOC_OWNER], 45);
+			prt(")", ctx->scr_places_y[LOC_OWNER], 50);
 
 			strcpy(buf, "Departures");
 		} else { 

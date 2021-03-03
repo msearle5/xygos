@@ -159,11 +159,19 @@ bool feat_is_fiery(int feat)
 }
 
 /**
- * True if the feature is fire-based.
+ * True if the feature is radioactive.
  */
 bool feat_is_radioactive(int feat)
 {
 	return tf_has(f_info[feat].flags, TF_RADIOACTIVE);
+}
+
+/**
+ * True if the feature is water-based.
+ */
+bool feat_is_water(int feat)
+{
+	return tf_has(f_info[feat].flags, TF_WATER);
 }
 
 /**
@@ -723,6 +731,14 @@ bool square_isradioactive(struct chunk *c, struct loc grid) {
 }
 
 /**
+ * True if the cave square is water.
+ */
+bool square_iswater(struct chunk *c, struct loc grid) {
+	assert(square_in_bounds(c, grid));
+	return feat_is_water(square(c, grid)->feat);
+}
+
+/**
  * True if the cave square is lit.
  */
 bool square_islit(struct chunk *c, struct loc grid) {
@@ -750,11 +766,11 @@ bool square_islitwall(struct chunk *c, struct loc grid) {
 }
 
 /**
- * True if the cave square can damage the inhabitant - only lava so far
+ * True if the cave square can damage the inhabitant - lava, fallout, water...
  */
 bool square_isdamaging(struct chunk *c, struct loc grid) {
 	assert(square_in_bounds(c, grid));
-	return (feat_is_fiery(square(c, grid)->feat) || feat_is_radioactive(square(c, grid)->feat));
+	return (feat_is_fiery(square(c, grid)->feat) || feat_is_radioactive(square(c, grid)->feat) || feat_is_water(square(c, grid)->feat));
 }
 
 /**

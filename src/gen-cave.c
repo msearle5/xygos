@@ -1710,11 +1710,10 @@ static void build_ruin(struct chunk *c, struct loc xroads, struct loc lot, int l
  * \param c is the current chunk
  * \param p is the player
  */
-static void town_gen_layout(struct chunk *c, struct player *p)
+static void town_gen_layout(struct chunk *c, struct player *p, int num_lava, bool lake)
 {
 	int n, x, y;
 	struct loc grid, pgrid, xroads;
-	int num_lava = 3 + randint0(3);
 	int ruins_percent = 80;
 
 	int max_attempts = 100;
@@ -1741,13 +1740,23 @@ static void town_gen_layout(struct chunk *c, struct player *p)
 			}
 
 		/* Make some lava streamers */
-		for (n = 0; n < 3 + num_lava; n++)
+		for (n = 0; n <num_lava; n++)
 			build_streamer(c, FEAT_LAVA, 0);
 
 		/* Make a town-sized starburst room. */
 		(void) generate_starburst_room(c, 0, 0, c->height - 1, c->width - 1,
 									   false,
 									   FEAT_FLOOR, false);
+
+		if (lake) {
+			
+			fill_rectangle(c, (c->height * 1) / 3,  (c->width * 2) / 5, (c->height * 2) / 3, (c->width * 3) / 5,
+				FEAT_WATER, 0);
+				/*
+			(void) generate_starburst_room(c, (c->height * 1) / 5,  (c->width * 2) / 5, (c->height * 4) / 5, (c->width * 3) / 5,
+									   false,
+									   FEAT_WATER, false);*/
+		}
 
 		/* Turn off room illumination flag */
 		for (grid.y = 1; grid.y < c->height - 1; grid.y++) {
@@ -1824,7 +1833,9 @@ static void town_gen_layout(struct chunk *c, struct player *p)
 				if (y == 0) continue;
 				if (randint0(100) > ruins_percent) continue;
 				if (one_in_(2) &&
-					!lot_has_shop(c, xroads, loc(x, y), lot_wid, lot_hgt)) {
+					!lot_has_shop(c, xroads, loc(x, y), lot_wid, lot_hgt) &&
+					lot_is_clear(c, xroads, loc(x, y), lot_wid,
+										  lot_hgt)) {
 					build_ruin(c, xroads, loc(x, y), lot_wid, lot_hgt);
 				}
 			}
@@ -1834,14 +1845,26 @@ static void town_gen_layout(struct chunk *c, struct player *p)
 
 	/* clear the street */
 	square_set_feat(c, loc(pgrid.x, pgrid.y + 1), FEAT_FLOOR);
-	fill_rectangle(c, pgrid.y + 2, pgrid.x - 1,
-				   max_store_y, pgrid.x + 1,
-				   FEAT_FLOOR, SQUARE_NONE);
-
-	fill_rectangle(c, xroads.y, min_store_x,
-			xroads.y + 1, max_store_x,
-			FEAT_FLOOR, SQUARE_NONE);
-
+	for(int y=pgrid.y + 2; y<=max_store_y; y++) {
+		for(int x=pgrid.x - 1; x<=pgrid.x + 1; x++) {
+			struct loc grid;
+			grid.x = x;
+			grid.y = y;
+			if (square_in_bounds(c, grid))
+				if (!square_ispassable(c, grid))
+					square_set_feat(c, grid, FEAT_FLOOR);
+		}
+	}
+	for(int y=xroads.y; y<=xroads.y + 1; y++) {
+		for(int x=min_store_x; x<=max_store_x; x++) {
+			struct loc grid;
+			grid.x = x;
+			grid.y = y;
+			if (square_in_bounds(c, grid))
+				if (!square_ispassable(c, grid))
+					square_set_feat(c, grid, FEAT_FLOOR);
+		}
+	}
 
 	/* Clear previous contents, add down stairs */
 	square_set_feat(c, pgrid, FEAT_MORE);
@@ -1925,7 +1948,7 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 		
 		fprintf(stderr,"town_gen %s, new build\n", player->town->name);
 		/* Build stuff */
-		town_gen_layout(c_new, p);
+		town_gen_layout(c_new, p, player->town->lava_num, player->town->lake);
 	} else {
 		/* If any stores are scheduled to be destroyed, do it now */
 		bool found = false;

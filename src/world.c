@@ -72,6 +72,8 @@ void world_cleanup_towns(void)
 		mem_free(t->name);
 		mem_free(t->connect);
 		mem_free(t->stores);
+		string_free(t->underground);
+		string_free(t->geography);
 		t->connect = NULL;
 	}
 	stores = NULL;
@@ -85,12 +87,7 @@ void world_cleanup_towns(void)
  */
 void world_change_town(struct town *t)
 {
-	/*struct town *prev = player->town;
-	player->town = t;
-	
-	player->town = prev;
-	prepare_next_level(&cave, player);*/
-	player->upkeep->last_level = player->town->name;
+	player->upkeep->last_level = player->town ? player->town->name : NULL;
 	player->town = t;
 	stores = player->town->stores;
 }
@@ -268,7 +265,7 @@ char *world_describe_town(struct town *t)
 {
 	static char buf[256];
 
-	#define GUFF(N) guff_##N[0]
+	#define GUFF(N) guff_##N[randint0(sizeof(guff_##N) / sizeof(const char *))]
 
 	static const char *guff_really[] = {
 		"intensely",
@@ -292,11 +289,11 @@ char *world_describe_town(struct town *t)
 		"eye-catching",
 	};
 	static const char *guff_town[] = {
-		"town",
-		"little town",
-		"village",
-		"old town",
-		"hamlet",
+		" town",
+		" little town",
+		" village",
+		" old town",
+		" hamlet",
 		", bustling town",
 		", quiet town",
 		", unspoiled town",
@@ -327,9 +324,36 @@ char *world_describe_town(struct town *t)
 		"vista",
 		"view",
 	};
+	static const char *guff_over[] = {
+		"features",
+		"showcases",
+		"benefits from",
+	};
+	static const char *guff_ideal[] = {
+		"The ideal",
+		"The perfect",
+		"A classic",
+	};
+	static const char *guff_destination[] = {
+		"destination",
+		"target",
+	};
+	static const char *guff_daring[] = {
+		"daring",
+		"adventurous",
+		"serious",
+		"curious",
+		
+	};
+	static const char *guff_tourist[] = {
+		"traveller",
+		"tourist",
+	};
 
-	sprintf(buf, "This %s %s %s %s in the %s %s of ... blah, blah, blah.",
-		GUFF(really), GUFF(pretty), GUFF(town), GUFF(sits), GUFF(dramatic), GUFF(surround));
+	sprintf(buf, "This %s %s%s %s in the %s %s of %s and %s %s "
+					"%s %s for the %s %s!",
+		GUFF(really), GUFF(pretty), GUFF(town), GUFF(sits), GUFF(dramatic), GUFF(surround), t->geography, GUFF(over), t->underground,
+		GUFF(ideal), GUFF(destination), GUFF(daring), GUFF(tourist));
 
 	#undef GUFF
 
@@ -683,6 +707,14 @@ bool world_locate_quests(void)
 	return true;
 }
 
+/** Connect all possible pairs of towns */
+void world_connect_complete(void)
+{
+	for(int i=0;i<z_info->town_max;i++)
+		for(int j=0; j<i; j++)
+			world_connect_towns(t_info+i, t_info+j);
+}
+
 /**
  * Generate towns, etc.
  * Returns true if successful.
@@ -700,20 +732,85 @@ bool world_init_towns(void)
 	/* New seed */
 	world_town_seed = Rand_u32b() | 1;
 
-	/* Create towns */
-	char *fort = world_new_town()->name;
-	char *outer = world_new_town()->name;
+	/*
+	 * Towns.
+	 * There is always one town with the Fortress, and at least a few others.
+	 * You start somewhere other than the Fortress.
+	 * For quests to work, well-known names must be used for any town with a quest (which is probably all of them)
+	 * ... although a reasonable extension would be to not allow quests to start in a town which is not used this game.
+	 *
+	 * So, determine the number of towns.
+	 * Assign each a dungeon, and one of a small selection of names.
+	 * Some of these dungeons are necessary (perhaps all), though - because there is an endboss, midboss or other special level required for a quest.
+	 * 		- but as they are not referred to by dungeon name - only by town and level - outside world.txt, it's OK to switch names around. (And not
+	 * just names - other properties, including depth? But this may prevent boss/levels being at a reasonable place.)
+	 * 		- This probably needs to be limited to a subset of roughly equivalent levels, if it's done at all.
+	 *
+	 * How are they connected?
+	 * Complete is possible.
+	 * Could put Fortress in the centermost, and only connect to Fortress or somehere closer. (From Fortress, all are reachable)
+	 * (Could even switch midgame, e.g. to <>Fortress only. Or *from* that to completing "Platinum Class", as a bonus)
+	 *
+	 * - Backgrounds - at least one is always volcanic ("Volcano"?) for quests. One may be an island (atoll? Need some way to keep you in)
+	 * 		- 'caves' is the cavern (or mine?) 'famous jewlry' is the mine etc.
+	 */
 
-	/* Find the player's town */
-	player->town = get_town_by_name(outer);
+	/* Create towns, dungeons */
+	struct town *t;
+	int geog[5] = { 0, 1, 2, 3, 4, };
+	shuffle(geog, sizeof(geog) / sizeof(*geog));
+	
+	world_town_dungeon(t = world_new_town(), "Fortress");
+	t->underground = "a historic underground fortress, said to extend hundreds of levels down.";
 
-	/* Enter first town */
-	world_change_town(player->town);
+	world_town_dungeon(t = world_new_town(), "Sewers");
+	t->underground = "mysterious catacombs of unknown purpose and extent.";
+
+	world_town_dungeon(t = world_new_town(), "Caverns");
+	t->underground = "lofty caverns and wonderful waterfalls of twisted rock.";
+
+	world_town_dungeon(t = world_new_town(), "Mine");
+	t->underground = "the famous gold mines - maybe you'll get lucky?";
+
+	world_town_dungeon(t = world_new_town(), "Stores");
+	t->underground = "an abandoned bunker, once a deadly secret.";
+
+	/* The 5 non-volcano towns.
+	 * One has a lake (and no street?)
+	 */
+	t = t_info + geog[0];
+	t->geography = "a placid, bottle-green lake";
+	t->lake = true;
+
+	/* Nothing special for the others? */
+	t = t_info + geog[1];
+	t->geography = "rolling green hills";
+
+	t = t_info + geog[2];
+	t->geography = "soaring granite cliffs";
+
+	t = t_info + geog[3];
+	t->geography = "snow-capped mountains";
+
+	t = t_info + geog[4];
+	t->geography = "the distant, smoky mountains";
+
+	/* Volcano - fixed geography and dungeon */
+	world_town_dungeon(t = world_new_town(), "Volcano");
+	t->geography = "an awesome active volcano";
+	t->underground = "enticing volcanic caves!";
+	t->lava_num = 3 + randint0(3);
+
+	for(int i=0; i<z_info->town_max; i++) {
+		t->geography = string_make(t->geography);
+		t->underground = string_make(t->underground);
+	}
+
+	/* Find and enter the player's town (any, except Fortress) */
+	world_change_town(t_info + randint1(z_info->town_max - 1));
 
 	/* Make connections */
-	world_connect_towns(get_town_by_name(outer), get_town_by_name(fort));
-	world_town_dungeon(get_town_by_name(fort), "Fortress");
-	world_town_dungeon(get_town_by_name(outer), "Sewer");
+	world_connect_complete();
 
 	/* Generate distances */
 	world_build_distances();

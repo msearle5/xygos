@@ -795,6 +795,17 @@ int player_check_terrain_damage(struct player *p, struct loc grid)
 
 		/* Radiation damage */
 		dam_taken = adjust_dam(p, ELEM_RADIATION, base_dam, RANDOMISE, res, false);
+	} else if (square_iswater(cave, grid)) {
+		int base_dam = 20 + randint1(40);
+		int res = p->state.el_info[ELEM_WATER].res_level;
+
+		/* Feather fall = water wings. */
+		if (player_of_has(p, OF_FEATHER)) {
+			dam_taken -= 20;
+		}
+
+		/* Water damage */
+		dam_taken = adjust_dam(p, ELEM_WATER, base_dam, RANDOMISE, res, false);
 	}
 
 	return dam_taken;
@@ -820,6 +831,9 @@ void player_take_terrain_damage(struct player *p, struct loc grid)
 		msg(square_feat(cave, grid)->hurt_msg);
 		inven_damage(player, PROJ_RADIATION, dam_taken);
 		player_inc_timed(player, TMD_RAD, dam_taken, false, false);
+	} else if (square_iswater(cave, grid)) {
+		msg(square_feat(cave, grid)->hurt_msg);
+		inven_damage(player, PROJ_WATER, dam_taken);
 	}
 }
 

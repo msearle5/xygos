@@ -26,6 +26,10 @@ struct town {
 	char *name;					/* Name of town */
 	struct store *stores;		/* Stores */
 	char *downto;				/* Go down to this level */
+	char *underground;			/* "over ancient caverns" */
+	char *geography;			/* "an active volcano" */
+	bool lake;					/* generate a lake */
+	byte lava_num;				/* and this many streamers of lava */
 };
 
 /* The world contains z->town_max towns, in this array */

@@ -831,9 +831,10 @@ void process_world(struct chunk *c)
 						chance *= 300;
 						chance /= z_info->food_value;
 						if (one_in_(chance)) {
-							/* No mushrooms growing in lava */
+							/* No mushrooms growing in lava, water */
 							if (square_isprojectable(cave, player->grid) &&
-								(!square_isfiery(cave, player->grid))) {
+								(!square_isfiery(cave, player->grid)) &&
+								(!square_iswater(cave, player->grid))) {
 								/* Food item or mushie, sometimes high level.
 								 * You are more likely to get food items rather than shrooms - and more likely
 								 * to get low level ones - when very low food
