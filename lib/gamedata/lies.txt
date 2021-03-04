@@ -414,6 +414,7 @@ R:They say that hindsight is always 20-20.
 R:They say that if you defeat me I shall return, more powerful than ever.
 R:They say that if you go down to the woods today, you're sure of a big surprise.
 R:They say that if you leave Galaxy 7 from Rainza, you will end up in Oresrati.
+R:They say that if you resist cold but not poison, you can correct it with Tippex.
 R:They say that if you start at the bottom the only place to go is up.
 R:They say that if you step on a crack you could break your mother's back.
 R:They say that if you step on a square you'll marry a bear.
@@ -439,11 +440,13 @@ R:They say that snake oil is the most powerful cure-all in existence.
 R:They say that something mysterious will happen if you hit the reset button.
 R:They say that spice is the plural of spouse.
 R:They say that stupid is as stupid does.
+R:They say that swimming is healthy exercise.
 R:They say that the Computer is Your Friend.
 R:They say that the Dark Wheel doesn't really exist.
 R:They say that the Lost Triangle of Zinthar is the key to the Ultimate Ending.
 R:They say that the best time to save your game is now before it's too late.
 R:They say that the cake is a lie.
+R:They say that the cake is a pie.
 R:They say that the dungeon has a bottom - and it's a big bottom!
 R:They say that the dungeon has no bottom.
 R:They say that the dungeon is deeper than Dis.
@@ -516,13 +519,15 @@ R:They say that you should put a brick in your petrol tank, for cheaper refills.
 R:They say that you should water down your petrol to make it last longer.
 R:They say that you will need a bell, book, and candle. 
 R:They say that you will need a black rod with a rusty star on the end.
+R:They say that you will need a card named NTSC SECAM.
 R:They say that you will never defeat Morgoth, Lord of Darkness.
+R:They say that you will never defeat the Serpent of Chaos.
 R:They say that your mission, should you choose to accept it, is awesome.
+R:They say that your mission is whatever you choose to accept.
 R:They say that your own weaponry can never hurt you, however close the range.
 R:They say that your path will be strewn with cowpats from the Devil's own herd.
 R:They say things about you.
 R:They say you cannot shoot yourself, no matter how hard you try.
-R:They say you will never defeat Morgoth, Lord of Darkness.
 R:They sure can!
 R:They sure don't dislike them.
 R:They tend to lose their masters.

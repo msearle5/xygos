@@ -364,7 +364,7 @@ static void do_cmd_wiz_change_aux(void)
 	strnfmt(tmp_val, sizeof(tmp_val), "%ld", (long)(player->au));
 
 	/* Query */
-	if (!get_string("Gold: ", tmp_val, 10)) return;
+	if (!get_string("Cash: ", tmp_val, 10)) return;
 
 	/* Extract */
 	tmp_long = atol(tmp_val);

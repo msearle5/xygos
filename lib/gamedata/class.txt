@@ -306,16 +306,16 @@ min-weight:40
 strength-multiplier:2
 equip:sword:pocket knife:1:1
 
-magic:1:300
-book:[Engineer]
-spell:Magic Missile:1:22:4:1:4:10
-seffect:BOLT_OR_BEAM:MISSILE:0:-10
-sdice:$Dd4
-sexpr:D:PLAYER_LEVEL:- 1 / 5 + 3
+#magic:1:300
+#book:[Engineer]
+#spell:Magic Missile:1:22:4:1:4:10
+#seffect:BOLT_OR_BEAM:MISSILE:0:-10
+#sdice:$Dd4
+#sexpr:D:PLAYER_LEVEL:- 1 / 5 + 3
 sdesc:Fires a magic missile that always hits its target and does
-sdesc: unresistable damage.
-sdesc:  Sometimes a beam is fired instead that hurts each monster
-sdesc: in its path.
-sdesc:  The chance to get a beam goes up with your character level.
+#sdesc: unresistable damage.
+#sdesc:  Sometimes a beam is fired instead that hurts each monster
+#sdesc: in its path.
+#sdesc:  The chance to get a beam goes up with your character level.
 
 cdesc:Devices are your strength - you'll know most on sight, and know how to get the best out of them too. While you aren't much of a fighter in general, you do know energy weapons (melee and ranged) and can see any machine or cyborg's weak points. You also excel with printers and item related cards, and will gain a few skills to use items in unexpected ways.

@@ -108,7 +108,7 @@ static void display_score_page(const struct high_score scores[], int start,
 
 		/* And still another line of info */
 		strnfmt(out_val, sizeof(out_val),
-				"(User %s, Date %s, Gold %s, Turn %s).",
+				"(User %s, Date %s, Cash %s, Turn %s).",
 				user, when, gold, aged);
 		c_put_str(attr, out_val, n * 4 + 4, 15);
 	}

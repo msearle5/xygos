@@ -250,6 +250,10 @@ sdesc:Spits a highly acidic loogie.
 sdesc: Sometimes you will be able to manage a continuous spray instead that hurts each monster
 sdesc: in its path - the chance to get a spray goes up with your character level.
 
+# venom fangs?
+
+## Head mutations (some are compatible) ##
+
 # Add a melee blow (and random activation)
 # Hats don't fit?
 name:Horns
@@ -257,12 +261,69 @@ gain:You grow a pair of evil-looking sharp black horns on your head.
 lose:Your horns shrivel away.
 # keep the random effect a surprise, though!
 desc:You have a pair of evil-looking sharp black horns on your head, and some extra nut attacks in melee.
+stats:0:0:0:0:0:-1:0
 blow:butt:3d6
 flag:mutation
 flag:nasty
 flag:birth
 random-effect:10
 effect:HORNS
+
+name:Knob_Head
+gain:You grow a knob from your forehead.
+lose:Your knob shrivels away... leaving your forehead looking normal again.
+desc:There is a smooth, ovoid projection attached to your forehead - it looks like a door-knob, but it is in fact a powerful sensory organ. Capable of detecting minds at a distance, unfortunately it also makes them aware of you.
+stats:0:0:0:0:0:-1:0
+flag:mutation
+flag:nasty
+flag:birth
+obj-flags:TELEPATHY
+obj-flags:AGGRAVATE
+
+## General physique mutations ##
+
+name:Thick_Muscles
+gain:You grow thick, ropy muscles.
+lose:Your muscles smooth down to normal.
+desc:You have huge thick ropy stiff muscles. You are considerably stronger but also slower and less dextrous.
+stats:5:0:0:-2:0:0:-1
+flag:mutation
+flag:nasty
+flag:birth
+forbid:Lean_and_Fragile
+forbid:Sprinter
+
+name:Lean_and_Fragile
+gain:You become very thin, wiry and agile - but weak and flimsy.
+lose:Your physique returns to normal.
+desc:You have become very thin and wiry. This makes you quick and agile, but weak and flimsy - you'll be more capable of landing hits in melee, but less damaging.
+stats:-1:0:0:4:-1:0:1
+tohit:6
+todam:-2
+flag:mutation
+flag:nasty
+flag:birth
+forbid:Thick_Muscles
+forbid:Sprinter
+
+name:Sprinter
+gain:You feel your muscles massage themselves.
+lose:You feel your muscles return to their usual configuration.
+desc:You are a natural sprinter - capable of brief bursts of impressive speed, but much less capable of sustained endurance.
+stats:1:0:0:1:-1:0:-3
+flag:mutation
+flag:nasty
+flag:birth
+forbid:Thick_Muscles
+forbid:Lean_and_Fragile
+
+book:[Sprint]
+spell:Sprint:1:12:4:4:1:3d30
+seffect:TIMED_INC:FAST:0:5
+sdice:$D+2d5
+sexpr:D:PLAYER_LEVEL:/ 5 + 3
+sdesc:Sprints - rapid movement for a few moments. It's never for that long, but it will be longer as you advance.
+
 
 
 ## Eyes mutations ##
@@ -315,9 +376,24 @@ forbid:Wide_Eyes
 # third eye (telpathy)?
 # blank eyes
 # dazzling?
+# wis/int shift 'left log'?
+
+## Mental mutations ##
+
+name:Thick_Brain
+gain:You grow a thick, ropey brain.
+lose:Your brain returns to normal.
+brief:You have a thick, ropey brain.
+desc:You have a thick, ropey brain. You aren't any good at anything requiring heavy thinking, but you are unimaginative enough that you withstand confusion.
+# and hallucination, if that were possible
+flag:mutation
+flag:nasty
+stats:0:-4:-3:0:0:-1:0
+obj-flags:PROT_CONF
+
+# cold/strange ('broken mirror') mind?
 
 ## Skin mutations ##
-
 
 name:Elephant_Hide
 gain:You grow a thick grey wrinkled elephant-like hide.
