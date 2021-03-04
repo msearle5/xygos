@@ -23,7 +23,7 @@
 #include "datafile.h"
 #include "effects.h"
 #include "init.h"
-#include "obj-curse.h"
+#include "obj-fault.h"
 #include "obj-desc.h"
 #include "obj-make.h"
 #include "obj-pile.h"
@@ -241,7 +241,7 @@ static void store_base_power(struct artifact_set_data *data)
 	for (i = 0; i < z_info->a_max; i++, num++) {
 		data->base_power[i] = artifact_power(i, "for original power", true);
 
-		/* Capture power stats, ignoring cursed and uber arts */
+		/* Capture power stats, ignoring faulty and uber arts */
 		if (data->base_power[i] > data->max_power &&
 			data->base_power[i] < INHIBIT_POWER)
 			data->max_power = data->base_power[i];
@@ -1068,7 +1068,7 @@ static void collect_artifact_data(struct artifact_set_data *data)
 
 		file_putf(log_file, "Current artifact index is %d\n", i);
 
-		/* Don't parse cursed or null items */
+		/* Don't parse faulty or null items */
 		if (data->base_power[i] < 0 || art->tval == 0) continue;
 
 		/* Get a pointer to the base item for this artifact */
@@ -2390,15 +2390,15 @@ static void remove_contradictory(struct artifact *art)
 	if (of_has(art->flags, OF_DRAIN_EXP))
 		of_off(art->flags, OF_HOLD_LIFE);
 
-	/* Remove any conflicting curses */
-	if (art->curses) {
+	/* Remove any conflicting faults */
+	if (art->faults) {
 		int i;
-		for (i = 1; i < z_info->curse_max; i++) {
-			if (artifact_curse_conflicts(art, i)) {
-				art->curses[i] = 0;
-				check_artifact_curses(art);
+		for (i = 1; i < z_info->fault_max; i++) {
+			if (artifact_fault_conflicts(art, i)) {
+				art->faults[i] = 0;
+				check_artifact_faults(art);
 			}
-			if (!art->curses) break;
+			if (!art->faults) break;
 		}
 	}
 }
@@ -2428,22 +2428,22 @@ static void add_ability(struct artifact *art, s32b target_power, int *freq,
 
 
 /**
- * Randomly select a curse and added it to the artifact in question.
+ * Randomly select a fault and added it to the artifact in question.
  */
-static void add_curse(struct artifact *art, int level)
+static void add_fault(struct artifact *art, int level)
 {
 	int max_tries = 5;
 
 	if (of_has(art->flags, OF_BLESSED)) return;
 
 	while (max_tries) {
-		int pick = randint1(z_info->curse_max - 1);
+		int pick = randint1(z_info->fault_max - 1);
 		int power = randint1(9) + 10 * m_bonus(9, level);
-		if (!curses[pick].poss[art->tval]) {
+		if (!faults[pick].poss[art->tval]) {
 			max_tries--;
 			continue;
 		}
-		append_artifact_curse(art, pick, power);
+		append_artifact_fault(art, pick, power);
 		return;
 	}
 }
@@ -2477,7 +2477,7 @@ static void make_bad(struct artifact *art, int level)
 		art->to_d = -art->to_d;
 
 	while (num) {
-		add_curse(art, level);
+		add_fault(art, level);
 		num--;
 	}
 }
@@ -2490,7 +2490,7 @@ static void copy_artifact(struct artifact *a_src, struct artifact *a_dst)
 {
 	mem_free(a_dst->slays);
 	mem_free(a_dst->brands);
-	mem_free(a_dst->curses);
+	mem_free(a_dst->faults);
 
 	/* Copy the structure */
 	memcpy(a_dst, a_src, sizeof(struct artifact));
@@ -2498,7 +2498,7 @@ static void copy_artifact(struct artifact *a_src, struct artifact *a_dst)
 	a_dst->next = NULL;
 	a_dst->slays = NULL;
 	a_dst->brands = NULL;
-	a_dst->curses = NULL;
+	a_dst->faults = NULL;
 	a_dst->activation = NULL;
 	a_dst->alt_msg = NULL;
 
@@ -2510,9 +2510,9 @@ static void copy_artifact(struct artifact *a_src, struct artifact *a_dst)
 		a_dst->brands = mem_zalloc(z_info->brand_max * sizeof(bool));
 		memcpy(a_dst->brands, a_src->brands, z_info->brand_max * sizeof(bool));
 	}
-	if (a_src->curses) {
-		a_dst->curses = mem_zalloc(z_info->curse_max * sizeof(int));
-		memcpy(a_dst->curses, a_src->curses, z_info->curse_max * sizeof(int));
+	if (a_src->faults) {
+		a_dst->faults = mem_zalloc(z_info->fault_max * sizeof(int));
+		memcpy(a_dst->faults, a_src->faults, z_info->fault_max * sizeof(int));
 	}
 }
 
@@ -2657,7 +2657,7 @@ static void design_artifact(struct artifact_set_data *data, int tv, int *aidx)
 		file_putf(log_file, "--- Supercharge is too powerful! Rolling back.\n");
 	}
 
-	/* Give this artifact a chance to be cursed - note it retains its power */
+	/* Give this artifact a chance to be faulty - note it retains its power */
 	if (one_in_(z_info->a_max / MAX(2, data->neg_power_total))) {
 		hurt_me = true;
 	}
@@ -2678,7 +2678,7 @@ static void design_artifact(struct artifact_set_data *data, int tv, int *aidx)
 			break;
 		}
 
-		/* Curse the designated artifacts */
+		/* Damage the designated artifacts */
 		if (hurt_me) {
 			make_bad(art, art_level);
 			if (one_in_(3)) {
@@ -2705,7 +2705,7 @@ static void design_artifact(struct artifact_set_data *data, int tv, int *aidx)
 	/* Cleanup a_old */
 	mem_free(a_old->slays);
 	mem_free(a_old->brands);
-	mem_free(a_old->curses);
+	mem_free(a_old->faults);
 	mem_free(a_old);
 
 	/* Set rarity based on power */
@@ -2916,12 +2916,12 @@ void write_randart_entry(ang_file *fff, struct artifact *art)
 		}
 	}
 
-	/* Output curses */
-	if (art->curses) {
-		for (j = 1; j < z_info->curse_max; j++) {
-			if (art->curses[j] != 0) {
-				file_putf(fff, "curse:%s:%d\n", curses[j].name,
-						  art->curses[j]);
+	/* Output faults */
+	if (art->faults) {
+		for (j = 1; j < z_info->fault_max; j++) {
+			if (art->faults[j] != 0) {
+				file_putf(fff, "fault:%s:%d\n", faults[j].name,
+						  art->faults[j]);
 			}
 		}
 	}

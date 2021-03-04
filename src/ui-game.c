@@ -408,7 +408,7 @@ static void start_game(bool new_game)
 		textui_do_birth();
 	} else {
 		/*
-		 * Bring the stock curse objects up-to-date with what the
+		 * Bring the stock fault objects up-to-date with what the
 		 * player knows.
 		 */
 		update_player_object_knowledge(player);

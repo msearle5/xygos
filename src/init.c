@@ -3815,7 +3815,7 @@ static struct {
 	{ "monster pain messages", &pain_parser },
 	{ "monster bases", &mon_base_parser },
 	{ "summons", &summon_parser },
-	{ "curses", &curse_parser },
+	{ "faults", &fault_parser },
 	{ "player shapes", &shape_parser },
 	{ "objects", &object_parser },
 	{ "activations", &act_parser },

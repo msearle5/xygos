@@ -30,7 +30,7 @@ extern struct file_parser projection_parser;
 extern struct file_parser object_base_parser;
 extern struct file_parser slay_parser;
 extern struct file_parser brand_parser;
-extern struct file_parser curse_parser;
+extern struct file_parser fault_parser;
 extern struct file_parser object_parser;
 extern struct file_parser act_parser;
 extern struct file_parser ego_parser;

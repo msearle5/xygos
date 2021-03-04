@@ -120,10 +120,10 @@ struct slay {
 };
 
 /**
- * Curse type
+ * Fault type
  */
-struct curse {
-	struct curse *next;
+struct fault {
+	struct fault *next;
 	char *name;
 	bool *poss;
 	struct object *obj;
@@ -234,7 +234,7 @@ struct object_kind {
 
 	bool *brands;
 	bool *slays;
-	int *curses;			/**< Array of curse powers */
+	int *faults;			/**< Array of fault powers */
 
 	byte d_attr;			/**< Default object attribute */
 	wchar_t d_char;			/**< Default object character */
@@ -276,7 +276,7 @@ extern struct object_kind *k_info;
 extern struct object_kind *unknown_item_kind;
 extern struct object_kind *unknown_gold_kind;
 extern struct object_kind *pile_kind;
-extern struct object_kind *curse_object_kind;
+extern struct object_kind *fault_object_kind;
 
 /**
  * Information about artifacts.
@@ -316,7 +316,7 @@ struct artifact {
 
 	bool *brands;
 	bool *slays;
-	int *curses;		/**< Array of curse powers */
+	int *faults;		/**< Array of fault powers */
 
 	int level;			/** Difficulty level for activation */
 
@@ -373,7 +373,7 @@ struct ego_item {
 
 	bool *brands;
 	bool *slays;
-	int *curses;			/**< Array of curse powers */
+	int *faults;			/**< Array of fault powers */
 
 	int rating;				/**< Level rating boost */
 	int alloc_prob; 		/** Chance of being generated (i.e. rarity) */
@@ -416,7 +416,7 @@ enum {
 	OBJ_NOTICE_IMAGINED = 0x08,
 };
 
-struct curse_data {
+struct fault_data {
 	int power;
 	int timeout;
 };
@@ -482,7 +482,7 @@ struct object {
 	struct element_info el_info[ELEM_MAX];	/**< Object element info */
 	bool *brands;			/**< Array of brand structures */
 	bool *slays;			/**< Array of slay structures */
-	struct curse_data *curses;	/**< Array of curse powers and timeouts */
+	struct fault_data *faults;	/**< Array of fault powers and timeouts */
 
 	struct effect *effect;	/**< Effect this item produces (effects.c) */
 	char *effect_msg;		/**< Message on use */
@@ -527,7 +527,7 @@ static struct object const OBJECT_NULL = {
 	.el_info = { { 0, 0 } },
 	.brands = NULL,
 	.slays = NULL,
-	.curses = NULL,
+	.faults = NULL,
 	.effect = NULL,
 	.effect_msg = NULL,
 	.activation = NULL,

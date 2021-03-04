@@ -776,7 +776,7 @@ void do_inven_wield(struct object *obj, int slot, bool verbose, bool overflow)
 	/* Sticky flag gets a special mention */
 	if (of_has(wielded->flags, OF_STICKY)) {
 		/* Warn the player */
-		msgt(MSG_CURSED, "Oops! It sticks to you like a magnet!");
+		msgt(MSG_FAULTY, "Oops! It sticks to you like a magnet!");
 	}
 
 	/* Lights which cannot be recharged: reduce by 1
@@ -811,7 +811,7 @@ void inven_wield(struct object *obj, int slot) {
 }
 
 /**
- * Take off a non-cursed equipment item
+ * Take off a non-faulty equipment item
  *
  * Note that taking off an item when "full" may cause that item
  * to fall to the ground.
@@ -862,7 +862,7 @@ void inven_takeoff(struct object *obj)
 }
 
 /**
- * Drop (some of) a non-cursed inventory/equipment item "near" the current
+ * Drop (some of) a non-faulty inventory/equipment item "near" the current
  * location
  *
  * There are two cases here - a single object or entire stack is being dropped,

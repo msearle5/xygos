@@ -19,7 +19,7 @@
 #include "angband.h"
 #include "cave.h"
 #include "init.h"
-#include "obj-curse.h"
+#include "obj-fault.h"
 #include "obj-desc.h"
 #include "obj-gear.h"
 #include "obj-ignore.h"
@@ -120,8 +120,8 @@ static void init_icon(void)
 			}
 		}
 	}
-	for (i = 1; i < z_info->curse_max; i++) {
-		if (curses[i].name) {
+	for (i = 1; i < z_info->fault_max; i++) {
+		if (faults[i].name) {
 			count++;
 		}
 	}
@@ -168,10 +168,10 @@ static void init_icon(void)
 			}
 		}
 	}
-	for (i = 1; i < z_info->curse_max; i++) {
-		if (curses[i].name) {
+	for (i = 1; i < z_info->fault_max; i++) {
+		if (faults[i].name) {
 			icon_list[count++] =
-				(struct icon) { ICON_VAR_CURSE, i, 0, curses[i].name };
+				(struct icon) { ICON_VAR_FAULT, i, 0, faults[i].name };
 		}
 	}
 	for (i = 1; i < OF_MAX; i++) {
@@ -291,10 +291,10 @@ bool player_knows_icon(struct player *p, size_t i)
 			}
 			break;
 		}
-		/* Curse icons */
-		case ICON_VAR_CURSE: {
-			assert(r->index < z_info->curse_max);
-			if (p->obj_k->curses[r->index].power) {
+		/* Fault icons */
+		case ICON_VAR_FAULT: {
+			assert(r->index < z_info->fault_max);
+			if (p->obj_k->faults[r->index].power) {
 				return true;
 			}
 			break;
@@ -314,7 +314,7 @@ bool player_knows_icon(struct player *p, size_t i)
 }
 
 /**
- * The name of a icon
+ * The name of an icon
  */
 char *icon_name(size_t i)
 {
@@ -324,8 +324,8 @@ char *icon_name(size_t i)
 		return format("%s brand", r->name);
 	else if (r->variety == ICON_VAR_SLAY)
 		return format("slay %s", r->name);
-	else if (r->variety == ICON_VAR_CURSE)
-		return format("%s curse", r->name);
+	else if (r->variety == ICON_VAR_FAULT)
+		return format("faulty (%s)", r->name);
 	else if (r->variety == ICON_VAR_RESIST)
 		return format("resist %s", r->name);
 	else
@@ -335,7 +335,7 @@ char *icon_name(size_t i)
 }
 
 /**
- * The description of a icon
+ * The description of an icon
  */
 char *icon_desc(size_t i)
 {
@@ -375,9 +375,9 @@ char *icon_desc(size_t i)
 			return format("Object makes the player's attacks against %s more powerful.", r->name);
 			break;
 		}
-		/* Curse icons */
-		case ICON_VAR_CURSE: {
-			return format("Object %s.", curses[r->index].desc);
+		/* Fault icons */
+		case ICON_VAR_FAULT: {
+			return format("Object %s.", faults[r->index].desc);
 			break;
 		}
 		/* Flag icons */
@@ -444,14 +444,14 @@ bool player_knows_slay(struct player *p, int i)
 }
 
 /**
- * Check if a curse is known to the player
+ * Check if a fault is known to the player
  *
  * \param p is the player
- * \param c is the curse
+ * \param c is the fault
  */
-bool player_knows_curse(struct player *p, int index)
+bool player_knows_fault(struct player *p, int index)
 {
-	return p->obj_k->curses[index].power == 1;
+	return p->obj_k->faults[index].power == 1;
 }
 
 /**
@@ -516,9 +516,9 @@ bool player_knows_ego(struct player *p, struct ego_item *ego,
 		}
 	}
 
-	/* All curses known */
-	for (i = 1; i < z_info->curse_max; i++) {
-		if (ego->curses && ego->curses[i] && !player_knows_curse(p, i)) {
+	/* All faults known */
+	for (i = 1; i < z_info->fault_max; i++) {
+		if (ego->faults && ego->faults[i] && !player_knows_fault(p, i)) {
 			return false;
 		}
 	}
@@ -577,7 +577,7 @@ bool object_is_in_store(const struct object *obj)
  */
 bool object_has_standard_to_h(const struct object *obj)
 {
-	/* Hack for curse object structures */
+	/* Hack for fault object structures */
 	if (!obj->kind) {
 		return true;
 	}
@@ -646,9 +646,9 @@ bool object_has_icon(const struct object *obj, int icon_no)
 			}
 			break;
 		}
-		/* Curse icons */
-		case ICON_VAR_CURSE: {
-			if (obj->curses && obj->curses[r->index].power)
+		/* Fault icons */
+		case ICON_VAR_FAULT: {
+			if (obj->faults && obj->faults[r->index].power)
 				return true;
 			break;
 		}
@@ -665,11 +665,11 @@ bool object_has_icon(const struct object *obj, int icon_no)
 }
 
 /**
- * Check if all non-curse icons on an object are known to the player
+ * Check if all non-fault icons on an object are known to the player
  *
  * \param obj is the object
  */
-static bool object_non_curse_icons_known(const struct object *obj)
+static bool object_non_fault_icons_known(const struct object *obj)
 {
 	int i;
 
@@ -730,13 +730,13 @@ bool object_icons_known(const struct object *obj)
 	/* No known object */
 	if (!obj->known) return false;
 
-	/* Not all curses known */
-	if (!curses_are_equal(obj, obj->known)) {
+	/* Not all faults known */
+	if (!faults_are_equal(obj, obj->known)) {
 		return false;
 	}
 
-	/* Answer is now the same as for non-curse icons */
-	return object_non_curse_icons_known(obj);
+	/* Answer is now the same as for non-fault icons */
+	return object_non_fault_icons_known(obj);
 }
 
 
@@ -1057,7 +1057,7 @@ void player_know_object(struct player *p, struct object *obj)
 			of_on(obj->known->flags, flag);
 	}
 
-	/* Curse object structures are finished now */
+	/* Fault object structures are finished now */
 	if (!obj->kind) {
 		return;
 	}
@@ -1088,28 +1088,28 @@ void player_know_object(struct player *p, struct object *obj)
 		}
 	}
 
-	/* Set curses - be very careful to keep knowledge aligned */
-	if (obj->curses) {
-		bool known_cursed = false;
-		for (i = 1; i < z_info->curse_max; i++) {
-			if (p->obj_k->curses[i].power && obj->curses[i].power) {
-				if (!obj->known->curses) {
-					obj->known->curses = mem_zalloc(z_info->curse_max *
-													sizeof(struct curse_data));
+	/* Set faults - be very careful to keep knowledge aligned */
+	if (obj->faults) {
+		bool known_faulty = false;
+		for (i = 1; i < z_info->fault_max; i++) {
+			if (p->obj_k->faults[i].power && obj->faults[i].power) {
+				if (!obj->known->faults) {
+					obj->known->faults = mem_zalloc(z_info->fault_max *
+													sizeof(struct fault_data));
 				}
-				obj->known->curses[i].power = obj->curses[i].power;
-				known_cursed = true;
-			} else if (obj->known->curses) {
-				obj->known->curses[i].power = 0;
+				obj->known->faults[i].power = obj->faults[i].power;
+				known_faulty = true;
+			} else if (obj->known->faults) {
+				obj->known->faults[i].power = 0;
 			}
 		}
-		if (!known_cursed) {
-			mem_free(obj->known->curses);
-			obj->known->curses = NULL;
+		if (!known_faulty) {
+			mem_free(obj->known->faults);
+			obj->known->faults = NULL;
 		}
-	} else if (obj->known->curses) {
-		mem_free(obj->known->curses);
-		obj->known->curses = NULL;
+	} else if (obj->known->faults) {
+		mem_free(obj->known->faults);
+		obj->known->faults = NULL;
 	}
 
 	/* Set ego type, jewellery type if known */
@@ -1118,7 +1118,7 @@ void player_know_object(struct player *p, struct object *obj)
 		obj->known->ego = obj->ego;
 	}
 
-	if (object_non_curse_icons_known(obj) && tval_is_jewelry(obj)) {
+	if (object_non_fault_icons_known(obj) && tval_is_jewelry(obj)) {
 		seen = obj->kind->everseen;
 		object_flavor_aware(obj);
 	}
@@ -1183,9 +1183,9 @@ void update_player_object_knowledge(struct player *p)
 			player_know_object(p, obj);
 	}
 
-	/* Curse objects */
-	for (i = 1; i < z_info->curse_max; i++) {
-		player_know_object(player, curses[i].obj);
+	/* Fault objects */
+	for (i = 1; i < z_info->fault_max; i++) {
+		player_know_object(player, faults[i].obj);
 	}
 
 	/* Update */
@@ -1285,14 +1285,14 @@ void player_learn_icon(struct player *p, size_t i, bool message)
 			break;
 		}
 
-		/* Curse icons */
-		case ICON_VAR_CURSE: {
+		/* Fault icons */
+		case ICON_VAR_FAULT: {
 			int i = r->index;
-			assert(i < z_info->curse_max);
+			assert(i < z_info->fault_max);
 
-			/* If the curse was unknown, add it to known curses */
-			if (!player_knows_curse(p, i)) {
-				p->obj_k->curses[i].power = 1;
+			/* If the fault was unknown, add it to known faults */
+			if (!player_knows_fault(p, i)) {
+				p->obj_k->faults[i].power = 1;
 				learned = true;
 			}
 			break;
@@ -1330,11 +1330,11 @@ void player_learn_flag(struct player *p, int flag)
 }
 
 /**
- * Learn a curse
+ * Learn a fault
  */
-void player_learn_curse(struct player *p, struct curse *curse)
+void player_learn_fault(struct player *p, struct fault *fault)
 {
-	int index = icon_index(ICON_VAR_CURSE, lookup_curse(curse->name));
+	int index = icon_index(ICON_VAR_FAULT, lookup_fault(fault->name));
 	if (index >= 0) {
 		player_learn_icon(p, index, true);
 	}
@@ -1464,21 +1464,21 @@ void mod_message(struct object *obj, int mod)
 	}
 }
 
-void object_curses_find_to_a(struct player *p, struct object *obj)
+void object_faults_find_to_a(struct player *p, struct object *obj)
 {
 	int index = icon_index(ICON_VAR_COMBAT, COMBAT_ICON_TO_A);
-	if (obj->curses) {
+	if (obj->faults) {
 		int i;
 
-		for (i = 1; i < z_info->curse_max; i++) {
-			if (!obj->curses[i].power || !curses[i].obj)
+		for (i = 1; i < z_info->fault_max; i++) {
+			if (!obj->faults[i].power || !faults[i].obj)
 				continue;
 
-			if (curses[i].obj->to_a != 0) {
+			if (faults[i].obj->to_a != 0) {
 				player_learn_icon(p, index, true);
 
-				/* Learn the curse */
-				index = icon_index(ICON_VAR_CURSE, i);
+				/* Learn the fault */
+				index = icon_index(ICON_VAR_FAULT, i);
 				if (index >= 0) {
 					player_learn_icon(p, index, true);
 				}
@@ -1487,21 +1487,21 @@ void object_curses_find_to_a(struct player *p, struct object *obj)
 	}
 }
 
-void object_curses_find_to_h(struct player *p, struct object *obj)
+void object_faults_find_to_h(struct player *p, struct object *obj)
 {
 	int index = icon_index(ICON_VAR_COMBAT, COMBAT_ICON_TO_H);
-	if (obj->curses) {
+	if (obj->faults) {
 		int i;
 
-		for (i = 1; i < z_info->curse_max; i++) {
-			if (!obj->curses[i].power || !curses[i].obj)
+		for (i = 1; i < z_info->fault_max; i++) {
+			if (!obj->faults[i].power || !faults[i].obj)
 				continue;
 
-			if (curses[i].obj->to_h != 0) {
+			if (faults[i].obj->to_h != 0) {
 				player_learn_icon(p, index, true);
 
-				/* Learn the curse */
-				index = icon_index(ICON_VAR_CURSE, i);
+				/* Learn the fault */
+				index = icon_index(ICON_VAR_FAULT, i);
 				if (index >= 0) {
 					player_learn_icon(p, index, true);
 				}
@@ -1510,21 +1510,21 @@ void object_curses_find_to_h(struct player *p, struct object *obj)
 	}
 }
 
-void object_curses_find_to_d(struct player *p, struct object *obj)
+void object_faults_find_to_d(struct player *p, struct object *obj)
 {
 	int index = icon_index(ICON_VAR_COMBAT, COMBAT_ICON_TO_D);
-	if (obj->curses) {
+	if (obj->faults) {
 		int i;
 
-		for (i = 1; i < z_info->curse_max; i++) {
-			if (!obj->curses[i].power || !curses[i].obj)
+		for (i = 1; i < z_info->fault_max; i++) {
+			if (!obj->faults[i].power || !faults[i].obj)
 				continue;
 
-			if (curses[i].obj->to_d != 0) {
+			if (faults[i].obj->to_d != 0) {
 				player_learn_icon(p, index, true);
 
-				/* Learn the curse */
-				index = icon_index(ICON_VAR_CURSE, i);
+				/* Learn the fault */
+				index = icon_index(ICON_VAR_FAULT, i);
 				if (index >= 0) {
 					player_learn_icon(p, index, true);
 				}
@@ -1534,32 +1534,32 @@ void object_curses_find_to_d(struct player *p, struct object *obj)
 }
 
 /**
- * Find flags caused by curses
+ * Find flags caused by faults
  *
  * \param p is the player
  * \param obj is the object
  * \param test_flags is the set of flags to check for
  * \return whether a flag was found
  */
-bool object_curses_find_flags(struct player *p, struct object *obj,
+bool object_faults_find_flags(struct player *p, struct object *obj,
 							  bitflag *test_flags)
 {
 	char o_name[80];
 	bool new = false;
 
 	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
-	if (obj->curses) {
+	if (obj->faults) {
 		int i;
 		int index;
 		bitflag f[OF_SIZE];
 		int flag;
 
-		for (i = 1; i < z_info->curse_max; i++) {
-			if (!obj->curses[i].power || !curses[i].obj)
+		for (i = 1; i < z_info->fault_max; i++) {
+			if (!obj->faults[i].power || !faults[i].obj)
 				continue;
 
 			/* Get all the relevant flags */
-			object_flags(curses[i].obj, f);
+			object_flags(faults[i].obj, f);
 			of_inter(f, test_flags);
 			for (flag = of_next(f, FLAG_START); flag != FLAG_END;
 				 flag = of_next(f, flag + 1)) {
@@ -1572,8 +1572,8 @@ bool object_curses_find_flags(struct player *p, struct object *obj,
 					}
 				}
 
-				/* Learn the curse */
-				index = icon_index(ICON_VAR_CURSE, i);
+				/* Learn the fault */
+				index = icon_index(ICON_VAR_FAULT, i);
 				if (index >= 0) {
 					player_learn_icon(p, index, true);
 				}
@@ -1585,26 +1585,26 @@ bool object_curses_find_flags(struct player *p, struct object *obj,
 }
 
 /**
- * Find a modifiers caused by curses
+ * Find a modifiers caused by faults
  *
  * \param p is the player
  * \param obj is the object
  */
-void object_curses_find_modifiers(struct player *p, struct object *obj)
+void object_faults_find_modifiers(struct player *p, struct object *obj)
 {
 	int i;
 
-	if (obj->curses) {
-		for (i = 1; i < z_info->curse_max; i++) {
-			int index = icon_index(ICON_VAR_CURSE, i);
+	if (obj->faults) {
+		for (i = 1; i < z_info->fault_max; i++) {
+			int index = icon_index(ICON_VAR_FAULT, i);
 			int j;
 
-			if (!obj->curses[i].power || !curses[i].obj)
+			if (!obj->faults[i].power || !faults[i].obj)
 				continue;
 
 			/* Learn all modifiers */
 			for (j = 0; j < OBJ_MOD_MAX; j++) {
-				if (curses[i].obj->modifiers[j]) {
+				if (faults[i].obj->modifiers[j]) {
 					if (!p->obj_k->modifiers[j]) {
 						player_learn_icon(p, icon_index(ICON_VAR_MOD, j), true);
 						if (p->upkeep->playing) {
@@ -1612,7 +1612,7 @@ void object_curses_find_modifiers(struct player *p, struct object *obj)
 						}
 					}
 
-					/* Learn the curse */
+					/* Learn the fault */
 					if (index >= 0) {
 						player_learn_icon(p, index, true);
 					}
@@ -1623,30 +1623,30 @@ void object_curses_find_modifiers(struct player *p, struct object *obj)
 }
 
 /**
- * Find an elemental property caused by curses
+ * Find an elemental property caused by faults
  *
  * \param p is the player
  * \param obj is the object
  * \param elem the element
- * \return whether the element appeared in a curse
+ * \return whether the element appeared in a fault
  */
-bool object_curses_find_element(struct player *p, struct object *obj, int elem)
+bool object_faults_find_element(struct player *p, struct object *obj, int elem)
 {
 	char o_name[80];
 	bool new = false;
 
 	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
-	if (obj->curses) {
+	if (obj->faults) {
 		int i;
 
-		for (i = 1; i < z_info->curse_max; i++) {
-			int index = icon_index(ICON_VAR_CURSE, i);
+		for (i = 1; i < z_info->fault_max; i++) {
+			int index = icon_index(ICON_VAR_FAULT, i);
 
-			if (!obj->curses[i].power || !curses[i].obj)
+			if (!obj->faults[i].power || !faults[i].obj)
 				continue;
 
 			/* Does the object affect the player's resistance to the element? */
-			if (curses[i].obj->el_info[elem].res_level != 0) {
+			if (faults[i].obj->el_info[elem].res_level != 0) {
 				/* Learn the element properties if we don't know yet */
 				if (!p->obj_k->el_info[elem].res_level) {
 					msg("Your %s glows.", o_name);
@@ -1655,7 +1655,7 @@ bool object_curses_find_element(struct player *p, struct object *obj, int elem)
 									  true);
 				}
 
-				/* Learn the curse */
+				/* Learn the fault */
 				if (index >= 0) {
 					player_learn_icon(p, index, true);
 				}
@@ -1774,15 +1774,15 @@ void object_learn_on_wield(struct player *p, struct object *obj)
 		}
 	}
 
-	/* Learn curses */
-	object_curses_find_to_a(p, obj);
-	object_curses_find_to_h(p, obj);
-	object_curses_find_to_d(p, obj);
-	object_curses_find_flags(p, obj, obvious_mask);
-	object_curses_find_modifiers(p, obj);
+	/* Learn faults */
+	object_faults_find_to_a(p, obj);
+	object_faults_find_to_h(p, obj);
+	object_faults_find_to_d(p, obj);
+	object_faults_find_flags(p, obj, obvious_mask);
+	object_faults_find_modifiers(p, obj);
 	for (i = 0; i < ELEM_MAX; i++) {
 		if (p->obj_k->el_info[i].res_level) {
-			(void) object_curses_find_element(p, obj, i);
+			(void) object_faults_find_element(p, obj, i);
 		}
 	}
 }
@@ -1913,8 +1913,8 @@ void missile_learn_on_ranged_attack(struct player *p, struct object *obj)
 		int index = icon_index(ICON_VAR_COMBAT, COMBAT_ICON_TO_D);
 		player_learn_icon(p, index, true);
 	}
-	object_curses_find_to_h(p, obj);
-	object_curses_find_to_d(p, obj);
+	object_faults_find_to_h(p, obj);
+	object_faults_find_to_d(p, obj);
 }
 
 /**
@@ -1942,7 +1942,7 @@ void equip_learn_on_defend(struct player *p)
 				int index = icon_index(ICON_VAR_COMBAT, COMBAT_ICON_TO_A);
 				player_learn_icon(p, index, true);
 			}
-			object_curses_find_to_a(p, obj);
+			object_faults_find_to_a(p, obj);
 			if (p->obj_k->to_a) return;
 		}
 	}
@@ -1977,7 +1977,7 @@ void equip_learn_on_ranged_attack(struct player *p)
 				int index = icon_index(ICON_VAR_COMBAT, COMBAT_ICON_TO_H);
 				player_learn_icon(p, index, true);
 			}
-			object_curses_find_to_h(p, obj);
+			object_faults_find_to_h(p, obj);
 			if (p->obj_k->to_h) return;
 		}
 	}
@@ -2017,8 +2017,8 @@ void equip_learn_on_melee_attack(struct player *p)
 				int index = icon_index(ICON_VAR_COMBAT, COMBAT_ICON_TO_D);
 				player_learn_icon(p, index, true);
 			}
-			object_curses_find_to_h(p, obj);
-			object_curses_find_to_d(p, obj);
+			object_faults_find_to_h(p, obj);
+			object_faults_find_to_d(p, obj);
 			if (p->obj_k->to_h && p->obj_k->to_d) return;
 		}
 	}
@@ -2072,8 +2072,8 @@ void equip_learn_flag(struct player *p, int flag)
 			of_on(obj->known->flags, flag);
 		}
 
-		/* Flag may be on a curse */
-		object_curses_find_flags(p, obj, f);
+		/* Flag may be on a fault */
+		object_faults_find_flags(p, obj, f);
 	}
 }
 
@@ -2114,8 +2114,8 @@ void equip_learn_element(struct player *p, int element)
 			obj->known->el_info[element].flags = obj->el_info[element].flags;
 		}
 
-		/* Element may be on a curse */
-		object_curses_find_element(p, obj, element);
+		/* Element may be on a fault */
+		object_faults_find_element(p, obj, element);
 	}
 }
 
@@ -2160,8 +2160,8 @@ void equip_learn_after_time(struct player *p)
 			player_learn_icon(p, icon_index(ICON_VAR_FLAG, flag), true);
 		}
 
-		/* Learn curses */
-		object_curses_find_flags(p, obj, timed_mask);
+		/* Learn faults */
+		object_faults_find_flags(p, obj, timed_mask);
 
 		if (!object_fully_known(obj)) {
 			/* Objects not fully known yet get marked as having had a chance

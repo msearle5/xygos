@@ -33,7 +33,7 @@
 #include "mon-util.h"
 #include "mon-timed.h"
 #include "obj-chest.h"
-#include "obj-curse.h"
+#include "obj-fault.h"
 #include "obj-desc.h"
 #include "obj-gear.h"
 #include "obj-ignore.h"
@@ -236,14 +236,14 @@ static bool project_touch(int dam, int rad, int typ, bool aware,
 }
 
 /**
- * Selects items that have at least one removable curse.
+ * Selects items that have at least one removable fault.
  */
 static bool item_tester_uncursable(const struct object *obj)
 {
-	struct curse_data *c = obj->known->curses;
+	struct fault_data *c = obj->known->faults;
 	if (c) {
 		size_t i;
-		for (i = 1; i < z_info->curse_max; i++) {
+		for (i = 1; i < z_info->fault_max; i++) {
 			if (c[i].power < 100) {
 				return true;
 			}
@@ -253,13 +253,13 @@ static bool item_tester_uncursable(const struct object *obj)
 }
 
 /**
- * Removes an individual curse from an object.
+ * Removes an individual fault from an object.
  */
-static void remove_object_curse(struct object *obj, int index, bool message)
+static void remove_object_fault(struct object *obj, int index, bool message)
 {
-	struct curse_data *c = &obj->curses[index];
-	char *name = curses[index].name;
-	char *removed = format("The %s curse is removed!", name);
+	struct fault_data *c = &obj->faults[index];
+	char *name = faults[index].name;
+	char *removed = format("The %s fault is repaired!", name);
 	int i;
 
 	c->power = 0;
@@ -269,38 +269,38 @@ static void remove_object_curse(struct object *obj, int index, bool message)
 	}
 
 	/* Check to see if that was the last one */
-	for (i = 1; i < z_info->curse_max; i++) {
-		if (obj->curses[i].power) {
+	for (i = 1; i < z_info->fault_max; i++) {
+		if (obj->faults[i].power) {
 			return;
 		}
 	}
 
-	mem_free(obj->curses);
-	obj->curses = NULL;
+	mem_free(obj->faults);
+	obj->faults = NULL;
 }
 
 /**
- * Attempts to remove a curse from an object.
+ * Attempts to remove a fault from an object.
  */
-static bool uncurse_object(struct object *obj, int strength, char *dice_string)
+static bool unfault_object(struct object *obj, int strength, char *dice_string)
 {
 	int index = 0;
 
-	if (get_curse(&index, obj, dice_string)) {
-		struct curse_data curse = obj->curses[index];
+	if (get_fault(&index, obj, dice_string)) {
+		struct fault_data fault = obj->faults[index];
 		char o_name[80];
 
-		if (curse.power >= 100) {
-			/* Curse is permanent */
+		if (fault.power >= 100) {
+			/* Fault is permanent */
 			return false;
-		} else if (strength >= curse.power) {
-			/* Successfully removed this curse */
-			remove_object_curse(obj->known, index, false);
-			remove_object_curse(obj, index, true);
+		} else if (strength >= fault.power) {
+			/* Successfully removed this fault */
+			remove_object_fault(obj->known, index, false);
+			remove_object_fault(obj, index, true);
 		} else if (!of_has(obj->flags, OF_FRAGILE)) {
 			/* Failure to remove, object is now fragile */
 			object_desc(o_name, sizeof(o_name), obj, ODESC_FULL);
-			msgt(MSG_CURSED, "The spell fails; your %s is now fragile.", o_name);
+			msgt(MSG_FAULTY, "The attempt fails; your %s is now fragile.", o_name);
 			of_on(obj->flags, OF_FRAGILE);
 			player_learn_flag(player, OF_FRAGILE);
 		} else if (one_in_(4)) {
@@ -308,7 +308,7 @@ static bool uncurse_object(struct object *obj, int strength, char *dice_string)
 			struct object *destroyed;
 			bool none_left = false;
 			msg("There is a bang and a flash!");
-			take_hit(player, damroll(5, 5), "Failed uncursing");
+			take_hit(player, damroll(5, 5), "Failed repairing");
 			if (object_is_carried(player, obj)) {
 				destroyed = gear_object_for_use(obj, 1, false, &none_left);
 				if (destroyed->artifact) {
@@ -322,7 +322,7 @@ static bool uncurse_object(struct object *obj, int strength, char *dice_string)
 			}
 		} else {
 			/* Non-destructive failure */
-			msg("The removal fails.");
+			msg("The repair fails.");
 		}
 	} else {
 		return false;
@@ -422,7 +422,7 @@ static bool enchant2(struct object *obj, s16b *score)
  * Revamped!  Now takes item pointer, number of times to try enchanting, and a
  * flag of what to try enchanting.  Artifacts resist enchantment some of the
  * time. Also, any enchantment attempt (even unsuccessful) kicks off a parallel
- * attempt to uncurse a cursed item.
+ * attempt to repair a faulty item.
  *
  * Note that an item can technically be enchanted all the way to +15 if you
  * wait a very, very, long time.  Going from +9 to +10 only works about 5% of
@@ -694,7 +694,7 @@ bool effect_handler_DAMAGE(effect_handler_context_t *context)
 		}
 
 		case SRC_OBJECT: {
-			/* Must be a cursed weapon */
+			/* Must be a faulty weapon */
 			struct object *obj = context->origin.which.object;
 			object_desc(killer, sizeof(killer), obj, ODESC_PREFIX | ODESC_BASE);
 			break;
@@ -1379,12 +1379,12 @@ bool effect_handler_DRAIN_LIGHT(effect_handler_context_t *context)
 }
 
 /**
- * Attempt to uncurse an object
+ * Attempt to unfault an object
  */
-bool effect_handler_REMOVE_CURSE(effect_handler_context_t *context)
+bool effect_handler_REMOVE_FAULT(effect_handler_context_t *context)
 {
-	const char *prompt = "Uncurse which item? ";
-	const char *rejmsg = "You have no curses to remove.";
+	const char *prompt = "Unfault which item? ";
+	const char *rejmsg = "You have no faults to remove.";
 	int itemmode = (USE_EQUIP | USE_INVEN | USE_QUIVER | USE_FLOOR);
 	int strength = effect_calculate_value(context, false);
 	struct object *obj = NULL;
@@ -1417,7 +1417,7 @@ bool effect_handler_REMOVE_CURSE(effect_handler_context_t *context)
 		strnfmt(dice_string, sizeof(dice_string), "%d", context->value.base);
 	}
 
-	return uncurse_object(obj, strength, dice_string);
+	return unfault_object(obj, strength, dice_string);
 }
 
 /**
@@ -2895,7 +2895,7 @@ bool effect_handler_PORTAL(effect_handler_context_t *context)
 			return true;
 		}
 
-		/* Check for a no teleport curse */
+		/* Check for a no teleport fault */
 		if (player_of_has(player, OF_NO_TELEPORT)) {
 			equip_learn_flag(player, OF_NO_TELEPORT);
 			msg("Teleportation forbidden!");
@@ -3015,7 +3015,7 @@ bool effect_handler_TELEPORT(effect_handler_context_t *context)
 			return true;
 		}
 
-		/* Check for a no teleport curse */
+		/* Check for a no teleport fault */
 		if (player_of_has(player, OF_NO_TELEPORT)) {
 			equip_learn_flag(player, OF_NO_TELEPORT);
 			msg("Teleportation forbidden!");
@@ -3187,7 +3187,7 @@ bool effect_handler_TELEPORT_TO(effect_handler_context_t *context)
 			return true;
 		}
 
-		/* Check for a no teleport curse */
+		/* Check for a no teleport fault */
 		if (player_of_has(player, OF_NO_TELEPORT)) {
 			equip_learn_flag(player, OF_NO_TELEPORT);
 			msg("Teleportation forbidden!");
@@ -3293,7 +3293,7 @@ bool effect_handler_TELEPORT_LEVEL(effect_handler_context_t *context)
 		return true;
 	}
 
-	/* Check for a no teleport curse */
+	/* Check for a no teleport fault */
 	if (player_of_has(player, OF_NO_TELEPORT)) {
 		equip_learn_flag(player, OF_NO_TELEPORT);
 		msg("Teleportation forbidden!");
@@ -4650,18 +4650,18 @@ bool effect_handler_TOUCH_AWARE(effect_handler_context_t *context)
 }
 
 /**
- * Curse the player's armor
+ * Fault the player's armor
  */
-bool effect_handler_CURSE_ARMOR(effect_handler_context_t *context)
+bool effect_handler_BLAST_ARMOR(effect_handler_context_t *context)
 {
 	struct object *obj;
 
 	char o_name[80];
 
-	/* Curse the body armor */
+	/* Fault the body armor */
 	obj = equipped_item_by_slot_name(player, "body");
 
-	/* Nothing to curse */
+	/* Nothing to fault */
 	if (!obj) return (true);
 
 	/* Describe */
@@ -4669,25 +4669,24 @@ bool effect_handler_CURSE_ARMOR(effect_handler_context_t *context)
 
 	/* Attempt a saving throw for artifacts */
 	if (obj->artifact && (randint0(100) < 50)) {
-		msg("A %s tries to %s, but your %s resists the effects!",
-				   "terrible black aura", "surround your armor", o_name);
+		msg("A fountain of sparks fly from your %s, but it is unaffected!", o_name);
 	} else {
 		int num = randint1(3);
 		int max_tries = 20;
-		msg("A terrible black aura blasts your %s!", o_name);
+		msg("A fountain of sparks flies from your %s!", o_name);
 
 		/* Take down bonus a wee bit */
 		obj->to_a -= randint1(3);
 
-		/* Try to find enough appropriate curses */
+		/* Try to find enough appropriate faults */
 		while (num && max_tries) {
-			int pick = randint1(z_info->curse_max - 1);
+			int pick = randint1(z_info->fault_max - 1);
 			int power = 10 * m_bonus(9, player->depth);
-			if (!curses[pick].poss[obj->tval]) {
+			if (!faults[pick].poss[obj->tval]) {
 				max_tries--;
 				continue;
 			}
-			append_object_curse(obj, pick, power);
+			append_object_fault(obj, pick, power);
 			num--;
 		}
 
@@ -4705,18 +4704,18 @@ bool effect_handler_CURSE_ARMOR(effect_handler_context_t *context)
 
 
 /**
- * Curse the player's weapon
+ * Damage the player's weapon
  */
-bool effect_handler_CURSE_WEAPON(effect_handler_context_t *context)
+bool effect_handler_BLAST_WEAPON(effect_handler_context_t *context)
 {
 	struct object *obj;
 
 	char o_name[80];
 
-	/* Curse the weapon */
+	/* Fault the weapon */
 	obj = equipped_item_by_slot_name(player, "weapon");
 
-	/* Nothing to curse */
+	/* Nothing to fault */
 	if (!obj) return (true);
 
 	/* Describe */
@@ -4724,26 +4723,25 @@ bool effect_handler_CURSE_WEAPON(effect_handler_context_t *context)
 
 	/* Attempt a saving throw */
 	if (obj->artifact && (randint0(100) < 50)) {
-		msg("A %s tries to %s, but your %s resists the effects!",
-				   "terrible black aura", "surround your weapon", o_name);
+		msg("A fountain of sparks fly from your %s, but it is unaffected!", o_name);
 	} else {
 		int num = randint1(3);
 		int max_tries = 20;
-		msg("A terrible black aura blasts your %s!", o_name);
+		msg("A fountain of sparks flies from your %s!", o_name);
 
 		/* Hurt it a bit */
 		obj->to_h = 0 - randint1(3);
 		obj->to_d = 0 - randint1(3);
 
-		/* Curse it */
+		/* Damage it */
 		while (num) {
-			int pick = randint1(z_info->curse_max - 1);
+			int pick = randint1(z_info->fault_max - 1);
 			int power = 10 * m_bonus(9, player->depth);
-			if (!curses[pick].poss[obj->tval]) {
+			if (!faults[pick].poss[obj->tval]) {
 				max_tries--;
 				continue;
 			}
-			append_object_curse(obj, pick, power);
+			append_object_fault(obj, pick, power);
 			num--;
 		}
 

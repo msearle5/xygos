@@ -40,9 +40,9 @@
 #define INHIBIT_WEAK    (one_in_(2))
 
 /**
- * Power rating below which uncursed randarts cannot aggravate
+ * Power rating below which only faulty randarts can aggravate
  * (so that aggravate is found only on endgame-quality items or
- * cursed items)
+ * faulty items)
  */
 #define AGGR_POWER 300
 

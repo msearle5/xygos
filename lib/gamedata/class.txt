@@ -312,7 +312,7 @@ equip:sword:pocket knife:1:1
 #seffect:BOLT_OR_BEAM:MISSILE:0:-10
 #sdice:$Dd4
 #sexpr:D:PLAYER_LEVEL:- 1 / 5 + 3
-sdesc:Fires a magic missile that always hits its target and does
+#sdesc:Fires a magic missile that always hits its target and does
 #sdesc: unresistable damage.
 #sdesc:  Sometimes a beam is fired instead that hurts each monster
 #sdesc: in its path.

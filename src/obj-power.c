@@ -17,7 +17,7 @@
  *    are included in all such copies.  Other copyrights may also apply.
  */
 #include "angband.h"
-#include "obj-curse.h"
+#include "obj-fault.h"
 #include "obj-gear.h"
 #include "obj-knowledge.h"
 #include "obj-info.h"
@@ -713,31 +713,31 @@ static int effects_power(const struct object *obj, int p)
 }
 
 /**
- * Add power for curses
+ * Add power for faults
  */
-static int curse_power(const struct object *obj, int p, int verbose,
+static int fault_power(const struct object *obj, int p, int verbose,
 					   ang_file *log_file)
 {
 	int i, q = 0;
 
-	if (obj->curses) {
-		/* Get the curse object power */
-		for (i = 1; i < z_info->curse_max; i++) {
-			if (obj->curses[i].power) {
-				int curse_power;
-				log_obj(format("Calculating %s curse power...\n",
-							   curses[i].name));
-				curse_power = object_power(curses[i].obj, verbose, log_file);
-				curse_power -= obj->curses[i].power / 10;
-				log_obj(format("Adjust for strength of curse, %d for %s curse power\n", curse_power, curses[i].name));
-				q += curse_power;
+	if (obj->faults) {
+		/* Get the fault object power */
+		for (i = 1; i < z_info->fault_max; i++) {
+			if (obj->faults[i].power) {
+				int fault_power;
+				log_obj(format("Calculating %s fault power...\n",
+							   faults[i].name));
+				fault_power = object_power(faults[i].obj, verbose, log_file);
+				fault_power -= obj->faults[i].power / 10;
+				log_obj(format("Adjust for strength of fault, %d for %s fault power\n", fault_power, faults[i].name));
+				q += fault_power;
 			}
 		}
 	}
 
 	if (q != 0) {
 		p += q;
-		log_obj(format("Total of %d power added for curses, total is %d\n",
+		log_obj(format("Total of %d power added for faults, total is %d\n",
 					   q, p));
 	}
 	return p;
@@ -785,7 +785,7 @@ s32b object_power(const struct object* obj, bool verbose, ang_file *log_file)
 	p = flags_power(obj, p, verbose, object_log);
 	p = element_power(obj, p);
 	p = effects_power(obj, p);
-	p = curse_power(obj, p, verbose, object_log);
+	p = fault_power(obj, p, verbose, object_log);
 
 	log_obj(format("FINAL POWER IS %d\n", p));
 
@@ -942,7 +942,7 @@ int object_value_real(const struct object *obj, int qty)
  *
  * This function returns the "value" of the given item (qty one).
  *
- * Never notice unknown bonuses or properties, including curses,
+ * Never notice unknown bonuses or properties, including faults,
  * since that would give the player information they did not have.
  */
 int object_value(const struct object *obj, int qty)

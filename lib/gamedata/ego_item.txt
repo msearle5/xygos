@@ -49,7 +49,7 @@
 # not match the depth as specified in the "info:" line.
 
 # 'combat' is for combat bonuses - to-hit, to-dam, to-ac.
-# Cursed ego-items will negate the given value.  These are
+# Faulty ego-items will negate the given value.  These are
 # extra bonuses on top of the normal values, and all of these
 # fields accept randomized values.
 
@@ -520,7 +520,7 @@ values:CON[d2]
 min-values:CON[0]
 slay:DRAGON_5
 
-### Cursed Weapons
+### Faulty Weapons
 
 name:of Morgul
 info:1:0

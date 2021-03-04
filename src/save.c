@@ -160,12 +160,12 @@ static void wr_item(const struct object *obj)
 		wr_byte(0);
 	}
 
-	/* Write curses if any */
-	if (obj->curses) {
+	/* Write faults if any */
+	if (obj->faults) {
 		wr_byte(1);
-		for (i = 0; i < z_info->curse_max; i++) {
-			wr_byte(obj->curses[i].power);
-			wr_u16b(obj->curses[i].timeout);
+		for (i = 0; i < z_info->fault_max; i++) {
+			wr_byte(obj->faults[i].power);
+			wr_u16b(obj->faults[i].timeout);
 		}
 	} else {
 		wr_byte(0);
@@ -384,7 +384,7 @@ void wr_object_memory(void)
 	wr_byte(ELEM_MAX);
 	wr_byte(z_info->brand_max);
 	wr_byte(z_info->slay_max);
-	wr_byte(z_info->curse_max);
+	wr_byte(z_info->fault_max);
 
 	/* Kind knowledge */
 	for (k_idx = 0; k_idx < z_info->k_max; k_idx++) {
@@ -668,9 +668,9 @@ void wr_misc(void)
 		wr_byte(player->obj_k->slays[i] ? 1 : 0);
 	}
 
-	/* Curses */
-	for (i = 0; i < z_info->curse_max; i++) {
-		wr_byte(player->obj_k->curses[i].power ? 1 : 0);
+	/* Faults */
+	for (i = 0; i < z_info->fault_max; i++) {
+		wr_byte(player->obj_k->faults[i].power ? 1 : 0);
 	}
 
 	/* Combat data */

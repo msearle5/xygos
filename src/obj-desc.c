@@ -499,9 +499,9 @@ static size_t obj_desc_inscrip(const struct object *obj, char *buf,
 			u[n++] = "tried";
 	}
 
-	/* Note curses */
-	if (obj->known->curses)
-		u[n++] = "trapped";
+	/* Note faults */
+	if (obj->known->faults)
+		u[n++] = "faulty";
 
 	/* Note ignore */
 	if (ignore_item_ok(obj))
@@ -543,8 +543,8 @@ static size_t obj_desc_aware(const struct object *obj, char *buf, size_t max,
 		strnfcat(buf, max, &end, " {unseen}");
 	} else if (!object_icons_known(obj)) {
 		strnfcat(buf, max, &end, " {??}");
-	} else if (obj->known->curses) {
-		strnfcat(buf, max, &end, " {trapped}");
+	} else if (obj->known->faults) {
+		strnfcat(buf, max, &end, " {faulty}");
 	}
 
 	return end;

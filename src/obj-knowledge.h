@@ -26,7 +26,7 @@ enum icon_variety {
 	ICON_VAR_RESIST,
 	ICON_VAR_BRAND,
 	ICON_VAR_SLAY,
-	ICON_VAR_CURSE,
+	ICON_VAR_FAULT,
 	ICON_VAR_FLAG
 };
 
@@ -56,7 +56,7 @@ void icon_set_note(size_t i, const char *inscription);
 void player_learn_icon(struct player *p, size_t i, bool message);
 bool player_knows_brand(struct player *p, int i);
 bool player_knows_slay(struct player *p, int i);
-bool player_knows_curse(struct player *p, int i);
+bool player_knows_fault(struct player *p, int i);
 bool player_knows_ego(struct player *p, struct ego_item *ego,
 	const struct object *obj);
 bool object_effect_is_known(const struct object *obj);
@@ -78,7 +78,7 @@ void player_know_object(struct player *p, struct object *obj);
 void update_player_object_knowledge(struct player *p);
 
 void player_learn_flag(struct player *p, int flag);
-void player_learn_curse(struct player *p, struct curse *curse);
+void player_learn_fault(struct player *p, struct fault *fault);
 void player_learn_innate(struct player *p);
 void player_learn_all_icons(struct player *p);
 

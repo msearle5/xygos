@@ -16,7 +16,7 @@
 
 #include "init.h"
 #include "object.h"
-#include "obj-curse.h"
+#include "obj-fault.h"
 #include "obj-gear.h"
 #include "obj-knowledge.h"
 #include "obj-util.h"
@@ -563,10 +563,10 @@ void compute_ui_entry_values_for_object(const struct ui_entry *entry,
 {
 	struct ui_entry_combiner_state cst = { 0, 0, 0 };
 	struct ui_entry_combiner_funcs combiner;
-	const struct curse_data *curse;
+	const struct fault_data *fault;
 	struct cached_object_data *cache2;
 	bool first, all_unknown, all_aux_unknown, any_aux, all_aux;
-	int curse_ind;
+	int fault_ind;
 
 	if (!obj || !entry->n_obj_prop) {
 		*val = UI_ENTRY_VALUE_NOT_PRESENT;
@@ -587,8 +587,8 @@ void compute_ui_entry_values_for_object(const struct ui_entry *entry,
 		assert(0);
 	}
 	cache2 = *cache;
-	curse = obj->curses;
-	curse_ind = 0;
+	fault = obj->faults;
+	fault_ind = 0;
 	while (obj) {
 		int i;
 
@@ -719,28 +719,28 @@ void compute_ui_entry_values_for_object(const struct ui_entry *entry,
 			}
 		}
 
-		if (curse) {
+		if (fault) {
 			/*
-			 * Proceed to the next unprocessed curse object.
+			 * Proceed to the next unprocessed fault object.
 			 * Don't overwrite the cached data for the base.
 			 */
 			obj = NULL;
-			if (curse_ind == 0) {
+			if (fault_ind == 0) {
 				cache2 = mem_alloc(sizeof(*cache2));
 			}
-			++curse_ind;
+			++fault_ind;
 			while (1) {
-				if (curse_ind >= z_info->curse_max) {
+				if (fault_ind >= z_info->fault_max) {
 					mem_free(cache2);
 					break;
 				}
-				if (curse[curse_ind].power) {
-					obj = curses[curse_ind].obj;
+				if (fault[fault_ind].power) {
+					obj = faults[fault_ind].obj;
 					of_wipe(cache2->f);
 					object_flags_known(obj, cache2->f);
 					break;
 				}
-				++curse_ind;
+				++fault_ind;
 			}
 		} else {
 			obj = NULL;

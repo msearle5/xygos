@@ -29,7 +29,7 @@
 #include "mon-make.h"
 #include "mon-util.h"
 #include "monster.h"
-#include "obj-curse.h"
+#include "obj-fault.h"
 #include "obj-desc.h"
 #include "obj-gear.h"
 #include "obj-knowledge.h"
@@ -447,7 +447,7 @@ static void do_cmd_wiz_change(void)
  *     We create a lot of fake items and see if they are of the
  *     same type (tval and sval), then we compare pval and +AC.
  *     If the fake-item is better or equal it is counted.
- *     Note that cursed items that are better or equal (absolute values)
+ *     Note that faulty items that are better or equal (absolute values)
  *     are counted, too.
  *     HINT: This is *very* useful for balancing the game!
  * - wiz_quantity_item()
@@ -1095,8 +1095,8 @@ static void wiz_reroll_item(struct object *obj)
 		obj->slays = NULL;
 		mem_free(obj->brands);
 		obj->brands = NULL;
-		mem_free(obj->curses);
-		obj->curses = NULL;
+		mem_free(obj->faults);
+		obj->faults = NULL;
 
 		/* Copy over - slays and brands OK, pile info needs restoring */
 		object_copy(obj, new);
@@ -1333,32 +1333,32 @@ static void wiz_quantity_item(struct object *obj, bool carried)
 
 
 /**
- * Tweak the cursed status of an object.
+ * Tweak the faulty status of an object.
  *
- * \param obj is the object to curse or decurse
+ * \param obj is the object to damage or repair
  */
-static void wiz_tweak_curse(struct object *obj)
+static void wiz_tweak_fault(struct object *obj)
 {
 	const char *p;
 	char tmp_val[80];
 	int val, pval;
 
-	/* Get curse name */
-	p = "Enter curse name or index: ";
+	/* Get fault name */
+	p = "Enter fault name or index: ";
 	strnfmt(tmp_val, sizeof(tmp_val), "0");
 	if (! get_string(p, tmp_val, sizeof(tmp_val))) return;
 
 	/* Accept index or name */
 	val = get_idx_from_name(tmp_val);
 	if (! val) {
-		val = lookup_curse(tmp_val);
+		val = lookup_fault(tmp_val);
 	}
-	if (val <= 0 || val >= z_info->curse_max) {
+	if (val <= 0 || val >= z_info->fault_max) {
 		return;
 	}
 
 	/* Get power */
-	p = "Enter curse power (0 removes): ";
+	p = "Enter fault power (0 removes): ";
 	strnfmt(tmp_val, sizeof(tmp_val), "0");
 	if (! get_string(p, tmp_val, 30)) return;
 	pval = get_idx_from_name(tmp_val);
@@ -1368,20 +1368,20 @@ static void wiz_tweak_curse(struct object *obj)
 
 	/* Apply */
 	if (pval) {
-		append_object_curse(obj, val, pval);
-	} else if (obj->curses) {
-		obj->curses[val].power = 0;
+		append_object_fault(obj, val, pval);
+	} else if (obj->faults) {
+		obj->faults[val].power = 0;
 
-		/* Duplicates logic from non-public check_object_curses(). */
+		/* Duplicates logic from non-public check_object_faults(). */
 		int i;
 
-		for (i = 0; i < z_info->curse_max; i++) {
-			if (obj->curses[i].power) {
+		for (i = 0; i < z_info->fault_max; i++) {
+			if (obj->faults[i].power) {
 				return;
 			}
 		}
-		mem_free(obj->curses);
-		obj->curses = NULL;
+		mem_free(obj->faults);
+		obj->faults = NULL;
 	}
 }
 
@@ -1428,7 +1428,7 @@ static void do_cmd_wiz_play(void)
 			changed = true;
 			break;
 		} else if (ch == 'c' || ch == 'C')
-			wiz_tweak_curse(obj);
+			wiz_tweak_fault(obj);
 		else if (ch == 's' || ch == 'S')
 			wiz_statistics(obj, player->depth);
 		else if (ch == 'r' || ch == 'R')
@@ -1527,11 +1527,11 @@ static void do_cmd_wiz_cure_all(void)
 {
 	int i;
 
-	/* Remove curses */
+	/* Remove faults */
 	for (i = 0; i < player->body.count; i++) {
-		if (player->body.slots[i].obj && player->body.slots[i].obj->curses) {
-			mem_free(player->body.slots[i].obj->curses);
-			player->body.slots[i].obj->curses = NULL;
+		if (player->body.slots[i].obj && player->body.slots[i].obj->faults) {
+			mem_free(player->body.slots[i].obj->faults);
+			player->body.slots[i].obj->faults = NULL;
 		}
 	}
 

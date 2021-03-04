@@ -25,7 +25,7 @@
 #include "mon-make.h"
 #include "mon-move.h"
 #include "mon-util.h"
-#include "obj-curse.h"
+#include "obj-fault.h"
 #include "obj-desc.h"
 #include "obj-gear.h"
 #include "obj-knowledge.h"
@@ -279,7 +279,7 @@ void play_ambient_sound(void)
 }
 
 /**
- * Helper for process_world -- decrement player->timed[], curse effect and technique cooldown fields
+ * Helper for process_world -- decrement player->timed[], fault effect and technique cooldown fields
  */
 static void decrease_timeouts(void)
 {
@@ -348,24 +348,24 @@ static void decrease_timeouts(void)
 		player_dec_timed(player, i, decr, false);
 	}
 
-	/* Curse effects always decrement by 1 */
+	/* Fault effects always decrement by 1 */
 	for (i = 0; i < player->body.count; i++) {
-		struct curse_data *curse = NULL;
+		struct fault_data *fault = NULL;
 		if (player->body.slots[i].obj == NULL) {
 			continue;
 		}
-		curse = player->body.slots[i].obj->curses;
-		if (curse) {
+		fault = player->body.slots[i].obj->faults;
+		if (fault) {
 			int j;
-			for (j = 0; j < z_info->curse_max; j++) {
-				if (curse[j].power) {
-					curse[j].timeout--;
-					if (!curse[j].timeout) {
-						struct curse *c = &curses[j];
-						if (do_curse_effect(j, player->body.slots[i].obj)) {
-							player_learn_curse(player, c);
+			for (j = 0; j < z_info->fault_max; j++) {
+				if (fault[j].power) {
+					fault[j].timeout--;
+					if (!fault[j].timeout) {
+						struct fault *c = &faults[j];
+						if (do_fault_effect(j, player->body.slots[i].obj)) {
+							player_learn_fault(player, c);
 						}
-						curse[j].timeout = randcalc(c->obj->time, 0, RANDOMISE);
+						fault[j].timeout = randcalc(c->obj->time, 0, RANDOMISE);
 					}
 				}
 			}

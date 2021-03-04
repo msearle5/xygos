@@ -28,7 +28,7 @@
 #include "mon-spell.h"
 #include "mon-util.h"
 #include "monster.h"
-#include "obj-curse.h"
+#include "obj-fault.h"
 #include "obj-gear.h"
 #include "obj-ignore.h"
 #include "obj-init.h"
@@ -76,7 +76,7 @@ static byte of_size = 0;
 static byte elem_max = 0;
 static byte brand_max;
 static byte slay_max;
-static byte curse_max;
+static byte fault_max;
 
 /**
  * Monster constants
@@ -198,15 +198,15 @@ static struct object *rd_item(void)
 		}
 	}
 
-	/* Read curses */
+	/* Read faults */
 	rd_byte(&tmp8u);
 	if (tmp8u) {
-		obj->curses = mem_zalloc(z_info->curse_max * sizeof(struct curse_data));
-		for (i = 0; i < curse_max; i++) {
+		obj->faults = mem_zalloc(z_info->fault_max * sizeof(struct fault_data));
+		for (i = 0; i < fault_max; i++) {
 			rd_byte(&tmp8u);
-			obj->curses[i].power = tmp8u;
+			obj->faults[i].power = tmp8u;
 			rd_u16b(&tmp16u);
-			obj->curses[i].timeout = tmp16u;
+			obj->faults[i].timeout = tmp16u;
 		}
 	}
 
@@ -596,10 +596,10 @@ int rd_object_memory(void)
 		return (-1);
 	}
 
-	/* Curses */
-	rd_byte(&curse_max);
-	if (curse_max > z_info->curse_max) {
-	        note(format("Too many (%u) curses allowed!", curse_max));
+	/* Faults */
+	rd_byte(&fault_max);
+	if (fault_max > z_info->fault_max) {
+	        note(format("Too many (%u) faults allowed!", fault_max));
 		return (-1);
 	}
 
@@ -1030,10 +1030,10 @@ int rd_misc(void)
 		player->obj_k->slays[i] = tmp8u ? true : false;
 	}
 
-	/* Read curses */
-	for (i = 0; i < curse_max; i++) {
+	/* Read faults */
+	for (i = 0; i < fault_max; i++) {
 		rd_byte(&tmp8u);
-		player->obj_k->curses[i].power = tmp8u;
+		player->obj_k->faults[i].power = tmp8u;
 	}
 
 	/* Combat data */

@@ -506,8 +506,8 @@ static void init_player(void) {
 	player->obj_k = object_new();
 	player->obj_k->brands = mem_zalloc(z_info->brand_max * sizeof(bool));
 	player->obj_k->slays = mem_zalloc(z_info->slay_max * sizeof(bool));
-	player->obj_k->curses = mem_zalloc(z_info->curse_max *
-									   sizeof(struct curse_data));
+	player->obj_k->faults = mem_zalloc(z_info->fault_max *
+									   sizeof(struct fault_data));
 
 	options_init_defaults(&player->opts);
 }

@@ -116,7 +116,7 @@ typedef enum stat_code
 	ST_WIS_ARMOR,
 	ST_DEX_ARMOR,
 	ST_CON_ARMOR,
-	ST_CURSED_ARMOR,
+	ST_FAULTY_ARMOR,
 	ST_WEAPONS,
 	ST_BAD_WEAPONS,
 	ST_AVERAGE_WEAPONS,
@@ -143,7 +143,7 @@ typedef enum stat_code
 	ST_XTRASHOTS_GUNS,
 	ST_BUCKLAND_GUNS,
 	ST_TELEP_GUNS,
-	ST_CURSED_GUNS,
+	ST_FAULTY_GUNS,
 	ST_PILLS,
 	ST_GAINSTAT_PILLS,
 	ST_HEALING_PILLS,
@@ -172,12 +172,12 @@ typedef enum stat_code
 	ST_BRAND_RINGS,
 	ST_ELVEN_RINGS,
 	ST_ONE_RINGS,
-	ST_CURSED_RINGS,
+	ST_FAULTY_RINGS,
 	ST_AMULETS,
 	ST_WIS_AMULETS,
 	ST_TELEP_AMULETS,
 	ST_ENDGAME_AMULETS,
-	ST_CURSED_AMULETS,
+	ST_FAULTY_AMULETS,
 	ST_AMMO,
 	ST_BAD_AMMO,
 	ST_AVERAGE_AMMO,
@@ -221,7 +221,7 @@ static const struct stat_data stat_message[] =
 	{ST_WIS_ARMOR, " +Wisdom     "},
 	{ST_DEX_ARMOR, " +Dexterity  "},
 	{ST_CON_ARMOR, " +Const.     "},
-	{ST_CURSED_ARMOR, " Cursed       "},
+	{ST_FAULTY_ARMOR, " Faulty       "},
 	{ST_WEAPONS, "\n ***WEAPONS***   \n All:       "},
 	{ST_BAD_WEAPONS, " Bad         "},
 	{ST_AVERAGE_WEAPONS, " Average     "},
@@ -248,7 +248,7 @@ static const struct stat_data stat_message[] =
 	{ST_XTRASHOTS_GUNS, " Extra shots "},
 	{ST_BUCKLAND_GUNS, " Buckland    "},
 	{ST_TELEP_GUNS, " Telepathy   "},
-	{ST_CURSED_GUNS, " Cursed      "},
+	{ST_FAULTY_GUNS, " Faulty      "},
 	{ST_PILLS, "\n ***PILLS***   \n All:        "},
 	{ST_GAINSTAT_PILLS, " Gain stat   "},//includes *enlight*
 	{ST_HEALING_PILLS, " Healing     "},
@@ -277,12 +277,12 @@ static const struct stat_data stat_message[] =
 	{ST_BRAND_RINGS, " Brand       "},
 	{ST_ELVEN_RINGS, " Elven       "},
 	{ST_ONE_RINGS, " The One     "},
-	{ST_CURSED_RINGS, " Cursed      "},
+	{ST_FAULTY_RINGS, " Faulty      "},
 	{ST_RINGS, "\n ***AMULETS***   \n All:        "},
 	{ST_WIS_AMULETS, " Wisdom      "},
 	{ST_TELEP_AMULETS, " Telepathy   "},
 	{ST_ENDGAME_AMULETS, " Endgame     "},//Trickery, weaponmastery, magi
-	{ST_CURSED_AMULETS, " Cursed      "},
+	{ST_FAULTY_AMULETS, " Faulty      "},
 	{ST_AMMO, "\n ***AMMO***      \n All:        "},
 	{ST_BAD_AMMO, " Bad         "},
 	{ST_AVERAGE_AMMO, " Average     "},
@@ -568,8 +568,8 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 			if (obj->modifiers[OBJ_MOD_CON] != 0)
 				add_stats(ST_CON_ARMOR, vault, mon, number);
 
-			if (obj->curses)
-				add_stats(ST_CURSED_ARMOR, vault, mon, number);
+			if (obj->faults)
+				add_stats(ST_FAULTY_ARMOR, vault, mon, number);
 
 			break;
 		}
@@ -693,9 +693,9 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 			if (of_has(obj->flags, OF_TELEPATHY))
 				add_stats(ST_TELEP_GUNS, vault, mon, number);
 
-			/* is cursed */
-			if (obj->curses)
-				add_stats(ST_CURSED_GUNS, vault, mon, number);
+			/* is faulty */
+			if (obj->faults)
+				add_stats(ST_FAULTY_GUNS, vault, mon, number);
 			break;
 		}
 
@@ -804,9 +804,9 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 
 			add_stats(ST_RINGS, vault, mon, number);
 
-			/* is it cursed */
-			if (obj->curses)
-				add_stats(ST_CURSED_RINGS, vault, mon, number);
+			/* is it faulty */
+			if (obj->faults)
+				add_stats(ST_FAULTY_RINGS, vault, mon, number);
 
 			if (strstr(obj->kind->name, "Speed")) {
 				add_stats(ST_SPEEDS_RINGS, vault, mon, number);
@@ -852,9 +852,9 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 				add_stats(ST_TELEP_AMULETS, vault, mon, number);
 			}
 
-			/* is cursed */
-			if (obj->curses)
-				add_stats(ST_CURSED_AMULETS, vault, mon, number);
+			/* is faulty */
+			if (obj->faults)
+				add_stats(ST_FAULTY_AMULETS, vault, mon, number);
 
 			break;
 		}

@@ -25,7 +25,7 @@
 #include "init.h"
 #include "monster.h"
 #include "mon-util.h"
-#include "obj-curse.h"
+#include "obj-fault.h"
 #include "obj-gear.h"
 #include "obj-info.h"
 #include "obj-knowledge.h"
@@ -111,29 +111,29 @@ static size_t element_info_collect(const bool list[], const char *recepticle[])
  * ------------------------------------------------------------------------ */
 
 /**
- * Describe an item's curses.
+ * Describe an item's faults.
  */
-static bool describe_curses(textblock *tb, const struct object *obj,
+static bool describe_faults(textblock *tb, const struct object *obj,
 		const bitflag flags[OF_SIZE])
 {
 	int i;
-	struct curse_data *c = obj->known->curses;
+	struct fault_data *c = obj->known->faults;
 
 	if (!c)
 		return false;
-	for (i = 1; i < z_info->curse_max; i++) {
+	for (i = 1; i < z_info->fault_max; i++) {
 		if (c[i].power) {
 			textblock_append(tb, "It ");
-			textblock_append_c(tb, COLOUR_L_RED, "%s", curses[i].desc);
+			textblock_append_c(tb, COLOUR_L_RED, "%s", faults[i].desc);
 			if (c[i].power == 100) {
-				textblock_append(tb, "; this curse cannot be removed");
+				textblock_append(tb, "; this is beyond repair");
 			}
 			textblock_append(tb, ".\n");
 		}
 	}
-	/* Say if curse removal has been tried */
+	/* Say if fault removal has been tried */
 	if (of_has(obj->flags, OF_FRAGILE)) {
-		textblock_append(tb, "Attempting to uncurse it may destroy it.\n");
+		textblock_append(tb, "Attempting to repair it again may destroy it.\n");
 	}
 
 	return true;
@@ -1913,11 +1913,11 @@ static textblock *object_info_out(const struct object *obj, int mode)
 	if (!terse) describe_flavor_text(tb, obj, ego);
 
 	if (!object_fully_known(obj) &&	(obj->known->notice & OBJ_NOTICE_ASSESSED) && !tval_is_useable(obj)) {
-		textblock_append(tb, "You do not know the full extent of this item's powers.\n");
+		textblock_append(tb, "You do not know the full extent of this item's capabilities.\n");
 		something = true;
 	}
 
-	if (describe_curses(tb, obj, flags)) something = true;
+	if (describe_faults(tb, obj, flags)) something = true;
 	if (describe_stats(tb, obj, mode)) something = true;
 	if (describe_slays(tb, obj)) something = true;
 	if (describe_brands(tb, obj)) something = true;

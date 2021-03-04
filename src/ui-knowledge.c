@@ -2188,7 +2188,7 @@ static const char *icon_group_text[] =
 	"Resists",
 	"Brands",
 	"Slays",
-	"Curses",
+	"Faults",
 	"Other",
 	NULL
 };

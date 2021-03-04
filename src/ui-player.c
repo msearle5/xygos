@@ -19,7 +19,7 @@
 #include "buildid.h"
 #include "game-world.h"
 #include "init.h"
-#include "obj-curse.h"
+#include "obj-fault.h"
 #include "obj-desc.h"
 #include "obj-gear.h"
 #include "obj-info.h"

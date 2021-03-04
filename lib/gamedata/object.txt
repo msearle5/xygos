@@ -157,7 +157,7 @@ name:<unknown treasure>
 type:none
 graphics:*:w
 
-name:<curse object>
+name:<fault object>
 type:none
 graphics:*:v
 
@@ -2863,7 +2863,7 @@ weight:2
 cost:1000
 alloc:20:10 to 50
 flags:EASY_KNOW
-curse:teleportation:100
+fault:teleportation:100
 values:SPD[2]
 
 name:Reckless Attacks
@@ -3131,7 +3131,7 @@ weight:3
 cost:10
 alloc:20:10 to 40
 flags:EASY_KNOW
-curse:teleportation:100
+fault:teleportation:100
 
 name:Slow Digestion
 type:amulet
@@ -3332,7 +3332,7 @@ cost:100
 alloc:16:10 to 100
 pile:25:2
 power:8
-effect:REMOVE_CURSE
+effect:REMOVE_FAULT
 dice:20+d20
 
 
@@ -3345,7 +3345,7 @@ cost:8000
 alloc:16:50 to 100
 pile:25:2
 power:20
-effect:REMOVE_CURSE
+effect:REMOVE_FAULT
 dice:50+d50
 
 ### Summoning ###
@@ -3483,7 +3483,7 @@ power:11
 effect:RECHARGE
 dice:6
 
-name:Door Destruction
+name:battering
 type:card
 graphics:-:Deep Light Blue
 level:10
@@ -3630,7 +3630,7 @@ cost:0
 #A:10:50 to 100
 pile:70:1d3
 power:0
-effect:CURSE_WEAPON
+effect:BLAST_WEAPON
 
 name:blast armour
 type:card
@@ -3641,7 +3641,7 @@ cost:0
 #A:10:50 to 100
 pile:70:1d3
 power:0
-effect:CURSE_ARMOR
+effect:BLAST_ARMOR
 
 name:darkness
 type:card
@@ -3667,8 +3667,6 @@ pile:70:1d3
 power:0
 msg:You hear a low-pitched whistling sound.
 effect:TOUCH:MAKE_TRAP:3
-
-
 
 
 ##### Pills #####
@@ -5327,7 +5325,7 @@ attack:1d2:0:0
 armor:0:0
 charges:4+d3
 power:8
-effect:REMOVE_CURSE
+effect:REMOVE_FAULT
 dice:20+d20
 
 

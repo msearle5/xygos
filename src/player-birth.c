@@ -24,7 +24,7 @@
 #include "init.h"
 #include "mon-lore.h"
 #include "monster.h"
-#include "obj-curse.h"
+#include "obj-fault.h"
 #include "obj-gear.h"
 #include "obj-ignore.h"
 #include "obj-init.h"
@@ -515,8 +515,8 @@ void player_init(struct player *p)
 	p->obj_k = mem_zalloc(sizeof(struct object));
 	p->obj_k->brands = mem_zalloc(z_info->brand_max * sizeof(bool));
 	p->obj_k->slays = mem_zalloc(z_info->slay_max * sizeof(bool));
-	p->obj_k->curses = mem_zalloc(z_info->curse_max *
-								  sizeof(struct curse_data));
+	p->obj_k->faults = mem_zalloc(z_info->fault_max *
+								  sizeof(struct fault_data));
 
 	/* Options should persist */
 	p->opts = opts_save;

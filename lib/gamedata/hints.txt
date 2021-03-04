@@ -141,7 +141,7 @@ H:It's a happy moment when sufficient DEX makes you "grab hold of your backpack"
 H:It's your own fault if you don't use all non-cheating means of awareness.
 H:Levels are generated randomly, and you can never go back. Usually.
 H:MAKE MONEY FAST! Find a Treasure Pit!
-H:Many items are bad, but few are cursed to the point of needing magic.
+H:Many items are bad, but few are faulty to the point of needing a repair device.
 H:Many items are bad, but few are force-locked and unable to be removed.
 H:Melee attacks, damage, and some effects will wake sleeping monsters.
 H:Monsters that breathe fire, acid, electricity, or cold can deal big damage.

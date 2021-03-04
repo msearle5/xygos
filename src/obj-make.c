@@ -22,7 +22,7 @@
 #include "effects.h"
 #include "init.h"
 #include "obj-chest.h"
-#include "obj-curse.h"
+#include "obj-fault.h"
 #include "obj-gear.h"
 #include "obj-knowledge.h"
 #include "obj-make.h"
@@ -445,10 +445,10 @@ void ego_apply_magic(struct object *obj, int level)
 	of_union(obj->flags, obj->ego->flags);
 	of_diff(obj->flags, obj->ego->flags_off);
 
-	/* Add slays, brands and curses */
+	/* Add slays, brands and faults */
 	copy_slays(&obj->slays, obj->ego->slays);
 	copy_brands(&obj->brands, obj->ego->brands);
-	copy_curses(obj, obj->ego->curses);
+	copy_faults(obj, obj->ego->faults);
 
 	/* Add resists */
 	for (i = 0; i < ELEM_MAX; i++) {
@@ -546,7 +546,7 @@ void copy_artifact_data(struct object *obj, const struct artifact *art)
 	of_union(obj->flags, art->flags);
 	copy_slays(&obj->slays, art->slays);
 	copy_brands(&obj->brands, art->brands);
-	copy_curses(obj, art->curses);
+	copy_faults(obj, art->faults);
 	for (i = 0; i < ELEM_MAX; i++) {
 		/* Take the larger of artifact and base object resist levels */
 		obj->el_info[i].res_level =
@@ -833,10 +833,10 @@ void object_prep(struct object *obj, struct object_kind *k, int lev,
 	obj->to_d = randcalc(k->to_d, lev, rand_aspect);
 	obj->to_a = randcalc(k->to_a, lev, rand_aspect);
 
-	/* Default slays, brands and curses */
+	/* Default slays, brands and faults */
 	copy_slays(&obj->slays, k->slays);
 	copy_brands(&obj->brands, k->brands);
-	copy_curses(obj, k->curses);
+	copy_faults(obj, k->faults);
 
 	/* Default resists */
 	for (i = 0; i < ELEM_MAX; i++) {
@@ -847,24 +847,24 @@ void object_prep(struct object *obj, struct object_kind *k, int lev,
 }
 
 /**
- * Attempt to apply curses to an object, with a corresponding increase in
+ * Attempt to apply faults to an object, with a corresponding increase in
  * generation level of the object
  */
-static int apply_curse(struct object *obj, int lev)
+static int apply_fault(struct object *obj, int lev)
 {
-	int pick, max_curses = randint1(4);
+	int pick, max_faults = randint1(4);
 	int power = randint1(9) + 10 * m_bonus(9, lev);
 	int new_lev = lev;
 
 	if (of_has(obj->flags, OF_BLESSED)) return lev;
 
-	while (max_curses--) {
-		/* Try to curse it */
+	while (max_faults--) {
+		/* Try to break it */
 		int tries = 3;
 		while (tries--) {
-			pick = randint1(z_info->curse_max - 1);
-			if (curses[pick].poss[obj->tval]) {
-				if (append_object_curse(obj, pick, power)) {
+			pick = randint1(z_info->fault_max - 1);
+			if (faults[pick].poss[obj->tval]) {
+				if (append_object_fault(obj, pick, power)) {
 					new_lev += randint1(1 + power / 10);
 				}
 				break;
@@ -904,9 +904,9 @@ int apply_magic(struct object *obj, int lev, bool allow_artifacts, bool good,
 			power = 2;
 	}
 
-	/* Give it a chance to be cursed */
+	/* Give it a chance to be faulty */
 	if (one_in_(20) && tval_is_wearable(obj)) {
-		lev = apply_curse(obj, lev);
+		lev = apply_fault(obj, lev);
 	}
 
 	/* Apply magic */
@@ -939,7 +939,7 @@ int apply_magic(struct object *obj, int lev, bool allow_artifacts, bool good,
  *
  * Note that this test only applies to the object *kind*, so it is
  * possible to choose a kind which is "good", and then later cause
- * the actual object to be cursed.  We do explicitly forbid objects
+ * the actual object to be faulty.  We do explicitly forbid objects
  * which are known to be boring or which start out somewhat damaged.
  */
 bool kind_is_good(const struct object_kind *kind)
@@ -1311,8 +1311,8 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
 	if (value)
 		*value = object_value_real(new_obj, new_obj->number);
 
-	/* Boost of 20% per level OOD for uncursed objects */
-	if ((!new_obj->curses) && (kind->alloc_min > c->depth)) {
+	/* Boost of 20% per level OOD for non-faulty objects */
+	if ((!new_obj->faults) && (kind->alloc_min > c->depth)) {
 		if (value) *value += (kind->alloc_min - c->depth) * (*value / 5);
 	}
 

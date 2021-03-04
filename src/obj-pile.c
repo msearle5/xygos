@@ -27,7 +27,7 @@
 #include "mon-make.h"
 #include "mon-util.h"
 #include "monster.h"
-#include "obj-curse.h"
+#include "obj-fault.h"
 #include "obj-desc.h"
 #include "obj-gear.h"
 #include "obj-ignore.h"
@@ -295,7 +295,7 @@ void object_free(struct object *obj)
 {
 	mem_free(obj->slays);
 	mem_free(obj->brands);
-	mem_free(obj->curses);
+	mem_free(obj->faults);
 	mem_free(obj);
 }
 
@@ -457,8 +457,8 @@ bool object_stackable(const struct object *obj1, const struct object *obj2,
 		/* Require identical ego-item types */
 		if (obj1->ego != obj2->ego) return false;
 
-		/* Require identical curses */
-		if (!curses_are_equal(obj1, obj2)) return false;
+		/* Require identical faults */
+		if (!faults_are_equal(obj1, obj2)) return false;
 
 		/* Hack - Never stack recharging wearables ... */
 		if ((obj1->timeout || obj2->timeout) &&
@@ -625,7 +625,7 @@ void object_wipe(struct object *obj)
 	/* Free slays and brands */
 	mem_free(obj->slays);
 	mem_free(obj->brands);
-	mem_free(obj->curses);
+	mem_free(obj->faults);
 
 	/* Wipe the structure */
 	memset(obj, 0, sizeof(*obj));
@@ -648,10 +648,10 @@ void object_copy(struct object *dest, const struct object *src)
 		dest->brands = mem_zalloc(z_info->brand_max * sizeof(bool));
 		memcpy(dest->brands, src->brands, z_info->brand_max * sizeof(bool));
 	}
-	if (src->curses) {
-		size_t array_size = z_info->curse_max * sizeof(struct curse_data);
-		dest->curses = mem_zalloc(array_size);
-		memcpy(dest->curses, src->curses, array_size);
+	if (src->faults) {
+		size_t array_size = z_info->fault_max * sizeof(struct fault_data);
+		dest->faults = mem_zalloc(array_size);
+		memcpy(dest->faults, src->faults, array_size);
 	}
 
 	/* Detach from any pile */

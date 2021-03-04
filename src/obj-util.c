@@ -27,7 +27,7 @@
 #include "init.h"
 #include "mon-make.h"
 #include "monster.h"
-#include "obj-curse.h"
+#include "obj-fault.h"
 #include "obj-desc.h"
 #include "obj-gear.h"
 #include "obj-ignore.h"
@@ -847,7 +847,7 @@ bool obj_can_refill(const struct object *obj)
 	return false;
 }
 
-/* Can only take off non-cursed items */
+/* Can only take off non-faulty items */
 bool obj_can_takeoff(const struct object *obj)
 {
 	return !obj_has_flag(obj, OF_STICKY);
@@ -892,18 +892,18 @@ bool obj_has_inscrip(const struct object *obj)
 
 bool obj_has_flag(const struct object *obj, int flag)
 {
-	struct curse_data *c = obj->curses;
+	struct fault_data *c = obj->faults;
 
 	/* Check the object's own flags */
 	if (of_has(obj->flags, flag)) {
 		return true;
 	}
 
-	/* Check any curse object flags */
+	/* Check any fault object flags */
 	if (c) {
 		int i;
-		for (i = 1; i < z_info->curse_max; i++) {
-			if (c[i].power && of_has(curses[i].obj->flags, flag)) {
+		for (i = 1; i < z_info->fault_max; i++) {
+			if (c[i].power && of_has(faults[i].obj->flags, flag)) {
 				return true;
 			}
 		}

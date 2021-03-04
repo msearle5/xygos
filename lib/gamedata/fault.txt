@@ -1,4 +1,4 @@
-# File: curse.txt
+# File: fault.txt
 
 # name: effect name
 # type: valid object base
@@ -83,7 +83,7 @@ values:SPD[-10] | STEALTH[-10] | CHR[-10]
 flags:AGGRAVATE
 desc:wakes up and annoys nearby monsters, and delays your escape
 
-name:poison
+name:poisoned
 type:gun
 type:digger
 type:hafted
@@ -206,14 +206,7 @@ time:1d500
 msg:Your weapon calls beyond the grave!
 desc:occasionally summons an undead
 
-name:impair mana recovery
-type:helm
-type:crown
-flags:IMPAIR_MANA
-conflict-flags:IMPAIR_MANA
-desc:makes you slow to recover mana
-
-name:impair hitpoint recovery
+name:impair recovery
 type:boots
 type:gloves
 type:shield
@@ -253,7 +246,7 @@ desc:prevents you from teleporting
 conflict:teleportation
 conflict-flags:NO_TELEPORT
 
-name:treacherous weapon
+name:treacherous
 type:digger
 type:hafted
 type:polearm
@@ -265,7 +258,7 @@ time:1d200
 msg:Your weapon turns on you!
 desc:makes your weapon attack you
 
-name:burning up
+name:burning
 type:boots
 type:gloves
 type:helm
@@ -279,7 +272,7 @@ values:RES_FIRE[-1] | RES_COLD[1]
 desc:makes you vulnerable to fire attacks, but resistant to cold
 conflict:chilled to the bone
 
-name:chilled to the bone
+name:chilling
 type:boots
 type:gloves
 type:helm

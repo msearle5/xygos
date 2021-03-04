@@ -541,7 +541,7 @@ slay:DRAGON_5
 slay:EVIL_2
 slay:DEMON_3
 slay:TROLL_3
-curse:air swing:30
+fault:air swing:30
 desc:This sword has runes of power incused on its ornate hilt, and a single
 desc: blood channel that gleams coldly blue as you grasp this mighty weapon of
 desc: peril.

@@ -37,7 +37,7 @@ struct angband_constants
 	u16b s_max;			/**< Maximum number of magic spells */
 	u16b pit_max;		/**< Maximum number of monster pit types */
 	u16b act_max;		/**< Maximum number of activations for randarts */
-	u16b curse_max;		/**< Maximum number of curses */
+	u16b fault_max;		/**< Maximum number of faults */
 	u16b slay_max;		/**< Maximum number of slays */
 	u16b brand_max;		/**< Maximum number of brands */
 	u16b mon_blows_max;	/**< Maximum number of monster blows */

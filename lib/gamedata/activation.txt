@@ -464,19 +464,19 @@ effect:ENCHANT:TOAC
 dice:2+1d3
 desc:attempts to magically enhance a piece of armour with high chance of success
 
-name:REMOVE_CURSE
+name:REMOVE_FAULT
 aim:0
 power:8
-effect:REMOVE_CURSE
+effect:REMOVE_FAULT
 dice:20+d20
-desc:attempts to remove a curse from an item
+desc:attempts to repair a faulty item
 
-name:REMOVE_CURSE2
+name:REMOVE_FAULT2
 aim:0
 power:20
-effect:REMOVE_CURSE
+effect:REMOVE_FAULT
 dice:50+d50
-desc:Makes a strong attempt to remove a curse from an item
+desc:makes a strong attempt to repair a faulty item
 
 name:LIGHT
 aim:0

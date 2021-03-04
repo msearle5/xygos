@@ -29,7 +29,7 @@
 #include "effects.h"
 #include "init.h"
 #include "mon-util.h"
-#include "obj-curse.h"
+#include "obj-fault.h"
 #include "obj-ignore.h"
 #include "obj-init.h"
 #include "obj-list.h"
@@ -154,29 +154,29 @@ static enum parser_error write_dummy_object_record(struct artifact *art, const c
 }
 
 /**
- * Fill in curse object info now that curse_object_kind is defined
+ * Fill in fault object info now that fault_object_kind is defined
  */
-static void write_curse_kinds(void)
+static void write_fault_kinds(void)
 {
 	int i;
-	int sval =  lookup_sval(tval_find_idx("none"), "<curse object>");
+	int sval =  lookup_sval(tval_find_idx("none"), "<fault object>");
 
-	for (i = 1; i < z_info->curse_max; i++) {
-		struct curse *curse = &curses[i];
-		curse->obj->kind = curse_object_kind;
-		curse->obj->sval = sval;
+	for (i = 1; i < z_info->fault_max; i++) {
+		struct fault *fault = &faults[i];
+		fault->obj->kind = fault_object_kind;
+		fault->obj->sval = sval;
 		/*
 		 * Tolerate an already allocated known version:  restarting
 		 * without exiting and redoing the artifacts in
 		 * do_cmd_accept_character().
 		 */
-		if (! curse->obj->known) {
-			curse->obj->known = object_new();
+		if (! fault->obj->known) {
+			fault->obj->known = object_new();
 		}
-		curse->obj->known->kind = curse_object_kind;
-		curses[i].obj->known->sval = sval;
+		fault->obj->known->kind = fault_object_kind;
+		faults[i].obj->known->sval = sval;
 		/* Mark it as touched so it can be fully known. */
-		curse->obj->known->notice |= OBJ_NOTICE_ASSESSED;
+		fault->obj->known->notice |= OBJ_NOTICE_ASSESSED;
 	}
 }
 
@@ -965,57 +965,57 @@ struct file_parser brand_parser = {
 
 /**
  * ------------------------------------------------------------------------
- * Initialize object curses
+ * Initialize object faults
  * ------------------------------------------------------------------------ */
 
-static enum parser_error parse_curse_name(struct parser *p) {
+static enum parser_error parse_fault_name(struct parser *p) {
 	const char *name = parser_getstr(p, "name");
-	struct curse *h = parser_priv(p);
+	struct fault *h = parser_priv(p);
 
-	struct curse *curse = mem_zalloc(sizeof *curse);
-	curse->obj = mem_zalloc(sizeof(struct object));
-	curse->next = h;
-	parser_setpriv(p, curse);
-	curse->name = string_make(name);
-	curse->poss = mem_zalloc(TV_MAX * sizeof(bool));
+	struct fault *fault = mem_zalloc(sizeof *fault);
+	fault->obj = mem_zalloc(sizeof(struct object));
+	fault->next = h;
+	parser_setpriv(p, fault);
+	fault->name = string_make(name);
+	fault->poss = mem_zalloc(TV_MAX * sizeof(bool));
 
 	return PARSE_ERROR_NONE;
 }
 
-static enum parser_error parse_curse_type(struct parser *p) {
+static enum parser_error parse_fault_type(struct parser *p) {
 	int tval = tval_find_idx(parser_getsym(p, "tval"));
 
-	struct curse *curse = parser_priv(p);
-	if (!curse)
+	struct fault *fault = parser_priv(p);
+	if (!fault)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 	if ((tval < 0) || (tval >= TV_MAX))
 		return PARSE_ERROR_UNRECOGNISED_TVAL;
-	curse->poss[tval] = true;
+	fault->poss[tval] = true;
 	return PARSE_ERROR_NONE;
 }
 
-static enum parser_error parse_curse_combat(struct parser *p) {
-	struct curse *curse = parser_priv(p);
-	assert(curse);
+static enum parser_error parse_fault_combat(struct parser *p) {
+	struct fault *fault = parser_priv(p);
+	assert(fault);
 
-	curse->obj->to_h = parser_getint(p, "to-h");
-	curse->obj->to_d = parser_getint(p, "to-d");
-	curse->obj->to_a = parser_getint(p, "to-a");
+	fault->obj->to_h = parser_getint(p, "to-h");
+	fault->obj->to_d = parser_getint(p, "to-d");
+	fault->obj->to_a = parser_getint(p, "to-a");
 	return PARSE_ERROR_NONE;
 }
 
-static enum parser_error parse_curse_flags(struct parser *p) {
-	struct curse *curse = parser_priv(p);
+static enum parser_error parse_fault_flags(struct parser *p) {
+	struct fault *fault = parser_priv(p);
 	char *s = string_make(parser_getstr(p, "flags"));
 	char *t;
-	assert(curse);
+	assert(fault);
 
 	t = strtok(s, " |");
 	while (t) {
 		bool found = false;
-		if (!grab_flag(curse->obj->flags, OF_SIZE, obj_flags, t))
+		if (!grab_flag(fault->obj->flags, OF_SIZE, obj_flags, t))
 			found = true;
-		if (grab_element_flag(curse->obj->el_info, t))
+		if (grab_element_flag(fault->obj->el_info, t))
 			found = true;
 		if (!found)
 			break;
@@ -1025,11 +1025,11 @@ static enum parser_error parse_curse_flags(struct parser *p) {
 	return t ? PARSE_ERROR_INVALID_FLAG : PARSE_ERROR_NONE;
 }
 
-static enum parser_error parse_curse_values(struct parser *p) {
-	struct curse *curse = parser_priv(p);
+static enum parser_error parse_fault_values(struct parser *p) {
+	struct fault *fault = parser_priv(p);
 	char *s;
 	char *t;
-	assert(curse);
+	assert(fault);
 
 	s = string_make(parser_getstr(p, "values"));
 	t = strtok(s, " |");
@@ -1040,11 +1040,11 @@ static enum parser_error parse_curse_values(struct parser *p) {
 		bool found = false;
 		if (!grab_index_and_int(&value, &index, obj_mods, "", t)) {
 			found = true;
-			curse->obj->modifiers[index] = value;
+			fault->obj->modifiers[index] = value;
 		}
 		if (!grab_index_and_int(&value, &index, element_names, "RES_", t)) {
 			found = true;
-			curse->obj->el_info[index].res_level = value;
+			fault->obj->el_info[index].res_level = value;
 		}
 		if (!found)
 			break;
@@ -1056,32 +1056,32 @@ static enum parser_error parse_curse_values(struct parser *p) {
 	return t ? PARSE_ERROR_INVALID_VALUE : PARSE_ERROR_NONE;
 }
 
-static enum parser_error parse_curse_effect(struct parser *p) {
-	struct curse *curse = parser_priv(p);
+static enum parser_error parse_fault_effect(struct parser *p) {
+	struct fault *fault = parser_priv(p);
 	struct effect *effect;
 	struct effect *new_effect = mem_zalloc(sizeof(*new_effect));
 
-	if (!curse)
+	if (!fault)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
 	/* Go to the next vacant effect and set it to the new one  */
-	if (curse->obj->effect) {
-		effect = curse->obj->effect;
+	if (fault->obj->effect) {
+		effect = fault->obj->effect;
 		while (effect->next)
 			effect = effect->next;
 		effect->next = new_effect;
 	} else
-		curse->obj->effect = new_effect;
+		fault->obj->effect = new_effect;
 
 	/* Fill in the detail */
 	return grab_effect_data(p, new_effect);
 }
 
-static enum parser_error parse_curse_effect_yx(struct parser *p) {
-	struct curse *curse = parser_priv(p);
-	struct effect *effect = curse->obj->effect;
+static enum parser_error parse_fault_effect_yx(struct parser *p) {
+	struct fault *fault = parser_priv(p);
+	struct effect *effect = fault->obj->effect;
 
-	if (!curse)
+	if (!fault)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
 	/* If there is no effect, assume that this is human and not parser error. */
@@ -1095,13 +1095,13 @@ static enum parser_error parse_curse_effect_yx(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-static enum parser_error parse_curse_dice(struct parser *p) {
-	struct curse *curse = parser_priv(p);
-	struct effect *effect = curse->obj->effect;
+static enum parser_error parse_fault_dice(struct parser *p) {
+	struct fault *fault = parser_priv(p);
+	struct effect *effect = fault->obj->effect;
 	dice_t *dice = NULL;
 	const char *string = NULL;
 
-	if (!curse)
+	if (!fault)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
 	dice = dice_new();
@@ -1125,20 +1125,20 @@ static enum parser_error parse_curse_dice(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-static enum parser_error parse_curse_expr(struct parser *p) {
-	struct curse *curse = parser_priv(p);
+static enum parser_error parse_fault_expr(struct parser *p) {
+	struct fault *fault = parser_priv(p);
 	expression_t *expression = NULL;
 	expression_base_value_f function = NULL;
-	struct effect *effect = curse->obj->effect;
+	struct effect *effect = fault->obj->effect;
 	const char *name;
 	const char *base;
 	const char *expr;
 
-	if (!curse)
+	if (!fault)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
 	/* If there are no dice, assume that this is human and not parser error. */
-	if (curse->obj->effect->dice == NULL)
+	if (fault->obj->effect->dice == NULL)
 		return PARSE_ERROR_NONE;
 
 	/* Go to the correct effect */
@@ -1167,54 +1167,54 @@ static enum parser_error parse_curse_expr(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-static enum parser_error parse_curse_msg(struct parser *p) {
-	struct curse *curse = parser_priv(p);
-	assert(curse);
-	curse->obj->effect_msg = string_append(curse->obj->effect_msg,
+static enum parser_error parse_fault_msg(struct parser *p) {
+	struct fault *fault = parser_priv(p);
+	assert(fault);
+	fault->obj->effect_msg = string_append(fault->obj->effect_msg,
 										   parser_getstr(p, "text"));
 	return PARSE_ERROR_NONE;
 }
 
-static enum parser_error parse_curse_time(struct parser *p) {
-	struct curse *curse = parser_priv(p);
-	assert(curse);
+static enum parser_error parse_fault_time(struct parser *p) {
+	struct fault *fault = parser_priv(p);
+	assert(fault);
 
-	curse->obj->time = parser_getrand(p, "time");
+	fault->obj->time = parser_getrand(p, "time");
 	return PARSE_ERROR_NONE;
 }
 
-static enum parser_error parse_curse_desc(struct parser *p) {
-	struct curse *curse = parser_priv(p);
+static enum parser_error parse_fault_desc(struct parser *p) {
+	struct fault *fault = parser_priv(p);
 
-	if (!curse)
+	if (!fault)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
-	curse->desc = string_append(curse->desc, parser_getstr(p, "desc"));
+	fault->desc = string_append(fault->desc, parser_getstr(p, "desc"));
 	return PARSE_ERROR_NONE;
 }
 
-static enum parser_error parse_curse_conflict(struct parser *p) {
-	struct curse *curse = parser_priv(p);
+static enum parser_error parse_fault_conflict(struct parser *p) {
+	struct fault *fault = parser_priv(p);
 
-	if (!curse)
+	if (!fault)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
-	curse->conflict = string_append(curse->conflict, "|");
-	curse->conflict = string_append(curse->conflict, parser_getstr(p, "conf"));
-	curse->conflict = string_append(curse->conflict, "|");
+	fault->conflict = string_append(fault->conflict, "|");
+	fault->conflict = string_append(fault->conflict, parser_getstr(p, "conf"));
+	fault->conflict = string_append(fault->conflict, "|");
 	return PARSE_ERROR_NONE;
 }
 
-static enum parser_error parse_curse_conflict_flags(struct parser *p) {
-	struct curse *curse = parser_priv(p);
+static enum parser_error parse_fault_conflict_flags(struct parser *p) {
+	struct fault *fault = parser_priv(p);
 	char *s = string_make(parser_getstr(p, "flags"));
 	char *t;
-	assert(curse);
+	assert(fault);
 
 	t = strtok(s, " |");
 	while (t) {
 		bool found = false;
-		if (!grab_flag(curse->conflict_flags, OF_SIZE, obj_flags, t))
+		if (!grab_flag(fault->conflict_flags, OF_SIZE, obj_flags, t))
 			found = true;
 		if (!found)
 			break;
@@ -1224,81 +1224,81 @@ static enum parser_error parse_curse_conflict_flags(struct parser *p) {
 	return t ? PARSE_ERROR_INVALID_FLAG : PARSE_ERROR_NONE;
 }
 
-struct parser *init_parse_curse(void) {
+struct parser *init_parse_fault(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
-	parser_reg(p, "name str name", parse_curse_name);
-	parser_reg(p, "type sym tval", parse_curse_type);
-	parser_reg(p, "combat int to-h int to-d int to-a", parse_curse_combat);
-	parser_reg(p, "effect sym eff ?sym type ?int radius ?int other", parse_curse_effect);
-	parser_reg(p, "effect-yx int y int x", parse_curse_effect_yx);
-	parser_reg(p, "dice str dice", parse_curse_dice);
-	parser_reg(p, "expr sym name sym base str expr", parse_curse_expr);
-	parser_reg(p, "msg str text", parse_curse_msg);
-	parser_reg(p, "time rand time", parse_curse_time);
-	parser_reg(p, "flags str flags", parse_curse_flags);
-	parser_reg(p, "values str values", parse_curse_values);
-	parser_reg(p, "desc str desc", parse_curse_desc);
-	parser_reg(p, "conflict str conf", parse_curse_conflict);
-	parser_reg(p, "conflict-flags str flags", parse_curse_conflict_flags);
+	parser_reg(p, "name str name", parse_fault_name);
+	parser_reg(p, "type sym tval", parse_fault_type);
+	parser_reg(p, "combat int to-h int to-d int to-a", parse_fault_combat);
+	parser_reg(p, "effect sym eff ?sym type ?int radius ?int other", parse_fault_effect);
+	parser_reg(p, "effect-yx int y int x", parse_fault_effect_yx);
+	parser_reg(p, "dice str dice", parse_fault_dice);
+	parser_reg(p, "expr sym name sym base str expr", parse_fault_expr);
+	parser_reg(p, "msg str text", parse_fault_msg);
+	parser_reg(p, "time rand time", parse_fault_time);
+	parser_reg(p, "flags str flags", parse_fault_flags);
+	parser_reg(p, "values str values", parse_fault_values);
+	parser_reg(p, "desc str desc", parse_fault_desc);
+	parser_reg(p, "conflict str conf", parse_fault_conflict);
+	parser_reg(p, "conflict-flags str flags", parse_fault_conflict_flags);
 	return p;
 }
 
-static errr run_parse_curse(struct parser *p) {
-	return parse_file_quit_not_found(p, "curse");
+static errr run_parse_fault(struct parser *p) {
+	return parse_file_quit_not_found(p, "fault");
 }
 
-static errr finish_parse_curse(struct parser *p) {
-	struct curse *curse, *next = NULL;
+static errr finish_parse_fault(struct parser *p) {
+	struct fault *fault, *next = NULL;
 	int count = 1;
 
 	/* Count the entries */
-	z_info->curse_max = 0;
-	curse = parser_priv(p);
-	while (curse) {
-		z_info->curse_max++;
-		curse = curse->next;
+	z_info->fault_max = 0;
+	fault = parser_priv(p);
+	while (fault) {
+		z_info->fault_max++;
+		fault = fault->next;
 	}
 
 	/* Allocate the direct access list and copy the data to it */
-	curses = mem_zalloc((z_info->curse_max + 1) * sizeof(*curse));
-	for (curse = parser_priv(p); curse; curse = next, count++) {
-		memcpy(&curses[count], curse, sizeof(*curse));
-		next = curse->next;
-		curses[count].next = NULL;
+	faults = mem_zalloc((z_info->fault_max + 1) * sizeof(*fault));
+	for (fault = parser_priv(p); fault; fault = next, count++) {
+		memcpy(&faults[count], fault, sizeof(*fault));
+		next = fault->next;
+		faults[count].next = NULL;
 
-		mem_free(curse);
+		mem_free(fault);
 	}
-	z_info->curse_max += 1;
+	z_info->fault_max += 1;
 
 	parser_destroy(p);
 	return 0;
 }
 
-static void cleanup_curse(void)
+static void cleanup_fault(void)
 {
 	int idx;
-	for (idx = 0; idx < z_info->curse_max; idx++) {
-		string_free(curses[idx].name);
-		string_free(curses[idx].conflict);
-		mem_free(curses[idx].desc);
-		if (curses[idx].obj) {
-			free_effect(curses[idx].obj->effect);
-			mem_free(curses[idx].obj->effect_msg);
-			object_free(curses[idx].obj->known);
-			mem_free(curses[idx].obj);
+	for (idx = 0; idx < z_info->fault_max; idx++) {
+		string_free(faults[idx].name);
+		string_free(faults[idx].conflict);
+		mem_free(faults[idx].desc);
+		if (faults[idx].obj) {
+			free_effect(faults[idx].obj->effect);
+			mem_free(faults[idx].obj->effect_msg);
+			object_free(faults[idx].obj->known);
+			mem_free(faults[idx].obj);
 		}
-		mem_free(curses[idx].poss);
+		mem_free(faults[idx].poss);
 	}
-	mem_free(curses);
+	mem_free(faults);
 }
 
-struct file_parser curse_parser = {
-	"curse",
-	init_parse_curse,
-	run_parse_curse,
-	finish_parse_curse,
-	cleanup_curse
+struct file_parser fault_parser = {
+	"fault",
+	init_parse_fault,
+	run_parse_fault,
+	finish_parse_fault,
+	cleanup_fault
 };
 
 /**
@@ -1544,7 +1544,7 @@ struct file_parser act_parser = {
 struct object_kind *unknown_item_kind;
 struct object_kind *unknown_gold_kind;
 struct object_kind *pile_kind;
-struct object_kind *curse_object_kind;
+struct object_kind *fault_object_kind;
 
 static enum parser_error parse_object_name(struct parser *p) {
 	const char *name = parser_getstr(p, "name");
@@ -1956,21 +1956,21 @@ static enum parser_error parse_object_brand(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-static enum parser_error parse_object_curse(struct parser *p) {
+static enum parser_error parse_object_fault(struct parser *p) {
 	struct object_kind *k = parser_priv(p);
 	const char *s = parser_getsym(p, "name");
 	int i;
 
 	assert(k);
-	for (i = 1; i < z_info->curse_max; i++) {
-		if (streq(s, curses[i].name)) break;
+	for (i = 1; i < z_info->fault_max; i++) {
+		if (streq(s, faults[i].name)) break;
 	}
-	if (i == z_info->curse_max)
-		return PARSE_ERROR_UNRECOGNISED_CURSE;
+	if (i == z_info->fault_max)
+		return PARSE_ERROR_UNRECOGNISED_FAULT;
 
-	if (!k->curses)
-		k->curses = mem_zalloc(z_info->curse_max * sizeof(int));
-	k->curses[i] = parser_getint(p, "power");
+	if (!k->faults)
+		k->faults = mem_zalloc(z_info->fault_max * sizeof(int));
+	k->faults[i] = parser_getint(p, "power");
 	return PARSE_ERROR_NONE;
 }
 
@@ -2035,7 +2035,7 @@ struct parser *init_parse_object(void) {
 	parser_reg(p, "desc str text", parse_object_desc);
 	parser_reg(p, "slay str code", parse_object_slay);
 	parser_reg(p, "brand str code", parse_object_brand);
-	parser_reg(p, "curse sym name int power", parse_object_curse);
+	parser_reg(p, "fault sym name int power", parse_object_fault);
 	parser_reg(p, "material sym name", parse_object_material);
 	init_parse_magic(p);
 	return p;
@@ -2094,7 +2094,7 @@ static void cleanup_object(void)
 		string_free(kind->vis_msg);
 		mem_free(kind->brands);
 		mem_free(kind->slays);
-		mem_free(kind->curses);
+		mem_free(kind->faults);
 		free_effect(kind->effect);
 		cleanup_magic(&kind->magic);
 	}
@@ -2470,7 +2470,7 @@ static enum parser_error parse_ego_brand(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-static enum parser_error parse_ego_curse(struct parser *p) {
+static enum parser_error parse_ego_fault(struct parser *p) {
 	struct ego_item *e = parser_priv(p);
 	char *s;
 	int i;
@@ -2478,15 +2478,15 @@ static enum parser_error parse_ego_curse(struct parser *p) {
 	if (!e)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 	s = string_make(parser_getsym(p, "name"));
-	for (i = 1; i < z_info->curse_max; i++) {
-		if (streq(s, curses[i].name)) break;
+	for (i = 1; i < z_info->fault_max; i++) {
+		if (streq(s, faults[i].name)) break;
 	}
-	if (i == z_info->curse_max)
-		return PARSE_ERROR_UNRECOGNISED_CURSE;
+	if (i == z_info->fault_max)
+		return PARSE_ERROR_UNRECOGNISED_FAULT;
 
-	if (!e->curses)
-		e->curses = mem_zalloc(z_info->curse_max * sizeof(int));
-	e->curses[i] = parser_getint(p, "power");
+	if (!e->faults)
+		e->faults = mem_zalloc(z_info->fault_max * sizeof(int));
+	e->faults[i] = parser_getint(p, "power");
 	return PARSE_ERROR_NONE;
 }
 
@@ -2512,7 +2512,7 @@ struct parser *init_parse_ego(void) {
 	parser_reg(p, "desc str text", parse_ego_desc);
 	parser_reg(p, "slay str code", parse_ego_slay);
 	parser_reg(p, "brand str code", parse_ego_brand);
-	parser_reg(p, "curse sym name int power", parse_ego_curse);
+	parser_reg(p, "fault sym name int power", parse_ego_fault);
 	init_parse_magic(p);
 	return p;
 }
@@ -2564,7 +2564,7 @@ static void cleanup_ego(void)
 		string_free(ego->text);
 		mem_free(ego->brands);
 		mem_free(ego->slays);
-		mem_free(ego->curses);
+		mem_free(ego->faults);
 		free_effect(ego->effect);
 
 		poss = ego->poss_items;
@@ -2861,23 +2861,23 @@ static enum parser_error parse_artifact_brand(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-static enum parser_error parse_artifact_curse(struct parser *p) {
+static enum parser_error parse_artifact_fault(struct parser *p) {
 	struct artifact *a = parser_priv(p);
 	char *s;
 	int i;
 
 	assert(a);
 	s = string_make(parser_getsym(p, "name"));
-	for (i = 1; i < z_info->curse_max; i++) {
-		if (streq(s, curses[i].name)) break;
+	for (i = 1; i < z_info->fault_max; i++) {
+		if (streq(s, faults[i].name)) break;
 	}
 	string_free(s);
-	if (i == z_info->curse_max)
-		return PARSE_ERROR_UNRECOGNISED_CURSE;
+	if (i == z_info->fault_max)
+		return PARSE_ERROR_UNRECOGNISED_FAULT;
 
-	if (!a->curses)
-		a->curses = mem_zalloc(z_info->curse_max * sizeof(int));
-	a->curses[i] = parser_getint(p, "power");
+	if (!a->faults)
+		a->faults = mem_zalloc(z_info->fault_max * sizeof(int));
+	a->faults[i] = parser_getint(p, "power");
 	return PARSE_ERROR_NONE;
 }
 
@@ -2901,7 +2901,7 @@ struct parser *init_parse_artifact(void) {
 	parser_reg(p, "desc str text", parse_artifact_desc);
 	parser_reg(p, "slay str code", parse_artifact_slay);
 	parser_reg(p, "brand str code", parse_artifact_brand);
-	parser_reg(p, "curse sym name int power", parse_artifact_curse);
+	parser_reg(p, "fault sym name int power", parse_artifact_fault);
 	init_parse_magic(p);
 	return p;
 }
@@ -2946,8 +2946,8 @@ static errr finish_parse_artifact(struct parser *p) {
 	unknown_gold_kind = lookup_kind(none,
 									lookup_sval(none, "<unknown treasure>"));
 	pile_kind = lookup_kind(none, lookup_sval(none, "<pile>"));
-	curse_object_kind = lookup_kind(none, lookup_sval(none, "<curse object>"));
-	write_curse_kinds();
+	fault_object_kind = lookup_kind(none, lookup_sval(none, "<fault object>"));
+	write_fault_kinds();
 	parser_destroy(p);
 	return 0;
 }
@@ -2962,7 +2962,7 @@ static void cleanup_artifact(void)
 		string_free(art->text);
 		mem_free(art->brands);
 		mem_free(art->slays);
-		mem_free(art->curses);
+		mem_free(art->faults);
 		cleanup_magic(&art->magic);
 	}
 	mem_free(a_info);

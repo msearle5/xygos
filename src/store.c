@@ -980,7 +980,7 @@ struct object *store_carry(struct store *store, struct object *obj)
 	else
 		value = object_value_real(obj, 1);
 
-	/* Cursed/Worthless items "disappear" when sold */
+	/* Faulty/Worthless items "disappear" when sold */
 	if (value <= 0)
 		return NULL;
 
@@ -1327,9 +1327,9 @@ static bool store_create_random(struct store *store)
 		/* Apply some "low-level" magic (no artifacts) */
 		apply_magic(obj, level, false, false, false, false);
 
-		/* Reject if item is 'damaged' (negative combat mods, curses) */
+		/* Reject if item is 'damaged' (negative combat mods, faults) */
 		if ((tval_is_weapon(obj) && ((obj->to_h < 0) || (obj->to_d < 0)))
-			|| (tval_is_armor(obj) && (obj->to_a < 0)) || (obj->curses)) {
+			|| (tval_is_armor(obj) && (obj->to_a < 0)) || (obj->faults)) {
 			object_delete(&obj);
 			continue;
 		}
