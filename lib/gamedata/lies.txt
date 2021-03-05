@@ -145,6 +145,7 @@ R:Error: All messages dispensed.
 R:Even a man who prays by night will become a gerbil when the moon is bright!
 R:Ever read Ambrose Bierce, From the devil's dictionary? No, didn't steal there.
 R:Ever tried inscribing your armor {erodeproof}?
+R:Exterminate. Exterminate. Exterminate!
 R:FRODO LIVES!!!
 R:Faeg i-varv din na lanc a nu ranc!
 R:Faster! Faster, potato heads!
@@ -397,12 +398,14 @@ R:They say that a mind is a terrible thing to waste.
 R:They say that a mine is a terrible thing to waste.
 R:They say that a mint is a terrible thing to waste.
 R:They say that a pineapple is like a hand grenade.
+R:They say that a red # is an altar of courage - a quick way to fast level ups.
 R:They say that a waist is a terrible thing to mind.
 R:They say that a waste is a terrible thing to mind.
 R:They say that all property is theft, except mine.
 R:They say that an eye of newt and a wing of bat are double the trouble.
 R:They say that ancient battlefields are often haunted.
 R:They say that black paint is an excellent stain remover.
+R:They say that blast armor cards will create bomb-proof armor.
 R:They say that blast weapon cards can create powerful but dangerous artifacts.
 R:They say that blue stones are radioactive, beware.
 R:They say that chocolate is delicious.
@@ -411,6 +414,7 @@ R:They say that dealing with the black market is dangerous.
 R:They say that gazpacho soup should be served cold.
 R:They say that handsome guys are hard to find these days.
 R:They say that hindsight is always 20-20.
+R:They say that hindsight is always 20%.
 R:They say that if you defeat me I shall return, more powerful than ever.
 R:They say that if you go down to the woods today, you're sure of a big surprise.
 R:They say that if you leave Galaxy 7 from Rainza, you will end up in Oresrati.
@@ -418,6 +422,7 @@ R:They say that if you resist cold but not poison, you can correct it with Tippe
 R:They say that if you start at the bottom the only place to go is up.
 R:They say that if you step on a crack you could break your mother's back.
 R:They say that if you step on a square you'll marry a bear.
+R:They say that if you once enter a shop in a loud shirt, you'll always be CHR 3.
 R:They say that it's all a fake - wake up, sheeple!
 R:They say that it's all done with magnets.
 R:They say that it's all smoke and mirrors.
@@ -471,6 +476,7 @@ R:They say that there is a trap on this level!
 R:They say that there is no such thing as free advice.
 R:They say that there was once a barbarian named Cohen.
 R:They say that there was once a soldier named Toasty.
+R:They say that there was once a Dark Jedi named Darth-Darth Binks.
 R:They say that there was once a wizard named Billy.
 R:They say that there was once a wizard named Tricky.
 R:They say that there's a rat under your desk, right now.
@@ -500,17 +506,18 @@ R:They say that you might die if you stepped in a heap of shit.
 R:They say that you must collect 20 bear asses.
 R:They say that you must drop twelve *treasures* here to complete the game.
 R:They say that you must follow the Way of the Exploding Fist.
+R:They say that you need to have tea, and no tea.
 R:They say that you should always be prepared for a final challenge.
 R:They say that you should avoid the fool's mate.
 R:They say that you should beware of fake Amulets of Yendor.
 R:They say that you should beware the undead.
+R:They say that you should be yourself and enjoy!
 R:They sat that you should buy a hotel on Mayfair and Park Lane.
 R:They say that you should call your armor `rustproof'.
 R:They say that you should eat crap - billions of flies can't all be wrong.
 R:They say that you should fear fire and fire fear.
 R:They say that you should fear the MISSINGNO.
 R:They say that you should fight fire with fire.
-R:They say that you should fight fire with fire - but the fire dept. uses water.
 R:They say that you should fill your vial with dew, and farm flies.
 R:They say that you should lay off the doughnuts, fatass.
 R:They say that you should name your weapon after your first monster kill.
@@ -534,10 +541,11 @@ R:They tend to lose their masters.
 R:Thieves are more likely to appear if you are carrying a lot of money.
 R:Thinking is dangerous.  It leads to ideas.
 R:THIS.
-R:This dungeon is owned and operated by Frobozz Magic Co., Ltd.
+R:This fortress is owned and operated by Frobozz Ltd.
 R:This game was NOT made on drugs.
 R:This is a joke.
 R:This is a rumor.
+R:Code 3 of 20. Collect them all to reach the Ultra Ending!
 R:This is not a rumor.
 R:This is only true if you're in bed at the time.
 R:This is the first turn of the rest of your game.
@@ -620,6 +628,8 @@ R:You feel the lightsaber (v) you are carrying in your backpack is special...
 R:You feel your luck is turning...
 R:You find kitten! Way to go, robot!
 R:You find pirate! Way to go, ninja!
+R:You have 11,437 unread messages.
+R:You have way too many unread messages.
 R:You have 99 Hi-Potions!
 R:You have an error in objdes()
 R:You have an error in object_desc()!
@@ -636,6 +646,7 @@ R:You will die in 1289 turns.
 R:You will encounter a dark, tall stranger...
 R:You will encounter a tall, dark, and gruesome creature...
 R:You will find a bushel of money.
+R:You will need a Raygun in the end, but not to shoot the Vorticon...
 R:You will obtain your death if you keep diving.
 R:You will obtain your goal if you keep diving.
 R:You! You are a very secretive person, even in that incarnation.

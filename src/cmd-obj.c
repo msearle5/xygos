@@ -824,7 +824,7 @@ void do_cmd_activate(struct command *cmd)
 }
 
 /**
- * Eat some food 
+ * Eat some food (or, if an Android, recharge)
  */
 void do_cmd_eat_food(struct command *cmd)
 {
@@ -1045,7 +1045,14 @@ void do_cmd_refill(struct command *cmd)
 		msg("Your light cannot be recharged.");
 		return;
 	} else if (of_has(light->flags, OF_TAKES_FUEL)) {
+		bool was_removable = obj_can_takeoff(light);
+
 		refill_lamp(light, obj);
+
+		bool is_removable = obj_can_takeoff(light);
+		if ((!is_removable) && (was_removable)) {
+			msgt(MSG_FAULTY, "As you recharge it, your light clamps itself firmly to you!");
+		}
 	} else {
 		msg("Your light cannot be recharged.");
 		return;

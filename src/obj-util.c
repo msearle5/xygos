@@ -891,10 +891,14 @@ bool obj_can_refill(const struct object *obj)
 	return false;
 }
 
-/* Can only take off non-faulty items */
+/* Can only take off non-sticky (or for the special case of lamps, uncharged) items */
 bool obj_can_takeoff(const struct object *obj)
 {
-	return !obj_has_flag(obj, OF_STICKY);
+	if (!obj_has_flag(obj, OF_STICKY))
+		return true;
+	if (tval_is_light(obj) && (obj->timeout == 0))
+		return true;
+	return false;
 }
 
 /* Can only put on wieldable items */

@@ -573,6 +573,9 @@ void light_timeout(struct object *obj)
 		if (burnt->known)
 			object_delete(&burnt->known);
 		object_delete(&burnt);
+	} else if (obj_has_flag(obj, OF_STICKY) && object_is_carried(player, obj)) {
+		/* Remind you that you can take it off now */
+		msg("It shifts about, and you realise that it is no longer attached to you.");
 	}
 }
 

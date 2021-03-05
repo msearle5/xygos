@@ -774,7 +774,7 @@ void do_inven_wield(struct object *obj, int slot, bool verbose, bool overflow)
 		msgt(MSG_WIELD, fmt, o_name, I2A(slot));
 
 	/* Sticky flag gets a special mention */
-	if (of_has(wielded->flags, OF_STICKY)) {
+	if (!obj_can_takeoff(obj)) {
 		/* Warn the player */
 		msgt(MSG_FAULTY, "Oops! It sticks to you like a magnet!");
 	}

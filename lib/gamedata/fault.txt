@@ -37,7 +37,7 @@ conflict-flags:NO_TELEPORT
 name:dullness
 type:helm
 type:crown
-values:INT[-5] | WIS[-5]
+values:INT[-5] | WIS[-5] | CHR[-5]
 desc:makes you mentally slow
 
 name:sickliness
@@ -82,6 +82,12 @@ type:boots
 values:SPD[-10] | STEALTH[-10] | CHR[-10]
 flags:AGGRAVATE
 desc:wakes up and annoys nearby monsters, and delays your escape
+
+name:magnetic
+# ... or high level?
+type:light
+flags:STICKY
+desc:clamps itself to you for as long as it has power
 
 name:poisoned
 type:gun
@@ -270,7 +276,7 @@ type:hard armor
 type:dragon armor
 values:RES_FIRE[-1] | RES_COLD[1]
 desc:makes you vulnerable to fire attacks, but resistant to cold
-conflict:chilled to the bone
+conflict:chilling
 
 name:chilling
 type:boots
@@ -284,7 +290,7 @@ type:hard armor
 type:dragon armor
 values:RES_FIRE[1] | RES_COLD[-1]
 desc:makes you vulnerable to cold attacks, but resistant to fire
-conflict:burning up
+conflict:burning
 
 name:steelskin
 type:digger

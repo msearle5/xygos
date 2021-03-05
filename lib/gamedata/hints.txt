@@ -257,6 +257,7 @@ H:They say that shopkeepers sometimes try to cheat the customer.
 H:They say that smart guys hang around at 1500m.
 H:They say that spam is not entirely useless.
 H:They say that speed kills.
+H:They say that sticky situations are back, but with patience can be discharged.
 H:They say that the key to killing tougher monsters is called "hit&run".
 H:They say that the thing about banishment is that it works both ways.
 H:They say that there is a speed limit.
