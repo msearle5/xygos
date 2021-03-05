@@ -1046,6 +1046,8 @@ static void wiz_reroll_item(struct object *obj)
 	new->slays = NULL;
 	mem_free(new->brands);
 	new->brands = NULL;
+	mem_free(new->faults);
+	new->faults = NULL;
 
 	/* Main loop. Ask for magification and artifactification */
 	while (true) {
@@ -1421,13 +1423,13 @@ static void do_cmd_wiz_play(void)
 		wiz_display_item(obj, all);
 
 		/* Get choice */
-		if (!get_com("[a]ccept [s]tatistics [r]eroll [t]weak [c]urse [q]uantity [k]nown? ", &ch))
+		if (!get_com("[a]ccept [s]tatistics [r]eroll [t]weak [f]ault [q]uantity [k]nown? ", &ch))
 			break;
 
 		if (ch == 'A' || ch == 'a') {
 			changed = true;
 			break;
-		} else if (ch == 'c' || ch == 'C')
+		} else if (ch == 'f' || ch == 'F')
 			wiz_tweak_fault(obj);
 		else if (ch == 's' || ch == 'S')
 			wiz_statistics(obj, player->depth);
@@ -1463,17 +1465,8 @@ static void do_cmd_wiz_play(void)
 		msg("Changes ignored.");
 }
 
-/**
- * What happens when you cheat death.  Tsk, tsk.
- */
-void wiz_cheat_death(void)
+static void cure_all()
 {
-	/* Mark social class, reset age, if needed */
-	player->age = 1;
-	player->noscore |= NOSCORE_WIZARD;
-
-	player->is_dead = false;
-
 	/* Restore hit & spell points */
 	player->chp = player->mhp;
 	player->chp_frac = 0;
@@ -1487,9 +1480,26 @@ void wiz_cheat_death(void)
 	(void)player_clear_timed(player, TMD_IMAGE, true);
 	(void)player_clear_timed(player, TMD_STUN, true);
 	(void)player_clear_timed(player, TMD_CUT, true);
+	(void)player_clear_timed(player, TMD_SLOW, true);
+	(void)player_clear_timed(player, TMD_AMNESIA, true);
+	(void)player_clear_timed(player, TMD_RAD, true);
 
-	/* Prevent starvation */
-	player_set_timed(player, TMD_FOOD, PY_FOOD_MAX - 1, false);
+	/* No longer hungry */
+	player_set_timed(player, TMD_FOOD, PY_FOOD_FULL - 1, false);
+}
+
+/**
+ * What happens when you cheat death.  Tsk, tsk.
+ */
+void wiz_cheat_death(void)
+{
+	/* Mark social class, reset age, if needed */
+	player->age = 1;
+	player->noscore |= NOSCORE_WIZARD;
+
+	player->is_dead = false;
+
+	cure_all();
 
 	/* Cancel recall */
 	if (player->word_recall)
@@ -1542,24 +1552,8 @@ static void do_cmd_wiz_cure_all(void)
 	/* Restore the level */
 	effect_simple(EF_RESTORE_EXP, source_none(), "0", 0, 0, 0, 0, 0, NULL);
 
-	/* Heal the player */
-	player->chp = player->mhp;
-	player->chp_frac = 0;
-
 	/* Cure stuff */
-	(void)player_clear_timed(player, TMD_BLIND, true);
-	(void)player_clear_timed(player, TMD_CONFUSED, true);
-	(void)player_clear_timed(player, TMD_POISONED, true);
-	(void)player_clear_timed(player, TMD_AFRAID, true);
-	(void)player_clear_timed(player, TMD_PARALYZED, true);
-	(void)player_clear_timed(player, TMD_IMAGE, true);
-	(void)player_clear_timed(player, TMD_STUN, true);
-	(void)player_clear_timed(player, TMD_CUT, true);
-	(void)player_clear_timed(player, TMD_SLOW, true);
-	(void)player_clear_timed(player, TMD_AMNESIA, true);
-
-	/* No longer hungry */
-	player_set_timed(player, TMD_FOOD, PY_FOOD_FULL - 1, false);
+	cure_all();
 
 	/* Redraw everything */
 	do_cmd_redraw();
@@ -1592,7 +1586,7 @@ static void do_cmd_wiz_jump(void)
 	depth = atoi(tmp_val);
 
 	/* Paranoia */
-	if (depth < 0) depth = 0;
+	if (depth < 0) depth = 0; 
 
 	/* Paranoia */
 	if (depth > z_info->max_depth - 1)
