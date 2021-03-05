@@ -56,12 +56,14 @@ struct flavor *flavors;
  * Longest "-" infix is 1
  * Longest " XX 1.2.3" version is 9
  */
-static char card_adj[MAX_TITLES][32];
+static char **card_adj;
+static int n_card_adj;
 
 /**
  * Hold the titles of pills, 6 to 28 characters each, plus quotes.
  */
-static char pill_adj[MAX_TITLES][32];
+static char **pill_adj;
+static int n_pill_adj;
 
 static void flavor_assign_fixed(void)
 {
@@ -140,6 +142,28 @@ void flavor_reset_fixed(void)
 	}
 }
 
+static void clean_strings(char ***array, int *length)
+{
+	for(int i=0;i<*length;i++)
+		string_free((*array)[i]);
+	mem_free(*array);
+	*array = NULL;
+	*length = 0;
+}
+
+static void insert_string(char *buf, int i, char ***array, int *length)
+{
+	if (i >= *length) {
+		int old = *length;
+		*length = i+1;
+		*array = mem_realloc(*array, sizeof(*array) * *length);
+		for(int j=old; j<*length; j++) {
+			(*array)[j] = NULL;
+		}
+	}
+	(*array)[i] = string_make(buf);
+}
+
 /**
  * Prepare the "variable" part of the "k_info" array.
  *
@@ -181,6 +205,9 @@ void flavor_init(void)
 	if (OPT(player, birth_randarts))
 		flavor_reset_fixed();
 
+	clean_strings(&pill_adj, &n_pill_adj);
+	clean_strings(&card_adj, &n_card_adj);
+
 	flavor_assign_fixed();
 
 	flavor_assign_random(TV_LIGHT);
@@ -199,9 +226,9 @@ void flavor_init(void)
 	 * For each output name:
 	 * 		Copy from a sequential input basename
 	 * 		+ a randomly chosen input suffix.
-	 * 		FIX doesnt randomize
 	 */
-	char suff[MAX_TITLES][8];
+	char **suff = NULL;
+	int n_suff = 0;
 	
 	/* Pull out suffixes into an array */
 	int pills = 0;
@@ -210,7 +237,11 @@ void flavor_init(void)
 			char *suffix = strchr(f->text, '|');
 			assert(suffix);
 			suffix++;
-			strncpy(suff[pills++], suffix, sizeof(suff[0]));
+			char buf[16];
+			strncpy(buf, suffix, sizeof(buf));
+			buf[sizeof(buf)-1] = 0;
+			insert_string(buf, pills, &suff, &n_suff);
+			pills++;
 		}
 	}
 
@@ -224,12 +255,16 @@ void flavor_init(void)
 			char *suffix = strchr(base, '|');
 			assert(suffix);
 			*suffix = 0;
-			snprintf(pill_adj[i], sizeof(pill_adj[i]), "%s%s", base, suff[randint0(pills)]);
-			pill_adj[i][sizeof(pill_adj[i])-1] = 0;
+			char buf[64];
+			snprintf(buf, sizeof(buf), "%s%s", base, suff[randint0(pills)]);
+			buf[sizeof(buf)-1] = 0;
+			insert_string(buf, i, &pill_adj, &n_pill_adj);
 			i++;
 		}
 	}
 	flavor_assign_random(TV_PILL);
+
+	clean_strings(&suff, &n_suff);
 
 	/* Cards (random titles, always blue) */
 	int cards = 0;
@@ -238,7 +273,11 @@ void flavor_init(void)
 			char *suffix = strchr(f->text, '|');
 			assert(suffix);
 			suffix++;
-			strncpy(suff[cards++], suffix, sizeof(suff[0]));
+			char buf[16];
+			strncpy(buf, suffix, sizeof(buf));
+			buf[sizeof(buf)-1] = 0;
+			insert_string(buf, cards, &suff, &n_suff);
+			cards++;
 		}
 	}
 
@@ -291,7 +330,7 @@ void flavor_init(void)
 			int rn3 = randint0(randint0(randint0(9)));
 			switch(randint0(12)) {
 				case 0:
-					switch(randint0(6)) {
+					switch(randint0(7)) {
 						default:
 							strcpy(suff, " X");
 							break;
@@ -306,6 +345,9 @@ void flavor_init(void)
 							break;
 						case 4:
 							strcpy(suff, " XX");
+							break;
+						case 5:
+							strcpy(suff, " II");
 							break;
 					}
 					if (!one_in_(3))
@@ -326,8 +368,10 @@ void flavor_init(void)
 					sprintf(suff, " %d.%d.%d", rn1, rn2, rn3);
 					break;
 			}
-			snprintf(card_adj[i], sizeof(card_adj[i]), "%s%s%s%s", base, sep, ext, suff);
-			card_adj[i][sizeof(card_adj[i])-1] = 0;
+			char buf[64];
+			snprintf(buf, sizeof(buf), "%s%s%s%s", base, sep, ext, suff);
+			buf[sizeof(buf)-1] = 0;
+			insert_string(buf, i, &card_adj, &n_card_adj);
 			i++;
 		}
 	}

@@ -8,13 +8,6 @@
 # flavor:<index>:<attr>:<text>
 # fixed:<index>:<sval>:<attr>:<text>
 
-#### Food
-kind:food:,
-
-fixed:303:choke-apple:Light Green:& apple~
-fixed:304:habanero:Red:& pepper~
-fixed:305:snozzcumber:Green:& cucumber~
-
 #### Lights
 kind:light:~
 
@@ -28,6 +21,13 @@ flavor:312:Cream:& long candle~
 flavor:313:Cream:& tapered candle~
 flavor:314:Cream:& ribbed candle~
 flavor:315:Violet:& striped candle~
+
+#### Food
+kind:food:,
+
+fixed:320:choke-apple:Light Green:& apple~
+fixed:321:habanero:Red:& pepper~
+fixed:322:snozzcumber:Green:& cucumber~
 
 
 ##### Rings #####
@@ -381,6 +381,15 @@ flavor:242:Magenta-Pink:stanfor|imine
 
 kind:card:-
 
+flavor:243:Deep Light Blue:Pep|Disrupt
+flavor:244:Deep Light Blue:Laser|Rescue
+flavor:245:Deep Light Blue:Light|4U
+flavor:246:Deep Light Blue:Mind|Spin
+flavor:247:Deep Light Blue:Adjust|Climber
+flavor:248:Deep Light Blue:Detona|Clone
+flavor:249:Deep Light Blue:Fire|Pocket
+flavor:250:Deep Light Blue:Pyro|Socket
+flavor:251:Deep Light Blue:Rev|Bodge
 flavor:252:Deep Light Blue:Speedy|Max
 flavor:253:Deep Light Blue:Net|Wumpus
 flavor:254:Deep Light Blue:Ulti|Run
@@ -409,14 +418,14 @@ flavor:276:Deep Light Blue:Nova|Lite
 flavor:277:Deep Light Blue:Quick|boost
 flavor:278:Deep Light Blue:Turbo|byte
 flavor:279:Deep Light Blue:Master|leap
-flavor:280:Deep Light Blue:Star|flyer
+flavor:280:Deep Light Blue:Star|flight
 flavor:281:Deep Light Blue:Multi|Dream
 flavor:282:Deep Light Blue:Inter|Matic
 flavor:283:Deep Light Blue:Digi|Flash
 flavor:284:Deep Light Blue:Elite|Wise
 flavor:285:Deep Light Blue:Infini|Smart
 flavor:286:Deep Light Blue:Simple|Creator
-flavor:287:Deep Light Blue:Cyber|Dream
+flavor:287:Deep Light Blue:Cyber|Chewer
 flavor:288:Deep Light Blue:Super|Plus
 flavor:289:Deep Light Blue:Ultra|Con
 flavor:290:Deep Light Blue:Auto|Zap
@@ -432,8 +441,9 @@ flavor:299:Deep Light Blue:Fast|Extend
 flavor:300:Deep Light Blue:Logi|Star
 flavor:301:Deep Light Blue:Think|Words
 flavor:302:Deep Light Blue:Brain|Storm
-# Adjust|Climber
-# Master|Wipe
-# Detona|Clone
-# Fire|Pocket
-# Pyro|Socket
+flavor:303:Deep Light Blue:Total|Roll
+flavor:304:Deep Light Blue:Clean|Swing
+# |Wipe
+# |Pack
+# |Stretch
+# |Mission
