@@ -49,6 +49,12 @@ static void tourist_init(void)
 			item.tval = TV_LIGHT;
 			item.sval = lookup_sval(TV_LIGHT, "firecracker");
 			break;
+		case 1:
+		case 2:
+			item.tval = TV_CARD;
+			item.sval = lookup_sval(TV_LIGHT, "rumor");
+			item.max = randint1(6);
+			break;
 		default:
 			player->au += 30;
 	}

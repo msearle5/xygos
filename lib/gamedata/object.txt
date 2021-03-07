@@ -774,21 +774,24 @@ dice:40
 desc:A thick slice of pork, salted to keep it from spoiling.  It is very
 desc: filling.
 
-name:& Honey-cake~
+name:& Hunter's pie~
 type:food
 graphics:,:y
 level:5
 weight:10
-cost:10
-alloc:30:20 to 70
-pile:40:1d3
+cost:100
+alloc:15:15 to 70
+pile:25:1d3
 power:1
 msg:Delicious!
 effect:NOURISH:INC_TO
-dice:60
-desc:The Beornings are renowned as the best bakers among men, and their
-desc: honey-cakes are deservedly prized.  Made of wheat flour with nuts and
-desc: honey and twice baked, they will sustain you through a long march.
+dice:90
+effect:TIMED_INC:BOLD
+dice:200+4d40
+desc:A delicious sweet, involving dried fruit and honey and some secret ingredients that 
+desc:have never been disclosed but do seem to keep customers coming back for more, despite 
+desc:the high price. It's named after the first baker to come up with the secret recipe 
+desc:(so yes, it's vegetarian:), and still made as it was before the War.
 
 name:& Piece~ of Elvish Waybread
 type:food
@@ -942,7 +945,7 @@ effect:RESTORE_STAT:SPD
 effect:NOURISH:INC_BY
 dice:5
 
-name:Clear Mind
+name:clarity
 type:mushroom
 graphics:,:d
 level:0
@@ -959,7 +962,7 @@ dice:50+7d7
 effect:NOURISH:INC_BY
 dice:5
 
-name:Emergency
+name:emergency
 type:mushroom
 graphics:,:d
 level:0
@@ -3168,6 +3171,20 @@ values:SPD[-3+1d2]
 
 
 ##### Cards #####
+
+
+### Special case for quest ###
+
+name:security
+type:card
+graphics:-:Deep Light Blue
+level:1
+weight:5g
+cost:10
+alloc:0:1 to 100
+power:0
+desc:It's encrypted, and you have no way to know what's on it.
+
 
 ### Teleportation ###
 

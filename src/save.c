@@ -41,6 +41,7 @@
 #include "player-timed.h"
 #include "trap.h"
 #include "ui-term.h"
+#include "world.h"
 
 
 /**
@@ -411,6 +412,26 @@ void rdwr_quests(void)
 		rdwr_u32b(&player->quests[i].flags);
 		rdwr_u16b(&player->quests[i].x);
 		rdwr_u16b(&player->quests[i].y);
+		rdwr_s32b(&player->quests[i].town);
+		rdwr_s32b(&player->quests[i].store);
+	}
+}
+
+void rdwr_world(void)
+{
+	rdwr_u32b(&world_town_seed);
+	for(int i=0;i<z_info->town_max;i++) {
+		rdwr_u32b(&t_info[i].connections);
+		rdwr_string(&t_info[i].name);
+		rdwr_string(&t_info[i].geography);
+		rdwr_string(&t_info[i].underground);
+		rdwr_bool(&t_info[i].lake);
+		rdwr_byte(&t_info[i].lava_num);
+		if ((!(t_info[i].connect)) && (t_info[i].connections))
+			t_info[i].connect = mem_zalloc(sizeof(t_info[i].connect[0]) * t_info[i].connections);
+		for(int j=0; j<(int)t_info[i].connections; j++) {
+			RDWR_PTR(&t_info[i].connect[j], t_info);
+		}
 	}
 }
 
@@ -419,6 +440,12 @@ void wr_quests(void)
 	/* Dump the quests */
 	rdwr_u16b(&z_info->quest_max);
 	rdwr_quests();
+}
+
+void wr_world(void)
+{
+	wr_u16b(z_info->town_max);
+	rdwr_world();
 }
 
 void wr_player(void)
@@ -487,6 +514,8 @@ void wr_player(void)
 	wr_s16b(player->recall_depth);
 	wr_s16b(player->danger);
 
+	RDWR_PTR(&(player->town), t_info);
+
 	/* More info */
 	wr_s16b(0);	/* oops */
 	wr_s16b(0);	/* oops */
@@ -515,6 +544,10 @@ void wr_player(void)
 
 	/* Quest currently active */
 	wr_s32b(player->active_quest);
+
+	/* Factions */
+	wr_s32b(player->bm_faction);
+	wr_s32b(player->town_faction);
 
 	/* Player flags */
 	for(i=0; i < (int)PF_SIZE; i++)
@@ -758,39 +791,41 @@ void wr_stores(void)
 	int i;
 
 	wr_u16b(MAX_STORES);
-	for (i = 0; i < MAX_STORES; i++) {
-		const struct store *store = &stores[i];
-		struct object *obj;
+	for(int t=0; t<z_info->town_max; t++) {
+		for (i = 0; i < MAX_STORES; i++) {
+			const struct store *store = &t_info[t].stores[i];
+			struct object *obj;
 
-		/* Save the current owner */
-		wr_byte(store->owner->oidx);
+			/* Save the current owner */
+			wr_byte(store->owner->oidx);
 
-		/* Save the current and maximum stock size */
-		wr_u16b(store->stock_num);
-		wr_s16b(store->stock_size);
+			/* Save the current and maximum stock size */
+			wr_u16b(store->stock_num);
+			wr_s16b(store->stock_size);
 
-		/* Save the stock */
-		for (obj = store->stock; obj; obj = obj->next) {
-			wr_item(obj->known);
-			wr_item(obj);
+			/* Save the stock */
+			for (obj = store->stock; obj; obj = obj->next) {
+				wr_item(obj->known);
+				wr_item(obj);
+			}
+
+			/* Save the entrance position */
+			wr_u16b(store->x);
+			wr_u16b(store->y);
+
+			/* Save the ban days and reason */
+			wr_u32b(store->bandays);
+			wr_string(store->banreason ? store->banreason : "");
+
+			/* Save the layaway index and day */
+			wr_s32b(store->layaway_idx);
+			wr_s32b(store->layaway_day);
+
+			/* Destroyed flag and danger */
+			wr_bool(store->destroy);
+			wr_bool(store->open);
+			wr_s32b(store->max_danger);
 		}
-
-		/* Save the entrance position */
-		wr_u16b(store->x);
-		wr_u16b(store->y);
-
-		/* Save the ban days and reason */
-		wr_u32b(store->bandays);
-		wr_string(store->banreason ? store->banreason : "");
-
-		/* Save the layaway index and day */
-		wr_s32b(store->layaway_idx);
-		wr_s32b(store->layaway_day);
-
-		/* Destroyed flag and danger */
-		wr_bool(store->destroy);
-		wr_bool(store->open);
-		wr_s32b(store->max_danger);
 	}
 }
 

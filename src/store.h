@@ -31,15 +31,16 @@
 enum {
 	STORE_NONE      = -1,
 	STORE_GENERAL	= 0,
-	STORE_ARMOR	= 1,
+	STORE_ARMOR		= 1,
 	STORE_WEAPON	= 2,
 	STORE_TEMPLE	= 3,
 	STORE_ALCHEMY	= 4,
-	STORE_MAGIC	= 5,
+	STORE_MAGIC		= 5,
 	STORE_B_MARKET	= 6,
-	STORE_HOME	= 7,
-	STORE_HQ	= 8,
-	MAX_STORES	= 9
+	STORE_HOME		= 7,
+	STORE_HQ		= 8,
+	STORE_AIR		= 9,
+	MAX_STORES		= 10
 };
 
 struct object_buy {
@@ -53,6 +54,7 @@ struct owner {
 	char *name;
 	unsigned int oidx;
 	s32b max_cost;
+	s32b greed;
 };
 
 struct store_entry {
@@ -75,8 +77,7 @@ struct store {
 	s32b low_danger;
 	s32b high_danger;
 	bool destroy;				/* Destroy when next entering the town */
-	bool open;					/* Is currently open (has an entrance). Destroyed stores must be closed (unless
-									you want an entrance in the ruin!) */
+	bool open;					/* Is currently open (has an entrance). Destroyed stores must be closed (unless you want an entrance in the ruin!) */
 	u16b x;						/* Position in the level, this should be valid even if closed or destroyed */
 	u16b y;
 
@@ -104,6 +105,7 @@ struct store {
 };
 
 extern struct store *stores;
+extern struct store *stores_init;
 
 void store_delete(struct store *s, struct object *obj, int amt);
 struct store *get_store_by_idx(int idx);
@@ -125,6 +127,7 @@ int price_item(struct store *store, const struct object *obj,
 bool store_will_buy_tester(const struct object *obj);
 bool store_check_num(struct store *store, const struct object *obj);
 int find_inven(const struct object *obj);
+void stores_copy(struct store *src);
 
 extern struct owner *store_ownerbyidx(struct store *s, unsigned int idx);
 

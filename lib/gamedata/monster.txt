@@ -346,6 +346,29 @@ flags:OPEN_DOOR | SMART | SPIRIT
 flags:MALE
 flags:FORCE_SLEEP | SPECIAL_GEN
 
+# friends? ranged?
+name:Ky, the Pie Spy
+base:person
+color:b
+speed:110
+hit-points:70
+hearing:20
+armor-class:5
+sleepiness:5
+depth:9
+rarity:1
+experience:90
+drop:card:blinking:70:2:6
+drop:card:security:100:1:1
+blow:HIT:HURT:2d4
+blow:TOUCH:EAT_ITEM
+blow:TOUCH:EAT_GOLD
+desc:She looks like just one more of the Black Market's agents - in other words, a grab-and-blink thief. But she matches the description you were given, so hopefully she's still carrying the stolen recipe.
+flags:UNIQUE | EVIL
+flags:DROP_60 | DROP_40 | DROP_20
+flags:OPEN_DOOR | SMART | SPIRIT | TAKE_ITEM
+flags:FEMALE | SPECIAL_GEN | QUESTOR
+
 
 ##### LEMMINGS #####
 

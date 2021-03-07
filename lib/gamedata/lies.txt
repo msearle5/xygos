@@ -151,6 +151,7 @@ R:Faeg i-varv din na lanc a nu ranc!
 R:Faster! Faster, potato heads!
 R:Forth Eorlingas!
 R:Fortune has betrayed you but for the momentum. Confidence!
+R:Flying to another city isn't the cheapest way to heal, but it is the fastest.
 R:From the standpoints of reason, business, caution you are probably wrong?
 R:From the standpoints of reason, business, caution you are wrong? Who cares!
 R:Full version coming soon - call 555-XYGOS for details!
@@ -263,6 +264,7 @@ R:Monsters sleep because you are boring, not because they ever get tired.
 R:Most monsters prefer minced meat. That's why they are hitting you!
 R:Most rumors are just as misleading as this one.
 R:My cat's breath smells like cat food.
+R:My eyes! The goggles do nothing!
 R:NO CARRIER.
 R:Nadath na i moe cerich.
 R:Nai tiruvantel ar varyuvantel i Valar tielyanna nu vilya.
@@ -473,6 +475,7 @@ R:They say that that these are only some of the benefits of an all-cheese diet.
 R:They say that there are many ways to die, and just as many ways to win.
 R:They say that there are ninnies, simpletons. And they never come back.
 R:They say that there is a trap on this level!
+R:They say that there is no lumber cabal.
 R:They say that there is no such thing as free advice.
 R:They say that there was once a barbarian named Cohen.
 R:They say that there was once a soldier named Toasty.
@@ -497,6 +500,7 @@ R:They say that you are fated to die on level nivelo.
 R:They say that you can always trust rumors.
 R:They say that you can find Genetic Engineering in ancient scrolls of wisdom.
 R:They say that you can gain Charisma by dipping your T-shirt in a fountain.
+R:They say that you don't win friends with salad.
 R:They say you can get a potion of cure dianthroritis in 30 turns, or it's free.
 R:They say that you can stand on an explosive barrel and fire a rocket down.
 R:They say that you got the quad damage!

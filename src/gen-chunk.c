@@ -69,6 +69,7 @@ struct chunk *chunk_write(struct chunk *c)
  */
 void chunk_list_add(struct chunk *c)
 {
+	assert(c->name);
 	int newsize = (chunk_list_max + CHUNK_LIST_INCR) *	sizeof(struct chunk *);
 
 	/* Lengthen the list if necessary */
@@ -115,6 +116,8 @@ bool chunk_list_remove(char *name)
 struct chunk *chunk_find_name(char *name)
 {
 	int i;
+
+	assert(name);
 
 	for (i = 0; i < chunk_list_max; i++)
 		if (!strcmp(name, chunk_list[i]->name))

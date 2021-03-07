@@ -76,11 +76,6 @@ static u32b WELLRNG1024a (void){
 }
 /* end WELL RNG */
 
-/**
- * Simple RNG, implemented with a linear congruent algorithm.
- */
-#define LCRNG(X) ((X) * 1103515245 + 12345)
-
 
 /**
  * Whether to use the simple RNG or not.
@@ -158,6 +153,19 @@ void Rand_init(void)
 	if (Rand_quick) {
 		u32b seed;
 
+#if _POSIX_C_SOURCE >= 199309L
+
+		/* Read the high resolution timer */
+		struct timespec ts;
+		clock_gettime(CLOCK_MONOTONIC, &ts);
+		long lseed = ts.tv_nsec;
+		lseed ^= ts.tv_sec;
+		lseed ^= (lseed >> 30);
+		lseed |= 1;
+		seed = lseed;
+
+#else
+
 		/* Basic seed */
 		seed = (u32b)(time(NULL));
 
@@ -167,6 +175,7 @@ void Rand_init(void)
 		seed = ((seed >> 3) * (getpid() << 1));
 
 #endif
+#endif
 
 		/* Use the complex RNG */
 		Rand_quick = false;
@@ -174,6 +183,12 @@ void Rand_init(void)
 		/* Seed the "complex" RNG */
 		Rand_state_init(seed);
 	}
+}
+
+/* Random 32-bit unsigned */
+u32b Rand_u32b(void)
+{
+	return WELLRNG1024a();
 }
 
 /** Random double.

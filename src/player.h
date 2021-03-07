@@ -130,6 +130,14 @@ enum {
 	SKILL_MAX
 };
 
+struct quest_location
+{
+	s32b town;					/* Town the quest is given from; can be none (-1) */
+	s32b store;					/* Store the quest is given from; can be STORE_NONE (-1) */
+	char *location;				/* Town or quest name */
+	char *storename;			/* In this town */
+};
+
 /**
  * Structure for the "quests"
  */
@@ -149,7 +157,10 @@ struct quest
 	u16b max_remaining;			/* The maximum number of items remaining to complete the quest */
 	s32b cur_num;				/* Number killed (unused) */
 	s32b max_num;				/* Number required (unused) */
+	s32b town;					/* Town the quest is given from; can be none (-1) */
 	s32b store;					/* Store the quest is given from; can be STORE_NONE (-1) */
+	struct quest_location *loc;	/* List of locations to start a quest from */
+	s32b quests;				/* Number of quests */
 	u32b flags;
 	char *target_item;			/* Item (or item class) considered a target of the quest */
 	char *intro;				/* Description given when you choose whether to take it */
@@ -490,6 +501,8 @@ struct player_upkeep {
 	bool generate_level;	/* True if level needs regenerating */
 	bool only_partial;		/* True if only partial updates are needed */
 	bool dropping;			/* True if auto-drop is in progress */
+	bool flight_level;		/* True if reached this level through the airport */
+	char *last_level;		/* Last level name */
 
 	int energy_use;			/* Energy use this turn */
 	int new_spells;			/* Number of spells available */
@@ -559,6 +572,7 @@ struct player {
 
 	s32b au;		/* Current Gold */
 
+	struct town *town;	/* Current town */
 	s16b max_depth;	/* Max depth */
 	s16b recall_depth;	/* Recall depth */
 	s16b depth;		/* Cur depth */
@@ -604,6 +618,8 @@ struct player {
 	struct quest *quests;				/* Quest history */
 	s32b active_quest;					/* Currently active quest */
 	u16b total_winner;					/* Total winner */
+	s32b bm_faction;					/* Faction with the black market */
+	s32b town_faction;					/* and with the rest of town */
 
 	u16b noscore;				/* Cheating flags */
 

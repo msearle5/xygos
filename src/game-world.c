@@ -41,6 +41,7 @@
 #include "store.h"
 #include "target.h"
 #include "trap.h"
+#include "world.h"
 #include "z-queue.h"
 
 u16b daycount = 0;
@@ -110,13 +111,19 @@ struct level *level_by_name(char *name)
 
 /**
  * Find a level by its depth
+ * If it is the surface, or it matches your current town
  */
 struct level *level_by_depth(int depth)
 {
+	assert(player);
+	assert(player->town);
 	struct level *lev = world;
 	while (lev) {
 		if (lev->depth == depth) {
-			break;
+			if (lev->depth == 0)
+				break;
+			if ((player->town->downto) && (!streq(player->town->downto, lev->name)))
+				break;
 		}
 		lev = lev->next;
 	}
@@ -132,6 +139,45 @@ bool is_daytime(void)
 		return true;
 
 	return false;
+}
+
+/**
+ * Return, in a static buffer, a time (turns) given as HH:MM, 24-hour clock.
+ */
+static char *do_format_time(int turns, const char *fmt)
+{
+	static char buf[8];
+	int hh, mm;
+	/* There are 24*60 minutes, and 10L * z_info->day_length turns, in a day
+	 * and the first half of a day is daytime.
+	 */
+	turns %= (10L * z_info->day_length);
+	turns *= (24 * 60);
+	turns /= (10L * z_info->day_length);
+
+	/* Convert minutes to hours and minutes */
+	mm = turns % 60;
+	hh = turns / 60;
+	sprintf(buf, "%02d:%02d", hh, mm);
+	return buf;
+}
+
+/**
+ * Return, in a static buffer, the time of day (turns) given as HH:MM, 24-hour clock.
+ * The offset is so that the sun rises at 6am, not midnight.
+ */
+char *format_time(int turns)
+{
+	return do_format_time(turns + ((10L * z_info->day_length) / 4), "%02d:%02d");
+}
+
+/**
+ * Return, in a static buffer, a duration (turns) given as HH:MM, 24-hour clock.
+ * Unlike times of day, there is no offset and leading zeroes are suppressed.
+ */
+char *format_duration(int turns)
+{
+	return do_format_time(turns, "%d:%02d");
 }
 
 /**
@@ -785,9 +831,10 @@ void process_world(struct chunk *c)
 						chance *= 300;
 						chance /= z_info->food_value;
 						if (one_in_(chance)) {
-							/* No mushrooms growing in lava */
+							/* No mushrooms growing in lava, water */
 							if (square_isprojectable(cave, player->grid) &&
-								(!square_isfiery(cave, player->grid))) {
+								(!square_isfiery(cave, player->grid)) &&
+								(!square_iswater(cave, player->grid))) {
 								/* Food item or mushie, sometimes high level.
 								 * You are more likely to get food items rather than shrooms - and more likely
 								 * to get low level ones - when very low food
@@ -1115,12 +1162,12 @@ void process_player(void)
 	notice_stuff(player);
 }
 
-/**
- * Housekeeping on arriving on a new level
- */
-void on_new_level(void)
+/** Handle timed danger.
+ * If the timie limit is active and sufficient time has passed,
+ * increase the danger level and mark stores for destruction.
+ **/
+void increase_danger_level(void)
 {
-	/* Handle timed danger */
 	if (OPT(player,birth_time_limit)) {
 		int danger = 0;
 		int pturn = turn / 10;
@@ -1143,6 +1190,15 @@ void on_new_level(void)
 			}
 		}
 	}
+}
+
+/**
+ * Housekeeping on arriving on a new level
+ */
+void on_new_level(void)
+{
+	/* Handle timed danger */
+	increase_danger_level();
 
 	/* Arena levels are not really a level change */
 	if (!player->upkeep->arena_level) {

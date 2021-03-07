@@ -17,17 +17,20 @@
 # The rarities are random values (base + XdY + level-dependent), producing a chance in 10000 of the item
 # being present. A leading - applies only to the base, not the entire value, unlike typical random values.
 # (For example, an item with -1000+M2000 would give -1000 at level 0, 0 at level 63 and 1000 at level 127.
-# So it would not appear until yuo had reach a maximum dungeon level of 63 and then would increase, to a
+# So it would not appear until you had reach a maximum dungeon level of 63 and then would increase, to a
 # maximum of 10% of the time at dungeon level 127.
 
 
-# General store
+# General ('convenience'?) store
 store:1:General Store
-owner:5000:Bilbo the Friendly (Hobbit)
-owner:10000:Rincewind the Chicken (Human)
-owner:20000:Snafu the Midget (Gnome)
-owner:30000:Lyar-el the Comely (Elf)
-owner:0:-
+owner:8:5000:Bilbo the Friendly (Hobbit)
+owner:10:10000:Rincewind the Chicken (Human)
+owner:12:20000:Snafu the Midget (Gnome)
+owner:15:30000:Lyar-el the Comely (Elf)
+owner:15:30000:Lyar-el the Comely (Elf)
+owner:15:30000:Lyar-el the Comely (Elf)
+owner:15:30000:Lyar-el the Comely (Elf)
+owner:0:0:-
 slots:0:4
 turnover:2
 danger:65:80
@@ -61,11 +64,15 @@ buy:arrow
 
 # Armoury
 store:2:Armoury
-owner:5000:Kon-Dar the Ugly (Half-Orc)
-owner:10000:Darg-Low the Grim (Human)
-owner:25000:Decado the Handsome (Dunadan)
-owner:30000:Mauglin the Grumpy (Dwarf)
-owner:0:-
+owner:8:5000:Kon-Dar the Ugly (Half-Orc)
+owner:10:10000:Darg-Low the Grim (Human)
+owner:12:25000:Decado the Handsome (Dunadan)
+owner:14:30000:Mauglin the Grumpy (Dwarf)
+owner:14:30000:Mauglin the Grumpy (Dwarf)
+owner:14:30000:Mauglin the Grumpy (Dwarf)
+owner:14:30000:Mauglin the Grumpy (Dwarf)
+owner:14:30000:Mauglin the Grumpy (Dwarf)
+owner:0:0:-
 slots:6:18
 turnover:9
 danger:72:90
@@ -99,11 +106,17 @@ buy:dragon armor
 
 # Weaponsmith
 store:3:Weapon Smiths
-owner:5000:Ithyl-Mak the Beastly (Half-Troll)
-owner:10000:Arndal Beast-Slayer (Half-Elf)
-owner:25000:Tarl Beast-Master (Hobbit)
-owner:30000:Oglign Dragon-Slayer (Dwarf)
-owner:0:-
+owner:8:5000:Ithyl-Mak the Beastly (Half-Troll)
+owner:10:10000:Arndal Beast-Slayer (Half-Elf)
+owner:12:25000:Tarl Beast-Master (Hobbit)
+owner:14:30000:Oglign Dragon-Slayer (Dwarf)
+owner:14:30000:Oglign Dragon-Slayer (Dwarf)
+owner:14:30000:Oglign Dragon-Slayer (Dwarf)
+owner:14:30000:Oglign Dragon-Slayer (Dwarf)
+owner:14:30000:Oglign Dragon-Slayer (Dwarf)
+owner:14:30000:Oglign Dragon-Slayer (Dwarf)
+owner:14:30000:Oglign Dragon-Slayer (Dwarf)
+owner:0:0:-
 slots:3:14
 turnover:9
 danger:72:90
@@ -149,11 +162,17 @@ buy:hafted
 
 # Electronics Outlet
 store:4:Electronics
-owner:15000:Ludwig the Humble (Human)
-owner:20000:Gunnar the Paladin (Human)
-owner:25000:Delilah the Pure (Elf)
-owner:30000:Bosk the Wise (Dwarf)
-owner:0:-
+owner:8:15000:Ludwig the Humble (Human)
+owner:10:20000:Gunnar the Paladin (Human)
+owner:12:25000:Delilah the Pure (Elf)
+owner:14:30000:Bosk the Wise (Dwarf)
+owner:14:30000:Bosk the Wise (Dwarf)
+owner:14:30000:Bosk the Wise (Dwarf)
+owner:14:30000:Bosk the Wise (Dwarf)
+owner:14:30000:Bosk the Wise (Dwarf)
+owner:14:30000:Bosk the Wise (Dwarf)
+owner:14:30000:Bosk the Wise (Dwarf)
+owner:0:0:-
 slots:0:2
 turnover:9
 danger:60:75
@@ -172,11 +191,16 @@ buy:block
 
 # Pharmacy
 store:5:Pharmacy
-owner:10000:Mauser the Chemist (Half-Elf)
-owner:10000:Wizzle the Chaotic (Hobbit)
-owner:15000:Ga-nat the Greedy (Gnome)
-owner:15000:Vella the Slender (Human)
-owner:0:-
+owner:8:10000:Mauser the Chemist (Half-Elf)
+owner:10:10000:Wizzle the Chaotic (Hobbit)
+owner:12:15000:Ga-nat the Greedy (Gnome)
+owner:14:15000:Vella the Slender (Human)
+owner:14:15000:Vella the Slender (Human)
+owner:14:15000:Vella the Slender (Human)
+owner:14:15000:Vella the Slender (Human)
+owner:14:15000:Vella the Slender (Human)
+owner:14:15000:Vella the Slender (Human)
+owner:0:0:-
 slots:4:6
 turnover:2
 danger:70:90
@@ -199,11 +223,17 @@ buy:pill
 
 # Magic-user's
 store:6:Magic Shop
-owner:15000:Ariel the Sorceress (Half-Elf)
-owner:20000:Buggerby the Great (Gnome)
-owner:25000:Inglorian the Mage (Human)
-owner:30000:Luthien Starshine (High-Elf)
-owner:0:-y
+owner:8:15000:Ariel the Sorceress (Half-Elf)
+owner:10:20000:Buggerby the Great (Gnome)
+owner:12:25000:Inglorian the Mage (Human)
+owner:14:30000:Luthien Starshine (High-Elf)
+owner:14:30000:Luthien Starshine (High-Elf)
+owner:14:30000:Luthien Starshine (High-Elf)
+owner:14:30000:Luthien Starshine (High-Elf)
+owner:14:30000:Luthien Starshine (High-Elf)
+owner:14:30000:Luthien Starshine (High-Elf)
+owner:14:30000:Luthien Starshine (High-Elf)
+owner:0:0:-
 slots:4:14
 turnover:9
 danger:70:90
@@ -232,30 +262,59 @@ buy:rod
 
 # Black Market - no stock given but we still need slot/turnover info
 store:7:Black Market
-owner:15000:Lo-Hak the Awful (Half-Troll)
-owner:20000:Histor the Goblin (Kobold)
-owner:25000:Durwin the Shifty (Half-Orc)
-owner:30000:Drago the Fair (Elf)
-owner:0:-
+owner:8:15000:Lo-Hak the Awful (Half-Troll)
+owner:10:20000:Histor the Goblin (Kobold)
+owner:12:25000:Durwin the Shifty (Half-Orc)
+owner:14:30000:Drago the Fair (Elf)
+owner:12:25000:Durwin the Shifty (Half-Orc)
+owner:14:30000:Drago the Fair (Elf)
+owner:12:25000:Durwin the Shifty (Half-Orc)
+owner:14:30000:Drago the Fair (Elf)
+owner:12:25000:Durwin the Shifty (Half-Orc)
+owner:14:30000:Drago the Fair (Elf)
+owner:0:0:-
 slots:6:18
 turnover:9
 danger:85:95
 
 store:8:Home
-owner:0:Your home
-owner:0:Your home
-owner:0:Your home
-owner:0:Your home
+owner:0:0:Your home
+owner:0:0:Your home
+owner:0:0:Your home
+owner:0:0:Your home
+owner:0:0:Your home
+owner:0:0:Your home
+owner:0:0:Your home
+owner:0:0:Your home
 size:23
-danger:90:99
+danger:90:98
 
 store:9:Field HQ
 closed
-owner:0:Space Marines Field HQ
-owner:0:Space Marines Field HQ
-owner:0:Space Marines Field HQ
-owner:0:Space Marines Field HQ
+owner:0:0:Space Marines Field HQ
+owner:0:0:Space Marines Field HQ
+owner:0:0:Space Marines Field HQ
+owner:0:0:Space Marines Field HQ
+owner:0:0:Space Marines Field HQ
+owner:0:0:Space Marines Field HQ
+owner:0:0:Space Marines Field HQ
+owner:0:0:Space Marines Field HQ
 slots:6:18
 turnover:9
-#normal:boots:0
-danger:96:99
+danger:96:98
+
+store:10:Airport
+# Should not be longer   -V-    than this
+owner:0:0:ApocalAir
+owner:0:0:InterVault
+owner:0:0:Atomic Airlines
+owner:0:0:Titanium Dragon
+owner:0:0:Plannit
+owner:0:0:Travelator
+owner:0:0:Kerbalair
+owner:0:0:Orbit Express
+owner:0:0:Litefast
+owner:0:0:Mercury Rising
+owner:0:0:Starhopper
+owner:0:0:Bounce Air
+danger:99:99

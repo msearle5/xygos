@@ -32,6 +32,8 @@
 #include "store.h"
 #include "trap.h"
 #include "ui-knowledge.h"
+#include "ui-store.h"
+#include "world.h"
 
 /**
  * Array of quests
@@ -49,7 +51,8 @@ static enum parser_error parse_quest_name(struct parser *p) {
 	q->next = h;
 	parser_setpriv(p, q);
 	q->name = string_make(name);
-	q->store = STORE_NONE;
+	q->quests = 0;
+	q->town = q->store = -1;
 	q->entry_min = -1;
 	q->entry_max = -1;
 	q->entry_feature = FEAT_NONE;
@@ -184,22 +187,24 @@ static enum parser_error parse_quest_store(struct parser *p) {
 	struct quest *q = parser_priv(p);
 	assert(q);
 
-	const char *name = parser_getstr(p, "store");
-	assert(name);
+	/* Read a town index, as a town name or the name of another quest */
+	const char *location = parser_getsym(p, "town");
 
-	/* Find the store */
-	assert(stores);
-	for (int i = 0; i < MAX_STORES; i++) {
-		/* Get the store */
-		struct store *store = &stores[i];
-		assert(store->name);
-		if (!strcmp(store->name, name)) {
-			q->store = i;
-			return PARSE_ERROR_NONE;
-		}
-	}
+	if (!location)
+		return PARSE_ERROR_INVALID_VALUE;
 
-	return PARSE_ERROR_INVALID_VALUE;
+	const char *name = NULL;
+	if (parser_hasval(p, "store"))
+		name = parser_getsym(p, "store");
+
+	q->loc = mem_realloc(q->loc, sizeof(struct quest_location) * (1 + q->quests));
+	struct quest_location *ql = q->loc + q->quests;
+	q->quests++;
+	ql->town = ql->store = -1;
+	ql->location = string_make(location);
+	ql->storename = string_make(name);
+
+	return PARSE_ERROR_NONE;
 }
 
 static enum parser_error parse_quest_number(struct parser *p) {
@@ -217,7 +222,7 @@ struct parser *init_parse_quest(void) {
 	parser_reg(p, "level uint level", parse_quest_level);
 	parser_reg(p, "race str race", parse_quest_race);
 	parser_reg(p, "number uint number", parse_quest_number);
-	parser_reg(p, "store str store", parse_quest_store);
+	parser_reg(p, "store sym town ?sym store", parse_quest_store);
 	parser_reg(p, "object str object", parse_quest_object);
 	parser_reg(p, "entrymin uint min", parse_quest_entrymin);
 	parser_reg(p, "entrymax uint max", parse_quest_entrymax);
@@ -284,6 +289,39 @@ struct file_parser quests_parser = {
 	cleanup_quest
 };
 
+
+/** Complete the current quest, successfully */
+static void succeed_quest(struct quest *q) {
+	if (!(q->flags & QF_SUCCEEDED))
+		msgt(MSG_LEVEL, "Your task is complete!");
+	q->flags |= QF_SUCCEEDED;
+	q->flags |= QF_UNREWARDED;
+	q->flags &= ~QF_FAILED;
+}
+
+/** Complete the current quest, unsuccessfully */
+static void fail_quest(struct quest *q) {
+	if (!(q->flags & QF_FAILED))
+		msgt(MSG_LEVEL, "You have failed in your task!");
+	q->flags |= QF_FAILED;
+	q->flags &= ~QF_SUCCEEDED;
+	q->flags |= QF_UNREWARDED;
+}
+
+/** Complete the current quest, successfully */
+static void quest_succeed(void) {
+	assert(player->active_quest >= 0);
+	struct quest *q = &player->quests[player->active_quest];
+	succeed_quest(q);
+}
+
+/** Complete the current quest, unsuccessfully */
+static void quest_fail(void) {
+	assert(player->active_quest >= 0);
+	struct quest *q = &player->quests[player->active_quest];
+	fail_quest(q);
+}
+
 /**
  * Check if the given level is a quest level.
  */
@@ -323,7 +361,11 @@ void player_quests_reset(struct player *p)
 		p->quests[i].race = quests[i].race;
 		p->quests[i].max_num = quests[i].max_num;
 		p->quests[i].flags = quests[i].flags;
+		p->quests[i].quests = quests[i].quests;
+		p->quests[i].town = quests[i].town;
 		p->quests[i].store = quests[i].store;
+		p->quests[i].loc = mem_alloc(quests[i].quests * sizeof(struct quest_location));
+		memcpy(p->quests[i].loc,  quests[i].loc,  quests[i].quests * sizeof(struct quest_location));
 		p->quests[i].unlock = quests[i].unlock;
 		p->quests[i].entry_min = quests[i].entry_min;
 		p->quests[i].entry_max= quests[i].entry_max;
@@ -347,6 +389,7 @@ void player_quests_free(struct player *p)
 		string_free(p->quests[i].intro);
 		string_free(p->quests[i].desc);
 		string_free(p->quests[i].target_item);
+		mem_free(p->quests[i].loc);
 	}
 	mem_free(p->quests);
 }
@@ -404,6 +447,8 @@ struct quest *get_quest_by_grid(struct loc grid)
  */
 struct quest *get_quest_by_name(const char *name)
 {
+	if (!name)
+		return NULL;
 	for (int i = 0; i < z_info->quest_max; i++) {
 		struct quest *q = &player->quests[i];
 		if (streq(q->name, name))
@@ -529,6 +574,24 @@ static struct object * has_special_flag(struct object *obj, void *data)
 	return (of_has(obj->flags, OF_QUEST_SPECIAL)) ? obj : NULL;
 }
 
+static struct object * kind_has_special_flag(struct object *obj, void *data)
+{
+	if (of_has(obj->flags, OF_QUEST_SPECIAL)) {
+		struct object_kind *k = (struct object_kind *)data;
+		if (obj->kind == k)
+			return obj;
+	}
+	return NULL;
+}
+
+static struct object * obj_of_kind(struct object *obj, void *data)
+{
+	struct object_kind *k = (struct object_kind *)data;
+	if (obj->kind == k)
+		return obj;
+	return NULL;
+}
+
 /**
  * Remove the QUEST_SPECIAL flag on all items - they are now ordinary items which can e.g. be sold.
  * Must at least check your home, your gear and the level.
@@ -558,6 +621,187 @@ static void quest_remove_specials(void)
 	} while (obj);
 }
 
+/** Count all items of a given kind
+ */
+static int quest_count_kind(struct object_kind *k)
+{
+	struct object *obj;
+	int count = 0;
+	do {
+		obj = find_object(obj_of_kind, k);
+		if (obj)
+			count++;
+	} while (obj);
+	return count;
+}
+
+/** Returns a (static) table of the count of all items of a given kind
+ */
+static int *quest_locate_kind(struct object_kind *k)
+{
+	struct object *obj;
+	static int table[MAX_LOCATION];
+	struct location location;
+	memset(table, 0, sizeof(table));
+	do {
+		obj = locate_object(obj_of_kind, k, &location);
+		if (obj)
+			table[location.type]++;
+	} while (obj);
+	return table;
+}
+
+/** Delete all items of a given kind
+ */
+static void quest_remove_kind(struct object_kind *k)
+{
+	struct object *obj;
+	do {
+		obj = find_object(obj_of_kind, k);
+		if (obj)
+			remove_object(obj);
+	} while (obj);
+}
+
+/** Special cases for quests when you change levels
+ * Called before level gen occurs
+ */
+void quest_changing_level(void)
+{
+	struct player *p = player;
+
+	/* Handle returning to the town from a quest level */
+	if ((p->active_quest >= 0) && (!player->depth)) {
+		struct quest *quest = &player->quests[player->active_quest];
+
+		/* Fail, or reward */
+		if (!(quest->flags & QF_SUCCEEDED)) {
+			quest->flags |= QF_FAILED;
+		} else {
+			quest->flags |= QF_UNREWARDED;
+		}
+
+		/* No longer active */
+		quest->flags &= ~QF_ACTIVE;
+
+		/* Not generating or in a quest any more */
+		p->active_quest = -1;
+	}
+}
+
+/** Special cases for quests when you change levels
+ * Called after level gen is complete (and the old level has been discarded)
+ * This is also called after reloading a level.
+ */
+void quest_changed_level(void)
+{
+	/* Quest specific checks */
+	for(int i=0;i<z_info->quest_max;i++) {
+		struct quest *q = player->quests + i;
+		if (q->flags & QF_ACTIVE) {
+			if (strstr(q->name, "Pie")) {
+				if (q->flags & QF_SUCCEEDED) {
+					/* Pie quest: if the card ever disappears unrecoverably, then you have failed */
+					struct object_kind *kind = lookup_kind(TV_CARD, lookup_sval(TV_CARD, "security"));
+					int count = quest_count_kind(kind);
+					if (!count) {
+						fail_quest(q);
+					}
+				}
+			}
+		}
+	}
+}
+
+/** Check for special quest behaviour when selling an object to the store.
+ * Returns true if handled, false if the normal selling dialog should continue.
+ */
+bool quest_selling_object(struct object *obj, struct store_context *ctx)
+{
+	struct store *store = ctx->store;
+
+	/* Selling the card to the BM triggers an alternate completion */
+	struct object_kind *security = lookup_kind(TV_CARD, lookup_sval(TV_CARD, "security"));
+	if (obj->kind == security) {
+		if (store->sidx == STORE_B_MARKET) {
+			store_long_text(ctx, "So you found her dead? Unfortunate, but at least we got the card back "
+									"and that is what really matters. You'll get the same $8000 reward she "
+									"would have had, and get to see some of the goods that most customers "
+									"don't. And we may have more for you to do, if you really want to take "
+									"her place.");
+			fail_quest(get_quest_by_name("Soldier, Sailor, Chef, Pie"));
+			player->au += 8000;
+			player->bm_faction++;
+			for (int j = 0; j < 10; j++)
+				store_maint(store);
+			remove_object(obj);
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/** Asked for a quest at a store, but none of the usual cases match.
+ * This handles the special cases (such as completing with an alternative ending at a different store, as in "Pie").
+ * It returns true if it has handled it, false for the generic no-quest message.
+ */
+bool quest_special_endings(struct store_context *ctx)
+{
+	struct store *store = ctx->store;
+	/* Pie quest: if you take the card to the BM */
+	if (store->sidx == STORE_B_MARKET) {
+		struct object_kind *kind = lookup_kind(TV_CARD, lookup_sval(TV_CARD, "security"));
+		struct object *obj = find_object(obj_of_kind, kind);
+		if (obj) {
+			while (find_object(obj_of_kind, kind)) {};
+			int *locs = quest_locate_kind(kind);
+			if (locs[LOCATION_PLAYER] > 0) {
+				screen_save();
+				int response = store_get_long_check(ctx, "So you have a certain card with you that we were expecting our Ky "
+															"to bring back. If you could tell me how you ended up with it and "
+															"return it to us, you'll be paid appropriately...");
+				screen_load();
+				if (response) {
+					// accepted
+					quest_selling_object(obj, ctx);
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+/** Returns true if the quest can have the reward given.
+ * This implies QF_SUCCESS | QF_UNREWARDED, and for many quests that is all that is needed.
+ * However, there are cases where additional checks are needed - for example, that you have
+ * not just obtained the McGuffin but have it with you now.
+ */
+bool quest_is_rewardable(const struct quest *q)
+{
+	/* Must be successful and unrewarded */
+	if ((q->flags & (QF_SUCCEEDED | QF_UNREWARDED)) != (QF_SUCCEEDED | QF_UNREWARDED))
+		return false;
+
+	/* Special cases */
+
+	/* You must have the card with you */
+	if (strstr(q->name, "Pie")) {
+		struct object_kind *security = lookup_kind(TV_CARD, lookup_sval(TV_CARD, "security"));
+		int *locs = quest_locate_kind(security);
+		if (locs[LOCATION_PLAYER] != 1) {
+			msg("Great news that you found it, but you'll to need to fetch it back.");
+			return false;
+		} else {
+			quest_remove_kind(security);
+		}
+	}
+
+	/* Default to OK */
+	return true;
+}
+
 /**
  * Generate a reward for completing a quest.
  * Passed true if the quest was completed successfully.
@@ -567,7 +811,7 @@ void quest_reward(const struct quest *q, bool success)
 {
 	const char *n = q->name;
 	int au = 0;
-	struct start_item si[2];
+	struct start_item si[4];
 	memset(si, 0, sizeof(si));
 
 	if (success) {
@@ -576,6 +820,10 @@ void quest_reward(const struct quest *q, bool success)
 			au = 200;
 		} else if (streq(n, "Msing Pills")) {
 			add_item(si, TV_PILL, "augmentation", 2, 2);
+		} else if (strstr(n, "Pie")) {
+			add_item(si, TV_FOOD, "Hunter's pie", 12, 12);
+			add_item(si, TV_MUSHROOM, "clarity", 5, 5);
+			add_item(si, TV_MUSHROOM, "emergency", 7, 7);
 		}
 		quest_remove_specials();
 	} else {
@@ -599,26 +847,6 @@ static bool item_is_target(const struct quest *q, const struct object *obj) {
 	if (!of_has(obj->flags, OF_QUEST_SPECIAL))
 		return false;
 	return (my_stristr(oname, q->target_item) != NULL);
-}
-
-/** Complete the current quest, successfully */
-static void quest_succeed(void) {
-	assert(player->active_quest >= 0);
-	struct quest *q = &player->quests[player->active_quest];
-	if (!(q->flags & QF_SUCCEEDED))
-		msgt(MSG_LEVEL, "Your task is complete!");
-	q->flags |= QF_SUCCEEDED;
-	q->flags &= ~QF_FAILED;
-}
-
-/** Complete the current quest, unsuccessfully */
-static void quest_fail(void) {
-	assert(player->active_quest >= 0);
-	struct quest *q = &player->quests[player->active_quest];
-	if (!(q->flags & QF_FAILED))
-		msgt(MSG_LEVEL, "You have failed in your task!");
-	q->flags |= QF_FAILED;
-	q->flags &= ~QF_SUCCEEDED;
 }
 
 /**
@@ -700,13 +928,25 @@ bool quest_check(const struct monster *m) {
 				if (q->cur_num == q->max_num) {
 					/* You've killed the last quest target */
 					quest_succeed();
+					return true;
 				}
 			}
 		}
 	}
 
+	/* Then check for monsters found outside special levels that affect quests.
+	 * These don't necessarily have the RF_QUESTOR flag (consider a 'random nonunique' quest)
+	 **/
+	bool questor = rf_has(m->race->flags, RF_QUESTOR);
+	if (questor) {
+		if (streq(m->race->name, "Ky, the Pie Spy")) {
+			succeed_quest(get_quest_by_name("Soldier, Sailor, Chef, Pie"));
+			return true;
+		}
+	}
+
 	/* Now dealing only with the win quests - so don't bother with non-questors */
-	if (!rf_has(m->race->flags, RF_QUESTOR)) return false;
+	if (!questor) return false;
 
 	/* Mark quests as complete */
 	for (i = 0; i < z_info->quest_max; i++) {

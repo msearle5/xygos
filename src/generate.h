@@ -248,6 +248,7 @@ extern struct vault *vaults;
 extern struct room_template *room_templates;
 
 /* gen-cave.c */
+struct chunk *town_gen_all(struct player *p, int min_height, int min_width);
 struct chunk *town_gen(struct player *p, int min_height, int min_width);
 struct chunk *classic_gen(struct player *p, int min_height, int min_width);
 struct chunk *labyrinth_gen(struct player *p, int min_height, int min_width);
@@ -311,6 +312,7 @@ bool build_room_of_chambers(struct chunk *c, struct loc centre, int rating);
 bool build_huge(struct chunk *c, struct loc centre, int rating);
 bool room_build(struct chunk *c, int by0, int bx0, struct room_profile profile,
 	bool finds_own_space);
+struct chunk *cave_generate(struct player *p, int height, int width);
 
 
 /* gen-util.c */

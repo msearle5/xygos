@@ -74,6 +74,7 @@
 #include "player-util.h"
 #include "store.h"
 #include "trap.h"
+#include "world.h"
 #include "z-queue.h"
 #include "z-type.h"
 
@@ -322,6 +323,24 @@ static void build_tunnel(struct chunk *c, struct loc grid1, struct loc grid2)
 		if (randint0(100) < dun->profile->tun.pen)
 			place_random_door(c, dun->wall[i]);
     }
+}
+
+/* Return the first feature on the level with the given feature.
+ * If none is present the original grid is unchanged, and returns false.
+ * If present, returns true
+ */
+static bool grid_find_feat(struct chunk *c, int feat, struct loc *loc)
+{
+	struct loc grid;
+	for (grid.y = 0; grid.y < c->height; grid.y++) {
+		for (grid.x = 0; grid.x < c->width; grid.x++) {
+			if (square_feat(c, grid)->fidx == feat) {
+				*loc = grid;
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 /**
@@ -1691,11 +1710,10 @@ static void build_ruin(struct chunk *c, struct loc xroads, struct loc lot, int l
  * \param c is the current chunk
  * \param p is the player
  */
-static void town_gen_layout(struct chunk *c, struct player *p)
+static void town_gen_layout(struct chunk *c, struct player *p, int num_lava, bool lake)
 {
 	int n, x, y;
 	struct loc grid, pgrid, xroads;
-	int num_lava = 3 + randint0(3);
 	int ruins_percent = 80;
 
 	int max_attempts = 100;
@@ -1722,13 +1740,22 @@ static void town_gen_layout(struct chunk *c, struct player *p)
 			}
 
 		/* Make some lava streamers */
-		for (n = 0; n < 3 + num_lava; n++)
+		for (n = 0; n <num_lava; n++)
 			build_streamer(c, FEAT_LAVA, 0);
 
 		/* Make a town-sized starburst room. */
 		(void) generate_starburst_room(c, 0, 0, c->height - 1, c->width - 1,
 									   false,
 									   FEAT_FLOOR, false);
+
+		if (lake) {
+			fill_rectangle(c, (c->height * 1) / 3,  (c->width * 2) / 5, (c->height * 2) / 3, (c->width * 3) / 5,
+				FEAT_WATER, 0);
+				/*
+			(void) generate_starburst_room(c, (c->height * 1) / 5,  (c->width * 2) / 5, (c->height * 4) / 5, (c->width * 3) / 5,
+									   false,
+									   FEAT_WATER, false);*/
+		}
 
 		/* Turn off room illumination flag */
 		for (grid.y = 1; grid.y < c->height - 1; grid.y++) {
@@ -1805,7 +1832,9 @@ static void town_gen_layout(struct chunk *c, struct player *p)
 				if (y == 0) continue;
 				if (randint0(100) > ruins_percent) continue;
 				if (one_in_(2) &&
-					!lot_has_shop(c, xroads, loc(x, y), lot_wid, lot_hgt)) {
+					!lot_has_shop(c, xroads, loc(x, y), lot_wid, lot_hgt) &&
+					lot_is_clear(c, xroads, loc(x, y), lot_wid,
+										  lot_hgt)) {
 					build_ruin(c, xroads, loc(x, y), lot_wid, lot_hgt);
 				}
 			}
@@ -1815,19 +1844,35 @@ static void town_gen_layout(struct chunk *c, struct player *p)
 
 	/* clear the street */
 	square_set_feat(c, loc(pgrid.x, pgrid.y + 1), FEAT_FLOOR);
-	fill_rectangle(c, pgrid.y + 2, pgrid.x - 1,
-				   max_store_y, pgrid.x + 1,
-				   FEAT_FLOOR, SQUARE_NONE);
-
-	fill_rectangle(c, xroads.y, min_store_x,
-			xroads.y + 1, max_store_x,
-			FEAT_FLOOR, SQUARE_NONE);
-
+	for(int y=pgrid.y + 2; y<=max_store_y; y++) {
+		for(int x=pgrid.x - 1; x<=pgrid.x + 1; x++) {
+			struct loc grid;
+			grid.x = x;
+			grid.y = y;
+			if (square_in_bounds(c, grid))
+				if (!square_ispassable(c, grid))
+					square_set_feat(c, grid, FEAT_FLOOR);
+		}
+	}
+	for(int y=xroads.y; y<=xroads.y + 1; y++) {
+		for(int x=min_store_x; x<=max_store_x; x++) {
+			struct loc grid;
+			grid.x = x;
+			grid.y = y;
+			if (square_in_bounds(c, grid))
+				if (!square_ispassable(c, grid))
+					square_set_feat(c, grid, FEAT_FLOOR);
+		}
+	}
 
 	/* Clear previous contents, add down stairs */
 	square_set_feat(c, pgrid, FEAT_MORE);
 
 	/* Place the player */
+	if (p->upkeep->flight_level) {
+		grid_find_feat(c, FEAT_AIRPORT, &pgrid);
+		p->upkeep->flight_level = false;
+	}
 	player_place(c, p, pgrid);
 }
 
@@ -1855,6 +1900,26 @@ void destroy_store(struct chunk *c, int store)
 	}
 }
 
+/** Generate all towns */
+struct chunk *town_gen_all(struct player *p, int height, int width)
+{
+	struct town *town = p->town;
+	struct chunk *ptchunk = NULL;
+	for(int i=0; i < z_info->town_max; i++) {
+		p->town = t_info + i;
+		struct chunk *c = cave_generate(p, height, width);
+		if (p->town == town) {
+			ptchunk = c;
+		}
+		if (!c->name) {
+			c->name = string_make(p->town->name);
+		}
+		chunk_list_add(c);
+	}
+	p->town = town;
+	return ptchunk;
+}
+
 /**
  * Town logic flow for generation of new town.
  * \param p is the player
@@ -1869,7 +1934,7 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 	struct loc grid;
 	int residents = is_daytime() ? z_info->town_monsters_day :
 		z_info->town_monsters_night;
-	struct chunk *c_new, *c_old = chunk_find_name("Town");
+	struct chunk *c_new, *c_old = chunk_find_name(player->town->name);
 
 	/* Make a new chunk */
 	c_new = cave_new(z_info->town_hgt, z_info->town_wid);
@@ -1879,10 +1944,9 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 		c_new->depth = danger_depth(player);
 
 		/* Build stuff */
-		town_gen_layout(c_new, p);
+		town_gen_layout(c_new, p, player->town->lava_num, player->town->lake);
 	} else {
 		/* If any stores are scheduled to be destroyed, do it now */
-		bool modded = false;
 		bool found = false;
 
 		for(int i=0;i<MAX_STORES;i++) {
@@ -1890,7 +1954,6 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 				destroy_store(c_old, i);
 				stores[i].destroy = false;
 				stores[i].open = false;
-				modded = true;
 			}
 		}
 
@@ -1905,7 +1968,6 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 					grid.y = p->quests[i].y;
 					square_set_feat(c_old, grid, FEAT_FLOOR);
 					found = true;
-					modded = true;
 					break;
 				}
 			}
@@ -1914,16 +1976,17 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 		/* Copy from the chunk list, remove the old one */
 		if (!chunk_copy(c_new, c_old, 0, 0, 0, 0))
 			quit_fmt("chunk_copy() level bounds failed!");
-		if (!modded) {
-			chunk_list_remove("Town");
-			cave_free(c_old);
-		}
 
 		/* Find the stairs (lame) */
 		if (!found) {
+			int feat = FEAT_MORE;
+			if (player->upkeep->flight_level) {
+				feat = FEAT_AIRPORT;
+				player->upkeep->flight_level = false;
+			}
 			for (grid.y = 0; grid.y < c_new->height; grid.y++) {
 				for (grid.x = 0; grid.x < c_new->width; grid.x++) {
-					if (square_feat(c_new, grid)->fidx == FEAT_MORE) {
+					if (square_feat(c_new, grid)->fidx == feat) {
 						found = true;
 						break;
 					}

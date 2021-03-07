@@ -243,6 +243,15 @@ look-prefix:the entrance to the
 look-in-preposition:at
 desc:Your base for the assault on Xygos.
 
+name:Airport
+graphics:*:B
+priority:20
+flags:SHOP | PROJECT | PASSABLE | PERMANENT | INTERESTING | EASY
+info:10:0
+look-prefix:the entrance to the
+look-in-preposition:at
+desc:A ticket office from which you can fly daily to other cities.
+
 name:secret door
 graphics:#:w
 priority:10
@@ -306,7 +315,7 @@ priority:10
 flags:WALL | ROCK | GRANITE | NO_SCENT | NO_FLOW | TORCH
 info:0:4
 confused-msg:bashes into a wall
-desc:A seam of hard rock.  It can be removed by digging or magic, and passed 
+desc:A seam of hard rock.  It can be removed by digging through it, and passed 
 desc:through by immaterial monsters.  It stops any spells, missiles or line of 
 desc:sight. 
 
@@ -343,6 +352,18 @@ run-msg:Lava blocks your path. Step into it?
 hurt-msg:The lava burns you!
 die-msg:burning to a cinder in lava
 resist-flag:IM_FIRE
+
+name:water
+graphics:~:Z
+priority:10
+flags:PROJECT | PASSABLE | NO_SCENT | WATER
+look-prefix:some
+desc:Water, too murky to easily tell how deep it is.
+walk-msg:You are too heavily loaded to swim easily. Really step in?
+run-msg:Water blocks your path. Swim across?
+hurt-msg:You are drowning!
+die-msg:drowning
+resist-flag:IM_WATER
 
 name:pile of passable rubble
 graphics:::u
