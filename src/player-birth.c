@@ -1001,7 +1001,10 @@ void player_generate(struct player *p, struct player_race *r, struct player_race
 	p->max_lev = p->lev = 1;
 
 	/* Set all class levels to the initial class */
-	memset(p->lev_class, (p->class - classes), sizeof(p->lev_class));
+	memset(p->lev_class, p->class->cidx, sizeof(p->lev_class));
+
+	/* Primary class */
+	set_primary_class();
 
 	/* Experience factor */
 	p->expfact = p->race->r_exp + p->extension->r_exp + p->class->c_exp;

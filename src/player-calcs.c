@@ -1451,9 +1451,8 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	 **/
 	for (i = 0; i < SKILL_MAX; i++) {
 		double total = 0;
-		int ci = 0;
 		for (struct player_class *c = classes; c; c = c->next) {
-			int levels = levels_in_class(ci);
+			int levels = levels_in_class(c->cidx);
 			if (levels) {
 				double x_skill = c->x_skills[i] * levels;
 				x_skill /= 10;
@@ -1462,7 +1461,6 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 				total += x_skill;
 				total += c_skill;
 			}
-			ci++;
 		}
 		state->skills[i] += total;
 	}

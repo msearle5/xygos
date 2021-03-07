@@ -815,6 +815,7 @@ int rd_player(void)
 	}
 
 	rdwr_player_levels();
+	set_primary_class();
 
 	/* Player town */
 	RDWR_PTR(&player->town, t_info);

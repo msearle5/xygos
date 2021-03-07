@@ -58,6 +58,66 @@ int levels_in_class(int c)
 	return l;
 }
 
+static int compar_class(const void *av, const void *bv)
+{
+	const struct player_class *a = *(const struct player_class **)av;
+	const struct player_class *b = *(const struct player_class **)bv;
+
+	int lev_a = levels_in_class(a->cidx);
+	int lev_b = levels_in_class(b->cidx);
+
+	if (lev_a != lev_b) return lev_b - lev_a;
+
+	for(int i=1; i<(int)sizeof(player->lev_class); i++) {
+		if (player->lev_class[i] == (a->cidx))
+			return 1;
+		if (player->lev_class[i] == (b->cidx))
+			return -1;
+	}
+	return 0;
+}
+
+/** Returns a (static) list of classes, from most levelled to least.
+ * The sort order is by total number of levels first, and the first level gained in that class second
+ * (earlier = first).
+ */ 
+struct player_class **ordered_classes(void)
+{
+	static struct player_class **order = NULL;
+	static int n_classes = 0;
+	if (!order) {
+		for (struct player_class *c = classes; c; c = c->next)
+			n_classes++;
+		order = mem_zalloc(sizeof(*order) * (n_classes + 1));	// +1 so there is always a terminator
+	}
+
+	/* Get all classes */
+	int n = 0;
+	for (struct player_class *c = classes; c; c = c->next) {
+		order[n] = c;
+		n++;
+	}
+
+	/* Sort */
+	qsort(order, n, sizeof(*order), compar_class);
+
+	/* Wipe unused ones */
+	for (int i=0; i<n; i++) {
+		if (levels_in_class(order[i]->cidx) == 0) {
+			order[i] = NULL;
+		}
+	}
+
+	return order;
+}
+
+/** Set the primary class, based on the level-class array */
+void set_primary_class(void)
+{
+	struct player_class **order = ordered_classes();
+	player->class = order[0];
+}
+
 /** Return an effective depth for difficulty of monster generation, etc.
  * based on physical depth and additional difficulty over time.
  */

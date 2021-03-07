@@ -265,6 +265,8 @@ static void adjust_level(struct player *p, bool verbose)
 	       (p->max_exp >= (exp_to_gain(p->max_lev+1))))
 		p->max_lev++;
 
+	set_primary_class();
+
 	if (p->max_lev > max_from) {
 		ability_levelup(p, max_from, p->max_lev);
 		player_hook(levelup, max_from, p->max_lev);
