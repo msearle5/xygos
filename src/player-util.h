@@ -119,6 +119,7 @@ bool player_of_has(struct player *p, int flag);
 bool player_resists(struct player *p, int element);
 bool player_is_immune(struct player *p, int element);
 void player_place(struct chunk *c, struct player *p, struct loc grid);
+int levels_in_class(int c);
 void disturb(struct player *p);
 void search(struct player *p);
 

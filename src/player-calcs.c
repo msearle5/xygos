@@ -1434,7 +1434,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	/* Extract race/class info */
 	state->see_infra = p->race->infra + p->extension->infra;
 	for (i = 0; i < SKILL_MAX; i++) {
-		state->skills[i] = p->race->r_skills[i]	+ p->extension->r_skills[i] + p->class->c_skills[i];
+		state->skills[i] = p->race->r_skills[i]	+ p->extension->r_skills[i];
 	}
 	for (i = 0; i < ELEM_MAX; i++) {
 		vuln[i] = false;
@@ -1445,9 +1445,27 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		}
 	}
 
-	/* Modify skills from level/class */
-	for (i = 0; i < SKILL_MAX; i++)
-		state->skills[i] += (p->class->x_skills[i] * p->lev / 10);
+	/* Modify skills from level/class.
+	 * The per-level skill (x_skills) is proportional directly to the number of levels you have in that class.
+	 * The base skill (c_skills) is instead proportional to the fraction of total levels that you have in that class.
+	 **/
+	for (i = 0; i < SKILL_MAX; i++) {
+		double total = 0;
+		int ci = 0;
+		for (struct player_class *c = classes; c; c = c->next) {
+			int levels = levels_in_class(ci);
+			if (levels) {
+				double x_skill = c->x_skills[i] * levels;
+				x_skill /= 10;
+				double c_skill = c->c_skills[i] * levels;
+				c_skill /= p->lev;
+				total += x_skill;
+				total += c_skill;
+			}
+			ci++;
+		}
+		state->skills[i] += total;
+	}
 
 	/* Base pflags */
 	pf_wipe(state->pflags);
