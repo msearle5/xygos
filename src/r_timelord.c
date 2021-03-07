@@ -61,10 +61,10 @@ static void timelord_regen_status(void)
 {
 	struct player *p = player;
 
-	p->timed[TMD_STUN] = damroll(2, 4);
-	p->timed[TMD_AMNESIA] = damroll(3, 8);
-	p->timed[TMD_CONFUSED] = damroll(3, 12);
-	p->timed[TMD_SCRAMBLE] = damroll(3, 16);
+	player_inc_timed(player, TMD_STUN, damroll(2, 4), false, false);
+	player_inc_timed(player, TMD_AMNESIA, damroll(3, 8), false, false);
+	player_inc_timed(player, TMD_CONFUSED, damroll(3, 12), false, false);
+	player_inc_timed(player, TMD_SCRAMBLE, damroll(3, 16), false, false);
 }
 
 /* Regenerate (on death or forced).
