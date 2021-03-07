@@ -494,25 +494,9 @@ void wr_player(void)
 	/* Padding */
 	wr_u32b(0);
 
-	wr_u32b(player->au);
-
-
-	wr_u32b(player->max_exp);
-	wr_u32b(player->exp);
-	wr_u16b(player->exp_frac);
 	wr_s16b(player->lev);
 
-	wr_s16b(player->mhp);
-	wr_s16b(player->chp);
-	wr_u16b(player->chp_frac);
-
-	wr_u16b(player->talent_points);
-
-	/* Max Player and Dungeon Levels */
-	wr_s16b(player->max_lev);
-	wr_s16b(player->max_depth);
-	wr_s16b(player->recall_depth);
-	wr_s16b(player->danger);
+	rdwr_player_levels();
 
 	RDWR_PTR(&(player->town), t_info);
 

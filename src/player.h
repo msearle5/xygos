@@ -592,6 +592,8 @@ struct player {
 	u16b talent_points;			/* Current talent points */
 	byte talent_gain[PY_MAX_LEVEL];	/* TP to gain per level */
 
+	byte lev_class[PY_MAX_LEVEL+1];	/* Class gained per level */
+
 	s16b stat_max[STAT_MAX];	/* Current "maximal" stat values */
 	s16b stat_cur[STAT_MAX];	/* Current "natural" stat values */
 	s16b stat_map[STAT_MAX];	/* Tracks remapped stats from temp stat swap */

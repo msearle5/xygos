@@ -652,6 +652,36 @@ int rd_world(void)
 	return 0;
 }
 
+void rdwr_player_levels(void)
+{
+	rdwr_s32b(&player->au);
+
+	/* XP */
+	rdwr_s32b(&player->max_exp);
+	rdwr_s32b(&player->exp);
+	rdwr_u16b(&player->exp_frac);
+
+	/* HP */
+	rdwr_s16b(&player->mhp);
+	rdwr_s16b(&player->chp);
+	rdwr_u16b(&player->chp_frac);
+
+	/* Talents */
+	rdwr_u16b(&player->talent_points);
+	for(int i=0;i<(int)sizeof(player->talent_gain);i++)
+		rdwr_byte(&player->talent_gain[i]);
+
+	/* Level by class */
+	for(int i=0;i<(int)sizeof(player->lev_class);i++)
+		rdwr_byte(&player->lev_class[i]);
+
+	/* Max Player and Dungeon Levels */
+	rdwr_s16b(&player->max_lev);
+	rdwr_s16b(&player->max_depth);
+	rdwr_s16b(&player->recall_depth);
+	rdwr_s16b(&player->danger);
+}
+
 /**
  * Read the player information
  */
@@ -776,12 +806,6 @@ int rd_player(void)
 
 	strip_bytes(4);
 
-	rd_s32b(&player->au);
-
-	rd_s32b(&player->max_exp);
-	rd_s32b(&player->exp);
-	rd_u16b(&player->exp_frac);
-
 	rd_s16b(&player->lev);
 
 	/* Verify player level */
@@ -790,15 +814,7 @@ int rd_player(void)
 		return (-1);
 	}
 
-	rd_s16b(&player->mhp);
-	rd_s16b(&player->chp);
-	rd_u16b(&player->chp_frac);
-
-	rd_u16b(&player->talent_points);
-	rd_s16b(&player->max_lev);
-	rd_s16b(&player->max_depth);
-	rd_s16b(&player->recall_depth);
-	rd_s16b(&player->danger);
+	rdwr_player_levels();
 
 	/* Player town */
 	RDWR_PTR(&player->town, t_info);

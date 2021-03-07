@@ -47,6 +47,17 @@
 /* List of death messages */
 struct death_msg *death;
 
+/** Returns the number of levels you have in a given class */
+int levels_in_class(int c)
+{
+	int l = 0;
+	for(int i=1; i<=player->lev; i++) {
+		if (player->lev_class[i] == c)
+			l++;
+	}
+	return l;
+}
+
 /** Return an effective depth for difficulty of monster generation, etc.
  * based on physical depth and additional difficulty over time.
  */
