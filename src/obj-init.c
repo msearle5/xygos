@@ -2079,6 +2079,13 @@ static errr finish_parse_object(struct parser *p) {
 	z_info->k_max += 1;
 	z_info->ordinary_kind_max = z_info->k_max;
 
+	/* verify */
+	for(int i=0;i<z_info->k_max - 1;i++) {
+		k = &k_info[i];
+		assert(k->name);
+		assert(k->base);
+	}
+
 	parser_destroy(p);
 	return 0;
 }

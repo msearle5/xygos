@@ -3865,6 +3865,7 @@ desc:A colony of the most advanced nanites, compressed into a pill which thoroug
 
 # INT, WIS, CHR restored; 
 name:remind nano-
+type:pill
 graphics:!:d
 level:26
 weight:1g
