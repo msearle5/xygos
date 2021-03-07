@@ -161,9 +161,10 @@ static void collect_from_store(struct store *store)
  *
  * Note that each comment_hint should have exactly one %s
  */
-static void prt_welcome(const struct owner *proprietor)
+static void prt_welcome(struct store *store)
 {
 	char short_name[20];
+	const struct owner *proprietor = store->owner;
 	const char *owner_name = proprietor->name;
 
 	int j;
@@ -178,14 +179,54 @@ static void prt_welcome(const struct owner *proprietor)
 	/* Truncate the name */
 	short_name[j] = '\0';
 
+	int faction = (store->sidx == STORE_B_MARKET) ? player->bm_faction : player->town_faction;
 	if (one_in_(3)) {
 		size_t i = randint0(N_ELEMENTS(comment_hint));
-		msg(comment_hint[i], random_hint());
+
+		/* Most shks will give you 100% hints by default, but mix in some lies if they don't like you.
+		 * The Black Market is economical with the truth by default, but can become mostly helpful if they like you.
+		 */
+		int truth = 100;
+		if (store->sidx == STORE_B_MARKET) {
+			if (faction < -1)
+				truth = 0;
+			else if (faction == -1)
+				truth = 10;
+			else if (faction == 0)
+				truth = 40;
+			else
+				truth = 90;
+		} else {
+			if (faction < -1)
+				truth = 10;
+			else if (faction == -1)
+				truth = 30;
+			else
+				truth = 100;
+		}
+		msg(comment_hint[i], random_rumor(truth));
 	} else if (player->lev > 5) {
 		const char *player_name;
+		int divi = 10;
+		if (faction < -1)
+			faction = -1;
+		switch (faction) {
+			case -1:
+				divi = 17;
+				break;
+			case 0:
+				divi = 9;
+				break;
+			case 1:
+				divi = 5;
+				break;
+			default:
+				divi = 4;
+				break;
+		}
 
 		/* We go from level 1 - 50  */
-		size_t i = ((unsigned)player->lev - 1) / 5;
+		size_t i = ((unsigned)player->lev - 1) / divi;
 		i = MIN(i, N_ELEMENTS(comment_welcome) - 1);
 
 		/* Get a title for the character */
@@ -195,6 +236,13 @@ static void prt_welcome(const struct owner *proprietor)
 			player_name = player->full_name;
 		else
 			player_name = "valued customer";
+
+		if (faction < 0) {
+			const char *insult[] = {
+				"scum", "loser", "waster", "rat",
+			};
+			player_name = insult[randint0(sizeof(insult) / sizeof(*insult))];
+		}
 
 		/* Balthazar says "Welcome" */
 		prt(format(comment_welcome[i], short_name, player_name), 0, 0);
@@ -571,11 +619,9 @@ static bool store_get_check(const char *prompt)
 	return store_do_check();
 }
 
+/* Print a long (multi line, formatted) message */
 void store_long_text(struct store_context *ctx, const char *text)
 {
-	/* Print a long (multi line, formatted) message */
-	unsigned long flags = ctx->flags;
-
 	/* Where the help text goes */
 	ctx->flags |= (STORE_SHOW_HELP);
 	store_display_recalc(ctx);
@@ -2341,7 +2387,7 @@ void use_store(game_event_type type, game_event_data *data, void *user)
 		if (you_own(store)) {
 			collect_from_store(store);
 		} else {
-			prt_welcome(store->owner);
+			prt_welcome(store);
 		}
 	}
 

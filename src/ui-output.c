@@ -134,7 +134,7 @@ void textui_textblock_line(textblock *tb, int line, region orig_area)
 	n_lines = textblock_calculate_lines(tb,
 			&line_starts, &line_lengths, area.width);
 
-	if (line < n_lines) {
+	if (line < (int)n_lines) {
 		display_area(textblock_text(tb), textblock_attrs(tb), line_starts + line,
 	             line_lengths + line, 1, area, 0);
 	}
