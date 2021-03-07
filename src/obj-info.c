@@ -87,6 +87,26 @@ static void info_out_list(textblock *tb, const char *list[], size_t count)
 	textblock_append(tb, ".\n");
 }
 
+/**
+ * Given an array of strings, as so:
+ *  { "Intelligence", "fish", "Lens", "prime", "NuMbEr" },
+ *
+ * ... output a list like "intelligence, fish, lens, prime, nuMbEr.\n".
+ */
+static void info_out_list_tolower(textblock *tb, const char *list[], size_t count)
+{
+	size_t i;
+	char buf[120];
+
+	for (i = 0; i < count; i++) {
+		my_strcpy(buf, list[i], sizeof(buf));
+		buf[0] = tolower(buf[0]);
+		textblock_append(tb, "%s", buf);
+		if (i != (count - 1)) textblock_append(tb, ", ");
+	}
+
+	textblock_append(tb, ".\n");
+}
 
 /**
  * Fills recepticle with all the elements that correspond to the given `list`.
@@ -208,7 +228,7 @@ static bool describe_elements(textblock *tb,
 	count = element_info_collect(list, i_descs);
 	if (count) {
 		textblock_append(tb, "Provides immunity to ");
-		info_out_list(tb, i_descs, count);
+		info_out_list_tolower(tb, i_descs, count);
 		prev = true;
 	}
 
@@ -218,7 +238,7 @@ static bool describe_elements(textblock *tb,
 	count = element_info_collect(list, r_descs);
 	if (count) {
 		textblock_append(tb, "Provides resistance to ");
-		info_out_list(tb, r_descs, count);
+		info_out_list_tolower(tb, r_descs, count);
 		prev = true;
 	}
 
@@ -228,7 +248,7 @@ static bool describe_elements(textblock *tb,
 	count = element_info_collect(list, v_descs);
 	if (count) {
 		textblock_append(tb, "Makes you vulnerable to ");
-		info_out_list(tb, v_descs, count);
+		info_out_list_tolower(tb, v_descs, count);
 		prev = true;
 	}
 
@@ -257,7 +277,7 @@ static bool describe_protects(textblock *tb, const bitflag flags[OF_SIZE])
 		return false;
 
 	textblock_append(tb, "Provides protection from ");
-	info_out_list(tb, p_descs, count);
+	info_out_list_tolower(tb, p_descs, count);
 
 	return  true;
 }
@@ -279,7 +299,7 @@ static bool describe_ignores(textblock *tb, const struct element_info el_info[])
 		return false;
 
 	textblock_append(tb, "Cannot be harmed by ");
-	info_out_list(tb, descs, count);
+	info_out_list_tolower(tb, descs, count);
 
 	return true;
 }
@@ -301,7 +321,7 @@ static bool describe_hates(textblock *tb, const struct element_info el_info[])
 		return false;
 
 	textblock_append(tb, "Can be destroyed by ");
-	info_out_list(tb, descs, count);
+	info_out_list_tolower(tb, descs, count);
 
 	return true;
 }
