@@ -1445,6 +1445,10 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		}
 	}
 
+	/* Modify skills from level/class */
+	for (i = 0; i < SKILL_MAX; i++)
+		state->skills[i] += (p->class->x_skills[i] * p->lev / 10);
+
 	/* Base pflags */
 	pf_wipe(state->pflags);
 	pf_copy(state->pflags, p->race->pflags);
@@ -1591,6 +1595,55 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		of_on(state->flags, OF_IMPAIR_HP);
 	}
 
+	/* Calculate the various stat values */
+	for (i = 0; i < STAT_MAX; i++) {
+		int add, use, ind;
+
+		add = state->stat_add[i];
+		add += (p->race->r_adj[i] + p->extension->r_adj[i] + p->class->c_adj[i]);
+		add += ability_to_stat(i);
+		state->stat_top[i] =  modify_stat_value(p->stat_max[i], add);
+		use = modify_stat_value(p->stat_cur[i], add);
+
+		state->stat_use[i] = use;
+
+		if (use <= 3) {/* Values: n/a */
+			ind = 0;
+		} else if (use <= 18) {/* Values: 3, 4, ..., 18 */
+			ind = (use - 3);
+		} else if (use <= 18+219) {/* Ranges: 18/00-18/09, ..., 18/210-18/219 */
+			ind = (15 + (use - 18) / 10);
+		} else {/* Range: 18/220+ */
+			ind = (37);
+		}
+
+		assert((0 <= ind) && (ind < STAT_RANGE));
+
+		/* Hack for hypothetical blows - NRM */
+		if (!update) {
+			if (i == STAT_STR) {
+				ind += str_ind;
+				ind = MIN(ind, 37);
+				ind = MAX(ind, 3);
+			} else if (i == STAT_DEX) {
+				ind += dex_ind;
+				ind = MIN(ind, 37);
+				ind = MAX(ind, 3);
+			}
+		}
+
+		/* Save the new index */
+		state->stat_ind[i] = ind;
+	}
+
+	/* Modify skills from stats */
+	state->skills[SKILL_DISARM_PHYS] += adj_dex_dis[state->stat_ind[STAT_DEX]];
+	state->skills[SKILL_DISARM_MAGIC] += adj_int_dis[state->stat_ind[STAT_INT]];
+	state->skills[SKILL_DEVICE] += adj_int_dev[state->stat_ind[STAT_INT]];
+	state->skills[SKILL_SAVE] += adj_wis_sav[state->stat_ind[STAT_WIS]];
+	state->skills[SKILL_DIGGING] += adj_str_dig[state->stat_ind[STAT_STR]];
+	state->speed += (state->stat_ind[STAT_SPD] - 7);
+
 	/* Effects of food outside the "Fed" range */
 	if (!player_timed_grade_eq(p, TMD_FOOD, "Fed")) {
 		int excess = p->timed[TMD_FOOD] - PY_FOOD_FULL;
@@ -1636,49 +1689,6 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 			}
 		}
 	}
-
-	/* Calculate the various stat values */
-	for (i = 0; i < STAT_MAX; i++) {
-		int add, use, ind;
-
-		add = state->stat_add[i];
-		add += (p->race->r_adj[i] + p->extension->r_adj[i] + p->class->c_adj[i]);
-		add += ability_to_stat(i);
-		state->stat_top[i] =  modify_stat_value(p->stat_max[i], add);
-		use = modify_stat_value(p->stat_cur[i], add);
-
-		state->stat_use[i] = use;
-
-		if (use <= 3) {/* Values: n/a */
-			ind = 0;
-		} else if (use <= 18) {/* Values: 3, 4, ..., 18 */
-			ind = (use - 3);
-		} else if (use <= 18+219) {/* Ranges: 18/00-18/09, ..., 18/210-18/219 */
-			ind = (15 + (use - 18) / 10);
-		} else {/* Range: 18/220+ */
-			ind = (37);
-		}
-
-		assert((0 <= ind) && (ind < STAT_RANGE));
-
-		/* Hack for hypothetical blows - NRM */
-		if (!update) {
-			if (i == STAT_STR) {
-				ind += str_ind;
-				ind = MIN(ind, 37);
-				ind = MAX(ind, 3);
-			} else if (i == STAT_DEX) {
-				ind += dex_ind;
-				ind = MIN(ind, 37);
-				ind = MAX(ind, 3);
-			}
-		}
-
-		/* Save the new index */
-		state->stat_ind[i] = ind;
-	}
-
-	state->speed += (state->stat_ind[STAT_SPD] - 7);
 
 	/* Other timed effects */
 	player_flags_timed(p, state->flags);
@@ -1796,16 +1806,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	state->to_h += adj_dex_th[state->stat_ind[STAT_DEX]];
 	state->to_h += adj_str_th[state->stat_ind[STAT_STR]];
 
-
-	/* Modify skills */
-	state->skills[SKILL_DISARM_PHYS] += adj_dex_dis[state->stat_ind[STAT_DEX]];
-	state->skills[SKILL_DISARM_MAGIC] += adj_int_dis[state->stat_ind[STAT_INT]];
-	state->skills[SKILL_DEVICE] += adj_int_dev[state->stat_ind[STAT_INT]];
-	state->skills[SKILL_SAVE] += adj_wis_sav[state->stat_ind[STAT_WIS]];
-	state->skills[SKILL_DIGGING] += adj_str_dig[state->stat_ind[STAT_STR]];
-	for (i = 0; i < SKILL_MAX; i++)
-		state->skills[i] += (p->class->x_skills[i] * p->lev / 10);
-
+	/* Bound skills */
 	if (state->skills[SKILL_DIGGING] < 1) state->skills[SKILL_DIGGING] = 1;
 	if (state->skills[SKILL_STEALTH] > 30) state->skills[SKILL_STEALTH] = 30;
 	if (state->skills[SKILL_STEALTH] < 0) state->skills[SKILL_STEALTH] = 0;
