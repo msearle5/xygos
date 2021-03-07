@@ -545,6 +545,10 @@ void wr_player(void)
 	/* Quest currently active */
 	wr_s32b(player->active_quest);
 
+	/* Factions */
+	wr_s32b(player->bm_faction);
+	wr_s32b(player->town_faction);
+
 	/* Player flags */
 	for(i=0; i < (int)PF_SIZE; i++)
 		wr_byte(player->ability_pflags[i]);

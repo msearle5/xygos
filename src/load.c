@@ -859,6 +859,10 @@ int rd_player(void)
 	/* Quest currently active */
 	rd_s32b(&player->active_quest);
 
+	/* Factions */
+	rd_s32b(&player->bm_faction);
+	rd_s32b(&player->town_faction);
+
 	/* Player flags */
 	for(i=0; i < (int)PF_SIZE; i++)
 		rd_byte(&player->ability_pflags[i]);

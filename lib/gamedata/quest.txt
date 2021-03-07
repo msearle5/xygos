@@ -54,7 +54,7 @@ entryfeature:lava
 intro:Well, I guess I can trust you now. I thought I was being clever, using a small cave that I thought nobody knew about to store my stash of valuable rare spirits safely. It's by the volcanic vent. Unfortunately the roof collapsed. Could you dig your way in and retrieve it for me? You'll be rewarded, and not just with a few bottle caps this time. I would take digging equipment of some kind - I don't know how far back the collapse went.
 desc:Retrieve the rare booze from the volcanic cave
 succeed:Well done. A reward? Isn't the thrill of exploration its own reward? No? Well, OK.
-failure:Defeated by a mouse. How heroic!
+failure:It was all lost? That's a shame.
 flags:locked
 
 name:Msing Pills
@@ -69,6 +69,18 @@ intro:Most of my stock has been stolen. I don't know who did it, or where they h
 desc:Find the pills and return them to the pharmacy
 succeed:Well done - you are going to like these, I'm sure.
 failure:Oh well - I realise that I didn't give you much to go on.
+
+name:Soldier, Sailor, Chef, Pie
+level:11
+object:card
+store:Mine:General Store
+store:Caverns:General Store
+min-found:1
+max-remaining:0
+intro:My baking is famous across dozens of vaults, and it's all down to my secret recipe. Nobody's managed to reproduce it, and believe me they have tried! But those snakes at the Black Market don't want to even attempt that - instead their agent deceived my young assistant, switching our one master copy of the recipe with junk. The agent slipped away underground, and is probably some way down by now. If you could get the recipe back for me before she breaks cover and takes it to the Black Market, I would be very grateful!
+desc:Find the Black Market's agent, return the recipe
+succeed:Here's the last batch and - if you can keep it quiet - the secret ingredients!
+failure:So why did I trust you again?
 
 name:Sauron
 level:99

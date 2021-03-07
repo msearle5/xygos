@@ -1414,6 +1414,9 @@ void prepare_next_level(struct chunk **c, struct player *p)
 
 	/* The dungeon is ready */
 	character_dungeon = true;
+
+	/* Quest specials - after changing level */
+	quest_changed_level();
 }
 
 /**

@@ -618,6 +618,8 @@ struct player {
 	struct quest *quests;				/* Quest history */
 	s32b active_quest;					/* Currently active quest */
 	u16b total_winner;					/* Total winner */
+	s32b bm_faction;					/* Faction with the black market */
+	s32b town_faction;					/* and with the rest of town */
 
 	u16b noscore;				/* Cheating flags */
 

@@ -88,23 +88,6 @@ static const char *comment_hint[] =
 };
 
 
-/**
- * Easy names for the elements of the 'scr_places' arrays.
- */
-enum
-{
-	LOC_PRICE = 0,
-	LOC_OWNER,
-	LOC_HEADER,
-	LOC_MORE,
-	LOC_HELP_CLEAR,
-	LOC_HELP_PROMPT,
-	LOC_AU,
-	LOC_WEIGHT,
-
-	LOC_MAX
-};
-
 /* State flags */
 #define STORE_GOLD_CHANGE      0x01
 #define STORE_FRAME_CHANGE     0x02
@@ -112,18 +95,6 @@ enum
 
 /* Compound flag for the initial display of a store */
 #define STORE_INIT_CHANGE		(STORE_FRAME_CHANGE | STORE_GOLD_CHANGE)
-
-struct store_context {
-	struct menu menu;			/* Menu instance */
-	struct store *store;	/* Pointer to store */
-	struct object **list;	/* List of objects (unused) */
-	int flags;				/* Display flags */
-	bool inspect_only;		/* Only allow looking */
-
-	/* Places for the various things displayed onscreen */
-	unsigned int scr_places_x[LOC_MAX];
-	unsigned int scr_places_y[LOC_MAX];
-};
 
 /* Return a random hint from the given hints list */
 static const char *random_line(struct hint *hints)
@@ -600,7 +571,34 @@ static bool store_get_check(const char *prompt)
 	return store_do_check();
 }
 
-static bool store_get_long_check(struct store_context *ctx, const char *prompt)
+void store_long_text(struct store_context *ctx, const char *text)
+{
+	/* Print a long (multi line, formatted) message */
+	unsigned long flags = ctx->flags;
+
+	/* Where the help text goes */
+	ctx->flags |= (STORE_SHOW_HELP);
+	store_display_recalc(ctx);
+	int help_loc = ctx->scr_places_y[LOC_HELP_PROMPT];
+
+	/* Clear */
+	clear_from(ctx->scr_places_y[LOC_HELP_CLEAR]);
+
+	/* Prepare hooks */
+	text_out_hook = text_out_to_screen;
+	text_out_indent = 1;
+	Term_gotoxy(1, help_loc);
+
+	/* Print it, wait */
+	text_out(text);
+	inkey_ex();
+
+	/* Clean up */
+	store_display_recalc(ctx);
+	return;
+}
+
+bool store_get_long_check(struct store_context *ctx, const char *prompt)
 {
 	/* Print a long (multi line, formatted) prompt */
 	unsigned long flags = ctx->flags;
@@ -702,38 +700,42 @@ static bool store_sell(struct store_context *ctx)
 		return false;
 	}
 
-	/* Get a full description */
-	object_desc(o_name, sizeof(o_name), temp_obj, ODESC_PREFIX | ODESC_FULL);
+	/* Check for special quest behaviours */
+	if (!quest_selling_object(obj, ctx)) {
 
-	/* Real store */
-	if (store->sidx != STORE_HOME) {
-		/* Extract the value of the items */
-		u32b price = price_item(store, temp_obj, true, amt);
+		/* Get a full description */
+		object_desc(o_name, sizeof(o_name), temp_obj, ODESC_PREFIX | ODESC_FULL);
 
-		object_wipe(temp_obj);
-		screen_save();
+		/* Real store */
+		if (store->sidx != STORE_HOME) {
+			/* Extract the value of the items */
+			u32b price = price_item(store, temp_obj, true, amt);
 
-		/* Show price */
-		if (!OPT(player, birth_no_selling))
-			prt(format("Price: %d", price), 1, 0);
+			object_wipe(temp_obj);
+			screen_save();
 
-		/* Confirm sale */
-		if (!store_get_check(format("%s %s? [ESC, any other key to accept]",
-				OPT(player, birth_no_selling) ? "Give" : "Sell", o_name))) {
+			/* Show price */
+			if (!OPT(player, birth_no_selling))
+				prt(format("Price: %d", price), 1, 0);
+
+			/* Confirm sale */
+			if (!store_get_check(format("%s %s? [ESC, any other key to accept]",
+					OPT(player, birth_no_selling) ? "Give" : "Sell", o_name))) {
+				screen_load();
+				return false;
+			}
+
 			screen_load();
-			return false;
+
+			cmdq_push(CMD_SELL);
+			cmd_set_arg_item(cmdq_peek(), "item", obj);
+			cmd_set_arg_number(cmdq_peek(), "quantity", amt);
+		} else { /* Player is at home */
+			object_wipe(temp_obj);
+			cmdq_push(CMD_STASH);
+			cmd_set_arg_item(cmdq_peek(), "item", obj);
+			cmd_set_arg_number(cmdq_peek(), "quantity", amt);
 		}
-
-		screen_load();
-
-		cmdq_push(CMD_SELL);
-		cmd_set_arg_item(cmdq_peek(), "item", obj);
-		cmd_set_arg_number(cmdq_peek(), "quantity", amt);
-	} else { /* Player is at home */
-		object_wipe(temp_obj);
-		cmdq_push(CMD_STASH);
-		cmd_set_arg_item(cmdq_peek(), "item", obj);
-		cmd_set_arg_number(cmdq_peek(), "quantity", amt);
 	}
 
 	/* Update the display */
@@ -1668,6 +1670,9 @@ static void store_quest(struct store_context *ctx)
 		return;
 	}
 
+	// In case of e.g. Pie quest's card
+	quest_changed_level();
+
 	// Scan the quests looking for a quest which is 'available' and based from this store.
 	for(int i=0;i<z_info->quest_max;i++)
 	{
@@ -1690,14 +1695,19 @@ static void store_quest(struct store_context *ctx)
 			} else if (q->flags & QF_UNREWARDED) {
 				/* Debrief */
 				if (q->flags & QF_SUCCEEDED) {
-					msg(q->succeed);
-					quest_reward(q, true);
-					/* Unlock quests depending on this */
-					if (q->unlock) {
-						for(int j=0;j<z_info->quest_max;j++)
-						{
-							if (streq(player->quests[j].name, q->unlock))
-								player->quests[j].flags &= ~QF_LOCKED;
+					/* There may be an additional check (such as carrying the right object)
+					 * before you can get a reward. This will print messages itself if needed.
+					 **/
+					if (quest_is_rewardable(q)) {
+						msg(q->succeed);
+						quest_reward(q, true);
+						/* Unlock quests depending on this */
+						if (q->unlock) {
+							for(int j=0;j<z_info->quest_max;j++)
+							{
+								if (streq(player->quests[j].name, q->unlock))
+									player->quests[j].flags &= ~QF_LOCKED;
+							}
 						}
 					}
 				} else {
@@ -1715,6 +1725,10 @@ static void store_quest(struct store_context *ctx)
 			}
 		}
 	}
+
+	/* Special cases */
+	if (quest_special_endings(ctx))
+		return;
 
 	msg("%s doesn't have anything that needs to be done right now.", store_shortname(ctx));
 }
