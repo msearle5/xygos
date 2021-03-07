@@ -945,42 +945,18 @@ int apply_magic(struct object *obj, int lev, bool allow_artifacts, bool good,
 bool kind_is_good(const struct object_kind *kind)
 {
 	/* Some item types are (almost) always good */
-	switch (kind->tval)
-	{
-		/* Armor -- Good unless damaged */
-		case TV_HARD_ARMOR:
-		case TV_SOFT_ARMOR:
-		case TV_DRAG_ARMOR:
-		case TV_SHIELD:
-		case TV_CLOAK:
-		case TV_BELT:
-		case TV_BOOTS:
-		case TV_GLOVES:
-		case TV_HELM:
-		case TV_CROWN:
-		{
-			if (randcalc(kind->to_a, 0, MINIMISE) < 0) return (false);
-			return true;
-		}
 
-		/* Weapons -- Good unless damaged */
-		case TV_GUN:
-		case TV_SWORD:
-		case TV_HAFTED:
-		case TV_POLEARM:
-		case TV_DIGGING:
-		{
-			if (randcalc(kind->to_h, 0, MINIMISE) < 0) return (false);
-			if (randcalc(kind->to_d, 0, MINIMISE) < 0) return (false);
-			return true;
-		}
+	/* Armor -- Good unless damaged */
+	if (kind_tval_is_armor(kind)) {
+		if (randcalc(kind->to_a, 0, MINIMISE) < 0) return (false);
+		return true;
+	}
 
-		/* Ammo -- Arrows/Bolts are good */
-		case TV_AMMO_12:
-		case TV_AMMO_9:
-		{
-			return true;
-		}
+	/* Weapons, including melee, guns and ammo -- Good unless damaged */
+	if (kind_tval_is_weapon(kind)) {
+		if (randcalc(kind->to_h, 0, MINIMISE) < 0) return (false);
+		if (randcalc(kind->to_d, 0, MINIMISE) < 0) return (false);
+		return true;
 	}
 
 	/* Anything with the GOOD flag */
@@ -1244,7 +1220,6 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
 			}
 		}
 	}
-
 
 	if (!new_obj) {
 		struct ego_item *ego = NULL;

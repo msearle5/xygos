@@ -211,9 +211,9 @@ bool tval_is_jewelry(const struct object *obj)
 	return obj->tval == TV_RING || obj->tval == TV_AMULET;
 }
 
-bool tval_is_weapon(const struct object *obj)
+static bool tv_is_weapon(int tv)
 {
-	switch (obj->tval) {
+	switch (tv) {
 		case TV_SWORD:
 		case TV_HAFTED:
 		case TV_POLEARM:
@@ -228,9 +228,19 @@ bool tval_is_weapon(const struct object *obj)
 	}
 }
 
-bool tval_is_armor(const struct object *obj)
+bool tval_is_weapon(const struct object *obj)
 {
-	switch (obj->tval) {
+	return tv_is_weapon(obj->tval);
+}
+
+bool kind_tval_is_weapon(const struct object_kind *kind)
+{
+	return tv_is_weapon(kind->tval);
+}
+
+static bool tv_is_armor(int tv)
+{
+	switch (tv) {
 		case TV_DRAG_ARMOR:
 		case TV_HARD_ARMOR:
 		case TV_SOFT_ARMOR:
@@ -245,6 +255,16 @@ bool tval_is_armor(const struct object *obj)
 		default:
 			return false;
 	}
+}
+
+bool kind_tval_is_armor(const struct object_kind *kind)
+{
+	return tv_is_armor(kind->tval);
+}
+
+bool tval_is_armor(const struct object *obj)
+{
+	return tv_is_armor(obj->tval);
 }
 
 bool tval_is_melee_weapon(const struct object *obj)
