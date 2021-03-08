@@ -467,7 +467,7 @@ static void player_embody(struct player *p)
  */
 static void get_money(void)
 {
-	player->au = player->au_birth = z_info->start_gold;
+	player->au = player->au_birth = Rand_normal(z_info->start_gold, z_info->start_gold_spread);
 }
 
 void player_init(struct player *p)
@@ -707,7 +707,7 @@ static void recalculate_stats(int *stats_local_local, int points_left_local)
 	}
 
 	/* Gold is inversely proportional to cost */
-	player->au_birth = z_info->start_gold + (50 * points_left_local);
+	player->au_birth = Rand_normal(z_info->start_gold, z_info->start_gold_spread) + (50 * points_left_local);
 
 	/* Update bonuses, hp, etc. */
 	get_bonuses();

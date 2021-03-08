@@ -637,6 +637,8 @@ static enum parser_error parse_constants_player(struct parser *p) {
 		z->max_range = value;
 	else if (streq(label, "start-gold"))
 		z->start_gold = value;
+	else if (streq(label, "start-gold-spread"))
+		z->start_gold_spread = value;
 	else if (streq(label, "food-value"))
 		z->food_value = value;
 	else
