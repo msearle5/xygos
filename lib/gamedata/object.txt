@@ -335,7 +335,7 @@ alloc:50:0 to 50
 attack:1d4:0:0
 armor:0:0
 pval:3000
-flags:BURNS_OUT
+flags:BURNS_OUT | HIDE_ACTIVATION
 desc:A BogStan brand D-cell, sealed in plastic and claiming to be ultra-long-life but long past its sell-by date despite that. Still, with luck it should still be usable to some extent.
 msg:You drain the cell dry.
 effect:NOURISH:INC_BY
@@ -351,7 +351,7 @@ alloc:20:2 to 70
 attack:1d4:0:0
 armor:0:0
 pval:7500
-flags:BURNS_OUT
+flags:BURNS_OUT | HIDE_ACTIVATION
 desc:A Flammacell D-size battery, sealed in plastic and not too far past its sell-by date. You can expect to get a lot more use from it than the cheap alternatives.
 msg:You drain the cell dry.
 effect:NOURISH:INC_BY
@@ -367,7 +367,7 @@ alloc:5:13 to 85
 attack:1d4:0:0
 armor:0:0
 pval:15000
-flags:BURNS_OUT
+flags:BURNS_OUT | HIDE_ACTIVATION
 desc:A D-size Bendacell battery, based on an alcohol fuel cell. It lasts much longer than any normal battery, and is lighter as well. In more than ways than one - drop it and it's as likely as not to go up in flames.
 msg:You drain the cell dry. Hic!
 effect:NOURISH:INC_BY
@@ -383,7 +383,7 @@ alloc:5:20 to 100
 attack:1d4:0:0
 armor:0:0
 pval:30000
-flags:BURNS_OUT
+flags:BURNS_OUT | HIDE_ACTIVATION
 desc:A D-size Flammacell battery, based on a hydrogen fuel cell. It lasts a great deal longer than any normal battery, and it's very light too. Apart from a slight tendency to explode it's a real win.
 msg:You drain the cell dry.
 effect:NOURISH:INC_BY
@@ -401,6 +401,7 @@ attack:1d4:0:0
 armor:0:0
 pval:7500
 time:500
+flags:HIDE_ACTIVATION
 desc:A Bettacell atomic battery which can be used like conventional D cells, to recharge any device. While it has a cooldown interlock preventing it from being used twice without waiting for a few minutes, its reserves of energy are sufficient that it will live - if not quite for ever - then at least for longer than you will. Especially if you drop it.
 msg:You recharge from the atomic cell.
 effect:NOURISH:INC_BY
@@ -419,6 +420,7 @@ attack:1d4:0:0
 armor:0:0
 pval:30000
 time:25
+flags:HIDE_ACTIVATION
 desc:The iconic dustbin-sized fusion reactor that powers cars and homes, now shrunk into a D-cell format. Few were made - you may consider yourself lucky to have found one of them. Or not, depending on which rumors you believe about *why* they were so quickly pulled off the market...
 msg:You recharge from Mr Fusion.
 effect:NOURISH:INC_BY

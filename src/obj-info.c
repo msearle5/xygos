@@ -1701,36 +1701,38 @@ static bool describe_effect(textblock *tb, const struct object *obj,
 	}
 
 	/* Activations get a special message */
-	if (obj->activation && obj->activation->desc) {
-		textblock_append(tb, "When activated, it ");
-		textblock_append(tb, "%s", obj->activation->desc);
-	} else {
-		int level = obj->artifact ?
-			obj->artifact->level : obj->kind->level;
-		int boost = MAX((player->state.skills[SKILL_DEVICE] - level) / 2, 0);
-		const char *prefix;
-		textblock *tbe;
+	if (!(of_has(obj->flags, OF_HIDE_ACTIVATION))) {
+		if (obj->activation && obj->activation->desc) {
+			textblock_append(tb, "When activated, it ");
+			textblock_append(tb, "%s", obj->activation->desc);
+		} else {
+			int level = obj->artifact ?
+				obj->artifact->level : obj->kind->level;
+			int boost = MAX((player->state.skills[SKILL_DEVICE] - level) / 2, 0);
+			const char *prefix;
+			textblock *tbe;
 
-		if (aimed)
-			prefix = "When aimed, it ";
-		else if (tval_is_edible(obj))
-			prefix = "When eaten, it ";
-		else if (tval_is_pill(obj))
-			prefix = "When quaffed, it ";
-		else if (tval_is_card(obj))
-			prefix = "When run, it ";
-		else
-			prefix = "When activated, it ";
+			if (aimed)
+				prefix = "When aimed, it ";
+			else if (tval_is_edible(obj))
+				prefix = "When eaten, it ";
+			else if (tval_is_pill(obj))
+				prefix = "When quaffed, it ";
+			else if (tval_is_card(obj))
+				prefix = "When run, it ";
+			else
+				prefix = "When activated, it ";
 
-		tbe = effect_describe(effect, prefix, boost, false);
-		if (! tbe) {
-			return false;
+			tbe = effect_describe(effect, prefix, boost, false);
+			if (! tbe) {
+				return false;
+			}
+			textblock_append_textblock(tb, tbe);
+			textblock_free(tbe);
 		}
-		textblock_append_textblock(tb, tbe);
-		textblock_free(tbe);
-	}
 
-	textblock_append(tb, ".\n");
+		textblock_append(tb, ".\n");
+	}
 
 	if (min_time || max_time) {
 		/* Sometimes adjust for player speed */

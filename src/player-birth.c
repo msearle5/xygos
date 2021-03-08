@@ -1255,6 +1255,9 @@ void do_cmd_accept_character(struct command *cmd)
 	cmd_abilities(player, true, player->talent_points, NULL);
 	init_talent(level_tp);
 
+	/* No quest in progress */
+	player->active_quest = -1;
+
 	/* Make a world: towns */
 	world_init_towns();
 
@@ -1318,9 +1321,6 @@ void do_cmd_accept_character(struct command *cmd)
 
 	/* Outfit the player, if they can sell the stuff */
 	player_outfit(player);
-
-	/* No quest in progress */
-	player->active_quest = -1;
 
 	/* Cooldowns at zero */
 	if (!player->cooldown)

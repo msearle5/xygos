@@ -838,6 +838,12 @@ subtype:throw
 code:NO_ACTIVATION
 power:0
 
+name:hide-activate
+type:flag
+subtype:throw
+code:HIDE_ACTIVATION
+power:0
+
 name:ignore acid
 type:ignore
 code:ACID
