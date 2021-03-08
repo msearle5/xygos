@@ -836,7 +836,7 @@ static bool store_purchase(struct store_context *ctx, int item, bool single)
 		/* Check if they have statuses (because otherwise they would be expected to wear off)
 		 **/
 		for (int i = 0; i < TMD_MAX; i++) {
-			if ((player->timed[i]) && (timed_effects[TMD_MAX].flag_general & PG_NASTY)) {
+			if ((player->timed[i]) && (timed_effects[i].flag_general & PG_NASTY)) {
 				msg("I am afraid you can't fly with us in that condition!");
 				return false;
 			}
