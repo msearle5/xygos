@@ -563,7 +563,6 @@ struct player {
 
 	struct loc grid;/* Player location */
 
-	u32b hitdie;	/* Hit dice (sides) */
 	byte expfact;	/* Experience factor */
 
 	s16b age;		/* Characters age */
@@ -629,7 +628,7 @@ struct player {
 
 	bool wizard;				/* Player is in wizard mode */
 
-	s16b player_hp[PY_MAX_LEVEL];		/* HP gained per level */
+	s16b *player_hp;			/* HP gained per level */
 
 	/* Saved values for quickstart */
 	s32b au_birth;						/* Birth gold when option birth_money is false */

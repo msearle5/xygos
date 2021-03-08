@@ -27,6 +27,7 @@
 #include "player-quest.h"
 #include "player-spell.h"
 #include "player-timed.h"
+#include "player-util.h"
 #include "z-color.h"
 #include "z-util.h"
 

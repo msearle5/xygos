@@ -1109,8 +1109,25 @@ static void calc_hitpoints(struct player *p)
 	/* Get "1/100th hitpoint bonus per level" value */
 	bonus = adj_con_mhp[p->state.stat_ind[STAT_CON]];
 
-	/* Calculate hitpoints */
-	mhp = p->player_hp[p->lev-1] + (bonus * p->lev / 100);
+	/* Calculate hitpoints from classes' player_hp tables.
+	 * The aim is to produce a weighted average of the classes' hp tables,
+	 * proportional to the number of levels per class.
+	 **/
+	double total = 0;
+	for (struct player_class *c = classes; c; c = c->next) {
+		int levels = levels_in_class(c->cidx);
+		if (levels) {
+			double scale = levels;
+			scale /= player->lev;
+			double part_hp = player->player_hp[(player->lev - 1) + (PY_MAX_LEVEL * c->cidx)];
+			part_hp *= scale;
+			total += part_hp;
+		}
+	}
+	mhp = total;
+
+	/* This is independent of class */
+	mhp += (bonus * p->lev / 100);
 
 	/* Always have at least one hitpoint per level */
 	if (mhp < p->lev + 1) mhp = p->lev + 1;

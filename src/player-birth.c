@@ -279,15 +279,15 @@ static void get_stats(int stat_use[STAT_MAX])
 	}
 }
 
-/* Worst (= most negative) negative deviation, as a proportion of the expected value
+/** Worst (= most negative) negative deviation, as a proportion of the expected value
  * in 10000ths
  */
-int hp_roll_worst(int *level)
+int hp_roll_worst(int hitdie, int *level)
 {
 	int worst = 0;
 	int rdev = 0;
 	for(int i=1; i<PY_MAX_LEVEL-10; i++) {
-		int mean = (i / 2) + ((player->hitdie * i) / (PY_MAX_LEVEL - 1)); 
+		int mean = (i / 2) + ((hitdie * i) / (PY_MAX_LEVEL - 1));
 		rdev += level[i];
 		if (i >= 5) {
 			int dev = rdev - mean;
@@ -300,13 +300,13 @@ int hp_roll_worst(int *level)
 	return worst;
 }
 
-/* Sum of squares of of negative deviations */
-int hp_roll_score(int *level)
+/** Sum of squares of of negative deviations */
+int hp_roll_score(int hitdie, int *level)
 {
 	int sum = 0;
 	int rdev = 0;
 	for(int i=1; i<PY_MAX_LEVEL; i++) {
-		int mean = (i / 2) + ((player->hitdie * i) / (PY_MAX_LEVEL - 1)); 
+		int mean = (i / 2) + ((hitdie * i) / (PY_MAX_LEVEL - 1));
 		rdev += level[i];
 		int dev = rdev - mean;
 		if (dev < 0)
@@ -315,16 +315,16 @@ int hp_roll_score(int *level)
 	return sum;
 }
 
-/* Produce hitpoints which are random at all levels except the first
+/** Produce hitpoints which are random at all levels except the first
  * which always gets max hit points, but which at maximum level always
  * has the same value (the average value of 49 hitdie rolls, + 1 max).
  * It should also not deviate too far from the average at any other
  * level.
  */
-void roll_hp(void)
+static void roll_hp_class(int hitdie, s16b *player_hp)
 {
 	/* Average expected HP - ignoring the first level */
-	int target = player->hitdie;
+	int target = hitdie;
 
 	/* Roll all hitpoints */
 	int level[PY_MAX_LEVEL];
@@ -361,27 +361,35 @@ void roll_hp(void)
 	 * levels 5 and 40 has been reduced below 5%.
 	 */
 	do {
-		int before = hp_roll_score(level);
+		int before = hp_roll_score(hitdie, level);
 		int from = randint1(PY_MAX_LEVEL-1);
 		int to = randint1(PY_MAX_LEVEL-1);
 		int tmp = level[from];
 		level[from] = level[to];
 		level[to] = tmp;
-		int after = hp_roll_score(level);
+		int after = hp_roll_score(hitdie, level);
 		if (before < after) {
 			// revert it - this has increased the deviation
 			tmp = level[from];
 			level[from] = level[to];
 			level[to] = tmp;
 		}
-	} while (hp_roll_worst(level) < -500); // 5%
+	} while (hp_roll_worst(hitdie, level) < -500); // 5%
 
 	/* Copy into the player's hitpoints */
-	player->player_hp[0] = (2 * player->hitdie) / PY_MAX_LEVEL;
+	player_hp[0] = (2 * hitdie) / PY_MAX_LEVEL;
 	for (int i = 1; i < PY_MAX_LEVEL; i++)
-		player->player_hp[i] = player->player_hp[i-1] + level[i];
+		player_hp[i] = player_hp[i-1] + level[i];
 }
 
+/** Roll hitpoints for all classes */
+void roll_hp(void)
+{
+	for (struct player_class *c = classes; c; c = c->next) {
+		int hitdie = hitdie_class(c);
+		roll_hp_class(hitdie, player->player_hp + (PY_MAX_LEVEL * c->cidx));
+	}
+}
 
 static void get_bonuses(void)
 {
@@ -977,6 +985,12 @@ static void generate_stats(int stats[STAT_MAX], int points_spent[STAT_MAX],
 	recalculate_stats(stats, *points_left);
 }
 
+int hitdie_class(const struct player_class *c)
+{
+	return player->race->r_mhp + player->extension->r_mhp + c->c_mhp;
+}
+
+
 /**
  * This fleshes out a full player based on the choices currently made,
  * and so is called whenever things like race or class are chosen.
@@ -1010,22 +1024,32 @@ void player_generate(struct player *p, struct player_race *r, struct player_race
 	p->expfact = p->race->r_exp + p->extension->r_exp + p->class->c_exp;
 
 	/* Hitdice */
-	p->hitdie = p->race->r_mhp + p->extension->r_mhp + p->class->c_mhp;
+	int hitdie = hitdie_class(player->class);
 
-	/* Pre-calculate level 1 hitdice */
-	p->player_hp[0] = (p->hitdie * 2) / PY_MAX_LEVEL;
+	/* HP array */
+	if (!(p->player_hp))
+		p->player_hp = mem_alloc(sizeof(s16b) * PY_MAX_LEVEL * (1 + classes->cidx));
 
-	/*
-	 * Fill in overestimates of hitpoints for additional levels.  Do not
-	 * do the actual rolls so the player can not reset the birth screen
-	 * to get a desirable set of initial rolls.
-	 */
-	for (i = 1; i < p->lev; i++) {
-		p->player_hp[i] = p->player_hp[i - 1] + (p->hitdie / PY_MAX_LEVEL);
+	/* For each class... */
+	for (struct player_class *c = classes; c; c = c->next) {
+		int hitdie = hitdie_class(c);
+		s16b *player_hp = player->player_hp + (PY_MAX_LEVEL * c->cidx);
+
+		/* Pre-calculate level 1 hitdice */
+		player_hp[0] = (hitdie * 2) / PY_MAX_LEVEL;
+
+		/*
+		 * Fill in overestimates of hitpoints for additional levels.  Do not
+		 * do the actual rolls so the player can not reset the birth screen
+		 * to get a desirable set of initial rolls.
+		 */
+		for (i = 1; i < p->lev; i++) {
+			player_hp[i] = player_hp[i - 1] + (hitdie / PY_MAX_LEVEL);
+		}
 	}
 
 	/* Initial hitpoints */
-	p->mhp = p->player_hp[p->lev - 1];
+	p->mhp = p->player_hp[(PY_MAX_LEVEL * p->class->cidx)];
 
 	/* Roll for age/height/weight */
 	get_ahw(p);

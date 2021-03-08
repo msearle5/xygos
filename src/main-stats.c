@@ -197,13 +197,13 @@ static void generate_player_for_stats()
 	player->expfact = player->race->r_exp + player->class->c_exp + player->extension->r_exp;
 
 	/* Hitdice */
-	player->hitdie = player->race->r_mhp + player->class->c_mhp + player->extension->r_mhp;
+	int hitdie = player->race->r_mhp + player->class->c_mhp + player->extension->r_mhp;
 
 	/* Initial hitpoints -- high just to be safe */
 	player->mhp = player->chp = 2000;
 
 	/* Pre-calculate level 1 hitdice */
-	player->player_hp[0] = (2 * player->hitdie) / PY_MAX_LEVEL;
+	player->player_hp[0] = (2 * hitdie) / PY_MAX_LEVEL;
 
 	/* Set age/height/weight */
 	player->ht = player->ht_birth = 66;

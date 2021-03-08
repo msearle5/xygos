@@ -574,7 +574,6 @@ static bool store_get_check(const char *prompt)
 void store_long_text(struct store_context *ctx, const char *text)
 {
 	/* Print a long (multi line, formatted) message */
-	unsigned long flags = ctx->flags;
 
 	/* Where the help text goes */
 	ctx->flags |= (STORE_SHOW_HELP);

@@ -763,7 +763,6 @@ int rd_player(void)
 	rd_byte(&player->opts.name_suffix);
 
 	/* Special Race/Class info */
-	rd_u32b(&player->hitdie);
 	rd_byte(&player->expfact);
 
 	/* Age/Height/Weight */
@@ -1118,10 +1117,12 @@ int rd_player_hp(void)
 
 	/* Read the player_hp array */
 	rd_u16b(&tmp16u);
-	if (tmp16u > PY_MAX_LEVEL) {
-		note(format("Too many (%u) hitpoint entries!", tmp16u));
+	if (tmp16u != PY_MAX_LEVEL * (classes->cidx + 1)) {
+		note(format("Wrong (%u, not %u) hitpoint entries!", tmp16u, PY_MAX_LEVEL * (classes->cidx + 1)));
 		return (-1);
 	}
+	if (!player->player_hp)
+		player->player_hp = mem_alloc(sizeof(s16b) * tmp16u);
 
 	/* Read the player_hp array */
 	for (i = 0; i < tmp16u; i++)
