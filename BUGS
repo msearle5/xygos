@@ -35,10 +35,13 @@ BUG: "angband: gen-cave.c:2009: town_gen: Assertion `grid.x > 0' failed." (= the
 	** related to the following? **
 
 BUG: Saw climbing the stair into town put me in the middle of the level (not on a store, or the <)
+	- is the search breaking the X loop, not the Y loop (gen-cave.c:1990)?
 
 -------------
 
-BUG:"You are too heavily loaded to swim" even when not overloaded.
+BUG: "You fail to the tengu" (+ red worm mass - when you attack it with a pocket knife)
+
+BUG: "You are too heavily loaded to swim" even when not overloaded.
 	(well, more accurately you can never swim - you always drown. You should be able to if not loaded, at least for most races.)
 
 BUG: Plurals: knifes vs knives, "13 alkaline battery" not ies.

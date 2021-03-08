@@ -953,7 +953,7 @@ item:hard armor:Partial Plate Armour
 flags:IGNORE_ELEC
 values:RES_ELEC[1]
 
-name:of Resist Fire
+name:(fireproof)
 info:800:14
 alloc:100:1 to 30
 min-combat:255:0:0

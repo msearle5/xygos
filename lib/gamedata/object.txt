@@ -811,7 +811,7 @@ dice:20
 desc:Food of the elves is always good; their waybread is no exception.  These
 desc: thin cakes are wrapped in leaves and keep their tastiness for months.
 
-name:& Flask~ of Whisky
+name:& bottle~ of whiskey
 type:food
 graphics:,:y
 level:0
