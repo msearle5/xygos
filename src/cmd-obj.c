@@ -828,7 +828,7 @@ void do_cmd_activate(struct command *cmd)
  */
 void do_cmd_eat_food(struct command *cmd)
 {
-	struct object *obj;
+	struct object *obj = NULL;
 	int use = USE_SINGLE;
 
 	/* Get an item */

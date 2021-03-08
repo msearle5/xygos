@@ -209,7 +209,7 @@ xcopy $(MSBuildProjectDirectory)\lib\* $(OutDir)lib\ /DESY /exclude:$(MSBuildPro
     <ClCompile Include="src\mon-timed.c" />
     <ClCompile Include="src\mon-util.c" />
     <ClCompile Include="src\obj-chest.c" />
-    <ClCompile Include="src\obj-curse.c" />
+    <ClCompile Include="src\obj-fault.c" />
     <ClCompile Include="src\obj-desc.c" />
     <ClCompile Include="src\obj-gear.c" />
     <ClCompile Include="src\obj-ignore.c" />
@@ -258,7 +258,7 @@ xcopy $(MSBuildProjectDirectory)\lib\* $(OutDir)lib\ /DESY /exclude:$(MSBuildPro
     <ClCompile Include="src\ui-birth.c" />
     <ClCompile Include="src\ui-command.c" />
     <ClCompile Include="src\ui-context.c" />
-    <ClCompile Include="src\ui-curse.c" />
+    <ClCompile Include="src\ui-fault.c" />
     <ClCompile Include="src\ui-death.c" />
     <ClCompile Include="src\ui-display.c" />
     <ClCompile Include="src\ui-entry-combiner.c" />
@@ -380,7 +380,7 @@ xcopy $(MSBuildProjectDirectory)\lib\* $(OutDir)lib\ /DESY /exclude:$(MSBuildPro
     <ClInclude Include="src\mon-util.h" />
     <ClInclude Include="src\monster.h" />
     <ClInclude Include="src\obj-chest.h" />
-    <ClInclude Include="src\obj-curse.h" />
+    <ClInclude Include="src\obj-fault.h" />
     <ClInclude Include="src\obj-desc.h" />
     <ClInclude Include="src\obj-gear.h" />
     <ClInclude Include="src\obj-ignore.h" />
@@ -425,7 +425,7 @@ xcopy $(MSBuildProjectDirectory)\lib\* $(OutDir)lib\ /DESY /exclude:$(MSBuildPro
     <ClInclude Include="src\ui-birth.h" />
     <ClInclude Include="src\ui-command.h" />
     <ClInclude Include="src\ui-context.h" />
-    <ClInclude Include="src\ui-curse.h" />
+    <ClInclude Include="src\ui-fault.h" />
     <ClInclude Include="src\ui-death.h" />
     <ClInclude Include="src\ui-display.h" />
     <ClInclude Include="src\ui-entry-combiner.h" />
@@ -561,7 +561,7 @@ xcopy $(MSBuildProjectDirectory)\lib\* $(OutDir)lib\ /DESY /exclude:$(MSBuildPro
     <Text Include="lib\gamedata\chest_trap.txt" />
     <Text Include="lib\gamedata\class.txt" />
     <Text Include="lib\gamedata\constants.txt" />
-    <Text Include="lib\gamedata\curse.txt" />
+    <Text Include="lib\gamedata\fault.txt" />
     <Text Include="lib\gamedata\dungeon_profile.txt" />
     <Text Include="lib\gamedata\ego_item.txt" />
     <Text Include="lib\gamedata\flavor.txt" />
