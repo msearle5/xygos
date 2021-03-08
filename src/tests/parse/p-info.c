@@ -117,7 +117,7 @@ int test_skill_shoot0(void *state) {
 	eq(r, PARSE_ERROR_NONE);
 	pr = parser_priv(state);
 	require(pr);
-	eq(pr->r_skills[SKILL_TO_HIT_BOW], 6);
+	eq(pr->r_skills[SKILL_TO_HIT_GUN], 6);
 	ok;
 }
 

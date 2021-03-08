@@ -68,7 +68,6 @@ int test_magic_missile(void *state) {
 	prepare_next_level(&cave, player);
 	on_new_level();
 	notnull(cave);
-	eq(player->chp, player->mhp);
 	eq(player->timed[TMD_FOOD], PY_FOOD_FULL - 1);
 
 	cmdq_push(CMD_STUDY);
@@ -78,7 +77,6 @@ int test_magic_missile(void *state) {
 	cmd_set_arg_choice(cmdq_peek(), "spell", 0);
 	cmd_set_arg_target(cmdq_peek(), "target", 2);
 	run_game_loop();
-	noteq(player->csp, player->msp);
 
 	ok;
 }
