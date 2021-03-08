@@ -8,8 +8,8 @@ lib/scores/scores.*
 *.exe
 *.elf
 *.map
-angband
-angband.nds
+xygos
+xygos.nds
 lib/save/*
 .project
 .cproject
@@ -17,7 +17,7 @@ lib/save/*
 *.rej
 *.app
 src/tests/bin/
-src/angband-master
+src/xygos-master
 *.gcov
 *.gcda
 *.gcno
@@ -36,3 +36,4 @@ Release/
 /*.vcxproj*
 .idea/
 cmake-build-debug/
+CMakeCache.txt

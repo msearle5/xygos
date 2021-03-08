@@ -69,5 +69,6 @@ bool tval_is_edible(const struct object *obj);
 bool tval_is_zapper(const struct object *obj);
 int tval_sval_count(const char *name);
 int tval_sval_list(const char *name, int *list, int max_size);
+bool kind_tval_is_weapon(const struct object_kind *kind);
 
 #endif /* OBJECT_TVAL_H */

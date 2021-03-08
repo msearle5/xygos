@@ -340,7 +340,7 @@ static void decrease_timeouts(void)
 
 		/* If an unwanted effect and below 0, skip */
 		if (player->chp < 0)
-			if (timed_effects[TMD_MAX].flag_general & PG_NASTY)
+			if (timed_effects[i].flag_general & PG_NASTY)
 				continue;
 
 		/* Special cases */
