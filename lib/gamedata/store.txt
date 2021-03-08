@@ -38,9 +38,9 @@ always:cloak:Cloak
 #always:food:Apple
 #always:digger:Shovel
 #always:digger:Pick
-normal:6mm ammo:6mm bullet
-#normal:9mm ammo:9mm bullet
-#normal:12mm ammo:12mm bullet
+normal:6mm ammo:6mm bullet:7500
+normal:9mm ammo:9mm bullet:2500
+normal:12mm ammo:12mm bullet:500
 #normal:light:disposable flashlight
 normal:boots:pair of high heels
 normal:boots:pair of flip flops
@@ -58,9 +58,9 @@ buy:mushroom
 buy:battery
 buy:digger
 buy:cloak
-buy:shot
-buy:bolt
-buy:arrow
+buy:ammo_6
+buy:ammo_9
+buy:ammo_12
 
 # Armoury
 store:2:Armoury

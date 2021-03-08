@@ -44,7 +44,7 @@ BUG: "You fail to the tengu" (+ red worm mass - when you attack it with a pocket
 BUG: "You are too heavily loaded to swim" even when not overloaded.
 	(well, more accurately you can never swim - you always drown. You should be able to if not loaded, at least for most races.)
 
-BUG: Plurals: knifes vs knives, "13 alkaline battery" not ies.
+BUG: Battery/s (not the objects, but elsewhere)
 
 BUG: After gaining an ability (Sprinting) modifying stats, char-screen and left-panel weren't updated until later (e.g. when changing level)
 
@@ -54,6 +54,7 @@ BUG: Printers all seem to generate with {ignore}
 BUG "These two can't intersect"
 
 BUG: m-techniques top label is wonky (move the level 1 to the right, and the cost-label 2 to the left?)
+	= unable to rep with Spit Acid, Sprint.
 
 BUG: "When activated, it feeds you for X turns" (on a battery. This isn't really even true for Androids - the 'activated' part)
 	- is there an existing way to hide activation descriptions?
