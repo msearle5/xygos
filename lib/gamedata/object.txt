@@ -325,7 +325,7 @@ values:USE_ENERGY[10]
 flags:TAKES_FUEL | EASY_KNOW | LIGHT_5 | IGNORE_FIRE
 desc:A very big, heavy and bright LED lamp, which drains its battery very quickly.
 
-name:& alkaline battery
+name:& alkaline batter|y|ies|
 type:battery
 graphics:!:Copper
 level:0
@@ -341,7 +341,7 @@ msg:You drain the cell dry.
 effect:NOURISH:INC_BY
 dice:30
 
-name:& lithium battery
+name:& lithium batter|y|ies|
 type:battery
 graphics:!:HotPink
 level:3
@@ -357,7 +357,7 @@ msg:You drain the cell dry.
 effect:NOURISH:INC_BY
 dice:75
 
-name:& alcohol cell
+name:& alcohol cell~
 type:battery
 graphics:!:Violet
 level:19
@@ -373,7 +373,7 @@ msg:You drain the cell dry. Hic!
 effect:NOURISH:INC_BY
 dice:100
 
-name:& hydrogen cell
+name:& hydrogen cell~
 type:battery
 graphics:!:OrangeRed
 level:33
@@ -390,7 +390,7 @@ effect:NOURISH:INC_BY
 dice:100
 
 # cooldown, reusable
-name:& atomic cell
+name:& atomic cell~
 type:battery
 graphics:!:CadetBlue
 level:54
@@ -1090,7 +1090,7 @@ desc:It makes you very stealthy for a short while.
 
 ### Swords ###
 
-name:& pocket knife~
+name:& pocket kni|fe|ves|
 type:sword
 graphics:|:W
 level:0
@@ -1103,7 +1103,7 @@ desc:A small knife (and set of several semi-useful tools) in a folding, pocketab
 desc: case. It's not intended as a weapon of course, but could be used as one if
 desc: you really had nothing else better.
 
-name:& flick knife~
+name:& flick kni|fe|ves|
 type:sword
 graphics:|:W
 level:1
@@ -1114,7 +1114,7 @@ attack:1d5:0:0
 armor:0:0
 desc:A smallish knife, spring-loaded to open automatically.
 
-name:& survival knife~
+name:& survival kni|fe|ves|
 type:sword
 graphics:|:W
 level:3
