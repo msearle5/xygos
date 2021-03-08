@@ -23,7 +23,7 @@
     <ProjectGuid>{F9D9B5D4-3694-4705-8651-82EB225E68FA}</ProjectGuid>
     <RootNamespace>AngBand</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Angband</ProjectName>
+    <ProjectName>Xygos</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -493,10 +493,10 @@ xcopy $(MSBuildProjectDirectory)\lib\* $(OutDir)lib\ /DESY /exclude:$(MSBuildPro
     <Image Include="lib\tiles\nomad\8x16.png" />
     <Image Include="lib\tiles\old\8x8.png" />
     <Image Include="lib\tiles\shockbolt\64x64.png" />
-    <Image Include="src\win\angband.ico" />
+    <Image Include="src\win\xygos.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="src\win\angband.rc" />
+    <ResourceCompile Include="src\win\xygos.rc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="lib\customize\font-gcu.prf" />

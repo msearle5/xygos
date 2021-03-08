@@ -1003,7 +1003,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="src\win\angband.ico">
+    <Image Include="src\win\xygos.ico">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="lib\icons\att-16.png">
@@ -1038,7 +1038,7 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="src\win\angband.rc">
+    <ResourceCompile Include="src\win\xygos.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
