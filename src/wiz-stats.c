@@ -58,6 +58,8 @@
  * connectivity.
 */
 
+double *wiz_stats_prob;
+
 #ifdef USE_STATS
 
 /*** Statsgen ***/
@@ -1420,8 +1422,6 @@ static void revive_uniques(void)
 		if (rf_has(race->flags, RF_UNIQUE)) race->max_num = 1;
 	}
 }
-
-double *wiz_stats_prob;
 
 /* Generate non-special artifacts at each level 1-100 (by steps).
  * Record the number of each generated.

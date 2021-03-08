@@ -224,7 +224,7 @@ errr grab_effect_data(struct parser *p, struct effect *effect)
  *
  * This function takes a writable buffers, initially containing the
  * "path" to the "config", "lib" and "data" directories, for example, 
- * "/etc/angband/", "/usr/share/angband" and "/var/games/angband" -
+ * "/etc/xygos/", "/usr/share/xygos" and "/var/games/xygos" -
  * or a system dependent string, for example, ":lib:".  The buffer
  * must be large enough to contain at least 32 more characters.
  *
