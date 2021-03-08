@@ -282,11 +282,11 @@ static void remove_object_fault(struct object *obj, int index, bool message)
 /**
  * Attempts to remove a fault from an object.
  */
-static bool unfault_object(struct object *obj, int strength, char *dice_string)
+static bool repair_object(struct object *obj, int strength, random_value value)
 {
 	int index = 0;
 
-	if (get_fault(&index, obj, dice_string)) {
+	if (get_fault(&index, obj, value)) {
 		struct fault_data fault = obj->faults[index];
 		char o_name[80];
 
@@ -1379,16 +1379,15 @@ bool effect_handler_DRAIN_LIGHT(effect_handler_context_t *context)
 }
 
 /**
- * Attempt to unfault an object
+ * Attempt to repair an object
  */
 bool effect_handler_REMOVE_FAULT(effect_handler_context_t *context)
 {
-	const char *prompt = "Unfault which item? ";
+	const char *prompt = "Repair which item? ";
 	const char *rejmsg = "You have no faults to remove.";
 	int itemmode = (USE_EQUIP | USE_INVEN | USE_QUIVER | USE_FLOOR);
 	int strength = effect_calculate_value(context, false);
 	struct object *obj = NULL;
-	char dice_string[20];
 
 	context->ident = true;
 
@@ -1401,23 +1400,7 @@ bool effect_handler_REMOVE_FAULT(effect_handler_context_t *context)
 			itemmode))
 		return false;
 
-	/* Get the possible dice strings */
-	if ((context->value.dice == 1) && context->value.base) {
-		strnfmt(dice_string, sizeof(dice_string), "%d+d%d",
-				context->value.base, context->value.sides);
-	} else if (context->value.dice && context->value.base) {
-		strnfmt(dice_string, sizeof(dice_string), "%d+%dd%d",
-				context->value.base, context->value.dice, context->value.sides);
-	} else if (context->value.dice == 1) {
-		strnfmt(dice_string, sizeof(dice_string), "d%d", context->value.sides);
-	} else if (context->value.dice) {
-		strnfmt(dice_string, sizeof(dice_string), "%dd%d",
-				context->value.dice, context->value.sides);
-	} else {
-		strnfmt(dice_string, sizeof(dice_string), "%d", context->value.base);
-	}
-
-	return unfault_object(obj, strength, dice_string);
+	return repair_object(obj, strength, context->value);
 }
 
 /**
