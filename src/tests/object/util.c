@@ -45,11 +45,7 @@ int test_obj_can_refill(void *state) {
     /* Not by torches */
     eq(obj_can_refill(&obj_torch), false);
 
-    /* Lanterns can be refilled by other lanterns */
-    eq(obj_can_refill(&obj_lantern), true);
-
-    /* ...but not by empty lanterns */
-    obj_lantern.timeout = 0;
+    /* Lanterns can't be refilled by other lanterns */
     eq(obj_can_refill(&obj_lantern), false);
 
     /* Lanterns can be refilled by flasks of oil */
