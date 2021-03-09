@@ -99,8 +99,18 @@ static void flavor_assign_random(byte tval)
 		if (k_info[i].tval != tval || k_info[i].flavor || (tval == TV_LIGHT && kf_has(k_info[i].kind_flags, KF_EASY_KNOW)))
 			continue;
 
-		if (!flavor_count)
-			quit_fmt("Not enough flavors for tval %d.", tval);
+		if (!flavor_count) {
+			for (f = flavors; f; f = f->next)
+				if (f->tval == tval && f->sval == SV_UNKNOWN)
+					flavor_count++;
+			int need_count = 0;
+			for (i = 0; i < z_info->k_max; i++) {
+				if (k_info[i].tval != tval || k_info[i].flavor || (tval == TV_LIGHT && kf_has(k_info[i].kind_flags, KF_EASY_KNOW)))
+					continue;
+				need_count++;
+			}
+			quit_fmt("Not enough flavors for tval %d (%s), found %d, need %d.", tval, tval_find_name(tval), flavor_count, need_count);
+		}
 
 		choice = randint0(flavor_count);
 	
@@ -215,7 +225,7 @@ void flavor_init(void)
 	flavor_assign_random(TV_AMULET);
 	flavor_assign_random(TV_DEVICE);
 	flavor_assign_random(TV_WAND);
-	flavor_assign_random(TV_ROD);
+	flavor_assign_random(TV_GADGET);
 	flavor_assign_random(TV_MUSHROOM);
 
 	/* Pills (random titles, always magenta)

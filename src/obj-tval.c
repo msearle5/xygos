@@ -38,7 +38,7 @@ bool tval_is_battery(const struct object *obj)
 
 bool tval_is_rod(const struct object *obj)
 {
-	return obj->tval == TV_ROD;
+	return obj->tval == TV_GADGET;
 }
 
 bool tval_is_pill(const struct object *obj)
@@ -124,7 +124,7 @@ bool tval_can_have_charges(const struct object *obj)
 
 bool tval_can_have_timeout(const struct object *obj)
 {
-	return obj->tval == TV_ROD || obj->tval == TV_BATTERY || obj->tval == TV_LIGHT;
+	return obj->tval == TV_GADGET || obj->tval == TV_BATTERY || obj->tval == TV_LIGHT;
 }
 
 bool tval_is_body_armor(const struct object *obj)
@@ -180,7 +180,7 @@ bool tval_is_printer(const struct object *obj)
 bool tval_is_useable(const struct object *obj)
 {
 	switch (obj->tval) {
-		case TV_ROD:
+		case TV_GADGET:
 		case TV_WAND:
 		case TV_DEVICE:
 		case TV_CARD:
@@ -199,7 +199,7 @@ bool tval_can_have_failure(const struct object *obj)
 	switch (obj->tval) {
 		case TV_DEVICE:
 		case TV_WAND:
-		case TV_ROD:
+		case TV_GADGET:
 			return true;
 		default:
 			return false;
@@ -355,7 +355,7 @@ bool tval_can_have_flavor_k(const struct object_kind *kind)
 		case TV_RING:
 		case TV_DEVICE:
 		case TV_WAND:
-		case TV_ROD:
+		case TV_GADGET:
 		case TV_PILL:
 		case TV_MUSHROOM:
 		case TV_CARD:

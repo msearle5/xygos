@@ -221,7 +221,7 @@ equip:food:random:1:1
 equip:food:random:1:1
 equip:food:random:1:1
 equip:food:random:1:1
-equip:rod:galactic map:1:1
+equip:gadget:galactic map:1:1
 equip:boots:flip flops:1:1
 equip:helm:sun hat:1:1
 equip:soft armor:loud shirt:1:1

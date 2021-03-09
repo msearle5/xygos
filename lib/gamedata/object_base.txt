@@ -154,7 +154,7 @@ graphics:green
 # max-stack:5
 flags:HATES_ELEC | EASY_KNOW
 
-name:rod:Rod~
+name:gadget:gadget~
 graphics:light purple
 # max-stack:5
 flags:HATES_ELEC | EASY_KNOW

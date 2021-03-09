@@ -823,7 +823,7 @@ static int object_value_base(const struct object *obj)
 			return 50;
 		case TV_DEVICE:
 			return 70;
-		case TV_ROD:
+		case TV_GADGET:
 			return 90;
 	}
 

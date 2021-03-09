@@ -1749,7 +1749,7 @@ int find_inven(const struct object *obj)
 			}
 
 			/* Rods */
-			case TV_ROD:
+			case TV_GADGET:
 			{
 				/* Assume okay */
 				break;

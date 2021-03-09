@@ -258,7 +258,7 @@ static const struct stat_data stat_message[] =
 	{ST_CARDS, "\n ***CARDS***   \n All:        "},
 	{ST_ENDGAME_CARDS, " Endgame     "},// destruction, banish, mass banish, rune
 	{ST_ACQUIRE_CARDS, " Acquire.    "},
-	{ST_RODS, "\n ***RODS***      \n All:        "},
+	{ST_RODS, "\n ***GADGETS***      \n All:        "},
 	{ST_UTILITY_RODS, " Utility     "},//dtrap, dstairs, dobj, light, illum
 	{ST_TELEPOTHER_RODS, " Tele Other  "},
 	{ST_DETECTALL_RODS, " Detect all  "},
@@ -750,7 +750,7 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 		}
 
 		/* rods */
-		case TV_ROD:{
+		case TV_GADGET:{
 
 			/* add to total */
 			add_stats(ST_RODS, vault, mon, number);
@@ -1141,8 +1141,8 @@ static void print_heading(void)
 	file_putf(stats_log,"			 only *Healing* and Life\n");
 	file_putf(stats_log," Cards:   Endgame cards include *Dest*, Rune, MBan and Ban \n");
 	file_putf(stats_log,"    		 *Acq* counts as two Acq cards");
-	file_putf(stats_log," Rods: 	 Utility rods: d-obj, d-stairs, d-traps, light, illum \n");
-	file_putf(stats_log,"    		 Endgame rods: Speed, Healing \n");
+	file_putf(stats_log," Gadgets: 	 Utility gadgets: d-obj, d-stairs, d-traps, light, illum \n");
+	file_putf(stats_log,"    		 Endgame gadgets: Speed, Healing \n");
 	file_putf(stats_log," Devices: 	 Kill devices: dispel evil, power, holiness. \n");
 	file_putf(stats_log,"    		 Power devices: healing, magi, banishment \n");
 }

@@ -59,7 +59,7 @@ static int check_devices(struct object *obj)
 
 	/* Get the right string */
 	if (tval_is_rod(obj)) {
-		action = "zap the rod";
+		action = "zap the gadget";
 	} else if (tval_is_wand(obj)) {
 		action = "use the wand";
 		what = "wand";
@@ -108,7 +108,7 @@ static int beam_chance(int tval)
 	switch (tval)
 	{
 		case TV_WAND: return 20;
-		case TV_ROD:  return 10;
+		case TV_GADGET:  return 10;
 	}
 
 	return 0;
@@ -755,13 +755,13 @@ void do_cmd_zap_rod(struct command *cmd)
 
 	/* Get an item */
 	if (cmd_get_item(cmd, "item", &obj,
-			"Zap which rod? ",
-			"You have no rods to zap.",
+			"Zap which gadget? ",
+			"You have no gadgets to zap.",
 			tval_is_rod,
 			USE_INVEN | USE_FLOOR | SHOW_FAIL) != CMD_OK) return;
 
 	if (!obj_can_zap(obj)) {
-		msg("That rod is still charging.");
+		msg("That gadget is still charging.");
 		return;
 	}
 

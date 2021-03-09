@@ -87,7 +87,7 @@ struct cmd_info cmd_item[] =
 	{ "Fire your gun", { 'f', 't' }, CMD_FIRE, NULL, player_can_fire_prereq },
 	{ "Use a device", { 'u', 'Z' }, CMD_USE_DEVICE, NULL, NULL },
 	{ "Aim a wand", {'a', 'z'}, CMD_USE_WAND, NULL, NULL },
-	{ "Zap a rod", {'z', 'a'}, CMD_USE_ROD, NULL, NULL },
+	{ "Zap a gadget", {'z', 'a'}, CMD_USE_ROD, NULL, NULL },
 	{ "Activate an object", {'A' }, CMD_ACTIVATE, NULL, NULL },
 	{ "Eat some food", { 'E' }, CMD_EAT, NULL, NULL },
 	{ "Quaff a pill", { 'q' }, CMD_QUAFF, NULL, NULL },

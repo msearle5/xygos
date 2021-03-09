@@ -1413,7 +1413,7 @@ bool build_vault(struct chunk *c, struct loc centre, struct vault *v)
 					/* Wand or rod. */
 				case '-': place_object(c, grid, c->depth + 3, one_in_(4), false,
 									   ORIGIN_VAULT,
-									   one_in_(2) ? TV_WAND : TV_ROD);
+									   one_in_(2) ? TV_WAND : TV_GADGET);
 					break;
 					/* Food or mushroom. */
 				case ',': place_object(c, grid, c->depth + 3, one_in_(4), false,

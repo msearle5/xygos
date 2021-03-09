@@ -106,7 +106,7 @@ static const char *obj_desc_get_basename(const struct object *obj, bool aware,
 		case TV_WAND:
 			return (show_flavor ? "& # gun~" : "&~");
 
-		case TV_ROD:
+		case TV_GADGET:
 			return (show_flavor ? "& # gadget~" : "&~");
 
 		case TV_PILL:
@@ -271,7 +271,7 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 		 * and suffix when it doesn't take a class name
 		 **/
 		const char *spacename = obj->kind->name;
-		if ((obj->tval == TV_WAND) || (obj->tval == TV_DEVICE) || (obj->tval == TV_ROD) ||
+		if ((obj->tval == TV_WAND) || (obj->tval == TV_DEVICE) || (obj->tval == TV_GADGET) ||
 			(!isalpha(spacename[strlen(spacename)-1])))
 				space = "";
 

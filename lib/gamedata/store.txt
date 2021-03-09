@@ -258,7 +258,7 @@ buy:amulet
 buy:ring
 buy:device
 buy:wand
-buy:rod
+buy:gadget
 
 # Black Market - no stock given but we still need slot/turnover info
 store:7:Black Market

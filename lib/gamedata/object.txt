@@ -5354,7 +5354,7 @@ dice:20+d20
 ### Detection ###
 
 name:metal detector
-type:rod
+type:gadget
 graphics:-:d
 level:5
 weight:15
@@ -5368,7 +5368,7 @@ effect-yx:22:40
 time:50
 
 name:universal detector
-type:rod
+type:gadget
 graphics:-:d
 level:30
 weight:15
@@ -5389,7 +5389,7 @@ effect-yx:22:40
 time:100
 
 name:galactic map
-type:rod
+type:gadget
 graphics:-:d
 level:65
 weight:15
@@ -5403,7 +5403,7 @@ effect-yx:33:55
 time:100
 
 name:tricorder
-type:rod
+type:gadget
 graphics:-:d
 level:35
 weight:15
@@ -5419,7 +5419,7 @@ time:100
 ### Bolts ###
 
 name:Fire Bolts
-type:rod
+type:gadget
 graphics:-:d
 level:30
 weight:15
@@ -5433,7 +5433,7 @@ dice:12d8
 time:15
 
 name:Frost Bolts
-type:rod
+type:gadget
 graphics:-:d
 level:25
 weight:15
@@ -5447,7 +5447,7 @@ dice:12d8
 time:13
 
 name:Lightning Bolts
-type:rod
+type:gadget
 graphics:-:d
 level:20
 weight:15
@@ -5461,7 +5461,7 @@ dice:6d6
 time:11
 
 name:Acid Bolts
-type:rod
+type:gadget
 graphics:-:d
 level:40
 weight:15
@@ -5478,7 +5478,7 @@ time:12
 ### Balls ###
 
 name:Fire Balls
-type:rod
+type:gadget
 graphics:-:d
 level:75
 weight:15
@@ -5492,7 +5492,7 @@ dice:144
 time:30
 
 name:Cold Balls
-type:rod
+type:gadget
 graphics:-:d
 level:60
 weight:15
@@ -5506,7 +5506,7 @@ dice:100
 time:25
 
 name:Lightning Balls
-type:rod
+type:gadget
 graphics:-:d
 level:55
 weight:15
@@ -5521,7 +5521,7 @@ dice:64
 time:23
 
 name:Acid Balls
-type:rod
+type:gadget
 graphics:-:d
 level:70
 weight:15
@@ -5538,7 +5538,7 @@ time:27
 ### Status-affecting ###
 
 name:Slow Monster
-type:rod
+type:gadget
 graphics:-:d
 level:30
 weight:15
@@ -5552,7 +5552,7 @@ dice:10+1d20
 time:40
 
 name:Hold Monster
-type:rod
+type:gadget
 graphics:-:d
 level:30
 weight:15
@@ -5569,7 +5569,7 @@ time:40
 ### Healing ###
 
 name:Curing
-type:rod
+type:gadget
 graphics:-:d
 level:65
 weight:15
@@ -5586,7 +5586,7 @@ effect:CURE:CONFUSED
 time:100
 
 name:Healing
-type:rod
+type:gadget
 graphics:-:d
 level:80
 weight:15
@@ -5603,7 +5603,7 @@ effect:CURE:STUN
 time:1000
 
 name:Restoration
-type:rod
+type:gadget
 graphics:-:d
 level:80
 weight:15
@@ -5625,7 +5625,7 @@ time:1000
 ### Other ###
 
 name:Polymorph
-type:rod
+type:gadget
 graphics:-:d
 level:35
 weight:15
@@ -5640,7 +5640,7 @@ expr:B:PLAYER_LEVEL:+ 0
 time:25
 
 name:Drain Life
-type:rod
+type:gadget
 graphics:-:d
 level:75
 weight:15
@@ -5654,7 +5654,7 @@ dice:150
 time:23
 
 name:Teleport Other
-type:rod
+type:gadget
 graphics:-:d
 level:45
 weight:15
@@ -5669,7 +5669,7 @@ expr:B:MAX_SIGHT:* 5
 time:25
 
 name:Disable Traps
-type:rod
+type:gadget
 graphics:-:d
 level:35
 weight:15
@@ -5682,7 +5682,7 @@ effect:ALTER:KILL_TRAP
 time:30
 
 name:Light
-type:rod
+type:gadget
 graphics:-:d
 level:10
 weight:15
@@ -5697,7 +5697,7 @@ dice:6d8
 time:9
 
 name:Illumination
-type:rod
+type:gadget
 graphics:-:d
 level:20
 weight:15
@@ -5712,7 +5712,7 @@ dice:2d8
 time:30
 
 name:Recall
-type:rod
+type:gadget
 graphics:-:d
 level:30
 weight:15
@@ -5726,7 +5726,7 @@ effect:RECALL
 time:60
 
 name:Speed
-type:rod
+type:gadget
 graphics:-:d
 level:95
 weight:15
