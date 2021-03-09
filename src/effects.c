@@ -285,6 +285,7 @@ static void remove_object_fault(struct object *obj, int index, bool message)
 static bool repair_object(struct object *obj, int strength, random_value value)
 {
 	int index = 0;
+	bool remove = false;
 
 	if (get_fault(&index, obj, value)) {
 		struct fault_data fault = obj->faults[index];
@@ -297,6 +298,9 @@ static bool repair_object(struct object *obj, int strength, random_value value)
 			/* Successfully removed this fault */
 			remove_object_fault(obj->known, index, false);
 			remove_object_fault(obj, index, true);
+		} else if (kf_has(obj->kind->kind_flags, KF_ACT_FAILED)) {
+			light_special_activation(obj);
+			remove = true;
 		} else if (!of_has(obj->flags, OF_FRAGILE)) {
 			/* Failure to remove, object is now fragile */
 			object_desc(o_name, sizeof(o_name), obj, ODESC_FULL);
@@ -305,10 +309,13 @@ static bool repair_object(struct object *obj, int strength, random_value value)
 			player_learn_flag(player, OF_FRAGILE);
 		} else if (one_in_(4)) {
 			/* Failure - unlucky fragile object is destroyed */
-			struct object *destroyed;
-			bool none_left = false;
+			remove = true;
 			msg("There is a bang and a flash!");
 			take_hit(player, damroll(5, 5), "Failed repairing");
+		}
+		if (remove) {
+			bool none_left = false;
+			struct object *destroyed;
 			if (object_is_carried(player, obj)) {
 				destroyed = gear_object_for_use(obj, 1, false, &none_left);
 				if (destroyed->artifact) {

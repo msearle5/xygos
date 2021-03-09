@@ -40,6 +40,7 @@ BUG: Saw climbing the stair into town put me in the middle of the level (not on 
 -------------
 
 BUG: "You fail to the tengu" (+ red worm mass - when you attack it with a pocket knife)
+	- UTR on dl0/1 outside the quest. Rubble?
 
 BUG: "You are too heavily loaded to swim" even when not overloaded.
 	(well, more accurately you can never swim - you always drown. You should be able to if not loaded, at least for most races.)

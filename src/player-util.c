@@ -520,6 +520,23 @@ void player_adjust_hp_precise(struct player *p, s32b hp_gain)
 	p->upkeep->redraw |= (PR_HP);
 }
 
+void light_special_activation(struct object *obj)
+{
+	bool ident = false;
+	bool was_aware = object_flavor_is_aware(obj);
+	int dir = randint1(8);
+	if (obj->kind->effect_msg)
+		print_custom_message(obj, obj->kind->effect_msg, MSG_GENERIC);
+	object_flavor_aware(obj);
+	if ((!was_aware) && (object_is_carried(player, obj)))
+		print_custom_message(obj, "You realize you were carrying a {kind}!", MSG_GENERIC);
+	struct effect effect;
+	memcpy(&effect, obj->effect, sizeof(effect));
+	effect.x = obj->grid.x;
+	effect.y = obj->grid.y;
+	effect_do(&effect, source_object(obj), NULL, &ident, was_aware, dir, 0, 0, NULL);
+}
+
 void light_timeout(struct object *obj)
 {
 	/* The light is now out */
@@ -527,20 +544,7 @@ void light_timeout(struct object *obj)
 
 	/* Special handling for some 'lights' */
 	if (object_effect(obj) && (of_has(obj->flags, OF_NO_ACTIVATION))) {
-		bool ident = false;
-		bool was_aware = object_flavor_is_aware(obj);
-		int dir = randint1(8);
-		if (obj->kind->effect_msg)
-			print_custom_message(obj, obj->kind->effect_msg, MSG_GENERIC);
-		object_flavor_aware(obj);
-		if ((!was_aware) && (object_is_carried(player, obj)))
-			print_custom_message(obj, "You realize you were carrying a {kind}!", MSG_GENERIC);
-		struct effect effect;
-		memcpy(&effect, obj->effect, sizeof(effect));
-		effect.x = obj->grid.x;
-		effect.y = obj->grid.y;
-		effect_do(&effect, source_object(obj), NULL, &ident, was_aware, dir, 0, 0, NULL);
-
+		light_special_activation(obj);
 	} else {
 		/* Default burning out message */
 		if (object_is_carried(player, obj))
