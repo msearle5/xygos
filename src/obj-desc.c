@@ -256,10 +256,11 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 
 	/* Quantity prefix */
 	if (prefix)
-		end = obj_desc_name_prefix(buf, max , end, obj, basename, modstr, terse);
+		end = obj_desc_name_prefix(buf, max , end, obj, obj->kind->name, modstr, terse);
 
 	if (aware && obj->kind->flavor && obj->tval != TV_FOOD && obj->tval != TV_LIGHT) {
 		const char *space = " ";
+		char buf2[256];
 
 		/* Contract "foo- pill" into "foo-pill", and don't put a space between an item name
 		 * and suffix when it doesn't take a class name
@@ -268,12 +269,10 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 		if ((obj->tval == TV_WAND) || (obj->tval == TV_DEVICE) || (obj->tval == TV_GADGET) ||
 			(!isalpha(spacename[strlen(spacename)-1])))
 				space = "";
-
-		strnfcat(buf, max, &end, "%s%s", obj->kind->name, space);
 	}
 
 	/* Base name */
-	end = obj_desc_name_format(buf, max, end, basename, modstr, plural);
+	end = obj_desc_name_format(buf, max, end, obj->kind->name, modstr, plural);
 
 	/* Append extra names of various kinds */
 	
@@ -281,15 +280,6 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 		strnfcat(buf, max, &end, " %s", obj->artifact->name);
 	else if ((obj->known->ego && obj->ego && !(mode & ODESC_NOEGO)) || (obj->ego && store))
 		strnfcat(buf, max, &end, " %s", obj->ego->name);
-	/*else if (aware && !obj->artifact &&
-			 (obj->kind->flavor || obj->kind->tval == TV_CARD)) {
-		if (!mimic) {
-			if (terse)
-				strnfcat(buf, max, &end, " '%s'", obj->kind->name);
-			else
-				strnfcat(buf, max, &end, " of %s", obj->kind->name);
-		}
-	}*/
 
 	return end;
 }
