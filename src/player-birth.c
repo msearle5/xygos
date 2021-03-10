@@ -359,7 +359,11 @@ void roll_hp(void)
 	 * The score is the geometric mean of all negative deviations, and
 	 * the process finishes when the worst-case -ve deviation between
 	 * levels 5 and 40 has been reduced below 5%.
+	 * Give up if 100K rolls have been made without progress - this can
+	 * happen with some unexpected inputs, such as a very low hitdie.
 	 */
+	int runrolls = 0;
+	int worst;
 	do {
 		int before = hp_roll_score(level);
 		int from = randint1(PY_MAX_LEVEL-1);
@@ -368,13 +372,17 @@ void roll_hp(void)
 		level[from] = level[to];
 		level[to] = tmp;
 		int after = hp_roll_score(level);
-		if (before < after) {
+		if (before <= after) {
 			// revert it - this has increased the deviation
 			tmp = level[from];
 			level[from] = level[to];
 			level[to] = tmp;
+		} else {
+			runrolls = 0;
 		}
-	} while (hp_roll_worst(level) < -500); // 5%
+		runrolls++;
+		worst = hp_roll_worst(level);
+	} while ((worst < -500) && (runrolls < 100000)); // 5%
 
 	/* Copy into the player's hitpoints */
 	player->player_hp[0] = (2 * player->hitdie) / PY_MAX_LEVEL;

@@ -48,8 +48,8 @@ static struct object_base TEST_DATA flask_base = {
 };
 
 static struct object_base TEST_DATA rod_base = {
-	.name = "Test Rod~",
-	.tval = TV_ROD,
+	.name = "Test Gadget~",
+	.tval = TV_GADGET,
 	.next = NULL,
 };
 
@@ -470,7 +470,7 @@ static struct object_kind TEST_DATA test_rod_treasure_location = {
 	.text = "A test rod of treasure location.",
 	.base = &rod_base,
 	.kidx = 1,
-	.tval = TV_ROD,
+	.tval = TV_GADGET,
 	.sval = 1,
 	.pval = {
 				.base = 0,

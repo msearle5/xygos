@@ -41,6 +41,7 @@ int test_obj_can_refill(void *state) {
     object_prep(&obj_lantern, &test_lantern, 1, AVERAGE);
 	player->gear = &obj_lantern;
     player->body.slots->obj = &obj_lantern; 
+    of_on(obj_lantern.flags, OF_TAKES_FUEL);
 
     /* Not by torches */
     eq(obj_can_refill(&obj_torch), false);

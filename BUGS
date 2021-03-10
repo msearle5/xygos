@@ -39,6 +39,9 @@ BUG: Saw climbing the stair into town put me in the middle of the level (not on 
 
 -------------
 
+BUG: After starting a new char, there is an unusual (~3 second) pause and the Magic Shop has lots of supercharged wands/staffs  (50 teleporters (10075 charges) etc.)
+	- Seen on the Ring Remove and later Unit Test 100% commits, but doesnt show up every time
+
 BUG: "You fail to the tengu" (+ red worm mass - when you attack it with a pocket knife)
 	- UTR on dl0/1 outside the quest. Rubble?
 

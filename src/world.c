@@ -72,8 +72,7 @@ void world_cleanup_towns(void)
 		mem_free(t->name);
 		mem_free(t->connect);
 		mem_free(t->stores);
-		string_free(t->underground);
-		string_free(t->geography);
+		/* t->underground, t->geography are constants, don't need to be freed */
 		t->connect = NULL;
 	}
 	stores = NULL;

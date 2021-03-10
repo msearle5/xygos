@@ -23,7 +23,7 @@ int setup_tests(void **state) {
 	player = &test_player;
 
 	z_info = mem_zalloc(sizeof(*z_info));
-	z_info->k_max = 5;
+	z_info->k_max = 6;
 	/* Won't set up any egos for testing. */
 	z_info->e_max = 0;
 	z_info->max_obj_depth = 2;
@@ -56,6 +56,10 @@ int setup_tests(void **state) {
 	k_info[4].alloc_prob = 5;
 	k_info[4].tval = TV_WAND;
 	kf_on(k_info[4].kind_flags, KF_GOOD);
+	k_info[5].alloc_min = 0;
+	k_info[5].alloc_max = 6;
+	k_info[5].alloc_prob = 0;
+	k_info[5].tval = TV_GOLD;
 
 	st = mem_alloc(sizeof(*st));
 	st->histogram = mem_alloc(z_info->k_max * sizeof(*st->histogram));
