@@ -2276,9 +2276,7 @@ bool effect_handler_DISENCHANT(effect_handler_context_t *context)
 
 	/* Count slots */
 	for (i = 0; i < player->body.count; i++) {
-		/* Ignore rings, amulets and lights */
-		if (slot_type_is(i, EQUIP_RING)) continue;
-		if (slot_type_is(i, EQUIP_AMULET)) continue;
+		/* Ignore lights */
 		if (slot_type_is(i, EQUIP_LIGHT)) continue;
 
 		/* Count disenchantable slots */
@@ -2287,9 +2285,7 @@ bool effect_handler_DISENCHANT(effect_handler_context_t *context)
 
 	/* Pick one at random */
 	for (i = player->body.count - 1; i >= 0; i--) {
-		/* Ignore rings, amulets and lights */
-		if (slot_type_is(i, EQUIP_RING)) continue;
-		if (slot_type_is(i, EQUIP_AMULET)) continue;
+		/* Ignore lights */
 		if (slot_type_is(i, EQUIP_LIGHT)) continue;
 
 		if (one_in_(count--)) break;

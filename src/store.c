@@ -1771,8 +1771,6 @@ int find_inven(const struct object *obj)
 			case TV_SOFT_ARMOR:
 			case TV_HARD_ARMOR:
 			case TV_DRAG_ARMOR:
-			case TV_RING:
-			case TV_AMULET:
 			case TV_LIGHT:
 			case TV_AMMO_12:
 			case TV_AMMO_9:

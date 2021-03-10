@@ -11,9 +11,6 @@
 body:Humanoid
 slot:WEAPON:weapon
 slot:GUN:shooting
-slot:RING:right hand
-slot:RING:left hand
-slot:AMULET:neck
 slot:LIGHT:light
 slot:BODY_ARMOR:body
 slot:CLOAK:back

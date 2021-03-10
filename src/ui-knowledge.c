@@ -1387,8 +1387,6 @@ static void do_cmd_knowledge_monsters(const char *name, int row)
  */
 static const grouper object_text_order[] =
 {
-	{TV_RING,			"Ring"			},
-	{TV_AMULET,			"Amulet"		},
 	{TV_PILL,			"Pill"			},
 	{TV_CARD,			"Card"			},
 	{TV_WAND,			"Wand"			},

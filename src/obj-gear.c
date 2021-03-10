@@ -250,7 +250,6 @@ int wield_slot(const struct object *obj)
 	switch (obj->tval)
 	{
 		case TV_GUN: return slot_by_type(player, EQUIP_GUN, false);
-		case TV_AMULET: return slot_by_type(player, EQUIP_AMULET, false);
 		case TV_CLOAK: return slot_by_type(player, EQUIP_CLOAK, false);
 		case TV_SHIELD: return slot_by_type(player, EQUIP_SHIELD, false);
 		case TV_GLOVES: return slot_by_type(player, EQUIP_GLOVES, false);
@@ -260,8 +259,6 @@ int wield_slot(const struct object *obj)
 
 	if (tval_is_melee_weapon(obj))
 		return slot_by_type(player, EQUIP_WEAPON, false);
-	else if (tval_is_ring(obj))
-		return slot_by_type(player, EQUIP_RING, false);
 	else if (tval_is_light(obj))
 		return slot_by_type(player, EQUIP_LIGHT, false);
 	else if (tval_is_body_armor(obj))
@@ -293,8 +290,6 @@ bool minus_ac(struct player *p)
 		/* Ignore non-armor */
 		if (slot_type_is(i, EQUIP_WEAPON)) continue;
 		if (slot_type_is(i, EQUIP_GUN)) continue;
-		if (slot_type_is(i, EQUIP_RING)) continue;
-		if (slot_type_is(i, EQUIP_AMULET)) continue;
 		if (slot_type_is(i, EQUIP_LIGHT)) continue;
 
 		/* Add */
@@ -306,8 +301,6 @@ bool minus_ac(struct player *p)
 		/* Ignore non-armor */
 		if (slot_type_is(i, EQUIP_WEAPON)) continue;
 		if (slot_type_is(i, EQUIP_GUN)) continue;
-		if (slot_type_is(i, EQUIP_RING)) continue;
-		if (slot_type_is(i, EQUIP_AMULET)) continue;
 		if (slot_type_is(i, EQUIP_LIGHT)) continue;
 
 		if (one_in_(count--)) break;

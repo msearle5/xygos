@@ -277,6 +277,7 @@ char *world_describe_town(struct town *t)
 		"stunningly",
 		"terrifically",
 		"sparklingly",
+		"enticingly",
 		"supremely",
 	};
 	static const char *guff_pretty[] = {
@@ -285,6 +286,7 @@ char *world_describe_town(struct town *t)
 		"attractive",
 		"striking",
 		"picturesque",
+		"beautiful",
 		"eye-catching",
 	};
 	static const char *guff_town[] = {
@@ -293,6 +295,7 @@ char *world_describe_town(struct town *t)
 		" village",
 		" old town",
 		" hamlet",
+		", quaint village",
 		", bustling town",
 		", quiet town",
 		", unspoiled town",
@@ -326,16 +329,23 @@ char *world_describe_town(struct town *t)
 	static const char *guff_over[] = {
 		"features",
 		"showcases",
+		"is known for",
+		"is famous for",
+		"stands over",
 		"benefits from",
 	};
 	static const char *guff_ideal[] = {
 		"The ideal",
 		"The perfect",
+		"Recommended as a",
 		"A classic",
 	};
 	static const char *guff_destination[] = {
 		"destination",
+		"hot-spot",
 		"target",
+		"attraction",
+		"nexus",
 	};
 	static const char *guff_daring[] = {
 		"daring",
@@ -347,6 +357,7 @@ char *world_describe_town(struct town *t)
 	static const char *guff_tourist[] = {
 		"traveller",
 		"tourist",
+		"thrill-seeker",
 	};
 
 	sprintf(buf, "This %s %s%s %s in the %s %s of %s and %s %s "

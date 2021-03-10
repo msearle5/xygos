@@ -1543,7 +1543,7 @@ void display_object_recall(struct object *obj)
 
 /**
  * This draws the Object Recall subwindow when displaying a recalled item kind
- * (e.g. a generic ring of acid or a generic blade of chaos)
+ * (e.g. a generic blade of chaos)
  */
 void display_object_kind_recall(struct object_kind *kind)
 {
@@ -1682,9 +1682,6 @@ void textui_cmd_ignore_menu(struct object *obj)
 	/* Quality ignoring */
 	value = ignore_level_of(obj);
 	type = ignore_type_of(obj);
-
-	if (tval_is_jewelry(obj) &&	ignore_level_of(obj) != IGNORE_BAD)
-		value = IGNORE_MAX;
 
 	if (value != IGNORE_MAX && type != ITYPE_MAX) {
 		strnfmt(out_val, sizeof out_val, "All %s %s",

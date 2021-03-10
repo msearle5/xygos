@@ -1121,11 +1121,6 @@ void player_know_object(struct player *p, struct object *obj)
 		obj->known->ego = obj->ego;
 	}
 
-	if (object_non_fault_icons_known(obj) && tval_is_jewelry(obj)) {
-		seen = obj->kind->everseen;
-		object_flavor_aware(obj);
-	}
-
 	/* Ensure effect is known as if object_set_base_known() had been called. */
 	if ((obj->kind->aware && obj->kind->flavor) ||
 		(!tval_is_wearable(obj) && !obj->kind->flavor) ||

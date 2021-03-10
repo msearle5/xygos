@@ -53,8 +53,6 @@
 #    $ - gold
 #    ] - armor up to 3 levels OOD
 #    | - weapon up to 3 levels OOD
-#    = - ring up to 3 levels OOD
-#    " - amulet up to 3 levels OOD
 #    ! - potion up to 3 levels OOD
 #    ? - card up to 3 levels OOD
 #    _ - device up to 3 levels OOD

@@ -135,15 +135,6 @@ break:50
 # max-stack:10
 flags:HATES_FIRE
 
-name:amulet:Amulet~
-graphics:orange
-# max-stack:2
-
-name:ring:Ring~
-graphics:red
-# max-stack:5
-flags:HATES_ELEC
-
 name:device:Device~
 graphics:light umber
 # max-stack:5

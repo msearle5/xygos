@@ -144,12 +144,8 @@ void flavor_reset_fixed(void)
 {
 	struct flavor *f;
 
-	for (f = flavors; f; f = f->next) {
-		if (f->tval == TV_RING && strstr(f->text, "Plain Gold"))
-			continue;
-
+	for (f = flavors; f; f = f->next)
 		f->sval = SV_UNKNOWN;
-	}
 }
 
 static void clean_strings(char ***array, int *length)
@@ -181,7 +177,7 @@ static void insert_string(char *buf, int i, char ***array, int *length)
  * For the most part, flavors are assigned randomly each game.
  *
  * Initialize descriptions for the "colored" objects, including:
- * Rings, Amulets, Devices, Wands, Rods, Mushrooms, Pills, Cards.
+ * Devices, Wands, Gadgets, Mushrooms, Pills, Cards.
  *
  * Hack -- make sure everything stays the same for each saved game
  * This is accomplished by the use of a saved "random seed", as in
@@ -221,8 +217,6 @@ void flavor_init(void)
 	flavor_assign_fixed();
 
 	flavor_assign_random(TV_LIGHT);
-	flavor_assign_random(TV_RING);
-	flavor_assign_random(TV_AMULET);
 	flavor_assign_random(TV_DEVICE);
 	flavor_assign_random(TV_WAND);
 	flavor_assign_random(TV_GADGET);

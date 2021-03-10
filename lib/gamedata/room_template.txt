@@ -9073,13 +9073,13 @@ D:%.[..[..[..[..[.%
 D:%...............%
 D:%%%%%%%%%%%%%%%%%
 
-name:Amulet chamber
+name:Printer chamber
 type:1
 rating:3
 rows:11
 columns:17
 doors:4
-tval:amulet
+tval:printer
 D:    #%%%%%%%#    
 D:  ###.......###  
 D: ##...#.x.#....# 
@@ -9092,13 +9092,13 @@ D: ##...#.x.#...##
 D:  ###.......###  
 D:    #%%%%%%%#    
 
-name:Ring chamber
+name:Block chamber
 type:1
 rating:3
 rows:11
 columns:17
 doors:2
-tval:ring
+tval:block
 D:    #%%%#%%%#    
 D:  ###...x...###  
 D: ##..##...##..## 

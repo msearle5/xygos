@@ -512,19 +512,6 @@ static int to_ac_power(const struct object *obj, int p)
 }
 
 /**
- * Add base power for jewelry
- */
-static int jewelry_power(const struct object *obj, int p)
-{
-	if (tval_is_jewelry(obj)) {
-		p += BASE_JEWELRY_POWER;
-		log_obj(format("Adding %d power for jewelry, total is %d\n", 
-					   BASE_JEWELRY_POWER, p));
-	}
-	return p;
-}
-
-/**
  * Add power for modifiers
  */
 static int modifier_power(const struct object *obj, int p)
@@ -777,9 +764,6 @@ s32b object_power(const struct object* obj, bool verbose, ang_file *log_file)
 	p = ac_power(obj, p);
 	p = to_ac_power(obj, p);
 
-	/* Bonus for jewelry */
-	p = jewelry_power(obj, p);
-
 	/* Other object properties */
 	p = modifier_power(obj, p);
 	p = flags_power(obj, p, verbose, object_log);
@@ -813,18 +797,21 @@ static int object_value_base(const struct object *obj)
 		case TV_FOOD:
 		case TV_MUSHROOM:
 			return 5;
+		case TV_BATTERY:
+			return 12;
+		case TV_BLOCK:
+			return 15;
 		case TV_PILL:
 		case TV_CARD:
 			return 20;
-		case TV_RING:
-		case TV_AMULET:
-			return 45;
 		case TV_WAND:
 			return 50;
 		case TV_DEVICE:
 			return 70;
 		case TV_GADGET:
 			return 90;
+		case TV_PRINTER:
+			return 100;
 	}
 
 	return 0;

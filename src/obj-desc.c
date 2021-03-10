@@ -94,12 +94,6 @@ static const char *obj_desc_get_basename(const struct object *obj, bool aware,
 		default:
 			return obj->kind->name;
 
-		case TV_AMULET:
-			return (show_flavor ? "& # Amulet~" : "& Amulet~");
-
-		case TV_RING:
-			return (show_flavor ? "& # Ring~" : "& Ring~");
-
 		case TV_DEVICE:
 			return (show_flavor ? "& # device~" : "&~");
 

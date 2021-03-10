@@ -14,8 +14,6 @@
 EQUIP(NONE,			false,	false,	"",				"",				"")
 EQUIP(WEAPON,		false,	false,	"Wielding",		"just lifting",	"attacking monsters with")
 EQUIP(GUN,			false,	false,	"Shooting",		"just holding",	"firing with")
-EQUIP(RING,			false,	true,	"On %s",		"",				"wearing on your %s")
-EQUIP(AMULET,		false,	true,	"Around %s",	"",				"wearing around your %s")
 EQUIP(LIGHT,		false,	false,	"Light source",	"",				"using to light your way")
 EQUIP(BODY_ARMOR,	true,	true,	"On %s",		"",				"wearing on your %s")
 EQUIP(CLOAK,		true,	true,	"On %s",		"",				"wearing on your %s")

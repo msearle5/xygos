@@ -237,12 +237,6 @@ owner:0:0:-
 slots:4:14
 turnover:9
 danger:70:90
-normal:ring:Searching
-normal:ring:Feather Falling
-normal:ring:Protection
-normal:ring:Open Wounds
-normal:amulet:Slow Digestion
-normal:amulet:Resist Acid
 normal:wand:beamlight
 normal:wand:molasso ray
 normal:wand:pixilator
@@ -254,8 +248,6 @@ normal:device:Light
 normal:device:mapping
 normal:device:anti-stealth radar
 normal:device:Detect Evil
-buy:amulet
-buy:ring
 buy:device
 buy:wand
 buy:gadget

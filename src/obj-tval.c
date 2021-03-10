@@ -81,11 +81,6 @@ bool tval_is_light_k(const struct object_kind *kind)
 	return kind->tval == TV_LIGHT;
 }
 
-bool tval_is_ring(const struct object *obj)
-{
-	return obj->tval == TV_RING;
-}
-
 bool tval_is_chest(const struct object *obj)
 {
 	return obj->tval == TV_CHEST;
@@ -206,11 +201,6 @@ bool tval_can_have_failure(const struct object *obj)
 	}
 }
 
-bool tval_is_jewelry(const struct object *obj)
-{
-	return obj->tval == TV_RING || obj->tval == TV_AMULET;
-}
-
 static bool tv_is_weapon(int tv)
 {
 	switch (tv) {
@@ -302,8 +292,6 @@ bool tval_has_variable_power(const struct object *obj)
 		case TV_HARD_ARMOR:
 		case TV_DRAG_ARMOR:
 		case TV_LIGHT:
-		case TV_AMULET:
-		case TV_RING:
 			return true;
 		default:
 			return false;
@@ -329,8 +317,6 @@ bool tval_is_wearable(const struct object *obj)
 		case TV_HARD_ARMOR:
 		case TV_DRAG_ARMOR:
 		case TV_LIGHT:
-		case TV_AMULET:
-		case TV_RING:
 			return true;
 		default:
 			return false;
@@ -351,8 +337,6 @@ bool tval_is_edible(const struct object *obj)
 bool tval_can_have_flavor_k(const struct object_kind *kind)
 {
 	switch (kind->tval) {
-		case TV_AMULET:
-		case TV_RING:
 		case TV_DEVICE:
 		case TV_WAND:
 		case TV_GADGET:
