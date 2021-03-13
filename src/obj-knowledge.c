@@ -718,9 +718,18 @@ static bool object_non_fault_icons_known(const struct object *obj)
 	}
 
 	/* Not all flags known */
-	if (!of_is_subset(obj->known->flags, obj->flags)) return false;
+	bool unknown = false;
+	for (i = 0; i < (int) icon_max; i++) {
+		int index = icon_index(ICON_VAR_FAULT, i);
+		if (index < 0) {
+			if (object_has_icon(obj, i) && !player_knows_icon(player, i)) {
+				unknown = true;
+				break;
+			}
+		}
+	}
 
-	return true;
+	return !unknown;
 }
 
 /**
