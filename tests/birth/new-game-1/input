@@ -1,7 +1,23 @@
+# Skip splash
 key space
-key i
-key i
+
+# Android
+key b
+key enter
+
+# Tourist
 key c
+key enter
+
+# Point based
+key a
+key enter
+
+# Accept stats
+key enter
+
+# Accept name
+key enter
 key c
 key a
 key enter

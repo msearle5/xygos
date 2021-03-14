@@ -422,7 +422,7 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 	/* originally this was armor, but I decided to generalize it */
 
 	/* has free action */
-	if (of_has(obj->flags, OF_FREE_ACT) {
+	if (of_has(obj->flags, OF_FREE_ACT)) {
 		/* add the stats */
 		add_stats(ST_FA_EQUIPMENT, vault, mon, number);
 
@@ -769,44 +769,6 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 			break;
 		}
 
-		case TV_RING:{
-
-			add_stats(ST_RINGS, vault, mon, number);
-
-			/* is it faulty */
-			if (obj->faults)
-				add_stats(ST_FAULTY_RINGS, vault, mon, number);
-
-			if (strstr(obj->kind->name, "Speed")) {
-				add_stats(ST_SPEEDS_RINGS, vault, mon, number);
-			} else if ((strstr(obj->kind->name, "Strength")) ||
-					   (strstr(obj->kind->name, "Intelligence")) ||
-					   (strstr(obj->kind->name, "Dexterity")) ||
-					   (strstr(obj->kind->name, "Constitution"))) {
-				add_stats(ST_STAT_RINGS, vault, mon, number);
-			} else if (strstr(obj->kind->name, "Resist Poison")) {
-				add_stats(ST_RPOIS_RINGS, vault, mon, number);
-			} else if (strstr(obj->kind->name, "Free Action")) {
-				add_stats(ST_FA_RINGS, vault, mon, number);
-			} else if (strstr(obj->kind->name, "See invisible")) {
-				add_stats(ST_SI_RINGS, vault, mon, number);
-			} else if ((strstr(obj->kind->name, "Flames")) ||
-					   (strstr(obj->kind->name, "Ice")) ||
-					   (strstr(obj->kind->name, "Acid")) ||
-					   (strstr(obj->kind->name, "Lightning"))) {
-				add_stats(ST_BRAND_RINGS, vault, mon, number);
-			} else if ((strstr(obj->kind->name, "Fire")) ||
-					   (strstr(obj->kind->name, "Adamant")) ||
-					   (strstr(obj->kind->name, "Firmament"))) {
-				add_stats(ST_ELVEN_RINGS, vault, mon, number);
-			} else if (strstr(obj->kind->name, "Power")) {
-				add_stats(ST_ONE_RINGS, vault, mon, number);
-			}
-
-
-			break;
-		}
-
 		case TV_AMMO_6:
 		case TV_AMMO_9:
 		case TV_AMMO_12:{
@@ -909,7 +871,7 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 		if (art->alloc_min > (player->depth)) art_ood[lvl] += addval;
 
 		/* check to see if it's a special artifact */
-		if ((obj->tval == TV_LIGHT) {
+		if (obj->tval == TV_LIGHT) {
 			/* increment special artifact counter */
 			art_spec[lvl] += addval;
 		} else {
