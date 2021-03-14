@@ -41,13 +41,17 @@ BUG: Saw climbing the stair into town put me in the middle of the level (not on 
 -------------
 
 BUG: pills, cards have missing top and tail from their names
+	Fixed: 3ff4fd1f6a21474bdf054e0ffd9fc03de9af8791
 
-BUG: After starting a new char, there is an unusual (~3 second) pause and the Magic Shop has lots of supercharged wands/staffs  (50 teleporters (10075 charges) etc.)
+BUG: The "use flavors" option is ignored
+
+BUG: After starting a new char, there is an unusual (3+ second) pause (also can pause on exit) and the Magic Shop has lots of supercharged wands/staffs  (50 teleporters (10075 charges) etc.)
 	- Seen on the Ring Remove and later Unit Test 100% commits, but doesnt show up every time.
 		- Save and reload, and they are gone.
 		- Debug gen of all-devices doesn't show anything like that.
 		- Consistent with items having # of charges multiplied by the size of the pile
-
+	Fixed: 0eb2e79464e1439e86e6e6111c4d439909a23c68
+ 
 BUG: "You fail to the tengu" (+ red worm mass - when you attack it with a pocket knife)
 	- UTR on dl0/1 outside the quest. Rubble?
 
@@ -81,6 +85,8 @@ BUG: Resists screen is >80 wide (Also, the per-slot stats only label only displa
 	So best to leave alone for now?
 	
 BUG: tval_is_sharp_missile
+
+BUG: Androids have a 'invisible extension' (you have to press Enter twice, which hits the birth tests.) ESC back also may be affected.
 
 BUG: Stone/steel skin timed should be blocked by the mutation (or combined with it in some way)
 

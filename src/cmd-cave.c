@@ -1101,9 +1101,9 @@ void move_player(int dir, bool disarm)
 		int dam_taken = player_check_terrain_damage(player, grid);
 
 		/* Check if running, or going to cost more than a third of hp.
-		 * Confused players go woopsie daisy
+		 * Confused (or blind) players go woopsie daisy
 		 **/
-		if (!player->timed[TMD_CONFUSED]) {
+		if ((!player->timed[TMD_CONFUSED]) && (!player->timed[TMD_BLIND])) {
 			if (player->upkeep->running && dam_taken) {
 				if (!get_check(feat->run_msg)) {
 					player->upkeep->running = 0;

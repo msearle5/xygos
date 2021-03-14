@@ -134,7 +134,7 @@ weight:2400
 weightmod:600
 obj-flags:REGEN
 player-flags:NO_MUTATIONS
-player-flags:NO_FOOD | EAT_BATTERIES
+player-flags:NO_FOOD | EAT_BATTERIES | NO_SWIMMING
 values:RES_ELEC[-1]
 desc:Sentient robots have been constructed for a variety of purposes and while artificial intelligence still isn't as good as the real thing, they have many advantages: a tough, fast metal body, precise aiming, rapid regeneration and IR vision. However, you can't easily gain talents, can't eat normal food and must avoid electric shocks.
 
