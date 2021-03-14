@@ -254,33 +254,58 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 		basename = obj->kind->flavor->text;
 	const char *modstr = obj_desc_get_modstr(obj->kind);
 
-	/* Quantity prefix */
-	if (prefix)
-		end = obj_desc_name_prefix(buf, max , end, obj, obj->kind->name, modstr, terse);
+	/* Some items have unadorned names */
+	if ((obj->tval == TV_WAND) || (obj->tval == TV_DEVICE) ||
+		(obj->tval == TV_GADGET) || (obj->tval == TV_LIGHT)) {
+		
+		/* Quantity prefix */
+		if (prefix)
+			end = obj_desc_name_prefix(buf, max, end, obj, obj->kind->name, modstr, terse);
+		end = obj_desc_name_format(buf, max, end, obj->kind->name, modstr, plural);
+	} else {
+		/* Prepend extra names */
+		if (obj->kind->flavor && aware && !mimic) {
+			const char *space = " ";
+			char buf2[256];
+			*buf2 = 0; 
+			size_t end2 = 0;
 
-	if (aware && obj->kind->flavor && obj->tval != TV_FOOD && obj->tval != TV_LIGHT) {
-		const char *space = " ";
-		char buf2[256];
+			/* Quantity prefix */
+			if (prefix) {
+				char buf3[256];
+				size_t end3 = 0;
+				*buf3 = 0;
+				strnfcat(buf3, sizeof(buf3), &end3, "&%s", obj->kind->name);
+				obj_desc_name_prefix(buf2, sizeof(buf2), end2, obj, buf3, modstr, terse);
+			}
 
-		/* Contract "foo- pill" into "foo-pill", and don't put a space between an item name
-		 * and suffix when it doesn't take a class name
-		 **/
-		const char *spacename = obj->kind->name;
-		if ((obj->tval == TV_WAND) || (obj->tval == TV_DEVICE) || (obj->tval == TV_GADGET) ||
-			(!isalpha(spacename[strlen(spacename)-1])))
-				space = "";
+			/* Contract "foo- pill" into "foo-pill", and don't put a space between an item name
+			 * and suffix when it doesn't take a class name
+			 **/
+			const char *spacename = obj->kind->name;
+			if ((obj->tval == TV_WAND) || (obj->tval == TV_DEVICE) || (obj->tval == TV_GADGET) ||
+				(!isalpha(spacename[strlen(spacename)-1])))
+					space = "";
+			strnfcat(buf, max, &end, "%s%s%s", buf2, obj->kind->name, space);
+		} else {
+			/* Quantity prefix */
+			if (prefix)
+				end = obj_desc_name_prefix(buf, max, end, obj, basename, modstr, terse);
+		}
+
+		/* Base name */
+		end = obj_desc_name_format(buf, max, end, basename, modstr, plural);
+
+		/* Append extra names of various kinds */
+		 if (object_is_known_artifact(obj))
+			strnfcat(buf, max, &end, " %s", obj->artifact->name);
+		else if ((obj->known->ego && !(mode & ODESC_NOEGO)) || (obj->ego && store))
+			strnfcat(buf, max, &end, " %s", obj->ego->name);
+		else if (aware && !obj->artifact &&
+				 (obj->kind->flavor || obj->kind->tval == TV_CARD)) {
+			;
+		}
 	}
-
-	/* Base name */
-	end = obj_desc_name_format(buf, max, end, obj->kind->name, modstr, plural);
-
-	/* Append extra names of various kinds */
-	
-	if (object_is_known_artifact(obj))
-		strnfcat(buf, max, &end, " %s", obj->artifact->name);
-	else if ((obj->known->ego && obj->ego && !(mode & ODESC_NOEGO)) || (obj->ego && store))
-		strnfcat(buf, max, &end, " %s", obj->ego->name);
-
 	return end;
 }
 
