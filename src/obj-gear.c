@@ -255,6 +255,8 @@ int wield_slot(const struct object *obj)
 		case TV_GLOVES: return slot_by_type(player, EQUIP_GLOVES, false);
 		case TV_BOOTS: return slot_by_type(player, EQUIP_BOOTS, false);
 		case TV_BELT: return slot_by_type(player, EQUIP_BELT, false);
+		case TV_LEGS: return slot_by_type(player, EQUIP_LEGS, false);
+		case TV_ARMS: return slot_by_type(player, EQUIP_ARMS, false);
 	}
 
 	if (tval_is_melee_weapon(obj))
@@ -784,7 +786,7 @@ void do_inven_wield(struct object *obj, int slot, bool verbose, bool overflow)
 		msgt(MSG_WIELD, fmt, o_name, I2A(slot));
 
 	/* Sticky flag gets a special mention */
-	if (!obj_can_takeoff(obj)) {
+	if (!obj_cyber_can_takeoff(obj)) {
 		/* Warn the player */
 		msgt(MSG_FAULTY, "Oops! It sticks to you like a magnet!");
 	}

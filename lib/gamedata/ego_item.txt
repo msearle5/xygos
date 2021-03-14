@@ -97,13 +97,31 @@
 # ends or the beginning of the next line to prevent words from running
 # together.
 
+### Implants
+
+name:(armored)
+info:4000:1
+alloc:100:1 to 127
+type:legs
+type:arms
+combat:0:0:d8M32
+desc:It also provides some extra protection.
+
+name:(zip)
+info:6000:10
+alloc:100:1 to 127
+type:legs
+type:arms
+flags-off:NO_EQUIP
+desc:It can be fitted and removed yourself, rather than having to visit the Cyber Salon.
+
 
 ### Lights
 # Candle-likes and glowsticks shouldn't get any egos.
 # Non-rechargeables (keyfob / disposable) could get RTG or Efficiency only
 # Rechargeables (electric torch/tactical/mobilamp) could get any
 
-name:(Etheric)
+name:(etheric)
 info:1800:10
 alloc:10:25 to 100
 item:light:electric torch
@@ -112,7 +130,7 @@ item:light:mobilamp
 values:STEALTH[d2] | RES_LIGHT[1] | RES_DARK[1] | LIGHT[-4]
 min-values:STEALTH[0] | LIGHT[-4]
 
-name:(Efficiency Mod)
+name:(efficiency mod)
 info:2000:10
 alloc:50:1 to 30
 item:light:keyfob light
@@ -124,7 +142,7 @@ values:LIGHT[1]
 min-values:LIGHT[1]
 desc:It runs for twice as long from a recharge.
 
-name:(RTG Mod)
+name:(RTG mod)
 info:2500:10
 alloc:100:1 to 30
 item:light:keyfob light
@@ -137,7 +155,7 @@ flags-off:TAKES_FUEL
 desc:It never needs to be recharged.
 
 #imported from S
-name:(IR Vision)
+name:(IR vision)
 info:6000:10
 alloc:10:20 to 127
 item:light:electric torch
@@ -146,7 +164,7 @@ item:light:mobilamp
 flags:PROT_BLIND | SEE_INVIS
 
 #imported from S
-name:(Laser Op)
+name:(laser op)
 info:4000:10
 alloc:10:20 to 127
 item:light:electric torch
@@ -925,7 +943,7 @@ min-values:LIGHT[1]
 
 ### Body Armor ###
 
-name:of Resist Acid
+name:(stainless)
 info:1000:16
 alloc:100:1 to 30
 min-combat:255:0:0
@@ -939,7 +957,7 @@ item:hard armor:Partial Plate Armour
 flags:IGNORE_ACID
 values:RES_ACID[1]
 
-name:of Resist Lightning
+name:(shockproof)
 info:400:10
 alloc:100:1 to 30
 min-combat:255:0:0

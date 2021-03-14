@@ -682,6 +682,8 @@ static bool store_sell(struct store_context *ctx)
 	int get_mode = USE_EQUIP | USE_INVEN | USE_FLOOR | USE_QUIVER;
 
 	struct store *store = ctx->store;
+	assert(store);
+	bool cyber = (store->sidx == STORE_CYBER);
 
 	struct object *obj;
 	struct object object_type_body = OBJECT_NULL;
@@ -693,8 +695,8 @@ static bool store_sell(struct store_context *ctx)
 
 	const char *reject = "You have nothing that I want. ";
 	const char *prompt = OPT(player, birth_no_selling) ? "Give which item? " : "Sell which item? ";
-
-	assert(store);
+	if (cyber)
+		prompt = OPT(player, birth_no_selling) ? "Give, install or uninstall which item? " : "Sell, install or uninstall which item? ";
 
 	if ((store->sidx == STORE_HQ) || (store->sidx == STORE_AIR)) {
 		msg("We don't buy used goods.");
@@ -719,12 +721,15 @@ static bool store_sell(struct store_context *ctx)
 		return false;
 
 	/* Cannot remove stickied objects */
-	if (object_is_equipped(player->body, obj) && !obj_can_takeoff(obj)) {
-		/* Oops */
-		msg("Hmmm, it seems to be stuck.");
 
-		/* Nope */
-		return false;
+	if (object_is_equipped(player->body, obj)) {
+		/* Oops */
+		bool stuck = (cyber ? (!obj_cyber_can_takeoff(obj)) : (!obj_can_takeoff(obj)));
+		if (stuck) {
+			msg("Hmmm, it seems to be stuck.");
+			/* Nope */
+			return false;
+		}
 	}
 
 	/* Get a quantity */
@@ -754,26 +759,36 @@ static bool store_sell(struct store_context *ctx)
 
 		/* Real store */
 		if (store->sidx != STORE_HOME) {
+			int cmd = CMD_SELL;
+
 			/* Extract the value of the items */
 			u32b price = price_item(store, temp_obj, true, amt);
 
 			object_wipe(temp_obj);
 			screen_save();
 
-			/* Show price */
-			if (!OPT(player, birth_no_selling))
-				prt(format("Price: %d", price), 1, 0);
+			/* Cyber Salon: may want to install it? */
+			bool equipped = (object_is_equipped(player->body, obj));
+			if (store_get_check(format("%s %s? [ESC, any other key to %sinstall]",
+					equipped ? "Uninstall" : "Install", o_name, equipped ? "un" : ""))) {
+				cmd = CMD_INSTALL;
+			} else {
 
-			/* Confirm sale */
-			if (!store_get_check(format("%s %s? [ESC, any other key to accept]",
-					OPT(player, birth_no_selling) ? "Give" : "Sell", o_name))) {
-				screen_load();
-				return false;
+				/* Show price */
+				if (!OPT(player, birth_no_selling))
+					prt(format("Price: %d", price), 1, 0);
+
+				/* Confirm sale */
+				if (!store_get_check(format("%s %s? [ESC, any other key to accept]",
+						OPT(player, birth_no_selling) ? "Give" : "Sell", o_name))) {
+					screen_load();
+					return false;
+				}
 			}
 
 			screen_load();
 
-			cmdq_push(CMD_SELL);
+			cmdq_push(cmd);
 			cmd_set_arg_item(cmdq_peek(), "item", obj);
 			cmd_set_arg_number(cmdq_peek(), "quantity", amt);
 		} else { /* Player is at home */

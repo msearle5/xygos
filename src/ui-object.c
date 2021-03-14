@@ -222,7 +222,7 @@ static void show_obj(int obj_num, int row, int col, bool cursor,
 		if (store) {
 			int price = price_item(store, obj, true, obj->number);
 
-			strnfmt(buf, sizeof(buf), "%6d au", price);
+			strnfmt(buf, sizeof(buf), "$%6d", price);
 			put_str(buf, row + obj_num, col + ex_offset_ctr);
 			ex_offset_ctr += 9;
 		}

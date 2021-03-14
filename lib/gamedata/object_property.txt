@@ -954,3 +954,8 @@ name:task special
 type:flag
 code:QUEST_SPECIAL
 power:1
+
+name:unable to equip
+type:flag
+code:NO_EQUIP
+power:0

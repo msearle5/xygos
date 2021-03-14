@@ -898,6 +898,18 @@ bool obj_can_refill(const struct object *obj)
 /* Can only take off non-sticky (or for the special case of lamps, uncharged) items */
 bool obj_can_takeoff(const struct object *obj)
 {
+	if (of_has(obj->flags, OF_NO_EQUIP))
+		return false;
+	if (!obj_has_flag(obj, OF_STICKY))
+		return true;
+	if (tval_is_light(obj) && (obj->timeout == 0))
+		return true;
+	return false;
+}
+
+/* Equivalent, but implants can be removed (for use by the store) */
+bool obj_cyber_can_takeoff(const struct object *obj)
+{
 	if (!obj_has_flag(obj, OF_STICKY))
 		return true;
 	if (tval_is_light(obj) && (obj->timeout == 0))
@@ -908,7 +920,7 @@ bool obj_can_takeoff(const struct object *obj)
 /* Can only put on wieldable items */
 bool obj_can_wear(const struct object *obj)
 {
-	return (wield_slot(obj) >= 0);
+	return ((wield_slot(obj) >= 0) && (!(of_has(obj->flags, OF_NO_EQUIP))));
 }
 
 /* Can only fire an item with the right tval */

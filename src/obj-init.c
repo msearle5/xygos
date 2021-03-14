@@ -2066,8 +2066,9 @@ static errr finish_parse_object(struct parser *p) {
 		memcpy(&k_info[kidx], k, sizeof(*k));
 		k_info[kidx].kidx = kidx;
 
-		/* Add base kind flags to kind kind flags */
+		/* Add base [kind] flags to kind [kind] flags */
 		kf_union(k_info[kidx].kind_flags, kb_info[k->tval].kind_flags);
+		of_union(k_info[kidx].flags, kb_info[k->tval].flags);
 
 		next = k->next;
 		if (kidx < z_info->k_max - 1)

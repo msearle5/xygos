@@ -35,3 +35,6 @@ TV(MUSHROOM,	"mushroom",		0)
 TV(GOLD,		"cash",			0)
 TV(BLOCK,		"block",		0)
 TV(PRINTER,		"printer",		0)
+TV(LEGS,		"legs",			0)
+TV(ARMS,		"arms",			0)
+

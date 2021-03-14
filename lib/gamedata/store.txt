@@ -310,3 +310,21 @@ owner:0:0:Mercury Rising
 owner:0:0:Starhopper
 owner:0:0:Bounce Air
 danger:99:99
+
+store:11:Cyber Salon
+owner:0:0:95% (Meta-Human)
+owner:0:0:Neo (Trans-Human)
+owner:0:0:Fran (Neo-Human)
+owner:0:0:Jimmy (Mostly Human)
+owner:0:0:Neo (Trans-Human)
+owner:0:0:Fran (Neo-Human)
+owner:0:0:95% (Meta-Human)
+owner:0:0:Neo (Trans-Human)
+owner:0:0:Fran (Neo-Human)
+slots:2:5
+turnover:1
+normal:legs
+#normal:arms:0
+buy:arms
+buy:legs
+danger:85:95

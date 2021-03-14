@@ -166,6 +166,28 @@ static int gun_multiplier(const struct object *obj)
 }
 
 /**
+ * Tval power
+ * Some items gain power from e.g. being able to use a special slot.
+ * Cyberware definitely, and maybe belts?
+ */
+static int tval_power(const struct object *obj)
+{
+	int p = 0;
+	switch (obj->tval) {
+		case TV_LEGS:
+			p = 50;
+			break;
+		case TV_ARMS:
+			p = 40;
+			break;
+		case TV_BELT:
+			p = 15;
+			break;
+	}
+	return p;
+}
+
+/**
  * To damage power
  */
 static int to_damage_power(const struct object *obj)
@@ -744,6 +766,7 @@ s32b object_power(const struct object* obj, bool verbose, ang_file *log_file)
 
 	/* Get all the attack power */
 	p = to_damage_power(obj);
+	p += tval_power(obj);
 	dice_pwr = damage_dice_power(obj);
 	p += dice_pwr;
 	if (dice_pwr) log_obj(format("total is %d\n", p));
@@ -857,6 +880,7 @@ int object_value_real(const struct object *obj, int qty)
 #else /* PRICE_DEBUG */
 		power = object_power(obj, false, NULL);
 #endif /* PRICE_DEBUG */
+		/* Variation */
 		value = SGN(power) * ((a * power * power) + (b * power));
 
 		/* Rescale for expendables */
@@ -864,6 +888,9 @@ int object_value_real(const struct object *obj, int qty)
 			 && !obj->ego) || tval_is_ammo(obj)) {
 			value = value / AMMO_RESCALER;
 		}
+
+		/* Add base cost */
+		value += obj->kind->cost;
 
 		/* Round up to make sure things like cloaks are not worthless */
 		if (value == 0) {

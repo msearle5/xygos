@@ -21,6 +21,21 @@
 #include "z-type.h"
 #include "z-util.h"
 
+bool tval_is_legs(const struct object *obj)
+{
+	return obj->tval == TV_LEGS;
+}
+
+bool tval_is_arms(const struct object *obj)
+{
+	return obj->tval == TV_ARMS;
+}
+
+bool tval_is_implant(const struct object *obj)
+{
+	return ((tval_is_arms(obj)) || (tval_is_legs(obj)));
+}
+
 bool tval_is_device(const struct object *obj)
 {
 	return obj->tval == TV_DEVICE;
@@ -272,30 +287,13 @@ bool tval_is_melee_weapon(const struct object *obj)
 
 bool tval_has_variable_power(const struct object *obj)
 {
-	switch (obj->tval) {
-		case TV_AMMO_6:
-		case TV_AMMO_9:
-		case TV_AMMO_12:
-		case TV_GUN:
-		case TV_DIGGING:
-		case TV_HAFTED:
-		case TV_POLEARM:
-		case TV_SWORD:
-		case TV_BOOTS:
-		case TV_GLOVES:
-		case TV_HELM:
-		case TV_CROWN:
-		case TV_SHIELD:
-		case TV_BELT:
-		case TV_CLOAK:
-		case TV_SOFT_ARMOR:
-		case TV_HARD_ARMOR:
-		case TV_DRAG_ARMOR:
-		case TV_LIGHT:
-			return true;
-		default:
-			return false;
-	}
+	if (tval_is_wearable(obj))
+		return true;
+	if (tval_is_ammo(obj))
+		return true;
+	if (tval_is_implant(obj))
+		return true;
+	return false;
 }
 
 bool tval_is_wearable(const struct object *obj)

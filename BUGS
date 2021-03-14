@@ -12,7 +12,7 @@ BUG: Lights are using wrong descriptions?
 	- Could it be the object.txt or flavor.txt?
 	** May be a dup or related to the following three issues **
 
-BUG: got am item with {??} generated in a store
+BUG: got an item with {??} generated in a store
 		- Light, with the rune being "use energy" or "light"?
 			- Is this a problem? It's IDed on buying it. Other stuff doesn't behave like that, though...
 	e.g. "a tactical flashlight (RTG Mod) (charging) {??}" in the store
@@ -27,6 +27,7 @@ BUG: Tourists' starting sun hat (resLight) isn't rune-IDed
 	- Is there something about start items (and wiz-command created?), like having no known object, that is different from normal creation?
 
 BUG: Buying a pair of shoes (retro rocket) {??} from a store was locked up in the store.c "Learn flavor, any effect and all the runes" loop.
+	Fixed: 416ff90a18e92ba95db126ffd717488548a88762
 
 ------------
 
@@ -39,10 +40,13 @@ BUG: Saw climbing the stair into town put me in the middle of the level (not on 
 
 -------------
 
+BUG: pills, cards have missing top and tail from their names
+
 BUG: After starting a new char, there is an unusual (~3 second) pause and the Magic Shop has lots of supercharged wands/staffs  (50 teleporters (10075 charges) etc.)
 	- Seen on the Ring Remove and later Unit Test 100% commits, but doesnt show up every time.
 		- Save and reload, and they are gone.
 		- Debug gen of all-devices doesn't show anything like that.
+		- Consistent with items having # of charges multiplied by the size of the pile
 
 BUG: "You fail to the tengu" (+ red worm mass - when you attack it with a pocket knife)
 	- UTR on dl0/1 outside the quest. Rubble?

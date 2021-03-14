@@ -26,6 +26,9 @@
  */
 #define SV_UNKNOWN			0
 
+bool tval_is_legs(const struct object *obj);
+bool tval_is_arms(const struct object *obj);
+bool tval_is_implant(const struct object *obj);
 bool tval_can_have_charges(const struct object *obj);
 bool tval_can_have_failure(const struct object *obj);
 bool tval_can_have_flavor_k(const struct object_kind *kind);

@@ -161,6 +161,169 @@ name:<fault object>
 type:none
 graphics:*:v
 
+##### Implants (Arms) #####
+
+# Dex - FA? (But that's more a whole-body thing)
+# Esp Str. Maybe con
+# + to hit/dam?
+# tunneling? (DIG_1 ..3)
+# blows, shots, might? (Not might for guns)
+# sustains?
+
+# Str only
+name:& Cybasics Cydearm~
+type:arms
+graphics:!:White
+weight:4740g
+cost:5450
+level:28
+alloc:4:20 to 50
+values:STR[1+M2]
+desc:A cybernetic implant - without any of the extra features of the high-end implants, it is still effective at strengthening your arms.
+material:steel
+
+# Str sustained
+name:& Collective Powerlift~
+type:arms
+graphics:!:Red
+weight:3800g
+cost:11500
+level:38
+alloc:3:30 to 127
+values:STR[2d2M2]
+flags:SUST_STR
+desc:The Powerlift cybernetic implant greatly strengthens your arms. The included advanced nanorebuilder also makes it almost impossible to become weakened.
+material:titanium
+
+# Dex (and a little str) - to hit?
+name:& Collective Powerflex~
+type:arms
+graphics:!:Red
+weight:3500g
+cost:15500
+level:43
+alloc:3:36 to 127
+values:STR[1+M2]
+values:DEX[2d2M2]
+flags:SUST_STR
+flags:SUST_DEX
+attack:0d0:1+M9:0
+desc:The Powerflex cybernetic implant strengthens your arms and improves your dexterity, so makiing you a more precise, effective combatant. The included advanced nanorebuilder also makes it almost impossible to become weaker or less agile.
+material:titanium
+
+##### Implants (Legs) #####
+
+#Blink/teleport?
+#FA, regen, sus SPD?
+# Stealth?
+# (But also look at making them into egos)
+
+# Basics only
+name:& Cybasics Legend~
+type:legs
+graphics:!:White
+weight:9150g
+cost:7700
+level:33
+alloc:3:25 to 55
+values:MOVES[1]
+desc:A cybernetic implant - without any of the extra features of the high-end implants, it still gets you moving faster.
+material:steel
+
+# Sprinting
+name:& Netrunner Sprint~
+type:legs
+graphics:!:Blue
+weight:6550g
+cost:11000
+level:40
+alloc:4:25 to 127
+values:SPD[-1+d2M1]
+values:MOVES[1]
+desc:A cybernetic implant, combining fast running with sprinting (extra move speed for a short while, as a technique).
+material:titanium
+
+book:[Legs]
+spell:Sprint:1:12:4:4:1:3d30
+seffect:TIMED_INC:FAST:0:5
+sdice:6d3
+sdesc:Sprints - rapid movement for a few moments.
+
+# FF / AC / Stealth
+name:& Collective Skate~
+type:legs
+weight:5400g
+cost:12400
+level:42
+alloc:4:30 to 127
+graphics:!:Red
+flags:FEATHER
+values:MOVES[1+M2]
+values:STEALTH[1+M2]
+desc:A cybernetic implant - the main intent being fast running, but force-skate technology has been integrated to provide some protection and especially to cushion falls. An additional benefit of this is that your steps are muffled, improving your stealth.
+
+# Mixed bag
+name:& Netrunner Leg-Up~
+type:legs
+graphics:!:Blue
+weight:7600g
+cost:14000
+level:45
+alloc:3:30 to 127
+values:SPD[-1+d2M1]
+values:MOVES[1+M3]
+values:STR[M3]
+values:DEX[M4]
+values:CON[M2]
+desc:A cybernetic implant, with the main intent being fast running though there are usually some side benefits.
+material:titanium
+
+# Dex
+name:& Netrunner Flex~
+type:legs
+graphics:!:Blue
+weight:5890g
+cost:18000
+level:49
+alloc:2:35 to 127
+values:SPD[d2M1]
+values:MOVES[1+M3]
+values:DEX[2d2M4]
+desc:A cybernetic implant, combining fast running with agility and overall quickness.
+material:titanium
+
+# Str/con
+name:& Collective Powertrain~
+type:legs
+graphics:!:Red
+weight:7950g
+cost:21000
+level:52
+alloc:2:38 to 127
+values:MOVES[1+M3]
+values:STR[d2M4]
+values:CON[d2M4]
+desc:A cybernetic implant, combining fast running with enhanced strength and toughness.
+material:titanium
+
+# Speed
+name:& Collective Lightning~
+type:legs
+graphics:!:Red
+weight:8300g
+cost:25000
+level:55
+alloc:2:55 to 127
+values:SPD[3d2M4]
+values:MOVES[1+M3]
+flags:SUST_SPD
+desc:A cybernetic implant, allowing fast running combined with overall speed.
+material:titanium
+
+# Capstone?
+# (But consider FBCs)
+
+
 ##### Lights #####
 
 name:& wax candle~
