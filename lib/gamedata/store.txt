@@ -268,8 +268,8 @@ owner:14:30000:Drago the Fair (Elf)
 owner:12:25000:Durwin the Shifty (Half-Orc)
 owner:14:30000:Drago the Fair (Elf)
 owner:0:0:-
-slots:6:18
-turnover:9
+slots:4:12
+turnover:6
 danger:85:95
 
 store:8:Home
