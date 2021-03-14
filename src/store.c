@@ -1592,8 +1592,6 @@ void store_maint(struct store *s)
 	}
 
 	if (s->turnover) {
-		int restock_attempts = 100000;
-		int stock = s->stock_num + randint1(s->turnover);
 
 		/* Now that the staples exist, we want to add more
 		 * items, at least enough to get us to normal_stock_min
@@ -1603,19 +1601,26 @@ void store_maint(struct store *s)
 		int min = s->normal_stock_min + s->always_num;
 		int max = s->normal_stock_max + s->always_num;
 
-		/* Buy a few items */
+		/* For the rest, we just choose items randomlyish */
+		/* The restock_attempts will probably only go to zero (otherwise
+		 * infinite loop) if stores don't have enough items they can stock,
+		 * so instead decrement the number of items demanded.
+		 * Only give up if no items can be generated.
+		 **/
+		int stock = s->stock_num + randint1(s->turnover);
 
 		/* Keep stock between specified min and max slots */
 		if (stock > max) stock = max;
 		if (stock < min) stock = min;
 
-		/* For the rest, we just choose items randomlyish */
-		/* The (huge) restock_attempts will only go to zero (otherwise
-		 * infinite loop) if stores don't have enough items they can stock! */
-		while (s->stock_num < stock && --restock_attempts)
-			store_create_random(s);
+		do {
+			int restock_attempts = 1000;
+			while (s->stock_num < stock && --restock_attempts)
+				store_create_random(s);
+			stock--;
+		} while (stock);
 
-		if (!restock_attempts)
+		if (s->stock_num < stock)
 			quit_fmt("Unable to (re-)stock store %d. Please report this bug",
 					 s->sidx + 1);
 	}

@@ -248,6 +248,9 @@ normal:device:Light
 normal:device:mapping
 normal:device:anti-stealth radar
 normal:device:Detect Evil
+normal:wand
+normal:device
+normal:gadget
 buy:device
 buy:wand
 buy:gadget
