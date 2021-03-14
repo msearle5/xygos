@@ -717,12 +717,33 @@ static const char *ability_name(int a) {
  * to init_talent after birth talents have been selected)
  */
 int setup_talents(void) {
-	player->talent_points = player->race->tp_base + player->class->tp_base;
-	
+	int base = player->race->tp_base + player->extension->tp_base + player->class->tp_base;
+	int max = player->race->tp_max + player->extension->tp_max + player->class->tp_max;
+
+	/* If something (such as an extension) has reduced base or max talents below 0, take it
+	 * from the other - but never allow negative base or max to get through.
+	 */
+	if (base < 0) {
+		max += base;
+		base = 0;
+	}
+	if (max < 0) {
+		base += max;
+		max = 0;
+	}
+	if (base < 0) {
+		base = 0;
+	}
+	if (max < 0) {
+		max = 0;
+	}
+
+	player->talent_points = base;
+
 	/* These must take all your TP */
 	ability[PF_PATIENCE]->cost = ability[PF_UNKNOWN_TALENTS]->cost = player->talent_points;
 	
-	return player->race->tp_max + player->class->tp_max;
+	return max;
 }
 
 /* Display the abilities which you have or could gain, with more information

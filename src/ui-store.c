@@ -769,7 +769,7 @@ static bool store_sell(struct store_context *ctx)
 
 			/* Cyber Salon: may want to install it? */
 			bool equipped = (object_is_equipped(player->body, obj));
-			if (store_get_check(format("%s %s? [ESC, any other key to %sinstall]",
+			if (cyber && store_get_check(format("%s %s? [ESC, any other key to %sinstall]",
 					equipped ? "Uninstall" : "Install", o_name, equipped ? "un" : ""))) {
 				cmd = CMD_INSTALL;
 			} else {

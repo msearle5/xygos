@@ -466,7 +466,8 @@ void wr_player(void)
 	wr_byte(player->opts.name_suffix);
 
 	wr_u32b(player->hitdie);
-	wr_byte(player->expfact);
+	wr_u16b(player->expfact_low);
+	wr_u16b(player->expfact_high);
 
 	wr_s16b(player->age);
 	wr_s16b(player->ht);

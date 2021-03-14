@@ -230,15 +230,14 @@ static void prt_level(int row, int col)
 static void prt_exp(int row, int col)
 {
 	char out_val[32];
-	bool lev50 = (player->lev == 50);
+	bool lev50 = (player->lev == PY_MAX_LEVEL);
 
 	long xp = (long)player->exp;
 
 
 	/* Calculate XP for next level */
 	if (!lev50)
-		xp = (long)(player_exp[player->lev - 1] * player->expfact / 100L) -
-			player->exp;
+		xp = (long)(exp_to_gain(player->lev + 1) - player->exp);
 
 	/* Format XP */
 	strnfmt(out_val, sizeof(out_val), "%8d", xp);
@@ -618,14 +617,13 @@ static int prt_stat_short(int stat, int row, int col)
 static int prt_exp_short(int row, int col)
 {
 	char out_val[32];
-	bool lev50 = (player->lev == 50);
+	bool lev50 = (player->lev == PY_MAX_LEVEL);
 
 	long xp = (long)player->exp;
 
 	/* Calculate XP for next level */
 	if (!lev50)
-		xp = (long)(player_exp[player->lev - 1] * player->expfact / 100L) -
-			player->exp;
+		xp = (long)(exp_to_gain(player->lev + 1) - player->exp);
 
 	/* Format XP */
 	strnfmt(out_val, sizeof(out_val), "%d", xp);

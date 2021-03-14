@@ -2080,8 +2080,8 @@ static enum parser_error parse_p_race_talents(struct parser *p) {
 	struct player_race *r = parser_priv(p);
 	if (!r)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
-	r->tp_base = parser_getuint(p, "base");
-	r->tp_max = parser_getuint(p, "max");
+	r->tp_base = parser_getint(p, "base");
+	r->tp_max = parser_getint(p, "max");
 	return PARSE_ERROR_NONE;
 }
 
@@ -2178,6 +2178,11 @@ static enum parser_error parse_p_race_exp(struct parser *p) {
 	if (!r)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 	r->r_exp = parser_getint(p, "exp");
+	if (parser_hasval(p, "high_exp")) {
+		r->r_high_exp = parser_getint(p, "high_exp");
+	} else {
+		r->r_high_exp = r->r_exp;
+	}
 	return PARSE_ERROR_NONE;
 }
 
@@ -2357,7 +2362,7 @@ struct parser *init_parse_p_race(void) {
 	parser_reg(p, "ext str name", parse_p_race_ext);
 	parser_reg(p, "exts str exts", parse_p_race_exts);
 	parser_reg(p, "stats int str int int int wis int dex int con int chr int spd", parse_p_race_stats);
-	parser_reg(p, "talents uint base uint max", parse_p_race_talents);
+	parser_reg(p, "talents int base int max", parse_p_race_talents);
 	parser_reg(p, "skill-disarm-phys int disarm", parse_p_race_skill_disarm_phys);
 	parser_reg(p, "skill-disarm-magic int disarm", parse_p_race_skill_disarm_magic);
 	parser_reg(p, "skill-device int device", parse_p_race_skill_device);
@@ -2370,7 +2375,7 @@ struct parser *init_parse_p_race(void) {
 	parser_reg(p, "skill-dig int dig", parse_p_race_skill_dig);
 	parser_reg(p, "equip sym tval sym sval uint min uint max", parse_p_race_equip);
 	parser_reg(p, "hitdie int mhp", parse_p_race_hitdie);
-	parser_reg(p, "exp int exp", parse_p_race_exp);
+	parser_reg(p, "exp int exp ?int high_exp", parse_p_race_exp);
 	parser_reg(p, "infravision int infra", parse_p_race_infravision);
 	parser_reg(p, "history uint hist", parse_p_race_history);
 	parser_reg(p, "age int base_age int mod_age", parse_p_race_age);

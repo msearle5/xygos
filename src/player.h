@@ -220,6 +220,7 @@ struct player_race {
 
 	int r_mhp;					/**< Hit-dice modifier */
 	int r_exp;					/**< Experience factor */
+	int r_high_exp;				/**< High level experience factor */
 
 	int tp_base;				/** Talent points at birth */
 	int tp_max;					/** Talent points gained by max level */
@@ -564,7 +565,8 @@ struct player {
 	struct loc grid;/* Player location */
 
 	u32b hitdie;	/* Hit dice (sides) */
-	byte expfact;	/* Experience factor */
+	u16b expfact_low;	/* Experience factor (low and high level) */
+	u16b expfact_high;
 
 	s16b age;		/* Characters age */
 	s16b ht;		/* Height */
@@ -691,6 +693,7 @@ byte player_hp_attr(struct player *p);
 byte player_sp_attr(struct player *p);
 void player_safe_name(char *safe, size_t safelen, const char *name, bool strip_suffix);
 void player_cleanup_members(struct player *p);
+s32b exp_to_gain(s32b level);
 
 /* player-race.c */
 struct player_race *player_id2race(guid id);

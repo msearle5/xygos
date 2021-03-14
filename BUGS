@@ -50,7 +50,7 @@ BUG: After starting a new char, there is an unusual (3+ second) pause (also can 
 		- Save and reload, and they are gone.
 		- Debug gen of all-devices doesn't show anything like that.
 		- Consistent with items having # of charges multiplied by the size of the pile
-	Fixed: 0eb2e79464e1439e86e6e6111c4d439909a23c68
+	Fixed: f14c51989bbceea922c8cb9200ad9131dfecbee9
  
 BUG: "You fail to the tengu" (+ red worm mass - when you attack it with a pocket knife)
 	- UTR on dl0/1 outside the quest. Rubble?

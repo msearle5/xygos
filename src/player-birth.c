@@ -1009,7 +1009,8 @@ void player_generate(struct player *p, struct player_race *r, struct player_race
 	p->max_lev = p->lev = 1;
 
 	/* Experience factor */
-	p->expfact = p->race->r_exp + p->extension->r_exp + p->class->c_exp;
+	p->expfact_low = p->race->r_exp + p->extension->r_exp + p->class->c_exp;
+	p->expfact_high = p->race->r_high_exp + p->extension->r_high_exp + p->class->c_exp;
 
 	/* Hitdice */
 	p->hitdie = p->race->r_mhp + p->extension->r_mhp + p->class->c_mhp;

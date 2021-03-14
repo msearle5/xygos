@@ -734,7 +734,8 @@ int rd_player(void)
 
 	/* Special Race/Class info */
 	rd_u32b(&player->hitdie);
-	rd_byte(&player->expfact);
+	rd_u16b(&player->expfact_low);
+	rd_u16b(&player->expfact_high);
 
 	/* Age/Height/Weight */
 	rd_s16b(&player->age);

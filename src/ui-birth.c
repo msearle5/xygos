@@ -227,7 +227,7 @@ static void birthmenu_display(struct menu *menu, int oid, bool cursor,
  */
 static const menu_iter birth_iter = { NULL, NULL, birthmenu_display, NULL, NULL };
 
-static void skill_help(const int r_skills[], const int c_skills[], int mhp, int exp, int infra)
+static void skill_help(const int r_skills[], const int c_skills[], int mhp, int exp, int exphigh, int infra)
 {
 	s16b skills[SKILL_MAX];
 	unsigned i;
@@ -237,7 +237,10 @@ static void skill_help(const int r_skills[], const int c_skills[], int mhp, int 
 
 	text_out_e("Hit/Shoot/Throw: %+d/%+d/%+d   \n", skills[SKILL_TO_HIT_MELEE],
 			   skills[SKILL_TO_HIT_GUN], skills[SKILL_TO_HIT_THROW]);
-	text_out_e("Hit die: %2d   XP mod: %d%%\n", mhp, exp);
+	if (exp == exphigh)
+		text_out_e("Hit die: %2d   XP mod: %d%%\n", mhp, exp);
+	else
+		text_out_e("Hit die: %2d   XP mod: %d%%=>%d%%\n", mhp, exp, exphigh);
 	text_out_e("Disarm: %+3d/%+3d   Devices: %+3d\n", skills[SKILL_DISARM_PHYS],
 			   skills[SKILL_DISARM_MAGIC], skills[SKILL_DEVICE]);
 	text_out_e("Save:   %+3d   Stealth: %+3d\n", skills[SKILL_SAVE],
@@ -307,7 +310,7 @@ static void race_ext_help(int i, void *db, const region *l, struct player_race *
 	/* Display skill information */
 	text_out_indent = SKILL_COL;
 	Term_gotoxy(SKILL_COL, TABLE_ROW);
-	skill_help(r->r_skills, NULL, r->r_mhp, r->r_exp, r->infra);
+	skill_help(r->r_skills, NULL, r->r_mhp, r->r_exp, r->r_high_exp, r->infra);
 
 	/* Display race description */
 	for(int y=DESC_ROW; y<=DESC_END; y++)
@@ -391,7 +394,7 @@ static void class_help(int i, void *db, const region *l)
 	text_out_indent = SKILL_COL;
 	Term_gotoxy(SKILL_COL, TABLE_ROW);
 	skill_help(r->r_skills, c->c_skills, r->r_mhp + c->c_mhp,
-			   r->r_exp + c->c_exp, -1);
+			   r->r_exp + c->c_exp, r->r_high_exp + c->c_exp, -1);
 
 	/* Display class description */
 	for(int y=DESC_ROW; y<=DESC_END; y++)
