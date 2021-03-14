@@ -547,7 +547,16 @@ static bool can_gain_talent(unsigned a, bool birth) {
 
 /* Recalculate everything needed after an ability has been changed */
 static void changed_abilities(void) {
-	player->upkeep->update |= PU_BONUS | PU_HP;
+	/* Update player */
+	handle_stuff(player);
+
+	/* Flush messages */
+	event_signal(EVENT_MESSAGE_FLUSH);
+
+	/* Update stuff */
+	player->upkeep->update |= PU_BONUS | PU_HP | PU_SPELLS | PU_TORCH | PU_UPDATE_VIEW | PU_PANEL | PU_INVEN;
+	player->upkeep->redraw |= PR_BASIC | PR_EXTRA | PR_LIGHT | PR_INVEN | PR_EQUIP;
+
 	update_stuff(player);
 }
 

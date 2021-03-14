@@ -40,40 +40,16 @@ BUG: Saw climbing the stair into town put me in the middle of the level (not on 
 
 -------------
 
-BUG: pills, cards have missing top and tail from their names
-	Fixed: 3ff4fd1f6a21474bdf054e0ffd9fc03de9af8791
-
 BUG: The "use flavors" option is ignored
-
-BUG: After starting a new char, there is an unusual (3+ second) pause (also can pause on exit) and the Magic Shop has lots of supercharged wands/staffs  (50 teleporters (10075 charges) etc.)
-	- Seen on the Ring Remove and later Unit Test 100% commits, but doesnt show up every time.
-		- Save and reload, and they are gone.
-		- Debug gen of all-devices doesn't show anything like that.
-		- Consistent with items having # of charges multiplied by the size of the pile
-	Fixed: f14c51989bbceea922c8cb9200ad9131dfecbee9
- 
-BUG: "You fail to the tengu" (+ red worm mass - when you attack it with a pocket knife)
-	- UTR on dl0/1 outside the quest. Rubble?
-
-BUG: "You are too heavily loaded to swim" even when not overloaded.
-	(well, more accurately you can never swim - you always drown. You should be able to if not loaded, at least for most races.)
 
 BUG: Battery/s (not the objects, but elsewhere)
 
 BUG: After gaining an ability (Sprinting) modifying stats, char-screen and left-panel weren't updated until later (e.g. when changing level)
 
-BUG: Printers all seem to generate with {ignore}
-	- can't easily reproduce this
-
 BUG "These two can't intersect"
-
-BUG: m-techniques top label is wonky (move the level 1 to the right, and the cost-label 2 to the left?)
-	= unable to rep with Spit Acid, Sprint.
 
 BUG: "When activated, it feeds you for X turns" (on a battery. This isn't really even true for Androids - the 'activated' part)
 	- is there an existing way to hide activation descriptions?
-
-BUG: (default) Black Market stocking level should be reduced, because faction can increase it? (I have seen as many as 16 items at init)
 
 BUG: Resists screen is >80 wide (Also, the per-slot stats only label only displays a to l)
 	Remove ':' lines?
@@ -90,11 +66,6 @@ BUG: Androids have a 'invisible extension' (you have to press Enter twice, which
 
 BUG: Stone/steel skin timed should be blocked by the mutation (or combined with it in some way)
 
-BUG: At dungeon l127 and l0, able to generate a Massive Iron Crown with acquisition (with INSTA_ART | QUEST_ART)
-	- Unable to reproduce (by checking in make_object_named), and artifact probabilities for it are zero.
-	- With no generation line (alloc 0) they shouldn't appear... could this have been the old "special artifacts" bug?
-	- If so, it's now gone.
-
 BUG?? - In quests, multiplying monsters are handled OK.
 	But not newly spawned monsters that happen to be of the same type, or monsters removed through genocide or kill-body - and at least some of that could occur
 	and could be fixed, although probably not in any quest currently in use.
@@ -109,4 +80,42 @@ BUG: When in Giant Form (from a snozzcumber) you can't eat. Or quaff. Quaffing p
 	- You also can't use shops ("scream"), which is generally OK but it should be possible to use ones you own, or the home! Well, maybe - it depends on the form, and the message is still out.
 	- Turn back when below 50% health? And/or a CON check.
 	- Or just treat being transformed as another timed counter?
-	
+
+WontFix
+=======
+
+BUG: Printers all seem to generate with {ignore}
+	- can't easily reproduce this
+
+BUG: "You fail to the tengu" (+ red worm mass - when you attack it with a pocket knife)
+	- UTR on dl0/1 outside the quest. Rubble?
+
+BUG: At dungeon l127 and l0, able to generate a Massive Iron Crown with acquisition (with INSTA_ART | QUEST_ART)
+	- Unable to reproduce (by checking in make_object_named), and artifact probabilities for it are zero.
+	- With no generation line (alloc 0) they shouldn't appear... could this have been the old "special artifacts" bug?
+	- If so, it's now gone.
+
+BUG: m-techniques top label is wonky (move the level 1 to the right, and the cost-label 2 to the left?)
+	= unable to rep with Spit Acid, Sprint.
+
+
+Fixed
+=====
+
+BUG: pills, cards have missing top and tail from their names
+	Fixed: 3ff4fd1f6a21474bdf054e0ffd9fc03de9af8791
+
+BUG: After starting a new char, there is an unusual (3+ second) pause (also can pause on exit) and the Magic Shop has lots of supercharged wands/staffs  (50 teleporters (10075 charges) etc.)
+	- Seen on the Ring Remove and later Unit Test 100% commits, but doesnt show up every time.
+		- Save and reload, and they are gone.
+		- Debug gen of all-devices doesn't show anything like that.
+		- Consistent with items having # of charges multiplied by the size of the pile
+	Fixed: f14c51989bbceea922c8cb9200ad9131dfecbee9
+ 
+BUG: "You are too heavily loaded to swim" even when not overloaded.
+	(well, more accurately you can never swim - you always drown. You should be able to if not loaded, at least for most races.)
+	Fixed: 2afb97798b19cb9e3b0bf8a72896df229f0e9ba9
+
+BUG: (default) Black Market stocking level should be reduced, because faction can increase it? (I have seen as many as 16 items at init)
+	Fixed: f68aab201792f83cd254d82924f81727f6bcdca8
+

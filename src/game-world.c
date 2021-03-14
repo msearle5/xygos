@@ -1163,7 +1163,7 @@ void process_player(void)
 }
 
 /** Handle timed danger.
- * If the timie limit is active and sufficient time has passed,
+ * If the time limit is active and sufficient time has passed,
  * increase the danger level and mark stores for destruction.
  **/
 void increase_danger_level(void)
