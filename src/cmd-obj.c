@@ -41,6 +41,8 @@
 #include "target.h"
 #include "trap.h"
 
+static bool check_shapechanged(void);
+
 /**
  * ------------------------------------------------------------------------
  * Utility bits and bobs
@@ -148,14 +150,8 @@ void do_cmd_uninscribe(struct command *cmd)
 {
 	struct object *obj;
 
-	if (player_is_shapechanged(player)) {
-		msg("You cannot do this while in %s form.",	player->shape->name);
-		if (get_check("Do you want to change back? " )) {
-			player_resume_normal_shape(player);
-		} else {
-			return;
-		}
-	}
+	if (check_shapechanged())
+		return;
 
 	/* Get arguments */
 	if (cmd_get_item(cmd, "item", &obj,
@@ -183,14 +179,8 @@ void do_cmd_inscribe(struct command *cmd)
 	char prompt[1024];
 	char o_name[80];
 
-	if (player_is_shapechanged(player)) {
-		msg("You cannot do this while in %s form.",	player->shape->name);
-		if (get_check("Do you want to change back? " )) {
-			player_resume_normal_shape(player);
-		} else {
-			return;
-		}
-	}
+	if (check_shapechanged())
+		return;
 
 	/* Get arguments */
 	if (cmd_get_item(cmd, "item", &obj,
@@ -244,14 +234,8 @@ void do_cmd_takeoff(struct command *cmd)
 {
 	struct object *obj;
 
-	if (player_is_shapechanged(player)) {
-		msg("You cannot do this while in %s form.",	player->shape->name);
-		if (get_check("Do you want to change back? " )) {
-			player_resume_normal_shape(player);
-		} else {
-			return;
-		}
-	}
+	if (check_shapechanged())
+		return;
 
 	/* Get arguments */
 	if (cmd_get_item(cmd, "item", &obj,
@@ -282,14 +266,8 @@ void do_cmd_wield(struct command *cmd)
 	int slot;
 	struct object *obj;
 
-	if (player_is_shapechanged(player)) {
-		msg("You cannot do this while in %s form.",	player->shape->name);
-		if (get_check("Do you want to change back? " )) {
-			player_resume_normal_shape(player);
-		} else {
-			return;
-		}
-	}
+	if (check_shapechanged())
+		return;
 
 	/* Get arguments */
 	if (cmd_get_item(cmd, "item", &obj,
@@ -376,14 +354,8 @@ void do_cmd_drop(struct command *cmd)
 	int amt;
 	struct object *obj;
 
-	if (player_is_shapechanged(player)) {
-		msg("You cannot do this while in %s form.",	player->shape->name);
-		if (get_check("Do you want to change back? " )) {
-			player_resume_normal_shape(player);
-		} else {
-			return;
-		}
-	}
+	if (check_shapechanged())
+		return;
 
 	/* Get arguments */
 	if (cmd_get_item(cmd, "item", &obj,
@@ -655,14 +627,8 @@ void do_cmd_run_card(struct command *cmd)
 {
 	struct object *obj;
 
-	if (player_is_shapechanged(player)) {
-		msg("You cannot do this while in %s form.",	player->shape->name);
-		if (get_check("Do you want to change back? " )) {
-			player_resume_normal_shape(player);
-		} else {
-			return;
-		}
-	}
+	if (check_shapechanged())
+		return;
 
 	/* Check player can use card */
 	if (!player_can_run(player, true))
@@ -685,14 +651,8 @@ void do_cmd_use_device(struct command *cmd)
 {
 	struct object *obj;
 
-	if (player_is_shapechanged(player)) {
-		msg("You cannot do this while in %s form.",	player->shape->name);
-		if (get_check("Do you want to change back? " )) {
-			player_resume_normal_shape(player);
-		} else {
-			return;
-		}
-	}
+	if (check_shapechanged())
+		return;
 
 	/* Get an item */
 	if (cmd_get_item(cmd, "item", &obj,
@@ -716,14 +676,8 @@ void do_cmd_aim_wand(struct command *cmd)
 {
 	struct object *obj;
 
-	if (player_is_shapechanged(player)) {
-		msg("You cannot do this while in %s form.",	player->shape->name);
-		if (get_check("Do you want to change back? " )) {
-			player_resume_normal_shape(player);
-		} else {
-			return;
-		}
-	}
+	if (check_shapechanged())
+		return;
 
 	/* Get an item */
 	if (cmd_get_item(cmd, "item", &obj,
@@ -747,14 +701,8 @@ void do_cmd_zap_rod(struct command *cmd)
 {
 	struct object *obj;
 
-	if (player_is_shapechanged(player)) {
-		msg("You cannot do this while in %s form.",	player->shape->name);
-		if (get_check("Do you want to change back? " )) {
-			player_resume_normal_shape(player);
-		} else {
-			return;
-		}
-	}
+	if (check_shapechanged())
+		return;
 
 	/* Get an item */
 	if (cmd_get_item(cmd, "item", &obj,
@@ -778,14 +726,8 @@ void do_cmd_activate(struct command *cmd)
 {
 	struct object *obj;
 
-	if (player_is_shapechanged(player)) {
-		msg("You cannot do this while in %s form.",	player->shape->name);
-		if (get_check("Do you want to change back? " )) {
-			player_resume_normal_shape(player);
-		} else {
-			return;
-		}
-	}
+	if (check_shapechanged())
+		return;
 
 	/* Get an item */
 	if (cmd_get_item(cmd, "item", &obj,
@@ -833,6 +775,13 @@ void do_cmd_eat_food(struct command *cmd)
 {
 	struct object *obj = NULL;
 	int use = USE_SINGLE;
+
+	if (player_is_shapechanged(player)) {
+		msg("In %s form, you can only eat from the floor.",	player->shape->name);
+		if (get_check("Do you want to change back? " )) {
+			player_resume_normal_shape(player);
+		}
+	}
 
 	/* Get an item */
 	if (player_has(player, PF_NO_FOOD)) {

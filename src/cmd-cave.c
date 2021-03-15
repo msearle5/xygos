@@ -1152,7 +1152,16 @@ void move_player(int dir, bool disarm)
 		/* Handle store doors, or notice objects */
 		if (square_isshop(cave, grid)) {
 			if (player_is_shapechanged(player)) {
-				msg("There is a scream and the door slams shut!");
+				struct store *store = store_at(cave, player->grid);
+				if (store->sidx == STORE_HOME) {
+					if (streq(player->shape->name, "giant")) {
+						msg("You are unable to get through the door!");
+					} else {
+						msg("You are unable to get a grip on the handle!");
+					}
+				} else {
+					msg("There is a scream and the door slams shut!");
+				}
 				return;
 			}
 			disturb(player);

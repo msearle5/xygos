@@ -1147,7 +1147,20 @@ dice:200
 effect:NOURISH:INC_BY
 dice:5
 
-name:Terror
+name:gigantism
+type:mushroom
+graphics:,:d
+level:0
+weight:1
+cost:700
+pile:40:1d2
+alloc:1:20 to 100
+power:9
+effect:SHAPECHANGE:giant
+desc:It one-ups the more common snozzcumber by allowing you to assume giant form 
+desc:without any risk of failure.
+
+name:terror
 type:mushroom
 graphics:,:d
 level:0
@@ -1162,7 +1175,7 @@ effect:NOURISH:INC_BY
 dice:5
 desc:It allows you to run for your life.
 
-name:Stoneskin
+name:stoneskin
 type:mushroom
 graphics:,:d
 level:0
