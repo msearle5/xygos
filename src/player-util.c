@@ -555,10 +555,15 @@ void light_timeout(struct object *obj)
 	if (of_has(obj->flags, OF_BURNS_OUT)) {
 		bool dummy;
 		struct object *burnt;
-		if (object_is_carried(player, obj))
-			burnt = gear_object_for_use(obj, 1, true, &dummy);
-		else
-			burnt = floor_object_for_use(obj, 1, true, &dummy);
+		if (obj->held_m_idx) {
+			pile_excise(&cave_monster(cave, obj->held_m_idx)->held_obj, obj);
+			burnt = obj;
+		} else {
+			if (object_is_carried(player, obj))
+				burnt = gear_object_for_use(obj, 1, true, &dummy);
+			else
+				burnt = floor_object_for_use(obj, 1, true, &dummy);
+		}
 		if (burnt->known)
 			object_delete(&burnt->known);
 		object_delete(&burnt);

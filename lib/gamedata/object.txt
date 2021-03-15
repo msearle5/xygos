@@ -353,7 +353,7 @@ attack:1d1:0:0
 armor:0:0
 pval:15
 time:15
-flags:BURNS_OUT | LIGHT_2 | MIMIC_KNOW | ACT_FAILED
+flags:BURNS_OUT | LIGHT_2 | MIMIC_KNOW | ACT_FAILED | NO_ACTIVATION
 msg:The {flavor} explodes!
 effect:SPOT:SHARD:3
 dice:4d10
@@ -387,7 +387,7 @@ attack:1d1:0:0
 armor:0:0
 pval:15
 time:15
-flags:BURNS_OUT | LIGHT_2 | MIMIC_KNOW | ACT_FAILED
+flags:BURNS_OUT | LIGHT_2 | MIMIC_KNOW | ACT_FAILED | NO_ACTIVATION
 msg:The {flavor} explodes!
 effect:SPOT:SHARD:6
 dice:4d20
