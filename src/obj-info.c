@@ -1752,7 +1752,11 @@ static bool describe_effect(textblock *tb, const struct object *obj,
 			textblock_append_c(tb, COLOUR_L_GREEN, "%d", max_time);
 		}
 
-		textblock_append(tb, " turns to recharge");
+		char *recharge = "recharge";
+		if (!kf_has(obj->kind->kind_flags, KF_EASY_KNOW)) {	/* => candle-like */
+			recharge = "burn down";
+		}
+		textblock_append(tb, " turns to %s", recharge);
 		if (subjective && player->state.speed != 110)
 			textblock_append(tb, " at your current speed");
 
