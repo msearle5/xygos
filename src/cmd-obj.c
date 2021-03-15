@@ -871,7 +871,7 @@ static bool check_shapechanged(void)
 }
 
 /**
- * Quaff a pill 
+ * Take a pill
  */
 void do_cmd_quaff_pill(struct command *cmd)
 {
@@ -882,8 +882,8 @@ void do_cmd_quaff_pill(struct command *cmd)
 
 	/* Get an item */
 	if (cmd_get_item(cmd, "item", &obj,
-			"Quaff which pill? ",
-			"You have no pills from which to quaff.",
+			"Take which pill? ",
+			"You have no pills which you can take.",
 			tval_is_pill,
 			USE_INVEN | USE_FLOOR) != CMD_OK) return;
 

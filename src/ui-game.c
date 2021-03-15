@@ -90,7 +90,7 @@ struct cmd_info cmd_item[] =
 	{ "Zap a gadget", {'z', 'a'}, CMD_USE_ROD, NULL, NULL },
 	{ "Activate an object", {'A' }, CMD_ACTIVATE, NULL, NULL },
 	{ "Eat some food", { 'E' }, CMD_EAT, NULL, NULL },
-	{ "Quaff a pill", { 'q' }, CMD_QUAFF, NULL, NULL },
+	{ "Take a pill", { 'q' }, CMD_QUAFF, NULL, NULL },
 	{ "Run a card", { 'r' }, CMD_RUN_CARD, NULL, player_can_run_prereq },
 	{ "Fuel your light source", { 'F' }, CMD_REFILL, NULL, player_can_refuel_prereq },
 	{ "Use an item", { 'U', 'X' }, CMD_USE, NULL, NULL }

@@ -326,6 +326,7 @@ bool tval_is_edible(const struct object *obj)
 	switch (obj->tval) {
 		case TV_FOOD:
 		case TV_MUSHROOM:
+		case TV_PILL:
 			return true;
 		default:
 			return false;

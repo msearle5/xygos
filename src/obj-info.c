@@ -1688,7 +1688,7 @@ static bool describe_effect(textblock *tb, const struct object *obj,
 		if (tval_is_edible(obj)) {
 			textblock_append(tb, "It can be eaten.\n");
 		} else if (tval_is_pill(obj)) {
-			textblock_append(tb, "It can be drunk.\n");
+			textblock_append(tb, "It can be taken.\n");
 		} else if (tval_is_card(obj)) {
 			textblock_append(tb, "It can be run.\n");
 		} else if (aimed) {
@@ -1717,7 +1717,7 @@ static bool describe_effect(textblock *tb, const struct object *obj,
 			else if (tval_is_edible(obj))
 				prefix = "When eaten, it ";
 			else if (tval_is_pill(obj))
-				prefix = "When quaffed, it ";
+				prefix = "When taken, it ";
 			else if (tval_is_card(obj))
 				prefix = "When run, it ";
 			else
