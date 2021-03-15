@@ -21,7 +21,7 @@ BUG: got an item with {??} generated in a store
 		- May only happen on wiz-command generated items
 		- Still occurs after 416ff90a18e92ba95db126ffd717488548a88762
 		- Also partly fixed: on buy it is IDed as "use energy".
-		- Pre-ID like combat?
+		- Pre-ID (like combat runes)?
 ------------
 
 BUG: "angband: gen-cave.c:2009: town_gen: Assertion `grid.x > 0' failed." (= the x,y are 0, 0.)
@@ -40,8 +40,6 @@ BUG: Battery/s (not the objects, but elsewhere)
 	- Wiz 'What kind of object?'
 
 BUG "These two can't intersect"
-
-BUG: tval_is_sharp_missile
 
 BUG: Androids have a 'invisible extension' (you have to press Enter twice, which hits the birth tests.) ESC back also may be affected.
 
@@ -149,6 +147,9 @@ BUG: Tourists' starting sun hat (resLight) isn't rune-IDed
 		- Is an ID loop similar to the shop, used on start items, a good idea?
 			- Yes, given that it is done right. See object_know_all().
 	Fixed: 99c26d1c47820871daeb39c0cd57b17f0a15537a
+
+BUG: tval_is_sharp_missile
+	Fixed: 9afc1bef64d42699c2a6f6e12517e92a1ba29397
 
 Theme
 =====

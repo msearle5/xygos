@@ -1290,10 +1290,13 @@ void do_cmd_accept_character(struct command *cmd)
 	if (OPT(player, birth_know_icons))
 		player_learn_all_icons(player);
 
-	/* Hack - player knows all combat icons.  Maybe make them not icons? NRM */
+	/* Hack - player knows all combat icons, and "use energy".
+	 * Maybe make them not icons? NRM
+	 **/
 	player->obj_k->to_a = 1;
 	player->obj_k->to_h = 1;
 	player->obj_k->to_d = 1;
+	player->obj_k->modifiers[OBJ_MOD_USE_ENERGY] = 1;
 
 	/* Initialise the stores, dungeon */
 	store_reset();
