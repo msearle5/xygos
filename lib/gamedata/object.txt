@@ -1274,7 +1274,7 @@ graphics:|:W
 level:0
 weight:100g
 cost:30
-alloc:20:0 to 100
+alloc:20:0 to 30
 attack:1d3:0:0
 armor:0:0
 desc:A small knife (and set of several semi-useful tools) in a folding, pocketable
@@ -1319,6 +1319,140 @@ desc:A very long knife, broadening toward the tip, with a serrated back and moul
 material:steel
 
 
+# Laser knives - like a miniature lightsaber.
+# There are a lot of these (5 laserknives, 5 crystal knives, 12? lightsabers) and all should
+# be unusual, so all must be rare.
+# They fade out l60ish as they are (not strictly, but for most characters that have reached that far) worse
+# than the *crystal knives.
+
+name:& laser kni|fe|ves|
+type:sword
+graphics:|:Green
+level:20
+weight:150g
+alloc:4:20 to 60
+attack:1d12:0:0
+armor:0:0
+brand:LIGHT_2
+values:LIGHT[1]
+desc:A line of green laser light forms a long knife that cuts through armour easily.
+material:aluminium
+
+name:& phase kni|fe|ves|
+type:sword
+graphics:|:White
+level:15
+weight:150g
+alloc:4:15 to 56
+attack:1d8:8+d5M10:0
+armor:0:0
+brand:NEXUS_2
+desc:A line of shimmering points of light - a blade of pure phased energy for which armor doesn't exist.
+material:aluminium
+
+# absorption, disruption, prismatic?
+
+# Lightsabers, etc.
+# These also eventually are outclassed by *blades, though not by dual/dim etc.
+# They generally have a brand (weak if dual) but no resistance.
+
+name:& lightsaber~
+type:sword
+graphics:|:Green
+level:30
+alloc:3:25 to 65
+weight:350g
+attack:1d14:0:0
+armor:0:0
+brand:LIGHT_3
+values:LIGHT[1]
+desc:A line of green laser light extends from a saber's hilt, a powerful weapon that cuts through armour easily.
+material:aluminium
+
+name:& dual lightsaber~
+type:sword
+graphics:|:Green
+level:40
+alloc:2:35 to 75
+weight:1250g
+attack:2d14:-5:0
+armor:0:0
+brand:LIGHT_2
+values:LIGHT[1]
+desc:Two lines of green laser light extend in each direction from a saber's hilt, a powerful weapon that cuts through armour easily - though it's considerably heavier and more unwieldy than the single type.
+material:aluminium
+
+name:& X-rated lightsaber~
+type:sword
+graphics:|:Blue
+level:35
+alloc:2:30 to 70
+weight:350g
+attack:1d18:-20:0
+armor:0:0
+brand:RADIATION_3
+desc:A line of invisible radiation extends from a saber's hilt, a powerful weapon - if you can hit anything with it.
+
+name:& X-rated dual lightsaber~
+type:sword
+graphics:|:Blue
+level:45
+alloc:2:40 to 80
+weight:1250g
+attack:2d18:-25:0
+armor:0:0
+brand:RADIATION_2
+desc:Two lines of invisible radiation extend in each direction from a saber's hilt, a powerful weapon that cuts through armour easily - though it's considerably heavier and more unwieldy than the single type, and so is even less easy to hit with.
+
+
+
+
+# Crystal knives - rare, deadly and bearing an elemental attack and resistance.
+# They are something like more advanced versions of the laser/phaser knives - more powerful
+# than the *sabers, although not the *blades.
+# Nega/soni=sonic, spectra=laser, para/warp- =phaser, perma=disruption, prismatic=?
+
+name:& sonicrystal kni|fe|ves|
+type:sword
+graphics:|:D
+level:50
+weight:400g
+alloc:2:40 to 127
+attack:1d16:0:0
+armor:0:0
+values:RES_SOUND[1]
+brand:SOUND_3
+desc:A long knife of glossy black crystal, which buzzes faintly as you hold it.
+material:glass
+
+name:& spectracrystal kni|fe|ves|
+type:sword
+graphics:|:Violet
+level:52
+weight:400g
+alloc:2:42 to 127
+attack:1d17:0:0
+armor:0:0
+values:RES_LIGHT[1]
+brand:LIGHT_3
+desc:A long knife of brilliant crystal, flashing thousands of colours.
+material:glass
+
+name:& warp-crystal kni|fe|ves|
+type:sword
+graphics:|:Gray50
+level:55
+weight:400g
+alloc:2:45 to 127
+attack:1d15:10+2d4M10:0
+armor:0:0
+values:RES_NEXUS[1]
+brand:NEXUS_3
+desc:A long knife of greyish crystal, which doesn't seem to be all quite there...
+material:glass
+
+# disruption equivalent
+
 ### Clubs ###
 
 name:& baseball bat~
@@ -1330,7 +1464,7 @@ cost:50
 alloc:20:0 to 100
 attack:2d4:0:0
 armor:0:0
-desc:FIXME
+desc:'If that dragon's got any voonerables, that arrow'll find 'em.' 
 material:wood
 
 name:& sledgehammer~
