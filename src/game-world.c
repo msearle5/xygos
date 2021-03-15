@@ -742,6 +742,31 @@ void process_world(struct chunk *c)
 		}
 	}
 
+	/* Giants return to normal form after a while.
+	 * How long is unpredictable, but strongly dependent on HP.
+	 **/
+	if (streq(p->shape->name, "giant")) {
+		int turns;
+		if (player->chp == player->mhp)
+			turns = 256;
+		else {
+			/* Scale nonlinearly.
+			 * This reduces to 1/4 of full scale (256) at 1/2 HP,
+			 * to 1/16 at 1/4 HP input etc.
+			 */
+			double chp = MAX(0, player->chp) * 16; /* sqrt (256) */
+			double mhp = player->mhp;
+			double turns_s = chp / mhp;
+			turns = turns_s * turns_s;
+		}
+		if (turns < 5)
+			turns = 5;
+		if (!randint0(turns)) {
+			/* Failed check: return to normal form */
+			player_resume_normal_shape(player);
+		}
+	}
+
 	/* Take damage from poison */
 	if (player->timed[TMD_POISONED])
 		take_hit(player, 1, "poison");
