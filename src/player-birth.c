@@ -596,11 +596,11 @@ void wield_all(struct player *p)
 
 void add_start_items(struct player *p, const struct start_item *si, bool skip, bool pay, int origin)
 {
-	struct object *obj, *known_obj;
+	struct object *obj;
 	for (; si; si = si->next) {
 		int num = rand_range(si->min, si->max);
 		struct object_kind *kind;
-		if (si->sval)
+		if (si->sval > SV_UNKNOWN)
 			kind = lookup_kind(si->tval, si->sval);
 		else
 			kind = get_obj_num(0, false, si->tval);
@@ -629,13 +629,7 @@ void add_start_items(struct player *p, const struct start_item *si, bool skip, b
 		obj->number = num;
 		obj->origin = origin;
 
-		known_obj = object_new();
-		obj->known = known_obj;
-		object_set_base_known(obj);
-		object_flavor_aware(obj);
-		obj->known->pval = obj->pval;
-		obj->known->effect = obj->effect;
-		obj->known->notice |= OBJ_NOTICE_ASSESSED;
+		object_know_all(obj);
 
 		/* Deduct the cost of the item from starting cash */
 		if (pay)

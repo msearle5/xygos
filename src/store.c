@@ -2211,13 +2211,8 @@ void do_cmd_sell(struct command *cmd)
 	 */
 	object_wipe(&dummy_item);
 
-	/* Know flavor of consumables */
-	object_flavor_aware(obj);
-	obj->known->effect = obj->effect;
-	while (!object_fully_known(obj)) {
-		object_learn_unknown_icon(player, obj);
-		player_know_object(player, obj);
-	}
+	/* Know flavor and unknown icons */
+	object_know_all(obj);
 
 	/* Take a proper copy of the now known-about object. */
 	sold_item = gear_object_for_use(obj, amt, false, &none_left);

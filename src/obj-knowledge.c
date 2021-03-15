@@ -2289,3 +2289,33 @@ void object_flavor_tried(struct object *obj)
 	assert(obj->kind);
 	obj->kind->tried = true;
 }
+
+/**
+ * Know everything about an object
+ *
+ * \param obj is the object
+ */
+void object_know_all(struct object *obj)
+{
+	struct object *known_obj;
+	if (!obj->known) {
+		known_obj = object_new();
+		obj->known = known_obj;
+		object_set_base_known(obj);
+	}
+	obj->known->pval = obj->pval;
+	obj->known->effect = obj->effect;
+
+	/* This is needed for the following loop to terminate!
+	 * Without it, player_know_object will exit early and won't set the flags needed.
+	 */
+	obj->known->notice |= OBJ_NOTICE_ASSESSED;
+
+	object_flavor_aware(obj);
+	obj->known->effect = obj->effect;
+	int a = 0;
+	while (!object_fully_known(obj)) {
+		object_learn_unknown_icon(player, obj);
+		player_know_object(player, obj);
+	}
+}
