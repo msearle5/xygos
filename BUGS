@@ -22,17 +22,6 @@ BUG: got an item with {??} generated in a store
 		- Still occurs after 416ff90a18e92ba95db126ffd717488548a88762
 		- Also partly fixed: on buy it is IDed as "use energy".
 		- Pre-ID like combat?
-
-BUG: Tourists' starting sun hat (resLight) isn't rune-IDed
-	- That might be reasonable. But the battery the tourist started with is also unIDed. It becomes IDed mysteriously later.
-	- Similar symptoms if they start with a wax candle.
-		- which is {??}. Wielding doesn't change it. Using an ID card on it produces no message but removes the ??.
-	- Is there something about start items (and wiz-command created?), like having no known object, that is different from normal creation?
-		- Still occurs after 416ff90a18e92ba95db126ffd717488548a88762
-		- But only partly. The hat is unIDed, but reading ID on it behaves as expected.
-		- Is an ID loop similar to the shop, used on start items, a good idea?
-			- Yes, given that it is done right. See object_know_all().
-	Fixed: 99c26d1c47820871daeb39c0cd57b17f0a15537a
 ------------
 
 BUG: "angband: gen-cave.c:2009: town_gen: Assertion `grid.x > 0' failed." (= the x,y are 0, 0.)
@@ -59,27 +48,6 @@ BUG: Androids have a 'invisible extension' (you have to press Enter twice, which
 BUG: Stone/steel skin timed should be blocked by the mutation (or combined with it in some way)
 
 BUG? After the success/failure message from a quest, ESC is the only way to get back out.
-
-BUG: When in Giant Form (from a snozzcumber) you can't eat. Or quaff. Quaffing prompts to to change back. (Reasonably for some forms, not really for this - is there a flag? If not, one could be added)
-	- There seems to be nothing preventing you staying in giant form. But you do need to eat.
-	- There should be a timeout anyway - fast hunger? (Androids can't do this anyway, at least for as long as the only way to take giant form is by eating something)
-=> OTOH only eating from the floor is consistent with not being able to get at your pack, so it's OK as long as the messages aren't misleading.
-	WontFix
-
-=>	Eating just says that you don't have any food (wrong!)
-	Fixed
-	
-=>	You also can't use shops ("scream"), which is generally OK but should it be possible to use ones you own, or the home? For consistency (you can't drop items on the ground, so why allow use of your home?) this is OK. The message is still out, though - there's nobody at home to scream.
-	- It might be reasonable to say (given that most of the existing forms in shape.txt won't be used) that any form is either too big or awkwardly shaped to fit through the door, or unable to operate a lock / doorknob. For the moment, assume a giant is the only big one (anything more general should wait until there are more examples being used).
-	- (So why isn't this true of the shops? Well IRL shops have unlocked / open / automatic doors which may be bigger that your average front door - the scream message is worth keeping, anyway.)
-
-=>
-	- Turn back when below 50% health? And/or a CON check.
-	- Or just treat being transformed as another timed counter?
-	- HP might be an interestingly different mechanic, though. There are a lot of timed effects
-		already and they can be too predictable. A per-turn chance based non-linearly on HP would
-		make more sense than a flat 50%, though.
-	- Fixed e90a3e850e7f7583cfb28e486dc819c7e5ec0552
 
 Defer
 =====
@@ -147,6 +115,40 @@ BUG: "When activated, it feeds you for X turns" (on a battery. This isn't really
 BUG: Quaffing pills
 	- one way to go would be to remove all references in the text to quaffing, make pills targets for eating, but keep the quaff command around as a shortcut and for finger memory.
 	Fixed: ed4d2f1faaf6610e9efc1b365291ae75c3503655
+
+BUG: When in Giant Form (from a snozzcumber) you can't eat. Or quaff. Quaffing prompts to to change back. (Reasonably for some forms, not really for this - is there a flag? If not, one could be added)
+	- There seems to be nothing preventing you staying in giant form. But you do need to eat.
+	- There should be a timeout anyway - fast hunger? (Androids can't do this anyway, at least for as long as the only way to take giant form is by eating something)
+=> OTOH only eating from the floor is consistent with not being able to get at your pack, so it's OK as long as the messages aren't misleading.
+	WontFix
+
+=>	Eating just says that you don't have any food (wrong!)
+	Fixed 810ebb5906360c9344c6ddced0c77e5024879db9
+
+=>	You also can't use shops ("scream"), which is generally OK but should it be possible to use ones you own, or the home? For consistency (you can't drop items on the ground, so why allow use of your home?) this is OK. The message is still out, though - there's nobody at home to scream.
+	- It might be reasonable to say (given that most of the existing forms in shape.txt won't be used) that any form is either too big or awkwardly shaped to fit through the door, or unable to operate a lock / doorknob. For the moment, assume a giant is the only big one (anything more general should wait until there are more examples being used).
+	- (So why isn't this true of the shops? Well IRL shops have unlocked / open / automatic doors which may be bigger that your average front door - the scream message is worth keeping, anyway.)
+	Fixed 810ebb5906360c9344c6ddced0c77e5024879db9
+
+=>
+	- Turn back when below 50% health? And/or a CON check.
+	- Or just treat being transformed as another timed counter?
+	- HP might be an interestingly different mechanic, though. There are a lot of timed effects
+		already and they can be too predictable. A per-turn chance based non-linearly on HP would
+		make more sense than a flat 50%, though.
+	- Fixed e90a3e850e7f7583cfb28e486dc819c7e5ec0552
+
+
+BUG: Tourists' starting sun hat (resLight) isn't rune-IDed
+	- That might be reasonable. But the battery the tourist started with is also unIDed. It becomes IDed mysteriously later.
+	- Similar symptoms if they start with a wax candle.
+		- which is {??}. Wielding doesn't change it. Using an ID card on it produces no message but removes the ??.
+	- Is there something about start items (and wiz-command created?), like having no known object, that is different from normal creation?
+		- Still occurs after 416ff90a18e92ba95db126ffd717488548a88762
+		- But only partly. The hat is unIDed, but reading ID on it behaves as expected.
+		- Is an ID loop similar to the shop, used on start items, a good idea?
+			- Yes, given that it is done right. See object_know_all().
+	Fixed: 99c26d1c47820871daeb39c0cd57b17f0a15537a
 
 Theme
 =====

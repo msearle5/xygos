@@ -2313,7 +2313,7 @@ void object_know_all(struct object *obj)
 
 	object_flavor_aware(obj);
 	obj->known->effect = obj->effect;
-	int a = 0;
+
 	while (!object_fully_known(obj)) {
 		object_learn_unknown_icon(player, obj);
 		player_know_object(player, obj);

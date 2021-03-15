@@ -166,17 +166,6 @@ bool tval_is_ammo(const struct object *obj)
 	}
 }
 
-bool tval_is_sharp_missile(const struct object *obj)
-{
-	switch (obj->tval) {
-		case TV_AMMO_9:
-		case TV_AMMO_12:
-			return true;
-		default:
-			return false;
-	}
-}
-
 bool tval_is_launcher(const struct object *obj)
 {
 	return obj->tval == TV_GUN;
