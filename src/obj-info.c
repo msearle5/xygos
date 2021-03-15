@@ -1679,9 +1679,9 @@ static bool describe_effect(textblock *tb, const struct object *obj,
 		return false;
 	}
 
-		if (kf_has(obj->kind->kind_flags, KF_MIMIC_KNOW) && (!obj->kind->aware)) {
-			effect = obj_mimic_kind(obj)->effect;
-		}
+	if (kf_has(obj->kind->kind_flags, KF_MIMIC_KNOW) && (!object_flavor_is_aware(obj))) {
+		effect = obj_mimic_kind(obj)->effect;
+	}
 
 	/* Effect not known, mouth platitudes */
 	if (!effect && object_effect(obj)) {
@@ -1831,11 +1831,15 @@ static bool describe_origin(textblock *tb, const struct object *obj, bool terse)
 }
 
 /* Returns the kind used by a MIMIC_KNOW object when unknown.
- * (This is a huge HACK - fix!)
+ * (This is slightly less of a hack than before, but still limiting!)
  */
 struct object_kind *obj_mimic_kind(const struct object *obj)
 {
-	return (obj->kind-1);
+	int k_idx = obj->kind - k_info;
+	do {
+		k_idx--;
+	} while (kf_has(k_info[k_idx].kind_flags, KF_MIMIC_KNOW));
+	return k_info + k_idx;
 }
 
 /**
@@ -1858,7 +1862,7 @@ static void describe_flavor_text(textblock *tb, const struct object *obj,
 		bool did_desc = false;
 		if (!ego && obj->kind->text) {
 			const char *text = obj->kind->text;
-			if (kf_has(obj->kind->kind_flags, KF_MIMIC_KNOW) && (!obj->kind->aware)) {
+			if (kf_has(obj->kind->kind_flags, KF_MIMIC_KNOW) && (!object_flavor_is_aware(obj))) {
 				text = obj_mimic_kind(obj)->text;
 			}
 			textblock_append(tb, "%s", text);

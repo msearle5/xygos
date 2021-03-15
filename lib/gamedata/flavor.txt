@@ -59,7 +59,7 @@ flavor:87:Green:twisting
 flavor:88:Orange:twirling
 flavor:89:Yellow:revolving
 flavor:90:Light Yellow:rotating
-
+# flapping?
 
 ##### Wands #####
 # These are finishes, materials, coverings, shapes.

@@ -644,6 +644,9 @@ static void wiz_create_item_drop_object(struct object *obj)
 	obj->origin = ORIGIN_CHEAT;
 	obj->origin_depth = player->depth;
 
+	/* ID it */
+	object_know_all(obj);
+
 	/* Drop the object from heaven */
 	drop_near(cave, &obj, 0, player->grid, true, true);
 }

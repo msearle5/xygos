@@ -208,7 +208,7 @@ values:DEX[2d2M2]
 flags:SUST_STR
 flags:SUST_DEX
 attack:0d0:1+M9:0
-desc:The Powerflex cybernetic implant strengthens your arms and improves your dexterity, so makiing you a more precise, effective combatant. The included advanced nanorebuilder also makes it almost impossible to become weaker or less agile.
+desc:The Powerflex cybernetic implant strengthens your arms and improves your dexterity, so making you a more precise, effective combatant. The included advanced nanorebuilder also makes it almost impossible to become weaker or less agile.
 material:titanium
 
 ##### Implants (Legs) #####
@@ -338,7 +338,7 @@ attack:1d1:0:0
 armor:0:0
 pval:1500
 time:1500
-flags:BURNS_OUT | LIGHT_2 | MIMIC_KNOW
+flags:BURNS_OUT | LIGHT_2
 desc:A wax candle.
 
 name:& firecracker~
