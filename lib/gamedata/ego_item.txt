@@ -380,64 +380,6 @@ type:polearm
 type:hafted
 slay:EVIL_2
 
-name:of Slay Undead
-info:3500:18
-alloc:100:1 to 30
-type:sword
-type:polearm
-item:hafted:Whip
-item:hafted:Ball-and-Chain
-item:hafted:Morning Star
-item:hafted:Flail
-item:hafted:Two-Handed Great Flail
-item:hafted:Mace
-item:hafted:Lead-Filled Mace
-item:hafted:Quarterstaff
-item:hafted:War Hammer
-item:hafted:Maul
-item:hafted:Great Hammer
-slay:UNDEAD_3
-
-name:of Slay Demon
-info:3500:14
-alloc:100:1 to 30
-type:sword
-type:polearm
-type:hafted
-slay:DEMON_3
-
-name:of Slay Orc
-info:2500:10
-alloc:150:1 to 20
-type:sword
-type:polearm
-type:hafted
-slay:ORC_3
-
-name:of Slay Troll
-info:2500:10
-alloc:150:1 to 25
-type:sword
-type:polearm
-type:hafted
-slay:TROLL_3
-
-name:of Slay Giant
-info:2500:14
-alloc:60:1 to 30
-type:sword
-type:polearm
-type:hafted
-slay:GIANT_3
-
-name:of Slay Dragon
-info:3500:18
-alloc:100:1 to 30
-type:sword
-type:polearm
-type:hafted
-slay:DRAGON_3
-
 # The *Slay* weapons (8)
 
 name:of *Slay Animal*
@@ -462,83 +404,7 @@ values:WIS[d2]
 min-values:WIS[0]
 slay:EVIL_2
 
-name:of *Slay Undead*
-info:8000:24
-alloc:30:10 to 60
-type:sword
-type:polearm
-item:hafted:Whip
-item:hafted:Ball-and-Chain
-item:hafted:Morning Star
-item:hafted:Flail
-item:hafted:Two-Handed Great Flail
-item:hafted:Mace
-item:hafted:Lead-Filled Mace
-item:hafted:Quarterstaff
-item:hafted:War Hammer
-item:hafted:Maul
-item:hafted:Great Hammer
-flags:RAND_RES_POWER
-values:WIS[d2]
-min-values:WIS[0]
-slay:UNDEAD_5
-
-name:of *Slay Demon*
-info:8000:16
-alloc:30:10 to 60
-type:sword
-type:polearm
-type:hafted
-flags: RAND_RES_POWER
-values:INT[d2]
-min-values:INT[0]
-slay:DEMON_5
-
-name:of *Slay Orc*
-info:4000:14
-alloc:60:1 to 40
-type:sword
-type:polearm
-type:hafted
-flags:RAND_RES_POWER
-values:DEX[d2]
-min-values:DEX[0]
-slay:ORC_3
-
-name:of *Slay Troll*
-info:4000:14
-alloc:60:1 to 45
-type:sword
-type:polearm
-type:hafted
-flags:RAND_RES_POWER
-values:STR[d2]
-min-values:STR[0]
-slay:TROLL_3
-
-name:of *Slay Giant*
-info:4000:16
-alloc:20:1 to 45
-type:sword
-type:polearm
-type:hafted
-flags:RAND_RES_POWER
-values:STR[d2]
-min-values:STR[0]
-slay:GIANT_3
-
-name:of *Slay Dragon*
-info:8000:24
-alloc:30:10 to 60
-type:sword
-type:polearm
-type:hafted
-flags:RAND_RES_POWER
-values:CON[d2]
-min-values:CON[0]
-slay:DRAGON_5
-
-### Faulty Weapons
+### Nasty weapons
 
 name:of Morgul
 info:1:0

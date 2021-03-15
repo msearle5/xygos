@@ -1280,6 +1280,7 @@ armor:0:0
 desc:A small knife (and set of several semi-useful tools) in a folding, pocketable
 desc: case. It's not intended as a weapon of course, but could be used as one if
 desc: you really had nothing else better.
+material:steel
 
 name:& flick kni|fe|ves|
 type:sword
@@ -1291,6 +1292,7 @@ alloc:20:1 to 100
 attack:1d5:0:0
 armor:0:0
 desc:A smallish knife, spring-loaded to open automatically.
+material:steel
 
 name:& survival kni|fe|ves|
 type:sword
@@ -1302,6 +1304,7 @@ alloc:20:3 to 100
 attack:1d7:0:0
 armor:0:0
 desc:A long, heavy knife with a metal guard, long black leather hilt and attached strap.
+material:steel
 
 name:& machete~
 type:sword
@@ -1313,502 +1316,87 @@ alloc:20:5 to 100
 attack:1d9:0:0
 armor:0:0
 desc:A very long knife, broadening toward the tip, with a serrated back and moulded rubber grip.
-
-name:& Rapier~
-type:sword
-graphics:|:W
-level:5
-weight:40
-cost:70
-alloc:20:5 to 100
-attack:1d6:0:0
-armor:0:0
-desc:A long, thin thrusting blade, mainly used in duels.
-
-name:& Short Sword~
-type:sword
-graphics:|:W
-level:5
-weight:80
-cost:90
-alloc:20:5 to 100
-attack:1d7:0:0
-armor:0:0
-desc:A short thrusting sword.
-
-name:& Cutlass~
-type:sword
-graphics:|:W
-level:5
-weight:110
-cost:120
-alloc:20:5 to 100
-attack:1d8:0:0
-armor:0:0
-desc:A thicker and slightly longer dagger, the cutlass is a slashing sword.  It
-desc: possesses a slight curve and only one side is sharp.
-
-name:& Tulwar~
-type:sword
-graphics:|:W
-level:5
-weight:100
-cost:170
-alloc:20:5 to 100
-attack:2d4:0:0
-armor:0:0
-desc:A wider-bladed cousin of the shamshir, with less of a curve.
-
-name:& Scimitar~
-type:sword
-graphics:|:W
-level:10
-weight:150
-cost:300
-alloc:20:10 to 100
-attack:4d2:0:0
-armor:0:0
-desc:A long sabre with an extreme curve to the blade.
-
-name:& Long Sword~
-type:sword
-graphics:|:W
-level:10
-weight:130
-cost:300
-alloc:20:10 to 100
-attack:2d5:0:0
-armor:0:0
-desc:A long, straight, two-edged blade, with two hand guards projecting out
-desc: from the hilt to form a perfect cross.
-
-name:& Broad Sword~
-type:sword
-graphics:|:W
-level:10
-weight:150
-cost:300
-alloc:20:10 to 100
-attack:2d5:0:0
-armor:0:0
-desc:A heavy, single-edged sword with a strong grip.
-
-name:& Bastard Sword~
-type:sword
-graphics:|:W
-level:15
-weight:140
-cost:400
-alloc:20:15 to 100
-attack:3d4:0:0
-armor:0:0
-desc:Also known as the hand-and-a-half blade.  A larger-than-normal straight-
-desc:sided sword with two cutting edges.
-
-name:& Katana~
-type:sword
-graphics:|:W
-level:20
-weight:120
-cost:600
-alloc:20:20 to 100
-attack:3d5:0:0
-armor:0:0
-desc:A slightly curved long-handled slashing sword with a single-edged
-desc: blade and a chisel tip.
-
-name:& Zweihander~
-type:sword
-graphics:|:W
-level:30
-weight:200
-cost:700
-alloc:20:30 to 100
-attack:3d6:0:0
-armor:0:0
-desc:A sword designed for two hands.
-
-name:& Executioner's Sword~
-type:sword
-graphics:|:r
-level:40
-weight:260
-cost:850
-alloc:20:40 to 100
-attack:4d5:0:0
-armor:0:0
-desc:A giant, curved blade designed to cleave the head cleanly from the body.
-
-name:& Blade~ of Chaos
-type:sword
-graphics:|:v
-level:70
-weight:180
-cost:4000
-alloc:10:70 to 100
-attack:6d5:0:0
-armor:0:0
-values:RES_CHAOS[1]
-desc:This inconstant weapon revels in disorder, hacking and slashing your foes
-desc: with bloodthirsty glee.
-
-
-
-### Whips ###
-
-name:& Whip~
-type:hafted
-graphics:\:D
-level:3
-weight:30
-cost:30
-alloc:20:3 to 100
-attack:1d3:0:0
-armor:0:0
-desc:A heavy whip, this thick coil is thrown from the shoulder and can
-desc: knock down a large man.
-
-name:& Ball-and-Chain~
-type:hafted
-graphics:\:D
-level:20
-weight:150
-cost:200
-alloc:20:20 to 100
-attack:2d4:0:0
-armor:0:0
-desc:A weighty iron ball, suspended by a chain from a sturdy oaken handle.
-
-name:& Morning Star~
-type:hafted
-graphics:\:D
-level:10
-weight:150
-cost:396
-alloc:20:10 to 100
-attack:2d6:0:0
-armor:0:0
-desc:A sturdy wooden pole connected by a chain to a ball of steel, which often
-desc: has projecting spikes.
-
-name:& Flail~
-type:hafted
-graphics:\:D
-level:10
-weight:150
-cost:353
-alloc:20:10 to 100
-attack:2d6:0:0
-armor:0:0
-desc:Two heavy bars of wood connected by a short link of chain, capable of
-desc: delivering crushing blows.
-
-name:& Two-Handed Great Flail~
-type:hafted
-graphics:\:y
-level:45
-weight:280
-cost:590
-alloc:20:45 to 100
-attack:3d6:0:0
-armor:0:0
-desc:Two great bars of wood connected by a massive chain, needing two hands
-desc: to properly wield.
+material:steel
 
 
 ### Clubs ###
 
-name:& Mace~
-type:hafted
-graphics:\:D
-level:5
-weight:120
-cost:130
-alloc:20:5 to 100
-attack:2d4:0:0
-armor:0:0
-desc:A war club with an iron head, usually flanged or spiked.
-
-name:& Lead-Filled Mace~
-type:hafted
-graphics:\:D
-level:15
-weight:180
-cost:502
-alloc:20:15 to 100
-attack:4d3:0:0
-armor:0:0
-desc:A heavy war club topped with a mass of lead-filled steel, capable of
-desc: landing crushing blows.
-
-name:& Quarterstaff~
+name:& baseball bat~
 type:hafted
 graphics:\:U
-level:10
-weight:150
-cost:200
-alloc:20:10 to 100
-attack:1d9:0:0
-armor:0:0
-desc:Six feet of oak which can be wielded in both hands to give a drubbing or
-desc: block one.
-
-name:& Throwing Hammer~
-type:hafted
-graphics:\:D
-level:40
-weight:55
-cost:250
-alloc:10:40 to 100
+level:1
+weight:960g
+cost:50
+alloc:20:0 to 100
 attack:2d4:0:0
 armor:0:0
-flags:THROWING
-desc:A short-handled iron hammer that can strike hard when thrown.
+desc:FIXME
+material:wood
 
-name:& War Hammer~
+name:& sledgehammer~
 type:hafted
 graphics:\:D
-level:5
-weight:120
-cost:225
-alloc:20:5 to 100
+level:3
+weight:5500g
+cost:105
+alloc:20:3 to 100
 attack:3d3:0:0
 armor:0:0
 desc:A mallet with a tapered head and a long handle.
+material:wood
 
-name:& Maul~
+name:& blackjack~
 type:hafted
-graphics:\:D
+graphics:\:U
 level:5
-weight:200
-cost:130
+weight:580g
+cost:70
 alloc:20:5 to 100
-attack:4d4:0:0
+attack:2d2:0:0
 armor:0:0
-desc:A long-handled hammer with a heavy head.
+desc:A small, easily concealed bludgeon. The heavy head makes it a reasonably effective weapon despite its small size. 
+material:wood
 
-name:& Great Hammer~
+name:& crowbar~
 type:hafted
-graphics:\:D
-level:5
-weight:180
-cost:500
-alloc:20:20 to 100
-attack:8d1:0:0
+graphics:\:s
+level:8
+weight:6200g
+cost:250
+alloc:20:8 to 100
+attack:3d4:0:0
 armor:0:0
-desc:A mighty hammer with a massive head designed to crush and stun.
-
-name:& Mace~ of Disruption
-type:hafted
-graphics:\:v
-level:80
-weight:400
-cost:4300
-alloc:10:80 to 100
-attack:5d8:0:0
-armor:0:0
-slay:UNDEAD_3
-desc:A giant's weapon, enchanted with shattering power that breaks bones,
-desc: bodies, and spirit.
-
-
-
-### Spears ###
-
-name:& Spear~
-type:polearm
-graphics:/:s
-level:5
-weight:50
-cost:36
-alloc:20:5 to 100
-attack:1d6:0:0
-armor:0:0
-flags:THROWING
-desc:The basic polearm, with a double-edged knife mounted on a light shaft.
-desc:  This weapon can be thrown effectively.
-
-name:& Awl-Pike~
-type:polearm
-graphics:/:s
-level:10
-weight:160
-cost:340
-alloc:20:10 to 100
-attack:1d8:0:0
-armor:0:0
-desc:A more robust version of the basic polearm, with a double-edged knife
-desc: mounted on a sturdy shaft.  It cannot be thrown effectively, but offers
-desc: some protection to the wielder.
-
-name:& Trident~
-type:polearm
-graphics:/:y
-level:5
-weight:70
-cost:120
-alloc:20:5 to 100
-attack:1d10:0:0
-armor:0:0
-desc:A three-pronged spear, originally for catching fish.
-
-name:& Halberd~
-type:polearm
-graphics:/:s
-level:25
-weight:190
-cost:430
-alloc:20:25 to 100
-attack:3d5:0:0
-armor:0:0
-desc:The most successful of the polearms, the halberd has a long haft mounted
-desc: with a heavy axe blade and opposing spike, and topped by a thrusting
-desc: spine.
-
-name:& Pike~
-type:polearm
-graphics:/:s
-level:15
-weight:160
-cost:358
-alloc:20:15 to 100
-attack:2d5:0:0
-armor:0:0
-desc:A fifteen foot spear, requiring two hands to wield, principally used in
-desc: infantry formations.
+desc:A hefty hooked metal bar, intended as a levering tool but it makes a useful improvised weapon if you can handle the weight.
+material:steel
 
 
 ### Axes ###
 
-name:& Throwing Axe~
+name:& hatchet~
 type:polearm
 graphics:/:s
-level:25
-weight:40
+level:12
+weight:780g
 cost:150
-alloc:10:25 to 100
-attack:2d3:0:0
-armor:0:0
-flags:THROWING
-desc:A short-handled hatchet, balanced for throwing.  A classic skirmisher's
-desc: weapon.
-
-name:& Beaked Axe~
-type:polearm
-graphics:/:s
-level:15
-weight:180
-cost:408
-alloc:20:15 to 100
-attack:2d6:0:0
-armor:0:0
-desc:A narrow axe head opposed by a crow's beak for penetrating armour.
-
-name:& Broad Axe~
-type:polearm
-graphics:/:s
-level:15
-weight:160
-cost:304
-alloc:20:15 to 100
-attack:2d6:0:0
-armor:0:0
-desc:A simple, single-bladed war axe capable of chopping though limbs or armour.
-
-name:& Battle Axe~
-type:polearm
-graphics:/:s
-level:15
-weight:170
-cost:334
-alloc:20:15 to 100
-attack:2d8:0:0
-armor:0:0
-desc:A double-bladed axe.  Very popular among Dwarves.
-
-name:& Lochaber Axe~
-type:polearm
-graphics:/:D
-level:45
-weight:250
-cost:750
-alloc:20:45 to 100
-attack:3d8:0:0
-armor:0:0
-desc:A long shaft with a long narrow blade.
-
-name:& Great Axe~
-type:polearm
-graphics:/:s
-level:40
-weight:230
-cost:500
-alloc:20:40 to 100
-attack:4d4:0:0
-armor:0:0
-desc:An enormous two-handed battle axe, carried by Dwarven champions, who
-desc: compete to see who can cleave the most orc heads.
-
-
-### Other misc polearms ###
-
-name:& Scythe~
-type:polearm
-graphics:/:s
-level:45
-weight:250
-cost:800
-alloc:20:45 to 100
-attack:5d3:0:0
-armor:0:0
-desc:The long crescent blade stands out from the handle of this
-desc: polearm, and it is swung with two hands to harvest grain or blood.
-
-name:& Glaive~
-type:polearm
-graphics:/:s
-level:20
-weight:190
-cost:363
-alloc:20:20 to 100
-attack:2d6:0:0
-armor:0:0
-desc:A reinforced wooden pole eight feet long, topped by a massive knife blade
-desc: that can be used to thrust or chop.
-
-name:& Lance~
-type:polearm
-graphics:/:s
-level:10
-weight:300
-cost:230
-alloc:20:10 to 100
-attack:2d8:0:0
-armor:0:0
-desc:A massive, tapered spear used primarily from horseback.
-
-name:& Scythe~ of Slicing
-type:polearm
-graphics:/:r
-level:60
-weight:250
-cost:3500
-alloc:10:60 to 100
-attack:8d4:0:0
-armor:0:0
-desc:A reaper's weapon, the long blade almost hums in anticipation of
-desc: the blood it will spill.
-
-name:& Lucerne Hammer~
-type:polearm
-graphics:/:B
-level:10
-weight:120
-cost:376
-alloc:20:10 to 100
+alloc:20:12 to 100
 attack:2d5:0:0
 armor:0:0
-desc:A long pole with a three- or four-pronged head balanced by a long spike.
+desc:A simple, short-handled hatchet.
+material:steel
+
+name:& fire axe~
+type:polearm
+graphics:/:s
+level:15
+weight:1450g
+cost:408
+alloc:10:15 to 100
+attack:2d7:0:0
+armor:0:0
+flags:IGNORE_FIRE
+values:RES_FIRE[1]
+desc:A narrow axe head, backed with a spike on a long, bright red handle.
+material:steel
 
 
 ##### Guns #####

@@ -123,27 +123,9 @@ danger:72:90
 normal:6mm ammo:6mm bullet
 normal:9mm ammo:9mm bullet
 normal:12mm ammo:12mm bullet
-normal:sword:Dagger
-normal:sword:Main Gauche
-normal:sword:Rapier
-normal:sword:Short Sword
-normal:sword:Cutlass
-normal:sword:Tulwar
-normal:sword:Broad Sword
-normal:sword:Long Sword
-normal:sword:Scimitar
-normal:sword:Katana
-normal:sword:Bastard Sword
-normal:polearm:Spear
-normal:polearm:Awl-Pike
-normal:polearm:Trident
-normal:polearm:Pike
-normal:polearm:Beaked Axe
-normal:polearm:Broad Axe
-normal:polearm:Battle Axe
-normal:polearm:Lance
-normal:polearm:Lucerne Hammer
-normal:hafted:Whip
+normal:sword
+normal:polearm
+normal:hafted
 normal:gun:6mm handgun
 normal:gun:6mm rifle
 normal:gun:9mm handgun
