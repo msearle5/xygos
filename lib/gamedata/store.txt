@@ -82,13 +82,9 @@ normal:boots:pair of armored boots
 normal:helm:Hard Leather Cap
 normal:helm:Metal Cap
 normal:helm:Iron Helm
-normal:soft armour:Robe
-normal:soft armour:Soft Leather Armour
-normal:soft armour:Studded Leather Armour
-normal:soft armour:Hard Leather Armour
-normal:soft armour:Leather Scale Mail
-normal:hard armour:Metal Scale Mail
-normal:hard armour:Chain Mail
+normal:soft armour
+normal:soft armour
+normal:hard armour
 normal:gloves:Set of Leather Gloves
 normal:gloves:Set of Gauntlets
 normal:shield:Wicker Shield

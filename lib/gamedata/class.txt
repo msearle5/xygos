@@ -126,9 +126,9 @@ equip:food:random:1:3
 ##equip:light:Wooden Torch:1:3
 equip:pill:Berserk Strength:1:1
 equip:sword:survival knife:1:1
-equip:soft armour:Soft Leather Armour:1:1
+#equip:soft armour:Soft Leather Armour:1:1
 equip:card:Word of Recall:1:1
-player-flags:BRAVERY_30 | NO_MANA | SHIELD_BASH
+player-flags:BRAVERY_30 | SHIELD_BASH
 title:Cadet
 title:Private
 title:Private 1st
