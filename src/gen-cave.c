@@ -1650,8 +1650,11 @@ static void build_store(struct chunk *c, int n, struct loc xroads,
 
 	/* Clear previous contents, add a store door */
 	square_set_feat(c, door, entrance_feature(n+1));
-	
+
 	/* And store its location */
+	if (door.x == 0) {
+		msg("Warning! Building store without location\n");
+	}
 	stores[n].x = door.x;
 	stores[n].y = door.y;
 }

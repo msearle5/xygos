@@ -1,20 +1,13 @@
 BUGS
 ====
 
-BUG: "angband: gen-cave.c:2009: town_gen: Assertion `grid.x > 0' failed." (= the x,y are 0, 0.)
-	- Can be triggered by Time Lord regeneration putting you in town, but has also been seen entering the town normally by <. 
-	** related to the following? **
+BUG:/home/msearle/rogl/angband/v-xygos/angband/src/xygos: Error in flag_on(lore->flags, b->resist_flag): FlagID[0] Size[11] FlagOff[4294967295] FlagBV[128]
+	(Hit a lizard with a laser knife)
+	(flagID 0 = illegal, 1 is the first allowed.)
+	- does every brand need a resist-flag?
+	Certainly all previously have
 
-BUG: Saw climbing the stair into town put me in the middle of the level (not on a store, or the <)
-	- is the search breaking the X loop, not the Y loop (gen-cave.c:1990)?
-		- no.
-
--------------
-
-BUG: Pile integrity failure (firecracker, which was held by a monster when it went off)
-	Not caused by 9afdfcfa7e44790941d902bff767ecaddc7b7f93
-	- Fixed.
-	- and there is no explosion
+BUG: Lock up at start (occasionally)
 
 BUG: The "use flavors" option is ignored
 
@@ -28,10 +21,6 @@ BUG: Androids have a 'invisible extension' (you have to press Enter twice, which
 BUG: Stone/steel skin timed should be blocked by the mutation (or combined with it in some way)
 
 BUG? After the success/failure message from a quest, ESC is the only way to get back out.
-
-BUG: Wording of some lights, etc. is awkward.
-	For example, "a firecracker" .. "Cannot be recharged" .. "Takes 16 turns to recharge".
-	with something similar for the disposable flashlight.
 
 Defer
 =====
@@ -49,11 +38,36 @@ BUG: Resists screen is >80 wide (Also, the per-slot stats only label only displa
 	Adapting to large terminals is also a possibility, but can't be the only way to play.
 	So best to leave alone for now?
 
+BUG: "angband: gen-cave.c:2009: town_gen: Assertion `grid.x > 0' failed." (= the x,y are 0, 0.)
+	- Can be triggered by Time Lord regeneration putting you in town, but has also been seen entering the town normally by <.
+	As of 05904e9b066bb48a66f707a9bf4726182a27dc38 it no longer is easy (if possible at all) to
+	trigger. A warning has been left in place.
+
+	- This was seen, repeatably within a games, for all stores, with "Crazy River"/50m (L1)
+		=> no "Stores" or other name (usual would be "Stores"/50m (L1)
+	- Other 5 towns were Fortress, Caverns, Mine, Stores, Volcano, so this is Sewers.
+	- It persists through save/load.
+	This is (as expected) index 1 into t_info.
+	Without having travelled to another town, all have xy=0,0.
+	Flew to another town (2) and there were no complaints.
+	Flew back and it moaned again.
+	In another game though no problem with Sewers. (Or any other.)
+	
+	** related to the following? **
+
+BUG: Saw climbing the stair into town put me in the middle of the level (not on a store, or the <)
+	- is the search breaking the X loop, not the Y loop (gen-cave.c:1990)?
+		- no.
+	Assuming this is the same as the one above.
+
 WontFix
 =======
 
+BUG? Do small dungeons have a bottom at the right place? (You can jump past it)
+	Yes. (No endboss, yet though)
+
 BUG: Printers all seem to generate with {ignore}
-	- can't easily reproduce this
+	- Can't easily reproduce this
 
 BUG: "You fail to the tengu" (+ red worm mass - when you attack it with a pocket knife)
 	- UTR on dl0/1 outside the quest. Rubble?
@@ -64,10 +78,17 @@ BUG: At dungeon l127 and l0, able to generate a Massive Iron Crown with acquisit
 	- If so, it's now gone.
 
 BUG: m-techniques top label is wonky (move the level 1 to the right, and the cost-label 2 to the left?)
-	= unable to rep with Spit Acid, Sprint.
+	- Unable to reproduce with Spit Acid, Sprint.
 
 Fixed
 =====
+
+BUG "dozifier field" (staff, in a store) has no article. Other staffs do.
+	Fixed
+
+BUG: Wording of some lights, etc. is awkward.
+	For example, "a firecracker" .. "Cannot be recharged" .. "Takes 16 turns to recharge".
+	with something similar for the disposable flashlight.
 
 BUG: After gaining an ability (Sprinting) modifying stats, char-screen and left-panel weren't updated until later (e.g. when changing level)
 	Fixed: 4a16691e3f4e5a7b3ae61a31d932688228a6b249
@@ -161,6 +182,11 @@ BUG: Lights are using wrong descriptions?
 	- Could it be the object.txt or flavor.txt?
 	- must be MIMIC_KNOW = one before!
 	Fixed: 9afdfcfa7e44790941d902bff767ecaddc7b7f93
+
+BUG: Pile integrity failure (firecracker, which was held by a monster when it went off)
+	Not caused by 9afdfcfa7e44790941d902bff767ecaddc7b7f93
+	- and there is no explosion
+	- Fixed: 05904e9b066bb48a66f707a9bf4726182a27dc38
 
 Theme
 =====

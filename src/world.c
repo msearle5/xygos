@@ -343,7 +343,7 @@ char *world_describe_town(struct town *t)
 		"destination",
 		"hot-spot",
 		"target",
-		"attraction",
+		"top attraction",
 		"nexus",
 	};
 	static const char *guff_daring[] = {
@@ -760,7 +760,7 @@ bool world_init_towns(void)
 	 * (Could even switch midgame, e.g. to <>Fortress only. Or *from* that to completing "Platinum Class", as a bonus)
 	 *
 	 * - Backgrounds - at least one is always volcanic ("Volcano"?) for quests. One may be an island (atoll? Need some way to keep you in)
-	 * 		- 'caves' is the cavern (or mine?) 'famous jewlry' is the mine etc.
+	 * 		- 'caves' is the cavern (or mine?) 'famous jewelry museum' is the mine etc.
 	 */
 
 	/* Create towns, dungeons */
