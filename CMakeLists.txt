@@ -116,6 +116,7 @@ ADD_EXECUTABLE(Xygos
         src/project-player.c
         src/project.c
         src/r_android.c
+        src/r_cyborg.c
         src/r_mutant.c
         src/r_timelord.c
         src/randname.c
