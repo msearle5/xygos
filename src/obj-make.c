@@ -40,7 +40,7 @@ extern double *wiz_stats_prob;
 
 /**
  * Stores cumulative probability distribution for objects at each level.  The
- * value at ilv * (z_info->k_max + 1) + itm is the probablity, out of
+ * value at ilv * (z_info->k_max + 1) + itm is the probability, out of
  * obj_alloc[ilv * (z_info->k_max + 1) + z_info->k_max], that an item whose
  * index is less than itm occurs at level, ilv.
  */

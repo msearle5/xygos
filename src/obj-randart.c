@@ -44,6 +44,102 @@ static ang_file *log_file = NULL;
 /* Activation list */
 struct activation *activations;
 
+struct artiname {
+	struct artiname *next;
+	char *name;
+	char *tags;
+};
+
+static struct artiname *artiname;
+static int n_artinames;
+static int n_good_artinames;
+
+/**
+ * ------------------------------------------------------------------------
+ * Initialize randart names
+ * ------------------------------------------------------------------------ */
+
+static enum parser_error parse_artiname(struct parser *p, bool good) {
+	struct artiname *h = parser_priv(p);
+	struct artiname *new = mem_zalloc(sizeof *new);
+
+	new->name = string_make(parser_getstr(p, "text"));
+	new->next = h;
+
+	parser_setpriv(p, new);
+	n_artinames++;
+	if (good)
+		n_good_artinames++;
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_good_artiname(struct parser *p) {
+	return parse_artiname(p, true);
+}
+
+static enum parser_error parse_bad_artiname(struct parser *p) {
+	return parse_artiname(p, false);
+}
+
+static enum parser_error parse_tag_artiname(struct parser *p) {
+	struct artiname *h = parser_priv(p);
+	char *newtag = parser_getstr(p, "text");
+	if (newtag) {
+		if (h->tags) {
+			int length = strlen(newtag) + strlen(h->tags) + 2;
+			char *buf = mem_zalloc(length);
+			snprintf(buf, length, "%s %s", newtag, h->tags);
+			string_free(h->tags);
+			h->tags = string_make(buf);
+			mem_free(buf);
+		} else {
+			h->tags = string_make(newtag);
+		}
+	}
+	return PARSE_ERROR_NONE;
+}
+
+struct parser *init_parse_artinames(void) {
+	struct parser *p = parser_new();
+	parser_reg(p, "N str text", parse_good_artiname);
+	parser_reg(p, "B str text", parse_bad_artiname);
+	parser_reg(p, "T str text", parse_tag_artiname);
+	n_artinames = n_good_artinames = 0;
+	return p;
+}
+
+static errr run_parse_artinames(struct parser *p) {
+	return parse_file_quit_not_found(p, "artinames");
+}
+
+static errr finish_parse_artinames(struct parser *p) {
+	artiname = mem_zalloc(sizeof(*artiname) * n_artinames);
+	for(int i=0; i<n_artinames; i++) {
+		parser_priv(p);
+	}
+	parser_destroy(p);
+	return 0;
+}
+
+static void cleanup_artinames(void)
+{
+	for(int i=0;i<n_artinames;i++) {
+		string_free(artiname[i].name);
+		string_free(artiname[i].tags);
+	}
+	mem_free(artiname);
+	artiname = NULL;
+	n_artinames = n_good_artinames = 0;
+}
+
+static struct file_parser artinames_parser = {
+	"artinames",
+	init_parse_artinames,
+	run_parse_artinames,
+	finish_parse_artinames,
+	cleanup_artinames
+};
+
 /**
  * ------------------------------------------------------------------------
  * Arrays of indices by item type, used in frequency generation
