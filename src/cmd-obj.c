@@ -987,7 +987,7 @@ void do_cmd_refill(struct command *cmd)
 			"Recharge from which battery? ",
 			"You have nothing you can recharge with.",
 			obj_can_refill,
-			USE_INVEN | USE_FLOOR) != CMD_OK) return;
+			USE_INVEN | USE_FLOOR | USE_QUIVER) != CMD_OK) return;
 
 	/* Check what we're wielding. */
 	if (!light || !tval_is_light(light)) {
