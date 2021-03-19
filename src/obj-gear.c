@@ -736,6 +736,10 @@ void do_inven_wield(struct object *obj, int slot, bool verbose, bool overflow)
 		if (obj->number > 1) {
 			wielded = gear_object_for_use(obj, 1, false, &dummy);
 
+			/* It's still carried; keep it's weight in the total. */
+			assert(wielded->number == 1);
+			player->upkeep->total_weight += wielded->weight;
+
 			/* The new item needs new gear and known gear entries */
 			wielded->next = obj->next;
 			obj->next = wielded;
