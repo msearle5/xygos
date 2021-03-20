@@ -2034,6 +2034,17 @@ static struct file_parser history_parser = {
  * Intialize player races
  * ------------------------------------------------------------------------ */
 
+struct player_body *get_body_by_name(const char *name)
+{
+	struct player_body *b;
+	for (b = bodies; b; b = b->next) {
+		if (streq(b->name, name)) {
+			return b;
+		}
+	}
+	return NULL;
+}
+
 static enum parser_error parse_p_race_name(struct parser *p) {
 	struct player_race *h = parser_priv(p);
 	struct player_race *r = mem_zalloc(sizeof *r);
@@ -2041,9 +2052,23 @@ static enum parser_error parse_p_race_name(struct parser *p) {
 	r->next = h;
 	r->name = string_make(parser_getstr(p, "name"));
 	parsing_magic = &r->magic;
-	/* Default body is humanoid */
+	/* Default body is humanoid (the first in body.txt) */
 	r->body = 0;
 	parser_setpriv(p, r);
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_p_race_body(struct parser *p) {
+		struct player_race *r = parser_priv(p);
+	if (!r)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	char *name = parser_getstr(p, "body");
+	struct player_body *body = get_body_by_name(name);
+	if (body) {
+		r->body = body - bodies;
+	} else {
+		return PARSE_ERROR_INVALID_VALUE;
+	}
 	return PARSE_ERROR_NONE;
 }
 
@@ -2386,6 +2411,7 @@ struct parser *init_parse_p_race(void) {
 	parser_reg(p, "player-flags ?str flags", parse_p_race_play_flags);
 	parser_reg(p, "values str values", parse_p_race_values);
 	parser_reg(p, "desc str desc", parse_p_race_desc);
+	parser_reg(p, "body str body", parse_p_race_body);
 	init_parse_magic(p);
 	return p;
 }

@@ -34,6 +34,7 @@
 # player-flags:player flags
 # values:values
 # desc:desc
+# body:body
 
 # 'name' indicates the beginning of an entry.
 
@@ -75,6 +76,8 @@
 
 # 'desc' is for the description shown on the character creation screen
 
+# 'body' is for the body as defined in body.txt. By default the last entry of that file ("Humanoid") is used.
+
 ext:None
 desc:A typical member of your race with nothing added or taken away - not a mutant, cyborg or other exotic variation.
  
@@ -115,6 +118,7 @@ weightmod:350
 desc:The race with average abilities, from a human perspective at least. While you won't have bulletproof skin or [bla], there's a reason that is has primarily been humans who have colonized the galaxy - in a word, adaptability. That shows in the lowest experience requirement and the most specialization through talents.
 
 name:Android
+body:HumanoidNoImplants
 exts:None
 stats:3:-2:-4:2:2:-3:2
 talents:0:0
