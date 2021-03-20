@@ -1951,7 +1951,7 @@ void do_cmd_buy(struct command *cmd)
 	if (amt != 1)
 		install = false;
 	else
-		install = (inven_carry_num(bought, true) <= 0);
+		install = ((inven_carry_num(bought, true) <= 0) && (wield_slot(bought) != player->body.count));
 
 	if (cyber && install) {
 		msg("You have %s installed for $%d.", o_name, price);
@@ -2114,6 +2114,9 @@ void do_cmd_install(struct command *cmd)
 		return;
 
 	if (amt != 1)
+		return;
+
+	if (wield_slot(obj) == player->body.count)
 		return;
 
 	if (object_is_equipped(player->body, obj)) {
