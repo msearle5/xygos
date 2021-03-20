@@ -617,7 +617,7 @@ static enum birth_stage menu_question(enum birth_stage current,
 					/* 
 					 * Make sure we've got a point-based char to play with. 
 					 * We call point_based_start here to make sure we get
-					 * an upda  te on the points totals before trying to
+					 * an update on the points totals before trying to
 					 * display the screen.  The call to CMD_RESET_STATS
 					 * forces a rebuying of the stats to give us up-to-date
 					 * totals.  This is, it should go without saying, a hack.
@@ -1181,6 +1181,8 @@ int textui_do_birth(void)
 
 	while (!done) {
 
+		int previous_stage = current_stage - 1;
+
 		switch (current_stage)
 		{
 			case BIRTH_RESET:
@@ -1224,6 +1226,8 @@ int textui_do_birth(void)
 					 **/
 					setup_menus();
 					if (ext_menu.count <= 1) {
+						menu_refresh(&ext_menu, false);
+						current_stage++;
 						command = CMD_CHOOSE_CLASS;
 						menu = &class_menu;
 					} else {
@@ -1246,7 +1250,7 @@ int textui_do_birth(void)
 				next = menu_question(current_stage, menu, command);
 
 				if (next == BIRTH_BACK)
-					next = current_stage - 1;
+					next = previous_stage;
 
 				/* Make sure the character gets reset before quickstarting */
 				if (next == BIRTH_QUICKSTART) 
