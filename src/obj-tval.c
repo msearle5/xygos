@@ -36,6 +36,11 @@ bool tval_is_implant(const struct object *obj)
 	return ((tval_is_arms(obj)) || (tval_is_legs(obj)));
 }
 
+int tval_random_implant(void)
+{
+	return (one_in_(2) ? TV_LEGS : TV_ARMS);
+}
+
 bool tval_is_device(const struct object *obj)
 {
 	return obj->tval == TV_DEVICE;
