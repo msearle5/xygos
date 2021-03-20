@@ -1,6 +1,9 @@
 # Skip splash
 key space
 
+# 'redo'
+key N
+
 # Android
 key b
 key enter
@@ -11,20 +14,24 @@ key enter
 
 # Point based
 key a
+
+# Accept default stats
 key enter
 
-# Accept stats
+# Accept default name
 key enter
 
-# Accept name
+# Accept character history
+key y
+
+# Accept character
 key enter
-key c
-key a
+
+# Accept talents
 key enter
-key enter
-key enter
-key enter
+
 # Character birthed.
 player-race?
+player-ext?
 player-class?
 quit
