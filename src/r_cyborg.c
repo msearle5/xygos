@@ -65,9 +65,9 @@ static void cyborg_init(void)
 		object_prep(obj[i_obj], k, 0, RANDOMISE);
 
 		/* Now find the sum of values */
-		value = 0;
 		/* If it's too high, remove at random */
 		do {
+			value = 0;
 			for(int i=0;i<n_tvals;i++) {
 				if (obj[i])
 					value += object_value_real(obj[i], 1);
