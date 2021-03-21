@@ -94,7 +94,6 @@ static void flavor_assign_random(byte tval)
 	for (f = flavors; f; f = f->next)
 		if (f->tval == tval && f->sval == SV_UNKNOWN)
 			flavor_count++;
-
 	for (i = 0; i < z_info->k_max; i++) {
 		if (k_info[i].tval != tval || k_info[i].flavor || (tval == TV_LIGHT && kf_has(k_info[i].kind_flags, KF_EASY_KNOW)))
 			continue;
@@ -113,7 +112,7 @@ static void flavor_assign_random(byte tval)
 		}
 
 		choice = randint0(flavor_count);
-	
+
 		for (f = flavors; f; f = f->next) {
 			if (f->tval != tval || f->sval != SV_UNKNOWN)
 				continue;
@@ -122,9 +121,9 @@ static void flavor_assign_random(byte tval)
 				k_info[i].flavor = f;
 				f->sval = k_info[i].sval;
 				if (tval == TV_PILL)
-					f->text = pill_adj[k_info[i].sval];
+					f->text = pill_adj[k_info[i].sval - 1];
 				if (tval == TV_CARD)
-					f->text = card_adj[k_info[i].sval];
+					f->text = card_adj[k_info[i].sval - 1];
 				flavor_count--;
 				break;
 			}
@@ -251,6 +250,11 @@ void flavor_init(void)
 
 	/* And combine them */
 	i = 0;
+	if (pill_adj) {
+		mem_free(pill_adj);
+		pill_adj = NULL;
+	}
+	n_pill_adj = 0;
 	for (struct flavor *f = flavors; f; f = f->next) {
 		if (f->tval == TV_PILL && f->sval == SV_UNKNOWN) {
 			char base[11];
