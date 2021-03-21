@@ -444,6 +444,8 @@ void ego_apply_magic(struct object *obj, int level)
 	/* Apply flags */
 	of_union(obj->flags, obj->ego->flags);
 	of_diff(obj->flags, obj->ego->flags_off);
+	of_union(obj->carried_flags, obj->ego->flags);
+	of_diff(obj->carried_flags, obj->ego->flags_off);
 
 	/* Add slays, brands and faults */
 	copy_slays(&obj->slays, obj->ego->slays);
@@ -544,6 +546,7 @@ void copy_artifact_data(struct object *obj, const struct artifact *art)
 	obj->timeout = 0;
 
 	of_union(obj->flags, art->flags);
+	of_union(obj->carried_flags, art->flags);
 	copy_slays(&obj->slays, art->slays);
 	copy_brands(&obj->brands, art->brands);
 	copy_faults(obj, art->faults);
@@ -808,7 +811,8 @@ void object_prep(struct object *obj, struct object_kind *k, int lev,
 
 	/* Copy flags */
 	of_copy(obj->flags, k->base->flags);
-	of_copy(obj->flags, k->flags);
+	of_union(obj->flags, k->flags);
+	of_copy(obj->carried_flags, k->carried_flags);
 
 	/* Assign modifiers */
 	for (i = 0; i < OBJ_MOD_MAX; i++)
@@ -821,8 +825,7 @@ void object_prep(struct object *obj, struct object_kind *k, int lev,
 	/* Assign pval for food, batteries, pills, printers and launchers */
 	if (tval_is_edible(obj) || tval_is_pill(obj) || tval_is_fuel(obj) ||
 		tval_is_launcher(obj) || tval_is_printer(obj))
-		obj->pval
-			= randcalc(k->pval, lev, rand_aspect);
+			obj->pval = randcalc(k->pval, lev, rand_aspect);
 
 	/* Default fuel */
 	if (tval_is_light(obj))

@@ -229,6 +229,8 @@ struct object_kind {
 	bitflag flags[OF_SIZE];					/**< Flags */
 	bitflag kind_flags[KF_SIZE];			/**< Kind flags */
 
+	bitflag carried_flags[OF_SIZE];			/**< Carried flags */
+
 	random_value modifiers[OBJ_MOD_MAX];
 	struct element_info el_info[ELEM_MAX];
 
@@ -300,16 +302,17 @@ struct artifact {
 	int to_h;		/**< Bonus to hit */
 	int to_d;		/**< Bonus to damage */
 	int to_a;		/**< Bonus to armor */
-	int ac;		/**< Base armor */
+	int ac;			/**< Base armor */
 
-	int dd;		/**< Base damage dice */
-	int ds;		/**< Base damage sides */
+	int dd;			/**< Base damage dice */
+	int ds;			/**< Base damage sides */
 
 	s32b weight;	/**< Weight in grams */
 
 	int cost;		/**< Artifact (pseudo-)worth */
 
-	bitflag flags[OF_SIZE];			/**< Flags */
+	bitflag carried_flags[OF_SIZE];		/**< Carried flags */
+	bitflag flags[OF_SIZE];				/**< Flags */
 
 	int modifiers[OBJ_MOD_MAX];
 	struct element_info el_info[ELEM_MAX];
@@ -365,6 +368,8 @@ struct ego_item {
 
 	bitflag flags[OF_SIZE];			/**< Flags */
 	bitflag flags_off[OF_SIZE];		/**< Flags to remove */
+	bitflag carried_flags[OF_SIZE];			/**< Carried flags */
+	bitflag carried_flags_off[OF_SIZE];				/**< Carried flags to remove */
 	bitflag kind_flags[KF_SIZE];	/**< Kind flags */
 
 	random_value modifiers[OBJ_MOD_MAX];
@@ -477,6 +482,7 @@ struct object {
 	s16b held_m_idx;		/**< Monster holding us (if any) */
 	s16b mimicking_m_idx;	/**< Monster mimicking us (if any) */
 
+	bitflag carried_flags[OF_SIZE];	/**< Object carried flags */
 	bitflag flags[OF_SIZE];	/**< Object flags */
 	s16b modifiers[OBJ_MOD_MAX];	/**< Object modifiers*/
 	struct element_info el_info[ELEM_MAX];	/**< Object element info */

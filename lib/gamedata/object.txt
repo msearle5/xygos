@@ -101,6 +101,9 @@
 # flags: lines may be used as are needed to specify all the flags, and
 # flags are separated by the '|' symbol.
 
+# 'carried-flags' is for (object) flags, which take effect when carried
+# (and *not* when worn)
+
 # 'values' is for object modifiers which take a value - stats, slays, brands,
 # resistances and so on.  An example is SLAY_UNDEAD[3], which denotes that
 # the weapon concerned has a basic 3x slay against undead creatures.  Like
@@ -863,6 +866,7 @@ cost:4
 alloc:5:0 to 50
 power:0
 msg:That tastes good.
+carried-flags:AGGRAVATE
 effect:NOURISH:INC_BY
 dice:20
 desc:A small round hard pongy pale yellow cheese.

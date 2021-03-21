@@ -1556,6 +1556,19 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		}
 	}
 
+	/* Analyze gear */
+	for (struct object *obj = player->gear; obj; obj = obj->next) {
+		if (!object_is_equipped(player->body, obj)) {
+			/* Extract the item carried flags */
+			if (known_only) {
+				object_carried_flags_known(obj, f);
+			} else {
+				object_carried_flags(obj, f);
+			}
+			of_union(collect_f, f);
+		}
+	}
+
 	/* Apply the collected flags */
 	of_union(state->flags, collect_f);
 

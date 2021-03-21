@@ -1729,6 +1729,25 @@ static enum parser_error parse_object_flags(struct parser *p) {
 	return t ? PARSE_ERROR_INVALID_FLAG : PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_object_carried_flags(struct parser *p) {
+	struct object_kind *k = parser_priv(p);
+	char *s = string_make(parser_getstr(p, "flags"));
+	char *t;
+	assert(k);
+
+	t = strtok(s, " |");
+	while (t) {
+		bool found = false;
+		if (!grab_flag(k->carried_flags, OF_SIZE, obj_flags, t))
+			found = true;
+		if (!found)
+			break;
+		t = strtok(NULL, " |");
+	}
+	mem_free(s);
+	return t ? PARSE_ERROR_INVALID_FLAG : PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_object_power(struct parser *p) {
 	struct object_kind *k = parser_priv(p);
 	assert(k);
@@ -2022,6 +2041,7 @@ struct parser *init_parse_object(void) {
 	parser_reg(p, "charges rand charges", parse_object_charges);
 	parser_reg(p, "pile int prob rand stack", parse_object_pile);
 	parser_reg(p, "flags str flags", parse_object_flags);
+	parser_reg(p, "carried-flags str flags", parse_object_carried_flags);
 	parser_reg(p, "power int power", parse_object_power);
 	parser_reg(p, "effect sym eff ?sym type ?int radius ?int other", parse_object_effect);
 	parser_reg(p, "effect-yx int y int x", parse_object_effect_yx);

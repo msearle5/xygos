@@ -449,6 +449,38 @@ void object_flags_known(const struct object *obj, bitflag flags[OF_SIZE])
 }
 
 /**
+ * Obtain the carried flags for an item
+ */
+void object_carried_flags(const struct object *obj, bitflag flags[OF_SIZE])
+{
+	of_wipe(flags);
+	if (!obj) return;
+	of_copy(flags, obj->carried_flags);
+}
+
+/**
+ * Obtain the carried flags for an item which are known to the player
+ */
+void object_carried_flags_known(const struct object *obj, bitflag flags[OF_SIZE])
+{
+	object_carried_flags(obj, flags);
+	of_inter(flags, obj->known->carried_flags);
+
+	if (!obj->kind) {
+		return;
+	}
+
+	if (object_flavor_is_aware(obj)) {
+		of_union(flags, obj->kind->carried_flags);
+	}
+
+	if (obj->ego && easy_know(obj)) {
+		of_union(flags, obj->ego->carried_flags);
+		of_diff(flags, obj->ego->carried_flags_off);
+	}
+}
+
+/**
  * Apply a tester function, skipping all non-objects and gold
  */
 bool object_test(item_tester tester, const struct object *obj)
