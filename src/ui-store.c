@@ -1921,11 +1921,11 @@ static void store_menu_set_selections(struct menu *menu, bool knowledge_menu)
 		if (OPT(player, rogue_like_commands)) {
 			/* These two can't intersect! */
 			menu->cmd_keys = "\x04\x05\x10?={|}~CEIPTdegilpswxFQSNOB"; /* \x10 = ^p , \x04 = ^D, \x05 = ^E */
-			menu->selections = "abcfmnoqrtuvyz13456790ABDGH";
+			menu->selections = "abcfmnoqrtuvyz13456790ADGH";
 		} else {
 			/* These two can't intersect! */
 			menu->cmd_keys = "\x05\x010?={|}~CEIbdegiklpstwxFQSNOB"; /* \x05 = ^E, \x10 = ^p */
-			menu->selections = "acfhjmnoqruvyz13456790ABDGH";
+			menu->selections = "acfhjmnoqruvyz13456790ADGH";
 		}
 	}
 }
