@@ -172,8 +172,14 @@ static struct object *rd_item(void)
 	}
 	rd_byte(&obj->notice);
 
-	for (i = 0; i < of_size; i++)
+	for (i = 0; i < of_size; i++) {
 		rd_byte(&obj->flags[i]);
+		rd_byte(&obj->carried_flags[i]);
+	}
+
+	for (i = 0; i < PF_SIZE; i++) {
+		rd_byte(&obj->pflags[i]);
+	}
 
 	for (i = 0; i < obj_mod_max; i++) {
 		rd_s16b(&obj->modifiers[i]);

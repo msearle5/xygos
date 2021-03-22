@@ -21,11 +21,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "guid.h"
-#include "obj-properties.h"
-#include "object.h"
-#include "option.h"
-
 /**
  * Indexes of the player stats (hard-coded by savefiles).
  */
@@ -48,10 +43,15 @@ enum
 	PF_MAX
 };
 
+#define PF_SIZE                FLAG_SIZE(PF_MAX)
+
+#include "guid.h"
+#include "obj-properties.h"
+#include "object.h"
+#include "option.h"
+
 #define player_hookz(X)			if (player->class->X) { player->class->X(); } if (player->race->X) { player->race->X(); } if (player->extension->X) { player->extension->X(); }
 #define player_hook(X, ...)		if (player->class->X) { player->class->X(__VA_ARGS__); } if (player->race->X) player->race->X(__VA_ARGS__); if (player->extension->X) player->extension->X(__VA_ARGS__);
-
-#define PF_SIZE                FLAG_SIZE(PF_MAX)
 
 #define pf_has(f, flag)        flag_has_dbg(f, PF_SIZE, flag, #f, #flag)
 #define pf_next(f, flag)       flag_next(f, PF_SIZE, flag)
@@ -486,7 +486,10 @@ struct player_state {
 
 	bitflag flags[OF_SIZE];					/**< Status flags from race and items */
 	struct element_info el_info[ELEM_MAX];	/**< Resists from race and items */
-	bitflag pflags[PF_SIZE];				/**< Player intrinsic flags */
+	bitflag pflags[PF_SIZE];				/**< Player intrinsic flags, combined */
+	bitflag pflags_base[PF_SIZE];			/**< Player intrinsic flags, from player */
+	bitflag pflags_equip[PF_SIZE];			/**< Player intrinsic flags, from gear */
+	bitflag pflags_temp[PF_SIZE];			/**< Player intrinsic flags, from temp effects */
 };
 
 #define player_has(p, flag)       (pf_has(p->state.pflags, (flag)))

@@ -1188,7 +1188,7 @@ cost:60
 alloc:10:10 to 40
 pile:70:1d4
 power:5
-effect:TIMED_SET:STONESKIN
+effect:TIMED_SET:STONE_SKIN
 dice:50+7d7
 effect:NOURISH:INC_BY
 dice:5
@@ -2069,7 +2069,7 @@ alloc:1:76 to 100
 armor:0:76+2d10
 weight:1250g
 flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD 
-desc:A chunky, awkward device that clips to your belt and radiates an extremely powerful protective force field. Never made in any quantity, you are very lucky to have found one of the few prototypes!"
+desc:A chunky, awkward device that clips to your belt and radiates an extremely powerful protective force field. Never made in any quantity, you are very lucky to have found one of the few prototypes!
 
 ### Cloaks ###
 
@@ -3433,7 +3433,7 @@ dice:20+1d20
 effect:SHAPECHANGE:bat
 effect:DRAIN_STAT:INT
 effect:DRAIN_STAT:WIS
-effect:TIMED_INC:STONESKIN
+effect:TIMED_INC:STONE_SKIN
 dice:20+1d20
 
 name:emetic

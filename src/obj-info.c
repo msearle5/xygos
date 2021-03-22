@@ -34,8 +34,10 @@
 #include "obj-slays.h"
 #include "obj-tval.h"
 #include "obj-util.h"
+#include "player-ability.h"
 #include "player-attack.h"
 #include "player-calcs.h"
+#include "player-properties.h"
 #include "project.h"
 #include "z-textblock.h"
 
@@ -1604,6 +1606,45 @@ static bool describe_light(textblock *tb, const struct object *obj,
 }
 
 /**
+ * Describe player flags.
+ */
+static bool describe_player_flags(textblock *tb, const struct object *obj,
+						   oinfo_detail_t mode)
+{
+	if (pf_is_empty(obj->pflags))
+		return false;
+
+	for(int i=0;i<PF_MAX;i++) {
+		if (pf_has(obj->pflags, i)) {
+			textblock_append(tb, "When worn, ");
+			if (ability[i]) {
+				char *desc = string_make(ability[i]->desc);
+				desc[0] = tolower(desc[0]);
+				textblock_append(tb, desc);
+				string_free(desc);
+			} else {
+				struct player_ability *pa = player_abilities;
+				while (pa && (pa->index != i))
+					pa = pa->next;
+				if (pa && pa->desc) {
+					char *desc = string_make(pa->desc);
+					desc[0] = tolower(desc[0]);
+					textblock_append(tb, desc);
+					string_free(desc);
+				} else {
+					textblock_append(tb, "you gain ");
+					textblock_append(tb, player_info_flags[i]);
+					textblock_append(tb, ".");
+				}
+			}
+			textblock_append(tb, "\n");
+		}
+	}
+
+	return true;
+}
+
+/**
  * Gives the known effects of using the given item.
  *
  * Fills in:
@@ -1954,6 +1995,7 @@ static textblock *object_info_out(const struct object *obj, int mode)
 	if (describe_sustains(tb, flags)) something = true;
 	if (describe_misc_magic(tb, flags)) something = true;
 	if (describe_light(tb, obj, mode)) something = true;
+	if (describe_player_flags(tb, obj, mode)) something = true;
 	if (ego && describe_ego(tb, obj->ego)) something = true;
 	if (something) textblock_append(tb, "\n");
 

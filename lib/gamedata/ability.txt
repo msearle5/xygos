@@ -408,6 +408,7 @@ ac:40
 forbid:Steel_Skin
 forbid:Scaly_Skin
 forbid:Crystal_Skin
+forbid:Stone_Skin
 
 name:Crystal_Skin
 gain:Hundreds of sparkling crystals grow from your skin.
@@ -422,6 +423,7 @@ values:STEALTH[-3]
 forbid:Steel_Skin
 forbid:Scaly_Skin
 forbid:Elephant_Hide
+forbid:Stone_Skin
 
 name:Scaly_Skin
 gain:You grow scaly, reptilian skin.
@@ -437,11 +439,13 @@ values:RES_COLD[-1]
 forbid:Steel_Skin
 forbid:Crystal_Skin
 forbid:Elephant_Hide
+forbid:Stone_Skin
 
 name:Steel_Skin
 gain:Your skin turns to shiny metal.
 lose:Your skin no longer looks metallic.
-brief:You have shiny metallic skin. This is very protective in general and especially effective against shards, but clumsy and vulnerable to electric shocks.
+brief:You have shiny metallic skin.
+desc:You have shiny metallic skin. This is very protective in general and especially effective against shards, but clumsy and vulnerable to electric shocks.
 flag:mutation
 flag:nasty
 flag:birth
@@ -452,4 +456,22 @@ values:RES_ELEC[-1]
 forbid:Scaly_Skin
 forbid:Crystal_Skin
 forbid:Elephant_Hide
+forbid:Stone_Skin
+
+name:Stone_Skin
+gain:Your skin turns to rough, hard stone.
+lose:Your skin no longer feels stony.
+brief:You have hard, stone-like skin.
+desc:You have pale, hard, rough, stone-like skin. This provides good protection and is especially effective against shards, but makes you clumsy and vulnerable to acid.
+flag:mutation
+flag:nasty
+flag:birth
+stats:0:0:0:-4:0:-1:0
+ac:40
+values:RES_SHARD[1]
+values:RES_ACID[-1]
+forbid:Scaly_Skin
+forbid:Crystal_Skin
+forbid:Elephant_Hide
+forbid:Steel_Skin
 

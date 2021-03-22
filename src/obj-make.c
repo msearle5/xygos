@@ -446,6 +446,7 @@ void ego_apply_magic(struct object *obj, int level)
 	of_diff(obj->flags, obj->ego->flags_off);
 	of_union(obj->carried_flags, obj->ego->flags);
 	of_diff(obj->carried_flags, obj->ego->flags_off);
+	pf_union(obj->pflags, obj->ego->pflags);
 
 	/* Add slays, brands and faults */
 	copy_slays(&obj->slays, obj->ego->slays);
@@ -547,6 +548,7 @@ void copy_artifact_data(struct object *obj, const struct artifact *art)
 
 	of_union(obj->flags, art->flags);
 	of_union(obj->carried_flags, art->flags);
+	pf_union(obj->pflags, art->pflags);
 	copy_slays(&obj->slays, art->slays);
 	copy_brands(&obj->brands, art->brands);
 	copy_faults(obj, art->faults);
@@ -813,6 +815,7 @@ void object_prep(struct object *obj, struct object_kind *k, int lev,
 	of_copy(obj->flags, k->base->flags);
 	of_union(obj->flags, k->flags);
 	of_copy(obj->carried_flags, k->carried_flags);
+	pf_copy(obj->pflags, k->pflags);
 
 	/* Assign modifiers */
 	for (i = 0; i < OBJ_MOD_MAX; i++)

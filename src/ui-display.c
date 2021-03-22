@@ -1190,6 +1190,8 @@ static size_t prt_tmd(int row, int col)
 	for (i = 0; i < TMD_MAX; i++) {
 		if (player->timed[i]) {
 			struct timed_grade *grade = timed_effects[i].grade;
+			if (!grade)
+				continue;
 			while (player->timed[i] > grade->max) {
 				grade = grade->next;
 			}

@@ -11,7 +11,6 @@
 #include "z-bitflag.h"
 #include "z-dice.h"
 
-
 /*** Game constants ***/
 
 /**
@@ -43,8 +42,13 @@ enum {
 	ORIGIN_MAX
 };
 
-
-/*** Structures ***/
+/**
+ * Element info type
+ */
+struct element_info {
+	s16b res_level;
+	bitflag flags;
+};
 
 /**
  * Information about class magic knowledge
@@ -56,6 +60,14 @@ struct class_magic {
 	int num_books;				/**< Number of spellbooks */
 	int total_spells;			/**< Number of spells for this class */
 };
+
+/* For PF_SIZE */
+#ifndef PLAYER_H
+#include "player.h"
+#endif
+
+
+/*** Structures ***/
 
 /**
  * Effect
@@ -136,14 +148,6 @@ enum {
 	EL_INFO_HATES = 0x01,
 	EL_INFO_IGNORE = 0x02,
 	EL_INFO_RANDOM = 0x04,
-};
-
-/**
- * Element info type
- */
-struct element_info {
-	s16b res_level;
-	bitflag flags;
 };
 
 /**
@@ -228,7 +232,7 @@ struct object_kind {
 
 	bitflag flags[OF_SIZE];					/**< Flags */
 	bitflag kind_flags[KF_SIZE];			/**< Kind flags */
-
+	bitflag pflags[PF_SIZE];				/**< Player intrinsic flags */
 	bitflag carried_flags[OF_SIZE];			/**< Carried flags */
 
 	random_value modifiers[OBJ_MOD_MAX];
@@ -313,6 +317,7 @@ struct artifact {
 
 	bitflag carried_flags[OF_SIZE];		/**< Carried flags */
 	bitflag flags[OF_SIZE];				/**< Flags */
+	bitflag pflags[PF_SIZE];			/**< Player intrinsic flags */
 
 	int modifiers[OBJ_MOD_MAX];
 	struct element_info el_info[ELEM_MAX];
@@ -364,13 +369,14 @@ struct ego_item {
 
 	u32b eidx;
 
-	int cost;						/**< Ego-item "cost" */
+	int cost;								/**< Ego-item "cost" */
 
-	bitflag flags[OF_SIZE];			/**< Flags */
-	bitflag flags_off[OF_SIZE];		/**< Flags to remove */
+	bitflag flags[OF_SIZE];					/**< Flags */
+	bitflag flags_off[OF_SIZE];				/**< Flags to remove */
 	bitflag carried_flags[OF_SIZE];			/**< Carried flags */
-	bitflag carried_flags_off[OF_SIZE];				/**< Carried flags to remove */
-	bitflag kind_flags[KF_SIZE];	/**< Kind flags */
+	bitflag carried_flags_off[OF_SIZE];		/**< Carried flags to remove */
+	bitflag kind_flags[KF_SIZE];			/**< Kind flags */
+	bitflag pflags[PF_SIZE];				/**< Player intrinsic flags */
 
 	random_value modifiers[OBJ_MOD_MAX];
 	int min_modifiers[OBJ_MOD_MAX];
@@ -482,13 +488,14 @@ struct object {
 	s16b held_m_idx;		/**< Monster holding us (if any) */
 	s16b mimicking_m_idx;	/**< Monster mimicking us (if any) */
 
-	bitflag carried_flags[OF_SIZE];	/**< Object carried flags */
-	bitflag flags[OF_SIZE];	/**< Object flags */
-	s16b modifiers[OBJ_MOD_MAX];	/**< Object modifiers*/
+	bitflag pflags[PF_SIZE];				/**< Player intrinsic flags */
+	bitflag carried_flags[OF_SIZE];			/**< Object carried flags */
+	bitflag flags[OF_SIZE];					/**< Object flags */
+	s16b modifiers[OBJ_MOD_MAX];			/**< Object modifiers*/
 	struct element_info el_info[ELEM_MAX];	/**< Object element info */
-	bool *brands;			/**< Array of brand structures */
-	bool *slays;			/**< Array of slay structures */
-	struct fault_data *faults;	/**< Array of fault powers and timeouts */
+	bool *brands;							/**< Array of brand structures */
+	bool *slays;							/**< Array of slay structures */
+	struct fault_data *faults;				/**< Array of fault powers and timeouts */
 
 	struct effect *effect;	/**< Effect this item produces (effects.c) */
 	char *effect_msg;		/**< Message on use */

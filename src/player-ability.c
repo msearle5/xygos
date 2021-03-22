@@ -546,7 +546,7 @@ static bool can_gain_talent(unsigned a, bool birth) {
 }
 
 /* Recalculate everything needed after an ability has been changed */
-static void changed_abilities(void) {
+void changed_abilities(void) {
 	/* Update player */
 	handle_stuff(player);
 
@@ -555,9 +555,14 @@ static void changed_abilities(void) {
 
 	/* Update stuff */
 	player->upkeep->update |= PU_BONUS | PU_HP | PU_SPELLS | PU_TORCH | PU_UPDATE_VIEW | PU_PANEL | PU_INVEN;
-	player->upkeep->redraw |= PR_BASIC | PR_EXTRA | PR_LIGHT | PR_INVEN | PR_EQUIP;
 
 	update_stuff(player);
+
+	/* Update stuff */
+	player->upkeep->update |= PU_BONUS | PU_HP | PU_SPELLS | PU_TORCH | PU_UPDATE_VIEW | PU_PANEL | PU_INVEN;
+	player->upkeep->redraw |= PR_BASIC | PR_EXTRA | PR_LIGHT | PR_INVEN | PR_EQUIP;
+
+	handle_stuff(player);
 }
 
 /* Attempt to gain an ability, returning true if successful.
@@ -782,7 +787,7 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 		Term_clear();
 
 		/* Build the top message */
-		const char *tops = "\nThis is a list of all your abilities (including talents and abilities gained through other means, such as mutations), plus any additional talents which you can currently gain. Existing abilities are displayed in grey, gainable talents in green";
+		const char *tops = "\nThis is a list of all your abilities (including talents and abilities gained through other means, such as mutations), plus any additional talents which you can currently gain. Existing intrinsic abilities are displayed in grey, existing abilities gained through your equipment in blue, existing abilities gained through temporary effects in magenta, gainable talents in green";
 		const char *tops_b = ", and talents which can only be gained at character creation in orange";
 		if (!birth)
 			tops_b = "";
@@ -869,7 +874,16 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 					if (i == selected) {
 						colour = COLOUR_WHITE;
 					} else {
-						colour = COLOUR_SLATE;
+						if (pf_has(player->state.pflags_base, avail[i])) {
+							/* Intrinsic */
+							colour = COLOUR_SLATE;
+						} else if (pf_has(player->state.pflags_equip, avail[i])) {
+							/* Equipment */
+							colour = COLOUR_L_BLUE;
+						} else {
+							/* Temporary */
+							colour = COLOUR_MAGENTA;
+						}
 					}
 				} else {
 					if (ability[avail[i]]->flags & AF_BIRTH) {
@@ -898,8 +912,10 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 			tb = textblock_new();
 			if (gain[selected])
 				textblock_append_c(tb, COLOUR_SLATE, "With this talent %s", ability[avail[selected]]->desc_future ? ability[avail[selected]]->desc_future : ability[avail[selected]]->desc);
-			else
-				textblock_append_c(tb, COLOUR_SLATE, "%c%s", toupper(ability[avail[selected]]->desc[0]), ability[avail[selected]]->desc + 1);
+			else {
+				if (ability[avail[selected]]->desc)
+					textblock_append_c(tb, COLOUR_SLATE, "%c%s", toupper(ability[avail[selected]]->desc[0]), ability[avail[selected]]->desc + 1);
+			}
 
 			/* Stats, AC, skills, etc */
 			for(int i=0;i<STAT_MAX;i++) {

@@ -134,8 +134,13 @@ static void wr_item(const struct object *obj)
 	}
 	wr_byte(obj->notice);
 
-	for (i = 0; i < OF_SIZE; i++)
+	for (i = 0; i < OF_SIZE; i++) {
 		wr_byte(obj->flags[i]);
+		wr_byte(obj->carried_flags[i]);
+	}
+
+	for (i = 0; i < PF_SIZE; i++)
+		wr_byte(obj->pflags[i]);
 
 	for (i = 0; i < OBJ_MOD_MAX; i++) {
 		wr_s16b(obj->modifiers[i]);

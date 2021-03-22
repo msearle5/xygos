@@ -28,6 +28,7 @@
 #include "obj-pile.h"
 #include "obj-tval.h"
 #include "obj-util.h"
+#include "player-ability.h"
 #include "player-calcs.h"
 #include "player-quest.h"
 #include "player-util.h"
@@ -722,6 +723,7 @@ void inven_carry(struct player *p, struct object *obj, bool absorb,
  */
 void do_inven_wield(struct object *obj, int slot, bool verbose, bool overflow)
 {
+	assert(slot < player->body.count);
 	struct object *wielded, *old = player->body.slots[slot].obj;
 
 	const char *fmt;
@@ -761,6 +763,10 @@ void do_inven_wield(struct object *obj, int slot, bool verbose, bool overflow)
 		wielded = floor_object_for_use(obj, 1, false, &dummy);
 		inven_carry(player, wielded, false, false);
 	}
+
+	/* Copy the old player flags to compare against */
+	bitflag pflags[PF_SIZE];
+	pf_copy(pflags, player->state.pflags);
 
 	/* Wear the new stuff */
 	player->body.slots[slot].obj = wielded;
@@ -809,10 +815,24 @@ void do_inven_wield(struct object *obj, int slot, bool verbose, bool overflow)
 
 	/* Recalculate bonuses, torch, mana, gear */
 	player->upkeep->notice |= (PN_IGNORE);
-	player->upkeep->update |= (PU_BONUS | PU_INVEN | PU_UPDATE_VIEW);
-	player->upkeep->redraw |= (PR_INVEN | PR_EQUIP | PR_ARMOR);
-	player->upkeep->redraw |= (PR_STATS | PR_HP | PR_SPEED);
-	update_stuff(player);
+
+	changed_abilities();
+
+	/* Has anything changed? If so, report it */
+	if (!pf_is_equal(pflags, player->state.pflags)) {
+		for(int i=0;i<PF_MAX;i++) {
+			if (pf_has(player->state.pflags, i)) {
+				if (!pf_has(pflags, i)) {
+					if (ability[i]) {
+						/* It's a newly added ability flag. Print the gain message */
+						if (ability[i]->gain) {
+							msg(ability[i]->gain);
+						}
+					}
+				}
+			}
+		}
+	}
 
 	/* Disable repeats */
 	cmd_disable_repeat();
@@ -853,13 +873,31 @@ void do_inven_takeoff(struct object *obj, bool verbose, bool overflow)
 	else
 		act = "You were wearing";
 
+	/* Copy the old player flags to compare against */
+	bitflag pflags[PF_SIZE];
+	pf_copy(pflags, player->state.pflags);
+
 	/* De-equip the object */
 	player->body.slots[slot].obj = NULL;
 	player->upkeep->equip_cnt--;
 
-	player->upkeep->update |= (PU_BONUS | PU_INVEN | PU_UPDATE_VIEW);
-	player->upkeep->notice |= (PN_IGNORE);
-	update_stuff(player);
+	changed_abilities();
+
+	/* Has anything changed? If so, report it */
+	if (!pf_is_equal(pflags, player->state.pflags)) {
+		for(int i=0;i<PF_MAX;i++) {
+			if (pf_has(pflags, i)) {
+				if (!pf_has(player->state.pflags, i)) {
+					if (ability[i]) {
+						/* It's a newly removed ability flag. Print the loss message */
+						if (ability[i]->lose) {
+							msg(ability[i]->lose);
+						}
+					}
+				}
+			}
+		}
+	}
 
 	/* Message */
 	if (verbose)

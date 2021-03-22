@@ -76,6 +76,14 @@ static const char *element_names[] = {
 	NULL
 };
 
+static const char *py_flags[] =
+{
+	#define PF(a) #a,
+	#include "list-player-flags.h"
+	#undef PF
+	NULL
+};
+
 static bool grab_element_flag(struct element_info *info, const char *flag_name)
 {
 	char prefix[20];
@@ -1015,6 +1023,8 @@ static enum parser_error parse_fault_flags(struct parser *p) {
 		bool found = false;
 		if (!grab_flag(fault->obj->flags, OF_SIZE, obj_flags, t))
 			found = true;
+		if (!grab_flag(fault->obj->pflags, PF_SIZE, py_flags, t))
+			found = true;
 		if (grab_element_flag(fault->obj->el_info, t))
 			found = true;
 		if (!found)
@@ -1719,6 +1729,8 @@ static enum parser_error parse_object_flags(struct parser *p) {
 			found = true;
 		if (!grab_flag(k->kind_flags, KF_SIZE, kind_flags, t))
 			found = true;
+		if (!grab_flag(k->pflags, PF_SIZE, py_flags, t))
+			found = true;
 		if (grab_element_flag(k->el_info, t))
 			found = true;
 		if (!found)
@@ -2361,6 +2373,8 @@ static enum parser_error parse_ego_flags(struct parser *p) {
 			found = true;
 		if (!grab_flag(e->kind_flags, KF_SIZE, kind_flags, t))
 			found = true;
+		if (!grab_flag(e->pflags, PF_SIZE, py_flags, t))
+			found = true;
 		if (grab_element_flag(e->el_info, t))
 			found = true;
 		if (!found)
@@ -2763,6 +2777,8 @@ static enum parser_error parse_artifact_flags(struct parser *p) {
 	while (t) {
 		bool found = false;
 		if (!grab_flag(a->flags, OF_SIZE, obj_flags, t))
+			found = true;
+		if (!grab_flag(a->pflags, PF_SIZE, py_flags, t))
 			found = true;
 		if (grab_element_flag(a->el_info, t))
 			found = true;
