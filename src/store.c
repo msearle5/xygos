@@ -72,6 +72,9 @@ struct hint *hints;
 struct hint *lies;
 
 
+void do_store_maint(struct store *s, bool init);
+
+
 static const char *obj_flags[] = {
 	"NONE",
 	#define OF(a) #a,
@@ -431,7 +434,7 @@ void stores_copy(struct store *src)
  * This must be duplicated per town.
  */
 void store_reset(void) {
-	int i, j;
+	int i;
 	struct store *s;
 
 	assert(t_info);
@@ -459,8 +462,7 @@ void store_reset(void) {
 			s->stock = NULL;
 			if (i == STORE_HOME)
 				continue;
-			for (j = 0; j < 10; j++)
-				store_maint(s);
+			do_store_maint(s, true);
 		}
 	}
 }
@@ -838,27 +840,6 @@ static void mass_produce(struct object *obj)
 			break;
 		}
 
-		case TV_SOFT_ARMOR:
-		case TV_HARD_ARMOR:
-		case TV_SHIELD:
-		case TV_GLOVES:
-		case TV_BOOTS:
-		case TV_CLOAK:
-		case TV_BELT:
-		case TV_HELM:
-		case TV_CROWN:
-		case TV_SWORD:
-		case TV_POLEARM:
-		case TV_HAFTED:
-		case TV_DIGGING:
-		case TV_GUN:
-		{
-			if (obj->ego) break;
-			if (cost <= 10L) size += mass_roll(3, 5);
-			if (cost <= 100L) size += mass_roll(3, 5);
-			break;
-		}
-
 		case TV_AMMO_6:
 		case TV_AMMO_9:
 		case TV_AMMO_12:
@@ -1018,7 +999,7 @@ void home_carry(struct object *obj)
  *
  * Returns the object inserted (for ease of use) or NULL if it disappears
  */
-struct object *store_carry(struct store *store, struct object *obj)
+struct object *store_carry(struct store *store, struct object *obj, bool maintain)
 {
 	unsigned int i;
 	u32b value;
@@ -1081,6 +1062,14 @@ struct object *store_carry(struct store *store, struct object *obj)
 	for (temp_obj = store->stock; temp_obj; temp_obj = temp_obj->next) {
 		/* Can the existing items be incremented? */
 		if (object_similar(temp_obj, obj, OSTACK_STORE)) {
+
+			/* If this is 'maintenance' (rather than selling an item), discard some duplicates */
+			if (maintain) {
+				if (!(one_in_(1+temp_obj->number))) {
+					return NULL;
+				}
+			}
+
 			/* Absorb (some of) the object */
 			store_object_absorb(temp_obj->known, known_obj);
 			obj->known = NULL;
@@ -1099,7 +1088,6 @@ struct object *store_carry(struct store *store, struct object *obj)
 	pile_insert(&store->stock, obj);
 	pile_insert(&store->stock_k, known_obj);
 	store->stock_num++;
-
 	return obj;
 }
 
@@ -1359,106 +1347,99 @@ static void store_level_limits(struct store *store, int *min_level, int *max_lev
 /**
  * Creates a random object and gives it to store 'store'
  */
-static bool store_create_random(struct store *store)
+static bool store_create_random(struct store *store, int min_level, int max_level, bool good, bool great)
 {
-	int tries, level;
+	struct object_kind *kind;
+	struct object *obj, *known_obj;
 
-	int min_level, max_level;
-	store_level_limits(store, &min_level, &max_level);
+	/* Work out the level for objects to be generated at */
+	int level = rand_range(min_level, max_level);
 
-	/* Consider up to six items */
-	for (tries = 0; tries < 6; tries++) {
-		struct object_kind *kind;
-		struct object *obj, *known_obj;
+	/* Black Markets have a random object, of a given level */
+	if (store->sidx == STORE_HQ)
+		kind = get_obj_num(level, false, 0);
+	else if (store->sidx == STORE_B_MARKET)
+		kind = get_obj_num(level, false, 0);
+	else
+		kind = store_get_choice(store, level);
 
-		/* Work out the level for objects to be generated at */
-		level = rand_range(min_level, max_level);
+	if (!kind)
+		return false;
 
-		/* Black Markets have a random object, of a given level */
-		if (store->sidx == STORE_HQ)
-			kind = get_obj_num(level, false, 0);
-		else if (store->sidx == STORE_B_MARKET)
-			kind = get_obj_num(level, false, 0);
-		else
-			kind = store_get_choice(store, level);
+	/*** Pre-generation filters ***/
 
-		if (!kind)
-			continue;
+	/* No chests in stores XXX */
+	if (kind->tval == TV_CHEST) return false;
 
-		/*** Pre-generation filters ***/
+	/*** Generate the item ***/
 
-		/* No chests in stores XXX */
-		if (kind->tval == TV_CHEST) continue;
+	/* Create a new object of the chosen kind */
+	obj = object_new();
+	object_prep(obj, kind, level, RANDOMISE);
 
-		/*** Generate the item ***/
+	/* Apply some "low-level" magic (no artifacts) */
+	apply_magic(obj, level, false, good, great, false);
 
-		/* Create a new object of the chosen kind */
-		obj = object_new();
-		object_prep(obj, kind, level, RANDOMISE);
-
-		/* Apply some "low-level" magic (no artifacts) */
-		apply_magic(obj, level, false, false, false, false);
-
-		/* Reject if item is 'damaged' (negative combat mods, faults) */
-		if ((tval_is_weapon(obj) && ((obj->to_h < 0) || (obj->to_d < 0)))
-			|| (tval_is_armor(obj) && (obj->to_a < 0)) || (obj->faults)) {
-			object_delete(&obj);
-			continue;
-		}
-
-		/*** Post-generation filters ***/
-
-		/* Make a known object */
-		known_obj = object_new();
-		obj->known = known_obj;
-
-		/* Know everything the player knows, no origin yet */
-		obj->known->notice |= OBJ_NOTICE_ASSESSED;
-		object_set_base_known(obj);
-		obj->known->notice |= OBJ_NOTICE_ASSESSED;
-		player_know_object(player, obj);
-		obj->origin = ORIGIN_NONE;
-
-		/* Black markets have expensive tastes */
-		if ((store->sidx == STORE_B_MARKET) && !black_market_ok(obj)) {
-			object_delete(&known_obj);
-			obj->known = NULL;
-			object_delete(&obj);
-			continue;
-		}
-
-		/* HQ only stocks some items */
-		if ((store->sidx == STORE_HQ) && !hq_ok(obj)) {
-			object_delete(&known_obj);
-			obj->known = NULL;
-			object_delete(&obj);
-			continue;
-		}
-
-		/* No "worthless" items */
-		if (object_value_real(obj, 1) < 1)  {
-			object_delete(&known_obj);
-			obj->known = NULL;
-			object_delete(&obj);
-			continue;
-		}
-
-		/* Mass produce and/or apply discount */
-		mass_produce(obj);
-
-		/* Attempt to carry the object */
-		if (!store_carry(store, obj)) {
-			object_delete(&known_obj);
-			obj->known = NULL;
-			object_delete(&obj);
-			continue;
-		}
-
-		/* Definitely done */
-		return true;
+	/* Reject if item is 'damaged' (faults).
+	 * The BM doesn't care about ripping you off, though.
+	 * And don't reject negative combat bonuses for their own sake, as there are some nice items
+	 * with -ve to hit, and anything actually worthless will be caught later by the value check.
+	 **/
+	if ((store->sidx != STORE_B_MARKET) && (obj->faults)) {
+		object_delete(&obj);
+		return false;
 	}
 
-	return false;
+	/*** Post-generation filters ***/
+
+	/* Make a known object */
+	known_obj = object_new();
+	obj->known = known_obj;
+
+	/* Know everything the player knows, no origin yet */
+	obj->known->notice |= OBJ_NOTICE_ASSESSED;
+	object_set_base_known(obj);
+	obj->known->notice |= OBJ_NOTICE_ASSESSED;
+	player_know_object(player, obj);
+	obj->origin = ORIGIN_NONE;
+
+	/* Black markets have expensive tastes */
+	if ((store->sidx == STORE_B_MARKET) && !black_market_ok(obj)) {
+		object_delete(&known_obj);
+		obj->known = NULL;
+		object_delete(&obj);
+		return false;
+	}
+
+	/* HQ only stocks some items */
+	if ((store->sidx == STORE_HQ) && !hq_ok(obj)) {
+		object_delete(&known_obj);
+		obj->known = NULL;
+		object_delete(&obj);
+		return false;
+	}
+
+	/* No "worthless" items */
+	if (object_value_real(obj, 1) < 1)  {
+		object_delete(&known_obj);
+		obj->known = NULL;
+		object_delete(&obj);
+		return false;
+	}
+
+	/* Mass produce and/or apply discount */
+	mass_produce(obj);
+
+	/* Attempt to carry the object */
+	if (!store_carry(store, obj, true)) {
+		object_delete(&known_obj);
+		obj->known = NULL;
+		object_delete(&obj);
+		return false;
+	}
+
+	/* Definitely done */
+	return true;
 }
 
 
@@ -1486,81 +1467,83 @@ static struct object *store_create_item(int level, struct store *store, struct o
 	obj->origin = ORIGIN_NONE;
 
 	/* Attempt to carry the object */
-	return store_carry(store, obj);
+	return store_carry(store, obj, true);
 }
 
 /**
  * Maintain the inventory at the stores.
  */
-void store_maint(struct store *s)
+void do_store_maint(struct store *s, bool init)
 {
 	/* Ignore home */
 	if (s->sidx == STORE_HOME)
 		return;
 
-	/* Destroy crappy black market items */
-	if (s->sidx == STORE_B_MARKET) {
-		struct object *obj = s->stock;
-		while (obj) {
-			struct object *next = obj->next;
-			if (!black_market_ok(obj))
-				store_delete(s, obj, obj->number);
-			obj = next;
+	if (!init) {
+		/* Destroy crappy black market items */
+		if (s->sidx == STORE_B_MARKET) {
+			struct object *obj = s->stock;
+			while (obj) {
+				struct object *next = obj->next;
+				if (!black_market_ok(obj))
+					store_delete(s, obj, obj->number);
+				obj = next;
+			}
 		}
-	}
 
-	/* We want to make sure stores have staple items. If there's
-	 * turnover, we also want to delete a few items, and add a few
-	 * items.
-	 *
-	 * If we create staple items, then delete items, then create new
-	 * items, we are stuck with one of three choices:
-	 * 1. We can risk deleting staple items, and not having any left.
-	 * 2. We can refuse to delete staple items, and risk having that
-	 * become an infinite loop.
-	 * 3. We can do a ton of extra bookkeeping to make sure we delete
-	 * staple items only if there's duplicates of them.
-	 *
-	 * What if we change the order? First sell a handful of random items,
-	 * then create any missing staples, then create new items. This
-	 * has two tests for s->turnover, but simplifies everything else
-	 * dramatically.
-	 */
-
-	if (s->turnover) {
-		int restock_attempts = 100000;
-		int stock = s->stock_num - randint1(s->turnover);
-
-		/* We'll end up adding staples for sure, maybe plus other
-		 * items. It's fine if we sell out completely, though, if
-		 * turnover is high. The cap doesn't include always_num,
-		 * because otherwise the addition of missing staples could
-		 * put us over (if the store was full of player-sold loot).
+		/* We want to make sure stores have staple items. If there's
+		 * turnover, we also want to delete a few items, and add a few
+		 * items.
+		 *
+		 * If we create staple items, then delete items, then create new
+		 * items, we are stuck with one of three choices:
+		 * 1. We can risk deleting staple items, and not having any left.
+		 * 2. We can refuse to delete staple items, and risk having that
+		 * become an infinite loop.
+		 * 3. We can do a ton of extra bookkeeping to make sure we delete
+		 * staple items only if there's duplicates of them.
+		 *
+		 * What if we change the order? First sell a handful of random items,
+		 * then create any missing staples, then create new items. This
+		 * has two tests for s->turnover, but simplifies everything else
+		 * dramatically.
 		 */
-		int min = 0;
-		int max = s->normal_stock_max;
 
-		/* More faction gives more items */
-		if ((s->sidx == STORE_B_MARKET) && (player->bm_faction > 0)) {
-			max *= (player->bm_faction + 2);
-			max /= 2;
-		}
+		if (s->turnover) {
+			int restock_attempts = 100000;
+			int stock = s->stock_num - randint1(s->turnover);
 
-		if (stock < min) stock = min;
-		if (stock > max) stock = max;
+			/* We'll end up adding staples for sure, maybe plus other
+			 * items. It's fine if we sell out completely, though, if
+			 * turnover is high. The cap doesn't include always_num,
+			 * because otherwise the addition of missing staples could
+			 * put us over (if the store was full of player-sold loot).
+			 */
+			int min = 0;
+			int max = s->normal_stock_max;
 
-		/* Destroy random objects until only "stock" slots are left */
-		while (s->stock_num > stock && --restock_attempts)
-			store_delete_random(s);
+			/* More faction gives more items */
+			if ((s->sidx == STORE_B_MARKET) && (player->bm_faction > 0)) {
+				max *= (player->bm_faction + 2);
+				max /= 2;
+			}
 
-		if (!restock_attempts)
-			quit_fmt("Unable to (de-)stock store %d. Please report this bug",
-					 s->sidx + 1);
-	} else {
-		if (s->always_num && s->stock_num) {
-			int sales = randint1(s->stock_num);
-			while (sales--) {
+			if (stock < min) stock = min;
+			if (stock > max) stock = max;
+
+			/* Destroy random objects until only "stock" slots are left */
+			while (s->stock_num > stock && --restock_attempts)
 				store_delete_random(s);
+
+			if (!restock_attempts)
+				quit_fmt("Unable to (de-)stock store %d. Please report this bug",
+						 s->sidx + 1);
+		} else {
+			if (s->always_num && s->stock_num) {
+				int sales = randint1(s->stock_num);
+				while (sales--) {
+					store_delete_random(s);
+				}
 			}
 		}
 	}
@@ -1607,23 +1590,61 @@ void store_maint(struct store *s)
 		 * so instead decrement the number of items demanded.
 		 * Only give up if no items can be generated.
 		 **/
-		int stock = s->stock_num + randint1(s->turnover);
+		int stock = s->stock_num;
+		if (init)
+			stock += s->turnover;
+		else
+			stock += randint1(s->turnover);
 
 		/* Keep stock between specified min and max slots */
 		if (stock > max) stock = max;
 		if (stock < min) stock = min;
 
-		do {
+
+		/* Try to generate enough items to fill stock.
+		 * If this is taking too long, start to increase the level
+		 * and produce more unusual items (as a good item won't merge
+		 * with the existing +0,+0 item).
+		 * If it's taking far too long (1000 tries) then reduce the
+		 * number of items required.
+		 */
+		while (stock && (s->stock_num < stock))
+		{
+			int min_level, max_level;
+			store_level_limits(s, &min_level, &max_level);
+
 			int restock_attempts = 1000;
-			while (s->stock_num < stock && --restock_attempts)
-				store_create_random(s);
+			bool good = false;
+			bool great = false;
+
+			while (s->stock_num < stock && --restock_attempts) {
+				store_create_random(s, min_level, max_level, good, great);
+				if (restock_attempts < (1000 - stock))
+					good = one_in_(2);
+				if (restock_attempts < (1000 - (stock * 10)))
+					great = one_in_(2);
+				if (restock_attempts < (1000 - (stock * 2))) {
+					if ((restock_attempts % stock) == 0) {
+						if (max_level < 100)
+							max_level++;
+					}
+				}
+			}
 			stock--;
-		} while (stock);
+		};
 
 		if (s->stock_num < stock)
 			quit_fmt("Unable to (re-)stock store %d. Please report this bug",
 					 s->sidx + 1);
 	}
+}
+
+/**
+ * Maintain the inventory at the stores.
+ */
+void store_maint(struct store *s)
+{
+	do_store_maint(s, false);
 }
 
 /**
@@ -2250,7 +2271,7 @@ void do_cmd_sell(struct command *cmd)
 	handle_stuff(player);
 
 	/* The store gets that (known) object */
-	if (! store_carry(store, sold_item)) {
+	if (! store_carry(store, sold_item, false)) {
 		/* The store rejected it; delete. */
 		if (sold_item->known) {
 			object_delete(&sold_item->known);

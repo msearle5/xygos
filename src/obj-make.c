@@ -1317,14 +1317,14 @@ struct object *make_object(struct chunk *c, int lev, bool good, bool great,
 /**
  * Scatter some objects near the player
  */
-void acquirement(struct loc grid, int level, int num, bool great)
+void do_acquirement(struct loc grid, int level, int num, bool good, bool great)
 {
 	struct object *nice_obj;
 
 	/* Acquirement */
 	while (num--) {
 		/* Make a good (or great) object (if possible) */
-		nice_obj = make_object(cave, level, true, great, true, NULL, 0);
+		nice_obj = make_object(cave, level, good, great, true, NULL, 0);
 		if (!nice_obj) continue;
 
 		nice_obj->origin = ORIGIN_ACQUIRE;
@@ -1333,6 +1333,14 @@ void acquirement(struct loc grid, int level, int num, bool great)
 		/* Drop the object */
 		drop_near(cave, &nice_obj, 0, grid, true, false);
 	}
+}
+
+/**
+ * Scatter some objects near the player
+ */
+void acquirement(struct loc grid, int level, int num, bool great)
+{
+	do_acquirement(grid, level, num, true, great);
 }
 
 

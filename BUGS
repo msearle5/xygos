@@ -7,8 +7,6 @@ BUG:/home/msearle/rogl/angband/v-xygos/angband/src/xygos: Error in flag_on(lore-
 	- does every brand need a resist-flag?
 	Certainly all previously have
 
-BUG: Lock up at start (occasionally)
-
 BUG: The "use flavors" option is ignored
 
 BUG: Battery/s (not the objects, but elsewhere)
@@ -16,14 +14,18 @@ BUG: Battery/s (not the objects, but elsewhere)
 
 BUG "These two can't intersect"
 
-BUG: Androids have a 'invisible extension' (you have to press Enter twice, which hits the birth tests.) ESC back also may be affected.
-
-BUG: Stone/steel skin timed should be blocked by the mutation (or combined with it in some way)
+BUG "How to handle forbids/requires, on equipment/temporary player flags?"
 
 BUG? After the success/failure message from a quest, ESC is the only way to get back out.
 
+BUG: Shops have a lot of items, more than would be expected from mass production, and startup is slow.
+	Is there a milder version of the shop-filling bug still around?
+
 Defer
 =====
+
+BUG: Lock up at start (occasionally)
+	UTR easily, and is likely the (fixed?) shop filling bug
 
 BUG?? - In quests, multiplying monsters are handled OK.
 	But not newly spawned monsters that happen to be of the same type, or monsters removed through genocide or kill-body - and at least some of that could occur
@@ -59,6 +61,8 @@ BUG: Saw climbing the stair into town put me in the middle of the level (not on 
 	- is the search breaking the X loop, not the Y loop (gen-cave.c:1990)?
 		- no.
 	Assuming this is the same as the one above.
+
+BUG: Crash at player-birth.c:463 (bodies is linked)
 
 WontFix
 =======
@@ -187,6 +191,21 @@ BUG: Pile integrity failure (firecracker, which was held by a monster when it we
 	Not caused by 9afdfcfa7e44790941d902bff767ecaddc7b7f93
 	- and there is no explosion
 	- Fixed: 05904e9b066bb48a66f707a9bf4726182a27dc38
+
+
+BUG: Androids have a 'invisible extension' (you have to press Enter twice, which hits the birth tests.) ESC back also may be affected.
+	- Fixed: 025540a6ecfc105a14723010dd2928eb1fe3a770
+
+BUG: The starting town was once "Smokey R8". Getting 99999999 gold got it renamed to Smokey R89999.
+	In another game with ok start, one of the other town names  had a corrupt last 
+	- Fixed (Probably. It's valgrind clean, anyway) in 84d53533f82af015f75bdb1f172bc23ba7b173dd
+
+BUG: 
+	Stone/steel skin timed/fault should be blocked by the mutation (or combined with it in some way)
+	- Fixed 98f38c1a1cf121ecb3bcf49667f4b193e582d04b
+
+BUG: Human Cyborg Engineer has no cyberware slots (starting gear is in pack) 
+	- Fixed (rebase)
 
 Theme
 =====

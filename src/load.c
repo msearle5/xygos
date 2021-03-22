@@ -1286,7 +1286,7 @@ static int rd_stores_aux(rd_item_t rd_item_version)
 					if (store->sidx == STORE_HOME)
 						home_carry(obj);
 					else
-						store_carry(store, obj);
+						store_carry(store, obj, false);
 				}
 			}
 

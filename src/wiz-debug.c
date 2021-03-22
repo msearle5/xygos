@@ -2268,6 +2268,18 @@ void get_debug_command(void)
 			break;
 		}
 
+		/* Normal Objects */
+		case 'N':
+		{
+			int n;
+			screen_save();
+			n= get_quantity("How many normal objects? ", 40);
+			screen_load();
+			if (n < 1) n = 1;
+			do_acquirement(player->grid, player->depth, n, false, false);
+			break;
+		}
+
 		/* Object playing routines */
 		case 'o':
 		{
