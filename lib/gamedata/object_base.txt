@@ -184,13 +184,13 @@ flags:EASY_KNOW
 name:cash
 graphics:light yellow
 
-name:legs:implant~
+name:legs:leg implant~
 graphics:white
 break:0
 flags:HATES_FIRE | HATES_ELEC
 flags:EASY_KNOW | NO_EQUIP
 
-name:arms:implant~
+name:arms:arm implant~
 graphics:white
 break:0
 flags:HATES_FIRE | HATES_ELEC
