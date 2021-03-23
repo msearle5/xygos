@@ -1515,7 +1515,7 @@ static tval_desc sval_dependent[] =
 {
 	{ TV_DEVICE,		"Devices" },
 	{ TV_WAND,			"Wands" },
-	{ TV_GADGET,			"Gadgets" },
+	{ TV_GADGET,		"Gadgets" },
 	{ TV_CARD,			"Cards" },
 	{ TV_PILL,			"Pills" },
 	{ TV_FOOD,			"Food" },

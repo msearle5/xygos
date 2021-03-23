@@ -2045,6 +2045,19 @@ struct player_body *get_body_by_name(const char *name)
 	return NULL;
 }
 
+int get_body_idx_by_name(const char *name)
+{
+	struct player_body *b;
+	int i = 0;
+	for (b = bodies; b; b = b->next) {
+		if (streq(b->name, name)) {
+			return i;
+		}
+		i++;
+	}
+	return -1;
+}
+
 static enum parser_error parse_p_race_name(struct parser *p) {
 	struct player_race *h = parser_priv(p);
 	struct player_race *r = mem_zalloc(sizeof *r);
@@ -2052,7 +2065,7 @@ static enum parser_error parse_p_race_name(struct parser *p) {
 	r->next = h;
 	r->name = string_make(parser_getstr(p, "name"));
 	parsing_magic = &r->magic;
-	/* Default body is humanoid (the first in body.txt) */
+	/* Default body is humanoid (the last in body.txt) */
 	r->body = 0;
 	parser_setpriv(p, r);
 	return PARSE_ERROR_NONE;
@@ -2063,9 +2076,9 @@ static enum parser_error parse_p_race_body(struct parser *p) {
 	if (!r)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 	char *name = parser_getstr(p, "body");
-	struct player_body *body = get_body_by_name(name);
-	if (body) {
-		r->body = body - bodies;
+	int body = get_body_idx_by_name(name);
+	if (body >= 0) {
+		r->body = body;
 	} else {
 		return PARSE_ERROR_INVALID_VALUE;
 	}

@@ -446,9 +446,6 @@ static void get_ahw(struct player *p)
 	get_height_weight(p);
 }
 
-
-
-
 /**
  * Creates the player's body
  */
@@ -458,14 +455,20 @@ static void player_embody(struct player *p)
 	int i;
 
 	assert(p->race);
+	struct player_body *bod = bodies;
+	for (i = 0; i < p->race->body; i++) {
+		bod = bod->next;
+		assert(bod);
+	}
 
-	memcpy(&p->body, &bodies[p->race->body], sizeof(p->body));
-	my_strcpy(buf, bodies[p->race->body].name, sizeof(buf));
+	memcpy(&p->body, bod, sizeof(p->body));
+	my_strcpy(buf, bod->name, sizeof(buf));
 	p->body.name = string_make(buf);
 	p->body.slots = mem_zalloc(p->body.count * sizeof(struct equip_slot));
+	
 	for (i = 0; i < p->body.count; i++) {
-		p->body.slots[i].type = bodies[p->race->body].slots[i].type;
-		my_strcpy(buf, bodies[p->race->body].slots[i].name, sizeof(buf));
+		p->body.slots[i].type = bod->slots[i].type;
+		my_strcpy(buf, bod->slots[i].name, sizeof(buf));
 		p->body.slots[i].name = string_make(buf);
 	}
 }
@@ -538,6 +541,8 @@ void player_init(struct player *p)
 	/* Default to the first race/class in the edit file */
 	p->race = races;
 	p->extension = extensions;
+	while (p->extension->next)
+		p->extension = p->extension->next;
 	p->class = classes;
 
 	/* Player starts unshapechanged */
