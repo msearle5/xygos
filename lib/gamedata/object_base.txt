@@ -162,7 +162,7 @@ break:10
 flags:HATES_ACID | HATES_FIRE
 flags:EASY_KNOW
 
-name:battery:battery~
+name:battery:batter|y|ies|
 graphics:orange
 break:80
 # max-stack:20
