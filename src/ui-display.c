@@ -490,16 +490,20 @@ static void prt_speed(int row, int col)
 
 static int fmt_depth(char buf[], int max)
 {
-	if (!player->depth) {
-		if (danger_depth(player) > 0) {
-			strnfmt(buf, max, "(L%d)", danger_depth(player));
-		} else {
-			my_strcpy(buf, player->town ? player->town->name : "Town", max);
+	if (player->active_quest >= 0) {
+		strnfmt(buf, max, "%-13s", player->quests[player->active_quest].name);
+	} else {
+		if (!player->depth) {
+			if (danger_depth(player) > 0) {
+				strnfmt(buf, max, "(L%d)", danger_depth(player));
+			} else {
+				my_strcpy(buf, player->town ? player->town->name : "Town", max);
+			}
 		}
+		else
+			strnfmt(buf, max, "%dm (L%d)",
+					player->depth * 50, danger_depth(player));
 	}
-	else
-		strnfmt(buf, max, "%dm (L%d)",
-		        player->depth * 50, danger_depth(player));
 	return strlen(buf);
 }
 
@@ -511,7 +515,6 @@ static void prt_depth(int row, int col)
 	char depths[32];
 
 	fmt_depth(depths, sizeof(depths));
-
 	/* Right-Adjust the "depth", and clear old values */
 	put_str(format("%-13s", depths), row, col);
 }
@@ -522,15 +525,20 @@ static void prt_depth(int row, int col)
 static void prt_dungeon(int row, int col)
 {
 	char dungeon[80];
-	if (player->depth && player->town && player->town->downto) {
-		my_strcpy(dungeon, player->town->downto, sizeof(dungeon));
-		char *s = strchr(dungeon, ' ');
-		if (s)
-			*s = 0;
-		/* Right-Adjust the "name", and clear old values */
+	if (player->active_quest >= 0) {
+		*dungeon = 0;
 		put_str(format("%-13s", dungeon), row, col);
-	} else if (danger_depth(player) > 0) {
-		put_str(format("%-13s", player->town ? player->town->name : "Town"), row, col);
+	} else {
+		if (player->depth && player->town && player->town->downto) {
+			my_strcpy(dungeon, player->town->downto, sizeof(dungeon));
+			char *s = strchr(dungeon, ' ');
+			if (s)
+				*s = 0;
+			/* Right-Adjust the "name", and clear old values */
+			put_str(format("%-13s", dungeon), row, col);
+		} else if (danger_depth(player) > 0) {
+			put_str(format("%-13s", player->town ? player->town->name : "Town"), row, col);
+		}
 	}
 }
 
