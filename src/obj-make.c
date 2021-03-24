@@ -317,7 +317,7 @@ static int binary_search_probtable(const u32b *tbl, int n, u32b p)
 /**
  * Select a base item for an ego.
  */
-static struct object_kind *select_ego_kind(struct ego_item *ego, int level)
+static struct object_kind *select_ego_kind(struct ego_item *ego, int level, int tval)
 {
 	struct poss_item *poss;
 	double *prob = mem_zalloc(sizeof(*prob) * z_info->k_max);
@@ -325,8 +325,10 @@ static struct object_kind *select_ego_kind(struct ego_item *ego, int level)
 
 	/* Fill a table of usable base items */
 	for (poss = ego->poss_items; poss; poss = poss->next) {
-		prob[poss->kidx] = obj_alloc[poss->kidx];
-		total += prob[poss->kidx];
+		if ((tval == 0) || (tval == k_info[poss->kidx].tval)) {
+			prob[poss->kidx] = obj_alloc[poss->kidx];
+			total += prob[poss->kidx];
+		}
 	}
 
 	/* No possibilities */
@@ -342,9 +344,24 @@ static struct object_kind *select_ego_kind(struct ego_item *ego, int level)
 }
 
 /**
+ * Return true if at least one item has a matching tval
+ */
+static bool ego_can_use_tval(struct ego_item *ego, int tval)
+{
+	struct poss_item *poss;
+
+	for (poss = ego->poss_items; poss; poss = poss->next) {
+		if (tval == k_info[poss->kidx].tval)
+			return true;
+	}
+
+	return false;
+}
+
+/**
  * Select an ego-item at random, based on the level.
  */
-static struct ego_item *ego_find_random(int level)
+static struct ego_item *ego_find_random(int level, int tval)
 {
 	int i;
 	double *prob = mem_zalloc(sizeof(*prob) * z_info->e_max);
@@ -356,20 +373,22 @@ static struct ego_item *ego_find_random(int level)
 		struct ego_item *ego = &e_info[i];
 		double p = 0.0;
 
-		if (level <= ego->alloc_max) {
-			p = table[i].prob2;
-			if (level >= ego->alloc_min) {
-				/* Between min and max levels - scale linearly
-				 * from maximum probability at native depth to
-				 * zero at maximum depth + 1
-				 **/
-				p *= (ego->alloc_max + 1) - level;
-				p /= (ego->alloc_max + 1) - ego->alloc_min;
-			} else {
-				/* Out of depth.
-				 * Divide by the # of levels OOD, * a constant
-				 **/
-				p /= 1.0 + (((double)(ego->alloc_min - level)) / 3.0);
+		if ((tval == 0) || (ego_can_use_tval(ego, tval))) {
+			if (level <= ego->alloc_max) {
+				p = table[i].prob2;
+				if (level >= ego->alloc_min) {
+					/* Between min and max levels - scale linearly
+					 * from maximum probability at native depth to
+					 * zero at maximum depth + 1
+					 **/
+					p *= (ego->alloc_max + 1) - level;
+					p /= (ego->alloc_max + 1) - ego->alloc_min;
+				} else {
+					/* Out of depth.
+					 * Divide by the # of levels OOD, * a constant
+					 **/
+					p /= 1.0 + (((double)(ego->alloc_min - level)) / 3.0);
+				}
 			}
 		}
 
@@ -502,10 +521,10 @@ static void ego_apply_minima(struct object *obj)
  * Try to find an ego-item for an object, setting obj->ego if successful and
  * applying various bonuses.
  */
-static struct ego_item *find_ego_item(int level)
+static struct ego_item *find_ego_item(int level, int tval)
 {
 	/* Try to get a legal ego type for this item */
-	return ego_find_random(level);
+	return ego_find_random(level, tval);
 }
 
 
@@ -1246,11 +1265,11 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
 		} else {
 			if (makeego) {
 				/* Select an ego item. This might fail */
-				ego = find_ego_item(lev);
+				ego = find_ego_item(lev, tval);
 			}
 			if (ego) {
 				/* Choose from the ego's allowed kinds */
-				kind = select_ego_kind(ego, lev);
+				kind = select_ego_kind(ego, lev, tval);
 			} else {
 				/* Try to choose an object kind */
 				while (tries) {
