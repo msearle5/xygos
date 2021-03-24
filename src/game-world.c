@@ -670,6 +670,25 @@ void process_world(struct chunk *c)
 		p->timed[TMD_PARALYZED] = 2;	// as it will be reduced by 1 later in process_world
 		p->timed[TMD_FOOD] = PY_FOOD_WEAK;
 	}
+
+	/* Occasionally pick a slot. If it contains a steel item, magnetize it */
+	if (player_of_has(player, OF_MAGNETIC)) {
+		if (one_in_(50)) {
+			int slot = randint0(p->body.count);
+			struct object *obj = p->body.slots[slot].obj;
+			if (obj) {
+				if (obj->kind->material == MAT_STEEL) {
+					if (!of_has(obj->flags, OF_STICKY)) {
+						char oname[256];
+						object_desc(oname, sizeof(oname), obj, ODESC_BASE);
+						msg("Your %s jerks.", oname);
+						of_on(obj->flags, OF_STICKY);
+					}
+				}
+			}
+		}
+	}
+
 	/*** Damage (or healing) over Time ***/
 
 	/* Take damage from radiation */

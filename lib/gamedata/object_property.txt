@@ -959,3 +959,8 @@ name:unable to equip
 type:flag
 code:NO_EQUIP
 power:0
+
+name:magnetic
+type:flag
+code:MAGNETIC
+power:-8

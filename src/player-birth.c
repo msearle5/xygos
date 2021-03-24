@@ -465,7 +465,7 @@ static void player_embody(struct player *p)
 	my_strcpy(buf, bod->name, sizeof(buf));
 	p->body.name = string_make(buf);
 	p->body.slots = mem_zalloc(p->body.count * sizeof(struct equip_slot));
-	
+
 	for (i = 0; i < p->body.count; i++) {
 		p->body.slots[i].type = bod->slots[i].type;
 		my_strcpy(buf, bod->slots[i].name, sizeof(buf));

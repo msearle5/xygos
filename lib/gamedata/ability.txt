@@ -173,6 +173,7 @@ brief:You have extraordinary intuition.
 desc:You have extraordinary awareness and intuition, giving you the ability to get a feeling about the likely contents of a level very quickly.
 desc_future:you would have extraordinary awareness and intuition, giving you the ability to get a feeling about the likely contents of a level very quickly.
 flag:talent
+flag:mutation
 stats:0:0:0:0:0:5:0
 cost:1
 
@@ -380,6 +381,17 @@ forbid:Wide_Eyes
 
 ## Mental mutations ##
 
+name:Animal_Magnetism
+gain:You taste blood for a moment.
+lose:You feel repulsive for a moment.
+brief:You have an animal magnetism.
+desc:You have an animal magnetism. This manifests itself as inexplicable charisma and an iron will - but is offset by trouble dealing with metal gear.
+flag:mutation
+flag:nasty
+stats:0:0:3:0:0:5:0
+obj-flags:MAGNETIC
+forbid:Thick_Brain
+
 name:Thick_Brain
 gain:You grow a thick, ropey brain.
 lose:Your brain returns to normal.
@@ -390,6 +402,7 @@ flag:mutation
 flag:nasty
 stats:0:-4:-3:0:0:-1:0
 obj-flags:PROT_CONF
+forbid:Animal_Magnetism
 
 # cold/strange ('broken mirror') mind?
 

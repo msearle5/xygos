@@ -69,6 +69,7 @@ PF(WIDE_EYES)
 PF(CAT_EYES)
 
 /* Mental */
+PF(ANIMAL_MAGNETISM)
 PF(THICK_BRAIN)
 
 /* Skin */
