@@ -502,7 +502,7 @@ void quest_enter_level(struct chunk *c)
 			if (square_isstairs(c, grid))
 				break;
 		}
-		if (square_isstairs(c, grid))
+		if ((grid.x < c->width) && (square_isstairs(c, grid)))
 			break;
 	}
 
