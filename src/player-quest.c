@@ -771,6 +771,7 @@ void quest_changing_level(void)
 		/* Fail, or reward */
 		if (!(quest->flags & QF_SUCCEEDED)) {
 			quest->flags |= QF_FAILED;
+			quest->flags |= QF_UNREWARDED;
 		} else {
 			quest->flags |= QF_UNREWARDED;
 		}
