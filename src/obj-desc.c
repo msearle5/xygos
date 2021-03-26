@@ -95,22 +95,34 @@ static const char *obj_desc_get_basename(const struct object *obj, bool aware,
 			return obj->kind->name;
 
 		case TV_DEVICE:
-			return (show_flavor ? "& # device~" : "&~");
+			return (show_flavor ? "& # device~" : "& device~");
 
 		case TV_WAND:
-			return (show_flavor ? "& # gun~" : "&~");
+			return (show_flavor ? "& # gun~" : "& gun~");
 
 		case TV_GADGET:
-			return (show_flavor ? "& # gadget~" : "&~");
+			return (show_flavor ? "& # gadget~" : "& gadget~");
+
+		case TV_LIGHT:
+			if (!obj->kind->flavor)
+				return obj->kind->name;
+			return (show_flavor ? "& # candle~" : "& candle~");
 
 		case TV_PILL:
-			return (show_flavor ? "& # pill~" : "& pill~");
-
+			if (show_flavor) {
+				if (aware) {
+					return "& pill~ (#)";
+				} else {
+					return "& # pill~";
+				}
+			} else {
+				return "& pill~";
+			}
 		case TV_CARD:
 			return (show_flavor ? "& card~ titled #" : "& card~");
 
 		case TV_MUSHROOM:
-			return (show_flavor ? "& # Mushroom~" : "& Mushroom~");
+			return (show_flavor ? "& # mushroom~" : "& mushroom~");
 	}
 
 	return "(nothing)";
@@ -257,17 +269,36 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 	/* Some items have unadorned names */
 	if ((obj->tval == TV_WAND) || (obj->tval == TV_DEVICE) ||
 		(obj->tval == TV_GADGET) || (obj->tval == TV_LIGHT)) {
-		
+		const char *name = obj->kind->name;
+		bool show_flavor = !terse && obj->kind->flavor && !store;
+		char buf2[256];
+
+		if ((aware) && (!(OPT(player, show_flavors))))
+			show_flavor = false;
+
+		if (aware) {
+			if (show_flavor) {
+				name = buf2;
+				strnfmt(buf2, sizeof(buf2), "& # %s", obj->kind->name);
+			} else {
+				; // use kind name
+			}
+		} else {
+			basename = obj_desc_get_basename(obj, aware, terse, mode);
+			name = basename;
+		}
+
 		/* Quantity prefix */
 		if (prefix)
-			end = obj_desc_name_prefix(buf, max, end, obj, obj->kind->name, modstr, terse);
-		end = obj_desc_name_format(buf, max, end, obj->kind->name, modstr, plural);
+			end = obj_desc_name_prefix(buf, max, end, obj, name, modstr, terse);
+
+		end = obj_desc_name_format(buf, max, end, name, modstr, plural);
 	} else {
 		/* Prepend extra names */
 		if (obj->kind->flavor && aware && !mimic) {
 			const char *space = " ";
 			char buf2[256];
-			*buf2 = 0; 
+			*buf2 = 0;
 			size_t end2 = 0;
 
 			/* Quantity prefix */
@@ -283,8 +314,7 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 			 * and suffix when it doesn't take a class name
 			 **/
 			const char *spacename = obj->kind->name;
-			if ((obj->tval == TV_WAND) || (obj->tval == TV_DEVICE) || (obj->tval == TV_GADGET) ||
-				(!isalpha(spacename[strlen(spacename)-1])))
+			if (!isalpha(spacename[strlen(spacename)-1]))
 					space = "";
 			strnfcat(buf, max, &end, "%s%s%s", buf2, obj->kind->name, space);
 		} else {
@@ -297,7 +327,7 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 		end = obj_desc_name_format(buf, max, end, basename, modstr, plural);
 
 		/* Append extra names of various kinds */
-		 if (object_is_known_artifact(obj))
+		if (object_is_known_artifact(obj))
 			strnfcat(buf, max, &end, " %s", obj->artifact->name);
 		else if ((obj->known->ego && !(mode & ODESC_NOEGO)) || (obj->ego && store))
 			strnfcat(buf, max, &end, " %s", obj->ego->name);

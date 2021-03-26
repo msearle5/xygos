@@ -50,7 +50,7 @@ entryfeature:lava
 #12 generated - more rewards if you return more than 6
 min-found:6
 max-remaining:0
-intro:Well, I guess I can trust you now. I thought I was being clever, using a small cave that I thought nobody knew about to store my stash of valuable rare spirits safely. It's by the volcanic vent. Unfortunately the roof collapsed. Could you dig your way in and retrieve it for me? You'll be rewarded, and not just with a few bottle caps this time. I would take digging equipment of some kind - I don't know how far back the collapse went.
+intro:Well, I guess I can trust you now. I thought I was being clever, using a small cave that I thought nobody knew about to store my stash of valuable rare spirits safely. It's by the volcanic vent. Unfortunately the roof collapsed - I really didn't expect that! Could you dig your way in and retrieve it for me? You'll be rewarded, and not just with a few bottle caps this time. I would take digging equipment of some kind - I don't know how far back the collapse went.
 desc:Retrieve the rare booze from the volcanic cave
 succeed:Thanks a lot. As promised I have $200 per bottle for you.
 failure:It was all lost? That's a shame.

@@ -11,16 +11,16 @@
 #### Lights
 kind:light:~
 
-flavor:306:Red:& red candle~
-flavor:307:Blue:& blue candle~
-flavor:308:Green:& green candle~
-flavor:309:White:& white candle~
-flavor:310:Light Slate:& silvery candle~
-flavor:311:Cream:& stubby candle~
-flavor:312:Cream:& long candle~
-flavor:313:Cream:& tapered candle~
-flavor:314:Cream:& ribbed candle~
-flavor:315:Violet:& striped candle~
+flavor:306:Red:red
+flavor:307:Blue:blue
+flavor:308:Green:green
+flavor:309:White:white
+flavor:310:Light Slate:silvery
+flavor:311:Cream:stubby
+flavor:312:Cream:long
+flavor:313:Cream:tapered
+flavor:314:Cream:ribbed
+flavor:315:Violet:striped
 
 #### Food
 kind:food:,

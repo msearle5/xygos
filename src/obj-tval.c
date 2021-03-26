@@ -337,6 +337,8 @@ bool tval_can_have_flavor_k(const struct object_kind *kind)
 		case TV_MUSHROOM:
 		case TV_CARD:
 			return true;
+		case TV_LIGHT:
+			return (kind->flavor);
 		default:
 			return false;
 	}
