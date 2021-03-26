@@ -792,6 +792,20 @@ effect:NOURISH:INC_BY
 dice:25
 desc:A round, warty, green melon.
 
+name:& carrot~
+type:food
+graphics:,:Carrot
+level:1
+weight:200g
+cost:18
+alloc:5:0 to 30
+power:0
+msg:That tastes good.
+effect:NOURISH:INC_BY
+dice:12
+effect:CURE:BLIND
+desc:A long skinny bright orange carrot, complete with a bunch of greens.
+
 name:& pepper~
 type:food
 graphics:,:R

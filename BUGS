@@ -1,28 +1,22 @@
 BUGS
 ====
 
+
+BUG "How to handle forbids/requires, on equipment/temporary player flags?"
+
+BUG After the success/failure message from a quest, ESC is the only way to get back out.
+
+BUG: "no position"
+
+Defer
+=====
+
 BUG:/home/msearle/rogl/angband/v-xygos/angband/src/xygos: Error in flag_on(lore->flags, b->resist_flag): FlagID[0] Size[11] FlagOff[4294967295] FlagBV[128]
 	(Hit a lizard with a laser knife)
 	(flagID 0 = illegal, 1 is the first allowed.)
 	- does every brand need a resist-flag?
 	Certainly all previously have
-
-BUG: The "use flavors" option is ignored
-
-BUG: Battery/s (not the objects, but elsewhere)
-	- Wiz 'What kind of object?'
-
-BUG "These two can't intersect"
-
-BUG "How to handle forbids/requires, on equipment/temporary player flags?"
-
-BUG? After the success/failure message from a quest, ESC is the only way to get back out.
-
-BUG: Shops have a lot of items, more than would be expected from mass production, and startup is slow.
-	Is there a milder version of the shop-filling bug still around?
-
-Defer
-=====
+	UTR
 
 BUG: Lock up at start (occasionally)
 	UTR easily, and is likely the (fixed?) shop filling bug
@@ -54,15 +48,13 @@ BUG: "angband: gen-cave.c:2009: town_gen: Assertion `grid.x > 0' failed." (= the
 	Flew to another town (2) and there were no complaints.
 	Flew back and it moaned again.
 	In another game though no problem with Sewers. (Or any other.)
-	
+
 	** related to the following? **
 
 BUG: Saw climbing the stair into town put me in the middle of the level (not on a store, or the <)
 	- is the search breaking the X loop, not the Y loop (gen-cave.c:1990)?
 		- no.
 	Assuming this is the same as the one above.
-
-BUG: Crash at player-birth.c:463 (bodies is linked)
 
 WontFix
 =======
@@ -76,16 +68,29 @@ BUG: Printers all seem to generate with {ignore}
 BUG: "You fail to the tengu" (+ red worm mass - when you attack it with a pocket knife)
 	- UTR on dl0/1 outside the quest. Rubble?
 
-BUG: At dungeon l127 and l0, able to generate a Massive Iron Crown with acquisition (with INSTA_ART | QUEST_ART)
-	- Unable to reproduce (by checking in make_object_named), and artifact probabilities for it are zero.
-	- With no generation line (alloc 0) they shouldn't appear... could this have been the old "special artifacts" bug?
-	- If so, it's now gone.
-
 BUG: m-techniques top label is wonky (move the level 1 to the right, and the cost-label 2 to the left?)
 	- Unable to reproduce with Spit Acid, Sprint.
 
 Fixed
 =====
+
+BUG: At dungeon l127 and l0, able to generate a Massive Iron Crown with acquisition (with INSTA_ART | QUEST_ART)
+	- Unable to reproduce (by checking in make_object_named), and artifact probabilities for it are zero.
+	- With no generation line (alloc 0) they shouldn't appear... could this have been the old "special artifacts" bug?
+	- No - seen this again (with a Mighty Hammer at l15, using debug option G)
+	- Fixed 8273ffd288aac2cd4382a46c490e3e86720ae060
+
+BUG: The "use flavors" option is ignored
+	- Fixed. a2c1a08917e191ad472a54cf161449ac3adf7f0a
+
+BUG: Battery/s (not the objects, but elsewhere)
+	- Wiz 'What kind of object?'
+	- also implantsx2
+	Fixed
+
+BUG: Shops have a lot of items, more than would be expected from mass production, and startup is slow.
+	Is there a milder version of the shop-filling bug still around?
+	Fixed a8d635069c46f99885a388422f0b3b530bb514be
 
 BUG "dozifier field" (staff, in a store) has no article. Other staffs do.
 	Fixed
@@ -206,6 +211,15 @@ BUG:
 
 BUG: Human Cyborg Engineer has no cyberware slots (starting gear is in pack) 
 	- Fixed (rebase)
+
+BUG "These two can't intersect"
+	- Fixed ffe9c52e
+
+BUG Crash at player-birth.c:463 (bodies is linked)
+	Fixed
+
+BUG: Failed the Msing Pills, returned to the Pharmacy, got "nothing needs to be done"
+	Fixed: 83cc48d181f80ae337e9a78ef930941733d83821
 
 Theme
 =====
