@@ -326,7 +326,8 @@ static struct object_kind *select_ego_kind(struct ego_item *ego, int level, int 
 	/* Fill a table of usable base items */
 	for (poss = ego->poss_items; poss; poss = poss->next) {
 		if ((tval == 0) || (tval == k_info[poss->kidx].tval)) {
-			prob[poss->kidx] = obj_alloc[poss->kidx];
+			assert(poss->kidx);
+			prob[poss->kidx] = obj_alloc[poss->kidx] - obj_alloc[poss->kidx-1];
 			total += prob[poss->kidx];
 		}
 	}
@@ -993,7 +994,8 @@ bool kind_is_good(const struct object_kind *kind)
 static struct object_kind *get_obj_num_by_kind(int level, bool good, int tval)
 {
 	const u32b *objects;
-	u32b total, value;
+	u32b total = 0;
+	u32b value;
 	int item;
 
 	assert(level >= 0 && level <= z_info->max_obj_depth);
@@ -1001,7 +1003,8 @@ static struct object_kind *get_obj_num_by_kind(int level, bool good, int tval)
 	if (good) {
 		objects = obj_alloc_great + level * (z_info->k_max + 1);
 		total = obj_total_tval_great[level * TV_MAX + tval];
-	} else {
+	}
+	if (!total) {
 		objects = obj_alloc + level * (z_info->k_max + 1);
 		total = obj_total_tval[level * TV_MAX + tval];
 	}
@@ -1054,11 +1057,13 @@ struct object_kind *get_obj_num(int level, bool good, int tval)
 	if (tval)
 		return get_obj_num_by_kind(level, good, tval);
 
-	objects = (good ? obj_alloc_great : obj_alloc) +
-		level * (z_info->k_max + 1);
+	objects = (good ? obj_alloc_great : obj_alloc) + (level * (z_info->k_max + 1));
+
+	if ((!objects[z_info->k_max]) && good)
+		objects = obj_alloc + (level * (z_info->k_max + 1));
 
 	/* Pick an object. */
-	if (! objects[z_info->k_max]) {
+	if (!objects[z_info->k_max]) {
 		return NULL;
 	}
 	value = randint0(objects[z_info->k_max]);
@@ -1272,7 +1277,7 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
 				kind = select_ego_kind(ego, lev, tval);
 			} else {
 				/* Try to choose an object kind */
-				while (tries) {
+				while (tries--) {
 					kind = get_obj_num(base, good || great, tval);
 					break;
 				}
@@ -1341,11 +1346,12 @@ void do_acquirement(struct loc grid, int level, int num, bool good, bool great)
 	struct object *nice_obj;
 
 	/* Acquirement */
-	while (num--) {
+	while (num) {
 		/* Make a good (or great) object (if possible) */
 		nice_obj = make_object(cave, level, good, great, true, NULL, 0);
 		if (!nice_obj) continue;
 
+		num--;
 		nice_obj->origin = ORIGIN_ACQUIRE;
 		nice_obj->origin_depth = player->depth;
 

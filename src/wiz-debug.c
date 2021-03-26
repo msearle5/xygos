@@ -2174,7 +2174,7 @@ void get_debug_command(void)
 		{
 			int n;
 			screen_save();
-			n= get_quantity("How many good objects? ", 40);
+			n= get_quantity("How many good objects? ", 99999);
 			screen_load();
 			if (n < 1) n = 1;
 			acquirement(player->grid, player->depth, n, false);
@@ -2277,7 +2277,7 @@ void get_debug_command(void)
 		{
 			int n;
 			screen_save();
-			n= get_quantity("How many normal objects? ", 40);
+			n= get_quantity("How many normal objects? ", 99999);
 			screen_load();
 			if (n < 1) n = 1;
 			do_acquirement(player->grid, player->depth, n, false, false);
@@ -2438,7 +2438,7 @@ void get_debug_command(void)
 		{
 			int n;
 			screen_save();
-			n = get_quantity("How many great objects? ", 40);
+			n = get_quantity("How many great objects? ", 99999);
 			screen_load();
 			if (n < 1) n = 1;
 			acquirement(player->grid, player->depth, n, true);
