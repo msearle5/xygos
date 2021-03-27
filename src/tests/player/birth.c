@@ -12,6 +12,8 @@ int setup_tests(void **state) {
 	z_info->quest_max = 1;
 	z_info->quiver_size = 10;
 	quests = &test_quest;
+	races = extensions = &test_race;
+	classes = &test_class;
 	player_init(p);
 	*state = p;
 	return 0;

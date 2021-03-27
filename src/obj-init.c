@@ -2825,7 +2825,6 @@ static enum parser_error parse_artifact_time(struct parser *p) {
 static enum parser_error parse_artifact_msg(struct parser *p) {
 	struct artifact *a = parser_priv(p);
 	assert(a);
-
 	a->alt_msg = string_append(a->alt_msg, parser_getstr(p, "text"));
 	return PARSE_ERROR_NONE;
 }

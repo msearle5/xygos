@@ -11,7 +11,10 @@ int setup_tests(void **state) {
 	z_info = mem_zalloc(sizeof(struct angband_constants));
 	z_info->pack_size = 23;
 	z_info->quiver_size = 10;
+	races = extensions = &test_race;
+	classes = &test_class;
 	player_init(p);
+	player_generate(p, &test_race, &test_race, &test_class, false);
 	*state = p;
 	return 0;
 }

@@ -5347,7 +5347,7 @@ static int printkind_compar(const void *a, const void *b)
 	return ((struct printkind *)a)->difficulty - ((struct printkind *)b)->difficulty;
 }
 
-/* Convert a difficulty (per 10K) to a colour index: red -> green */
+/** Convert a difficulty (per 10K) to a colour index: red -> green */
 static int difficulty_colour(int diff)
 {
 	if (diff < 1000)
@@ -5363,7 +5363,7 @@ static int difficulty_colour(int diff)
 	return COLOUR_PURPLE;
 }
 
-/* Return true if it is possible (in any circumstances) to print an item.
+/** Return true if it is possible (in any circumstances) to print an item.
  * (This does not have to check the material)
  * Unprintable items include blocks, special artifacts, etc. There should probably be a flag for
  * more granular control.
@@ -5616,8 +5616,8 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 				difficulty /= 2;
 				difficulty += 100;
 
-				 /* Easy end: difficulty easier than -100 is all the same */
-				 if (difficulty < 0) 
+				/* Easy end: difficulty easier than -100 is all the same */
+				if (difficulty < 0)
 					difficulty = 0;
 
 				/* Difficult end: off the end = no chance, stop */
@@ -5643,8 +5643,7 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 				int length = strlen(item[nprintable].name);
 				if (length > longestname)
 					longestname = length;
-				
-				
+
 				nprintable++;
 			}
 		}

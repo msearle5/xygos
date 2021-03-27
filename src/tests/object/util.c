@@ -29,7 +29,7 @@ int teardown_tests(void *state) {
 
 /* Regression test for #1661 */
 int test_obj_can_refill(void *state) {
-    struct object obj_torch, obj_lantern, obj_candidate;
+    static struct object obj_torch, obj_lantern, obj_candidate;
 
     /* Torches cannot be refilled */
     object_prep(&obj_torch, &test_torch, 1, AVERAGE);
@@ -42,7 +42,6 @@ int test_obj_can_refill(void *state) {
 	player->gear = &obj_lantern;
     player->body.slots->obj = &obj_lantern; 
     of_on(obj_lantern.flags, OF_TAKES_FUEL);
-
     /* Not by torches */
     eq(obj_can_refill(&obj_torch), false);
 
@@ -56,7 +55,9 @@ int test_obj_can_refill(void *state) {
     /* Lanterns cannot be refilled by charging rods of treasure detection */
     object_prep(&obj_candidate, &test_rod_treasure_location, 1, AVERAGE);
     obj_candidate.timeout = 50;
+
     eq(obj_can_refill(&obj_candidate), false);
+
     ok;
 }
 
