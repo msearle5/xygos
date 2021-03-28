@@ -1491,6 +1491,35 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		}
 	}
 
+	/* Extract forbids - FIXME, this looks slow. Cache it in state? */
+	bool forbid[PF_MAX];
+	memset(forbid, 0, sizeof(forbid));
+	bitflag has_flag[PF_SIZE];
+	pf_copy(has_flag, state->pflags_temp);
+	pf_union(has_flag, state->pflags_equip);
+	pf_union(has_flag, state->pflags_base);
+	for (i = 0; i < PF_MAX; i++) {
+		if (ability[i]) {
+			if (pf_has(has_flag, i)) {
+				for (j = 0; j < PF_MAX; j++) {
+					if (ability[j]) {
+						if (ability[i]->forbid[j]) {
+							forbid[j] = true;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/* Apply forbids to equipment and temporary flags */
+	for (i = 0; i < PF_MAX; i++) {
+		if (forbid[i]) {
+			pf_off(state->pflags_equip, i);
+			pf_off(state->pflags_temp, i);
+		}
+	}
+
 	/* Combine base, temporary and equipment pflags. This must be done early, so that
 	 * "Extract from abilities" knows about all flags.
 	 **/

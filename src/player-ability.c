@@ -482,7 +482,7 @@ static bool ability_allowed(unsigned a, bool gain) {
 	for(int i=0; i<PF_MAX; i++) {
 		if (ability[i]) {
 			if (ability[i]->forbid[a]) {
-				if (player_has(player, i)) {
+				if (pf_has(player->state.pflags_base, i)) {
 					return false;
 				}
 			}
@@ -493,7 +493,7 @@ static bool ability_allowed(unsigned a, bool gain) {
 	for(int i=0; i<PF_MAX; i++) {
 		if (ability[i]) {
 			if (ability[a]->require[i]) {
-				if (!player_has(player, i)) {
+				if (!pf_has(player->state.pflags_base, i)) {
 					return false;
 				}
 			}
@@ -519,7 +519,7 @@ static bool can_gain_ability(unsigned a, bool birth) {
 	assert(a < PF_MAX);
 	assert(ability[a]);
 
-	if (player_has(player, a))
+	if (pf_has(player->state.pflags_base, a))
 		return false;
 
 	if (!ability_allowed(a, true))
@@ -590,7 +590,7 @@ static bool lose_ability(unsigned a) {
 	assert(a < PF_MAX);
 	assert(ability[a]);
 
-	if (!player_has(player, a))
+	if (!pf_has(player->state.pflags_base, a))
 		return false;
 
 	if (!ability_allowed(a, false))
@@ -657,7 +657,7 @@ bool get_mutation(unsigned long flags, bool allow_loss)
 	for(int i=0;i<PF_MAX;i++) {
 		if (ability[i]) {
 			if ((ability[i]->flags & flags) == flags) {
-				if ((player_has(player, i) && allow_loss) || (can_gain_ability(i, true))) {
+				if ((pf_has(player->state.pflags_base, i) && allow_loss) || (can_gain_ability(i, true))) {
 					ok = true;
 					break;
 				}
@@ -675,7 +675,7 @@ bool get_mutation(unsigned long flags, bool allow_loss)
 		mut = randint0(PF_MAX);
 		if (ability[mut]) {
 			if ((ability[mut]->flags & flags) == flags) {
-				if ((player_has(player, mut) && allow_loss) || (can_gain_ability(mut, true))) {
+				if ((pf_has(player->state.pflags_base, mut) && allow_loss) || (can_gain_ability(mut, true))) {
 					break;
 				}
 			}
@@ -705,7 +705,7 @@ bool get_mutation(unsigned long flags, bool allow_loss)
 	}
 
 	/* If you already have it, remove it - otherwise gain it */
-	if (player_has(player, mut))
+	if (pf_has(player->state.pflags_base, mut))
 		lose_ability(mut);
 	else
 		gain_ability(mut, true);
