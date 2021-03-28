@@ -5058,3 +5058,16 @@ flags:INSTA_ART | QUEST_ART
 
 #The "Special Artifacts" are now automatically generated from artifact.txt
 
+name:& chocolate egg~
+type:food
+graphics:,:Violet
+level:0
+weight:200g
+cost:25
+alloc:15:0 to 20
+power:0
+flags:SPECIAL_GEN
+msg:That tastes good.
+effect:NOURISH:INC_BY
+dice:50
+desc:A chocolate egg, covered in shiny purple foil.

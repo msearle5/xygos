@@ -31,7 +31,9 @@
 #include "obj-slays.h"
 #include "obj-tval.h"
 #include "obj-util.h"
+
 #include <math.h>
+#include <time.h>
 
 /** Let the stats see into the artifact probability table */
 extern double *wiz_stats_prob;
@@ -1171,6 +1173,65 @@ static double ego_prob(double depth, bool good, bool great)
 		return 0.0325 + ((MIN(depth, 40) / 40.0) * 0.0675);	/* 3.25% at level 0, 10% at level 40+ */
 }
 
+/* Anonymous Gregorian Algorithm (Nature, 1876).
+ * This calculates the date of Easter Sunday.
+ * The function treats the whole long weekend as Easter, so -2 to +1 day.
+ **/
+bool its_easter(void)
+{
+	struct tm t;
+	time_t now;
+	time(&now);
+	gmtime_r(&now, &t);
+
+	int y = t.tm_year + 1900;
+	int a = y % 19;
+	int b = y / 100;
+	int c = y % 100;
+	int d = b / 4;
+	int e = b % 4;
+	int f = (b + 8) / 25;
+	int g = (b - f + 1) / 3;
+	int h = ((19 * a) + b - d - g + 15) % 30;
+	int i = c / 4;
+	int k = c % 4;
+	int l = (32 + (2 * e) + (2 * i) - h - k) % 7;
+	int m = (a + (11 * h) + (22 * l)) / 451;
+	int month = (h + l - (7 * m) + 114) / 31;
+	int day = ((h + l - (7 * m) + 114) % 31) + 1;
+
+	/* Date of Easter Sunday as an offset from March 1 */
+	int easter = day;
+	if (month == 4)
+		easter += 31;
+
+	/* Current date as an offset from March 1 */
+	int today = t.tm_mday;
+	if (t.tm_mon == 3)
+		today += 31;
+	else if (t.tm_mon != 2)
+		return false;
+
+	int offset = today - easter;
+
+	return ((offset <= 1) && (offset >= -2));
+}
+
+/* Called for non-artifact items with the SPECIAL_GEN kind flag set.
+ * These can't always be generated, with the conditions varying per object.
+ * Returns true if it is OK to generate the item.
+ */
+static bool special_item_can_gen(struct object_kind *kind)
+{
+	/* Seasonal silliness */
+	if (strstr(kind->name, "chocolate egg")) {
+		return its_easter();
+	}
+
+	/* Default to OK */
+	return true;
+}
+
 /**
  * Attempt to make an object
  *
@@ -1284,6 +1345,10 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
 			}
 		}
 		if (!kind)
+			return NULL;
+
+		/* Discard special cases */
+		if ((kf_has(kind->kind_flags, KF_SPECIAL_GEN)) && (!special_item_can_gen(kind)))
 			return NULL;
 
 		/* Make the object, prep it and apply magic */
