@@ -2,8 +2,6 @@ BUGS
 ====
 
 
-BUG "How to handle forbids/requires, on equipment/temporary player flags?"
-
 BUG After the success/failure message from a quest, ESC is the only way to get back out.
 
 BUG: "no position"
@@ -73,6 +71,12 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+BUG "How to handle forbids/requires, on equipment/temporary player flags?"
+	- Innate <=> innate forbids are already handled (although they assume that all abilities are innate).
+	- Equipment/Temporary: If forbidden by innate, other equipment, or temporary effects then it doesn't take effect.
+	- Equipment/temporary requires: This shouldn't allow you to gain anything intrinsically (or allow any
+	additional equipment or temporary effects) that you couldn't without it.
+	Fixed: 1ad3b926c7fb3e5bcddfd6840be575fac9097a73
 
 BUG: At dungeon l127 and l0, able to generate a Massive Iron Crown with acquisition (with INSTA_ART | QUEST_ART)
 	- Unable to reproduce (by checking in make_object_named), and artifact probabilities for it are zero.
