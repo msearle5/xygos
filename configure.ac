@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(Xygos, 0.0.1, bugs@rephial.org)
+AC_INIT(Xygos, 0.0.2, msearle5@btinternet.com)
 AC_CONFIG_SRCDIR(src)
 
 AC_CANONICAL_HOST
@@ -8,7 +8,7 @@ AC_CANONICAL_TARGET
 BUILDSYS_INIT
 BUILDSYS_TOUCH_DEPS
 
-AC_SUBST(PACKAGE, angband)
+AC_SUBST(PACKAGE, xygos)
 
 AC_CONFIG_HEADERS(src/autoconf.h)
 
