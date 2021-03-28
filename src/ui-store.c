@@ -1742,7 +1742,7 @@ static void store_quest(struct store_context *ctx)
 			if (!(q->flags & (QF_ACTIVE | QF_FAILED | QF_SUCCEEDED | QF_UNREWARDED))) {
 				/* Take new quest - ask first */
 				screen_save();
-				int response = store_get_long_check(ctx, q->intro);
+				int response = store_get_long_check(ctx, quest_get_intro(q));
 				screen_load();
 				if (response) {
 					/* Accepted TODO message */

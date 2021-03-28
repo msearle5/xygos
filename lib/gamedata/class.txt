@@ -183,6 +183,32 @@ equip:gun:6mm handgun:1:1
 equip:6mm ammo:6mm bullet:30:40
 cdesc:A civilian weapon expert, reasonably skilled with all ranged weapons and the best of any role with your chosen specialty. Being used to firing at paper targets which rarely fire back though, your melee combat and stealth are not so hot. You'll start being able to recognize all weapon mods.
 
+############### WRESTLER ##############
+
+############### MEDIC #################
+
+############### PILOT #################
+name:Pilot
+stats:0:1:1:2:0:1:5
+title:Trainee
+title:Student
+title:Rider
+title:Pilot
+title:Instructor
+title:Aviator
+title:Ace
+title:Hunter
+title:Bounder
+title:Shadowlord
+exp:10
+hitdie:90
+max-attacks:5
+min-weight:40
+strength-multiplier:3
+# light armor - maybe more? mapping card?
+equip:food:random:1:3
+cdesc:You fly a cavespeeder, giving you increased speed (in straight lines) which improves with your skill. You can also avoid pits, lava and similar hazards but must be aware that a jet engine wakes the heaviest sleepers. Later you'll be able to upgrade to a fighter, equipped with a plasma cannon.
+
 ############### TOURIST ###############
 name:Tourist
 stats:-1:0:-3:0:0:2:0

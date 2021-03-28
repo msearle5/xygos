@@ -588,7 +588,6 @@ alloc:10:10 to 100
 type:6mm ammo
 type:9mm ammo
 type:12mm ammo
-flags:IGNORE_FIRE
 brand:FIRE_3
 desc:This ammunition bursts into a tiny but intense fireball on impact, capable of setting almost anything alight.
 
@@ -602,14 +601,14 @@ flags:IGNORE_COLD
 brand:COLD_3
 desc:These exotic bullets freeze their target solid on contact.
 
-#name:of Wounding
-#info:20:5
-#alloc:15:15 to 127
-#combat:3+d5:3+d5:0
-#type:6mm ammo
-#type:9mm ammo
-#type:12mm ammo
-#desc:Ammunition of Wounding often has unusually high to-hit and to-dam values.
+name:(guided)
+info:20:5
+alloc:15:15 to 127
+combat:10+d9M10:3+d5:0
+type:6mm ammo
+type:9mm ammo
+type:12mm ammo
+desc:Guided ammunition lets you "spray and pray" with a high chance of still hitting the mark.
 
 name:(damaged)
 info:0:0

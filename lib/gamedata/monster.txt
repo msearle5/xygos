@@ -599,6 +599,32 @@ flags:RAND_25
 flags:NO_FEAR
 desc:Lemmings hung with weights for their dive from the cliff tops.
 
+
+##### QUADRUPEDS #####
+
+name:wumpus
+base:quadruped
+color:DarkGreen
+speed:100
+hit-points:450
+hearing:4
+smell:4
+armor-class:50
+sleepiness:200
+depth:38
+rarity:5
+experience:500
+blow:CRUSH:HURT:10d12
+flags:SMART | COLD_BLOOD | WEIRD_MIND | RAND_25 | BASH_DOOR | KILL_BODY | KILL_ITEM
+
+
+
+
+
+
+
+
+
 ### Dungeon level 0 ###
 
 name:filthy street urchin
