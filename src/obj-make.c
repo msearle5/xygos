@@ -1221,7 +1221,7 @@ bool its_easter(void)
  * These can't always be generated, with the conditions varying per object.
  * Returns true if it is OK to generate the item.
  */
-static bool special_item_can_gen(struct object_kind *kind)
+bool special_item_can_gen(struct object_kind *kind)
 {
 	/* Seasonal silliness */
 	if (strstr(kind->name, "chocolate egg")) {

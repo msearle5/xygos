@@ -45,5 +45,6 @@ void acquirement(struct loc grid, int level, int num, bool great);
 struct object_kind *money_kind(const char *name, int value);
 struct object *make_gold(int lev, char *coin_type);
 struct object *make_artifact(int lev, int tval);
+bool special_item_can_gen(struct object_kind *kind);
 
 #endif /* OBJECT_MAKE_H */

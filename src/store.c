@@ -1371,6 +1371,10 @@ static bool store_create_random(struct store *store, int min_level, int max_leve
 	/* No chests in stores XXX */
 	if (kind->tval == TV_CHEST) return false;
 
+	/* Discard special cases */
+	if ((kf_has(kind->kind_flags, KF_SPECIAL_GEN)) && (!special_item_can_gen(kind)))
+		return NULL;
+
 	/*** Generate the item ***/
 
 	/* Create a new object of the chosen kind */
