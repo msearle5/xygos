@@ -76,20 +76,18 @@ owner:0:0:-
 slots:6:18
 turnover:9
 danger:72:90
-normal:boots:pair of combat boots
-normal:boots:pair of work boots
-normal:boots:pair of armored boots
-normal:helm:Hard Leather Cap
-normal:helm:Metal Cap
-normal:helm:Iron Helm
+normal:boots
+normal:boots
+normal:boots
+normal:helm
+normal:helm
+normal:helm
 normal:soft armour
 normal:soft armour
 normal:hard armour
-normal:gloves:Set of Leather Gloves
-normal:gloves:Set of Gauntlets
-normal:shield:Wicker Shield
-normal:shield:Small Metal Shield
-normal:shield:Leather Shield
+normal:gloves
+normal:gloves
+normal:shield
 buy:boots
 buy:gloves
 buy:crown
