@@ -1947,7 +1947,7 @@ alloc:4:6 to 45
 armor:0:11+d5M4
 weight:120g
 flags:IGNORE_ACID
-desc:A small device that clips to your belt and radiates a force field that turns away blows, or at least reduces their impact.
+desc:A small device that clips to your belt and radiates a protective force field.  It's Reflex's take on the standard personal forcefield generator, and is considerably more effective than the basic model.
 material:plastic
 
 name:& Rebound forcefield generator~
@@ -2191,7 +2191,7 @@ effect:IDENTIFY
 ### Enchantments ###
 
 #precision/power?
-name:Enchant Weapon To-Hit
+name:enhanced precision
 type:card
 graphics:-:Deep Light Blue
 level:15
@@ -2202,8 +2202,9 @@ pile:25:2
 power:15
 effect:ENCHANT:TOHIT
 dice:1
+desc:Attempts to make weapons or ammunition a little more precise, more likely to hit its target.
 
-name:Enchant Weapon To-Dam
+name:enhanced power
 type:card
 graphics:-:Deep Light Blue
 level:15
@@ -2214,8 +2215,9 @@ pile:25:2
 power:20
 effect:ENCHANT:TODAM
 dice:1
+desc:Attempts to make weapons or ammunition a little more powerful, more capable of striking truly.
 
-name:Enchant Armour
+name:enhanced protection
 type:card
 graphics:-:Deep Light Blue
 level:15
@@ -2226,8 +2228,9 @@ pile:25:2
 power:12
 effect:ENCHANT:TOAC
 dice:1
+desc:Attempts to make armour or other worn equipment a little more protective.
 
-name:*Enchant Weapon*
+name:enhanced potency
 type:card
 graphics:-:Deep Light Blue
 level:50
@@ -2238,9 +2241,9 @@ pile:25:2
 power:22
 effect:ENCHANT:TOBOTH
 dice:1d3
+desc:Attempts to make weapons or ammunition more precise and powerful, more capable of striking forcefully and accurately.
 
-
-name:*Enchant Armour*
+name:enhanced preservation
 type:card
 graphics:-:Deep Light Blue
 level:50
@@ -2251,7 +2254,7 @@ pile:25:2
 power:15
 effect:ENCHANT:TOAC
 dice:2+1d3
-
+desc:Attempts to make armour or other worn equipment considerably more protective.
 
 name:repair
 type:card
@@ -2264,7 +2267,6 @@ pile:25:2
 power:8
 effect:REMOVE_FAULT
 dice:20+d20
-
 
 name:major repair
 type:card
@@ -2280,7 +2282,7 @@ dice:50+d50
 
 ### Summoning ###
 
-name:Summon Monster
+name:summoning
 type:card
 graphics:-:Deep Light Blue
 level:1
@@ -2291,18 +2293,19 @@ pile:70:1d3
 power:0
 effect:SUMMON:ANY
 dice:1d3
+desc:It's a form of teleportation. It transports monsters from off the level to your side.
 
-name:Summon Undead
-type:card
-graphics:-:Deep Light Blue
-level:15
-weight:5g
-cost:0
-alloc:10:15 to 100
-pile:70:1d3
-power:0
-effect:SUMMON:UNDEAD
-dice:1d3
+#name:Summon Undead
+#type:card
+#graphics:-:Deep Light Blue
+#level:15
+#weight:5g
+#cost:0
+#alloc:10:15 to 100
+#pile:70:1d3
+#power:0
+#effect:SUMMON:UNDEAD
+#dice:1d3
 
 name:local acquisition
 type:card
