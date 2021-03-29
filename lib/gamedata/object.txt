@@ -1764,7 +1764,7 @@ level:20
 weight:2750g
 cost:350
 alloc:20:18 to 100
-attack:1d1:0:1
+attack:1d1:-1:1
 armor:7:0
 flags:IGNORE_FIRE
 material:steel

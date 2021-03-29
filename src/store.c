@@ -1289,6 +1289,21 @@ static bool black_market_ok(const struct object *obj)
 }
 
 
+/**
+ * This makes sure that the armoury only stocks items which have AC (mostly armour,
+ * but the occasional other item is a feature).
+ *
+ * 'Armour' means at least 2 points of base AC or at least 10 points total AC.
+ */
+static bool armoury_ok(const struct object *obj)
+{
+	if (obj->ac >= 2) return true;
+	if (obj->to_a + obj->ac >= 10) return true;
+
+	/* Otherwise nope */
+	return false;
+}
+
 
 /**
  * Get a choice from the store allocation table, in tables.c
@@ -1355,10 +1370,10 @@ static bool store_create_random(struct store *store, int min_level, int max_leve
 	/* Work out the level for objects to be generated at */
 	int level = rand_range(min_level, max_level);
 
-	/* Black Markets have a random object, of a given level */
-	if (store->sidx == STORE_HQ)
-		kind = get_obj_num(level, false, 0);
-	else if (store->sidx == STORE_B_MARKET)
+	/* Black Markets and HQs have a random object, of a given level.
+	 * Armouries do for some items.
+	 **/
+	if (((store->sidx == STORE_HQ) || (store->sidx == STORE_B_MARKET)) || ((store->sidx == STORE_ARMOR) && (one_in_(2))))
 		kind = get_obj_num(level, false, 0);
 	else
 		kind = store_get_choice(store, level);
@@ -1409,6 +1424,14 @@ static bool store_create_random(struct store *store, int min_level, int max_leve
 
 	/* Black markets have expensive tastes */
 	if ((store->sidx == STORE_B_MARKET) && !black_market_ok(obj)) {
+		object_delete(&known_obj);
+		obj->known = NULL;
+		object_delete(&obj);
+		return false;
+	}
+
+	/* Armouries only stock armour */
+	if ((store->sidx == STORE_ARMOR) && !armoury_ok(obj)) {
 		object_delete(&known_obj);
 		obj->known = NULL;
 		object_delete(&obj);
