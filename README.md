@@ -3,6 +3,7 @@
 <p align="center">
   <img src="screenshots/title.png" width="425"/>
   <img src="screenshots/game.png" width="425"/>
+  <img src="screenshots/char.png" width="425"/>
 </p>
 
 Xygos is a variant of Angband - a graphical dungeon adventure game that uses
