@@ -1179,12 +1179,12 @@ static double ego_prob(double depth, bool good, bool great)
  **/
 bool its_easter(void)
 {
-	struct tm t;
+	struct tm *t;
 	time_t now;
 	time(&now);
-	gmtime_r(&now, &t);
+	t = gmtime(&now);
 
-	int y = t.tm_year + 1900;
+	int y = t->tm_year + 1900;
 	int a = y % 19;
 	int b = y / 100;
 	int c = y % 100;
@@ -1206,10 +1206,10 @@ bool its_easter(void)
 		easter += 31;
 
 	/* Current date as an offset from March 1 */
-	int today = t.tm_mday;
-	if (t.tm_mon == 3)
+	int today = t->tm_mday;
+	if (t->tm_mon == 3)
 		today += 31;
-	else if (t.tm_mon != 2)
+	else if (t->tm_mon != 2)
 		return false;
 
 	int offset = today - easter;
