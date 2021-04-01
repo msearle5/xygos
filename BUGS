@@ -2,6 +2,7 @@ BUGS
 ====
 
 BUG: "You failed to concentrate hard enough" may be inappropriate. Per spell?
+		- with a default per primary stat? With concentrate for INT.
 	- also the 'fail' field doesn't appear to influence fail rate
 
 BUG: "You knock out the MlM" -> "The MlM flees in terror!" -> "The MlM can move again" (after making amove!)

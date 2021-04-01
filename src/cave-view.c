@@ -735,6 +735,9 @@ void update_view(struct chunk *c, struct player *p)
 {
 	int x, y;
 
+	if (!c)
+		return;
+
 	/* Record the current view */
 	mark_wasseen(c);
 

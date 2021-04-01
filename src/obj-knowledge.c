@@ -227,7 +227,7 @@ static int icon_index(size_t variety, int index)
 
 	/* Read it from the table */
 	unsigned cindex = (max_index * (int)variety) + index;
-	if (cindex < max_var * max_index) 
+	if (cindex < (unsigned)(max_var * max_index))
 		return cache[cindex];
 	else
 		return -1;

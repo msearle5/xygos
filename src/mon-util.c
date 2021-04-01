@@ -502,6 +502,9 @@ void update_monsters(bool full)
 {
 	int i;
 
+	if (!cave)
+		return;
+
 	/* Update each (live) monster */
 	for (i = 1; i < cave_monster_max(cave); i++) {
 		struct monster *mon = cave_monster(cave, i);
