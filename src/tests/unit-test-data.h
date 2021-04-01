@@ -23,7 +23,14 @@
 #include "player-timed.h"
 #include "project.h"
 
-static s16b TEST_DATA test_timed[TMD_MAX] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 
+/* 53 = TMD_MAX */
+static s16b TEST_DATA test_timed[53] = {
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0
 };
 
 static struct object_base TEST_DATA sword_base = {
@@ -1064,6 +1071,10 @@ static struct object TEST_DATA test_player_knowledge = {
 	.origin_depth = 0,
 	.origin_race = NULL,
 	.note = 0,
+};
+
+static struct player_shape TEST_DATA test_player_shape = {
+	.name = "normal",
 };
 
 
