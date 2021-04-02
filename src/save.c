@@ -470,7 +470,6 @@ void wr_player(void)
 	wr_string(player->class->name);
 	wr_byte(player->opts.name_suffix);
 
-	wr_u32b(player->hitdie);
 	wr_u16b(player->expfact_low);
 	wr_u16b(player->expfact_high);
 
@@ -500,25 +499,9 @@ void wr_player(void)
 	/* Padding */
 	wr_u32b(0);
 
-	wr_u32b(player->au);
-
-
-	wr_u32b(player->max_exp);
-	wr_u32b(player->exp);
-	wr_u16b(player->exp_frac);
 	wr_s16b(player->lev);
 
-	wr_s16b(player->mhp);
-	wr_s16b(player->chp);
-	wr_u16b(player->chp_frac);
-
-	wr_u16b(player->talent_points);
-
-	/* Max Player and Dungeon Levels */
-	wr_s16b(player->max_lev);
-	wr_s16b(player->max_depth);
-	wr_s16b(player->recall_depth);
-	wr_s16b(player->danger);
+	rdwr_player_levels();
 
 	RDWR_PTR(&(player->town), t_info);
 
@@ -744,8 +727,8 @@ void wr_player_hp(void)
 {
 	int i;
 
-	wr_u16b(PY_MAX_LEVEL);
-	for (i = 0; i < PY_MAX_LEVEL; i++)
+	wr_u16b(PY_MAX_LEVEL * (classes->cidx + 1));
+	for (i = 0; i < (int)(PY_MAX_LEVEL * (classes->cidx + 1)); i++)
 		wr_s16b(player->player_hp[i]);
 }
 

@@ -27,6 +27,7 @@
 #include "player-quest.h"
 #include "player-spell.h"
 #include "player-timed.h"
+#include "player-util.h"
 #include "z-color.h"
 #include "z-util.h"
 
@@ -281,6 +282,8 @@ static void adjust_level(struct player *p, bool verbose)
 	while ((p->max_lev < PY_MAX_LEVEL) &&
 	       (p->max_exp >= (exp_to_gain(p->max_lev+1))))
 		p->max_lev++;
+
+	set_primary_class();
 
 	if (p->max_lev > max_from) {
 		ability_levelup(p, max_from, p->max_lev);

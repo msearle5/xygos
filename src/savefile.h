@@ -102,6 +102,7 @@ int rd_object_memory(void);
 int rd_quests(void);
 int rd_artifacts(void);
 int rd_player(void);
+void rdwr_player_levels(void);
 int rd_world(void);
 int rd_ignore(void);
 int rd_misc(void);
