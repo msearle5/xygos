@@ -77,6 +77,17 @@ static int compar_class(const void *av, const void *bv)
 	return 0;
 }
 
+/** Returns the class with the given cidx, of NULL if there is none.
+ */
+struct player_class *get_class_by_idx(int cidx)
+{
+	for (struct player_class *c = classes; c; c = c->next) {
+		if (c->cidx == cidx)
+			return c;
+	}
+	return NULL;
+}
+
 /** Returns a (static) list of classes, from most levelled to least.
  * The sort order is by total number of levels first, and the first level gained in that class second
  * (earlier = first).

@@ -123,6 +123,7 @@ void player_place(struct chunk *c, struct player *p, struct loc grid);
 int levels_in_class(int c);
 struct player_class **ordered_classes(void);
 void set_primary_class(void);
+struct player_class *get_class_by_idx(int cidx);
 void disturb(struct player *p);
 void search(struct player *p);
 

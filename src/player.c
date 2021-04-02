@@ -198,9 +198,27 @@ s32b exp_to_gain(s32b level)
 	/* Base exp to advance, ignoring exp factors */
 	double exp = player_exp[level-2];
 
-	/* Level-1 and max-level factors */
-	double exp_low = exp * player->expfact_low;
-	double exp_high = exp * player->expfact_high;
+	/* Avoid division by 0 - probably can't happen, though */
+	if (level <= 1)
+		return 0;
+
+	/* Class exp factor - average of all levels' classes' exp factors */
+	s32b c_exp = 0;
+	for(int l=1; l<level; l++) {
+		c_exp += get_class_by_idx(player->lev_class[l])->c_exp;
+	}
+	double t_exp = c_exp;
+	c_exp /= (level-1);
+
+	/* Level-1 and max-level race/ext factors */
+	double exp_low = player->expfact_low;
+	exp_low += t_exp;
+	double exp_high = player->expfact_high;
+	exp_high += t_exp;
+
+	/* Base exp */
+	exp_low *= exp;
+	exp_high *= exp;
 
 	/* Fractional factors */
 	double prop_high = (level - 2) / (PY_MAX_LEVEL - 2);
@@ -305,7 +323,7 @@ static void adjust_level(struct player *p, bool verbose)
 s32b player_exp_scale(s32b amount)
 {
 	struct player *p = player;
-	
+
 	/* Two levels above your maximum (one level above would be the amount needed to gain the next level)
 	 * is the first point to care about
 	 */

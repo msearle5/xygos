@@ -363,7 +363,6 @@ static void roll_hp_class(int hitdie, s16b *player_hp)
 	 * happen with some unexpected inputs, such as a very low hitdie.
 	 */
 	int runrolls = 0;
-	int worst;
 	do {
 		int before = hp_roll_score(hitdie, level);
 		int from = randint1(PY_MAX_LEVEL-1);
@@ -1027,11 +1026,8 @@ void player_generate(struct player *p, struct player_race *r, struct player_race
 	set_primary_class();
 
 	/* Experience factor */
-	p->expfact_low = p->race->r_exp + p->extension->r_exp + p->class->c_exp;
-	p->expfact_high = p->race->r_high_exp + p->extension->r_high_exp + p->class->c_exp;
-
-	/* Hitdice */
-	int hitdie = hitdie_class(player->class);
+	p->expfact_low = p->race->r_exp + p->extension->r_exp;
+	p->expfact_high = p->race->r_high_exp + p->extension->r_high_exp;
 
 	/* HP array */
 	if (!(p->player_hp))
@@ -1039,6 +1035,7 @@ void player_generate(struct player *p, struct player_race *r, struct player_race
 
 	/* For each class... */
 	for (struct player_class *c = classes; c; c = c->next) {
+		/* Hitdice */
 		int hitdie = hitdie_class(c);
 		s16b *player_hp = player->player_hp + (PY_MAX_LEVEL * c->cidx);
 
