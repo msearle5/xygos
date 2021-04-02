@@ -422,18 +422,19 @@ static bool describe_brands(textblock *tb, const struct object *obj)
 
 	if (!b) return false;
 
-	if (tval_is_weapon(obj) || tval_is_fuel(obj))
-		textblock_append(tb, "Branded with ");
-	else
-		textblock_append(tb, "It brands your melee attacks with ");
-
 	for (i = 1; i < z_info->brand_max; i++) {
 		if (b[i]) {
 			count++;
 		}
 	}
 
-	assert(count >= 1);
+	if (!count) return false;
+
+	if (tval_is_weapon(obj) || tval_is_fuel(obj))
+		textblock_append(tb, "Branded with ");
+	else
+		textblock_append(tb, "It brands your melee attacks with ");
+
 	for (i = 1; i < z_info->brand_max; i++) {
 		if (!b[i]) continue;
 

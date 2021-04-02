@@ -41,6 +41,7 @@
 #include "obj-make.h"
 #include "obj-pile.h"
 #include "obj-power.h"
+#include "obj-slays.h"
 #include "obj-tval.h"
 #include "obj-util.h"
 #include "player-ability.h"
@@ -6162,6 +6163,102 @@ bool effect_handler_CLIMBING(effect_handler_context_t *context)
 	} else {
 		msg("Success");
 	}
+	return (true);
+}
+
+/**
+ * Prismatic Lightsaber
+ */
+bool effect_handler_PRISMATIC(effect_handler_context_t *context)
+{
+	assert(context->obj);
+	struct object *obj = (struct object *)context->obj;
+	if (!(obj->brands))
+		return (true);
+
+	#define n_brands 5
+
+	static const char *flip[] = {
+		"flip",
+		"switch",
+		"convert",
+		"dial",
+		"transform",
+	};
+
+	/* The brands to switch between */
+	static const char *message[n_brands*2] = {
+		"a brilliant dual lightsaber.",
+		"a dimsaber's twin chaotic maelstroms.",
+		"an ominous red dual darksaber.",
+		"a pair of shimmering phantom blades.",
+		"invisible dual X-ray beams.",
+		"a brilliant lightsaber.",
+		"a dimsaber's chaotic maelstrom.",
+		"an ominous red darksaber.",
+		"an uncannily shimmering phantom blade.",
+		"an invisible X-ray beam.",
+	};
+
+	static const char *brand_name[n_brands*2] =	{	"LIGHT_2", "CHAOS_2", "DARK_2", "NEXUS_2", "RADIATION_2",
+										"LIGHT_3", "CHAOS_3", "DARK_3", "NEXUS_3", "RADIATION_3" };
+	int resist_idx[n_brands] = { ELEM_LIGHT, ELEM_CHAOS, ELEM_DARK, ELEM_NEXUS, ELEM_RADIATION };
+	int brand_idx[n_brands*2];
+	int brand = 0;
+
+	/* Find the brand indexes */
+	for(int i=0;i<n_brands*2;i++) {
+		brand_idx[i] = get_brand_by_name(brand_name[i]);
+		if (brand_idx[i] < 0) {
+			msg("Whoops. What's %s?", brand_name[i]);
+			return (true);
+		}
+		if (obj->brands[brand_idx[i]])
+			brand = i;
+	}
+
+	/* Turn off the other brands and resistances */
+	for(int i=0;i<n_brands*2;i++) {
+		obj->brands[brand_idx[i]] = false;
+		if (obj->known->brands)
+			obj->known->brands[brand_idx[i]] = false;
+		obj->el_info[resist_idx[i % n_brands]].res_level = 0;
+	}
+	obj->modifiers[OBJ_MOD_LIGHT] = 0;
+
+	/* The new one */
+	brand++;
+	if ((brand % n_brands) == 0)
+		brand -= n_brands;
+
+	/* Turn on this one */
+	obj->brands[brand_idx[brand]] = true;
+	obj->el_info[resist_idx[brand % n_brands]].res_level = 1;
+
+	/* A lightsaber glows, the others don't */
+	if ((brand % n_brands) == 0)
+		obj->modifiers[OBJ_MOD_LIGHT] = 1;
+
+	/* X-sabers are hard to use.
+	 * But a reversible penalty (of say -20) would allow you to enhance it to +15 and then
+	 * switch it back to a +35 lightsaber! So just assume that the X-mode has a visible guide
+	 * beam.
+	 **/
+
+	/* Print a message */
+	msg("You %s your weapon into %s", flip[randint0(sizeof(flip)/sizeof(*flip))], message[brand]);
+
+	/* Learn, as if wielded */
+	object_learn_on_wield(player, obj);
+	player_know_object(player, obj);
+	update_player_object_knowledge(player);
+
+	/* Update */
+	player->upkeep->update |= (PU_TORCH);
+	update_stuff(player);
+
+	#undef n_brands
+
 	return (true);
 }
 

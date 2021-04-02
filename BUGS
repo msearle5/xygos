@@ -1,7 +1,10 @@
 BUGS
 ====
 
-BUG: on 28/3 the BM had a choc egg
+BUG: effect_handler_CLIMBING is incomplete
+BUG: subwindow inventory uses lb
+
+BUG: on 28/3 the BM had a choc egg - also seen one in initial inventory
 
 BUG After the success/failure message from a quest, ESC is the only way to get back out.
 
