@@ -680,6 +680,7 @@ void rdwr_player_levels(void)
 	/* Level by class */
 	for(int i=0;i<(int)sizeof(player->lev_class);i++)
 		rdwr_byte(&player->lev_class[i]);
+	rdwr_byte(&player->switch_class);
 
 	/* Max Player and Dungeon Levels */
 	rdwr_s16b(&player->max_lev);

@@ -68,6 +68,7 @@ static const struct command_info game_cmds[] =
 	{ CMD_HISTORY_CHOICE, "write history", do_cmd_choose_history, false, 0 },
 	{ CMD_ACCEPT_CHARACTER, "accept character", do_cmd_accept_character, false, 0 },
 
+	{ CMD_CLASS, "change class", do_cmd_change_class, 0 },
 	{ CMD_GO_UP, "go up stairs", do_cmd_go_up, false, 0 },
 	{ CMD_GO_DOWN, "go down stairs", do_cmd_go_down, false, 0 },
 	{ CMD_WALK, "walk", do_cmd_walk, true, 0 },

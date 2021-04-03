@@ -1021,6 +1021,7 @@ void player_generate(struct player *p, struct player_race *r, struct player_race
 
 	/* Set all class levels to the initial class */
 	memset(p->lev_class, p->class->cidx, sizeof(p->lev_class));
+	p->switch_class = p->class->cidx;
 
 	/* Primary class */
 	set_primary_class();

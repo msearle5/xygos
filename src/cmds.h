@@ -51,6 +51,7 @@ void do_cmd_abilities(void);
 void do_cmd_wizard(void);
 void do_cmd_suicide(struct command *cmd);
 void do_cmd_note(void);
+void do_cmd_change_class(void);
 
 /* cmd-obj.c */
 void do_cmd_uninscribe(struct command *cmd);

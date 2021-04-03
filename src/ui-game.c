@@ -158,6 +158,7 @@ struct cmd_info cmd_util[] =
 {
 	{ "Interact with options", { '=' }, CMD_NULL, do_cmd_xxx_options, NULL },
 
+	{ "Change class", { 'G' }, CMD_NULL, do_cmd_change_class, NULL },
 	{ "Save and don't quit", { KTRL('S') }, CMD_NULL, save_game, NULL },
 	{ "Save and quit", { KTRL('X') }, CMD_NULL, textui_quit, NULL },
 	{ "Kill character and quit", { 'Q' }, CMD_NULL, textui_cmd_suicide, NULL },

@@ -597,6 +597,7 @@ struct player {
 	byte talent_gain[PY_MAX_LEVEL];	/* TP to gain per level */
 
 	byte lev_class[PY_MAX_LEVEL+1];	/* Class gained per level */
+	byte switch_class;				/* Class to switch to at next level up */
 
 	s16b stat_max[STAT_MAX];	/* Current "maximal" stat values */
 	s16b stat_cur[STAT_MAX];	/* Current "natural" stat values */
