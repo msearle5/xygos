@@ -50,8 +50,10 @@ enum
 #include "object.h"
 #include "option.h"
 
-#define player_hookz(X)			if (player->class->X) { player->class->X(); } if (player->race->X) { player->race->X(); } if (player->extension->X) { player->extension->X(); }
-#define player_hook(X, ...)		if (player->class->X) { player->class->X(__VA_ARGS__); } if (player->race->X) player->race->X(__VA_ARGS__); if (player->extension->X) player->extension->X(__VA_ARGS__);
+extern struct player_class **ordered_classes(void);
+
+#define player_hookz(X)			{ struct player_class **classes = ordered_classes(); while (*classes) { if ((*classes)->X) { (*classes)->X(); } classes++; } } if (player->race->X) { player->race->X(); } if (player->extension->X) { player->extension->X(); }
+#define player_hook(X, ...)		{ struct player_class **classes = ordered_classes(); while (*classes) { if ((*classes)->X) { (*classes)->X(__VA_ARGS__); } classes++; } } if (player->race->X) player->race->X(__VA_ARGS__); if (player->extension->X) player->extension->X(__VA_ARGS__);
 
 #define pf_has(f, flag)        flag_has_dbg(f, PF_SIZE, flag, #f, #flag)
 #define pf_next(f, flag)       flag_next(f, PF_SIZE, flag)
