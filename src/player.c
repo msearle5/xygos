@@ -208,7 +208,7 @@ s32b exp_to_gain(s32b level)
 		c_exp += get_class_by_idx(player->lev_class[l])->c_exp;
 	}
 	double t_exp = c_exp;
-	c_exp /= (level-1);
+	t_exp /= (level-1);
 
 	/* Level-1 and max-level race/ext factors */
 	double exp_low = player->expfact_low;
@@ -248,6 +248,9 @@ static s32b exp_to_lev(s32b exp)
 
 static void adjust_level(struct player *p, bool verbose)
 {
+	char buf[80];
+	bool message = false;
+
 	if (p->exp < 0)
 		p->exp = 0;
 
@@ -276,7 +279,6 @@ static void adjust_level(struct player *p, bool verbose)
 
 	while ((p->lev < PY_MAX_LEVEL) &&
 	       (p->exp >= exp_to_gain(p->lev+1))) {
-		char buf[80];
 
 		p->lev++;
 
@@ -284,14 +286,7 @@ static void adjust_level(struct player *p, bool verbose)
 		if (p->lev > p->max_lev)
 			p->max_lev = p->lev;
 
-		if (verbose) {
-			/* Log level updates */
-			strnfmt(buf, sizeof(buf), "Reached level %d", p->lev);
-			history_add(p, buf, HIST_GAIN_LEVEL);
-
-			/* Message */
-			msgt(MSG_LEVEL, "Welcome to level %d.",	p->lev);
-		}
+		message = true;
 
 		for(int i=0;i<STAT_MAX;i++)
 			effect_simple(EF_RESTORE_STAT, source_none(), "0", STAT_STR+i, 0, 0, 0, 0, NULL);
@@ -300,6 +295,48 @@ static void adjust_level(struct player *p, bool verbose)
 	while ((p->max_lev < PY_MAX_LEVEL) &&
 	       (p->max_exp >= (exp_to_gain(p->max_lev+1))))
 		p->max_lev++;
+
+	int newexp = exp_to_gain(p->max_lev-1);
+
+	if (p->max_lev > max_from) {
+		for(int i=max_from+1; i<=p->max_lev; i++)
+			p->lev_class[i] = p->switch_class;
+	}
+
+	/* Switch class */
+	if ((p->max_lev > max_from) && (p->switch_class != p->lev_class[max_from])) {
+		if (verbose) {
+			const char *c = get_class_by_idx(p->switch_class)->name;
+
+			/* Log class change */
+			strnfmt(buf, sizeof(buf), "Level up, changed to %s", c);
+			history_add(p, buf, HIST_GAIN_LEVEL);
+
+			msgt(MSG_LEVEL, "You are now training as a %s.", c);
+		}
+		p->exp = p->max_exp = newexp;
+		//adjust_level(p, false);
+		while ((p->lev > 1) &&
+			   (p->exp < (exp_to_gain(p->lev))))
+			p->lev--;
+
+		while ((p->lev < PY_MAX_LEVEL) &&
+			   (p->exp >= exp_to_gain(p->lev+1)))
+			p->lev++;
+
+		if (p->lev > p->max_lev)
+			p->max_lev = p->lev;
+		return;
+	} else {
+		if (verbose && message ) {
+			/* Log level updates */
+			strnfmt(buf, sizeof(buf), "Reached level %d", p->lev);
+			history_add(p, buf, HIST_GAIN_LEVEL);
+
+			/* Message */
+			msgt(MSG_LEVEL, "Welcome to level %d.",	p->lev);
+		}
+	}
 
 	set_primary_class();
 

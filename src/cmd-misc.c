@@ -161,7 +161,7 @@ void do_cmd_change_class(void)
 	column_width++;
 
 	/* Build the top message */
-	const char *tops = "You can select a class and at the next time you level up, if you have selected a different class from your current one, you wil change class. This is usually at the cost of that level's experience.";
+	const char *tops = "You can select a class and at the next time you level up, if you have selected a different class from your current one, you will change class. This is usually at the cost of that level's experience.";
 	const char *tops_max = "You are at maximum level. As changes to your class only take effect at level up, your class cannot change.";
 	if (player->max_lev == PY_MAX_LEVEL)
 		tops = tops_max;
@@ -220,9 +220,9 @@ void do_cmd_change_class(void)
 
 		/* Classes so far */
 		tb = textblock_new();
-		textblock_append_c(tb, COLOUR_YELLOW, "You started as a %s, and", get_class_by_idx(player->lev_class[1])->name);
+		textblock_append_c(tb, COLOUR_YELLOW, "You started as a %s", get_class_by_idx(player->lev_class[1])->name);
 		if (player->max_lev == 1)
-			textblock_append_c(tb, COLOUR_YELLOW, " have yet to level up.");
+			textblock_append_c(tb, COLOUR_YELLOW, ", and have yet to level up.");
 		else {
 			/* Display the list of changes so far */
 			int changes = 0;
@@ -238,23 +238,43 @@ void do_cmd_change_class(void)
 			if (changes) {
 				int *levels = mem_zalloc(n_classes * sizeof(*levels));
 				int *percent = mem_zalloc(n_classes * sizeof(*percent));
-				textblock_append_c(tb, COLOUR_YELLOW, " changed");
+				//textblock_append_c(tb, COLOUR_YELLOW, " changed");
+				const char *changed = " and changed ";
 				for(int i = 1; i <= player->max_lev; i++) {
 					int next = player->lev_class[i];
 					if (next != prev) {
-						textblock_append_c(tb, COLOUR_YELLOW, " to %s at level %d", get_class_by_idx(next)->name, i);
+						textblock_append_c(tb, COLOUR_YELLOW, "%sto %s at level %d", changed, get_class_by_idx(next)->name, i);
 						prev = next;
+						changes--;
+						changed = (changes > 1)  ? ", " : " and ";
 					}
 					levels[next]++; 
 				}
+
+				/* Convert to percent, trying to make it sum to 100% even if it wouldn't because rounding */
+				int sum = 0;
+				int high = 0;
+				int high_i = 0;
+				int match = 0;
 				for(int i = 0; i < n_classes; i++) {
 					percent[i] = (levels[i] * 100) / player->max_lev;
+					sum += percent[i];
+					if (percent[i] > high) {
+						high = percent[i];
+						high_i = i;
+						match = 0;
+					} else if (percent[i] == high) {
+						match++;
+					}
 				}
+				if (match == 1)
+					percent[high_i] += (100 - sum);
+
 				textblock_append_c(tb, COLOUR_YELLOW, ", making you ");
 				bool first = true;
 				for(int i = 0; i < n_classes; i++) {
 					if (percent[i] > 0) {
-						textblock_append_c(tb, COLOUR_YELLOW, "%s%d%% %s", first ? "" : ", ");
+						textblock_append_c(tb, COLOUR_YELLOW, "%s%d%% %s", first ? "" : ", ", percent[i], get_class_by_idx(i)->name);
 						first = false;
 					}
 				}
@@ -262,7 +282,7 @@ void do_cmd_change_class(void)
 				mem_free(levels);
 				mem_free(percent);
 			} else {
-				textblock_append_c(tb, COLOUR_YELLOW, "have not changed class.");
+				textblock_append_c(tb, COLOUR_YELLOW, ", and have not changed class.");
 			}
 		}
 
