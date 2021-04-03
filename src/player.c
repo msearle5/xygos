@@ -315,7 +315,7 @@ static void adjust_level(struct player *p, bool verbose)
 			msgt(MSG_LEVEL, "You are now training as a %s.", c);
 		}
 		p->exp = p->max_exp = newexp;
-		//adjust_level(p, false);
+
 		while ((p->lev > 1) &&
 			   (p->exp < (exp_to_gain(p->lev))))
 			p->lev--;
@@ -326,7 +326,6 @@ static void adjust_level(struct player *p, bool verbose)
 
 		if (p->lev > p->max_lev)
 			p->max_lev = p->lev;
-		return;
 	} else {
 		if (verbose && message ) {
 			/* Log level updates */

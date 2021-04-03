@@ -238,7 +238,7 @@ void do_cmd_change_class(void)
 			if (changes) {
 				int *levels = mem_zalloc(n_classes * sizeof(*levels));
 				int *percent = mem_zalloc(n_classes * sizeof(*percent));
-				//textblock_append_c(tb, COLOUR_YELLOW, " changed");
+
 				const char *changed = " and changed ";
 				for(int i = 1; i <= player->max_lev; i++) {
 					int next = player->lev_class[i];

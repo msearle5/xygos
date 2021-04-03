@@ -1402,6 +1402,22 @@ static void apply_modifiers(struct player *p, struct player_state *state, s16b *
 		* p->obj_k->modifiers[OBJ_MOD_MOVES];
 }
 
+/* Return the + to a given stat from classes stat bonuses, mixed according to their weights.
+ */
+int class_to_stat(int stat)
+{
+	int total = 0;
+
+	/* Sum */
+	for(int i=1; i<=player->max_lev; i++)
+		total += get_class_by_idx(player->lev_class[i])->c_adj[stat];
+
+	/* Round to nearest */
+	total *= 2;
+	total += player->max_lev;
+	return total / (player->max_lev * 2);
+}
+
 /**
  * Calculate the players current "state", taking into account
  * not only race/class intrinsics, but also objects being worn
@@ -1722,7 +1738,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		int add, use, ind;
 
 		add = state->stat_add[i];
-		add += (p->race->r_adj[i] + p->extension->r_adj[i] + p->class->c_adj[i]);
+		add += (p->race->r_adj[i] + p->extension->r_adj[i] + class_to_stat(i));
 		add += ability_to_stat(i);
 		state->stat_top[i] =  modify_stat_value(p->stat_max[i], add);
 		use = modify_stat_value(p->stat_cur[i], add);

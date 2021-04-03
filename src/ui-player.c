@@ -525,7 +525,7 @@ void display_player_stat_info(bool generating)
 		c_put_str(COLOUR_L_BLUE, buf, row+i, col+15);
 
 		/* Class Bonus */
-		strnfmt(buf, sizeof(buf), "%+3d", player->class->c_adj[i]);
+		strnfmt(buf, sizeof(buf), "%+3d", class_to_stat(i));
 		c_put_str(COLOUR_L_BLUE, buf, row+i, col+19);
 
 		/* Equipment Bonus */
