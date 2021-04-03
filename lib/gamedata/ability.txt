@@ -23,6 +23,8 @@
 #								take it), but also see the "birth" flag.
 # class:<class>			-	If present, this talent cam only be gained by this class (multiple classes can be given, as one line
 #								e.g. class:Marksman,Soldier
+#						-	If min/maxlevel and class(es) are present for a multiclassed character, the highest per-class level
+#								is used.
 
 ### - interactions - ###
 # forbid:<talent>		-	This forbids another ability from being gained if this ability is already present. This may be

@@ -25,6 +25,7 @@
 #include "player.h"
 #include "player-ability.h"
 #include "player-calcs.h"
+#include "player-util.h"
 #include "project.h"
 #include "ui-display.h"
 #include "ui-input.h"
@@ -500,11 +501,32 @@ static bool ability_allowed(unsigned a, bool gain) {
 		}
 	}
 
+	/* No class? Use overall level */
+	int min = ability[a]->minlevel;
+	int max = ability[a]->maxlevel;
+	int highest = player->lev;
+	int lowest = player->lev;
+
+	/* Class? Use highest / lowest level-in-class */
+	if (ability[a]->class) {
+		lowest = PY_MAX_LEVEL;
+		highest = 0;
+		for(struct player_class *class = classes; class; class = class->next) {
+			int l = levels_in_class(class->cidx);
+			if (l && my_stristr(ability[a]->class, class->name)) {
+				if (l < lowest)
+					lowest = l;
+				if (l > highest)
+					highest = l;
+			}
+		}
+	}
+
 	/* Check minimum and maximum level and class */
-	if (player->lev < ability[a]->minlevel) {
+	if (highest < min) {
 		return false;
 	}
-	if ((ability[a]->maxlevel) && (player->lev > ability[a]->maxlevel)) {
+	if ((max) && (lowest > max)) {
 		return false;
 	}
 	if ((ability[a]->class) && (!my_stristr(ability[a]->class, player->class->name))) {
