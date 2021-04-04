@@ -6132,6 +6132,24 @@ bool effect_handler_HORNS(effect_handler_context_t *context)
 	return (true);
 }
 
+bool effect_handler_BANANA(effect_handler_context_t *context)
+{
+	/* May have a spider in it */
+	if (one_in_(20)) {
+		int mon = summon_named_near(player->grid, "spider");
+		if (mon) {
+			msg("It begins to move of its own accord, and bursts open! There's a SPIDER in it!");
+			return (true);
+		}
+	}
+
+	/* If not (or if the monster summoning couldn't find one), it's just food */
+	msg("That tastes good.");
+	player_inc_timed(player, TMD_FOOD, 10 * z_info->food_value, false, false);
+
+	return (true);
+}
+
 /**
  * Time Lord regeneration
  **/

@@ -71,9 +71,9 @@
 # 'type' is for the base type of item, from object_base.txt.
 
 # 'level' defines how "advanced" the object is, when determining how easy it
-# is to use a wand, device or rod.
+# is to use a device, gun or gadget.
 
-# 'weight' is in tenth-pounds.
+# 'weight' is in tenth-pounds, grams or kg (if a g or kg suffix is used).
 
 # 'cost' is the item's base value.
 
@@ -689,10 +689,10 @@ effect:NOURISH:INC_BY
 dice:10
 desc:A fresh shiny green apple.
 
-#A fruit resembling an apple, but you don't want to eat it.
+# A fruit resembling an apple, but you don't want to eat it.
 # ID should work (or you could eat ID it), but as it has the same name as the apple it won't stack.
 # This looks cheesy, so maybe this and any other mimic item carried at once should auto-ID (on the basis that it is easier to identify
-# it when there is a real apple next to it to compare it to? Could have red and green apples, but that wouldn't help much.
+# it when there is a real apple next to it to compare it to)? Could have red and green apples, but that wouldn't help much.
 name:& choke-apple~
 type:food
 graphics:,:G
@@ -761,9 +761,7 @@ cost:6
 alloc:6:0 to 20
 pile:90:1d5
 power:0
-msg:That tastes good.
-effect:NOURISH:INC_BY
-dice:10
+effect:BANANA
 desc:A bendy banana.
 
 name:& pineapple~
