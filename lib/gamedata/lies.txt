@@ -572,7 +572,7 @@ R:To say it blunt: you *cannot* afford another mistake. - What you say, really?
 R:Troll the World!
 R:Trololololololololololololololololol
 R:True.
-R:Try inscribing the name of the first monster killed by it in the weapon!
+R:Try inscribing the name of the first monster killed by it on the weapon!
 R:Try using a food-scan card while hallucinating.
 R:Uh oh.
 R:Ulch!  That meat was painted!
@@ -651,6 +651,7 @@ R:You must be three times as resistant to {illegible} than other elements.
 R:You must eat a great dessert, you must eat it all alone...
 R:You seem inoffensive, a mere joker, a light-weight. But your eyes ..?
 R:You transform into an amoeba.
+R:You turn into a wumpus! Your armor breaks apart!
 R:You undergo a freakish metamorphosis!
 R:You walk like you're dead!
 R:You will die in 1289 turns.

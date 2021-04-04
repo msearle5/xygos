@@ -131,6 +131,11 @@ void do_cmd_change_class(void)
 {
 	bool leaving = false;
 
+	if (!OPT(player, birth_multi_class)) {
+		msg("You cannot change class as you have disabled it by birth option.");
+		return;
+	}
+
 	/* Extract names, etc. from classes */
 	int n_classes = 0;
 	const char **name = NULL;
