@@ -727,13 +727,23 @@ static const byte colour_table[] =
 
 
 static struct panel *get_panel_topleft(void) {
-	struct panel *p = panel_allocate(6);
+	struct panel *p = panel_allocate(7);
 
 	panel_line(p, COLOUR_L_BLUE, "Name", "%s", player->full_name);
 	if (!streq(player->extension->name, "None"))
 		panel_line(p, COLOUR_L_BLUE, "Extend",	"%s", player->extension->name);
 	panel_line(p, COLOUR_L_BLUE, "Race",	"%s", player->race->name);
 	panel_line(p, COLOUR_L_BLUE, "Class", "%s", player->class->name);
+	if (player->switch_class != player->class->cidx) {
+		panel_line(p, COLOUR_L_BLUE, "  -->", "%s", get_class_by_idx(player->switch_class)->name);
+	} else {
+		int lic = levels_in_class(player->class->cidx);
+		if (lic != player->max_lev) {
+			char buf[32];
+			strnfmt(buf, sizeof(buf), "%d/%d", lic, player->max_lev);
+			panel_line(p, COLOUR_L_BLUE, "Level", "%s", buf);
+		}
+	}
 	panel_line(p, COLOUR_L_BLUE, "Title", "%s", show_title());
 	panel_line(p, COLOUR_L_BLUE, "HP", "%d/%d", player->chp, player->mhp);
 
