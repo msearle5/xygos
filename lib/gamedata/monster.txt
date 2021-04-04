@@ -5224,29 +5224,6 @@ friends:100:2d7:Same
 desc:Liquid footprints follow this hound as it pads around the dungeon.  An
 desc: acrid smell of acid rises from the dog's pelt.
 
-name:chimaera
-base:hybrid
-color:r
-speed:110
-hit-points:160
-hearing:12
-smell:20
-armor-class:22
-sleepiness:30
-depth:20
-rarity:2
-experience:200
-blow:BUTT:HURT:2d8
-blow:BITE:HURT:2d10
-blow:BITE:FIRE:2d6
-flags:BASH_DOOR
-flags:IM_FIRE
-flags:FORCE_SLEEP
-innate-freq:10
-spells:BR_FIRE
-desc:It is a strange concoction of goat, lion and dragon, with the heads of all
-desc: three beasts.
-
 name:quylthulg
 base:quylthulg
 color:y
@@ -10030,23 +10007,6 @@ spells:S_DEMON
 desc:A pile of pulsing flesh that glows with an inner hellish fire.  The world
 desc: itself seems to cry out against it.
 
-name:draconic quylthulg
-base:quylthulg
-color:g
-speed:120
-hit-points:420
-hearing:20
-armor-class:1
-sleepiness:0
-depth:45
-rarity:1
-experience:3000
-spell-freq:2
-spells:BLINK | TPORT
-spells:S_DRAGON
-desc:It looks like it was once a dragon corpse, now deeply infected with magical
-desc: bacteria that make it pulse in a foul and degrading way.
-
 name:greater basilisk
 base:reptile
 color:D
@@ -12098,24 +12058,6 @@ spell-freq:2
 spells:BLINK | TELE_TO
 spells:S_HI_DEMON
 desc:A massive pulsating mound of flesh, glowing with a hellish light.
-
-name:greater draconic quylthulg
-base:quylthulg
-color:G
-speed:120
-hit-points:1320
-hearing:20
-armor-class:1
-sleepiness:0
-depth:71
-rarity:2
-experience:10500
-flags:ATTR_FLICKER
-spell-freq:2
-spells:BLINK | TELE_TO
-spells:S_HI_DRAGON
-desc:A massive mound of scaled flesh, throbbing and pulsating with multi-hued
-desc: light.
 
 name:greater rotting quylthulg
 base:quylthulg
