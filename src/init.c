@@ -2075,7 +2075,7 @@ static enum parser_error parse_p_race_body(struct parser *p) {
 		struct player_race *r = parser_priv(p);
 	if (!r)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
-	char *name = parser_getstr(p, "body");
+	const char *name = parser_getstr(p, "body");
 	int body = get_body_idx_by_name(name);
 	if (body >= 0) {
 		r->body = body;

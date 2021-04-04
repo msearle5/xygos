@@ -40,6 +40,7 @@
 #include "player-calcs.h"
 #include "player-history.h"
 #include "player-spell.h"
+#include "player-util.h"
 #include "store.h"
 #include "target.h"
 #include "ui-display.h"

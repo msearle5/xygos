@@ -481,7 +481,7 @@ void show_inven(int mode, item_tester tester)
 
 	bool in_term = (mode & OLIST_WINDOW) ? true : false;
 
-	/* Intialize */
+	/* Initialize */
 	wipe_obj_list();
 
 	/* Include burden for term windows */

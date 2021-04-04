@@ -138,5 +138,6 @@ void update_stuff(struct player *p);
 void redraw_stuff(struct player *p);
 void handle_stuff(struct player *p);
 int weight_remaining(struct player *p);
+int class_to_stat(int stat);
 
 #endif /* !PLAYER_CALCS_H */

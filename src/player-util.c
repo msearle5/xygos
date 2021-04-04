@@ -82,7 +82,7 @@ static int compar_class(const void *av, const void *bv)
 struct player_class *get_class_by_idx(int cidx)
 {
 	for (struct player_class *c = classes; c; c = c->next) {
-		if (c->cidx == cidx)
+		if ((int)(c->cidx) == cidx)
 			return c;
 	}
 	return NULL;
