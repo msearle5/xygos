@@ -487,10 +487,10 @@ void show_inven(int mode, item_tester tester)
 	/* Include burden for term windows */
 	if (in_term) {
 		strnfmt(items[num_obj].label, sizeof(items[num_obj].label),
-		        "Burden %d.%d lb (%d.%d lb %s) ",
-		        player->upkeep->total_weight / 10,
-				player->upkeep->total_weight % 10,
-		        abs(diff) / 10, abs(diff) % 10,
+		        "Burden %d.%d kg (%d.%d kg %s) ",
+		        player->upkeep->total_weight / 1000,
+				(player->upkeep->total_weight % 1000) / 100,
+		        abs(diff) / 1000, (abs(diff) % 1000) / 100,
 		        (diff < 0 ? "overweight" : "remaining"));
 
 		items[num_obj].object = NULL;
