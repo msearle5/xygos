@@ -66,8 +66,8 @@ static void soldier_loadsave(bool complete) {
 static void soldier_init(void)
 {
 	/* Initialise saved state */
-	get_class_by_name("Soldier")->state = mem_zalloc(sizeof(struct soldier_state));
-
+	struct soldier_state *state = get_class_by_name("Soldier")->state = mem_zalloc(sizeof(struct soldier_state));
+fprintf(stderr,"hi\n");
 	/* Allow access to HQ */
 	get_store_by_name("Field HQ")->open = true;
 
@@ -88,7 +88,6 @@ static void soldier_init(void)
 	name[0] = toupper(name[0]);
 	strnfmt(buf, sizeof(buf), "General %s (%s)", name, race);
 	get_store_by_name("Field HQ")->owner->name = string_make(buf);
-	struct soldier_state *state = (struct soldier_state *)get_class_by_name("Soldier");
 	state->storename = string_make(buf);
 }
 

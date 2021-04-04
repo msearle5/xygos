@@ -674,7 +674,16 @@ void rdwr_player_levels(void)
 
 	/* Talents */
 	rdwr_u16b(&player->talent_points);
-	for(int i=0;i<(int)sizeof(player->talent_gain);i++)
+	
+	/* Get an empty array of talent gain counts */
+	int n_classes = 0;
+	for (struct player_class *c = classes; c; c = c->next)
+		if ((int)c->cidx > n_classes)
+			n_classes = c->cidx;
+	n_classes++;
+	if (!player->talent_gain)
+		player->talent_gain = mem_alloc(PY_MAX_LEVEL * n_classes);
+	for(int i=0;i<PY_MAX_LEVEL * n_classes;i++)
 		rdwr_byte(&player->talent_gain[i]);
 
 	/* Level by class */

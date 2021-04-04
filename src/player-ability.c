@@ -1072,42 +1072,63 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 /* Complete init of player talents (roll out TP-gain levels)
  * This must be done after birth talents (including Patience etc.) have been fixed.
  **/
-void init_talent(int tp) {
-	int bp = player->race->tp_base + player->class->tp_base;
-	memset(player->talent_gain, 0, sizeof(player->talent_gain));
+void init_talent(int initial_tp) {
 
-	/* Distribute fairly evenly between level 2 and maximum.
-	 * (Or max/2 and maximum for Patience, or level 3 and 90% of max for Unknown)
-	 */
-	int min = 2;
-	int max = PY_MAX_LEVEL - 1;
+	/* Get an empty array of talent gain counts */
+	int n_classes = 0;
+	for (struct player_class *c = classes; c; c = c->next)
+		if ((int)c->cidx > n_classes)
+			n_classes = c->cidx;
+	n_classes++;
 
-	/* Patience = more TP, but later */
-	if (player_has(player, PF_PATIENCE)) {
-		tp += (((bp * 3) + 1) / 2) + 1;
-		min = PY_MAX_LEVEL / 2;
-		bp = 0;
+	if (player->talent_gain)
+		mem_free(player->talent_gain);
+	player->talent_gain = mem_zalloc(n_classes * PY_MAX_LEVEL);
+
+	/* For each class, get a TP gain array */
+	for (int cl = 0; cl < n_classes; cl++) {
+		struct player_class *c = get_class_by_idx(cl);
+
+		/* Determine effective TP.
+		 * This is the TP for that class plus an offset intended to cancel the level-gain and base TP.
+		 * Also change the minimum level for classes with less base TP.
+		 */
+		int bp = player->race->tp_base + c->tp_base + initial_tp - player->class->tp_base;
+		int tp = player->race->tp_max + c->tp_max;
+
+		/* Distribute fairly evenly between level 2 and maximum.
+		 * (Or max/2 and maximum for Patience, or level 3 and 90% of max for Unknown)
+		 */
+		int min = 2;
+		int max = PY_MAX_LEVEL - 1;
+
+		/* Patience = more TP, but later */
+		if (player_has(player, PF_PATIENCE)) {
+			tp += (((bp * 3) + 1) / 2) + 1;
+			min = PY_MAX_LEVEL / 2;
+			bp = 0;
+		}
+
+		/* This doesn't require that all talents *must* be taken immediately */
+		if (player_has(player, PF_PRECOCITY)) {
+			bp = ((tp * 2) + 2) / 3;
+			tp = 0;
+		}
+
+		/* Avoid getting TP close to max level for unknown talents */
+		if (player_has(player, PF_UNKNOWN_TALENTS)) {
+			min++;
+			max -= (PY_MAX_LEVEL / 10);
+		}
+
+		/* If there are any level-gain TP level, spread them.
+		 * FIXME: try to be more equally spaced? (e.g. minimise the difference between pairs, including ends)
+		 **/
+		for (int i = 0; i < tp; i++)
+			player->talent_gain[(cl * PY_MAX_LEVEL) + rand_range(min, max)]++;
 	}
 
-	/* This doesn't require that all talents *must* be taken immediately */
-	if (player_has(player, PF_PRECOCITY)) {
-		bp = ((tp * 2) + 2) / 3;
-		tp = 0;
-	}
-
-	/* Avoid getting TP close to max level for unknown talents */
-	if (player_has(player, PF_UNKNOWN_TALENTS)) {
-		min++;
-		max -= (PY_MAX_LEVEL / 10);
-	}
-
-	/* If there are any level-gain TP level, spread them.
-	 * FIXME: try to be more equally spaced? (e.g. minimise the difference between pairs, including ends)
-	 **/
-	for (int i = 0; i < tp; i++)
-		player->talent_gain[rand_range(min, max)]++;
-
-	player->talent_points = bp;
+	player->talent_points = player->race->tp_base + player->class->tp_base;
 }
 
 /* Handle ability gain at level up.
@@ -1118,8 +1139,10 @@ void init_talent(int tp) {
 bool ability_levelup(struct player *p, int from, int to)
 {
 	/* For all levels gained, sum TP per level */
-	for(int level = from+1; level <= to; level++)
-		p->talent_points += p->talent_gain[level-1];
+	for(int level = from+1; level <= to; level++) {
+		int lc = p->lev_class[level];
+		p->talent_points += p->talent_gain[(PY_MAX_LEVEL * lc)+(level-1)];
+	}
 
 	int gains = p->talent_points;
 	if (gains == 0)

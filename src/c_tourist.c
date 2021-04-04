@@ -22,19 +22,12 @@ struct tourist_state {
 
 /* Save or load state, according to the global saving flag */
 static void tourist_loadsave(bool complete) {
-	if (player->class->state == NULL)
-		player->class->state = mem_zalloc(sizeof(struct tourist_state));
 
-	struct tourist_state *state = (struct tourist_state *)player->class->state;
-	/* rdwr_xxx */
 }
 
-/* Start a new character as a X */
+/* Start a new character as a Tourist */
 static void tourist_init(void)
 {
-	/* Initialise saved state */
-	player->class->state = mem_zalloc(sizeof(struct tourist_state));
-
 	/* Some extra spending money (generously, because the expensive mapping
 	 * device means that au will probably be 0 at this point. The MAX is in
 	 * case of an ability giving cash or the no-start-kit option)
@@ -65,13 +58,13 @@ static void tourist_init(void)
 /* Gain a new level (or levels) for the first time */
 static void tourist_levelup(int from, int to)
 {
-	struct tourist_state *state = (struct tourist_state *)player->class->state;
+
 }
 
 /* Enter or exit a town building */
 static void tourist_building(int store, bool entering, bool *do_default)
 {
-	struct tourist_state *state = (struct tourist_state *)player->class->state;
+
 }
 
 /* Install hooks */

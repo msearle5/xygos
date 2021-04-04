@@ -52,8 +52,8 @@ enum
 
 extern struct player_class **ordered_classes(void);
 
-#define player_hookz(X)			{ struct player_class **classes = ordered_classes(); while (*classes) { if ((*classes)->X) { (*classes)->X(); } classes++; } } if (player->race->X) { player->race->X(); } if (player->extension->X) { player->extension->X(); }
-#define player_hook(X, ...)		{ struct player_class **classes = ordered_classes(); while (*classes) { if ((*classes)->X) { (*classes)->X(__VA_ARGS__); } classes++; } } if (player->race->X) player->race->X(__VA_ARGS__); if (player->extension->X) player->extension->X(__VA_ARGS__);
+#define player_hookz(X)			{ struct player_class *c = classes; while (c) { if (c->X) { c->X(); } c=c->next; } } if (player->race->X) { player->race->X(); } if (player->extension->X) { player->extension->X(); }
+#define player_hook(X, ...)		{ struct player_class *c = classes; while (c) { if (c->X) { c->X(__VA_ARGS__); } c=c->next; } } if (player->race->X) player->race->X(__VA_ARGS__); if (player->extension->X) player->extension->X(__VA_ARGS__);
 
 #define pf_has(f, flag)        flag_has_dbg(f, PF_SIZE, flag, #f, #flag)
 #define pf_next(f, flag)       flag_next(f, PF_SIZE, flag)
@@ -596,7 +596,7 @@ struct player {
 	u16b chp_frac;	/* Cur hit frac (times 2^16) */
 
 	u16b talent_points;			/* Current talent points */
-	byte talent_gain[PY_MAX_LEVEL];	/* TP to gain per level */
+	byte *talent_gain;			/* TP to gain per level */
 
 	byte lev_class[PY_MAX_LEVEL+1];	/* Class gained per level */
 	byte switch_class;				/* Class to switch to at next level up */
