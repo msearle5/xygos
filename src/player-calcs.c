@@ -1874,9 +1874,9 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		state->el_info[ELEM_DARK].res_level = 1;
 	}
 
-	/* Combat Regeneration */
-	if (player_has(p, PF_COMBAT_REGEN) && character_dungeon) {
-		of_on(state->flags, OF_IMPAIR_HP);
+	/* Evil */
+	if (player_has(p, PF_EVIL) && character_dungeon) {
+		state->el_info[ELEM_HOLY_ORB].res_level = -1;
 	}
 
 	/* Calculate the various stat values */
