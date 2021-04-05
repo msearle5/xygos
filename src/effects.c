@@ -701,7 +701,8 @@ bool effect_handler_DAMAGE(effect_handler_context_t *context)
 			break;
 		}
 
-		case SRC_OBJECT: {
+		case SRC_OBJECT:
+		case SRC_OBJECT_AT: {
 			/* Must be a faulty weapon */
 			struct object *obj = context->origin.which.object;
 			object_desc(killer, sizeof(killer), obj, ODESC_PREFIX | ODESC_BASE);
@@ -3932,6 +3933,9 @@ bool effect_handler_SPOT(effect_handler_context_t *context)
 				pgrid = cave_monster(cave, context->origin.which.object->held_m_idx)->grid;
 			}
 		}
+		flg |= PROJECT_JUMP;
+	} else if (context->origin.what == SRC_OBJECT_AT) {
+		pgrid = context->origin.grid;
 		flg |= PROJECT_JUMP;
 	} else if (context->origin.what == SRC_MONSTER) {
 		int midx = context->origin.which.monster;

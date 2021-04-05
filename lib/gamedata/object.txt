@@ -326,6 +326,35 @@ material:titanium
 # Capstone?
 # (But consider FBCs)
 
+##### Thrown Weapons #####
+
+# Thrown weapons - molotov, fr[ao]g grenade, EMP grenade, thermal detonator, energy bomb, flash grenade, smoke bomb, vortex bomb, gas grenade, plasmacon, sonic stun[ner]...
+# If thrown these are assumed armed, most should be launchable to greater distance (and contact fused?) with a grenade launcher.
+# How much of this should be base and how much ego?
+# The different names (and weights, radii etc) suggest that all the above (and other) type be different base items,
+# with egos mostly being applicable to all of them.
+# You can arm them without throwing and get faster - or arm them and get caught.
+# This group includes some heavy weapons (satchel charge) that aren't really meant for throwing, although a strong character could throw them a small distance.
+# There may be some (thermal detonator) that are somewhere in between.
+# Egos may include: crawler (will move after being thrown towards closest target, including you), contact, 'persist' (remains in place until touched)
+# Preferably thrown items should rebound.
+# Combat information here is for typical damage at ground zero - damage is much less at range.
+# Even small explosions should cause secondaries and especially fling stuff around which goes off when it hits the wall/monster.
+
+name:& fire bomb~
+type:bomb
+graphics:*:Brown
+level:1
+weight:800g
+cost:20
+pile:10:3
+alloc:6:0 to 14
+flags:EXPLODE
+msg:The {flavor} explodes!
+effect:SPOT:FIRE:3
+dice:2d10
+desc:A 'Molotov Cocktail' - a beer bottle filled with highly flammable fuel. It's not a sophisticated weapon, but it can still be effective.
+
 
 ##### Lights #####
 
@@ -396,7 +425,7 @@ effect:SPOT:SHARD:6
 dice:4d20
 effect:SPOT:KILL_DOOR:2
 dice:4d40
-desc:A candle-shaped explosive charge with a 15-second fuze.
+desc:A candle-shaped explosive charge with a 15-second fuze. It's not intended as a weapon but could be thrown, with the explosion typically covering a 60m radius. But the long fuze could be a problem, and you can't fire it from a grenade launcher.
 
 name:& keyfob light~
 type:light

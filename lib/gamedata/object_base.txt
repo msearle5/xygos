@@ -47,9 +47,14 @@ flags:SHOW_DICE
 name:12mm ammo:12mm ammo
 graphics:light umber
 break:25
-# max-stack:40
 flags:HATES_ACID | HATES_FIRE
 flags:SHOW_DICE
+
+name:bomb:bomb~
+graphics:light umber
+break:100
+# max-stack:40
+flags:HATES_FIRE
 
 name:gun:gun~
 graphics:umber

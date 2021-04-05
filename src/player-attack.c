@@ -1030,7 +1030,7 @@ static const struct hit_types ranged_hit_types[] = {
  * logic, while using the 'attack' parameter to do work particular to each
  * kind of attack.
  */
-static void ranged_helper(struct player *p,	struct object *obj, int dir,
+static void ranged_helper(struct command *cmd, struct player *p,	struct object *obj, int dir,
 						  int range, int shots, ranged_attack attack,
 						  const struct hit_types *hit_types, int num_types)
 {
@@ -1107,13 +1107,16 @@ static void ranged_helper(struct player *p,	struct object *obj, int dir,
 		/* Try the attack on the monster at (x, y) if any */
 		mon = square_monster(cave, path_g[i]);
 		if (mon) {
+			char m_name[80];
+			monster_desc(m_name, sizeof(m_name), mon, MDESC_OBJE);
+
 			int visible = monster_is_visible(mon);
 
 			bool fear = false;
 			const char *note_dies = monster_is_destroyed(mon) ? 
 				" is destroyed." : " dies.";
 
-			struct attack_result result = attack(p, obj, grid);
+			struct attack_result result = attack(cmd, p, obj, grid);
 			breaks = result.breaks;
 			int dmg = result.dmg;
 			u32b msg_type = result.msg_type;
@@ -1130,7 +1133,7 @@ static void ranged_helper(struct player *p,	struct object *obj, int dir,
 				equip_learn_on_ranged_attack(p);
 
 				/* No negative damage; change verb if no damage done */
-				if (dmg <= 0) {
+				if ((dmg <= 0) && (mon->race)) {
 					dmg = 0;
 					msg_type = MSG_MISS;
 					my_strcpy(hit_verb, "fails to harm", sizeof(hit_verb));
@@ -1141,7 +1144,6 @@ static void ranged_helper(struct player *p,	struct object *obj, int dir,
 					msgt(MSG_SHOOT_HIT, "The %s finds a mark.", o_name);
 				} else {
 					for (j = 0; j < num_types; j++) {
-						char m_name[80];
 						const char *dmg_text = "";
 
 						if (msg_type != hit_types[j].msg_type) {
@@ -1151,8 +1153,6 @@ static void ranged_helper(struct player *p,	struct object *obj, int dir,
 						if (OPT(p, show_damage)) {
 							dmg_text = format(" (%d)", dmg);
 						}
-
-						monster_desc(m_name, sizeof(m_name), mon, MDESC_OBJE);
 
 						if (hit_types[j].text) {
 							msgt(msg_type, "Your %s %s %s%s. %s", o_name, 
@@ -1171,10 +1171,12 @@ static void ranged_helper(struct player *p,	struct object *obj, int dir,
 				}
 
 				/* Hit the monster, check for death */
-				if (!mon_take_hit(mon, dmg, &fear, note_dies)) {
-					message_pain(mon, dmg);
-					if (fear && monster_is_visible(mon)) {
-						add_monster_message(mon, MON_MSG_FLEE_IN_TERROR, true);
+				if (mon->race) {
+					if (!mon_take_hit(mon, dmg, &fear, note_dies)) {
+						message_pain(mon, dmg);
+						if (fear && monster_is_visible(mon)) {
+							add_monster_message(mon, MON_MSG_FLEE_IN_TERROR, true);
+						}
 					}
 				}
 			}
@@ -1210,7 +1212,7 @@ static void ranged_helper(struct player *p,	struct object *obj, int dir,
 /**
  * Helper function used with ranged_helper by do_cmd_fire.
  */
-static struct attack_result make_ranged_shot(struct player *p,
+static struct attack_result make_ranged_shot(struct command *cmd, struct player *p,
 		struct object *ammo, struct loc grid)
 {
 	char *hit_verb = mem_alloc(20 * sizeof(char));
@@ -1244,11 +1246,33 @@ static struct attack_result make_ranged_shot(struct player *p,
 	return result;
 }
 
+void thrown_explodes(struct command *cmd, struct object *obj, struct loc grid)
+{
+	struct effect *effect = object_effect(obj);
+	if (effect) {
+		target_fix();
+		bool ident = false;
+
+		/* Boost damage effects if skill > difficulty */
+		int boost = MAX((player->state.skills[SKILL_TO_HIT_THROW] - player->lev) / 2, 0);
+
+		effect_do(effect,
+					source_object_at(obj, grid),
+					obj,
+					&ident,
+					object_flavor_is_aware(obj),
+					5,
+					false,
+					boost,
+					cmd);
+		target_release();
+	}
+}
 
 /**
  * Helper function used with ranged_helper by do_cmd_throw.
  */
-static struct attack_result make_ranged_throw(struct player *p,
+static struct attack_result make_ranged_throw(struct command *cmd, struct player *p,
 	struct object *obj, struct loc grid)
 {
 	char *hit_verb = mem_alloc(20 * sizeof(char));
@@ -1258,6 +1282,16 @@ static struct attack_result make_ranged_throw(struct player *p,
 	int b = 0, s = 0;
 
 	my_strcpy(hit_verb, "hits", 20);
+
+	/* Direct effect for exploding things (which can't miss)
+	 * The actual explosion occurs in drop_near.
+	 **/
+	if (of_has(obj->flags, OF_EXPLODE)) {
+		result.dmg *= 3;
+		if (obj->kind->effect) {
+			return result;
+		}
+	}
 
 	/* If we missed then we're done */
 	if (!test_hit(chance, mon->race->ac, monster_is_visible(mon)))
@@ -1275,11 +1309,7 @@ static struct attack_result make_ranged_throw(struct player *p,
 		result.dmg = o_ranged_damage(p, mon, obj, NULL, b, s, &result.msg_type);
 	}
 
-	/* Direct adjustment for exploding things (flasks of oil) */
-	if (of_has(obj->flags, OF_EXPLODE))
-		result.dmg *= 3;
-
-	return result;
+	return result; 
 }
 
 
@@ -1337,7 +1367,7 @@ void do_cmd_fire(struct command *cmd) {
 		return;
 	}
 
-	ranged_helper(player, obj, dir, range, shots, attack, ranged_hit_types,
+	ranged_helper(cmd, player, obj, dir, range, shots, attack, ranged_hit_types,
 				  (int) N_ELEMENTS(ranged_hit_types));
 }
 
@@ -1388,7 +1418,7 @@ void do_cmd_throw(struct command *cmd) {
 		return;
 	}
 
-	ranged_helper(player, obj, dir, range, shots, attack, ranged_hit_types,
+	ranged_helper(cmd, player, obj, dir, range, shots, attack, ranged_hit_types,
 				  (int) N_ELEMENTS(ranged_hit_types));
 }
 

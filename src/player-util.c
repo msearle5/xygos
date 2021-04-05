@@ -158,7 +158,7 @@ static const char *random_death_msg(void)
 }
 
 /**
- * Increment to the next or decrement to the preceeding level
+ * Increment to the next or decrement to the preceding level
    accounting for the stair skip value in constants
    Keep in mind to check all intermediate level for unskippable
    quests

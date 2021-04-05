@@ -120,7 +120,7 @@ static int beam_chance(int tval)
 /**
  * Print an artifact activation message.
  */
-static void activation_message(struct object *obj)
+void activation_message(struct object *obj)
 {
 	const char *message;
 

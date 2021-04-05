@@ -67,7 +67,7 @@ static void soldier_init(void)
 {
 	/* Initialise saved state */
 	struct soldier_state *state = get_class_by_name("Soldier")->state = mem_zalloc(sizeof(struct soldier_state));
-fprintf(stderr,"hi\n");
+
 	/* Allow access to HQ */
 	get_store_by_name("Field HQ")->open = true;
 

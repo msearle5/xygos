@@ -1101,6 +1101,11 @@ void drop_near(struct chunk *c, struct object **dropped, int chance,
 
 	/* Handle normal breakage */
 	if (!((*dropped)->artifact) && (randint0(100) < chance)) {
+		if (of_has((*dropped)->flags, OF_EXPLODE)) {
+			if ((*dropped)->kind->effect) {
+				thrown_explodes(NULL, *dropped, grid);
+			}
+		}
 		floor_carry_fail(*dropped, true, object_destroyed(*dropped, grid) || (chance == 100));
 		return;
 	}
