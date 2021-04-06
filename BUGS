@@ -9,6 +9,12 @@ BUG After the success/failure message from a quest, ESC is the only way to get b
 
 BUG: "no position"
 
+BUG - Major Repair on an item with two curses both 0% - "The repair was succesful. THe repair fials." (it succeeded)
+	- 3 items - 2 *mighty hunter*, 1 mighty hunter - didn't ego-ID. 1 was cursed.
+	- Also got a failed ID from an item with {??} (still ?? after IDing)
+
+BUG - Force harnesses are very common (like 1 in 10 or 20 obejcts) in the town
+
 Defer
 =====
 

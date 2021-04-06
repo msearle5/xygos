@@ -63,6 +63,8 @@
 
 #include <math.h>
 
+static void shapechange(const char *shapename, bool verbose);
+
 /**
  * ------------------------------------------------------------------------
  * Structures and helper functions for effects
@@ -287,6 +289,7 @@ static bool repair_object(struct object *obj, int strength, random_value value)
 {
 	int index = 0;
 	bool remove = false;
+	bool success = false;
 
 	if (get_fault(&index, obj, value)) {
 		struct fault_data fault = obj->faults[index];
@@ -299,6 +302,7 @@ static bool repair_object(struct object *obj, int strength, random_value value)
 			/* Successfully removed this fault */
 			remove_object_fault(obj->known, index, false);
 			remove_object_fault(obj, index, true);
+			success = true;
 		} else if (kf_has(obj->kind->kind_flags, KF_ACT_FAILED)) {
 			light_special_activation(obj);
 			remove = true;
@@ -329,8 +333,9 @@ static bool repair_object(struct object *obj, int strength, random_value value)
 				square_delete_object(cave, obj->grid, obj, true, true);
 			}
 		} else {
-			/* Non-destructive failure */
-			msg("The repair fails.");
+			/* Success (message already printed) / Non-destructive failure */
+			if (!success)
+				msg("The repair fails.");
 		}
 	} else {
 		return false;
@@ -974,7 +979,6 @@ bool effect_handler_HABANERO(effect_handler_context_t *context)
 /* Check WIS, and if it passes you swallowed it.
  * In that case, feed you (to max, including slowing) and transform into a giant!
  */
-static void shapechange(const char *shapename, bool verbose);
 bool effect_handler_SNOZZCUMBER(effect_handler_context_t *context)
 {
 	if (stat_check(STAT_WIS, 17)) {
