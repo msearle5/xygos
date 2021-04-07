@@ -37,22 +37,26 @@ static void tourist_init(void)
 
 	/* Possible random item */
 	struct start_item item = { 0, 0, 1, 1, NULL };
+	bool items = false;
 	switch(randint0(10)) {
 		case 0:
 			item.tval = TV_LIGHT;
 			item.sval = lookup_sval(TV_LIGHT, "firecracker");
+			items = true;
 			break;
 		case 1:
 		case 2:
 			item.tval = TV_CARD;
 			item.sval = lookup_sval(TV_LIGHT, "rumor");
 			item.max = randint1(6);
+			items = true;
 			break;
 		default:
 			player->au += 30;
 	}
 	player->au_birth = player->au;
-	add_start_items(player, &item, (!OPT(player, birth_start_kit)), false, ORIGIN_BIRTH);
+	if (items)
+		add_start_items(player, &item, (!OPT(player, birth_start_kit)), false, ORIGIN_BIRTH);
 }
 
 /* Gain a new level (or levels) for the first time */
