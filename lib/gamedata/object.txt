@@ -1380,6 +1380,7 @@ attack:1d12:0:0
 armor:0:0
 brand:LIGHT_2
 values:LIGHT[1]
+flags:GOOD
 desc:A line of green laser light forms a long knife that cuts through armour easily.
 material:aluminium
 
@@ -1392,6 +1393,7 @@ alloc:4:15 to 56
 attack:1d8:8+d5M10:0
 armor:0:0
 brand:NEXUS_2
+flags:GOOD
 desc:A line of shimmering points of light - a blade of pure phased energy for which armor doesn't exist.
 material:aluminium
 
@@ -1410,6 +1412,7 @@ weight:350g
 attack:1d14:0:0
 armor:0:0
 brand:LIGHT_3
+flags:GOOD
 values:LIGHT[1] | RES_LIGHT[1]
 desc:A line of green laser light extends from a saber's hilt, a powerful weapon that cuts through armour easily.
 material:aluminium
@@ -1437,6 +1440,7 @@ attack:1d14:0:0
 armor:0:0
 brand:DARK_3
 values:RES_DARK[1]
+flags:GOOD
 desc:A glowing red absorption beam extends from a saber's hilt, a powerful weapon that shrieks as air rushes into it.
 material:aluminium
 
@@ -1450,6 +1454,7 @@ attack:1d14:0:0
 armor:0:0
 brand:CHAOS_3
 values:RES_CHAOS[1]
+flags:GOOD
 desc:A swirling blade of disruption extends from a saber's hilt, a powerful weapon that twists space about it.
 material:aluminium
 
@@ -1463,6 +1468,7 @@ attack:1d15:0:0
 armor:0:0
 brand:LIGHT_3
 values:LIGHT[1] | RES_LIGHT[1]
+flags:GOOD
 effect:PRISMATIC
 desc:A weapon for the Jedi who can never decide what to pack. The prismatic lightsaber switches at the touch of a button between a laser weapon, an absorption beam, a blade of disruption, an invisible X-ray beam and a phantom blade of phased energy.
 material:aluminium
@@ -1477,6 +1483,7 @@ attack:2d14:-5:0
 armor:0:0
 brand:LIGHT_2
 values:LIGHT[1] | RES_LIGHT[1]
+flags:GOOD
 desc:Two lines of green laser light extend in each direction from a saber's hilt, a powerful weapon that cuts through armour easily - though it's considerably heavier and more unwieldy than the single type.
 material:aluminium
 
@@ -1490,6 +1497,7 @@ attack:2d14:-5:0
 armor:0:0
 brand:DARK_2
 values:RES_DARK[1]
+flags:GOOD
 desc:Twin absorption beams, glowing deep red, extending in both directions, a powerful weapon that cuts through armour easily - though it's considerably heavier and more unwieldy than the single type.
 material:aluminium
 
@@ -1503,6 +1511,7 @@ attack:2d14:0:0
 armor:0:0
 brand:CHAOS_2
 values:RES_CHAOS[1]
+flags:GOOD
 desc:Two swirling blades of disruption, extending in opposite directions - a powerful weapon that cuts through armour easily.
 material:aluminium
 
@@ -1516,6 +1525,7 @@ attack:2d14:0:0
 armor:0:0
 brand:NEXUS_2
 values:RES_NEXUS[1]
+flags:GOOD
 desc:Two lines of shimmering points of light mark the path of blades of pure phased energy, moving through solid rock without leaving a trace to reach its target.
 material:aluminium
 
@@ -1529,6 +1539,7 @@ attack:2d15:0:0
 armor:0:0
 brand:LIGHT_2
 values:LIGHT[1] | RES_LIGHT[1]
+flags:GOOD
 effect:PRISMATIC
 desc:A weapon for the Jedi who can never decide what to pack. This dual prismatic lightsaber can switch at the touch of a button between laser weapons, absorption beams, blades of disruption, invisible X-ray beams and phantom blades of phased energy.
 material:aluminium
@@ -1542,6 +1553,8 @@ weight:350g
 attack:1d18:-20:0
 armor:0:0
 brand:RADIATION_3
+values:RES_RADIATION[1]
+flags:GOOD
 desc:A line of invisible radiation extends from a saber's hilt, a powerful weapon - if you can hit anything with it.
 
 name:& X-rated dual lightsaber~
@@ -1553,6 +1566,8 @@ weight:1250g
 attack:2d18:-25:0
 armor:0:0
 brand:RADIATION_2
+values:RES_RADIATION[1]
+flags:GOOD
 desc:Two lines of invisible radiation extend in each direction from a saber's hilt, a powerful weapon that cuts through armour easily - though it's considerably heavier and more unwieldy than the single type, and so is even less easy to hit with.
 
 
@@ -1573,6 +1588,7 @@ attack:1d16:0:0
 armor:0:0
 values:RES_SOUND[1]
 brand:SOUND_3
+flags:GOOD
 desc:A long knife of glossy black crystal, which buzzes faintly as you hold it.
 material:glass
 
@@ -1586,6 +1602,7 @@ attack:1d17:0:0
 armor:0:0
 values:RES_LIGHT[1]
 brand:LIGHT_3
+flags:GOOD
 desc:A long knife of brilliant crystal, flashing thousands of colours.
 material:glass
 
@@ -1599,6 +1616,7 @@ attack:1d15:10+2d4M10:0
 armor:0:0
 values:RES_NEXUS[1]
 brand:NEXUS_3
+flags:GOOD
 desc:A long knife of greyish crystal, which doesn't seem to be all quite there...
 material:glass
 
