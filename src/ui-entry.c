@@ -770,10 +770,9 @@ void compute_ui_entry_values_for_gear(const struct ui_entry *entry,
 {
 	struct ui_entry_combiner_state cst = { 0, 0, 0 };
 	struct ui_entry_combiner_funcs combiner;
-	const struct fault_data *fault;
+
 	struct cached_object_data *cache2;
 	bool first, all_unknown, all_aux_unknown, any_aux, all_aux;
-	int fault_ind;
 
 	bitflag f[OF_SIZE];
 	if (*cache == NULL) {
@@ -799,7 +798,6 @@ void compute_ui_entry_values_for_gear(const struct ui_entry *entry,
 				assert(0);
 			}
 			cache2 = *cache;
-			fault = obj->faults;
 
 			for (int i = 0; i < entry->n_obj_prop; ++i) {
 				int ind = entry->obj_props[i].index;

@@ -964,3 +964,8 @@ name:magnetic
 type:flag
 code:MAGNETIC
 power:-8
+
+name:animal sense
+type:flag
+code:SENSE_ANIMAL
+power:10

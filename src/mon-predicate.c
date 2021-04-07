@@ -102,6 +102,14 @@ bool monster_is_stupid(const struct monster *mon)
 }
 
 /**
+ * Monster is an animal
+ */
+bool monster_is_animal(const struct monster *mon)
+{
+	return rf_has(mon->race->flags, RF_ANIMAL);
+}
+
+/**
  * Monster is (or was) smart
  */
 bool monster_is_smart(const struct monster *mon)

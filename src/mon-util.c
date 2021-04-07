@@ -307,6 +307,7 @@ void update_mon(struct monster *mon, struct chunk *c, bool full)
 
 	/* ESP permitted */
 	bool telepathy_ok = player_of_has(player, OF_TELEPATHY);
+	bool sense_animal = player_of_has(player, OF_SENSE_ANIMAL);
 
 	assert(mon != NULL);
 
@@ -339,18 +340,27 @@ void update_mon(struct monster *mon, struct chunk *c, bool full)
 	/* Detected */
 	if (mflag_has(mon->mflag, MFLAG_MARK)) flag = true;
 
-	/* Check if telepathy works here */
+	/* Check if telepathy (or other distant sensing) works here */
 	if (square_isno_esp(c, mon->grid) || square_isno_esp(c, pgrid)) {
 		telepathy_ok = false;
+		sense_animal = false;
 	}
 
 	/* Nearby */
+	bool seen_esp = false;
+	bool seen_animal = false;
 	if (d <= z_info->max_sight) {
 		/* Basic telepathy */
-		if (telepathy_ok && monster_is_esp_detectable(mon)) {
-			/* Detectable */
+		if ((telepathy_ok) && (monster_is_esp_detectable(mon))) {
+			/* Detectable by ESP */
 			flag = true;
-
+			seen_esp = true;
+		} else if ((sense_animal) && (monster_is_animal(mon))) {
+			/* Detectable by animal sensing */
+			flag = true;
+			seen_animal = true;
+		}
+		if (flag) {
 			/* Check for LOS so that MFLAG_VIEW is set later */
 			if (square_isview(c, mon->grid)) easy = true;
 		}
@@ -403,8 +413,10 @@ void update_mon(struct monster *mon, struct chunk *c, bool full)
 	if (flag) {
 		/* Learn about the monster's mind */
 		if (telepathy_ok) {
-			flags_set(lore->flags, RF_SIZE, RF_EMPTY_MIND, RF_WEIRD_MIND,
-					  RF_SMART, RF_STUPID, FLAG_END);
+			if (seen_esp)
+				flags_set(lore->flags, RF_SIZE, RF_EMPTY_MIND, RF_WEIRD_MIND, RF_SMART, RF_STUPID, FLAG_END);
+			else if (seen_animal)
+				flags_set(lore->flags, RF_ANIMAL);
 		}
 
 		/* It was previously unseen */
