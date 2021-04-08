@@ -495,8 +495,9 @@ struct object {
 	bitflag flags[OF_SIZE];					/**< Object flags */
 	s16b modifiers[OBJ_MOD_MAX];			/**< Object modifiers*/
 	struct element_info el_info[ELEM_MAX];	/**< Object element info */
-	bool *brands;							/**< Array of brand structures */
-	bool *slays;							/**< Array of slay structures */
+
+	bool *brands;							/**< Flag absence/presence of each brand */
+	bool *slays;							/**< Flag absence/presence of each slay */
 	struct fault_data *faults;				/**< Array of fault powers and timeouts */
 
 	struct effect *effect;	/**< Effect this item produces (effects.c) */
