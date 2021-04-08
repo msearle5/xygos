@@ -389,6 +389,15 @@ power:35
 bindui:esp_ui_compact_0:0
 desc:Grants telepathy
 
+name:animal sense
+type:flag
+subtype:misc ability
+id-type:on wield
+code:SENSE_ANIMAL
+power:10
+bindui:sense_animal_ui_compact_0:0:0
+desc:Grants the ability to sense animals
+
 name:see invisible
 type:flag
 subtype:misc ability
@@ -964,8 +973,3 @@ name:magnetic
 type:flag
 code:MAGNETIC
 power:-8
-
-name:animal sense
-type:flag
-code:SENSE_ANIMAL
-power:10

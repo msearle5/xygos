@@ -246,6 +246,12 @@ name:Telepathy
 desc:You have telepathy.
 
 type:object
+code:SENSE_ANIMAL
+bindui:sense_animal_ui_compact_0:0:1
+name:Animal Sense
+desc:You can sense animals.
+
+type:object
 code:SEE_INVIS
 bindui:see_invis_ui_compact_0:0:1
 name:See Invisible
@@ -309,6 +315,7 @@ code:TRAP_IMMUNE
 bindui:trap_immunity_ui_compact_0:0:1
 name:Trap Immune
 desc:You are immune to traps.
+
 
 ## Element flags
 
