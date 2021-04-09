@@ -349,6 +349,7 @@ void update_mon(struct monster *mon, struct chunk *c, bool full)
 	/* Nearby */
 	bool seen_esp = false;
 	bool seen_animal = false;
+	bool seen_metal = false;
 	if (d <= z_info->max_sight) {
 		/* Basic telepathy */
 		if ((telepathy_ok) && (monster_is_esp_detectable(mon))) {
@@ -359,6 +360,10 @@ void update_mon(struct monster *mon, struct chunk *c, bool full)
 			/* Detectable by animal sensing */
 			flag = true;
 			seen_animal = true;
+		} else if ((sense_animal) && (monster_is_metal(mon))) {
+			/* Detectable by metal sensing */
+			flag = true;
+			seen_metal = true;
 		}
 		if (flag) {
 			/* Check for LOS so that MFLAG_VIEW is set later */
@@ -417,6 +422,8 @@ void update_mon(struct monster *mon, struct chunk *c, bool full)
 				flags_set(lore->flags, RF_SIZE, RF_EMPTY_MIND, RF_WEIRD_MIND, RF_SMART, RF_STUPID, FLAG_END);
 			else if (seen_animal)
 				flags_set(lore->flags, RF_ANIMAL);
+			else if (seen_metal)
+				flags_set(lore->flags, RF_METAL);
 		}
 
 		/* It was previously unseen */

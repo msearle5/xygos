@@ -208,48 +208,53 @@ priority:-6
 
 name:sense_animal_ui_compact_0
 template:good_flag_ui_compact_0
-label:ESP
+label:sAnim
 priority:-7
+
+name:sense_metal_ui_compact_0
+template:good_flag_ui_compact_0
+label:sMeta
+priority:-8
 
 name:see_invis_ui_compact_0
 template:good_flag_ui_compact_0
 label:See invisible
 label5:S.Inv
 label2:SI
-priority:-8
+priority:-9
 
 name:free_action_ui_compact_0
 template:good_flag_ui_compact_0
 label:Free action
 label5:FrAct
 label2:FA
-priority:-9
+priority:-10
 
 name:feather_falling_ui_compact_0
 template:good_flag_ui_compact_0
 label:Feather falling
 label5:Feath
 label2:Ft
-priority:-10
+priority:-11
 
 name:slow_digestion_ui_compact_0
 template:good_flag_ui_compact_0
 label:Slow digestion
 label5:S.Dig
 label2:SD
-priority:-11
+priority:-12
 
 name:trap_immunity_ui_compact_0
 template:good_flag_ui_compact_0
 label:Trap immunity
 label5:TrpIm
 label2:TI
-priority:-12
+priority:-13
 
 name:bless_ui_compact_0
 template:good_flag_ui_compact_0
 label:Bless
-priority:-13
+priority:-14
 
 # The following use other_flag_ui_compact_0 from ui_entry_base.txt.
 

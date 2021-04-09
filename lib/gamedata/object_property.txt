@@ -398,6 +398,15 @@ power:10
 bindui:sense_animal_ui_compact_0:0:0
 desc:Grants the ability to sense animals
 
+name:metal sense
+type:flag
+subtype:misc ability
+id-type:on wield
+code:SENSE_METAL
+power:10
+bindui:sense_metal_ui_compact_0:0:0
+desc:Grants the ability to sense metal
+
 name:see invisible
 type:flag
 subtype:misc ability

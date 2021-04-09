@@ -252,6 +252,12 @@ name:Animal Sense
 desc:You can sense animals.
 
 type:object
+code:SENSE_METAL
+bindui:sense_metal_ui_compact_0:0:1
+name:Metal Sense
+desc:You can detect metal monsters.
+
+type:object
 code:SEE_INVIS
 bindui:see_invis_ui_compact_0:0:1
 name:See Invisible
