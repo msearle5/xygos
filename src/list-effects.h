@@ -11,7 +11,7 @@
  */
 /* name 							aim		info		args	info flags		description */
 EFFECT(RANDOM,						false,	NULL,		0,		EFINFO_NONE,	"randomly ")
-EFFECT(DAMAGE,						false,	"hurt",		1,		EFINFO_HURT,	"damages the player")
+EFFECT(DAMAGE,						false,	"hurt",		1,		EFINFO_DICE,	"does %s damage to the player")
 EFFECT(HEAL_HP,						false,	"heal",		2,		EFINFO_HEAL,	"heals %s hitpoints%s")
 EFFECT(MON_HEAL_HP,					false,	NULL,		0,		EFINFO_NONE,	"heals monster hitpoints")
 EFFECT(MON_HEAL_KIN,				false,	NULL,		0,		EFINFO_NONE,	"heals fellow monster hitpoints")
@@ -107,10 +107,10 @@ EFFECT(SHAPECHANGE,					false,	NULL,		0,		EFINFO_NONE,	"changes the player's sha
 EFFECT(CURSE,						true,	"dam",		0,		EFINFO_NONE,	"damages a monster directly")
 EFFECT(COMMAND,						true,	NULL,		0,		EFINFO_NONE,	"takes control of a monster")
 EFFECT(JUMP_AND_BITE,				false,	NULL,		0,		EFINFO_NONE,	"jumps the player to the closest living monster and bites it")
-EFFECT(MOVE_ATTACK,					true,	"blows",	0,		EFINFO_NONE,	"moves the player up to 4 spaces and executes up to %d melee blows")
+EFFECT(MOVE_ATTACK,					true,	"blows",	1,		EFINFO_DICE,	"moves the player up to 4 spaces and executes up to %d melee blows")
 EFFECT(SINGLE_COMBAT,				true,	NULL,		0,		EFINFO_NONE,	"engages a monster in single combat")
-EFFECT(MELEE_BLOWS,					true,	"blows",	0,		EFINFO_NONE,	"strikes %d blows against an adjacent monster")
-EFFECT(SWEEP,						false,	"blows",	1,		EFINFO_NONE,	"strikes %d blows against all adjacent monsters")
+EFFECT(MELEE_BLOWS,					true,	"blows",	1,		EFINFO_DICE,	"strikes %d blows against an adjacent monster")
+EFFECT(SWEEP,						false,	"blows",	1,		EFINFO_DICE,	"strikes %d blows against all adjacent monsters")
 EFFECT(BIZARRE,						true,	NULL,		0,		EFINFO_NONE,	"does bizarre things")
 EFFECT(WONDER,						true,	NULL,		0,		EFINFO_NONE,	"creates random and unpredictable effects")
 EFFECT(HABANERO,					false, "dam",		3,		EFINFO_NONE,	"may make you resist cold for a while, and maybe even breathe fire")
