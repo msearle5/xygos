@@ -644,6 +644,26 @@ void add_start_items(struct player *p, const struct start_item *si, bool skip, b
 					break;
 				}
 
+			/* Exclude if configured to do so based on birth options. */
+			if (si->eopts) {
+				bool included = true;
+				int eind = 0;
+
+				while (si->eopts[eind] && included) {
+					if (si->eopts[eind] > 0) {
+						if (p->opts.opt[si->eopts[eind]]) {
+							included = false;
+						}
+					} else {
+						if (!p->opts.opt[-si->eopts[eind]]) {
+							included = false;
+						}
+					}
+					++eind;
+				}
+				if (!included) continue;
+			}
+
 			/* Discard special cases */
 			if ((kf_has(kind->kind_flags, KF_SPECIAL_GEN)) && (!special_item_can_gen(kind)))
 				ok = false;
