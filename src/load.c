@@ -884,17 +884,7 @@ int rd_player(void)
 		note("Discarded unsupported timed effects");
 	}
 
-	/* Total energy used so far */
-	rd_u32b(&player->total_energy);
-	/* # of turns spent resting */
-	rd_u32b(&player->resting_turn);
-
-	/* Quest currently active */
-	rd_s32b(&player->active_quest);
-
-	/* Factions */
-	rd_s32b(&player->bm_faction);
-	rd_s32b(&player->town_faction);
+	rdwr_player();
 
 	/* Player flags */
 	for(i=0; i < (int)PF_SIZE; i++)

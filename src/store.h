@@ -130,6 +130,8 @@ bool store_will_buy_tester(const struct object *obj);
 bool store_check_num(struct store *store, const struct object *obj);
 int find_inven(const struct object *obj);
 void stores_copy(struct store *src);
+int store_faction(struct store *store);
+int store_cyber_rank(void);
 
 extern struct owner *store_ownerbyidx(struct store *s, unsigned int idx);
 

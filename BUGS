@@ -1,17 +1,13 @@
 BUGS
 ====
 
-BUG: Char dumps ([0])
-
-BUG: Some entries are off the bottom of mode-2 char sheet. Delete top-left and top-right?
-
 BUG: Metal detect flag only detects monsters with the METAL flag
 
 BUG: effect_handler_CLIMBING is incomplete
 
 BUG: on 28/3 the BM had a choc egg - also seen one in initial inventory
 
-BUG After the success/failure message from a quest, ESC is the only way to get back out.
+BUG: After the success/failure message from a quest, ESC is the only way to get back out.
 
 BUG: "no position"
 
@@ -31,15 +27,6 @@ BUG: Lock up at start (occasionally)
 BUG?? - In quests, multiplying monsters are handled OK.
 	But not newly spawned monsters that happen to be of the same type, or monsters removed through genocide or kill-body - and at least some of that could occur
 	and could be fixed, although probably not in any quest currently in use.
-
-BUG: Resists screen is >80 wide (Also, the per-slot stats only label only displays a to l)
-	Remove ':' lines?
-	Currently the second screen retains the Name..HP and sum-stats blocks. Would removing them help? (A third screen is another option)
-	Would want to retain the stat labels if this is done (or move them to the left of the slot-stats)
-	This might result in a 3, not 4 column display. Giving 26 not 19 chars (plus the intermediate blanks), enough for a few more in both description and slots.
-	But will there end up with more, or less slots? Rings and amulets will disappear. OTOH, a form with more slots might appear...
-	Adapting to large terminals is also a possibility, but can't be the only way to play.
-	So best to leave alone for now?
 
 BUG: "angband: gen-cave.c:2009: town_gen: Assertion `grid.x > 0' failed." (= the x,y are 0, 0.)
 	- Can be triggered by Time Lord regeneration putting you in town, but has also been seen entering the town normally by <.
@@ -233,6 +220,25 @@ BUG Crash at player-birth.c:463 (bodies is linked)
 
 BUG: Failed the Msing Pills, returned to the Pharmacy, got "nothing needs to be done"
 	Fixed: 83cc48d181f80ae337e9a78ef930941733d83821
+
+BUG: Resists screen is >80 wide (Also, the per-slot stats only label only displays a to l)
+	Remove ':' lines?
+	Currently the second screen retains the Name..HP and sum-stats blocks. Would removing them help? (A third screen is another option)
+	Would want to retain the stat labels if this is done (or move them to the left of the slot-stats)
+	This might result in a 3, not 4 column display. Giving 26 not 19 chars (plus the intermediate blanks), enough for a few more in both description and slots.
+	But will there end up with more, or less slots? Rings and amulets will disappear. OTOH, a form with more slots might appear...
+	Adapting to large terminals is also a possibility, but can't be the only way to play.
+	So best to leave alone for now?
+	Fixed 2430aa0eafb895dc09b62c0d4297e8e300b71b25
+
+BUG: Long pause after character death
+	Almost all from death_knowledge->player_learn_all_icons->player->learn_icon->update_player_object_knowledge->player_learn_icon->object_fully_known->object_icons_known->object_non_fault_icons_known->icon_index.
+	There are 112 calls to player_learn_icon (expected, that many icons)
+	108 to update_player_object_knowledge (OK, that many unlearned)
+	40K to player_know_object (why so many? There are probably about 1000 items in stores)
+	and 4.3M calls to icon_index (wat?)
+	Fixed 682927715e713dd70ae544c29f5e20631a0465bd
+
 
 Theme
 =====

@@ -453,6 +453,22 @@ void wr_world(void)
 	rdwr_world();
 }
 
+void rdwr_player(void)
+{
+	/* Total energy used so far */
+	rdwr_u32b(&player->total_energy);
+	/* # of turns spent resting */
+	rdwr_u32b(&player->resting_turn);
+
+	/* Quest currently active */
+	rdwr_s32b(&player->active_quest);
+
+	/* Factions */
+	rdwr_s32b(&player->bm_faction);
+	rdwr_s32b(&player->town_faction);
+	rdwr_s32b(&player->cyber_faction);
+}
+
 void wr_player(void)
 {
 	int i;
@@ -526,17 +542,7 @@ void wr_player(void)
 	for (i = 0; i < TMD_MAX; i++)
 		wr_s16b(player->timed[i]);
 
-	/* Total energy used so far */
-	wr_u32b(player->total_energy);
-	/* # of turns spent resting */
-	wr_u32b(player->resting_turn);
-
-	/* Quest currently active */
-	wr_s32b(player->active_quest);
-
-	/* Factions */
-	wr_s32b(player->bm_faction);
-	wr_s32b(player->town_faction);
+	rdwr_player();
 
 	/* Player flags */
 	for(i=0; i < (int)PF_SIZE; i++)

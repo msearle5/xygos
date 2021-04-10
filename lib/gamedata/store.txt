@@ -291,19 +291,19 @@ owner:0:0:Bounce Air
 danger:99:99
 
 store:11:Cyber Salon
-owner:0:0:95% (Meta-Human)
-owner:0:0:Neo (Trans-Human)
-owner:0:0:Fran (Neo-Human)
-owner:0:0:Jimmy (Mostly Human)
-owner:0:0:Neo (Trans-Human)
-owner:0:0:Fran (Neo-Human)
-owner:0:0:95% (Meta-Human)
-owner:0:0:Neo (Trans-Human)
-owner:0:0:Fran (Neo-Human)
-slots:2:5
+owner:1:0:95% (Meta-Human)
+owner:2:0:Neo (Trans-Human)
+owner:3:0:Fran (Neo-Human)
+owner:4:0:Jimmy (Mostly Human)
+owner:5:0:Neo (Trans-Human)
+owner:4:0:Fran (Neo-Human)
+owner:3:0:95% (Meta-Human)
+owner:2:0:Neo (Trans-Human)
+owner:1:0:Fran (Neo-Human)
+slots:8:16
 turnover:1
 normal:legs
-#normal:arms:0
+normal:arms
 buy:arms
 buy:legs
 danger:85:95

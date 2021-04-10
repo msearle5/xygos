@@ -179,7 +179,12 @@ static void prt_welcome(struct store *store)
 	/* Truncate the name */
 	short_name[j] = '\0';
 
-	int faction = (store->sidx == STORE_B_MARKET) ? player->bm_faction : player->town_faction;
+	int faction = store_faction(store);
+	if (store->sidx == STORE_CYBER) {
+		faction = store_cyber_rank();
+		if (faction > 0)
+			faction = (faction >= 3) ? 2 : 1;
+	}
 	if (one_in_(3)) {
 		size_t i = randint0(N_ELEMENTS(comment_hint));
 

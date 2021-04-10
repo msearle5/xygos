@@ -724,23 +724,41 @@ int price_item(struct store *store, const struct object *obj,
 			((3 + player->state.stat_ind[STAT_CHR]) * 10)) + store->owner->greed;
 
 		/* The black market is always a worse deal (for the rest of them) */
-		if (store->sidx == STORE_B_MARKET) {
-			int bmf = (player->bm_faction >= 0) ? (20 / (player->bm_faction + 1)) : 50;
-			adjust = (adjust * 2) + 30 + bmf;
-		} else {
-			/* Expensive stuff gets a further hike.
-			 * 'Expensive' is based on the max cost.
-			 * It's still always better than the BM, though
-			 **/
-			int value = object_value_real(obj, 1);
-			int costly = proprietor->max_cost / 30;
-			int scale = proprietor->max_cost / 250;
-			int chscale = proprietor->max_cost / 7500;
-			if (value > costly) {
-				int div = (scale + (chscale * player->state.stat_ind[STAT_CHR]));
-				if (div) {
-					int markup = adjust + ((object_value_real(obj, 1) - costly) / (scale + (chscale * player->state.stat_ind[STAT_CHR])));
-					adjust = MIN(((adjust * 2) + 30), markup);
+		switch (store->sidx) {
+			case STORE_B_MARKET: {
+				int bmf = (player->bm_faction >= 0) ? (20 / (player->bm_faction + 1)) : 50;
+				adjust = (adjust * 2) + 30 + bmf;
+				break;
+			}
+			case STORE_CYBER: {
+				/* Cyber Salon has its own rules.
+				 * It doesn't care about CHR, level or high prices (as it's all expensive).
+				 * It cares a lot about your faction rank, and has a little variation from per-store greed.
+				 * It should usually (= independent of CHR of greed, but not of BM faction) be worse than
+				 * the BM when you are at rank 0 or below, but better otherwise (to add the choice of selling
+				 * to the BM for more cash, or to the Salon for more faction)
+				 */
+				static const int rank_adjust[8] = {
+					600, 450, 160, 135, 120, 113, 108, 105
+				};
+				adjust = (rank_adjust[store_cyber_rank()+1] * (100 + store->owner->greed)) / 100;
+				break;
+			}
+			default: {
+				/* Expensive stuff gets a further hike.
+				 * 'Expensive' is based on the max cost.
+				 * It's still always better than the BM, though
+				 **/
+				int value = object_value_real(obj, 1);
+				int costly = proprietor->max_cost / 30;
+				int scale = proprietor->max_cost / 250;
+				int chscale = proprietor->max_cost / 7500;
+				if (value > costly) {
+					int div = (scale + (chscale * player->state.stat_ind[STAT_CHR]));
+					if (div) {
+						int markup = adjust + ((object_value_real(obj, 1) - costly) / (scale + (chscale * player->state.stat_ind[STAT_CHR])));
+						adjust = MIN(((adjust * 2) + 30), markup);
+					}
 				}
 			}
 		}
@@ -1336,20 +1354,39 @@ static struct object_kind *store_get_choice(struct store *store, int level)
 	return NULL;
 }
 
+int store_faction(struct store *store)
+{
+	if (store->sidx == STORE_B_MARKET)
+		return player->bm_faction;
+	if (store->sidx == STORE_CYBER)
+		return player->cyber_faction;
+	else
+		return player->town_faction;
+}
+
 static void store_level_limits(struct store *store, int *min_level, int *max_level)
 {
 	/* Decide min/max levels */
+	int faction = store_faction(store);
 	if (store->sidx == STORE_HQ) {
 		*min_level = 1;
 		*max_level = 5 + (title_idx(levels_in_class(get_class_by_name("Soldier")->cidx) * 6));
 	} else {
 		if (store->sidx == STORE_B_MARKET) {
-			if (player->bm_faction <= 0) {
+			if (faction <= 0) {
 				*min_level = MIN(40, player->max_depth / 2);
 				*max_level = MIN(55, (player->max_depth / 2) + 15);
 			} else {
-				*min_level = MIN(75, player->max_depth + (player->bm_faction * 5));
-				*max_level = MIN(90, player->max_depth + 10 + (player->bm_faction * 10));
+				*min_level = MIN(75, player->max_depth + (faction * 5));
+				*max_level = MIN(90, player->max_depth + 10 + (faction * 10));
+			}
+		} else if (store->sidx == STORE_CYBER) {
+			int rank = store_cyber_rank();
+			if (rank < 1) {
+				*min_level = *max_level = 0;
+			} else {
+				*min_level = MIN(35, (rank * 7) - 6);
+				*max_level = MIN(95, 18 + (rank * 13));
 			}
 		} else {
 			*min_level = 1;
@@ -1507,6 +1544,29 @@ void do_store_maint(struct store *s, bool init)
 	if (s->sidx == STORE_HOME)
 		return;
 
+	int faction = store_faction(s);
+
+	/* We'll end up adding staples for sure, maybe plus other
+	 * items. It's fine if we sell out completely, though, if
+	 * turnover is high. The cap doesn't include always_num,
+	 * because otherwise the addition of missing staples could
+	 * put us over (if the store was full of player-sold loot).
+	 */
+	int min = 0;
+	int max = s->normal_stock_max;
+
+	/* More faction gives more items */
+	if ((s->sidx == STORE_B_MARKET) && (player->bm_faction > 0)) {
+		max *= (faction + 2);
+		max /= 2;
+	} else if (s->sidx == STORE_CYBER) {
+		int rank = faction / 100;
+		if (rank <= 0)
+			rank = 0;
+		max *= (1<<rank) - 1;
+		max >>= rank;
+	}
+
 	if (!init) {
 		/* Destroy crappy black market items */
 		if (s->sidx == STORE_B_MARKET) {
@@ -1541,20 +1601,6 @@ void do_store_maint(struct store *s, bool init)
 			int restock_attempts = 100000;
 			int stock = s->stock_num - randint1(s->turnover);
 
-			/* We'll end up adding staples for sure, maybe plus other
-			 * items. It's fine if we sell out completely, though, if
-			 * turnover is high. The cap doesn't include always_num,
-			 * because otherwise the addition of missing staples could
-			 * put us over (if the store was full of player-sold loot).
-			 */
-			int min = 0;
-			int max = s->normal_stock_max;
-
-			/* More faction gives more items */
-			if ((s->sidx == STORE_B_MARKET) && (player->bm_faction > 0)) {
-				max *= (player->bm_faction + 2);
-				max /= 2;
-			}
 
 			if (stock < min) stock = min;
 			if (stock > max) stock = max;
@@ -1602,15 +1648,7 @@ void do_store_maint(struct store *s, bool init)
 		}
 	}
 
-	if (s->turnover) {
-
-		/* Now that the staples exist, we want to add more
-		 * items, at least enough to get us to normal_stock_min
-		 * items that aren't necessarily staples.
-		 */
-
-		int min = s->normal_stock_min + s->always_num;
-		int max = s->normal_stock_max + s->always_num;
+	if (s->turnover && s->normal_stock_max) {
 
 		/* For the rest, we just choose items randomlyish */
 		/* The restock_attempts will probably only go to zero (otherwise
@@ -1627,7 +1665,6 @@ void do_store_maint(struct store *s, bool init)
 		/* Keep stock between specified min and max slots */
 		if (stock > max) stock = max;
 		if (stock < min) stock = min;
-
 
 		/* Try to generate enough items to fill stock.
 		 * If this is taking too long, start to increase the level
@@ -2177,6 +2214,22 @@ void do_cmd_install(struct command *cmd)
 	}
 }
 
+/* Returns your rank as a member of the Cyber Salon.
+ * So <0 => -1,
+ *  	0..99 => 0,
+ * 		100..199 =>1, etc. to a maximum of 6
+ */
+int store_cyber_rank(void)
+{
+	int rank = player->cyber_faction;
+	if (rank < 0)
+		return -1;
+	rank /= 100;
+	if (rank > 6)
+		return 6;
+	return rank;
+}
+
 /**
  * Sell an item to the current store.
  */
@@ -2240,6 +2293,46 @@ void do_cmd_sell(struct command *cmd)
 
 	/* Get some money */
 	player->au += price;
+
+	/* Update faction */
+	if (cyber) {
+
+		/* But not by buying stuff and selling it back again */
+		if (obj->origin != ORIGIN_STORE) {
+
+			/* Previous rank */
+			int rank = store_cyber_rank();
+
+			/* Value decreases as you advance ranks */
+			int value = (price / (20 + player->cyber_faction));
+
+			/* Never skip a level */
+			if (value > 100)
+				value = 100;
+			player->cyber_faction += value;
+
+			/* Have you advanced a rank? */
+			int newrank = store_cyber_rank();
+
+			/* If so, let you know */
+			if (rank != newrank) {
+				static const char *message[] = {
+					"You are now considered to be a customer in good standing again.",
+					"You are welcomed as a card carrying Cyber Salon member.",
+					"You are now a Chrome Hand Member of the Cyber Salon.",
+					"You are now a Silver Hand Member of the Cyber Salon.",
+					"You are now a Golden Hand Member of the Cyber Salon.",
+					"You are now a Platinum Hand Member of the Cyber Salon.",
+					"You are now a top-tier, Diamond Hand Member of the Cyber Salon."
+				};
+				msgt(MSG_LEVEL, message[newrank]);
+
+				/* And bring out some new stock */
+				for(int i=0;i<5;i++)
+					store_maint(store);
+			}
+		}
+	}
 
 	/* Update the auto-history if selling an artifact that was previously
 	 * un-IDed. (Ouch!) */
