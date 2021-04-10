@@ -192,15 +192,41 @@ static void init_icon(void)
  */
 static int icon_index(size_t variety, int index)
 {
-	size_t i;
+	static int *cache;
+	static int max_var = 0;
+	static int max_index = 0;
 
-	/* Look for the icon */
-	for (i = 0; i < icon_max; i++)
-		if ((icon_list[i].variety == variety) && (icon_list[i].index == index))
-			return i;
+	/* A cache of icon varieties / indexes is used to avoid linear search.
+	 * Performance matters as this is called over 4M times at game exit - when
+	 * this was a linear search, this caused a noticeable delay.
+	 * 
+	 * First time, build the table
+	 **/
+	if (!cache) {
+		/* Find the maximum variety and index, and allocate an array to cache them */
+		for(int i=0; i < (int)icon_max; i++) {
+			if ((int)icon_list[i].variety > max_var)
+				max_var = icon_list[i].variety;
+			if (icon_list[i].index > max_index)
+				max_index = icon_list[i].index;
+		}
+		max_var++;
+		max_index++;
+		cache = mem_alloc(sizeof(*cache) * max_var * max_index);
 
-	/* Can't find it */
-	return -1;
+		/* Fill it with -1 for entries that are missing */
+		for(int i=0; i < max_var * max_index; i++)
+			cache[i] = -1;
+
+		/* Fill all entries that would hit with the index */
+		for(int i=0; i < (int)icon_max; i++) {
+			int cachei = (max_index * icon_list[i].variety) + icon_list[i].index;
+			cache[cachei] = i;
+		}
+	}
+
+	/* Read it from the table */
+	return cache[(max_index * (int)variety) + index];
 }
 
 /**
