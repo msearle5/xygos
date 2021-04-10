@@ -1,6 +1,12 @@
 BUGS
 ====
 
+BUG: Char dumps ([0])
+
+BUG: Some entries are off the bottom of mode-2 char sheet. Delete top-left and top-right?
+
+BUG: Metal detect flag only detects monsters with the METAL flag
+
 BUG: effect_handler_CLIMBING is incomplete
 
 BUG: on 28/3 the BM had a choc egg - also seen one in initial inventory
@@ -8,9 +14,6 @@ BUG: on 28/3 the BM had a choc egg - also seen one in initial inventory
 BUG After the success/failure message from a quest, ESC is the only way to get back out.
 
 BUG: "no position"
-
-BUG - 3 items - 2 *mighty hunter*, 1 mighty hunter - didn't ego-ID. 1 was cursed.
-	- Also got a failed ID from an item with {??} (still ?? after IDing)
 
 Defer
 =====

@@ -120,6 +120,8 @@ static void panel_space(struct panel *p) {
 	p->len++;
 }
 
+#define CS_MAX_REGIONS 4
+#define CS_MAX_LABEL 28
 
 /**
  * Cache the layout of the character sheet, currently only for the resistance
@@ -127,17 +129,19 @@ static void panel_space(struct panel *p) {
  */
 struct char_sheet_resist {
 	struct ui_entry* entry;
-	wchar_t label[6];
+	wchar_t label[CS_MAX_LABEL+1];
 };
 struct char_sheet_config {
 	struct ui_entry** stat_mod_entries;
-	region res_regions[4];
-	struct char_sheet_resist *resists_by_region[4];
-	int n_resist_by_region[4];
+	region res_regions[CS_MAX_REGIONS];
+	struct char_sheet_resist *resists_by_region[CS_MAX_REGIONS];
+	int label_width[CS_MAX_REGIONS];
+	int n_resist_by_region[CS_MAX_REGIONS];
 	int n_stat_mod_entries;
-	int res_cols;
+	int res_cols[CS_MAX_REGIONS];
 	int res_rows;
-	int res_nlabel;
+	int regions;
+	int sustain_region;
 };
 static struct char_sheet_config *cached_config = NULL;
 static void display_resistance_panel(int ipart, struct char_sheet_config* config);
@@ -148,8 +152,7 @@ static bool have_valid_char_sheet_config(void)
 	if (!cached_config) {
 		return false;
 	}
-	if (cached_config->res_cols !=
-		cached_config->res_nlabel + 1 + player->body.count) {
+	if (cached_config->res_cols[0] != cached_config->label_width[0] + player->body.count) {
 		return false;
 	}
 	return true;
@@ -182,12 +185,12 @@ static bool check_for_two_categories(const struct ui_entry* entry,
 }
 
 
-static void configure_char_sheet(void)
+static void configure_char_sheet(bool minimum_size)
 {
 	char* region_categories[] = {
 		"resistances",
-		"abilities",
 		"hindrances",
+		"abilities",
 		"modifiers"
 	};
 	char* test_categories[2];
@@ -196,7 +199,48 @@ static void configure_char_sheet(void)
 
 	release_char_sheet_config();
 
-	cached_config = mem_alloc(sizeof(*cached_config));
+	cached_config = mem_zalloc(sizeof(*cached_config));
+	cached_config->regions = CS_MAX_REGIONS;
+	cached_config->sustain_region = 1;
+
+	for(int i=0;i<CS_MAX_REGIONS; i++)
+		cached_config->label_width[i] = 0;
+	int wid, hgt;
+	if (minimum_size) {
+		wid = 80;
+		hgt = 24;
+	} else {
+		Term_get_size(&wid, &hgt);
+	}
+
+	/* Fit columns to the screen */
+	int offset, low, lowi;
+	do {
+		/* +1, because there is no gap after the rightmost region */
+		offset = wid+1;
+		low = wid;
+		for(int i=0;i<cached_config->regions;i++) {
+			offset -= cached_config->label_width[i] + 3 + player->body.count;
+			if (cached_config->label_width[i] < low) {
+				low = cached_config->label_width[i];
+				lowi = i;
+			}
+		}
+		if (offset > 0) {
+			cached_config->label_width[lowi]++;
+		}
+	} while (offset > 0);
+
+	for(int i=0;i<cached_config->regions;i++) {
+		if ((cached_config->label_width[i]) > CS_MAX_LABEL)
+			cached_config->label_width[i] = CS_MAX_LABEL;
+	}
+
+	/* Same size regions, if minimum size */
+	if (minimum_size) {
+		for(int i=0;i<cached_config->regions;i++)
+			cached_config->label_width[i] = low;
+	}
 
 	test_categories[0] = "CHAR_SCREEN1";
 	test_categories[1] = "stat_modifiers";
@@ -211,25 +255,28 @@ static void configure_char_sheet(void)
 	    n = STAT_MAX;
 	}
 	cached_config->n_stat_mod_entries = n;
-	cached_config->stat_mod_entries = mem_alloc(n *
-		sizeof(*cached_config->stat_mod_entries));
+	cached_config->stat_mod_entries = mem_alloc(n * sizeof(*cached_config->stat_mod_entries));
 	for (i = 0; i < n; ++i) {
 		cached_config->stat_mod_entries[i] =
 			advance_ui_entry_iterator(ui_iter);
 	}
 	release_ui_entry_iterator(ui_iter);
 
-	cached_config->res_nlabel = 6;
-	cached_config->res_cols =
-		cached_config->res_nlabel + 2 + player->body.count;
 	cached_config->res_rows = 0;
-	for (i = 0; i < 4; ++i) {
+	for (i = 0; i < cached_config->regions; ++i) {
 		int j;
 
-		cached_config->res_regions[i].col =
-			i * (cached_config->res_cols + 1);
-		cached_config->res_regions[i].row = 2 + STAT_MAX;
-		cached_config->res_regions[i].width = cached_config->res_cols;
+		cached_config->res_cols[i] = cached_config->label_width[i] + 2 + player->body.count;
+		int col = 0;
+		if (i > 0)
+			col = cached_config->res_cols[i-1] + cached_config->res_regions[i-1].col + 1;
+
+		cached_config->res_regions[i].col = col;
+		int row = 2 + STAT_MAX;
+		if (i != cached_config->sustain_region)
+			row = 1;
+		cached_config->res_regions[i].row = row;
+		cached_config->res_regions[i].width = cached_config->res_cols[i];
 
 		test_categories[1] = region_categories[i];
 		ui_iter = initialize_ui_entry_iterator(check_for_two_categories, test_categories, region_categories[i]);
@@ -238,8 +285,8 @@ static void configure_char_sheet(void)
 		 * Fit in 24 row display; leave at least one row blank before
 		 * prompt on last row.
 		 */
-		if (n + 2 + cached_config->res_regions[i].row > 22) {
-		    n = 20 - cached_config->res_regions[i].row;
+		if (n + cached_config->res_regions[i].row > 22) {
+		    n = 22 - cached_config->res_regions[i].row;
 		}
 		cached_config->n_resist_by_region[i] = n;
 		cached_config->resists_by_region[i] = mem_alloc(n * sizeof(*cached_config->resists_by_region[i]));
@@ -247,8 +294,8 @@ static void configure_char_sheet(void)
 			struct ui_entry *entry = advance_ui_entry_iterator(ui_iter);
 
 			cached_config->resists_by_region[i][j].entry = entry;
-			get_ui_entry_label(entry, cached_config->res_nlabel, true, cached_config->resists_by_region[i][j].label);
-			(void) text_mbstowcs(cached_config->resists_by_region[i][j].label + 5, ":", 1);
+			get_ui_entry_label(entry, cached_config->label_width[i] + 1, true, cached_config->resists_by_region[i][j].label);
+			(void) text_mbstowcs(cached_config->resists_by_region[i][j].label + cached_config->label_width[i], ":", 1);
 		}
 		release_ui_entry_iterator(ui_iter);
 
@@ -258,7 +305,7 @@ static void configure_char_sheet(void)
 				cached_config->n_resist_by_region[i];
 		}
 	}
-	for (i = 0; i < 4; ++i) {
+	for (i = 0; i < cached_config->regions; ++i) {
 		cached_config->res_regions[i].page_rows =
 			cached_config->res_rows + 2;
 	}
@@ -368,10 +415,20 @@ static void display_player_equippy(int y, int x)
 
 		/* Dump */
 		if ((tile_width == 1) && (tile_height == 1))
-		        Term_putch(x + i, y, a, c);
+			Term_putch(x + i, y, a, c);
 	}
 }
 
+static void display_player_header(struct char_sheet_config *config, int region, int row, int col)
+{
+	char buf[64];
+	memset(buf, ' ', sizeof(buf));
+	int width = config->label_width[region];
+	strcpy(buf+width, "abcdefghijklmnopqrstuvwxyz");
+	strcpy(buf+player->body.count+width, "*@");
+
+	Term_putstr(col, row, config->res_cols[region], COLOUR_WHITE, buf);
+}
 
 static void display_resistance_panel(int ipart, struct char_sheet_config *config)
 {
@@ -393,16 +450,15 @@ static void display_resistance_panel(int ipart, struct char_sheet_config *config
 		equipment[i] = slot_object(player, i);
 	}
 
-	/* Equippy */
-	display_player_equippy(row++, col + config->res_nlabel);
+	/* Equippy / header */
+	if (ipart != config->sustain_region) {
+		display_player_equippy(row++, col + config->label_width[ipart]);
 
-	char buf[64];
-	strcpy(buf, "      abcdefghijklmnopqrstuvwxyz");
-	strcpy(buf+player->body.count+6, "*@");
+		display_player_header(config, ipart, row++, col);
+	}
 
-	Term_putstr(col, row++, config->res_cols, COLOUR_WHITE, buf);
 	render_details.label_position.x = col;
-	render_details.value_position.x = col + config->res_nlabel;
+	render_details.value_position.x = col + config->label_width[ipart];
 	render_details.position_step = loc(1, 0);
 	render_details.combined_position = loc(0, 0);
 	render_details.vertical_label = false;
@@ -420,7 +476,7 @@ static void display_resistance_panel(int ipart, struct char_sheet_config *config
 		render_details.label_position.y = row;
 		render_details.value_position.y = row;
 		render_details.known_icon = is_ui_entry_for_known_icon(entry, player);
-		ui_entry_renderer_apply(get_ui_entry_renderer_index(entry), config->resists_by_region[ipart][i].label, config->res_nlabel, vals, auxs, player->body.count + 2, &render_details);
+		ui_entry_renderer_apply(get_ui_entry_renderer_index(entry), config->resists_by_region[ipart][i].label, config->label_width[ipart], vals, auxs, player->body.count + 2, &render_details);
 	}
 
 	if (pcache) {
@@ -571,16 +627,17 @@ static void display_player_sust_info(struct char_sheet_config *config)
 	}
 
 	/* Row */
-	row = 2;
+	row = 3;
 
 	/* Column */
-	col = 26;
+	col = config->res_regions[config->sustain_region].col;
 
 	/* Header */
-	c_put_str(COLOUR_WHITE, "abcdefghijkl@", row - 1, col);
+	display_player_equippy(row - 2, col + config->label_width[config->sustain_region] + 1);
+	display_player_header(config, config->sustain_region, row - 1, col);
 
-	render_details.label_position.x = col + player->body.count + 5;
-	render_details.value_position.x = col;
+	render_details.label_position.x = col + player->body.count;
+	render_details.value_position.x = col + config->label_width[config->sustain_region] + 1;
 	render_details.position_step = loc(1, 0);
 	render_details.combined_position = loc(0, 0);
 	render_details.vertical_label = false;
@@ -924,11 +981,14 @@ void display_player_xtra_info(void)
  *
  * Mode 0 = standard display with skills/history
  * Mode 1 = special display with equipment flags
+ * Mode 2 = ", 80x24 (for character dumps).
  */
 void display_player(int mode)
 {
-	if (!have_valid_char_sheet_config()) {
-		configure_char_sheet();
+	static int lastmode = -1;
+	if (!have_valid_char_sheet_config() || (mode != lastmode)) {
+		configure_char_sheet(mode == 2);
+		lastmode = mode;
 	}
 
 	/* Erase screen */
@@ -938,22 +998,20 @@ void display_player(int mode)
 	if (Term != angband_term[0] && !player->upkeep->playing) return;
 
 	if (mode) {
-		struct panel *p = panels[0].panel();
-		display_panel(p, panels[0].align_left, &panels[0].bounds);
-		panel_free(p);
-
 		/* Stat/Sustain flags */
 		display_player_sust_info(cached_config);
 
 		/* Other flags */
 		display_player_flag_info();
+
 	} else {
 		/* Extra info */
 		display_player_xtra_info();
+
+		/* Stat info */
+		display_player_stat_info(false);
 	}
 
-	/* Stat info */
-	display_player_stat_info(false);
 }
 
 
@@ -975,13 +1033,11 @@ void write_character_dump(ang_file *fff)
 	int n;
 	char *buf, *p;
 
-	if (!have_valid_char_sheet_config()) {
-		configure_char_sheet();
-	}
+	configure_char_sheet(true);
 
 	n = 80;
-	if (n < 2 * cached_config->res_cols + 1) {
-		n = 2 * cached_config->res_cols + 1;
+	if (n < 2 * cached_config->res_cols[0] + 1) {
+		n = 2 * cached_config->res_cols[0] + 1;
 	}
 	buf = mem_alloc(text_wcsz() * n + 1);
 
@@ -1022,7 +1078,7 @@ void write_character_dump(ang_file *fff)
 	display_player(1);
 
 	/* Print a header */
-	file_putf(fff, format("%-20s%s\n", "Resistances", "Abilities"));
+	file_putf(fff, format("%-21s%s\n", "Resistances", "Sustains/Hindrances"));
 
 	/* Dump part of the screen */
 	ylim = ((cached_config->n_resist_by_region[0] >
@@ -1033,7 +1089,7 @@ void write_character_dump(ang_file *fff)
 	for (y = cached_config->res_regions[0].row + 2; y < ylim; y++) {
 		p = buf;
 		/* Dump each row */
-		for (x = 0; x < 2 * cached_config->res_cols + 1; x++) {
+		for (x = 0; x < 2 * cached_config->res_cols[0] + 1; x++) {
 			/* Get the attr/char */
 			(void)(Term_what(x, y, &a, &c));
 
@@ -1060,7 +1116,7 @@ void write_character_dump(ang_file *fff)
 	file_putf(fff, "\n");
 
 	/* Print a header */
-	file_putf(fff, format("%-20s%s\n", "Hindrances", "Modifiers"));
+	file_putf(fff, format("%-21s%s\n", "Abilities", "Modifiers"));
 
 	/* Dump part of the screen */
 	ylim = ((cached_config->n_resist_by_region[2] >
@@ -1071,9 +1127,9 @@ void write_character_dump(ang_file *fff)
 	for (y = cached_config->res_regions[0].row + 2; y < ylim; y++) {
 		p = buf;
 		/* Dump each row */
-		for (x = 0; x < 2 * cached_config->res_cols + 1; x++) {
+		for (x = 0; x < 2 * cached_config->res_cols[0] + 1; x++) {
 			/* Get the attr/char */
-			(void)(Term_what(x + 2 * cached_config->res_cols + 2, y, &a, &c));
+			(void)(Term_what(x + 2 * cached_config->res_cols[0], y, &a, &c));
 
 			/* Dump it */
 			n = text_wctomb(p, c);
