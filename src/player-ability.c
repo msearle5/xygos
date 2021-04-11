@@ -591,7 +591,7 @@ void changed_abilities(void) {
  * This does not care about talent points & so could be used for mutations, etc.
  * Can fail if already present or blocked.
  */
-static bool gain_ability(unsigned a, bool birth) {
+bool gain_ability(unsigned a, bool birth) {
 	assert(a < PF_MAX);
 	assert(ability[a]);
 
@@ -1072,7 +1072,7 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 /* Complete init of player talents (roll out TP-gain levels)
  * This must be done after birth talents (including Patience etc.) have been fixed.
  **/
-void init_talent(int initial_tp) {
+void init_talent(int initial_tp, int orig_tp) {
 
 	/* Get an empty array of talent gain counts */
 	int n_classes = 0;
@@ -1093,7 +1093,7 @@ void init_talent(int initial_tp) {
 		 * This is the TP for that class plus an offset intended to cancel the level-gain and base TP.
 		 * Also change the minimum level for classes with less base TP.
 		 */
-		int bp = player->race->tp_base + c->tp_base + initial_tp - player->class->tp_base;
+		int bp = player->race->tp_base + c->tp_base + orig_tp - player->class->tp_base;
 		int tp = player->race->tp_max + c->tp_max;
 
 		/* Distribute fairly evenly between level 2 and maximum.
@@ -1128,7 +1128,28 @@ void init_talent(int initial_tp) {
 			player->talent_gain[(cl * PY_MAX_LEVEL) + rand_range(min, max)]++;
 	}
 
-	player->talent_points = player->race->tp_base + player->class->tp_base;
+	//player->talent_points = player->race->tp_base + player->class->tp_base;
+
+	/* Talent points are now determined.
+	 * Birth effects of talents follow:
+	 */
+
+	/* Cash and town faction */
+	if (player_has(player, PF_TRADE_CONNECTION)) {
+		player->au += 1000 + damroll(3, 500);
+		player->town_faction++;
+	}
+
+	/* Cash and BM faction */
+	if (player_has(player, PF_MOB_CONNECTION)) {
+		player->au += 500 + damroll(3, 300);
+		player->bm_faction++;
+	}
+
+	/* Salon faction */
+	if (player_has(player, PF_NET_CONNECTION)) {
+		player->cyber_faction += 100;
+	}
 }
 
 /* Handle ability gain at level up.

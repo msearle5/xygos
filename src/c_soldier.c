@@ -69,7 +69,8 @@ static void soldier_init(void)
 	struct soldier_state *state = get_class_by_name("Soldier")->state = mem_zalloc(sizeof(struct soldier_state));
 
 	/* Allow access to HQ */
-	get_store_by_name("Field HQ")->open = true;
+	if (player->class == get_class_by_name("Soldier"))
+		get_store_by_name("Field HQ")->open = true;
 
 	/* Set a random owner */
 	char buf[256];

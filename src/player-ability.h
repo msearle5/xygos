@@ -22,7 +22,7 @@ struct attack {
 	random_value damage;					/**< for 6d6 of */
 	int element;							/**< fire damage */
 };
- 
+
 struct ability {
 	char *name;
 	char *gain;
@@ -69,6 +69,7 @@ bool ability_levelup(struct player *p, int from, int to);
 int setup_talents(void);
 int cmd_abilities(struct player *p, bool birth, int selected, bool *flip);
 int ability_to_stat(int stat);
-void init_talent(int tp);
+void init_talent(int initial_tp, int orig_tp);
 bool get_mutation(unsigned long flags, bool allow_loss);
 bool mutate(void);
+bool gain_ability(unsigned a, bool birth);

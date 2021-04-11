@@ -1287,8 +1287,9 @@ void do_cmd_accept_character(struct command *cmd)
 
 	/* Prompt for birth talents and roll out per-level talent points */
 	int level_tp = setup_talents();
+	int orig_tp = player->talent_points;
 	cmd_abilities(player, true, player->talent_points, NULL);
-	init_talent(level_tp);
+	init_talent(level_tp, orig_tp);
 
 	/* No quest in progress */
 	player->active_quest = -1;

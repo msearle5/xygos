@@ -1370,7 +1370,8 @@ static void store_level_limits(struct store *store, int *min_level, int *max_lev
 	int faction = store_faction(store);
 	if (store->sidx == STORE_HQ) {
 		*min_level = 1;
-		*max_level = 5 + (title_idx(levels_in_class(get_class_by_name("Soldier")->cidx) * 6));
+		struct player_class *soldier = get_class_by_name("Soldier");
+		*max_level = 5 + (title_idx_of_class(soldier, levels_in_class(soldier->cidx) * 6));
 	} else {
 		if (store->sidx == STORE_B_MARKET) {
 			if (faction <= 0) {

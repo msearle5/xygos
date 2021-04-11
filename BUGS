@@ -11,6 +11,8 @@ BUG: After the success/failure message from a quest, ESC is the only way to get 
 
 BUG: "no position"
 
+BUG: Classes don't have + to TP defined in the .txt, they should.
+
 Defer
 =====
 

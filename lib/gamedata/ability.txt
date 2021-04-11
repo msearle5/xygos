@@ -167,6 +167,41 @@ cost:0
 
 ######## Generally available talents ##########
 
+# +$, +town faction
+name:Trade_Connection
+gain:You have 1 new connection on LinkedUp!
+lose:You have no new connections on LinkedUp.
+brief:You have a connection in business.
+desc:You can buy and sell items and obtain services at great prices. Plus, you start with plenty of cash-ola!
+desc_future:you could buy and sell items and obtain services at great prices. Plus, you start with plenty of cash-ola!
+flag:talent
+flag:birth
+forbid:Mob_Connection
+cost:1
+
+# +$, +BM faction
+name:Mob_Connection
+gain:You realize how good you look in sunglasses.
+lose:You realize that sunglasses are a bad idea in a cave.
+brief:You have a friend in the Family.
+desc:You gain some dodgy skills and few thieves will dare to bother you. You also start with a wad of ill-gotten gains.
+desc_future:you would gain some dodgy skills and few thieves would dare to bother you. You would also start with a wad of ill-gotten gains.
+flag:talent
+flag:birth
+forbid:Trade_Connection
+cost:1
+
+# +cyber faction
+name:Net_Connection
+gain:You realize that chrome will never really go out of fashion.
+lose:You sense that somebody has cut the hard link.
+brief:You know a member of the Cyber Salon.
+desc:You begin as a member of the Cyber Salon, and so can buy implants there immediately.
+desc_future:you would begin as a member of the Cyber Salon, and so could buy implants there immediately.
+flag:talent
+flag:birth
+cost:1
+
 name:Emotional_Intelligence
 # this gain msg is naff
 gain:You feel in touch with the Universal Oneness.
