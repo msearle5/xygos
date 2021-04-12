@@ -31,6 +31,7 @@
 #include "obj-desc.h"
 #include "obj-gear.h"
 #include "obj-ignore.h"
+#include "obj-init.h"
 #include "obj-knowledge.h"
 #include "obj-make.h"
 #include "obj-pile.h"
@@ -1023,6 +1024,16 @@ bool obj_is_useable(const struct object *obj)
 		return obj->tval == player->state.ammo_tval;
 
 	return false;
+}
+
+const struct object_material *obj_material(const struct object *obj)
+{
+	return material + obj->kind->material;
+}
+
+bool obj_is_metal(const struct object *obj)
+{
+	return obj_material(obj)->metal;
 }
 
 /*** Generic utility functions ***/

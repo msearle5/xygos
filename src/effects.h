@@ -67,5 +67,6 @@ void effect_simple(int index,
 	int x,
 	bool *ident);
 int recharge_failure_chance(const struct object *obj, int strength);
+void forget_remembered_objects(struct chunk *c, struct chunk *knownc, struct loc grid);
 
 #endif /* INCLUDED_EFFECTS_H */

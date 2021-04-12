@@ -184,10 +184,11 @@ struct object_base {
 	int break_perc;
 	int max_stack;
 	int num_svals;
+	byte material;	/** Material */
 };
 
 extern struct object_base *kb_info;
-#define MATERIAL(T, N, D, C) MAT_##T,
+#define MATERIAL(T, N, D, C, M) MAT_##T,
 enum {
 #include "list-materials.h"
 };
@@ -197,6 +198,7 @@ struct object_material {
 	char *name;
 	int density;
 	int cost;
+	bool metal;
 };
 
 /**

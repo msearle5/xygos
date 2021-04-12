@@ -354,7 +354,7 @@ msg:The {flavor} explodes!
 effect:SPOT:FIRE:3
 dice:2d10
 desc:A 'Molotov Cocktail' - a beer bottle filled with highly flammable fuel. It's not a sophisticated weapon, but it can still be effective.
-
+material:glass
 
 ##### Lights #####
 
@@ -372,6 +372,7 @@ pval:1500
 time:1500
 flags:BURNS_OUT | LIGHT_2
 desc:A wax candle.
+material:wax
 
 name:& firecracker~
 type:light
@@ -390,6 +391,7 @@ msg:The {flavor} explodes!
 effect:SPOT:SHARD:3
 dice:4d10
 desc:A candle-shaped firework. Light the blue touch paper and after a 15 second delay - BANG.
+material:paper
 
 name:& flare~
 type:light
@@ -406,6 +408,7 @@ time:40
 flags:BURNS_OUT | LIGHT_5 | MIMIC_KNOW
 msg:The {kind} fizzles out.
 desc:A small candle-shaped flare, intended to be safely hand held. It gives a very bright white light for the short time it burns for.
+material:paper
 
 name:& stick~ of dynamite
 type:light
@@ -426,6 +429,7 @@ dice:4d20
 effect:SPOT:KILL_DOOR:2
 dice:4d40
 desc:A candle-shaped explosive charge with a 15-second fuze. It's not intended as a weapon but could be thrown, with the explosion typically covering a 60m radius. But the long fuze could be a problem, and you can't fire it from a grenade launcher.
+material:paper
 
 name:& keyfob light~
 type:light
@@ -535,6 +539,7 @@ desc:A BogStan brand D-cell, sealed in plastic and claiming to be ultra-long-lif
 msg:You drain the cell dry.
 effect:NOURISH:INC_BY
 dice:30
+material:steel
 
 name:& lithium batter|y|ies|
 type:battery
@@ -551,6 +556,7 @@ desc:A Flammacell D-size battery, sealed in plastic and not too far past its sel
 msg:You drain the cell dry.
 effect:NOURISH:INC_BY
 dice:75
+material:steel
 
 name:& alcohol cell~
 type:battery
@@ -567,6 +573,7 @@ desc:A D-size Bendacell battery, based on an alcohol fuel cell. It lasts much lo
 msg:You drain the cell dry. Hic!
 effect:NOURISH:INC_BY
 dice:100
+material:titanium
 
 name:& hydrogen cell~
 type:battery
@@ -583,6 +590,7 @@ desc:A D-size Flammacell battery, based on a hydrogen fuel cell. It lasts a grea
 msg:You drain the cell dry.
 effect:NOURISH:INC_BY
 dice:100
+material:titanium
 
 # cooldown, reusable
 name:& atomic cell~
@@ -601,6 +609,7 @@ desc:A Bettacell atomic battery which can be used like conventional D cells, to 
 msg:You recharge from the atomic cell.
 effect:NOURISH:INC_BY
 dice:100
+material:titanium
 
 # no or much shorter cooldown, higher pval
 # Should be scarce (e.g. 10), but not unique
@@ -620,6 +629,7 @@ desc:The iconic dustbin-sized fusion reactor that powers cars and homes, now shr
 msg:You recharge from Mr Fusion.
 effect:NOURISH:INC_BY
 dice:100
+material:unobtainium
 
 ##### Chunks #####
 # Chunks (blocks) are raw materials in 1 kg blocks, used for item creation.
@@ -2200,6 +2210,7 @@ alloc:20:1 to 100
 attack:0d0:0:0
 armor:1:0
 desc:Leather hand protection, with an open palm for gripping weapons.
+material:leather
 
 name:& Set~ of Gauntlets
 type:gloves
@@ -2211,6 +2222,7 @@ alloc:20:10 to 100
 attack:1d1:0:0
 armor:3:0
 desc:A set of gloves that completely covers the hand and wrist in steel plating.
+material:steel
 
 ### Shields ###
 
@@ -5054,134 +5066,167 @@ desc:A suit of utterly black scales, against which no metal or wood can rest.
 name:bottle caps
 type:cash
 graphics:$:SteelBlue
+material:steel
 
 name:mountain money
 type:cash
 graphics:$:I
+material:paper
 
 name:wooden nickels
 type:cash
 graphics:$:Burlywood
+material:wood
 
 name:chocolate coins
 type:cash
 graphics:$:Gold
+material:aluminium
 
 name:monopoly money
 type:cash
 graphics:$:i
+material:paper
 
 name:sequins
 type:cash
 graphics:$:i
+material:plastic
 
 name:lottery tickets
 type:cash
 graphics:$:i
+material:paper
 
 name:arcade tokens
 type:cash
 graphics:$:Brass
+material:copper
 
 name:swarovskite
 type:cash
 graphics:$:y
+material:glass
 
 name:postage stamps
 type:cash
 graphics:$:i
+material:paper
 
 name:small change
 type:cash
 graphics:$:Copper
+material:copper
 
 name:book tokens
 type:cash
 graphics:$:T
+material:paper
 
 name:cubic zirconia
 type:cash
 graphics:$:w
+material:stone
 
 name:gift cards
 type:cash
 graphics:$:y
+material:paper
 
 name:ethelcoins
 type:cash
 graphics:$:Brass
+material:copper
 
 name:used bills
 type:cash
 graphics:$:ForestGreen
+material:paper
 
 name:santo gold
 type:cash
 graphics:$:Goldenrod
+material:copper
 
 name:liquor certificates
 type:cash
 graphics:$:Tan
+material:paper
 
 name:silver nuggets
 type:cash
 graphics:$:w
+material:silver
 
 name:pearls
 type:cash
 graphics:$:W
+material:organic
 
 name:space-miles
 type:cash
 graphics:$:SkyBlue
+material:paper
 
 name:opals
 type:cash
 graphics:$:W
+material:stone
 
 name:sapphires
 type:cash
 graphics:$:b
+material:stone
 
 name:gold dust
 type:cash
 graphics:$:Gold
+material:gold
 
 name:emeralds
 type:cash
 graphics:$:g
+material:stone
 
 name:rare coins
 type:cash
 graphics:$:Gold
+material:gold
 
 name:tiberium
 type:cash
 graphics:$:G
+material:metal
 
 name:rubies
 type:cash
 graphics:$:r
+material:stone
 
 name:platinum bars
 type:cash
 graphics:$:Grey75
+material:platinum
 
 name:diamonds
 type:cash
 graphics:$:w
+material:stone
 
 name:gold-pressed latinum
 type:cash
 graphics:$:Gold
+material:gold
 
 name:dilithium crystals
 type:cash
 graphics:$:w
+material:stone
 
 name:unobtainium wafers
 type:cash
 graphics:$:AliceBlue
+material:unobtainium
 
 
 ##### "Morgoth Artifacts" #####

@@ -1899,7 +1899,7 @@ bool effect_handler_DETECT_GOLD(effect_handler_context_t *context)
  * effect_handler_DETECT_OBJECTS to remove remembered objects at locations
  * sensed or detected as empty.
  */
-static void forget_remembered_objects(struct chunk *c, struct chunk *knownc, struct loc grid)
+void forget_remembered_objects(struct chunk *c, struct chunk *knownc, struct loc grid)
 {
 	struct object *obj = square_object(knownc, grid);
 

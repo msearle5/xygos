@@ -308,6 +308,7 @@ void update_mon(struct monster *mon, struct chunk *c, bool full)
 	/* ESP permitted */
 	bool telepathy_ok = player_of_has(player, OF_TELEPATHY);
 	bool sense_animal = player_of_has(player, OF_SENSE_ANIMAL);
+	bool sense_metal = player_of_has(player, OF_SENSE_METAL);
 
 	assert(mon != NULL);
 
@@ -360,7 +361,7 @@ void update_mon(struct monster *mon, struct chunk *c, bool full)
 			/* Detectable by animal sensing */
 			flag = true;
 			seen_animal = true;
-		} else if ((sense_animal) && (monster_is_metal(mon))) {
+		} else if ((sense_metal) && (monster_is_metal(mon))) {
 			/* Detectable by metal sensing */
 			flag = true;
 			seen_metal = true;
