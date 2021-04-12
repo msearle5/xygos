@@ -124,6 +124,12 @@ static const char *random_hint(void)
 	return random_rumor(100);
 }
 
+/* Build a random shopkeeper name */
+void random_shk_name(char *buf, int len)
+{
+	strnfmt(buf, len, "%s %s", random_line(firstnames), random_line(secondnames));
+}
+
 /* Return a random hint from the global hints or lies list,
  * with a minimum and maximum length. It is also checked for being
  * "saying like" - that is, the first character is alphanumeric.

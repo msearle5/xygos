@@ -109,6 +109,17 @@ struct store {
 extern struct store *stores;
 extern struct store *stores_init;
 
+/**
+ * The first name array
+ */
+extern struct hint *firstnames;
+
+/**
+ * The second name array
+ */
+extern struct hint *secondnames;
+
+
 void store_delete(struct store *s, struct object *obj, int amt);
 struct store *get_store_by_idx(int idx);
 struct store *get_store_by_name(const char *name);

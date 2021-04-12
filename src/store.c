@@ -72,6 +72,17 @@ struct hint *hints;
  */
 struct hint *lies;
 
+/**
+ * The first name array
+ */
+struct hint *firstnames;
+
+/**
+ * The second name array
+ */
+struct hint *secondnames;
+
+
 
 void do_store_maint(struct store *s, bool init);
 
@@ -456,6 +467,20 @@ void store_reset(void) {
 			s = &stores[i];
 			s->banreason = "";
 			s->layaway_idx = -1;
+
+			/* Random store names */
+			struct owner *own = s->owners;
+			while (own) {
+				if (own->name) {
+					if (own->name[0] == '*') {
+						char buf[32];
+						string_free(own->name);
+						random_shk_name(buf, sizeof(buf));
+						own->name = string_make(buf);
+					}
+				}
+				own = own->next;
+			}
 
 			s->max_danger = s->low_danger + randint0(1 + s->high_danger - s->low_danger);
 			store_shuffle(s);
