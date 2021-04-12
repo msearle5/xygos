@@ -1273,9 +1273,28 @@ static int rd_stores_aux(rd_item_t rd_item_version)
 
 			byte own;
 			u16b num;
+			byte n_owners;
 
 			/* Read the basic info */
 			rd_byte(&own);
+
+			if (t == 0) {
+				/* Load the number of owners */
+				rd_byte(&n_owners);
+
+				/* Load the owners' names */
+				struct owner *o = store->owners;
+				for(int i=0;i<n_owners;i++) {
+					char buf[32];
+					rd_string(buf, sizeof(buf));
+					if (o->name) {
+						string_free(o->name);
+					}
+					o->name = string_make(buf);
+					o = o->next;
+				}
+			}
+
 			rd_u16b(&num);
 			rd_s16b(&store->stock_size);
 

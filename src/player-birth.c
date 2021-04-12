@@ -1332,7 +1332,6 @@ void do_cmd_accept_character(struct command *cmd)
 	player->obj_k->modifiers[OBJ_MOD_USE_ENERGY] = 1;
 
 	/* Initialise the stores, dungeon */
-	store_reset();
 	chunk_list_max = 0;
 
 	/* Player learns innate icons */

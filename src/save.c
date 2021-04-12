@@ -794,6 +794,24 @@ void wr_stores(void)
 			/* Save the current owner */
 			wr_byte(store->owner->oidx);
 
+			/* Save the number of owners */
+			if (t == 0) {
+				int n = 0;
+				struct owner *own = store->owners;
+				while (own) {
+					n++;
+					own = own->next;
+				}
+				wr_byte(n);
+
+				/* Save the owners' names */
+				own = store->owners;
+				while (own) {
+					wr_string(own->name);
+					own = own->next;
+				}
+			}
+
 			/* Save the current and maximum stock size */
 			wr_u16b(store->stock_num);
 			wr_s16b(store->stock_size);

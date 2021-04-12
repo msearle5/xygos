@@ -469,17 +469,19 @@ void store_reset(void) {
 			s->layaway_idx = -1;
 
 			/* Random store names */
-			struct owner *own = s->owners;
-			while (own) {
-				if (own->name) {
-					if (own->name[0] == '*') {
-						char buf[32];
-						string_free(own->name);
-						random_shk_name(buf, sizeof(buf));
-						own->name = string_make(buf);
+			if (t == 0) {
+				struct owner *own = s->owners;
+				while (own) {
+					if (own->name) {
+						if (own->name[0] == '*') {
+							char buf[32];
+							string_free(own->name);
+							random_shk_name(buf, sizeof(buf));
+							own->name = string_make(buf);
+						}
 					}
+					own = own->next;
 				}
-				own = own->next;
 			}
 
 			s->max_danger = s->low_danger + randint0(1 + s->high_danger - s->low_danger);
@@ -1825,6 +1827,7 @@ static struct owner *store_choose_owner(struct store *s) {
 		n = randint1(n-1);
 		o = store_ownerbyidx(s, n);
 	} while (store_by_owner(o));
+
 	return o;
 }
 

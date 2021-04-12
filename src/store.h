@@ -136,7 +136,7 @@ void store_shuffle(struct store *store);
 void store_update(void);
 int price_item(struct store *store, const struct object *obj,
 			   bool store_buying, int qty);
-
+void random_shk_name(char *buf, int len);
 bool store_will_buy_tester(const struct object *obj);
 bool store_check_num(struct store *store, const struct object *obj);
 int find_inven(const struct object *obj);
