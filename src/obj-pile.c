@@ -910,22 +910,70 @@ bool floor_carry(struct chunk *c, struct loc grid, struct object *drop,
 	return true;
 }
 
-/* Return true if something interesting has happended (and a message printed) */
+/* Return true if something interesting has happened (and a message printed) */
 bool object_destroyed(struct object *obj, struct loc loc)
 {
 	static bool first = true;
 	static int atomic;
+	static int durian;
+	static int hydrogen;
+	static int lithium;
+	static int alcohol;
+	static int pineapple;
 	if (first) {
 		atomic = lookup_sval(TV_BATTERY, "atomic cell");
+		hydrogen = lookup_sval(TV_BATTERY, "hydrogen cell");
+		alcohol = lookup_sval(TV_BATTERY, "alcohol cell");
+		lithium = lookup_sval(TV_BATTERY, "lithium battery");
+		pineapple = lookup_sval(TV_FOOD, "pineapple");
+		durian = lookup_sval(TV_FOOD, "durian");
 	}
 
 	int sv = obj->kind->sval;
 	switch(obj->kind->tval) {
 		case TV_BATTERY: {
-			if (sv == atomic) {
+			if (sv == hydrogen) {
+				msg("The hydrogen cell explodes in a ball of fire!");
+				project(source_object(obj), 5, loc, 30 + damroll(1, 30), ELEM_FIRE,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
+				return true;
+			}
+			else if (sv == alcohol) {
+				msg("The alcohol cell explodes into blue flames!");
+				project(source_object(obj), 3, loc, 15 + damroll(1, 15), ELEM_FIRE,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
+				return true;
+			}
+			else if (sv == lithium) {
+				msg("The lithium battery goes up in flames!");
+				project(source_object(obj), 2, loc, 12 + damroll(1, 12), ELEM_FIRE,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
+				return true;
+			}
+			else if (sv == atomic) {
 				msg("The atomic cell breaks open!");
 				project(source_object(obj), 6, loc, 150 + damroll(1, 20), ELEM_RADIATION,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
 				return true;
+			}
+		}
+		case TV_FOOD: {
+			if (sv == pineapple) {
+				msg("The pineapple detonates!");
+				project(source_object(obj), 5, loc, 10 + damroll(2, 20), ELEM_SHARD,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
+				return true;
+			}
+			else if (sv == durian) {
+				msg("The durian splatters!");
+				project(source_object(obj), 3, loc, 8 + damroll(2, 10), ELEM_POIS,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
+				return true;
+			}
+		}
+		case TV_LIGHT: {
+			if ((obj->ego) && (streq(obj->ego->name, "(RTG mod)"))) {
+				msg("The light's RTG breaks open!");
+				project(source_object(obj), 6, loc, 150 + damroll(1, 20), ELEM_RADIATION,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
+				return true;
+			}
+			else if (object_effect(obj) && (of_has(obj->flags, OF_NO_ACTIVATION))) {
+				// you may not know what it is, and it should ID as if you were holding it in view?
+				light_timeout(obj);
 			}
 		}
 	}

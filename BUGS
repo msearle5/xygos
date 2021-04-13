@@ -1,7 +1,11 @@
 BUGS
 ====
 
-BUG: Metal detect flag only detects monsters with the METAL flag
+BUG: Delete the savefile, make a new character, check a store's name.
+	  Save, reload. The store name will sometimes have changed.
+	  Save, reload again and it won't.
+	  It does this with or without random names being used for that store,
+	  although it has only been tested with the random name diff in place.
 
 BUG: effect_handler_CLIMBING is incomplete
 

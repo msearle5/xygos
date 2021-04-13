@@ -806,15 +806,29 @@ desc:A bendy banana.
 name:& pineapple~
 type:food
 graphics:,:y
-level:0
+level:1
 weight:900g
 cost:9
-alloc:5:0 to 20
-power:0
+alloc:4:0 to 30
+power:1
 msg:That tastes good.
 effect:NOURISH:INC_BY
 dice:25
 desc:A spiky pineapple.
+
+name:& durian~
+type:food
+graphics:,:y
+level:1
+weight:2500g
+cost:40
+alloc:3:0 to 25
+power:1
+msg:That tastes... well, better than it smells, anyway.
+carried-flags:AGGRAVATE
+effect:NOURISH:INC_BY
+dice:90
+desc:Known as the king of fruits - perhaps because it smells like you are in the "throne room".
 
 name:& melon~
 type:food
