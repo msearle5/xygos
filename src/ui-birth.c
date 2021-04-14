@@ -235,7 +235,9 @@ static void skill_help(const int r_skills[], const int c_skills[], int mhp, int 
 	for (i = 0; i < SKILL_MAX ; ++i)
 		skills[i] = (r_skills ? r_skills[i] : 0 ) + (c_skills ? c_skills[i] : 0);
 
-	text_out_e("Hit/Shoot/Throw: %+d/%+d/%+d   \n", skills[SKILL_TO_HIT_MELEE],
+	text_out_e("Weapon / Unarmed Melee: %+d/%+d   \n", skills[SKILL_TO_HIT_MELEE],
+			   skills[SKILL_TO_HIT_MARTIAL]);
+	text_out_e("Shooting / Throwing: %+d/%+d   \n",
 			   skills[SKILL_TO_HIT_GUN], skills[SKILL_TO_HIT_THROW]);
 	if (exp == exphigh)
 		text_out_e("Hit die: %2d   XP mod: %d%%\n", mhp, exp);

@@ -3093,6 +3093,10 @@ static const char *skill_index_to_name(int i)
 		name = "melee to hit";
 		break;
 
+	case SKILL_TO_HIT_MARTIAL:
+		name = "unarmed to hit";
+		break;
+
 	case SKILL_TO_HIT_GUN:
 		name = "shooting to hit";
 		break;

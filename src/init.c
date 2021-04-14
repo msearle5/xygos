@@ -2179,6 +2179,14 @@ static enum parser_error parse_p_race_skill_melee(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_p_race_skill_martial(struct parser *p) {
+	struct player_race *r = parser_priv(p);
+	if (!r)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	r->r_skills[SKILL_TO_HIT_MARTIAL] = parser_getint(p, "martial");
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_p_race_skill_shoot(struct parser *p) {
 	struct player_race *r = parser_priv(p);
 	if (!r)
@@ -2408,6 +2416,7 @@ struct parser *init_parse_p_race(void) {
 	parser_reg(p, "skill-stealth int stealth", parse_p_race_skill_stealth);
 	parser_reg(p, "skill-search int search", parse_p_race_skill_search);
 	parser_reg(p, "skill-melee int melee", parse_p_race_skill_melee);
+	parser_reg(p, "skill-martial int martial", parse_p_race_skill_martial);
 	parser_reg(p, "skill-shoot int shoot", parse_p_race_skill_shoot);
 	parser_reg(p, "skill-throw int throw", parse_p_race_skill_throw);
 	parser_reg(p, "skill-dig int dig", parse_p_race_skill_dig);
@@ -2563,6 +2572,14 @@ static enum parser_error parse_shape_skill_melee(struct parser *p) {
 	if (!shape)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 	shape->skills[SKILL_TO_HIT_MELEE] = parser_getint(p, "melee");
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_shape_skill_martial(struct parser *p) {
+	struct player_shape *shape = parser_priv(p);
+	if (!shape)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	shape->skills[SKILL_TO_HIT_MARTIAL] = parser_getint(p, "martial");
 	return PARSE_ERROR_NONE;
 }
 
@@ -2812,6 +2829,7 @@ struct parser *init_parse_shape(void) {
 	parser_reg(p, "skill-stealth int stealth", parse_shape_skill_stealth);
 	parser_reg(p, "skill-search int search", parse_shape_skill_search);
 	parser_reg(p, "skill-melee int melee", parse_shape_skill_melee);
+	parser_reg(p, "skill-martial int martial", parse_shape_skill_martial);
 	parser_reg(p, "skill-throw int throw", parse_shape_skill_throw);
 	parser_reg(p, "skill-dig int dig", parse_shape_skill_dig);
 	parser_reg(p, "obj-flags ?str flags", parse_shape_obj_flags);
@@ -2975,6 +2993,15 @@ static enum parser_error parse_class_skill_melee(struct parser *p) {
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 	c->c_skills[SKILL_TO_HIT_MELEE] = parser_getint(p, "base");
 	c->x_skills[SKILL_TO_HIT_MELEE] = parser_getint(p, "incr");
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_class_skill_martial(struct parser *p) {
+	struct player_class *c = parser_priv(p);
+	if (!c)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	c->c_skills[SKILL_TO_HIT_MARTIAL] = parser_getint(p, "base");
+	c->x_skills[SKILL_TO_HIT_MARTIAL] = parser_getint(p, "incr");
 	return PARSE_ERROR_NONE;
 }
 
@@ -3383,6 +3410,7 @@ struct parser *init_parse_class(void) {
 	parser_reg(p, "skill-stealth int base int incr", parse_class_skill_stealth);
 	parser_reg(p, "skill-search int base int incr", parse_class_skill_search);
 	parser_reg(p, "skill-melee int base int incr", parse_class_skill_melee);
+	parser_reg(p, "skill-martial int base int incr", parse_class_skill_martial);
 	parser_reg(p, "skill-shoot int base int incr", parse_class_skill_shoot);
 	parser_reg(p, "skill-throw int base int incr", parse_class_skill_throw);
 	parser_reg(p, "skill-dig int base int incr", parse_class_skill_dig);

@@ -85,9 +85,14 @@ int chance_of_melee_hit(const struct player *p, const struct object *weapon)
 {
 	int chance, bonus = p->state.to_h;
 
-	if (weapon)
+	if (weapon) {
 		bonus += weapon->to_h;
-	chance = p->state.skills[SKILL_TO_HIT_MELEE] + bonus * BTH_PLUS_ADJ;
+		chance = p->state.skills[SKILL_TO_HIT_MELEE];
+	} else {
+		bonus += p->state.skills[SKILL_TO_HIT_MARTIAL] / 4;
+		chance = p->state.skills[SKILL_TO_HIT_MARTIAL];
+	}
+	chance += bonus * BTH_PLUS_ADJ;
 	return chance;
 }
 
@@ -302,13 +307,18 @@ static int o_critical_shot(const struct player *p,
  */
 static int critical_melee(const struct player *p,
 		const struct monster *monster,
+		const struct object *obj, 
 		int weight, int plus,
 		int dam, u32b *msg_type)
 {
 	int debuff_to_hit = is_debuffed(monster) ? DEBUFF_CRITICAL_HIT : 0;
 	int power = (weight / 30) + randint1(650);
-	int chance = (weight / 30) + (p->state.to_h + plus + debuff_to_hit) * 5
-		+ (p->state.skills[SKILL_TO_HIT_MELEE] - 60);
+	int chance = (weight / 30) + (p->state.to_h + plus + debuff_to_hit) * 5;
+	if (obj)
+		chance += p->state.skills[SKILL_TO_HIT_MELEE];
+	else
+		chance += p->state.skills[SKILL_TO_HIT_MARTIAL];
+	chance -= 60;
 	int new_dam = dam;
 
 	if (randint1(5000) > chance) {
@@ -769,7 +779,7 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear)
 		/* Get the damage */
 		if (!OPT(p, birth_percent_damage)) {
 			dmg = melee_damage(mon, obj, b, s);
-			dmg = critical_melee(p, mon, weight, obj->to_h, dmg, &msg_type);
+			dmg = critical_melee(p, mon, obj, weight, obj->to_h, dmg, &msg_type);
 		} else {
 			dmg = o_melee_damage(p, mon, obj, b, s, &msg_type);
 		}
@@ -788,6 +798,12 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear)
 	return py_attack_hit(p, grid, mon, dmg, verb, msg_type, splash, do_quake, fear);
 }
 
+/* Skill for the current weapon */
+int weapon_skill(struct player *p)
+{
+	struct object *weapon = slot_object(p, slot_by_name(p, "weapon"));
+	return weapon ? p->state.skills[SKILL_TO_HIT_MELEE] : p->state.skills[SKILL_TO_HIT_MARTIAL];
+}
 
 /**
  * Attempt a shield bash; return true if the monster dies
@@ -800,7 +816,7 @@ bool attempt_shield_bash(struct player *p, struct monster *mon, bool *fear)
 	int bash_quality, bash_dam, energy_lost;
 
 	/* Bashing chance depends on melee skill, DEX, and a level bonus. */
-	int bash_chance = p->state.skills[SKILL_TO_HIT_MELEE] / 8 +
+	int bash_chance = weapon_skill(p) / 8 +
 		adj_dex_th[p->state.stat_ind[STAT_DEX]] / 2;
 
 	/* No shield, no bash */
@@ -824,7 +840,7 @@ bool attempt_shield_bash(struct player *p, struct monster *mon, bool *fear)
 	}
 
 	/* Calculate attack quality, a mix of momentum and accuracy. */
-	bash_quality = p->state.skills[SKILL_TO_HIT_MELEE] / 4 + p->wt / 360 +
+	bash_quality = weapon_skill(p) / 4 + p->wt / 360 +
 		p->upkeep->total_weight / 3600 + shield->weight / 90;
 
 	/* Calculate damage.  Big shields are deadly. */

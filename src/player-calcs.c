@@ -1863,6 +1863,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	}
 	if (p->timed[TMD_SHERO]) {
 		state->skills[SKILL_TO_HIT_MELEE] += 75;
+		state->skills[SKILL_TO_HIT_MARTIAL] += 90;
 		state->to_a -= 10;
 		state->skills[SKILL_DEVICE] = state->skills[SKILL_DEVICE] * 9 / 10;
 	}

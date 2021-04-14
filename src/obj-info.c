@@ -470,7 +470,7 @@ static void calculate_melee_crits(struct player_state *state, int weight,
 {
 	weight = (weight * 10) / 454;
 	int k, to_crit = weight + 5 * (state->to_h + plus) +
-		3 * state->skills[SKILL_TO_HIT_MELEE] - 60;
+		3 * weapon_skill(player) - 60;
 	to_crit = MIN(5000, MAX(0, to_crit));
 
 	*mult = *add = 0;
@@ -499,8 +499,7 @@ static int o_calculate_melee_crits(struct player_state state,
 								   const struct object *obj)
 {
 	int dice = 0;
-	int chance = BTH_PLUS_ADJ * (state.to_h + obj->known->to_h) +
-		state.skills[SKILL_TO_HIT_MELEE];
+	int chance = BTH_PLUS_ADJ * (state.to_h + obj->known->to_h) + weapon_skill(player);
 	chance = (100 * chance) / (chance + 240);
 	dice = (537 * chance) / 240;
 

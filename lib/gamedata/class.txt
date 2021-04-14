@@ -112,6 +112,7 @@ skill-save:18:10
 skill-stealth:0:0
 skill-search:10:12
 skill-melee:70:45
+skill-martial:40:35
 skill-shoot:55:45
 skill-throw:55:45
 skill-dig:0:0
@@ -170,6 +171,7 @@ skill-save:18:10
 skill-stealth:0:0
 skill-search:10:12
 skill-melee:45:40
+skill-martial:25:30
 skill-shoot:72:45
 skill-throw:66:30
 skill-dig:0:0
@@ -184,6 +186,37 @@ equip:6mm ammo:6mm bullet:30:40
 cdesc:A civilian weapon expert, reasonably skilled with all ranged weapons and the best of any role with your chosen specialty. Being used to firing at paper targets which rarely fire back though, your melee combat and stealth are not so hot. You'll start being able to recognize all weapon mods.
 
 ############### WRESTLER ##############
+name:Wrestler
+stats:5:-3:-3:2:4:0:0
+title:Wrestler
+skill-disarm-phys:25:20
+skill-disarm-magic:10:10
+skill-device:10:7
+skill-save:24:10
+skill-stealth:0:0
+skill-search:10:12
+skill-martial:75:60
+skill-melee:25:20
+skill-shoot:15:20
+skill-throw:15:30
+exp:5
+hitdie:330
+max-attacks:4
+min-weight:40
+strength-multiplier:4
+equip:food:random:2:3
+equip:food:random:1:1
+#padded armor? martial arts weapon?
+cdesc:It sounds crazy at first - to fight only with bare hands and in your skivvies to boot. But with the right training it works surprisingly well, though you'll still be hoping for a green belt (as in mil-spec forcefield kit) and similar unencumbering protection.
+
+############### CLOWN #################
+name:Clown
+title:Clown
+equip:food:durian:1:1
+equip:food:pineapple:1:1
+equip:food:Hunter's pie:1:1
+equip:food:random:2:3
+cdesc:A master of deception, misdirection and custard pies. You can perform impressive card tricks and are a great shot with a thrown knife or more exotic weapons (it's always best to kill your enemies in a humorous way, after all). And when it turns out that you shouldn't have brought a pie to a gun fight, some useful athletic techniques may speed your escape.
 
 ############### MEDIC #################
 
@@ -202,6 +235,7 @@ title:Bounder
 title:Shadowlord
 exp:10
 hitdie:90
+# FIXME: skills
 max-attacks:5
 min-weight:40
 strength-multiplier:3
@@ -232,6 +266,7 @@ skill-save:30:9
 skill-stealth:2:0
 skill-search:10:12
 skill-melee:15:25
+skill-martial:1:25
 skill-shoot:20:15
 skill-throw:25:35
 skill-dig:0:0

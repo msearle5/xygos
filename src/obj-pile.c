@@ -952,6 +952,7 @@ bool object_destroyed(struct object *obj, struct loc loc)
 				project(source_object(obj), 6, loc, 150 + damroll(1, 20), ELEM_RADIATION,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
 				return true;
 			}
+			break;
 		}
 		case TV_FOOD: {
 			if (sv == pineapple) {
@@ -964,6 +965,7 @@ bool object_destroyed(struct object *obj, struct loc loc)
 				project(source_object(obj), 3, loc, 8 + damroll(2, 10), ELEM_POIS,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
 				return true;
 			}
+			break;
 		}
 		case TV_LIGHT: {
 			if ((obj->ego) && (streq(obj->ego->name, "(RTG mod)"))) {

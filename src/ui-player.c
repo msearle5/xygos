@@ -839,7 +839,7 @@ static struct panel *get_panel_combat(void) {
 
 	/* Melee */
 	obj = equipped_item_by_slot_name(player, "weapon");
-	bth = (player->state.skills[SKILL_TO_HIT_MELEE] * 10) / BTH_PLUS_ADJ;
+	bth = (weapon_skill(p) * 10) / BTH_PLUS_ADJ;
 	dam = player->known_state.to_d + (obj ? obj->known->to_d : 0);
 	hit = player->known_state.to_h + (obj ? obj->known->to_h : 0);
 

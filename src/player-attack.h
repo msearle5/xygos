@@ -63,5 +63,6 @@ void apply_deadliness(int *die_average, int deadliness);
 extern void py_attack(struct player *p, struct loc grid);
 extern bool py_attack_real(struct player *p, struct loc grid, bool *fear);
 void thrown_explodes(struct command *cmd, struct object *obj, struct loc grid);
+int weapon_skill(struct player *p);
 
 #endif /* !PLAYER_ATTACK_H */
