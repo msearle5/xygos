@@ -435,8 +435,8 @@ bool object_stackable(const struct object *obj1, const struct object *obj2,
 
 		/* ... otherwise ok */
 	} else if (tval_has_variable_power(obj1)) {
-		bool obj1_is_known = object_fully_known((struct object *)obj1);
-		bool obj2_is_known = object_fully_known((struct object *)obj2);
+		bool obj1_is_known = object_fully_known(obj1);
+		bool obj2_is_known = object_fully_known(obj2);
 
 		/* Require identical values */
 		if (obj1->ac != obj2->ac) return false;
