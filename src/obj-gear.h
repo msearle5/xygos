@@ -27,11 +27,24 @@
  */
 enum
 {
-	#define EQUIP(a, b, c, d, e, f) EQUIP_##a,
+	#define EQUIP(a, b, c, d, e, f, g, h) EQUIP_##a,
 	#include "list-equip-slots.h"
 	#undef EQUIP
 	EQUIP_MAX
 };
+
+struct slot_info {
+	int index;
+	bool acid_vuln;
+	bool name_in_desc;
+	int weight;
+	int ac;
+	const char *mention;
+	const char *heavy_describe;
+	const char *describe;
+};
+
+extern const struct slot_info slot_table[];
 
 int slot_by_name(struct player *p, const char *name);
 bool slot_type_is(int slot, int type);

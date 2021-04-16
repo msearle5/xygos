@@ -109,7 +109,7 @@ char *ANGBAND_DIR_INFO;
 char *ANGBAND_DIR_ARCHIVE;
 
 static const char *slots[] = {
-	#define EQUIP(a, b, c, d, e, f) #a,
+	#define EQUIP(a, b, c, d, e, f, g, h) #a,
 	#include "list-equip-slots.h"
 	#undef EQUIP
 	NULL

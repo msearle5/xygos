@@ -307,7 +307,7 @@ static int o_critical_shot(const struct player *p,
  */
 static int critical_melee(const struct player *p,
 		const struct monster *monster,
-		const struct object *obj, 
+		const struct object *obj,
 		int weight, int plus,
 		int dam, u32b *msg_type)
 {

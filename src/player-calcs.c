@@ -1418,6 +1418,33 @@ int class_to_stat(int stat)
 	return total / (player->max_lev * 2);
 }
 
+int effective_ac_of(struct object *obj, int slot)
+{
+	const int wlev = levels_in_class(get_class_by_name("Wrestler")->cidx);
+	/* No bonus if not a wrestler or using a melee weapon */
+
+	if ((!wlev) || (equipped_item_by_slot_name(player, "weapon")))
+		return obj ? obj->ac : 0;
+	int ac = obj ? obj->ac : 0;
+
+	/* Increase AC for wrestlers */
+	int weight = slot_table[slot].weight;
+	if (weight) {
+		/* At the specified weight, there is no AC gain */
+		int armweight = obj ? obj->weight : 0;
+		if (armweight < weight) {
+			int bonus = slot_table[slot].ac;	/* AC if slot is empty and max level */
+			bonus *= (wlev * (weight - armweight));
+			bonus /= (PY_MAX_LEVEL * weight);
+			if (obj && obj->to_h < 0)
+				bonus >>= -obj->to_h;
+			ac += bonus;
+		}
+	}
+
+	return ac;
+}
+
 /**
  * Calculate the players current "state", taking into account
  * not only race/class intrinsics, but also objects being worn
@@ -1619,6 +1646,10 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		struct object *obj = slot_object(p, i);
 		struct fault_data *fault = obj ? obj->faults : NULL;
 
+		/* Apply AC bonus even if there is no object, because Wrestlers */
+		if (!obj)
+			state->ac += effective_ac_of(obj, i);
+
 		while (obj) {
 			int dig = 0;
 
@@ -1655,7 +1686,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 			}
 
 			/* Apply combat bonuses */
-			state->ac += obj->ac;
+			state->ac += effective_ac_of(obj, i);
 			if (!known_only || obj->known->to_a)
 				state->to_a += obj->to_a;
 			if (!slot_type_is(i, EQUIP_WEAPON) && !slot_type_is(i, EQUIP_GUN)) {

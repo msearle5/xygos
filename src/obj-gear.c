@@ -33,18 +33,11 @@
 #include "player-quest.h"
 #include "player-util.h"
 
-static const struct slot_info {
-	int index;
-	bool acid_vuln;
-	bool name_in_desc;
-	const char *mention;
-	const char *heavy_describe;
-	const char *describe;
-} slot_table[] = {
-	#define EQUIP(a, b, c, d, e, f) { EQUIP_##a, b, c, d, e, f },
+const struct slot_info slot_table[] = {
+	#define EQUIP(a, b, c, d, e, f, g, h) { EQUIP_##a, b, c, d, e, f, g, h },
 	#include "list-equip-slots.h"
 	#undef EQUIP
-	{ EQUIP_MAX, false, false, NULL, NULL, NULL }
+	{ EQUIP_MAX, false, false, 0, 0, NULL, NULL, NULL }
 };
 
 int slot_by_name(struct player *p, const char *name)
