@@ -1326,7 +1326,6 @@ bool mon_take_hit(struct monster *mon, int dam, bool *fear, const char *note)
 
 	/* Wake it up, make it aware of the player */
 	monster_wake(mon, false, 100);
-	mon_clear_timed(mon, MON_TMD_HOLD, MON_TMD_FLG_NOTIFY);
 
 	/* Become aware of its presence */
 	if (monster_is_camouflaged(mon))

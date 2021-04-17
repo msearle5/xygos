@@ -306,7 +306,7 @@ static int o_critical_shot(const struct player *p,
  * Factor in weapon weight, total plusses, player level.
  */
 static int critical_melee(const struct player *p,
-		const struct monster *monster,
+		struct monster *monster,
 		const struct object *obj,
 		int weight, int plus,
 		int dam, u32b *msg_type)
@@ -316,8 +316,10 @@ static int critical_melee(const struct player *p,
 	int chance = (weight / 30) + (p->state.to_h + plus + debuff_to_hit) * 5;
 	if (obj)
 		chance += p->state.skills[SKILL_TO_HIT_MELEE];
-	else
+	else {
+		/* Note that currently this path won't be used as this fn is only called with an object */
 		chance += p->state.skills[SKILL_TO_HIT_MARTIAL];
+	}
 	chance -= 60;
 	int new_dam = dam;
 
@@ -618,11 +620,14 @@ static const struct hit_types melee_hit_types[] = {
 	{ MSG_HIT_HI_SUPERB, "It was a *SUPERB* hit!" },
 };
 
-bool py_attack_hit(struct player *p, struct loc grid, struct monster *mon, int dmg, char *verb, u32b msg_type, int splash, bool do_quake, bool *fear)
+static bool py_attack_hit(struct player *p, struct loc grid, struct monster *mon, int dmg, char *verb, const char *after, u32b msg_type, int splash, bool do_quake, bool *fear)
 {
 	int drain = 0;
 	bool stop = false;
 	char m_name[80];
+
+	if (!after)
+		after = ".";
 
 	/* Extract monster name (or "it") */
 	monster_desc(m_name, sizeof(m_name), mon, MDESC_TARG);
@@ -662,7 +667,7 @@ bool py_attack_hit(struct player *p, struct loc grid, struct monster *mon, int d
 			msgt(msg_type, "You %s %s%s. %s", verb, m_name, dmg_text,
 					melee_hit_types[i].text);
 		else
-			msgt(msg_type, "You %s %s%s.", verb, m_name, dmg_text);
+			msgt(msg_type, "You %s %s%s%s", verb, m_name, dmg_text);
 	}
 
 	/* Pre-damage side effects */
@@ -715,6 +720,8 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear)
 
 	/* Default to punching for one damage */
 	char verb[20];
+	char after[64];
+	strcpy(after, ".");
 	int dmg = 1;
 	u32b msg_type = MSG_HIT;
 
@@ -739,7 +746,6 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear)
 
 	/* Disturb the monster */
 	monster_wake(mon, false, 100);
-	mon_clear_timed(mon, MON_TMD_HOLD, MON_TMD_FLG_NOTIFY);
 
 	/* See if the player hit */
 	success = test_hit(chance, mon->race->ac, monster_is_visible(mon));
@@ -790,12 +796,125 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear)
 			do_quake = true;
 			equip_learn_flag(p, OF_IMPACT);
 		}
+	} else {
+		/* Handle unarmed melee.
+		 * Only Wrestlers can get critical hits - the chance depends on armor weight,
+		 * level, the monster's AC.
+		 * A critical means more damage, a more emphatic message and a chance of
+		 * debuffing the monster.
+		 **/
+		const int wlev = levels_in_class(get_class_by_name("Wrestler")->cidx);
+		if (wlev) {
+			/* Determine clumsy armor factor
+			 * This is related to effective_ac_of(), though different enough to not want to use it directly.
+			 * In particular it is independent of level.
+			 **/
+			int eff_ac = 0;
+			int max_ac = 0;
+			for (int i = 0; i < p->body.count; i++) {
+				struct object *armor = slot_object(p, i);
+				int eff = 0;
+				int armweight = armor ? armor->weight : 0;
+				int weight = slot_table[i].weight;
+				weight -= armweight;
+				if (weight > 0) {
+					eff = (weight * slot_table[i].ac) / slot_table[i].weight;
+				}
+				if (obj && obj->to_h < 0)
+					eff >>= -obj->to_h;
+				eff_ac += eff;
+				max_ac += slot_table[i].ac;
+			}
+			/* Max_ac is now the most AC bonus that it is possible to get, while eff_ac is the amount that you
+			 * would have at level 50.
+			 * With eff_ac at 0 you will get few criticals (effectively dividing your level by 5), at max_ac the most.
+			 * Eff_lev is scaled from 1 to 10000.
+			 */
+			int eff_lev = MAX((wlev * 40), (wlev * 200 * eff_ac) / max_ac);
+			/* How many, and how powerful the crits are depends on eff_lev and monster AC / level.
+			 * You can get your maximum crit against any monster, though - just not so often.
+			 */
+			int mon_def = MAX (eff_lev + (mon->race->ac * 100) + (mon->race->level * 40) + 2500, eff_lev * 2);
+			int power = 0;
+			while (randint0(mon_def) < eff_lev)
+				power++;
+
+			/* Power is now the type of critical - 0 is not a crit and will stop here, higher levels
+			 * are increasingly rare and powerful crits.
+			 */
+			if (power) {
+				strcpy(after, "!");
+				/* Extract a verb */
+				const char *ouch = "bug";
+				switch(power) {
+					case 1:
+						ouch = one_in_(2) ? "smack" : "whack";
+						break;
+					case 2:
+						ouch = one_in_(2) ? "strike" : "slam";
+						break;
+					case 3:
+						ouch = "slug";
+						break;
+					case 4:
+						ouch = "pound";
+						break;
+					default:
+						ouch = "hammer";
+						break;
+				}
+				/* Produce an increased damage */
+				dmg = ((2 + power) * dmg) / 2;
+				/* Add statuses: stun, etc. on critical unarmed melee hits */
+				if ((wlev) && (!obj)) {
+					if (randint0(power + 4) < power) {
+						if (mon_inc_timed(mon, MON_TMD_HOLD, 2 + randint0(power + 2), MON_TMD_FLG_NOMESSAGE)) {
+							switch(randint0(4)) {
+								case 0:
+									ouch = "hold down";
+									break;
+								case 1:
+									ouch = "pin down";
+									break;
+								case 2:
+									ouch = "immobilize";
+									break;
+								case 3:
+									ouch = "knock out";
+									break;
+							}
+						}
+					}
+					else if (randint0(power + 3) < power) {
+						if (mon_inc_timed(mon, MON_TMD_SLOW, 2 + randint0(power + 3), MON_TMD_FLG_NOMESSAGE)) {
+							strcpy(after, ". ");
+							monster_desc(after + 2, sizeof(after) - 2, mon, MDESC_CAPITAL | MDESC_HIDE | MDESC_PRO_HID);
+							strcat(after, " is slowed!");
+						}
+					}
+					else if (randint0(power + 2) < power) {
+						mon_inc_timed(mon, MON_TMD_STUN, 2 + randint0(power + 4), MON_TMD_FLG_NOMESSAGE);
+						switch(randint0(2)) {
+							case 0:
+								ouch = "stun";
+								break;
+							case 1:
+								strcpy(after, ". ");
+								monster_desc(after + 2, sizeof(after) - 2, mon, MDESC_CAPITAL | MDESC_HIDE);
+								strcat(after, " staggers back!");
+								break;
+						}
+					}
+				}
+				my_strcpy(verb, ouch, sizeof(verb));
+			}
+		}
 	}
 
 	/* Learn by use */
 	equip_learn_on_melee_attack(p);
 
-	return py_attack_hit(p, grid, mon, dmg, verb, msg_type, splash, do_quake, fear);
+	return py_attack_hit(p, grid, mon, dmg, verb, after, msg_type, splash, do_quake, fear);
 }
 
 /* Skill for the current weapon */
@@ -962,8 +1081,11 @@ bool py_attack_extra(struct player *p, struct loc grid, struct monster *mon, str
 		if (vuln)
 			if (rf_has(mon->race->flags, vuln))
 				dmg = (dmg * rand_range(200, 500)) / 100;
-	} 
-	return py_attack_hit(p, grid, mon, dmg, att->msg, MSG_HIT, 0, false, NULL);
+	}
+	const char *after = ".";
+	if (dmg >= (randcalc(att->damage, 0, MAXIMISE) * 7) / 8)
+		after = "!";
+	return py_attack_hit(p, grid, mon, dmg, att->msg, after, MSG_HIT, 0, false, NULL);
 }
 
 /**

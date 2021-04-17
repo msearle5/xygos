@@ -1234,7 +1234,7 @@ void calc_digging_chances(struct player_state *state, int chances[DIGGING_MAX])
  *
  * \param obj is the object for which we are calculating blows
  * \param state is the player state for which we are calculating blows
- * \param extra_blows is the number of +blows available from this object and
+ * \param extra_blows is the number of +blows (x100) available from this object and
  * this state
  *
  * N.B. state->num_blows is now 100x the number of blows.
@@ -1270,8 +1270,7 @@ int calc_blows(struct player *p, const struct object *obj,
 	blows = MIN((10000 / blow_energy), (100 * p->class->max_attacks));
 
 	/* Require at least one blow, two for O-combat */
-	return MAX(blows + (100 * extra_blows),
-			   OPT(p, birth_percent_damage) ? 200 : 100);
+	return MAX(blows + extra_blows, OPT(p, birth_percent_damage) ? 200 : 100);
 }
 
 
@@ -1943,6 +1942,15 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	}
 	if (p->timed[TMD_STEALTH]) {
 		state->skills[SKILL_STEALTH] += 10;
+	}
+
+	/* Wrestlers get extra blows, + to hit, and + to damage */
+	extra_blows *= 100;
+	const int wlev = levels_in_class(get_class_by_name("Wrestler")->cidx);
+	if ((wlev) && (!equipped_item_by_slot_name(player, "weapon"))) {
+		extra_blows += (wlev * 5) + ((wlev * wlev) / 10);
+		state->to_d += wlev;
+		state->to_h += wlev / 3;
 	}
 
 	/* Analyze flags - check for fear */
