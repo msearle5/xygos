@@ -1097,6 +1097,36 @@ static void process_player_cleanup(void)
 				square_light_spot(cave, mon->grid);
 			}
 
+			/* Maintain momentum.
+			 * If the difference between the current grid and the previous grid is the
+			 * same as the difference between the previous grid and the one before that
+			 * then you are moving in a straight line (or stopped, or jumping).
+			 * If you have also moved 1 grid in any of the 8 directions from the previous
+			 * then you aren't stopped, jumping etc and can increase the momentum count,
+			 * otherwise zero it.
+			 **/
+			bool moving = false;
+			if ((player->grid.x != player->grid_last_1.x) || (player->grid.y != player->grid_last_1.y)) {
+				/* Last action was movement */
+				int xd1 = player->grid.x - player->grid_last_1.x;
+				int yd1 = player->grid.y - player->grid_last_1.y;
+				if ((xd1 >= -1) && (yd1 >= -1) && (xd1 <= 1) && (yd1 <= 1)) {
+					/* Of one grid */
+					int xd2 = player->grid_last_1.x - player->grid_last_2.x;
+					int yd2 = player->grid_last_1.y - player->grid_last_2.y;
+					if ((xd2 == xd1) && (yd2 == yd1)) {
+						/* In the right direction */
+						moving = true;
+					}
+				}
+			}
+			if (moving)
+				player->momentum++;
+			else
+				player->momentum = 0;
+			player->grid_last_2 = player->grid_last_1;
+			player->grid_last_1 = player->grid;
+
 			/* Clear NICE flag, and show marked monsters */
 			for (i = 1; i < cave_monster_max(cave); i++) {
 				struct monster *mon = cave_monster(cave, i);

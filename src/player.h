@@ -569,6 +569,8 @@ struct player {
 	struct player_class *class;
 
 	struct loc grid;/* Player location */
+	struct loc grid_last_1;/* Player previous location */
+	struct loc grid_last_2;/* Player second previous location */
 
 	u16b expfact_low;	/* Experience factor (low and high level) */
 	u16b expfact_high;
@@ -610,6 +612,7 @@ struct player {
 
 	s16b word_recall;			/* Word of recall counter */
 	s16b deep_descent;			/* Deep Descent counter */
+	u16b momentum;				/* Number of turns spent moving in the same direction */
 
 	s16b energy;				/* Current energy */
 	u32b total_energy;			/* Total energy used (including resting) */
