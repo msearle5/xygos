@@ -366,8 +366,8 @@ struct player_class {
 	int tp_base;				/** Talent points at birth */
 	int tp_max;					/** Talent points gained by max level */
 
-	bitflag flags[OF_SIZE];		/**< (Object) flags */
-	bitflag pflags[PF_SIZE];	/**< (Player) flags */
+	bitflag flags[PY_MAX_LEVEL][OF_SIZE];	/**< (Object) flags */
+	bitflag pflags[PY_MAX_LEVEL][PF_SIZE];	/**< (Player) flags */
 
 	int max_attacks;			/**< Maximum possible attacks */
 	int min_weight;				/**< Minimum weapon weight for calculations */

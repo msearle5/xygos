@@ -18,6 +18,7 @@
 
 #include "effects.h"
 #include "init.h"
+#include "obj-knowledge.h"
 #include "obj-pile.h"
 #include "obj-util.h"
 #include "player-ability.h"
@@ -344,6 +345,21 @@ static void adjust_level(struct player *p, bool verbose)
 		player_hook(levelup, max_from, p->max_lev);
 	}
 
+	/* You may have new intrinsics.
+	 * Notice them.
+	 */
+	for (struct player_class *c = classes; c; c = c->next) {
+		int levels = levels_in_class(c->cidx);
+		if (levels) {
+			for (int i=0;i<OF_MAX;i++) {
+				if (of_has(c->flags[levels], i)) {
+					player_learn_flag(p, i);
+				}
+			}
+		}
+	}
+	update_player_object_knowledge(p);
+
 	p->upkeep->update |= (PU_BONUS | PU_HP | PU_SPELLS);
 	p->upkeep->redraw |= (PR_LEV | PR_TITLE | PR_EXP | PR_STATS);
 	handle_stuff(p);
@@ -428,7 +444,14 @@ void player_flags(struct player *p, bitflag f[OF_SIZE])
 {
 	/* Add racial flags */
 	memcpy(f, p->race->flags, sizeof(p->race->flags));
-	of_union(f, p->class->flags);
+	memcpy(f, p->extension->flags, sizeof(p->race->flags));
+
+	/* Add object-flags from class */
+	for (struct player_class *c = classes; c; c = c->next) {
+		int levels = levels_in_class(c->cidx);
+		if (levels)
+			of_union(f, c->flags[levels]);
+	}
 
 	/* Some classes become immune to fear at a certain plevel */
 	if (player_has(p, PF_BRAVERY_30) && p->lev >= 30) {

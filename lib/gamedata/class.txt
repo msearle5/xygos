@@ -25,6 +25,8 @@
 # title:title
 # hitdie:hp
 # equip:tval:sval:min:max
+# level-from:level
+# obj-flags:class flags
 # player-flags:class flags
 # magic:spell_first:spell_weight:num_books
 # book:name
@@ -62,7 +64,11 @@
 # 'equip' is for starting equipment - tval of the item, sval of the item,
 # minimum amount, maximum amount.
 
-# 'flags' is for class flags.
+# 'level-from' is the first level which the following flags apply to
+
+# 'obj-flags' is for class object-flags.
+
+# 'player-flags' is for class player-flags.
 
 # 'title' is for class titles.
 # There can be any number of them - max 12 chars if possible (13 would mean
@@ -206,6 +212,20 @@ min-weight:40
 strength-multiplier:4
 equip:food:random:2:3
 equip:food:random:1:1
+level-from:15
+obj-flags:REGEN
+level-from:20
+obj-flags:PROT_FEAR
+level-from:25
+obj-flags:FREE_ACT
+level-from:30
+obj-flags:PROT_STUN
+level-from:35
+obj-flags:PROT_CONF | SUST_STR | SUST_CON
+level-from:40
+obj-flags:SUST_DEX | SUST_SPD
+level-from:45
+obj-flags:HOLD_LIFE
 #padded armor? martial arts weapon?
 cdesc:It sounds crazy at first - to fight only with bare hands and in your skivvies to boot. But with the right training it works surprisingly well, though you'll still be hoping for a green belt (as in mil-spec forcefield kit) and similar unencumbering protection.
 

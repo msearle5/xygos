@@ -23,6 +23,7 @@
 #include "player.h"
 #include "player-ability.h"
 #include "player-timed.h"
+#include "player-util.h"
 #include "ui-entry.h"
 #include "ui-entry-combiner.h"
 #include "ui-entry-init.h"
@@ -1083,6 +1084,18 @@ void compute_ui_entry_values_for_player(const struct ui_entry *entry,
 			}
 
 			v = of_has(p->shape->flags, ind) ? 1 : 0;
+			if (!v) {
+				/* Test object-flags from class */
+				for (struct player_class *c = classes; c; c = c->next) {
+					int levels = levels_in_class(c->cidx);
+					if (levels) {
+						if (of_has(c->flags[levels], ind)) {
+							v = 1;
+							break;
+						}
+					}
+				}
+			}
 			a = 0;
 			if (v && of_has(p->obj_k->flags, ind)) {
 				if (entry->p_abilities[i].isaux) {

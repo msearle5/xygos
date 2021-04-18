@@ -74,6 +74,9 @@
 
 bool play_again = false;
 
+static int grab_flags_from = 1;
+static int grab_flags_to = PY_MAX_LEVEL;
+
 /* Currently parsed class_magic */
 struct class_magic *parsing_magic;
 
@@ -2897,6 +2900,8 @@ static enum parser_error parse_class_name(struct parser *p) {
 	c->next = h;
 	parsing_magic = &c->magic;
 	parser_setpriv(p, c);
+	grab_flags_from = 1;
+	grab_flags_to = PY_MAX_LEVEL;
 	return PARSE_ERROR_NONE;
 }
 
@@ -3136,7 +3141,10 @@ static enum parser_error parse_class_obj_flags(struct parser *p) {
 	flags = string_make(parser_getstr(p, "flags"));
 	s = strtok(flags, " |");
 	while (s) {
-		if (grab_flag(c->flags, OF_SIZE, list_obj_flag_names, s))
+		bool flag;
+		for (int i=grab_flags_from; i<=grab_flags_to; i++)
+			flag = grab_flag(c->flags[i], OF_SIZE, list_obj_flag_names, s);
+		if (flag)
 			break;
 		s = strtok(NULL, " |");
 	}
@@ -3157,7 +3165,10 @@ static enum parser_error parse_class_play_flags(struct parser *p) {
 	flags = string_make(parser_getstr(p, "flags"));
 	s = strtok(flags, " |");
 	while (s) {
-		if (grab_flag(c->pflags, PF_SIZE, player_info_flags, s))
+		bool flag;
+		for (int i=grab_flags_from; i<=grab_flags_to; i++)
+			flag = grab_flag(c->pflags[i], PF_SIZE, player_info_flags, s);
+		if (flag)
 			break;
 		s = strtok(NULL, " |");
 	}
@@ -3380,6 +3391,18 @@ static enum parser_error parse_class_cdesc(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+/* Class description to display on the character creation screeen */
+static enum parser_error parse_class_level_from(struct parser *p) {
+	struct player_class *c = parser_priv(p);
+	if (!c)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	int from = parser_getint(p, "from");
+	if ((from < 1) || (from > PY_MAX_LEVEL))
+		return PARSE_ERROR_INVALID_VALUE;
+	grab_flags_from = from;
+	return PARSE_ERROR_NONE;
+}
+
 void init_parse_magic(struct parser *p)
 {
 	parser_reg(p, "magic uint first uint weight", parse_class_magic);
@@ -3421,6 +3444,7 @@ struct parser *init_parse_class(void) {
 	parser_reg(p, "title str title", parse_class_title);
 	parser_reg(p, "equip sym tval sym sval uint min uint max",
 			   parse_class_equip);
+	parser_reg(p, "level-from int from", parse_class_level_from);
 	parser_reg(p, "obj-flags ?str flags", parse_class_obj_flags);
 	parser_reg(p, "player-flags ?str flags", parse_class_play_flags);
 	init_parse_magic(p);

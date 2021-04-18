@@ -1525,7 +1525,13 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	pf_wipe(state->pflags_base);
 	pf_copy(state->pflags_base, p->race->pflags);
 	pf_union(state->pflags_base, p->extension->pflags);
-	pf_union(state->pflags_base, p->class->pflags);
+
+	for (struct player_class *c = classes; c; c = c->next) {
+		int levels = levels_in_class(c->cidx);
+		if (levels)
+			pf_union(state->pflags_base, c->pflags[levels]);
+	}
+
 	pf_union(state->pflags_base, p->ability_pflags);
 	pf_union(state->pflags_base, p->shape->pflags);
 
@@ -2069,7 +2075,6 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		/* Require at least one shot */
 		if (state->num_shots < 10) state->num_shots = 10;
 	}
-
 
 	/* Analyze weapon */
 	state->heavy_wield = false;

@@ -1,6 +1,10 @@
 BUGS
 ====
 
+BUG: "You knock out the MlM" -> "The MlM flees in terror!" -> "The MlM can move again" (after making amove!)
+
+BUG: New Character sheet doesn't show stat names
+
 BUG: Delete the savefile, make a new character, check a store's name.
 	  Save, reload. The store name will sometimes have changed.
 	  Save, reload again and it won't.
@@ -9,7 +13,7 @@ BUG: Delete the savefile, make a new character, check a store's name.
 
 BUG: effect_handler_CLIMBING is incomplete
 
-BUG: on 28/3 the BM had a choc egg - also seen one in initial inventory
+BUG: on 28/3 the BM had a choc egg - also seen one 17/4 in initial inventory
 
 BUG: After the success/failure message from a quest, ESC is the only way to get back out.
 
