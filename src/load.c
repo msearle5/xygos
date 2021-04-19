@@ -1608,10 +1608,10 @@ int rd_dungeon(void)
 	rd_u16b(&daycount);
 	rd_u16b(&py);
 	rd_u16b(&px);
-	rd_u16b(&player->grid_last_1.y);
-	rd_u16b(&player->grid_last_1.x);
-	rd_u16b(&player->grid_last_2.y);
-	rd_u16b(&player->grid_last_2.x);
+	rd_s32b(&player->grid_last_1.y);
+	rd_s32b(&player->grid_last_1.x);
+	rd_s32b(&player->grid_last_2.y);
+	rd_s32b(&player->grid_last_2.x);
 	rd_u16b(&player->momentum);
 	rd_byte(&square_size);
 

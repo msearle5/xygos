@@ -1472,6 +1472,8 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	bitflag f[OF_SIZE];
 	bitflag collect_f[OF_SIZE];
 	bool vuln[ELEM_MAX];
+	char mom_speed[MOM_SPEED_MAX];
+	memset(mom_speed, 0, sizeof(mom_speed));
 
 	/* Hack to allow calculating hypothetical blows for extra STR, DEX - NRM */
 	int str_ind = state->stat_ind[STAT_STR];
@@ -1534,6 +1536,20 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 
 	pf_union(state->pflags_base, p->ability_pflags);
 	pf_union(state->pflags_base, p->shape->pflags);
+
+	/* Remove cancelled flags */
+	bool cancel[PF_MAX];
+	memset(cancel, 0, sizeof(cancel));
+	for (i = 0; i < PF_MAX; i++) {
+		if (player_has(p, i)) {
+			for (j = 0; j < PF_MAX; j++)
+				cancel[i] |= ability[i]->cancel[j];
+		}
+	}
+	for (i = 0; i < PF_MAX; i++) {
+		if (cancel[i])
+			pf_off(state->pflags_base, i);
+	}
 
 	/* Extract the player flags */
 	player_flags(p, collect_f);
@@ -1626,6 +1642,12 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 				pf_union(state->pflags, ability[i]->pflags);
 
 				of_union(collect_f, ability[i]->oflags);
+
+				/* Sum abilities giving speed based on momentum */
+				if (ability[i]->mom_speed) {
+					for(int j=0;j<MOM_SPEED_MAX;j++)
+						mom_speed[j] += ability[i]->mom_speed[j];
+				}
 
 				/* Apply element info, noting vulnerabilites for later processing */
 				for (j = 0; j < ELEM_MAX; j++) {
@@ -1958,6 +1980,9 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		state->to_d += wlev;
 		state->to_h += wlev / 3;
 	}
+
+	/* Pilots (or anyone with a suitable ability) get extra speed */
+	state->speed += mom_speed[MIN((size_t)player->momentum, sizeof(mom_speed)-1)];
 
 	/* Analyze flags - check for fear */
 	if (of_has(state->flags, OF_AFRAID)) {

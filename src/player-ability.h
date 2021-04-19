@@ -16,7 +16,7 @@
  *    are included in all such copies.  Other copyrights may also apply.
  */
 
- 
+
 struct attack {
 	char *msg;								/**< "You "smack" the foo */
 	random_value damage;					/**< for 6d6 of */
@@ -45,7 +45,9 @@ struct ability {
 	struct attack *attacks;
 	bool forbid[PF_MAX];
 	bool require[PF_MAX];
+	bool cancel[PF_MAX];
 	int a_adj[STAT_MAX];
+	s16b mom_speed[MOM_SPEED_MAX];			/**< Momentum - to - speed */
 	bitflag oflags[OF_SIZE];				/**< Racial (object) flags */
 	bitflag oflags_off[OF_SIZE];			/**< Racial (object) flags (turn off) */
 	bitflag pflags[PF_SIZE];				/**< Racial (player) flags */

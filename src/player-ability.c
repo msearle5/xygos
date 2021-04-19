@@ -89,6 +89,20 @@ static enum parser_error parse_ability_forbid(struct parser *p) {
 	return PARSE_ERROR_INVALID_PLAYER_FLAG;
 }
 
+static enum parser_error parse_ability_cancel(struct parser *p) {
+	struct ability *a = parser_priv(p);
+	assert(a);
+	const char *cancel = parser_getstr(p, "cancel");
+	int index = 0;
+
+	/* Locate by name and set the flag. It's done this way to avoid needing a second pass with the names read. */
+	#define PF(N) if (!my_stricmp(#N, cancel)) { a->cancel[index] = true; return PARSE_ERROR_NONE; } index++;
+	#include "list-player-flags.h"
+	#undef PF
+
+	return PARSE_ERROR_INVALID_PLAYER_FLAG;
+}
+
 static enum parser_error parse_ability_require(struct parser *p) {
 	struct ability *a = parser_priv(p);
 	assert(a);
@@ -210,6 +224,39 @@ static enum parser_error parse_ability_todam(struct parser *p) {
 	assert(a);
 
 	a->todam = parser_getint(p, "todam");
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_ability_mom_speed(struct parser *p) {
+	struct ability *a = parser_priv(p);
+	assert(a);
+
+	/* Read a string and extract a list of numbers.
+	 * If there are less than MOM_SPEED_MAX, the last one given is duplicated to fill the array.
+	 * If there are more, the excess are ignored.
+	 **/
+	const char *text = parser_getstr(p, "speed");
+	if (!text)
+		return PARSE_ERROR_INVALID_VALUE;
+	char *input = string_make(text);
+	long speed = 0;
+	for(int i=0; i<MOM_SPEED_MAX; i++) {
+		char *token = strsep(&input, " \t,:");
+		if (token) {
+			char *endptr = NULL;
+			speed = strtol(token, &endptr, 10);
+			if ((!endptr) || (*endptr)) {
+				string_free(input);
+				return PARSE_ERROR_INVALID_VALUE;
+			}
+			if ((speed < -127) || (speed > 127)) {
+				string_free(input);
+				return PARSE_ERROR_INVALID_VALUE;
+			}
+		}
+		a->mom_speed[i] = speed;
+	}
+	string_free(input);
 	return PARSE_ERROR_NONE;
 }
 
@@ -404,9 +451,11 @@ struct parser *init_parse_ability(void) {
 	parser_reg(p, "brief str brief", parse_ability_brief);
 	parser_reg(p, "forbid str forbid", parse_ability_forbid);
 	parser_reg(p, "require str require", parse_ability_require);
+	parser_reg(p, "cancel str cancel", parse_ability_cancel);
 	parser_reg(p, "desc str desc", parse_ability_desc);
 	parser_reg(p, "class str class", parse_ability_class);
 	parser_reg(p, "ac int ac", parse_ability_ac);
+	parser_reg(p, "mom-speed str speed", parse_ability_mom_speed);
 	parser_reg(p, "tohit int tohit", parse_ability_tohit);
 	parser_reg(p, "todam int todam", parse_ability_todam);
 	parser_reg(p, "desc_future str desc_future", parse_ability_desc_future);

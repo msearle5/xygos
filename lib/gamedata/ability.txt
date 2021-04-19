@@ -32,6 +32,7 @@
 #							forbid:B on A), although this is not required.
 # require:<talent>		-	This prevents this ability from being gained unless this ability is already present. This may be
 #							given any number of times.
+# cancel:<talent>		-	This prevents another ability from taking effect if this ability is present.
 
 ### - misc - ###
 # flag:<flag>			- Set any one (but only one per line) of the following flags:
@@ -51,6 +52,36 @@
 # obj-flags-off:object flags	- prevent one or more object flags
 # player-flags:player flags	- add one or more player flags
 # values:					values is for object modifiers which take a value
+
+######### Pilot Skill Abilities ##############
+# These are available only to the Pilot class
+#
+
+name:Cavespeeder_Pilot
+gain:You are now flying a cavespeeder. Up, up and away!
+lose:You are no longer able to fly a cavespeeder.
+brief:You are a cavespeeder pilot.
+desc:You are a cavespeeder pilot, able to move quickly and fly above obstacles.
+desc_future:you would be a cavespeeder pilot, able to move quickly and fly above obstacles.
+flag:talent
+minlevel:3
+class:Pilot
+mom-speed:0:1:2:3:3:4:4:4:4:5
+cost:0
+
+name:Cavefighter_Pilot
+gain:You are now flying a cavefighter. Pew, pew, pew!
+lose:You are no longer able to fly a cavefighter.
+brief:You are a cavefighter pilot.
+desc:You are a cavefighter pilot, able to move quickly and fly above obstacles - or blast them into plasma!
+desc_future:you would be a cavespeeder pilot, able to move quickly and fly above obstacles - or blast them into plasma!
+flag:talent
+minlevel:25
+class:Pilot
+require:Cavespeeder_Pilot
+cancel:Cavespeeder_Pilot
+mom-speed:0:1:2:3:3:4:4:4:4:5
+cost:0
 
 ######### Marksman Skill Abilities ###########
 # These are available only to the Marksman class

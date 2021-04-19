@@ -45,6 +45,9 @@ enum
 
 #define PF_SIZE                FLAG_SIZE(PF_MAX)
 
+/* Maximum size of a momemtum-speed array */
+#define MOM_SPEED_MAX		16
+
 #include "guid.h"
 #include "obj-properties.h"
 #include "object.h"

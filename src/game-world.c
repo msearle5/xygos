@@ -1106,6 +1106,7 @@ static void process_player_cleanup(void)
 			 * otherwise zero it.
 			 **/
 			bool moving = false;
+			int mom = player->momentum;
 			if ((player->grid.x != player->grid_last_1.x) || (player->grid.y != player->grid_last_1.y)) {
 				/* Last action was movement */
 				int xd1 = player->grid.x - player->grid_last_1.x;
@@ -1126,6 +1127,9 @@ static void process_player_cleanup(void)
 				player->momentum = 0;
 			player->grid_last_2 = player->grid_last_1;
 			player->grid_last_1 = player->grid;
+
+			if (mom != player->momentum)
+				player->upkeep->update |= PU_BONUS;
 
 			/* Clear NICE flag, and show marked monsters */
 			for (i = 1; i < cave_monster_max(cave); i++) {

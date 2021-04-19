@@ -374,10 +374,10 @@ static void class_help(int i, void *db, const region *l)
 	for (ability = player_abilities; ability; ability = ability->next) {
 		if (n_flags >= flag_space) break;
 		if (streq(ability->type, "object") &&
-			!of_has(c->flags, ability->index)) {
+			!of_has(c->flags[1], ability->index)) {
 			continue;
 		} else if (streq(ability->type, "player") &&
-				   !pf_has(c->pflags, ability->index)) {
+				   !pf_has(c->pflags[1], ability->index)) {
 			continue;
 		} else if (streq(ability->type, "element")) {
 			continue;

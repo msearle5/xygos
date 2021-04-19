@@ -1041,10 +1041,10 @@ void wr_dungeon(void)
 	wr_u16b(daycount);
 	wr_u16b(player->grid.y);
 	wr_u16b(player->grid.x);
-	wr_u16b(player->grid_last_1.y);
-	wr_u16b(player->grid_last_1.x);
-	wr_u16b(player->grid_last_2.y);
-	wr_u16b(player->grid_last_2.x);
+	wr_s32b(player->grid_last_1.y);
+	wr_s32b(player->grid_last_1.x);
+	wr_s32b(player->grid_last_2.y);
+	wr_s32b(player->grid_last_2.x);
 	wr_u16b(player->momentum);
 	wr_byte(SQUARE_SIZE);
 

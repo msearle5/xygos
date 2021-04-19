@@ -242,7 +242,7 @@ cdesc:A master of deception, misdirection and custard pies. You can perform impr
 
 ############### PILOT #################
 name:Pilot
-stats:0:1:1:2:0:1:5
+stats:0:1:1:2:0:1:0
 title:Trainee
 title:Student
 title:Rider
