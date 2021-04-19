@@ -241,7 +241,7 @@ static enum parser_error parse_ability_mom_speed(struct parser *p) {
 	char *input = string_make(text);
 	long speed = 0;
 	for(int i=0; i<MOM_SPEED_MAX; i++) {
-		char *token = strsep(&input, " \t,:");
+		char *token = strtok(i ? NULL : input, " \t,:");
 		if (token) {
 			char *endptr = NULL;
 			speed = strtol(token, &endptr, 10);
