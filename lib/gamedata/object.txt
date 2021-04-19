@@ -906,6 +906,7 @@ cost:650
 alloc:2:1 to 100
 power:0
 effect:SNOZZCUMBER
+flags:MIMIC_KNOW
 desc:A vegetable resembling a long dark green cucumber. But if you can get past 
 desc:the truly foul taste, it does much more for you than your average salad!
 
