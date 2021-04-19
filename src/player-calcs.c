@@ -1444,6 +1444,35 @@ int effective_ac_of(struct object *obj, int slot)
 	return ac;
 }
 
+/** Return the current burden weight, grams */
+int burden_weight(struct player *p)
+{
+	int j = p->upkeep->total_weight;
+
+	/* Add ballast if you are dragging a plane
+	 * (= you have flying talents, but are not flying)
+	 * Weight is guessed from the numer of talents (this could be moved out to the ability.txt)
+	 **/
+	if (!player->flying) {
+		int flying_talents = 0;
+		for (int i=0;i<PF_MAX;i++) {
+			if (ability[i]) {
+				if (player_has(p, i)) {
+					if (ability[i]->flags & AF_FLYING) {
+						flying_talents++;
+					}
+				}
+			}
+		}
+		/* 40kg for basic, 50kg for mid-level, 60kg for top-tier */
+		if (flying_talents) {
+			j += (30000 + (10000 * flying_talents));
+		}
+	}
+
+	return j;
+}
+
 /**
  * Calculate the players current "state", taking into account
  * not only race/class intrinsics, but also objects being worn
@@ -1537,13 +1566,19 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	pf_union(state->pflags_base, p->ability_pflags);
 	pf_union(state->pflags_base, p->shape->pflags);
 
-	/* Remove cancelled flags */
+	/* Remove cancelled flags.
+	 * Use state->pflags_base not the more general player_has, to avoid being
+	 * dependent on the last run (and so ending up with a glitch on the first
+	 * turn after restoring, for example)
+	 **/
 	bool cancel[PF_MAX];
 	memset(cancel, 0, sizeof(cancel));
 	for (i = 0; i < PF_MAX; i++) {
-		if (player_has(p, i)) {
-			for (j = 0; j < PF_MAX; j++)
-				cancel[i] |= ability[i]->cancel[j];
+		if (ability[i]) {
+			if (pf_has(state->pflags_base, i)) {
+				for (j = 0; j < PF_MAX; j++)
+					cancel[j] |= ability[i]->cancel[j];
+			}
 		}
 	}
 	for (i = 0; i < PF_MAX; i++) {
@@ -1633,34 +1668,36 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	for (i = 0; i < PF_MAX; i++) {
 		if (ability[i]) {
 			if (player_has(p, i)) {
-				state->ac += ability[i]->ac;
-				state->to_h += ability[i]->tohit;
-				state->to_d += ability[i]->todam;
+				if ((player->flying) || (!(ability[i]->flags & AF_FLYING))) {
+					state->ac += ability[i]->ac;
+					state->to_h += ability[i]->tohit;
+					state->to_d += ability[i]->todam;
 
-				/* Add to both base and combined pflags */
-				pf_union(state->pflags_base, ability[i]->pflags);
-				pf_union(state->pflags, ability[i]->pflags);
+					/* Add to both base and combined pflags */
+					pf_union(state->pflags_base, ability[i]->pflags); 
+					pf_union(state->pflags, ability[i]->pflags);
 
-				of_union(collect_f, ability[i]->oflags);
+					of_union(collect_f, ability[i]->oflags);
 
-				/* Sum abilities giving speed based on momentum */
-				if (ability[i]->mom_speed) {
-					for(int j=0;j<MOM_SPEED_MAX;j++)
-						mom_speed[j] += ability[i]->mom_speed[j];
-				}
+					/* Sum abilities giving speed based on momentum */
+					if (ability[i]->mom_speed) {
+						for(int j=0;j<MOM_SPEED_MAX;j++)
+							mom_speed[j] += ability[i]->mom_speed[j];
+					}
 
-				/* Apply element info, noting vulnerabilites for later processing */
-				for (j = 0; j < ELEM_MAX; j++) {
-					if (ability[i]->el_info[j].res_level) {
-						if (ability[i]->el_info[j].res_level == -1)
-							vuln[j] = true;
+					/* Apply element info, noting vulnerabilites for later processing */
+					for (j = 0; j < ELEM_MAX; j++) {
+						if (ability[i]->el_info[j].res_level) {
+							if (ability[i]->el_info[j].res_level == -1)
+								vuln[j] = true;
 
-						/* OK because res_level hasn't included vulnerability yet */
-						if (ability[i]->el_info[j].res_level > state->el_info[j].res_level)
-							state->el_info[j].res_level = ability[i]->el_info[j].res_level;
+							/* OK because res_level hasn't included vulnerability yet */
+							if (ability[i]->el_info[j].res_level > state->el_info[j].res_level)
+								state->el_info[j].res_level = ability[i]->el_info[j].res_level;
 
-						/* Apply modifiers */
-						apply_modifiers(p, state, ability[i]->modifiers, &extra_blows, &extra_shots, &extra_might, &extra_moves);
+							/* Apply modifiers */
+							apply_modifiers(p, state, ability[i]->modifiers, &extra_blows, &extra_shots, &extra_might, &extra_moves);
+						}
 					}
 				}
 			}
@@ -1982,7 +2019,8 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	}
 
 	/* Pilots (or anyone with a suitable ability) get extra speed */
-	state->speed += mom_speed[MIN((size_t)player->momentum, sizeof(mom_speed)-1)];
+	if (player->flying)
+		state->speed += mom_speed[MIN((size_t)player->momentum, sizeof(mom_speed)-1)];
 
 	/* Analyze flags - check for fear */
 	if (of_has(state->flags, OF_AFRAID)) {
@@ -1992,7 +2030,8 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	}
 
 	/* Analyze weight */
-	j = p->upkeep->total_weight;
+	j = burden_weight(p);
+
 	i = weight_limit(state);
 	int burden = ((j * BURDEN_RANGE) / i) - BURDEN_RANGE;
 	if (burden >= 0) {

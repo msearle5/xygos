@@ -632,6 +632,8 @@ struct player {
 	char died_from[80];					/* Cause of death */
 	char *history;						/* Player history */
 	struct quest *quests;				/* Quest history */
+
+	bool flying;						/* Currently flying (using a Pilot ability) */
 	s32b active_quest;					/* Currently active quest */
 	u16b total_winner;					/* Total winner */
 	s32b bm_faction;					/* Faction with the black market */

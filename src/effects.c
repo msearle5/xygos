@@ -6158,6 +6158,22 @@ bool effect_handler_BANANA(effect_handler_context_t *context)
 	return (true);
 }
 
+/* It shouldn't be possible to land or takeoff in the wrong state */
+bool effect_handler_LAND(effect_handler_context_t *context)
+{
+	/* Thes messages will needs to be modified if jetpacks are used */
+	msg("You settle to the ground and climb out.");
+	player->flying = false;
+	return (true);
+}
+
+bool effect_handler_TAKEOFF(effect_handler_context_t *context)
+{
+	msg("You get in and take off.");
+	player->flying = true;
+	return (true);
+}
+
 /**
  * Time Lord regeneration
  **/

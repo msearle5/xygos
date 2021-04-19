@@ -60,6 +60,7 @@ struct ability {
 #define AF_NASTY		0x00000002		/* has at least some negatives to some characters */
 #define AF_TALENT		0x00000004		/* can be bought as a talent */
 #define AF_MUTATION		0x00000008		/* can be gained as a mutation */
+#define AF_FLYING		0x00000010		/* flags and speed take effect only when in flight. Books are ground/flight/both. */
 
 /* The ability array */
 extern struct ability *ability[];

@@ -277,6 +277,8 @@ static enum parser_error parse_ability_flag(struct parser *p) {
 		flag = AF_TALENT;
 	if (!my_stricmp(text, "nasty"))
 		flag = AF_NASTY;
+	if (!my_stricmp(text, "flying"))
+		flag = AF_FLYING;
 
 	if (flag)
 		a->flags |= flag;

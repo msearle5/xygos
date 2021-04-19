@@ -463,6 +463,9 @@ void rdwr_player(void)
 	/* Quest currently active */
 	rdwr_s32b(&player->active_quest);
 
+	/* Flying? */
+	rdwr_bool(&player->flying);
+
 	/* Factions */
 	rdwr_s32b(&player->bm_faction);
 	rdwr_s32b(&player->town_faction);

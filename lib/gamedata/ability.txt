@@ -40,6 +40,9 @@
 #						-	mutation	- If set, the ability can be gained as a mutation.
 #						-	talent		- If set, the ability may be gained as a talent.
 #						-	nasty		- This talent may be considered harmful (for at least some characters)
+#						-	flying		- This talent only takes effect (for flags and mom-speed) when flying.
+#										  This also means that the first book is accessible only when not flying, and
+#										  the second book is accessible only when flying. Later books are always available.
 # stats:<7 stats>		- List of stats bonuses
 # ac:<bonus to ac>
 # tohit:<bonus to hit>
@@ -64,24 +67,84 @@ brief:You are a cavespeeder pilot.
 desc:You are a cavespeeder pilot, able to move quickly and fly above obstacles.
 desc_future:you would be a cavespeeder pilot, able to move quickly and fly above obstacles.
 flag:talent
+flag:flying
+obj-flags:AGGRAVATE | FEATHER
 minlevel:3
 class:Pilot
 mom-speed:0:1:2:3:3:4:4:4:4:5
 cost:0
+
+book:[Cavespeeder]
+spell:Take off:1:2:3:3:0:0
+seffect:TAKEOFF
+sdesc:Get into your cavespeeder and fly away.
+
+book:[Cavespeeder]
+spell:Land:1:2:3:3:0:0
+seffect:LAND
+sdesc:Land your cavespeeder and drag it along with you.
 
 name:Cavefighter_Pilot
 gain:You are now flying a cavefighter. Pew, pew, pew!
 lose:You are no longer able to fly a cavefighter.
 brief:You are a cavefighter pilot.
 desc:You are a cavefighter pilot, able to move quickly and fly above obstacles - or blast them into plasma!
-desc_future:you would be a cavespeeder pilot, able to move quickly and fly above obstacles - or blast them into plasma!
+desc_future:you would be a cavefighter pilot, able to move quickly and fly above obstacles - or blast them into plasma!
 flag:talent
+flag:flying
 minlevel:25
+obj-flags:AGGRAVATE | FEATHER
 class:Pilot
 require:Cavespeeder_Pilot
 cancel:Cavespeeder_Pilot
+forbid:Caveracer_Pilot
+forbid:Cavespeeder_Pilot
 mom-speed:0:1:2:3:3:4:4:4:4:5
 cost:0
+
+book:[Cavefighter]
+spell:Take off:1:22:50:3:0:0
+seffect:TAKEOFF
+sdesc:Get into your cavefighter and fly away.
+
+book:[Cavefighter]
+spell:Land:1:22:50:3:0:0
+seffect:LAND
+sdesc:Land your cavefighter and drag it along with you.
+
+spell:Laser:1:22:50:3:0:4d3
+seffect:BEAM:LIGHT:0:-10
+sdice:$Dd$E
+sexpr:D:PLAYER_LEVEL:/ 7
+sexpr:E:PLAYER_LEVEL:* 3 / 2 + 3
+sdesc:Pow - fire the main laser!
+
+name:Caveracer_Pilot
+gain:You are now flying a caveracer. Spee-eeed!
+lose:You are no longer able to fly a caveracer.
+brief:You are a caveracer pilot.
+desc:You are a caveracer pilot, able to outfly almost anything.
+desc_future:you would be a caveracer pilot, able to outfly almost anything.
+flag:talent
+flag:flying
+minlevel:25
+obj-flags:AGGRAVATE | FEATHER
+class:Pilot
+require:Cavespeeder_Pilot
+cancel:Cavespeeder_Pilot
+forbid:Cavefighter_Pilot
+mom-speed:0:2:4:6:7:8:8:9:9:9:10
+cost:0
+
+book:[Caveracer]
+spell:Take off:1:22:50:3:0:0
+seffect:TAKEOFF
+sdesc:Get into your caveracer and fly away.
+
+book:[Caveracer]
+spell:Land:1:22:50:3:0:0
+seffect:LAND
+sdesc:Land your caveracer and drag it along with you.
 
 ######### Marksman Skill Abilities ###########
 # These are available only to the Marksman class

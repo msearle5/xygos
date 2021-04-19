@@ -1,5 +1,9 @@
 BUGS
 ====
+BUG: "You failed to concentrate hard enough" may be inappropriate. Per spell?
+	- also the 'fail' field doesn't appear to influence fail rate
+
+BUG: Gain a talent (e.g. Cavespeeder Pilot) and you (sometimes) end up Starving (0%)
 
 BUG: "You knock out the MlM" -> "The MlM flees in terror!" -> "The MlM can move again" (after making amove!)
 
@@ -77,6 +81,10 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+BUG:a & snozzcumber~snozzcumber in starting inve
+	%s%s%s, "a ", "& snozzcumber~", "" ( & so snozzcumber after this line, presumably by obj_desc_name_format)
+	Fixed: 86084f5568409e01da8faa85502c9e2b5358212a
+
 BUG "How to handle forbids/requires, on equipment/temporary player flags?"
 	- Innate <=> innate forbids are already handled (although they assume that all abilities are innate).
 	- Equipment/Temporary: If forbidden by innate, other equipment, or temporary effects then it doesn't take effect.
