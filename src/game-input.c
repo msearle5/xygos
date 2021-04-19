@@ -185,6 +185,25 @@ bool get_fault(int *choice, struct object *obj, random_value value)
 }
 
 /**
+ * Confirm whether to enable the debugging commands.
+ */
+bool confirm_debug(void)
+{
+	/* Use a UI-specific method. */
+	if (confirm_debug_hook) {
+		return confirm_debug_hook();
+	}
+
+	/* Otherwise, use a generic procedure.  First, mention effects. */
+	msg("You are about to use the dangerous, unsupported, debug commands!");
+	msg("Your machine may crash, and your savefile may become corrupted!");
+	event_signal(EVENT_MESSAGE_FLUSH);
+
+	/* Then verify. */
+	return get_check("Are you sure you want to use the debug commands? ");
+}
+
+/**
  * Get the borders of the area the player can see (the "panel")
  */
 void get_panel(int *min_y, int *min_x, int *max_y, int *max_x)
