@@ -505,6 +505,31 @@ static void display_player_flag_info(void)
 		display_resistance_panel(i, cached_config);
 }
 
+static void display_player_stat(int i, int row, int statcol)
+{
+	if (player->stat_cur[i] < player->stat_max[i])
+		/* Use lowercase stat name */
+		put_str(stat_names_reduced[i], row, statcol);
+	else
+		/* Assume uppercase stat name */
+		put_str(stat_names[i], row, statcol);
+
+	/* Indicate natural maximum */
+	if (player->stat_max[i] == 18+100)
+		put_str("!", row, statcol+3);
+	else
+		put_str(":", row, statcol+3);
+}
+
+static void display_player_sust_stats(int col)
+{
+	int row = 3;
+
+	/* Display the stat labels */
+	for (int i = 0; i < STAT_MAX; i++) {
+		display_player_stat(i, row+i, col);
+	}
+}
 
 /**
  * Special display, part 2b
@@ -514,7 +539,6 @@ void display_player_stat_info(bool generating)
 	int i, row, col;
 
 	char buf[80];
-
 
 	/* Row */
 	row = 2;
@@ -543,18 +567,7 @@ void display_player_stat_info(bool generating)
 		else
 			statcol -= 5;
 
-		if (player->stat_cur[i] < player->stat_max[i])
-			/* Use lowercase stat name */
-			put_str(stat_names_reduced[i], row+i, statcol);
-		else
-			/* Assume uppercase stat name */
-			put_str(stat_names[i], row+i, statcol);
-
-		/* Indicate natural maximum */
-		if (player->stat_max[i] == 18+100)
-			put_str("!", row+i, statcol+3);
-		else
-			put_str(":", row+i, statcol+3);
+		display_player_stat(i, row+i, statcol);
 
 		/* Internal "natural" maximum value
 		 * When doing character generation it is possible to
@@ -632,6 +645,8 @@ static void display_player_sust_info(struct char_sheet_config *config)
 
 	/* Column */
 	col = config->res_regions[config->sustain_region].col;
+
+	display_player_sust_stats(col + config->label_width[config->sustain_region] - 4);
 
 	/* Header */
 	display_player_equippy(row - 2, col + config->label_width[config->sustain_region] + 1);
@@ -1004,7 +1019,6 @@ void display_player(int mode)
 
 		/* Other flags */
 		display_player_flag_info();
-
 	} else {
 		/* Extra info */
 		display_player_xtra_info();

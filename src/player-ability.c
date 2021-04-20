@@ -1299,7 +1299,7 @@ bool ability_levelup(struct player *p, int from, int to)
 		}
 	} else {
 		/* Not Unknown Talents. There is no need to force a decision immediately, though. */
-		msgt(MSG_LEVEL, "You may now gain new talents. Press Ctrl-T at any time to browse and gain talents.");
+		msgt(MSG_LEVEL, "You may now gain new talents. Press Shift-S at any time to browse and gain talents.");
 	}
 
 	return true;
