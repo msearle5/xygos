@@ -1,20 +1,10 @@
 BUGS
 ====
 
-BUG: The info on how to gani new talents is wrong:
-	'Alt-T' or Ctrl-T, not S not gain talents "at any time"
-	Fixed
-
 BUG: "You failed to concentrate hard enough" may be inappropriate. Per spell?
 	- also the 'fail' field doesn't appear to influence fail rate
 
-BUG: Gain a talent (e.g. Cavespeeder Pilot) and you (sometimes) end up Starving (0%)
-
 BUG: "You knock out the MlM" -> "The MlM flees in terror!" -> "The MlM can move again" (after making amove!)
-
-BUG: New Character sheet doesn't show stat names
-	ui-player.c, display_player_sust_info
-	Fixed
 
 BUG: Delete the savefile, make a new character, check a store's name.
 	  Save, reload. The store name will sometimes have changed.
@@ -32,6 +22,9 @@ BUG: Classes don't have + to TP defined in the .txt, they should.
 
 Defer
 =====
+
+BUG: Gain a talent (e.g. Cavespeeder Pilot) and you (sometimes) end up Starving (0%)
+	UTR easily (for watchpoints)
 
 BUG:/home/msearle/rogl/angband/v-xygos/angband/src/xygos: Error in flag_on(lore->flags, b->resist_flag): FlagID[0] Size[11] FlagOff[4294967295] FlagBV[128]
 	(Hit a lizard with a laser knife)
@@ -86,6 +79,14 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+BUG: The info on how to gani new talents is wrong:
+	'Alt-T' or Ctrl-T, not S not gain talents "at any time"
+	Fixed 64e37b29094475ff217aff2b01a8d975d209d069
+
+BUG: New Character sheet doesn't show stat names
+	ui-player.c, display_player_sust_info
+	Fixed 64e37b29094475ff217aff2b01a8d975d209d069
+
 BUG: on 28/3 the BM had a choc egg - also seen one 17/4 in initial inventory
 	- BM fixed earlier
 	- Start items fixed f86b37dab902c014b0659e005093faf8601c16f3 
