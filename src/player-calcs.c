@@ -1451,7 +1451,7 @@ int burden_weight(struct player *p)
 
 	/* Add ballast if you are dragging a plane
 	 * (= you have flying talents, but are not flying)
-	 * Weight is guessed from the numer of talents (this could be moved out to the ability.txt)
+	 * Weight is guessed from the number of talents (this could be moved out to the ability.txt)
 	 **/
 	if (!player->flying) {
 		int flying_talents = 0;

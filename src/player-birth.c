@@ -611,24 +611,46 @@ void add_start_items(struct player *p, const struct start_item *si, bool skip, b
 	for (; si; si = si->next) {
 		int num = rand_range(si->min, si->max);
 		struct object_kind *kind;
-		if (si->sval > SV_UNKNOWN)
-			kind = lookup_kind(si->tval, si->sval);
-		else
-			kind = get_obj_num(0, false, si->tval);
-		assert(kind);
+		bool ok = true;
+		bool ignore = false;
 
-		/* Without start_kit, only start with 1 food and 1 light */
-		if (skip) {
-			if (!tval_is_food_k(kind) && !tval_is_light_k(kind))
-				continue;
+		/* Loop until success. Failing because of a 'special case' here allows generation
+		 * again: this is a property of the object and only occurs randomly so won't cause
+		 * further looping. Start_kit and no_food OTOH cause the item to be ignored.
+		 */
+		do {
+			ok = true;
 
-			num = 1;
-		}
+			if (si->sval > SV_UNKNOWN)
+				kind = lookup_kind(si->tval, si->sval);
+			else
+				kind = get_obj_num(0, false, si->tval);
+			assert(kind);
 
-		/* If you can't eat food, don't start with it */
-		if (tval_is_food_k(kind))
-			if (player_has(p, PF_NO_FOOD))
-				continue;
+			/* Without start_kit, only start with 1 food and 1 light */
+			if (skip) {
+				if (!tval_is_food_k(kind) && !tval_is_light_k(kind)) {
+					ignore = true;
+					break;
+				}
+
+				num = 1;
+			}
+
+			/* If you can't eat food, don't start with it */
+			if (tval_is_food_k(kind))
+				if (player_has(p, PF_NO_FOOD)) {
+					ignore = true;
+					break;
+				}
+
+			/* Discard special cases */
+			if ((kf_has(kind->kind_flags, KF_SPECIAL_GEN)) && (!special_item_can_gen(kind)))
+				ok = false;
+		} while (!ok);
+
+		if (ignore)
+			continue;
 
 		/* Prepare a new item */
 		obj = object_new();

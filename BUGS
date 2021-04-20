@@ -1,5 +1,9 @@
 BUGS
 ====
+
+BUG: The info on how to gani new talents is wrong:
+	'Alt-T' or Ctrl-T, not S not gain talents "at any time"
+
 BUG: "You failed to concentrate hard enough" may be inappropriate. Per spell?
 	- also the 'fail' field doesn't appear to influence fail rate
 
@@ -18,6 +22,7 @@ BUG: Delete the savefile, make a new character, check a store's name.
 BUG: effect_handler_CLIMBING is incomplete
 
 BUG: on 28/3 the BM had a choc egg - also seen one 17/4 in initial inventory
+	- BM fixed
 
 BUG: After the success/failure message from a quest, ESC is the only way to get back out.
 
