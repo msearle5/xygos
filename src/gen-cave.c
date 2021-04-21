@@ -3200,8 +3200,7 @@ struct chunk *gauntlet_gen(struct player *p, int min_height, int min_width) {
 	cave_free(right);
 
 	/* Generate permanent walls around the edge of the generated area */
-	draw_rectangle(c, 0, 0, c->height - 1, c->width - 1, 
-				   FEAT_PERM, SQUARE_NONE, true);
+	draw_rectangle(c, 0, 0, c->height - 1, c->width - 1, FEAT_PERM, SQUARE_NONE, true);
 
 	/* Connect */
 	ensure_connectedness(c);
