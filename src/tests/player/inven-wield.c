@@ -8,7 +8,7 @@
 #include "effects.h"
 #include "game-world.h"
 #include "init.h"
-#include "obj-curse.h"
+#include "obj-fault.h"
 #include "obj-gear.h"
 #include "obj-knowledge.h"
 #include "obj-make.h"
@@ -126,7 +126,7 @@ static bool fill_pack(void) {
 	int slots_used = pack_slots_used(player);
 
 	while (slots_used < z_info->pack_size) {
-		struct object *obj = setup_object(TV_POTION, 1, 1);
+		struct object *obj = setup_object(TV_PILL, 1, 1);
 
 		if (!obj) return false;
 		/* Inscribe it so it doesn't stack. */
@@ -156,8 +156,7 @@ static bool check_similar(const struct object* obj1, const struct object *obj2) 
 				(obj2->el_info[i].flags & (EL_INFO_HATES | EL_INFO_IGNORE)))
 			return false;
 	}
-	if (tval_is_weapon(obj1) || tval_is_armor(obj1) ||
-			tval_is_jewelry(obj1) || tval_is_light(obj1)) {
+	if (tval_is_weapon(obj1) || tval_is_armor(obj1) || tval_is_light(obj1)) {
 		if (obj1->ac != obj2->ac) return false;
 		if (obj1->dd != obj2->dd) return false;
 		if (obj1->ds != obj2->ds) return false;
@@ -173,7 +172,7 @@ static bool check_similar(const struct object* obj1, const struct object *obj2) 
 
 		if (obj1->ego != obj2->ego) return false;
 
-		if (!curses_are_equal(obj1, obj2)) return false;
+		if (!faults_are_equal(obj1, obj2)) return false;
 	}
 	if (obj1->note && obj2->note && (obj1->note != obj2->note))
 		return false;
@@ -415,7 +414,7 @@ static int test_inven_wield_floor_single_filled(void *state) {
 
 	require(empty_gear(player));
 	require(empty_floor(cave, player->grid));
-	obj1 = setup_object(TV_AMULET, 1, 1);
+	obj1 = setup_object(TV_BELT, 1, 1);
 	require(obj1 != NULL);
 	gear_insert_end(obj1);
 	require(object_is_carried(player, obj1));
@@ -424,7 +423,7 @@ static int test_inven_wield_floor_single_filled(void *state) {
 	inven_wield(obj1, slot);
 	old_weight = player->upkeep->total_weight;
 	old_slots = pack_slots_used(player);
-	obj2 = setup_object(TV_AMULET, 2, 1);
+	obj2 = setup_object(TV_BELT, 2, 1);
 	require(obj2 != NULL);
 	note = false;
 	require(floor_carry(cave, player->grid, obj2, &note));
@@ -580,7 +579,7 @@ static int test_inven_wield_floor_full_overflow(void *state) {
 
 	require(empty_gear(player));
 	require(empty_floor(cave, player->grid));
-	obj1 = setup_object(TV_BOW, 1, 1);
+	obj1 = setup_object(TV_GUN, 1, 1);
 	require(obj1 != NULL);
 	gear_insert_end(obj1);
 	require(object_is_carried(player, obj1));
@@ -590,7 +589,7 @@ static int test_inven_wield_floor_full_overflow(void *state) {
 	require(fill_pack());
 	old_weight = player->upkeep->total_weight;
 	old_slots = pack_slots_used(player);
-	obj2 = setup_object(TV_BOW, 2, 1);
+	obj2 = setup_object(TV_GUN, 2, 1);
 	require(obj2 != NULL);
 	note = false;
 	require(floor_carry(cave, player->grid, obj2, &note));
@@ -610,6 +609,7 @@ static int test_inven_wield_floor_full_overflow(void *state) {
 	ok;
 }
 
+#ifdef undef
 static int test_inven_wield_ring_none(void *state) {
 	struct object *obj;
 	int slot;
@@ -742,6 +742,7 @@ static int test_inven_wield_ring_two(void *state) {
 	require(pack_slots_used(player) == old_slots);
 	ok;
 }
+#endif
 
 const char *suite_name = "player/inven-wield";
 struct test tests[] = {
@@ -756,8 +757,8 @@ struct test tests[] = {
 	{ "inven_wield pack/full pack/no overflow", test_inven_wield_pack_full_no_overflow },
 	{ "inven_wield pack/full pack/overflow", test_inven_wield_pack_full_overflow },
 	{ "inven_wield floor/full pack/overflow", test_inven_wield_floor_full_overflow },
-	{ "inven_wield ring none carried", test_inven_wield_ring_none },
+	/*{ "inven_wield ring none carried", test_inven_wield_ring_none },
 	{ "inven_wield ring one carried", test_inven_wield_ring_one },
-	{ "inven_wield ring two carried", test_inven_wield_ring_two },
+	{ "inven_wield ring two carried", test_inven_wield_ring_two },*/
 	{ NULL, NULL }
 };
