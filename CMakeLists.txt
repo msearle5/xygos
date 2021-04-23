@@ -218,7 +218,7 @@ ENDIF()
 IF (SUPPORT_SPOIL_FRONTEND)
 
     INCLUDE(src/cmake/macros/SPOIL_Frontend.cmake)
-    CONFIGURE_SPOIL_FRONTEND(Angband)
+    CONFIGURE_SPOIL_FRONTEND(Xygos)
 
 ENDIF()
 
