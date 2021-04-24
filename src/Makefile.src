@@ -222,5 +222,15 @@ STATSMAINFILES = main-stats.o \
 
 SPOILMAINFILES = main-spoil.o
 
+BORGFILES = borg/borg1.o \
+	borg/borg2.o \
+	borg/borg3.o \
+	borg/borg4.o \
+	borg/borg5.o \
+	borg/borg6.o \
+	borg/borg7.o \
+	borg/borg8.o \
+	borg/borg9.o \
+
 buildid.o: $(ANGFILES)
 ANGFILES += buildid.o

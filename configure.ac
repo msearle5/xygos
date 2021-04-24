@@ -221,6 +221,10 @@ AC_ARG_ENABLE(stats,
 	[AS_HELP_STRING([--enable-stats],     [Enables stats frontend (default: disabled)])],
 	[enable_stats=$enableval],
 	[enable_stats=no])
+AC_ARG_ENABLE(borg,
+	[AS_HELP_STRING([--enable-borg],     [Enables borg (default: disabled)])],
+	[enable_borg=$enableval],
+	[enable_borg=no])
 AC_ARG_ENABLE(spoil,
 	[AS_HELP_STRING([--enable-spoil],     [Enable command-line spoiler generation (default: enabled)])],
 	[enable_spoil=$enableval],
@@ -433,6 +437,12 @@ if test "$enable_stats" = "yes"; then
 	fi
 fi
 
+dnl Borg checking
+
+if test "$enable_borg" = "yes"; then
+	MAINFILES="${MAINFILES} \$(BORGFILES)"
+fi
+
 dnl Spoiler checking
 if test "$enable_spoil" = "yes"; then
 	AC_DEFINE(USE_SPOIL, 1, [Define to 1 to build the command-line spoiler generation])
@@ -530,6 +540,12 @@ if test "$enable_stats" = "yes"; then
 	echo "- Stats                                   Yes"
 else
     echo "- Stats                                   No"
+fi
+
+if test "$enable_borg" = "yes"; then
+	echo "- Borg                                    Yes"
+else
+    echo "- Borg                                    No"
 fi
 
 if test "$enable_spoil" = "yes"; then
