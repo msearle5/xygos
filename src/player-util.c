@@ -617,7 +617,7 @@ void light_special_activation(struct object *obj)
 	memcpy(&effect, obj->effect, sizeof(effect));
 	effect.x = obj->grid.x;
 	effect.y = obj->grid.y;
-	effect_do(&effect, source_object(obj), NULL, &ident, was_aware, dir, 0, 0, NULL);
+	effect_do(&effect, source_object(obj), NULL, &ident, was_aware, dir, 0, 0, NULL, 0);
 }
 
 void light_timeout(struct object *obj)

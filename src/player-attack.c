@@ -1402,7 +1402,8 @@ void thrown_explodes(struct command *cmd, struct object *obj, struct loc grid)
 					5,
 					false,
 					boost,
-					cmd);
+					cmd,
+					0);
 		target_release();
 	}
 }

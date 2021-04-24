@@ -80,6 +80,7 @@ typedef struct effect_handler_context_s {
 	const random_value value;
 	const int subtype, radius, other, y, x;
 	const char *msg;
+	const int alternate;
 	bool ident;
 	struct command *cmd;
 } effect_handler_context_t;
@@ -4924,7 +4925,7 @@ bool effect_handler_SHAPECHANGE(effect_handler_context_t *context)
 	/* Do effect */
 	if (shape->effect) {
 		(void) effect_do(shape->effect, source_player(), NULL, &ident, true,
-						 0, 0, 0, NULL);
+						 0, 0, 0, NULL, context->alternate);
 	}
 
 	return true;
@@ -6210,6 +6211,14 @@ bool effect_handler_CLIMBING(effect_handler_context_t *context)
 }
 
 /**
+ * Next effect (do nothing here)
+ */
+bool effect_handler_NEXT(effect_handler_context_t *context)
+{
+	return (true);
+}
+
+/**
  * Prismatic Lightsaber
  */
 bool effect_handler_PRISMATIC(effect_handler_context_t *context)
@@ -6574,6 +6583,7 @@ int effect_subtype(int index, const char *type)
  *               command can use the same information without prompting the
  *               player again.  Use NULL for this if not invoked as part of
  *               a command.
+ * \param alternate	- select which alternate form. 0 is the first (and the default).
  */
 bool effect_do(struct effect *effect,
 		struct source origin,
@@ -6583,11 +6593,29 @@ bool effect_do(struct effect *effect,
 		int dir,
 		int beam,
 		int boost,
-		struct command *cmd)
+		struct command *cmd,
+		int alternate)
 {
 	bool completed = false;
 	effect_handler_f handler;
 	random_value value = { 0, 0, 0, 0 };
+
+	/* Move effect forward to the first effect after 'alternate' NEXTs */
+	struct effect *first = effect;
+	for (int i=0; i<alternate; i++) {
+		do {
+			effect = effect->next;
+		} while (effect && (effect->index != EF_NEXT));
+	}
+	if ((effect) && (effect->index == EF_NEXT))
+		effect = effect->next;
+	/* If the alternate is not present, default to the first. This is not
+	 * an error - it allows the alternate form of cards (for example) to
+	 * work even though not every card has an alternate form.
+	 */
+	if (!effect) {
+		effect = first;
+	}
 
 	do {
 		int random_choices = 0, leftover = 0;
@@ -6633,6 +6661,7 @@ bool effect_do(struct effect *effect,
 				effect->y,
 				effect->x,
 				effect->msg,
+				alternate,
 				*ident,
 				cmd
 			};
@@ -6648,7 +6677,7 @@ bool effect_do(struct effect *effect,
 				effect = effect->next;
 		else
 			effect = effect->next;
-	} while (effect);
+	} while (effect && (effect->index != EF_NEXT));
 
 	return completed;
 }
@@ -6692,6 +6721,6 @@ void effect_simple(int index,
 		ident = &dummy_ident;
 	}
 
-	effect_do(&effect, origin, NULL, ident, true, dir, 0, 0, NULL);
+	effect_do(&effect, origin, NULL, ident, true, dir, 0, 0, NULL, 0);
 	dice_free(effect.dice);
 }

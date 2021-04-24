@@ -399,7 +399,7 @@ enum use {
  * Use an object the right way.
  */
 static void use_aux(struct command *cmd, struct object *obj, enum use use,
-					int snd)
+					int snd, int alternate)
 {
 	struct effect *effect = object_effect(obj);
 	bool can_use = true;
@@ -521,7 +521,8 @@ static void use_aux(struct command *cmd, struct object *obj, enum use use,
 							dir,
 							beam,
 							boost,
-							cmd);
+							cmd,
+							alternate);
 		target_release();
 
 		if (!used) {
@@ -647,7 +648,7 @@ void do_cmd_run_card(struct command *cmd)
 			tval_is_card,
 			USE_INVEN | USE_FLOOR) != CMD_OK) return;
 
-	use_aux(cmd, obj, USE_SINGLE, MSG_GENERIC);
+	use_aux(cmd, obj, USE_SINGLE, MSG_GENERIC, 0);
 }
 
 /**
@@ -673,7 +674,7 @@ void do_cmd_use_device(struct command *cmd)
 		return;
 	}
 
-	use_aux(cmd, obj, USE_CHARGE, MSG_USE_DEVICE);
+	use_aux(cmd, obj, USE_CHARGE, MSG_USE_DEVICE, 0);
 }
 
 /**
@@ -699,7 +700,7 @@ void do_cmd_aim_wand(struct command *cmd)
 		return;
 	}
 
-	use_aux(cmd, obj, USE_CHARGE, MSG_ZAP_ROD);
+	use_aux(cmd, obj, USE_CHARGE, MSG_ZAP_ROD, 0);
 }
 
 /**
@@ -725,7 +726,7 @@ void do_cmd_zap_rod(struct command *cmd)
 		return;
 	}
 
-	use_aux(cmd, obj, USE_TIMEOUT, MSG_ZAP_ROD);
+	use_aux(cmd, obj, USE_TIMEOUT, MSG_ZAP_ROD, 0);
 }
 
 /**
@@ -774,7 +775,7 @@ void do_cmd_activate(struct command *cmd)
 			do_inven_wield(equip_obj, slot, false, true);
 		return;
 	} else {
-		use_aux(cmd, obj, USE_TIMEOUT, MSG_ACT_ARTIFACT);
+		use_aux(cmd, obj, USE_TIMEOUT, MSG_ACT_ARTIFACT, 0);
 	}
 }
 
@@ -813,7 +814,7 @@ void do_cmd_eat_food(struct command *cmd)
 				USE_INVEN | USE_FLOOR) != CMD_OK) return;
 	}
 
-	use_aux(cmd, obj, use, MSG_EAT);
+	use_aux(cmd, obj, use, MSG_EAT, 0);
 }
 
 /**
@@ -834,7 +835,7 @@ void do_cmd_quaff_pill(struct command *cmd)
 			tval_is_pill,
 			USE_INVEN | USE_FLOOR) != CMD_OK) return;
 
-	use_aux(cmd, obj, USE_SINGLE, MSG_QUAFF);
+	use_aux(cmd, obj, USE_SINGLE, MSG_QUAFF, 0);
 }
 
 /**
@@ -857,7 +858,7 @@ void do_cmd_use_printer(struct command *cmd)
 
 	/* Hack */
 	obj->pval = 1;
-	use_aux(cmd, obj, USE_CHARGE, MSG_PRINT);
+	use_aux(cmd, obj, USE_CHARGE, MSG_PRINT, 0);
 	obj->pval = 0;
 }
 

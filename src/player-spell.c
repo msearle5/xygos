@@ -458,7 +458,7 @@ bool spell_cast(int spell_index, int dir, struct command *cmd)
 	} else {
 		/* Cast the spell */
 		if (!effect_do(spell->effect, source_player(), NULL, ident, true, dir,
-					   beam, 0, cmd)) {
+					   beam, 0, cmd, 0)) {
 			mem_free(ident);
 			return false;
 		}

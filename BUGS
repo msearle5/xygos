@@ -1,6 +1,8 @@
 BUGS
 ====
 
+BUG: "You cannot carry that many items" in store with 1 item - presumably caused by the pulled fix and the reason that the unit tests fail
+
 BUG: "You failed to concentrate hard enough" may be inappropriate. Per spell?
 		- with a default per primary stat? With concentrate for INT.
 	- also the 'fail' field doesn't appear to influence fail rate

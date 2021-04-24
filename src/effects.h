@@ -56,7 +56,8 @@ bool effect_do(struct effect *effect,
 	int dir,
 	int beam,
 	int boost,
-	struct command *cmd);
+	struct command *cmd,
+	int alternate);
 void effect_simple(int index,
 	struct source origin,
 	const char *dice_string,

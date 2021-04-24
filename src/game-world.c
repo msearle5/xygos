@@ -422,7 +422,7 @@ static void decrease_timeouts(void)
 	for(int i=0;i<PF_MAX;i++) {
 		if (ability[i] && player_has(player, i) && ability[i]->effect_randomly && one_in_(ability[i]->effect_randomly)) {
 			bool ident;
-			effect_do(ability[i]->effect, source_player(), NULL, &ident, true, 0, 0, 0, NULL);
+			effect_do(ability[i]->effect, source_player(), NULL, &ident, true, 0, 0, 0, NULL, 0);
 		}
 	}
 
