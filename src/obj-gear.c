@@ -589,7 +589,7 @@ int inven_carry_num(const struct object *obj, bool stack)
 	}
 
 	int n_free_slot = z_info->pack_size - pack_slots_used(player);
-	int num_to_quiver, num_left, i;
+	int num_to_quiver = 0, num_left = 0, i;
 
 	/* Check for similarity */
 	if (stack) {
