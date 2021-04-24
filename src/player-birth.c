@@ -709,24 +709,31 @@ void add_start_items(struct player *p, const struct start_item *si, bool skip, b
 bool player_make_simple(const char *nrace, const char *next, const char *nclass,
 	const char* nplayer)
 {
-	int ir = 0, ic = 0, ie = 4;
+	int ir = 0, ic = 0, ie = 0;
 
 	if (nrace) {
 		const struct player_race *rc = races;
 		int nr = 0;
 
-		while (1) {
+		while (rc != extensions) {
 			if (!rc) return false;
 			if (streq(rc->name, nrace)) break;
 			rc = rc->next;
 			++ir;
 			++nr;
 		}
-		while (rc) {
+		while (rc != extensions) {
 			rc = rc->next;
 			++nr;
 		}
 		ir = nr - ir  - 1;
+	} else {
+		const struct player_race *rc = races;
+		while (rc != extensions) {
+			rc = rc->next;
+			++ir;
+		}
+		--ir;
 	}
 
 	if (next) {
@@ -745,6 +752,12 @@ bool player_make_simple(const char *nrace, const char *next, const char *nclass,
 			++ne;
 		}
 		ie = ne - ie  - 1;
+	} else {
+		const struct player_race *rc = races;
+		while (rc != extensions) {
+			rc = rc->next;
+			++ie;
+		}
 	}
 
 	if (nclass) {

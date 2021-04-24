@@ -48,7 +48,7 @@ int teardown_tests(void *state) {
 int test_newgame(void *state) {
 
 	/* Try making a new game */
-	eq(player_make_simple(NULL, NULL, "Tester"), true);
+	eq(player_make_simple(NULL, NULL, NULL, "Tester"), true);
 
 	eq(player->is_dead, false);
 	prepare_next_level(&cave, player);

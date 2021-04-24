@@ -53,17 +53,6 @@ int teardown_tests(void *state) {
 	return 0;
 }
 
-/* Forget all known flavors. */
-static void forget_flavors(void) {
-	int i;
-
-	for (i = 1; i < z_info->k_max; ++i) {
-		struct object_kind *kind = &k_info[i];
-
-		kind->aware = false;
-	}
-}
-
 /* Remove all of the gear. */
 static bool flush_gear(void) {
 	struct object *curr = player->gear;
