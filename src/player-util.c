@@ -447,17 +447,21 @@ int energy_per_move(struct player *p)
 bool stat_check(int stat, int mid)
 {
 	// Get the 'internal' value (3..18, then 18/10 = 18+10 etc.)
-	int val = player->stat_cur[stat];
-	
+	int val = player->stat_cur[stat] + 3;
+
 	// Translate it to a linear form
 	if (val < 18) val = ((val - 18) * 10) + 18;
-	
+
 	// Translate the midpoint
 	if (mid < 18) mid = ((mid - 18) * 10) + 18;
-	
+
+	// Keep them +ve
+	val += 180;
+	mid += 180;
+
 	// Generate a random value
 	int check = Rand_normal(val, val / 2);
-	
+
 	// Return true if it's at least equal to mid
 	if (check >= mid)
 		return true;
