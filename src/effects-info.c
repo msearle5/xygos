@@ -14,6 +14,7 @@
  *    are included in all such copies.  Other copyrights may also apply.
  */
 
+#include "cmds.h"
 #include "effects-info.h"
 #include "effects.h"
 #include "init.h"
@@ -114,6 +115,7 @@ static void copy_to_textblock_with_coloring(textblock *tb, const char *s)
  * effect that could be described.  Otherwise, returns NULL.
  */
 static textblock *create_random_effect_description(const struct effect *e,
+	const struct object *obj,
 	int count, const char *prefix, int dev_skill_boost,
 	const struct effect **nexte)
 {
@@ -241,7 +243,7 @@ static textblock *create_random_effect_description(const struct effect *e,
 		textblock *tb;
 		int ivalid;
 		
-		tb = effect_describe(efirst, "randomly ", dev_skill_boost,
+		tb = effect_describe(efirst, obj, "randomly ", dev_skill_boost,
 			true);
 		if (tb) {
 			ivalid = 1;
@@ -263,7 +265,7 @@ static textblock *create_random_effect_description(const struct effect *e,
 			if (!effect_desc(e) || e->index == EF_RANDOM) {
 				continue;
 			}
-			tb = effect_describe(e,
+			tb = effect_describe(e, obj,
 				(ivalid == 0) ? "randomly " : NULL,
 				dev_skill_boost, true);
 			if (!tb) {
@@ -309,12 +311,19 @@ bool effect_display_alternate(int alternate)
 	}
 }
 
-/** Returns a prefix to describe an alternate mode */
-const char *effect_prefix_alternate(int alternate)
+/** Returns a prefix to describe an alternate mode.
+ * This may be in a static buffer that is reused between calls
+ **/
+const char *effect_prefix_alternate(const struct object *obj, int alternate)
 {
+	static char buf[128];
 	switch(alternate) {
-		case 1:
-			return ", or when using the Rare Card technique it ";
+		case 1: {
+			assert(obj);
+			int level = card_level(obj);
+			strnfmt(buf, sizeof(buf), ", or when using the Rare Card technique at level %d or above it ", level);
+			return buf;
+		}
 		default:
 			return ", or ";
 	}
@@ -330,7 +339,7 @@ const char *effect_prefix_alternate(int alternate)
  * the descriptions.  dev_skill_boost is the percent increase from the device
  * skill to show in the descriptions.
  */
-textblock *effect_describe(const struct effect *e, const char *prefix,
+textblock *effect_describe(const struct effect *e, const struct object *obj, const char *prefix,
 	int dev_skill_boost, bool only_first)
 {
 	textblock *tb = NULL;
@@ -340,7 +349,7 @@ textblock *effect_describe(const struct effect *e, const char *prefix,
 	do {
 
 		int nadded = 0;
-		const char *altprefix = effect_prefix_alternate(alt);
+		const char *altprefix = effect_prefix_alternate(obj, alt);
 		if (effect_display_alternate(alt++)) {
 			while (e && (e->index != EF_NEXT)) {
 				const char* edesc = effect_desc(e);
@@ -356,7 +365,7 @@ textblock *effect_describe(const struct effect *e, const char *prefix,
 				if (e->index == EF_RANDOM) {
 					const struct effect *nexte;
 					textblock *tbe = create_random_effect_description(
-						e->next, roll, (nadded == 0) ? prefix : NULL,
+						e->next, obj, roll, (nadded == 0) ? prefix : NULL,
 						dev_skill_boost, &nexte);
 
 					e = (only_first) ? NULL : nexte;

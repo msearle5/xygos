@@ -3395,7 +3395,7 @@ static void shape_lore_append_misc_flags(textblock *tb,
 static void shape_lore_append_change_effects(textblock *tb,
 	const struct player_shape *s)
 {
-	textblock *tbe = effect_describe(s->effect, "Changing into the shape ",
+	textblock *tbe = effect_describe(s->effect, NULL, "Changing into the shape ",
 		0, false);
 
 	if (tbe) {

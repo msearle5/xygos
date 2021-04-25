@@ -92,7 +92,7 @@ static void spell_menu_display(struct menu *m, int oid, bool cursor,
 	 *  X HP (HP cost, where X may be a fixed number, dice, or normal ("~50") and may change with level)
 	 *  X t (Cooldown - X is as above. If the spell can't be cast because cooldown, change the colour and
 	 * 			display the number of turns remaining.)
-	 * If it has both display the HP (as more urgent) if it is available, the turns remainng otherwise
+	 * If it has both display the HP (as more urgent) if it is available, the turns remaining otherwise.
 	 **/
 	char randval[30];
 	*randval = 0;

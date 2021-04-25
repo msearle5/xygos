@@ -1764,7 +1764,7 @@ static bool describe_effect(textblock *tb, const struct object *obj,
 			else
 				prefix = "When activated, it ";
 
-			tbe = effect_describe(effect, prefix, boost, false);
+			tbe = effect_describe(effect, obj, prefix, boost, false);
 			if (! tbe) {
 				return false;
 			}

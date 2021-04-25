@@ -1,4 +1,5 @@
 master
+borg		active, experimental	Porting the Borg
 artifacts	active, experimental	Randarts / halfarts etc.
 sliding		inactive, merged		Sliding (mixed) classes
 champions	active, experimental	Champions (ghosts)

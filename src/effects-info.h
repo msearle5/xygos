@@ -47,7 +47,7 @@ enum {
 	EFINFO_TOUCH
 };
 
-textblock *effect_describe(const struct effect *e, const char *prefix,
+textblock *effect_describe(const struct effect *e, const struct object *obj, const char *prefix,
 	int dev_skill_boost, bool only_first);
 struct effect *effect_next(struct effect *effect);
 bool effect_damages(const struct effect *effect);

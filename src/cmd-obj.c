@@ -625,6 +625,15 @@ static void use_aux(struct command *cmd, struct object *obj, enum use use,
 	}
 }
 
+int card_level(const struct object *obj)
+{
+	int level = ((obj->kind->level * 6) / 10) + 5;
+	if (level > 40)
+		level -= (level - 40) / 2;
+	if (level > 50)
+		level = 50;
+	return level;
+}
 
 /**
  * Run a card
@@ -648,7 +657,20 @@ void do_cmd_run_card(struct command *cmd)
 			tval_is_card,
 			USE_INVEN | USE_FLOOR) != CMD_OK) return;
 
-	use_aux(cmd, obj, USE_SINGLE, MSG_GENERIC, 0);
+	int alt = 0;
+	if (player->timed[TMD_RARE_CARD]) {
+		player_set_timed(player, TMD_RARE_CARD, 0, false);
+		int cardlevel = card_level(obj);
+		int yourlevel = levels_in_class(get_class_by_name("Clown")->cidx);
+		if (yourlevel >= cardlevel) {
+			alt = 1;
+			msg("You pull out a rare card!");
+		} else {
+			msg("You don't have the skill to switch this card.");
+		}
+	}
+
+	use_aux(cmd, obj, USE_SINGLE, MSG_GENERIC, alt);
 }
 
 /**

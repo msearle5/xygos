@@ -72,6 +72,7 @@ void do_cmd_refill(struct command *cmd);
 void do_cmd_cast(struct command *cmd);
 void do_cmd_use_printer(struct command *cmd);
 void activation_message(struct object *obj);
+int card_level(const struct object *obj);
 
 /* cmd-pickup.c */
 int do_autopickup(struct player *p);

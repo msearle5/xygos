@@ -275,7 +275,7 @@ static int collect_from_book(int **spells, struct class_spell ***spellps, int *n
 	if (spells)
 		*spells = mem_zalloc(n_spells * sizeof(*spells));
 	if (spellps && n_i)
-		*spellps = mem_zalloc((*n_i + 100) * sizeof(*spellps));
+		*spellps = mem_zalloc((*n_i + 100) * sizeof(*spellps)); //@FIXME
 
 	/* Write the spells */
 	n_spells = 0;
@@ -526,7 +526,7 @@ size_t append_random_value_string(char *buffer, size_t size, const random_value 
 static void spell_effect_append_value_info(const struct effect *effect,
 										   char *p, size_t len)
 {
-	random_value rv;
+	random_value rv = {0, 0, 0, 0};
 	const char *type = NULL;
 	const char *special = NULL;
 	size_t offset = strlen(p);

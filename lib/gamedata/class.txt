@@ -252,12 +252,45 @@ cdesc:It sounds crazy at first - to fight only with bare hands and in your skivv
 
 ############### CLOWN #################
 name:Clown
+stats:0:-1:-2:2:0:3:0
+title:Mascot
+title:Sidekick
 title:Clown
+title:Entertainer
+title:Conjurer
+title:Magician
+title:Mentalist
+#Puppetmaster? 
+exp:10
+hitdie:50
+skill-disarm-phys:15:30
+skill-disarm-magic:15:25
+skill-device:20:15
+skill-save:0:0
+skill-stealth:0:0
+skill-search:0:5
+skill-martial:35:25
+skill-melee:30:15
+skill-shoot:25:20
+skill-throw:40:20
+skill-dig:5:10
+max-attacks:5
+min-weight:30
+strength-multiplier:3
 equip:food:durian:1:1:none
 equip:food:pineapple:1:1:none
 equip:food:Hunter's pie:1:1:none
 equip:food:random:2:3:none
 cdesc:A master of deception, misdirection and custard pies. You can perform impressive card tricks and are a great shot with a thrown knife or more exotic weapons (it's always best to kill your enemies in a humorous way, after all). And when it turns out that you shouldn't have brought a pie to a gun fight, some useful athletic techniques may speed your escape.
+
+magic:1:300
+book:[Clown]
+# spell:name:level:fail:exp:stat:hp:cooldown
+spell:Rare Card:5:20:8:5:1:10d2
+seffect:TIMED_INC:RARE_CARD
+sdice:4d2
+sdesc:Some cards have a hidden mode - using this technique before running the card will allow you to access it, if you are high enough level. The object information for the card will tell you what it does.
+
 
 ############### MEDIC #################
 
@@ -335,7 +368,7 @@ hitdie:190
 max-attacks:5
 min-weight:40
 exp:5
-#Digger, climber, diver, explorer, mapper, pathfinder, cave finder...
+#Digger, climber, diver, excavator, explorer, mapper, pathfinder, cave finder...
 title:Climber
 title:Spelunker
 title:Caver
