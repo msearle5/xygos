@@ -5,7 +5,6 @@
 #define INCLUDED_BORG2_H
 
 #include "angband.h"
-#include "object/tvalsval.h"
 #include "cave.h"
 
 #ifdef ALLOW_BORG

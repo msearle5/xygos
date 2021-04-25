@@ -7,7 +7,6 @@
 #define INCLUDED_BORG4_H
 
 #include "angband.h"
-#include "object/tvalsval.h"
 #include "cave.h"
 
 #ifdef ALLOW_BORG
@@ -32,7 +31,7 @@ extern void borg_notice(bool notice_swap, bool do_inven_equip);
  *
  * in_item is passed in if you want to pretent that in_item is
  *          the only item in the home.
- * no_items is passed in as TRUE if you want to pretend that the
+ * no_items is passed in as true if you want to pretend that the
  *          home is empty.
  */
 extern void borg_notice_home(borg_item *in_item, bool no_items);

@@ -1,10 +1,16 @@
 /* File: borg1.c */
 /* Purpose: Low level stuff for the Borg -BEN- */
 #include "angband.h"
-#include "object/tvalsval.h"
 #include "cave.h"
+#include "init.h"
+#include "monster.h"
+#include "player-timed.h"
+#include "h-basic.h"
 
 #include "borg1.h"
+#include "borg2.h"
+#include "borg3.h"
+#include "borg4.h"
 
 /*
  * This file contains various low level variables and routines.
@@ -32,7 +38,7 @@ int borg_delay_factor;
 
 /* dynamic borg stuff */
 bool borg_uses_swaps;
-bool borg_uses_calcs = TRUE;
+bool borg_uses_calcs = true;
 bool borg_worships_damage;
 bool borg_worships_speed;
 bool borg_worships_hp;
@@ -60,7 +66,7 @@ int borg_enchant_limit;
 
 /* HACK... this should really be a parm into borg_prepared */
 /*         I am just being lazy */
-bool borg_slow_return = FALSE;
+bool borg_slow_return = false;
 
 req_item **borg_required_item;
 int *n_req;
@@ -309,7 +315,7 @@ char *prefix_pref[] =
  */
 
 bool borg_active;       /* Actually active */
-bool borg_resurrect = FALSE;    /* continous play mode */
+bool borg_resurrect = false;    /* continous play mode */
 
 bool borg_cancel;       /* Being cancelled */
 
@@ -319,8 +325,8 @@ bool borg_casted_glyph;        /* because we dont have a launch anymore */
 int borg_stop_dlevel = -1;
 int borg_stop_clevel = -1;
 int borg_no_deeper = 127;
-bool borg_stop_king = TRUE;
-bool borg_dont_react = FALSE;
+bool borg_stop_king = true;
+bool borg_dont_react = false;
 int successful_target = 0;
 int sold_item_tval[10];
 int sold_item_sval[10];
@@ -351,12 +357,12 @@ bool borg_threat_invis;
  * Various silly flags
  */
 
-bool borg_flag_save = FALSE;    /* Save savefile at each level */
-bool borg_flag_dump = FALSE;    /* Save savefile at each death */
-bool borg_save = FALSE;        /* do a save next level */
-bool borg_graphics = FALSE;    /* rr9's graphics */
-bool borg_confirm_target = FALSE; /* emergency spell use */
-bool borg_scumming_pots = TRUE;	/* Borg will quickly store pots in home */
+bool borg_flag_save = false;    /* Save savefile at each level */
+bool borg_flag_dump = false;    /* Save savefile at each death */
+bool borg_save = false;        /* do a save next level */
+bool borg_graphics = false;    /* rr9's graphics */
+bool borg_confirm_target = false; /* emergency spell use */
+bool borg_scumming_pots = true;	/* Borg will quickly store pots in home */
 
 /*
  * Use a simple internal random number generator
@@ -376,7 +382,7 @@ u32b borg_rand_local;       /* Save personal setting */
 s16b borg_t = 0L;          /* Current "time" */
 s16b need_see_inviso = 0;    /* cast this when required */
 s16b borg_see_inv = 0;
-bool need_shift_panel = FALSE;    /* to spot offscreens */
+bool need_shift_panel = false;    /* to spot offscreens */
 s16b when_shift_panel = 0L;
 s16b time_this_panel = 0L;   /* Current "time" on current panel*/
 int unique_on_level;		/* Index of unique */
@@ -403,7 +409,7 @@ s16b when_last_kill_mult = 0;   /* When a multiplier was last killed */
 bool my_need_alter;        /* incase i hit a wall or door */
 bool my_no_alter;          /*  */
 bool my_need_redraw;        /* incase i hit a wall or door */
-bool borg_attempting_refresh_resist = FALSE;  /* for the Resistance spell */
+bool borg_attempting_refresh_resist = false;  /* for the Resistance spell */
 
 /*
  * Some information
@@ -478,14 +484,14 @@ bool borg_fear_mon_spell;
  * Current shopping information
  */
 
-bool borg_in_shop = FALSE;  /* True if the borg is inside of a store */
+bool borg_in_shop = false;  /* true if the borg is inside of a store */
 s16b goal_shop = -1;        /* Next shop to visit */
 s16b goal_ware = -1;        /* Next item to buy there */
 s16b goal_item = -1;        /* Next item to sell there */
 s16b goal_qty = 1;
 int borg_food_onsale = -1;      /* Are shops selling food? */
 int borg_fuel_onsale = -1;      /* Are shops selling fuel? */
-bool borg_needs_quick_shopping = FALSE; /* Needs to buy without browsing all shops */
+bool borg_needs_quick_shopping = false; /* Needs to buy without browsing all shops */
 s16b borg_best_fit_item = -1;	/* Item to be worn.  Index used to note which item not to sell */
 
 
@@ -539,18 +545,18 @@ s16b borg_questor_died; /* time stamp */
  * Some estimated state variables
  */
 
-s16b my_stat_max[6];    /* Current "maximal" stat values */
-s16b my_stat_cur[6];    /* Current "natural" stat values */
-s16b my_stat_use[6];    /* Current "resulting" stat values */
-s16b my_stat_ind[6];    /* Current "additions" to stat values */
-bool my_need_stat_check[6];  /* do I need to check my stats? */
+s16b my_stat_max[STAT_MAX];    /* Current "maximal" stat values */
+s16b my_stat_cur[STAT_MAX];    /* Current "natural" stat values */
+s16b my_stat_use[STAT_MAX];    /* Current "resulting" stat values */
+s16b my_stat_ind[STAT_MAX];    /* Current "additions" to stat values */
+bool my_need_stat_check[STAT_MAX];  /* do I need to check my stats? */
 
-s16b my_stat_add[6];  /* additions to stats  This will allow upgrading of */
+s16b my_stat_add[STAT_MAX];  /* additions to stats  This will allow upgrading of */
                       /* equiptment to allow a ring of int +4 to be traded */
                       /* for a ring of int +6 even if maximized to allow a */
                       /* later swap to be better. */
 
-s16b home_stat_add[6];
+s16b home_stat_add[STAT_MAX];
 
 int weapon_swap;    /* location of my swap weapon */
 int armour_swap;    /* my swap of armour */
@@ -699,9 +705,9 @@ s16b amt_cure_blind;
 
 s16b amt_book[9];
 
-s16b amt_add_stat[6];
-s16b amt_inc_stat[6];  /* Stat potions */
-s16b amt_fix_stat[7];  /* #7 is to fix all stats */
+s16b amt_add_stat[STAT_MAX];
+s16b amt_inc_stat[STAT_MAX];  /* Stat potions */
+s16b amt_fix_stat[STAT_MAX+1];  /* #7 is to fix all stats */
 s16b amt_fix_exp;
 
 s16b amt_cool_staff;   /* holiness - power staff */
@@ -743,7 +749,7 @@ s16b num_missile;
 
 s16b num_book[9];
 
-s16b num_fix_stat[7]; /* #7 is to fix all stats */
+s16b num_fix_stat[STAT_MAX+1]; /* #7 is to fix all stats */
 
 s16b num_fix_exp;
 s16b num_mana;
@@ -852,27 +858,20 @@ int borg_feeling = 0;   /* Current level "feeling" */
 
 s16b shop_num = -1;     /* Current shop index */
 
-
-
 /*
  * State variables extracted from the screen
  */
 
 s32b borg_exp;      /* Current experience */
-
 s32b borg_gold;     /* Current gold */
-
-int borg_stat[6];   /* Current stat values */
-
+int borg_stat[STAT_MAX];   /* Current stat values */
 int borg_book[9];   /* Current book slots */
-
 
 /*
  * State variables extracted from the inventory/equipment
  */
 
 int borg_cur_wgt;   /* Current weight */
-
 
 /*
  * Constant state variables
@@ -1197,21 +1196,21 @@ borg_data *borg_data_hard_m;  /* Constant "hard" data for monster flow */
  * Strategy flags -- recalculate things
  */
 
-bool borg_danger_wipe = FALSE;  /* Recalculate danger */
+bool borg_danger_wipe = false;  /* Recalculate danger */
 
-bool borg_do_update_view = FALSE;  /* Recalculate view */
+bool borg_do_update_view = false;  /* Recalculate view */
 
-bool borg_do_update_light = FALSE;  /* Recalculate lite */
+bool borg_do_update_light = false;  /* Recalculate lite */
 
 /*
   * Strategy flags -- examine the world
   */
 
- bool borg_do_inven = TRUE;  /* Acquire "inven" info */
- bool borg_do_equip = TRUE;  /* Acquire "equip" info */
- bool borg_do_panel = TRUE;  /* Acquire "panel" info */
- bool borg_do_frame = TRUE;  /* Acquire "frame" info */
- bool borg_do_spell = TRUE;  /* Acquire "spell" info */
+ bool borg_do_inven = true;  /* Acquire "inven" info */
+ bool borg_do_equip = true;  /* Acquire "equip" info */
+ bool borg_do_panel = true;  /* Acquire "panel" info */
+ bool borg_do_frame = true;  /* Acquire "frame" info */
+ bool borg_do_spell = true;  /* Acquire "spell" info */
  byte borg_do_spell_aux = 0; /* Hack -- book for "borg_do_spell" */
  bool borg_do_browse = 0;    /* Acquire "store" info */
  byte borg_do_browse_what = 0;   /* Hack -- store for "borg_do_browse" */
@@ -1221,9 +1220,9 @@ bool borg_do_update_light = FALSE;  /* Recalculate lite */
  /*
   * Strategy flags -- run certain functions
   */
- bool borg_do_crush_junk = FALSE;
- bool borg_do_crush_hole = FALSE;
- bool borg_do_crush_slow = FALSE;
+ bool borg_do_crush_junk = false;
+ bool borg_do_crush_hole = false;
+ bool borg_do_crush_slow = false;
 
 /* am I fighting a unique? */
 int borg_fighting_unique;
@@ -1550,7 +1549,7 @@ errr borg_what_text(int x, int y, int n, byte *a, char *s)
             if (d_a)
             {
                 /* Verify the "attribute" (or stop) t_a 14 is the cyan color of "-more-" */
-                if (t_a != d_a && t_a != TERM_L_BLUE && t_a != TERM_ORANGE) break;
+                if (t_a != d_a && t_a != COLOUR_L_BLUE && t_a != COLOUR_ORANGE) break;
             }
 
             /* Acquire attribute */
@@ -1616,7 +1615,7 @@ void borg_note(char *what)
     if (borg_match[0] && strstr(what, borg_match))
     {
         /* Clean cancel */
-        borg_cancel = TRUE;
+        borg_cancel = true;
     }
 
     /* Mega-Hack -- Check against the swap loops */
@@ -1633,7 +1632,7 @@ void borg_note(char *what)
         if (!angband_term[j]) continue;
 
         /* Check flag */
-        if (!(op_ptr->window_flag[j] & PW_BORG_1)) continue;
+        if (!(window_flag[j] & PW_BORG_1)) continue;
 
         /* Activate */
         Term_activate(angband_term[j]);
@@ -1683,7 +1682,7 @@ void borg_note(char *what)
                 buf[i] = '\0';
 
                 /* Show message */
-                Term_addstr(-1, TERM_WHITE, buf);
+                Term_addstr(-1, COLOUR_WHITE, buf);
 
                 /* Advance (wrap) */
                 if (++y >= h) y = 0;
@@ -1699,7 +1698,7 @@ void borg_note(char *what)
             }
 
             /* Show message tail */
-            Term_addstr(-1, TERM_WHITE, what);
+            Term_addstr(-1, COLOUR_WHITE, what);
 
             /* Advance (wrap) */
             if (++y >= h) y = 0;
@@ -1712,7 +1711,7 @@ void borg_note(char *what)
         else
         {
             /* Show message */
-            Term_addstr(-1, TERM_WHITE, what);
+            Term_addstr(-1, COLOUR_WHITE, what);
 
             /* Advance (wrap) */
             if (++y >= h) y = 0;
@@ -1739,7 +1738,7 @@ void borg_note(char *what)
 void borg_oops(char *what)
 {
     /* Stop processing */
-    borg_active = FALSE;
+    borg_active = false;
 
     /* Give a warning */
     borg_note(format("# Aborting (%s).", what));
@@ -1860,7 +1859,7 @@ bool borg_tell(char *what)
     borg_keypress(KC_ENTER);
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 
 
@@ -1893,7 +1892,7 @@ bool borg_change_name(char *str)
     borg_keypress(ESCAPE);
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 
 
@@ -1925,7 +1924,7 @@ bool borg_dump_character(char *str)
     borg_keypress(ESCAPE);
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 
 
@@ -1949,7 +1948,7 @@ bool borg_save_game(void)
     borg_keypress(ESCAPE);
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 
 
@@ -1964,45 +1963,45 @@ void borg_update_frame(void)
 {
     int i;
 
-	player_state *state = &p_ptr->state;
+	player_state *state = &player->state;
 
     /* Assume level is fine */
-    borg_skill[BI_ISFIXLEV] = FALSE;
+    borg_skill[BI_ISFIXLEV] = false;
 
     /* Note "Lev" vs "LEV" */
-    if (p_ptr->lev < p_ptr->max_lev) borg_skill[BI_ISFIXLEV] = TRUE;
+    if (player->lev < player->max_lev) borg_skill[BI_ISFIXLEV] = true;
 
     /* Extract "LEVEL xxxxxx" */
-    borg_skill[BI_CLEVEL] = borg_skill[BI_CLEVEL] = p_ptr->lev;
+    borg_skill[BI_CLEVEL] = borg_skill[BI_CLEVEL] = player->lev;
 
     /* cheat the max clevel */
-    borg_skill[BI_MAXCLEVEL] = p_ptr->max_lev;
+    borg_skill[BI_MAXCLEVEL] = player->max_lev;
 
     /* Note "Winner" */
-    borg_skill[BI_KING] = p_ptr->total_winner;
+    borg_skill[BI_KING] = player->total_winner;
 
     /* Assume experience is fine */
-    borg_skill[BI_ISFIXEXP] = FALSE;
+    borg_skill[BI_ISFIXEXP] = false;
 
     /* Note "Exp" vs "EXP" and am I lower than level 50*/
-    if (p_ptr->exp < p_ptr->max_exp)
+    if (player->exp < player->max_exp)
 	{
 		/* fix it if in town */
-		if (borg_skill[BI_CLEVEL] == 50 && borg_skill[BI_CDEPTH] == 0) borg_skill[BI_ISFIXEXP] = TRUE;
+		if (borg_skill[BI_CLEVEL] == 50 && borg_skill[BI_CDEPTH] == 0) borg_skill[BI_ISFIXEXP] = true;
 
 		/* dont worry about fixing it in the dungeon */
-		if (borg_skill[BI_CLEVEL] == 50 && borg_skill[BI_CDEPTH] >=1) borg_skill[BI_ISFIXEXP] = FALSE;
+		if (borg_skill[BI_CLEVEL] == 50 && borg_skill[BI_CDEPTH] >=1) borg_skill[BI_ISFIXEXP] = false;
 
 		/* Not at Max Level */
-		if (borg_skill[BI_CLEVEL] != 50) borg_skill[BI_ISFIXEXP] = TRUE;
+		if (borg_skill[BI_CLEVEL] != 50) borg_skill[BI_ISFIXEXP] = true;
 	}
 
     /* Extract "EXP xxxxxxxx" */
-    borg_exp = p_ptr->exp;
+    borg_exp = player->exp;
 
 
     /* Extract "AU xxxxxxxxx" */
-    borg_gold = p_ptr->au;
+    borg_gold = player->au;
 
 
     /* Extract "Fast (+x)" or "Slow (-x)" */
@@ -2020,121 +2019,114 @@ void borg_update_frame(void)
 
 
 	/* A quick cheat to see if I missed a message about my status on some timed spells */
-    if (!goal_recalling && p_ptr->word_recall ) goal_recalling = TRUE;
-    if (!borg_prot_from_evil && p_ptr->timed[TMD_PROTEVIL]) borg_prot_from_evil = (p_ptr->timed[TMD_PROTEVIL] ? TRUE : FALSE);
-	if (!borg_speed && (p_ptr->timed[TMD_FAST] || p_ptr->timed[TMD_SPRINT] || p_ptr->timed[TMD_TERROR])) 
-		(borg_speed = (p_ptr->timed[TMD_FAST] || p_ptr->timed[TMD_SPRINT] || p_ptr->timed[TMD_TERROR]) ? TRUE : FALSE);
-    borg_skill[BI_TRACID] = (p_ptr->timed[TMD_OPP_ACID] ? TRUE : FALSE);
-    borg_skill[BI_TRELEC] = (p_ptr->timed[TMD_OPP_ELEC] ? TRUE : FALSE);
-    borg_skill[BI_TRFIRE] = (p_ptr->timed[TMD_OPP_FIRE] ? TRUE : FALSE);
-    borg_skill[BI_TRCOLD] = (p_ptr->timed[TMD_OPP_COLD] ? TRUE : FALSE);
-    borg_skill[BI_TRPOIS] = (p_ptr->timed[TMD_OPP_POIS] ? TRUE : FALSE);
-    borg_bless = (p_ptr->timed[TMD_BLESSED] ? TRUE : FALSE);
-    borg_shield = (p_ptr->timed[TMD_SHIELD] ? TRUE : FALSE);
-    borg_stone = (p_ptr->timed[TMD_STONESKIN] ? TRUE : FALSE);
-    borg_hero = (p_ptr->timed[TMD_HERO] ? TRUE : FALSE);
-    borg_berserk = (p_ptr->timed[TMD_SHERO] ? TRUE : FALSE);
+    if (!goal_recalling && player->word_recall ) goal_recalling = true;
+    if (!borg_prot_from_evil && player->timed[TMD_PROTEVIL]) borg_prot_from_evil = (player->timed[TMD_PROTEVIL] ? true : false);
+	if (!borg_speed && (player->timed[TMD_FAST] || player->timed[TMD_SPRINT] || player->timed[TMD_TERROR])) 
+		(borg_speed = (player->timed[TMD_FAST] || player->timed[TMD_SPRINT] || player->timed[TMD_TERROR]) ? true : false);
+    borg_skill[BI_TRACID] = (player->timed[TMD_OPP_ACID] ? true : false);
+    borg_skill[BI_TRELEC] = (player->timed[TMD_OPP_ELEC] ? true : false);
+    borg_skill[BI_TRFIRE] = (player->timed[TMD_OPP_FIRE] ? true : false);
+    borg_skill[BI_TRCOLD] = (player->timed[TMD_OPP_COLD] ? true : false);
+    borg_skill[BI_TRPOIS] = (player->timed[TMD_OPP_POIS] ? true : false);
+    borg_bless = (player->timed[TMD_BLESSED] ? true : false);
+    borg_shield = (player->timed[TMD_SHIELD] ? true : false);
+    borg_stone = (player->timed[TMD_STONE_SKIN] ? true : false);
+    borg_hero = (player->timed[TMD_HERO] ? true : false);
+    borg_berserk = (player->timed[TMD_SHERO] ? true : false);
 
 	/* if hasting, it doesn't count as 'borg_speed'.  The speed */
     /* gained from hasting is counted seperately. */
     if (borg_speed)
 	{
-        if (p_ptr->timed[TMD_FAST] || p_ptr->timed[TMD_SPRINT]) borg_skill[BI_SPEED] -= 10;
-		else if (p_ptr->timed[TMD_TERROR]) borg_skill[BI_SPEED] -=5;
+        if (player->timed[TMD_FAST] || player->timed[TMD_SPRINT]) borg_skill[BI_SPEED] -= 10;
+		else if (player->timed[TMD_TERROR]) borg_skill[BI_SPEED] -=5;
 	}
 
     /* Extract "Cur AC xxxxx" */
-    borg_skill[BI_ARMOR] = state->dis_ac + state->dis_to_a;
+    borg_skill[BI_ARMOR] = state->ac + state->to_a;
 
     /* Extract "Cur HP xxxxx" */
-    borg_skill[BI_CURHP] = p_ptr->chp;
+    borg_skill[BI_CURHP] = player->chp;
 
     /* Extract "Max HP xxxxx" */
-    borg_skill[BI_MAXHP] = p_ptr->mhp;
+    borg_skill[BI_MAXHP] = player->mhp;
 
     /* Extract "Cur SP xxxxx" (or zero) */
-    borg_skill[BI_CURSP] = p_ptr->csp;
+    borg_skill[BI_CURSP] = 0;
 
     /* Extract "Max SP xxxxx" (or zero) */
-    borg_skill[BI_MAXSP] = p_ptr->msp;
+    borg_skill[BI_MAXSP] = 0;
 
     /* Clear all the "state flags" */
-    borg_skill[BI_ISWEAK] = borg_skill[BI_ISHUNGRY] = borg_skill[BI_ISFULL] = borg_skill[BI_ISGORGED] = FALSE;
-    borg_skill[BI_ISBLIND] = borg_skill[BI_ISCONFUSED] = borg_skill[BI_ISAFRAID] = borg_skill[BI_ISPOISONED] = FALSE;
-    borg_skill[BI_ISCUT] = borg_skill[BI_ISSTUN] = borg_skill[BI_ISHEAVYSTUN] = borg_skill[BI_ISIMAGE] = borg_skill[BI_ISSTUDY] = FALSE;
-    borg_skill[BI_ISSEARCHING] = FALSE;
-	borg_skill[BI_ISPARALYZED] = FALSE;
-	borg_skill[BI_ISFORGET] = FALSE;
+    borg_skill[BI_ISWEAK] = borg_skill[BI_ISHUNGRY] = borg_skill[BI_ISFULL] = borg_skill[BI_ISGORGED] = false;
+    borg_skill[BI_ISBLIND] = borg_skill[BI_ISCONFUSED] = borg_skill[BI_ISAFRAID] = borg_skill[BI_ISPOISONED] = false;
+    borg_skill[BI_ISCUT] = borg_skill[BI_ISSTUN] = borg_skill[BI_ISHEAVYSTUN] = borg_skill[BI_ISIMAGE] = borg_skill[BI_ISSTUDY] = false;
+    borg_skill[BI_ISSEARCHING] = false;
+	borg_skill[BI_ISPARALYZED] = false;
+	borg_skill[BI_ISFORGET] = false;
 
     /* Check for "Weak" */
-    if (p_ptr->food < PY_FOOD_WEAK) borg_skill[BI_ISWEAK] = borg_skill[BI_ISHUNGRY] = TRUE;
+    if (player->food < PY_FOOD_WEAK) borg_skill[BI_ISWEAK] = borg_skill[BI_ISHUNGRY] = true;
 
     /* Check for "Hungry" */
-    else if (p_ptr->food < PY_FOOD_ALERT) borg_skill[BI_ISHUNGRY] = TRUE;
+    else if (player->food < PY_FOOD_HUNGRY) borg_skill[BI_ISHUNGRY] = true;
 
     /* Check for "Normal" */
-    else if (p_ptr->food < PY_FOOD_FULL) /* Nothing */;
+    else if (player->food < PY_FOOD_FULL) /* Nothing */;
 
     /* Check for "Full" */
-    else if (p_ptr->food < PY_FOOD_MAX) borg_skill[BI_ISFULL] = TRUE;
+    else if (player->food < PY_FOOD_MAX) borg_skill[BI_ISFULL] = true;
 
     /* Check for "Gorged" */
-    else borg_skill[BI_ISGORGED] = borg_skill[BI_ISFULL] = TRUE;
+    else borg_skill[BI_ISGORGED] = borg_skill[BI_ISFULL] = true;
 
     /* Check for "Blind" */
-    if (p_ptr->timed[TMD_BLIND]) borg_skill[BI_ISBLIND] = TRUE;
+    if (player->timed[TMD_BLIND]) borg_skill[BI_ISBLIND] = true;
 
     /* Check for "Confused" */
-    if (p_ptr->timed[TMD_CONFUSED]) borg_skill[BI_ISCONFUSED] = TRUE;
+    if (player->timed[TMD_CONFUSED]) borg_skill[BI_ISCONFUSED] = true;
 
     /* Check for "Afraid" */
-	if (p_ptr->timed[TMD_AFRAID]) borg_skill[BI_ISAFRAID] = TRUE;
+	if (player->timed[TMD_AFRAID]) borg_skill[BI_ISAFRAID] = true;
 
     /* Check for "Poisoned" */
-    if (p_ptr->timed[TMD_POISONED]) borg_skill[BI_ISPOISONED] = TRUE;
+    if (player->timed[TMD_POISONED]) borg_skill[BI_ISPOISONED] = true;
 
     /* Check for any text */
-    if (p_ptr->timed[TMD_CUT]) borg_skill[BI_ISCUT] = TRUE;
+    if (player->timed[TMD_CUT]) borg_skill[BI_ISCUT] = true;
 
     /* Check for Stun */
-    if (p_ptr->timed[TMD_STUN] && (p_ptr->timed[TMD_STUN] <= 50)) borg_skill[BI_ISSTUN] = TRUE;
+    if (player->timed[TMD_STUN] && (player->timed[TMD_STUN] <= 50)) borg_skill[BI_ISSTUN] = true;
 
     /* Check for Heavy Stun */
-    if (p_ptr->timed[TMD_STUN] > 50) borg_skill[BI_ISHEAVYSTUN] = TRUE;
+    if (player->timed[TMD_STUN] > 50) borg_skill[BI_ISHEAVYSTUN] = true;
 
     /* Check for Paralyze */
-    if (p_ptr->timed[TMD_PARALYZED] > 50) borg_skill[BI_ISPARALYZED] = TRUE;
+    if (player->timed[TMD_PARALYZED] > 50) borg_skill[BI_ISPARALYZED] = true;
 
     /* Check for "Hallucinating" */
-    if (p_ptr->timed[TMD_IMAGE]) borg_skill[BI_ISIMAGE] = TRUE;
+    if (player->timed[TMD_IMAGE]) borg_skill[BI_ISIMAGE] = true;
 
     /* Check for "Amnesia" */
-    if (p_ptr->timed[TMD_AMNESIA]) borg_skill[BI_ISFORGET] = TRUE;
+    if (player->timed[TMD_AMNESIA]) borg_skill[BI_ISFORGET] = true;
 
 	/* Check to "Bless" */
-	borg_bless = (p_ptr->timed[TMD_BLESSED] ? TRUE : FALSE);
-
-    /* Check for Searching mode */
-    if (p_ptr->searching) borg_skill[BI_ISSEARCHING] = TRUE;
-
-    /* Check for "Study" */
-    if (p_ptr->new_spells) borg_skill[BI_ISSTUDY] = TRUE;
-
+	borg_bless = (player->timed[TMD_BLESSED] ? true : false);
 
     /* Parse stats */
     for (i = 0; i < 6; i++)
     {
-        borg_skill[BI_ISFIXSTR+i] = p_ptr->stat_cur[A_STR+i] < p_ptr->stat_max[A_STR+i];
-        borg_skill[BI_CSTR+i] = p_ptr->stat_cur[A_STR+i];
-        borg_stat[i] = p_ptr->stat_cur[i];
+        borg_skill[BI_ISFIXSTR+i] = player->stat_cur[STAT_STR+i] < player->stat_max[STAT_STR+i];
+        borg_skill[BI_CSTR+i] = player->stat_cur[STAT_STR+i];
+        borg_stat[i] = player->stat_cur[i];
 
     }
 
     /* Hack -- Access max depth */
-    borg_skill[BI_CDEPTH] = p_ptr->depth;
+    borg_skill[BI_CDEPTH] = player->depth;
 
     /* Hack -- Access max depth */
-    borg_skill[BI_MAXDEPTH] = p_ptr->max_depth;
+    borg_skill[BI_MAXDEPTH] = player->max_depth;
 
 }
 
@@ -2516,7 +2508,7 @@ void borg_sort_aux(void *u, void *v, int p, int q)
     b = q;
 
     /* Partition */
-    while (TRUE)
+    while (true)
     {
         /* Slide i2 */
         while (!(*borg_sort_comp)(u, v, b, z)) b--;
@@ -2573,10 +2565,10 @@ bool borg_sort_comp_hook(void *u, void *v, int a, int b)
     cmp = (strcmp(text[a], text[b]));
 
     /* Strictly less */
-    if (cmp < 0) return (TRUE);
+    if (cmp < 0) return (true);
 
     /* Strictly more */
-    if (cmp > 0) return (FALSE);
+    if (cmp > 0) return (false);
 
     /* Enforce "stable" sort */
     return (what[a] <= what[b]);
@@ -2742,13 +2734,13 @@ if (!borg_rand_local)
     /* Scan the objects */
     for (i = 0; i < z_info->k_max; i++)
     {
-        object_kind *k_ptr = &k_info[i];
+        struct object_kind *k_ptr = &k_info[i];
 
         /* Skip non-items */
         if (!k_ptr->name) continue;
 
         /* Notice this object */
-        borg_is_take[(byte)(k_ptr->d_char)] = TRUE;
+        borg_is_take[(byte)(k_ptr->d_char)] = true;
     }
 
     /*** Monster tracking ***/
@@ -2763,13 +2755,13 @@ if (!borg_rand_local)
     /* Scan the monsters */
     for (i = 1; i < z_info->r_max-1; i++)
     {
-        monster_race *r_ptr = &r_info[i];
+        struct monster_race *r_ptr = &r_info[i];
 
         /* Skip non-monsters */
         if (!r_ptr->name) continue;
 
 		/* Notice this monster */
-        borg_is_kill[(byte)(r_ptr->d_char)] = TRUE;
+        borg_is_kill[(byte)(r_ptr->d_char)] = true;
     }
 
 
@@ -2787,7 +2779,7 @@ if (!borg_rand_local)
     /* Hack -- Extract dead uniques */
     for (i = 1; i < z_info->r_max-1; i++)
     {
-        monster_race *r_ptr = &r_info[i];
+        struct monster_race *r_ptr = &r_info[i];
 
         /* Skip non-monsters */
         if (!r_ptr->name) continue;

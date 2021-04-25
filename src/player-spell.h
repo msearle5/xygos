@@ -34,3 +34,5 @@ extern bool spell_needs_aim(int spell_index);
 extern expression_base_value_f spell_value_base_by_name(const char *name);
 extern int spell_collect_from_book(int **spells);
 size_t append_random_value_string(char *buffer, size_t size, const random_value *rv);
+extern const int adj_mag_stat[STAT_RANGE];
+extern const int adj_mag_fail[STAT_RANGE] ;

@@ -2,9 +2,8 @@
 /*  Purpose: Notice and Power code for the Borg -BEN- */
 
 #include "angband.h"
-#include "object/tvalsval.h"
 #include "cave.h"
-#include "files.h"
+#include "z-file.h"
 
 #include "borg1.h"
 #include "borg2.h"
@@ -110,7 +109,7 @@ static int borg_bonus_activation(int i, bool ultility)
 		value +=(500+(200));
 		borg_skill[BI_NSRANGED] ++;
 		/* extra boost for speed (if this is Ringil) */
-		if (!op_ptr->opt[OPT_birth_randarts])
+		if (!OPT(player,birth_randarts)
 			value +=25000L;
 		break;
 
@@ -275,7 +274,7 @@ static int borg_bonus_activation(int i, bool ultility)
 		case EFF_FIREBRAND:
 		value +=(500+(300));
 		/* extra boost for speed */
-		if (!op_ptr->opt[OPT_birth_randarts])
+		if (!OPT(player,birth_randarts)
 			value +=25000L;
 		break;
 
@@ -421,8 +420,8 @@ static int borg_bonus_activation(int i, bool ultility)
 static void borg_notice_aux1(void)
 {
     int         i, hold;
-    const struct player_race *rb_ptr = p_ptr->race;
-    const struct player_class *cb_ptr = p_ptr->class;
+    const struct player_race *rb_ptr = player->race;
+    const struct player_class *cb_ptr = player->class;
 
     int         extra_blows = 0;
 
@@ -491,59 +490,59 @@ static void borg_notice_aux1(void)
     player_flags(f);
 
     /* Good flags */
-    if (rf_has(f, OF_SLOW_DIGEST)) borg_skill[BI_SDIG] = TRUE;
-    if (rf_has(f, OF_FEATHER)) borg_skill[BI_FEATH] = TRUE;
-    if (rf_has(f, OF_REGEN)) borg_skill[BI_REG] = TRUE;
-    if (rf_has(f, OF_TELEPATHY)) borg_skill[BI_ESP] = TRUE;
-    if (rf_has(f, OF_SEE_INVIS)) borg_skill[BI_SINV] = TRUE;
-    if (rf_has(f, OF_FREE_ACT)) borg_skill[BI_FRACT] = TRUE;
-    if (rf_has(f, OF_HOLD_LIFE)) borg_skill[BI_HLIFE] = TRUE;
+    if (rf_has(f, OF_SLOW_DIGEST)) borg_skill[BI_SDIG] = true;
+    if (rf_has(f, OF_FEATHER)) borg_skill[BI_FEATH] = true;
+    if (rf_has(f, OF_REGEN)) borg_skill[BI_REG] = true;
+    if (rf_has(f, OF_TELEPATHY)) borg_skill[BI_ESP] = true;
+    if (rf_has(f, OF_SEE_INVIS)) borg_skill[BI_SINV] = true;
+    if (rf_has(f, OF_FREE_ACT)) borg_skill[BI_FRACT] = true;
+    if (rf_has(f, OF_HOLD_LIFE)) borg_skill[BI_HLIFE] = true;
 
     /* Weird flags */
 
     /* Bad flags */
-    if (rf_has(f, OF_IMPACT)) borg_skill[BI_W_IMPACT] = TRUE;
-    if (rf_has(f, OF_AGGRAVATE)) borg_skill[BI_CRSAGRV] = TRUE;
-    if (rf_has(f, OF_TELEPORT)) borg_skill[BI_CRSTELE] = TRUE;
-	if (rf_has(f, OF_IMPAIR_HP)) borg_skill[BI_CRSHPIMP] = TRUE;
-	if (rf_has(f, OF_IMPAIR_MANA)) borg_skill[BI_CRSMPIMP] = TRUE;
-	if (rf_has(f, OF_AFRAID)) borg_skill[BI_CRSFEAR] = TRUE;
-	if (rf_has(f, OF_VULN_FIRE)) borg_skill[BI_CRSFVULN] = TRUE;
-	if (rf_has(f, OF_VULN_ACID)) borg_skill[BI_CRSAVULN] = TRUE;
-	if (rf_has(f, OF_VULN_COLD)) borg_skill[BI_CRSCVULN] = TRUE;
-	if (rf_has(f, OF_VULN_ELEC)) borg_skill[BI_CRSEVULN] = TRUE;
+    if (rf_has(f, OF_IMPACT)) borg_skill[BI_W_IMPACT] = true;
+    if (rf_has(f, OF_AGGRAVATE)) borg_skill[BI_CRSAGRV] = true;
+    if (rf_has(f, OF_TELEPORT)) borg_skill[BI_CRSTELE] = true;
+	if (rf_has(f, OF_IMPAIR_HP)) borg_skill[BI_CRSHPIMP] = true;
+	if (rf_has(f, OF_IMPAIR_MANA)) borg_skill[BI_CRSMPIMP] = true;
+	if (rf_has(f, OF_AFRAID)) borg_skill[BI_CRSFEAR] = true;
+	if (rf_has(f, OF_VULN_FIRE)) borg_skill[BI_CRSFVULN] = true;
+	if (rf_has(f, OF_VULN_ACID)) borg_skill[BI_CRSAVULN] = true;
+	if (rf_has(f, OF_VULN_COLD)) borg_skill[BI_CRSCVULN] = true;
+	if (rf_has(f, OF_VULN_ELEC)) borg_skill[BI_CRSEVULN] = true;
 
     /* Immunity flags */
-    if (rf_has(f, OF_IM_FIRE)) borg_skill[BI_IFIRE] = TRUE;
-    if (rf_has(f, OF_IM_ACID)) borg_skill[BI_IACID] = TRUE;
-    if (rf_has(f, OF_IM_COLD)) borg_skill[BI_ICOLD] = TRUE;
-    if (rf_has(f, OF_IM_ELEC)) borg_skill[BI_IELEC] = TRUE;
+    if (rf_has(f, OF_IM_FIRE)) borg_skill[BI_IFIRE] = true;
+    if (rf_has(f, OF_IM_ACID)) borg_skill[BI_IACID] = true;
+    if (rf_has(f, OF_IM_COLD)) borg_skill[BI_ICOLD] = true;
+    if (rf_has(f, OF_IM_ELEC)) borg_skill[BI_IELEC] = true;
 
     /* Resistance flags */
-    if (rf_has(f, OF_RES_ACID)) borg_skill[BI_RACID] = TRUE;
-    if (rf_has(f, OF_RES_ELEC)) borg_skill[BI_RELEC] = TRUE;
-    if (rf_has(f, OF_RES_FIRE)) borg_skill[BI_RFIRE] = TRUE;
-    if (rf_has(f, OF_RES_COLD)) borg_skill[BI_RCOLD] = TRUE;
-    if (rf_has(f, OF_RES_POIS)) borg_skill[BI_RPOIS] = TRUE;
-    if (rf_has(f, OF_RES_FEAR)) borg_skill[BI_RFEAR] = TRUE;
-    if (rf_has(f, OF_RES_LIGHT)) borg_skill[BI_RLITE] = TRUE;
-    if (rf_has(f, OF_RES_DARK)) borg_skill[BI_RDARK] = TRUE;
-    if (rf_has(f, OF_RES_BLIND)) borg_skill[BI_RBLIND] = TRUE;
-    if (rf_has(f, OF_RES_CONFU)) borg_skill[BI_RCONF] = TRUE;
-    if (rf_has(f, OF_RES_SOUND)) borg_skill[BI_RSND] = TRUE;
-    if (rf_has(f, OF_RES_SHARD)) borg_skill[BI_RSHRD] = TRUE;
-    if (rf_has(f, OF_RES_NEXUS)) borg_skill[BI_RNXUS] = TRUE;
-    if (rf_has(f, OF_RES_NETHR)) borg_skill[BI_RNTHR] = TRUE;
-    if (rf_has(f, OF_RES_CHAOS)) borg_skill[BI_RKAOS] = TRUE;
-    if (rf_has(f, OF_RES_DISEN)) borg_skill[BI_RDIS] = TRUE;
+    if (rf_has(f, OF_RES_ACID)) borg_skill[BI_RACID] = true;
+    if (rf_has(f, OF_RES_ELEC)) borg_skill[BI_RELEC] = true;
+    if (rf_has(f, OF_RES_FIRE)) borg_skill[BI_RFIRE] = true;
+    if (rf_has(f, OF_RES_COLD)) borg_skill[BI_RCOLD] = true;
+    if (rf_has(f, OF_RES_POIS)) borg_skill[BI_RPOIS] = true;
+    if (rf_has(f, OF_RES_FEAR)) borg_skill[BI_RFEAR] = true;
+    if (rf_has(f, OF_RES_LIGHT)) borg_skill[BI_RLITE] = true;
+    if (rf_has(f, OF_RES_DARK)) borg_skill[BI_RDARK] = true;
+    if (rf_has(f, OF_RES_BLIND)) borg_skill[BI_RBLIND] = true;
+    if (rf_has(f, OF_RES_CONFU)) borg_skill[BI_RCONF] = true;
+    if (rf_has(f, OF_RES_SOUND)) borg_skill[BI_RSND] = true;
+    if (rf_has(f, OF_RES_SHARD)) borg_skill[BI_RSHRD] = true;
+    if (rf_has(f, OF_RES_NEXUS)) borg_skill[BI_RNXUS] = true;
+    if (rf_has(f, OF_RES_NETHR)) borg_skill[BI_RNTHR] = true;
+    if (rf_has(f, OF_RES_CHAOS)) borg_skill[BI_RKAOS] = true;
+    if (rf_has(f, OF_RES_DISEN)) borg_skill[BI_RDIS] = true;
 
     /* Sustain flags */
-    if (rf_has(f, OF_SUST_STR)) borg_skill[BI_SSTR] = TRUE;
-    if (rf_has(f, OF_SUST_INT)) borg_skill[BI_SINT] = TRUE;
-    if (rf_has(f, OF_SUST_WIS)) borg_skill[BI_SWIS] = TRUE;
-    if (rf_has(f, OF_SUST_DEX)) borg_skill[BI_SDEX] = TRUE;
-    if (rf_has(f, OF_SUST_CON)) borg_skill[BI_SCON] = TRUE;
-    if (rf_has(f, OF_SUST_CHR)) borg_skill[BI_SCHR] = TRUE;
+    if (rf_has(f, OF_SUST_STR)) borg_skill[BI_SSTR] = true;
+    if (rf_has(f, OF_SUST_INT)) borg_skill[BI_SINT] = true;
+    if (rf_has(f, OF_SUST_WIS)) borg_skill[BI_SWIS] = true;
+    if (rf_has(f, OF_SUST_DEX)) borg_skill[BI_SDEX] = true;
+    if (rf_has(f, OF_SUST_CON)) borg_skill[BI_SCON] = true;
+    if (rf_has(f, OF_SUST_CHR)) borg_skill[BI_SCHR] = true;
 
 	/* I am pretty sure the CF_flags will be caught by the
 	 * code above when the player flags are checked
@@ -574,31 +573,31 @@ static void borg_notice_aux1(void)
             borg_artifact[item->name1] = item->iqty;
 
         /* Affect stats */
-        if (of_has(item->flags, OF_STR)) my_stat_add[A_STR] += item->pval;
-        if (of_has(item->flags, OF_INT)) my_stat_add[A_INT] += item->pval;
-        if (of_has(item->flags, OF_WIS)) my_stat_add[A_WIS] += item->pval;
-        if (of_has(item->flags, OF_DEX)) my_stat_add[A_DEX] += item->pval;
+        if (of_has(item->flags, OF_STR)) my_stat_add[STAT_STR] += item->pval;
+        if (of_has(item->flags, OF_INT)) my_stat_add[STAT_INT] += item->pval;
+        if (of_has(item->flags, OF_WIS)) my_stat_add[STAT_WIS] += item->pval;
+        if (of_has(item->flags, OF_DEX)) my_stat_add[STAT_DEX] += item->pval;
         if (of_has(item->flags, OF_CON)) my_stat_add[A_CON] += item->pval;
-        if (of_has(item->flags, OF_CHR)) my_stat_add[A_CHR] += item->pval;
+        if (of_has(item->flags, OF_CHR)) my_stat_add[STAT_CHR] += item->pval;
 
         /* various slays */
-        if (of_has(item->flags, OF_SLAY_ANIMAL)) borg_skill[BI_WS_ANIMAL] = TRUE;
-        if (of_has(item->flags, OF_SLAY_EVIL))   borg_skill[BI_WS_EVIL] = TRUE;
-        if (of_has(item->flags, OF_SLAY_UNDEAD)) borg_skill[BI_WS_UNDEAD] = TRUE;
-        if (of_has(item->flags, OF_SLAY_DEMON))  borg_skill[BI_WS_DEMON] = TRUE;
-        if (of_has(item->flags, OF_SLAY_ORC))    borg_skill[BI_WS_ORC] = TRUE;
-        if (of_has(item->flags, OF_SLAY_TROLL))  borg_skill[BI_WS_TROLL] = TRUE;
-        if (of_has(item->flags, OF_SLAY_GIANT))  borg_skill[BI_WS_GIANT] = TRUE;
-        if (of_has(item->flags, OF_SLAY_DRAGON)) borg_skill[BI_WS_DRAGON] = TRUE;
-        if (of_has(item->flags, OF_KILL_UNDEAD)) borg_skill[BI_WK_UNDEAD] = TRUE;
-        if (of_has(item->flags, OF_KILL_DEMON))  borg_skill[BI_WK_DEMON] = TRUE;
-        if (of_has(item->flags, OF_KILL_DRAGON)) borg_skill[BI_WK_DRAGON] = TRUE;
-        if (of_has(item->flags, OF_IMPACT))      borg_skill[BI_W_IMPACT] = TRUE;
-        if (of_has(item->flags, OF_BRAND_ACID))  borg_skill[BI_WB_ACID] = TRUE;
-        if (of_has(item->flags, OF_BRAND_ELEC))  borg_skill[BI_WB_ELEC] = TRUE;
-        if (of_has(item->flags, OF_BRAND_FIRE))  borg_skill[BI_WB_FIRE] = TRUE;
-        if (of_has(item->flags, OF_BRAND_COLD))  borg_skill[BI_WB_COLD] = TRUE;
-        if (of_has(item->flags, OF_BRAND_POIS))  borg_skill[BI_WB_POIS] = TRUE;
+        if (of_has(item->flags, OF_SLAY_ANIMAL)) borg_skill[BI_WS_ANIMAL] = true;
+        if (of_has(item->flags, OF_SLAY_EVIL))   borg_skill[BI_WS_EVIL] = true;
+        if (of_has(item->flags, OF_SLAY_UNDEAD)) borg_skill[BI_WS_UNDEAD] = true;
+        if (of_has(item->flags, OF_SLAY_DEMON))  borg_skill[BI_WS_DEMON] = true;
+        if (of_has(item->flags, OF_SLAY_ORC))    borg_skill[BI_WS_ORC] = true;
+        if (of_has(item->flags, OF_SLAY_TROLL))  borg_skill[BI_WS_TROLL] = true;
+        if (of_has(item->flags, OF_SLAY_GIANT))  borg_skill[BI_WS_GIANT] = true;
+        if (of_has(item->flags, OF_SLAY_DRAGON)) borg_skill[BI_WS_DRAGON] = true;
+        if (of_has(item->flags, OF_KILL_UNDEAD)) borg_skill[BI_WK_UNDEAD] = true;
+        if (of_has(item->flags, OF_KILL_DEMON))  borg_skill[BI_WK_DEMON] = true;
+        if (of_has(item->flags, OF_KILL_DRAGON)) borg_skill[BI_WK_DRAGON] = true;
+        if (of_has(item->flags, OF_IMPACT))      borg_skill[BI_W_IMPACT] = true;
+        if (of_has(item->flags, OF_BRAND_ACID))  borg_skill[BI_WB_ACID] = true;
+        if (of_has(item->flags, OF_BRAND_ELEC))  borg_skill[BI_WB_ELEC] = true;
+        if (of_has(item->flags, OF_BRAND_FIRE))  borg_skill[BI_WB_FIRE] = true;
+        if (of_has(item->flags, OF_BRAND_COLD))  borg_skill[BI_WB_COLD] = true;
+        if (of_has(item->flags, OF_BRAND_POIS))  borg_skill[BI_WB_POIS] = true;
 
         /* Affect infravision */
         if (of_has(item->flags, OF_INFRA)) borg_skill[BI_INFRA] += item->pval;
@@ -628,24 +627,24 @@ static void borg_notice_aux1(void)
         if (of_has(item->flags, OF_MIGHT)) extra_might++;
 
         /* Various flags */
-        if (of_has(item->flags, OF_SLOW_DIGEST)) borg_skill[BI_SDIG] = TRUE;
-        if (of_has(item->flags, OF_AGGRAVATE)) borg_skill[BI_CRSAGRV] = TRUE;
-        if (of_has(item->flags, OF_TELEPORT)) borg_skill[BI_CRSTELE] = TRUE;
-		if (of_has(item->flags, OF_IMPAIR_HP)) borg_skill[BI_CRSHPIMP] = TRUE;
-		if (of_has(item->flags, OF_IMPAIR_MANA)) borg_skill[BI_CRSMPIMP] = TRUE;
-		if (of_has(item->flags, OF_AFRAID)) borg_skill[BI_CRSFEAR] = TRUE;
-		if (of_has(item->flags, OF_VULN_FIRE)) borg_skill[BI_CRSFVULN] = TRUE;
-		if (of_has(item->flags, OF_VULN_ACID)) borg_skill[BI_CRSAVULN] = TRUE;
-		if (of_has(item->flags, OF_VULN_COLD)) borg_skill[BI_CRSCVULN] = TRUE;
-		if (of_has(item->flags, OF_VULN_ELEC)) borg_skill[BI_CRSEVULN] = TRUE;
+        if (of_has(item->flags, OF_SLOW_DIGEST)) borg_skill[BI_SDIG] = true;
+        if (of_has(item->flags, OF_AGGRAVATE)) borg_skill[BI_CRSAGRV] = true;
+        if (of_has(item->flags, OF_TELEPORT)) borg_skill[BI_CRSTELE] = true;
+		if (of_has(item->flags, OF_IMPAIR_HP)) borg_skill[BI_CRSHPIMP] = true;
+		if (of_has(item->flags, OF_IMPAIR_MANA)) borg_skill[BI_CRSMPIMP] = true;
+		if (of_has(item->flags, OF_AFRAID)) borg_skill[BI_CRSFEAR] = true;
+		if (of_has(item->flags, OF_VULN_FIRE)) borg_skill[BI_CRSFVULN] = true;
+		if (of_has(item->flags, OF_VULN_ACID)) borg_skill[BI_CRSAVULN] = true;
+		if (of_has(item->flags, OF_VULN_COLD)) borg_skill[BI_CRSCVULN] = true;
+		if (of_has(item->flags, OF_VULN_ELEC)) borg_skill[BI_CRSEVULN] = true;
 
 
-        if (of_has(item->flags, OF_REGEN)) borg_skill[BI_REG] = TRUE;
-        if (of_has(item->flags, OF_TELEPATHY)) borg_skill[BI_ESP] = TRUE;
-        if (of_has(item->flags, OF_SEE_INVIS)) borg_skill[BI_SINV] = TRUE;
-        if (of_has(item->flags, OF_FEATHER)) borg_skill[BI_FEATH] = TRUE;
-        if (of_has(item->flags, OF_FREE_ACT)) borg_skill[BI_FRACT] = TRUE;
-        if (of_has(item->flags, OF_HOLD_LIFE)) borg_skill[BI_HLIFE] = TRUE;
+        if (of_has(item->flags, OF_REGEN)) borg_skill[BI_REG] = true;
+        if (of_has(item->flags, OF_TELEPATHY)) borg_skill[BI_ESP] = true;
+        if (of_has(item->flags, OF_SEE_INVIS)) borg_skill[BI_SINV] = true;
+        if (of_has(item->flags, OF_FEATHER)) borg_skill[BI_FEATH] = true;
+        if (of_has(item->flags, OF_FREE_ACT)) borg_skill[BI_FRACT] = true;
+        if (of_has(item->flags, OF_HOLD_LIFE)) borg_skill[BI_HLIFE] = true;
 
 		/* Item makes player glow or has a light radius  */
 		if (of_has(item->flags, OF_LIGHT))
@@ -658,53 +657,53 @@ static void borg_notice_aux1(void)
         /* if you are immune you automaticly resist */
         if (of_has(item->flags, OF_IM_FIRE))
         {
-            borg_skill[BI_IFIRE] = TRUE;
-            borg_skill[BI_RFIRE] = TRUE;
-            borg_skill[BI_TRFIRE] = TRUE;
+            borg_skill[BI_IFIRE] = true;
+            borg_skill[BI_RFIRE] = true;
+            borg_skill[BI_TRFIRE] = true;
         }
         if (of_has(item->flags, OF_IM_ACID))
         {
-            borg_skill[BI_IACID] = TRUE;
-            borg_skill[BI_RACID] = TRUE;
-            borg_skill[BI_TRACID] = TRUE;
+            borg_skill[BI_IACID] = true;
+            borg_skill[BI_RACID] = true;
+            borg_skill[BI_TRACID] = true;
         }
         if (of_has(item->flags, OF_IM_COLD))
         {
-            borg_skill[BI_ICOLD] = TRUE;
-            borg_skill[BI_RCOLD] = TRUE;
-            borg_skill[BI_TRCOLD] = TRUE;
+            borg_skill[BI_ICOLD] = true;
+            borg_skill[BI_RCOLD] = true;
+            borg_skill[BI_TRCOLD] = true;
         }
         if (of_has(item->flags, OF_IM_ELEC))
         {
-            borg_skill[BI_IELEC] = TRUE;
-            borg_skill[BI_RELEC] = TRUE;
-            borg_skill[BI_TRELEC] = TRUE;
+            borg_skill[BI_IELEC] = true;
+            borg_skill[BI_RELEC] = true;
+            borg_skill[BI_TRELEC] = true;
         }
 
         /* Resistance flags */
-        if (of_has(item->flags, OF_RES_ACID)) borg_skill[BI_RACID] = TRUE;
-        if (of_has(item->flags, OF_RES_ELEC)) borg_skill[BI_RELEC] = TRUE;
-        if (of_has(item->flags, OF_RES_FIRE)) borg_skill[BI_RFIRE] = TRUE;
-        if (of_has(item->flags, OF_RES_COLD)) borg_skill[BI_RCOLD] = TRUE;
-        if (of_has(item->flags, OF_RES_POIS)) borg_skill[BI_RPOIS] = TRUE;
-        if (of_has(item->flags, OF_RES_CONFU)) borg_skill[BI_RCONF] = TRUE;
-        if (of_has(item->flags, OF_RES_SOUND)) borg_skill[BI_RSND] = TRUE;
-        if (of_has(item->flags, OF_RES_LIGHT)) borg_skill[BI_RLITE] = TRUE;
-        if (of_has(item->flags, OF_RES_DARK)) borg_skill[BI_RDARK] = TRUE;
-        if (of_has(item->flags, OF_RES_CHAOS)) borg_skill[BI_RKAOS] = TRUE;
-        if (of_has(item->flags, OF_RES_DISEN)) borg_skill[BI_RDIS] = TRUE;
-        if (of_has(item->flags, OF_RES_SHARD)) borg_skill[BI_RSHRD] = TRUE;
-        if (of_has(item->flags, OF_RES_NEXUS)) borg_skill[BI_RNXUS] = TRUE;
-        if (of_has(item->flags, OF_RES_BLIND)) borg_skill[BI_RBLIND] = TRUE;
-        if (of_has(item->flags, OF_RES_NETHR)) borg_skill[BI_RNTHR] = TRUE;
+        if (of_has(item->flags, OF_RES_ACID)) borg_skill[BI_RACID] = true;
+        if (of_has(item->flags, OF_RES_ELEC)) borg_skill[BI_RELEC] = true;
+        if (of_has(item->flags, OF_RES_FIRE)) borg_skill[BI_RFIRE] = true;
+        if (of_has(item->flags, OF_RES_COLD)) borg_skill[BI_RCOLD] = true;
+        if (of_has(item->flags, OF_RES_POIS)) borg_skill[BI_RPOIS] = true;
+        if (of_has(item->flags, OF_RES_CONFU)) borg_skill[BI_RCONF] = true;
+        if (of_has(item->flags, OF_RES_SOUND)) borg_skill[BI_RSND] = true;
+        if (of_has(item->flags, OF_RES_LIGHT)) borg_skill[BI_RLITE] = true;
+        if (of_has(item->flags, OF_RES_DARK)) borg_skill[BI_RDARK] = true;
+        if (of_has(item->flags, OF_RES_CHAOS)) borg_skill[BI_RKAOS] = true;
+        if (of_has(item->flags, OF_RES_DISEN)) borg_skill[BI_RDIS] = true;
+        if (of_has(item->flags, OF_RES_SHARD)) borg_skill[BI_RSHRD] = true;
+        if (of_has(item->flags, OF_RES_NEXUS)) borg_skill[BI_RNXUS] = true;
+        if (of_has(item->flags, OF_RES_BLIND)) borg_skill[BI_RBLIND] = true;
+        if (of_has(item->flags, OF_RES_NETHR)) borg_skill[BI_RNTHR] = true;
 
         /* Sustain flags */
-        if (of_has(item->flags, OF_SUST_STR)) borg_skill[BI_SSTR] = TRUE;
-        if (of_has(item->flags, OF_SUST_INT)) borg_skill[BI_SINT] = TRUE;
-        if (of_has(item->flags, OF_SUST_WIS)) borg_skill[BI_SWIS] = TRUE;
-        if (of_has(item->flags, OF_SUST_DEX)) borg_skill[BI_SDEX] = TRUE;
-        if (of_has(item->flags, OF_SUST_CON)) borg_skill[BI_SCON] = TRUE;
-        if (of_has(item->flags, OF_SUST_CHR)) borg_skill[BI_SCHR] = TRUE;
+        if (of_has(item->flags, OF_SUST_STR)) borg_skill[BI_SSTR] = true;
+        if (of_has(item->flags, OF_SUST_INT)) borg_skill[BI_SINT] = true;
+        if (of_has(item->flags, OF_SUST_WIS)) borg_skill[BI_SWIS] = true;
+        if (of_has(item->flags, OF_SUST_DEX)) borg_skill[BI_SDEX] = true;
+        if (of_has(item->flags, OF_SUST_CON)) borg_skill[BI_SCON] = true;
+        if (of_has(item->flags, OF_SUST_CHR)) borg_skill[BI_SCHR] = true;
 
 
         /* Hack -- Net-zero The borg will miss read acid damaged items such as
@@ -737,7 +736,7 @@ static void borg_notice_aux1(void)
     }
 
 	/* Some characters/races have special flags */
-	if (borg_class == CLASS_MAGE) borg_skill[BI_NO_MELEE] = TRUE;
+	if (borg_class == CLASS_MAGE) borg_skill[BI_NO_MELEE] = true;
 
     /* Update "stats" */
     for (i = 0; i < 6; i++)
@@ -746,10 +745,10 @@ static void borg_notice_aux1(void)
 
         add = my_stat_add[i];
 
-        if (op_ptr->opt[OPT_birth_maximize])
+        if (OPT(player,birth_maximize)
         {
             /* Modify the stats for race/class */
-            add += (p_ptr->race->r_adj[i] + p_ptr->class->c_adj[i]);
+            add += (player->race->r_adj[i] + player->class->c_adj[i]);
         }
         /* Extract the new "use_stat" value for the stat */
         use = modify_stat_value(my_stat_cur[i], add);
@@ -777,19 +776,19 @@ static void borg_notice_aux1(void)
 
 
     /* 'Mana' is actually the 'mana adjustment' */
-    if (p_ptr->class->spell_book == TV_PRAYER_BOOK)
+    if (player->class->spell_book == TV_PRAYER_BOOK)
     {
         borg_skill[BI_SP_ADJ] =
-            ((adj_mag_mana[my_stat_ind[A_WIS]] * borg_skill[BI_CLEVEL]) / 2);
-        borg_skill[BI_FAIL1] = adj_mag_stat[my_stat_ind[A_WIS]];
-        borg_skill[BI_FAIL2] = adj_mag_fail[my_stat_ind[A_WIS]];
+            ((adj_mag_mana[my_stat_ind[STAT_WIS]] * borg_skill[BI_CLEVEL]) / 2);
+        borg_skill[BI_FAIL1] = adj_mag_stat[my_stat_ind[STAT_WIS]];
+        borg_skill[BI_FAIL2] = adj_mag_fail[my_stat_ind[STAT_WIS]];
     }
-    if (p_ptr->class->spell_book == TV_MAGIC_BOOK)
+    if (player->class->spell_book == TV_MAGIC_BOOK)
     {
         borg_skill[BI_SP_ADJ] =
-            ((adj_mag_mana[my_stat_ind[A_INT]] * borg_skill[BI_CLEVEL]) / 2);
-        borg_skill[BI_FAIL1] = adj_mag_stat[my_stat_ind[A_INT]];
-        borg_skill[BI_FAIL2] = adj_mag_fail[my_stat_ind[A_INT]];
+            ((adj_mag_mana[my_stat_ind[STAT_INT]] * borg_skill[BI_CLEVEL]) / 2);
+        borg_skill[BI_FAIL1] = adj_mag_stat[my_stat_ind[STAT_INT]];
+        borg_skill[BI_FAIL2] = adj_mag_fail[my_stat_ind[STAT_INT]];
     }
 
 
@@ -798,14 +797,14 @@ static void borg_notice_aux1(void)
 
 
     /* Actual Modifier Bonuses (Un-inflate stat bonuses) */
-    borg_skill[BI_ARMOR] += ((int)(adj_dex_ta[my_stat_ind[A_DEX]]) - 128);
-    borg_skill[BI_TODAM] += ((int)(adj_str_td[my_stat_ind[A_STR]]) - 128);
-    borg_skill[BI_TOHIT] += ((int)(adj_dex_th[my_stat_ind[A_DEX]]) - 128);
-    borg_skill[BI_TOHIT] += ((int)(adj_str_th[my_stat_ind[A_STR]]) - 128);
+    borg_skill[BI_ARMOR] += ((int)(adj_dex_ta[my_stat_ind[STAT_DEX]]) - 128);
+    borg_skill[BI_TODAM] += ((int)(adj_str_td[my_stat_ind[STAT_STR]]) - 128);
+    borg_skill[BI_TOHIT] += ((int)(adj_dex_th[my_stat_ind[STAT_DEX]]) - 128);
+    borg_skill[BI_TOHIT] += ((int)(adj_str_th[my_stat_ind[STAT_STR]]) - 128);
 
 
     /* Obtain the "hold" value */
-    hold = adj_str_hold[my_stat_ind[A_STR]];
+    hold = adj_str_hold[my_stat_ind[STAT_STR]];
 
 
     /** Examine the "current bow" **/
@@ -828,7 +827,7 @@ static void borg_notice_aux1(void)
     /* It is hard to carholdry a heavy bow */
     if (hold < item->weight / 10)
     {
-        borg_skill[BI_HEAVYBOW] = TRUE;
+        borg_skill[BI_HEAVYBOW] = true;
         /* Hard to wield a heavy bow */
         borg_skill[BI_TOHIT] += 2 * (hold - item->weight / 10);
     }
@@ -874,7 +873,7 @@ static void borg_notice_aux1(void)
         my_ammo_power += extra_might;
 
 		/* Hack -- Reward High Level Rangers using Bows */
-        if (player_has(PF_EXTRA_SHOT) && (my_ammo_tval == TV_ARROW))
+        if (player_has(player, PF_EXTRA_SHOT) && (my_ammo_tval == TV_ARROW))
         {
             /* Extra shot at level 20 */
             if (borg_skill[BI_CLEVEL] >= 20) my_num_fire++;
@@ -915,7 +914,7 @@ static void borg_notice_aux1(void)
     /* It is hard to hold a heavy weapon */
     if (hold < item->weight / 10)
     {
-        borg_skill[BI_HEAVYWEPON] = TRUE;
+        borg_skill[BI_HEAVYWEPON] = true;
 
         /* Hard to wield a heavy weapon */
         borg_skill[BI_TOHIT] += 2 * (hold - item->weight / 10);
@@ -928,16 +927,16 @@ static void borg_notice_aux1(void)
         int div;
 		
         /* Enforce a minimum "weight" (tenth pounds) */
-        div = ((item->weight < p_ptr->class->min_weight) ? p_ptr->class->min_weight : item->weight);
+        div = ((item->weight < player->class->min_weight) ? player->class->min_weight : item->weight);
 
         /* Get the strength vs weight */
-        str_index = (adj_str_blow[my_stat_ind[A_STR]] * p_ptr->class->att_multiply / div);
+        str_index = (adj_str_blow[my_stat_ind[STAT_STR]] * player->class->att_multiply / div);
 
         /* Maximal value */
         if (str_index > 11) str_index = 11;
 
         /* Index by dexterity */
-        dex_index = (adj_dex_blow[my_stat_ind[A_DEX]]);
+        dex_index = (adj_dex_blow[my_stat_ind[STAT_DEX]]);
 
         /* Maximal value */
         if (dex_index > 11) dex_index = 11;
@@ -946,7 +945,7 @@ static void borg_notice_aux1(void)
         borg_skill[BI_BLOWS] = blows_table[str_index][dex_index];
 
         /* Maximal value */
-        if (borg_skill[BI_BLOWS] > p_ptr->class->max_attacks) borg_skill[BI_BLOWS] = p_ptr->class->max_attacks;
+        if (borg_skill[BI_BLOWS] > player->class->max_attacks) borg_skill[BI_BLOWS] = player->class->max_attacks;
 
         /* Add in the "bonus blows" */
         borg_skill[BI_BLOWS] += extra_blows;
@@ -968,27 +967,27 @@ static void borg_notice_aux1(void)
         (item->dd * item->ds);
 
      /* Hack -- Reward High Level Warriors with Res Fear */
-     if (player_has(PF_BRAVERY_30))
+     if (player_has(player, PF_BRAVERY_30))
      {
          /* Resist fear at level 30 */
-         if (borg_skill[BI_CLEVEL] >= 30) borg_skill[BI_RFEAR] = TRUE;
+         if (borg_skill[BI_CLEVEL] >= 30) borg_skill[BI_RFEAR] = true;
      }
 
     /* Affect Skill -- stealth (bonus one) */
     borg_skill[BI_STL] += 1;
 
     /* Affect Skill -- disarming (DEX and INT) */
-    borg_skill[BI_DIS] += adj_dex_dis[my_stat_ind[A_DEX]];
-    borg_skill[BI_DIS] += adj_int_dis[my_stat_ind[A_INT]];
+    borg_skill[BI_DIS] += adj_dex_dis[my_stat_ind[STAT_DEX]];
+    borg_skill[BI_DIS] += adj_int_dis[my_stat_ind[STAT_INT]];
 
     /* Affect Skill -- magic devices (INT) */
-    borg_skill[BI_DEV] += adj_int_dev[my_stat_ind[A_INT]];
+    borg_skill[BI_DEV] += adj_int_dev[my_stat_ind[STAT_INT]];
 
     /* Affect Skill -- saving throw (WIS) */
-    borg_skill[BI_SAV] += adj_wis_sav[my_stat_ind[A_WIS]];
+    borg_skill[BI_SAV] += adj_wis_sav[my_stat_ind[STAT_WIS]];
 
     /* Affect Skill -- digging (STR) */
-    borg_skill[BI_DIG] += adj_str_dig[my_stat_ind[A_STR]];
+    borg_skill[BI_DIG] += adj_str_dig[my_stat_ind[STAT_STR]];
 
 
     /* Affect Skill -- disarming (Level, by Class) */
@@ -1037,7 +1036,7 @@ static void borg_notice_aux1(void)
 	}
 
     /* priest weapon penalty for non-blessed edged weapons */
-    if (player_has(PF_BLESS_WEAPON) &&
+    if (player_has(player, PF_BLESS_WEAPON) &&
         ((item->tval == TV_SWORD || item->tval == TV_POLEARM) &&
         !of_has(item->flags, OF_BLESSED)))
     {
@@ -1049,7 +1048,7 @@ static void borg_notice_aux1(void)
 	/*** Count needed enchantment ***/
 
     /* Assume no enchantment needed */
-    my_need_enchant_to_a = 0;
+    my_need_enchant_distance4( = 0;
     my_need_enchant_to_h = 0;
     my_need_enchant_to_d = 0;
     my_need_brand_weapon = 0;
@@ -1128,14 +1127,14 @@ static void borg_notice_aux1(void)
         {
             if (item->to_a < borg_enchant_limit)
             {
-                my_need_enchant_to_a += (borg_enchant_limit - item->to_a);
+                my_need_enchant_distance4( += (borg_enchant_limit - item->to_a);
             }
         }
         else
         {
             if (item->to_a < 8)
             {
-                my_need_enchant_to_a += (8 - item->to_a);
+                my_need_enchant_distance4( += (8 - item->to_a);
             }
         }
     }
@@ -1175,23 +1174,23 @@ static void borg_notice_aux1(void)
     }
 
 	/* Special way to handle See Inv */
-	if (borg_see_inv >= 1) borg_skill[BI_SINV] = TRUE;
+	if (borg_see_inv >= 1) borg_skill[BI_SINV] = true;
 	if (borg_skill[BI_CDEPTH] == 0 && /* only in town.  Allow him to recall down */
         (borg_prayer_legal(2, 3) ||
-         borg_spell_legal(2, 6))) borg_skill[BI_SINV] = TRUE;
+         borg_spell_legal(2, 6))) borg_skill[BI_SINV] = true;
 
 	/* Very special handling of Free Action.
 	 * If the person has perfect Savings throw, he can be
 	 * considered ok on Free Action.  This can free up an
 	 * equipment slot.
 	 */
-    if (borg_skill[BI_SAV] >= 100) borg_skill[BI_FRACT] = TRUE;
+    if (borg_skill[BI_SAV] >= 100) borg_skill[BI_FRACT] = true;
 
 	/* Special case for RBlindness.  Perfect saves and the
 	 * resistances for light and dark are good enough for RBlind
 	 */
 	if (borg_skill[BI_SAV] >= 100 && borg_skill[BI_RDARK] &&
-	    borg_skill[BI_RLITE]) borg_skill[BI_RBLIND] = TRUE;
+	    borg_skill[BI_RLITE]) borg_skill[BI_RBLIND] = true;
 
 	/*** Quiver needs to be evaluated ***/
 
@@ -1214,7 +1213,7 @@ static void borg_notice_aux1(void)
 		if (my_ammo_power >= 3)
 		{
 
-			if ((borg_has_effect(EFF_FIREBRAND, TRUE, TRUE) ||
+			if ((borg_has_effect(EFF_FIREBRAND, true, true) ||
 				 borg_spell_legal_fail(7, 5, 65)) &&
 			  item->iqty >=5 &&
 			  /* Skip artifacts and ego-items */
@@ -1299,18 +1298,18 @@ static void borg_notice_aux2(void)
     amt_book[8] = 0;
 
     /* Reset various */
-    amt_add_stat[A_STR] = 0;
-    amt_add_stat[A_INT] = 0;
-    amt_add_stat[A_WIS] = 0;
-    amt_add_stat[A_DEX] = 0;
+    amt_add_stat[STAT_STR] = 0;
+    amt_add_stat[STAT_INT] = 0;
+    amt_add_stat[STAT_WIS] = 0;
+    amt_add_stat[STAT_DEX] = 0;
     amt_add_stat[A_CON] = 0;
-    amt_add_stat[A_CHR] = 0;
-    amt_fix_stat[A_STR] = 0;
-    amt_fix_stat[A_INT] = 0;
-    amt_fix_stat[A_WIS] = 0;
-    amt_fix_stat[A_DEX] = 0;
+    amt_add_stat[STAT_CHR] = 0;
+    amt_fix_stat[STAT_STR] = 0;
+    amt_fix_stat[STAT_INT] = 0;
+    amt_fix_stat[STAT_WIS] = 0;
+    amt_fix_stat[STAT_DEX] = 0;
     amt_fix_stat[A_CON] = 0;
-    amt_fix_stat[A_CHR] = 0;
+    amt_fix_stat[STAT_CHR] = 0;
     amt_fix_stat[6] = 0;
 
     amt_fix_exp = 0;
@@ -1319,7 +1318,7 @@ static void borg_notice_aux2(void)
     amt_digger = 0;
 
     /* Reset enchantment */
-    amt_enchant_to_a = 0;
+    amt_enchant_distance4( = 0;
     amt_enchant_to_d = 0;
     amt_enchant_to_h = 0;
 
@@ -1361,7 +1360,7 @@ static void borg_notice_aux2(void)
             case TV_MAGIC_BOOK:
             case TV_PRAYER_BOOK:
             /* Skip incorrect books */
-            if (item->tval != p_ptr->class->spell_book) break;
+            if (item->tval != player->class->spell_book) break;
             /* Count the books */
             amt_book[item->sval] += item->iqty;
             break;
@@ -1387,7 +1386,7 @@ static void borg_notice_aux2(void)
 					 */
 					if (borg_munchkin_start && borg_skill[BI_MAXCLEVEL] >= borg_munchkin_level)
 					{
-						amt_fix_stat[A_STR] += item->iqty;
+						amt_fix_stat[STAT_STR] += item->iqty;
 						amt_fix_stat[A_CON] += item->iqty;
 						borg_skill[BI_ACUREPOIS] += item->iqty;
 					}
@@ -1395,12 +1394,12 @@ static void borg_notice_aux2(void)
                 case SV_FOOD_RESTORING:
 					if (borg_munchkin_start && borg_skill[BI_MAXCLEVEL] >= borg_munchkin_level)
 					{
-						amt_fix_stat[A_STR] += item->iqty;
-						amt_fix_stat[A_INT] += item->iqty;
-						amt_fix_stat[A_WIS] += item->iqty;
-						amt_fix_stat[A_DEX] += item->iqty;
+						amt_fix_stat[STAT_STR] += item->iqty;
+						amt_fix_stat[STAT_INT] += item->iqty;
+						amt_fix_stat[STAT_WIS] += item->iqty;
+						amt_fix_stat[STAT_DEX] += item->iqty;
 						amt_fix_stat[A_CON] += item->iqty;
-						amt_fix_stat[A_CHR] += item->iqty;
+						amt_fix_stat[STAT_CHR] += item->iqty;
 						amt_fix_stat[6]     += item->iqty;
 					}
                     break;
@@ -1482,49 +1481,49 @@ static void borg_notice_aux2(void)
                 break;
 
 				case SV_POTION_INC_STR:
-                amt_inc_stat[A_STR] += item->iqty;
+                amt_inc_stat[STAT_STR] += item->iqty;
                 break;
                 case SV_POTION_INC_INT:
-                amt_inc_stat[A_INT] += item->iqty;
+                amt_inc_stat[STAT_INT] += item->iqty;
                 break;
                 case SV_POTION_INC_WIS:
-                amt_inc_stat[A_WIS] += item->iqty;
+                amt_inc_stat[STAT_WIS] += item->iqty;
                 break;
                 case SV_POTION_INC_DEX:
-                amt_inc_stat[A_DEX] += item->iqty;
+                amt_inc_stat[STAT_DEX] += item->iqty;
                 break;
                 case SV_POTION_INC_CON:
                 amt_inc_stat[A_CON] += item->iqty;
                 break;
                 case SV_POTION_INC_CHR:
-                amt_inc_stat[A_CHR] += item->iqty;
+                amt_inc_stat[STAT_CHR] += item->iqty;
                 break;
                 case SV_POTION_INC_ALL:
-                amt_inc_stat[A_STR] += item->iqty;
-                amt_inc_stat[A_INT] += item->iqty;
-                amt_inc_stat[A_WIS] += item->iqty;
-                amt_inc_stat[A_DEX] += item->iqty;
+                amt_inc_stat[STAT_STR] += item->iqty;
+                amt_inc_stat[STAT_INT] += item->iqty;
+                amt_inc_stat[STAT_WIS] += item->iqty;
+                amt_inc_stat[STAT_DEX] += item->iqty;
                 amt_inc_stat[A_CON] += item->iqty;
-                amt_inc_stat[A_CHR] += item->iqty;
+                amt_inc_stat[STAT_CHR] += item->iqty;
                 break;
 
 				case SV_POTION_RES_STR:
-                amt_fix_stat[A_STR] += item->iqty;
+                amt_fix_stat[STAT_STR] += item->iqty;
                 break;
                 case SV_POTION_RES_INT:
-                amt_fix_stat[A_INT] += item->iqty;
+                amt_fix_stat[STAT_INT] += item->iqty;
                 break;
                 case SV_POTION_RES_WIS:
-                amt_fix_stat[A_WIS] += item->iqty;
+                amt_fix_stat[STAT_WIS] += item->iqty;
                 break;
                 case SV_POTION_RES_DEX:
-                amt_fix_stat[A_DEX] += item->iqty;
+                amt_fix_stat[STAT_DEX] += item->iqty;
                 break;
                 case SV_POTION_RES_CON:
                 amt_fix_stat[A_CON] += item->iqty;
                 break;
                 case SV_POTION_RES_CHR:
-                amt_fix_stat[A_CHR] += item->iqty;
+                amt_fix_stat[STAT_CHR] += item->iqty;
                 break;
 
 				case SV_POTION_RESTORE_EXP:
@@ -1572,7 +1571,7 @@ static void borg_notice_aux2(void)
                 break;
 
                 case SV_SCROLL_ENCHANT_ARMOR:
-                amt_enchant_to_a += item->iqty;
+                amt_enchant_distance4( += item->iqty;
                 break;
 
                 case SV_SCROLL_ENCHANT_WEAPON_TO_HIT:
@@ -1595,7 +1594,7 @@ static void borg_notice_aux2(void)
                 amt_enchant_armor += item->iqty;
                 break;
 
-                case SV_SCROLL_RUNE_OF_PROTECTION:
+                case SV_SCROLL_RUNE_PROTECTION:
                 borg_skill[BI_AGLYPH] += item->iqty;
                 break;
 
@@ -1870,7 +1869,7 @@ static void borg_notice_aux2(void)
 			 */
 			if (my_ammo_power < 3) break;
 
-            if ((borg_has_effect(EFF_FIREBRAND, TRUE, TRUE) ||
+            if ((borg_has_effect(EFF_FIREBRAND, true, true) ||
                  borg_spell_legal_fail(7, 5, 65)) &&
               item->iqty >=5 &&
               /* Skip artifacts and ego-items */
@@ -1945,7 +1944,7 @@ static void borg_notice_aux2(void)
 
     /* Handle "identify" -> infinite identifies */
     if (borg_spell_legal(2, 5) || borg_prayer_legal(5, 2) ||
-        borg_has_effect(EFF_IDENTIFY, TRUE, TRUE))
+        borg_has_effect(EFF_IDENTIFY, true, true))
     {
         borg_skill[BI_AID] += 1000;
     }
@@ -1971,7 +1970,7 @@ static void borg_notice_aux2(void)
 
     /* Handle "detection" */
     if (borg_prayer_legal(5, 1) ||
-    borg_has_effect(EFF_DETECT_ALL, TRUE, TRUE))
+    borg_has_effect(EFF_DETECT_ALL, true, true))
     {
         borg_skill[BI_ADETDOOR] = 1000;
         borg_skill[BI_ADETTRAP] = 1000;
@@ -1983,12 +1982,12 @@ static void borg_notice_aux2(void)
     if (borg_prayer_legal(2, 3) ||
         borg_spell_legal(2, 6))
     {
-		borg_skill[BI_DINV] = TRUE;
+		borg_skill[BI_DINV] = true;
     }
 
     /* Handle "magic mapping" */
     if (borg_prayer_legal(2, 6) ||
-    borg_has_effect(EFF_MAPPING, TRUE, TRUE))
+    borg_has_effect(EFF_MAPPING, true, true))
     {
         borg_skill[BI_ADETDOOR] = 1000;
         borg_skill[BI_ADETTRAP] = 1000;
@@ -1997,8 +1996,8 @@ static void borg_notice_aux2(void)
 
     /* Handle "call lite" */
     if (borg_prayer_legal(0, 4) ||
-    	borg_has_effect(EFF_ILLUMINATION, TRUE, TRUE) ||
-    	borg_has_effect(EFF_CLAIRVOYANCE, TRUE, TRUE) ||
+    	borg_has_effect(EFF_ILLUMINATION, true, true) ||
+    	borg_has_effect(EFF_CLAIRVOYANCE, true, true) ||
     	borg_spell_legal(0, 3))
     {
         borg_skill[BI_ALITE] += 1000;
@@ -2006,7 +2005,7 @@ static void borg_notice_aux2(void)
 
     /* Handle "protection from evil" */
     if (borg_prayer_legal(2, 4) ||
-    borg_has_effect(EFF_PROTEVIL, TRUE, TRUE))
+    borg_has_effect(EFF_PROTEVIL, true, true))
     {
         borg_skill[BI_APFE] += 1000;
     }
@@ -2035,7 +2034,7 @@ static void borg_notice_aux2(void)
     }
 
     /* Handle "Brand Weapon (bolts)" */
-    if (borg_has_effect(EFF_FIREBRAND, TRUE, TRUE) ||
+    if (borg_has_effect(EFF_FIREBRAND, true, true) ||
         borg_spell_legal_fail(7, 5, 65))
     {
         amt_brand_weapon += 1000;
@@ -2045,13 +2044,13 @@ static void borg_notice_aux2(void)
     if (borg_spell_legal_fail(7, 2, 65) ||
         borg_prayer_legal_fail(7, 3, 65))
     {
-        amt_enchant_to_a += 1000;
+        amt_enchant_distance4( += 1000;
         amt_enchant_armor +=1000;
     }
 
     /* Handle Diggers (stone to mud) */
     if (borg_spell_legal_fail(2, 2, 40) ||
-    	borg_has_effect(EFF_STONE_TO_MUD, TRUE, TRUE) ||
+    	borg_has_effect(EFF_STONE_TO_MUD, true, true) ||
 		borg_equips_ring(SV_RING_DELVING))
     {
         amt_digger += 1;
@@ -2063,7 +2062,7 @@ static void borg_notice_aux2(void)
     {
         borg_skill[BI_RECALL] += 1000;
     }
-	if (borg_has_effect(EFF_RECALL, TRUE, FALSE))
+	if (borg_has_effect(EFF_RECALL, true, false))
 	{
 		borg_skill[BI_RECALL] += 1;
 	}
@@ -2080,7 +2079,7 @@ static void borg_notice_aux2(void)
     {
         borg_skill[BI_APHASE] += 1000;
     }
-	if (borg_has_effect(EFF_TELE_PHASE, TRUE, FALSE))
+	if (borg_has_effect(EFF_TELE_PHASE, true, false))
 	{
 		borg_skill[BI_APHASE] += 1;
 	}
@@ -2092,7 +2091,7 @@ static void borg_notice_aux2(void)
     {
         borg_skill[BI_ATELEPORT] += 1000;
     }
-	if (borg_has_effect(EFF_TELE_LONG, TRUE, FALSE))
+	if (borg_has_effect(EFF_TELE_LONG, true, false))
 	{
 		borg_skill[BI_AESCAPE] += 1;
         borg_skill[BI_ATELEPORT] += 1;
@@ -2116,24 +2115,24 @@ static void borg_notice_aux2(void)
         borg_skill[BI_ASPEED] += 1000;
     }
 	/* Activatable equipment HASTE */
-	else if ((borg_has_effect(EFF_HASTE1, TRUE, TRUE)  || borg_has_effect(EFF_HASTE2, TRUE, TRUE) ||
-		borg_has_effect(EFF_HASTE, TRUE, TRUE)) &&
+	else if ((borg_has_effect(EFF_HASTE1, true, true)  || borg_has_effect(EFF_HASTE2, true, true) ||
+		borg_has_effect(EFF_HASTE, true, true)) &&
 		(!borg_has[borg_lookup_kind(TV_ROD, SV_ROD_SPEED)]))
 	{
         borg_skill[BI_ASPEED] += 100;
 	}
 
 	/* Handle "Cure Serious Wounds" */
-    if (borg_has_effect(EFF_CURE_SERIOUS, TRUE, TRUE))
+    if (borg_has_effect(EFF_CURE_SERIOUS, true, true))
     {
         borg_skill[BI_ACSW] += 1000;
     }
 
 
     /* Handle "heal" */
-    if (borg_has_effect(EFF_HEAL1,TRUE, TRUE) ||
-        borg_has_effect(EFF_HEAL2,TRUE, TRUE) ||
-        borg_has_effect(EFF_HEAL3,TRUE, TRUE) ||
+    if (borg_has_effect(EFF_HEAL1,true, true) ||
+        borg_has_effect(EFF_HEAL2,true, true) ||
+        borg_has_effect(EFF_HEAL3,true, true) ||
         borg_prayer_legal(3, 2) ||
         borg_prayer_legal(6, 2))
     {
@@ -2141,20 +2140,20 @@ static void borg_notice_aux2(void)
     }
 
     /* Handle "fix exp" */
-    if (borg_has_effect(EFF_RESTORE_LIFE, TRUE, TRUE))
+    if (borg_has_effect(EFF_RESTORE_LIFE, true, true))
     {
         amt_fix_exp += 1000;
     }
 
 	/* Handle "Remembrance" -- is just as good as Hold Life */
 	if (borg_prayer_legal(6, 4) ||
-	    borg_has_effect(EFF_RESTORE_LIFE, TRUE, TRUE))
+	    borg_has_effect(EFF_RESTORE_LIFE, true, true))
 	{
-		borg_skill[BI_HLIFE] = TRUE;
+		borg_skill[BI_HLIFE] = true;
 	}
 
     /* Handle "recharge" */
-    if (borg_has_effect(EFF_RECHARGE, TRUE, TRUE) ||
+    if (borg_has_effect(EFF_RECHARGE, true, true) ||
         borg_spell_legal(7,4) ||
         borg_prayer_legal(7,1) ||
         borg_spell_legal(2, 1))
@@ -2163,7 +2162,7 @@ static void borg_notice_aux2(void)
     }
 
 	/* Stone to Mud spell */
-	if (borg_has_effect(EFF_STONE_TO_MUD, TRUE, TRUE) ||
+	if (borg_has_effect(EFF_STONE_TO_MUD, true, true) ||
 		borg_spell_legal(2, 2))
 	{
 		borg_skill[BI_ASTONE2MUD] += 1000;
@@ -2176,42 +2175,42 @@ static void borg_notice_aux2(void)
         borg_skill[BI_AFUEL] += 1000;
 
 	/* Resist Poison from a reliable source.  This frees up an inventory slot */
-	if (borg_has_effect(EFF_RESIST_POIS, TRUE, TRUE) ||
-		borg_has_effect(EFF_RESIST_ALL, TRUE, TRUE) ||
+	if (borg_has_effect(EFF_RESIST_POIS, true, true) ||
+		borg_has_effect(EFF_RESIST_ALL, true, true) ||
 		borg_spell_legal_fail(4, 2, 35)) borg_skill[BI_RPOIS] += 1;
 
     /* No need to *buy* stat increase potions */
-    if (my_stat_cur[A_STR] >= (18+100) + 10 * op_ptr->opt[OPT_birth_maximize] *
-        (p_ptr->race->r_adj[A_STR] + p_ptr->class->c_adj[A_STR]))
-        amt_add_stat[A_STR] += 1000;
+    if (my_stat_cur[STAT_STR] >= (18+100) + 10 * OPT(player,birth_maximize] *
+        (player->race->r_adj[STAT_STR] + player->class->c_adj[STAT_STR]))
+        amt_add_stat[STAT_STR] += 1000;
 
-    if (my_stat_cur[A_INT] >= (18+100) + 10 * op_ptr->opt[OPT_birth_maximize] *
-        (p_ptr->race->r_adj[A_INT] + p_ptr->class->c_adj[A_INT]))
-         amt_add_stat[A_INT] += 1000;
+    if (my_stat_cur[STAT_INT] >= (18+100) + 10 * OPT(player,birth_maximize] *
+        (player->race->r_adj[STAT_INT] + player->class->c_adj[STAT_INT]))
+         amt_add_stat[STAT_INT] += 1000;
 
-    if (my_stat_cur[A_WIS] >= (18+100) + 10 * op_ptr->opt[OPT_birth_maximize] *
-        (p_ptr->race->r_adj[A_WIS] + p_ptr->class->c_adj[A_WIS]))
-        amt_add_stat[A_WIS] += 1000;
+    if (my_stat_cur[STAT_WIS] >= (18+100) + 10 * OPT(player,birth_maximize] *
+        (player->race->r_adj[STAT_WIS] + player->class->c_adj[STAT_WIS]))
+        amt_add_stat[STAT_WIS] += 1000;
 
-    if (my_stat_cur[A_DEX] >= (18+100) + 10 * op_ptr->opt[OPT_birth_maximize] *
-        (p_ptr->race->r_adj[A_DEX] + p_ptr->class->c_adj[A_DEX]))
-         amt_add_stat[A_DEX] += 1000;
+    if (my_stat_cur[STAT_DEX] >= (18+100) + 10 * OPT(player,birth_maximize] *
+        (player->race->r_adj[STAT_DEX] + player->class->c_adj[STAT_DEX]))
+         amt_add_stat[STAT_DEX] += 1000;
 
-    if (my_stat_cur[A_CON] >= (18+100) + 10 * op_ptr->opt[OPT_birth_maximize] *
-        (p_ptr->race->r_adj[A_CON] + p_ptr->class->c_adj[A_CON]))
+    if (my_stat_cur[A_CON] >= (18+100) + 10 * OPT(player,birth_maximize] *
+        (player->race->r_adj[A_CON] + player->class->c_adj[A_CON]))
         amt_add_stat[A_CON] += 1000;
 
-    if (my_stat_cur[A_CHR] >= (18+100) + 10 * op_ptr->opt[OPT_birth_maximize] *
-        (p_ptr->race->r_adj[A_CHR] + p_ptr->class->c_adj[A_CHR]))
-         amt_add_stat[A_CHR] += 1000;
+    if (my_stat_cur[STAT_CHR] >= (18+100) + 10 * OPT(player,birth_maximize] *
+        (player->race->r_adj[STAT_CHR] + player->class->c_adj[STAT_CHR]))
+         amt_add_stat[STAT_CHR] += 1000;
 
     /* No need to *buy* stat repair potions */
-    if (!borg_skill[BI_ISFIXSTR]) amt_fix_stat[A_STR] += 1000;
-    if (!borg_skill[BI_ISFIXINT]) amt_fix_stat[A_INT] += 1000;
-    if (!borg_skill[BI_ISFIXWIS]) amt_fix_stat[A_WIS] += 1000;
-    if (!borg_skill[BI_ISFIXDEX]) amt_fix_stat[A_DEX] += 1000;
+    if (!borg_skill[BI_ISFIXSTR]) amt_fix_stat[STAT_STR] += 1000;
+    if (!borg_skill[BI_ISFIXINT]) amt_fix_stat[STAT_INT] += 1000;
+    if (!borg_skill[BI_ISFIXWIS]) amt_fix_stat[STAT_WIS] += 1000;
+    if (!borg_skill[BI_ISFIXDEX]) amt_fix_stat[STAT_DEX] += 1000;
     if (!borg_skill[BI_ISFIXCON]) amt_fix_stat[A_CON] += 1000;
-    if (!borg_skill[BI_ISFIXCHR]) amt_fix_stat[A_CHR] += 1000;
+    if (!borg_skill[BI_ISFIXCHR]) amt_fix_stat[STAT_CHR] += 1000;
 
 
     /* No need for experience repair */
@@ -2272,7 +2271,7 @@ void borg_notice_swap_weapon(void)
 		if (borg_slot(item->tval, item->sval) == -1) continue;
 
         /* priest weapon penalty for non-blessed edged weapons */
-        if (player_has(PF_BLESS_WEAPON) &&
+        if (player_has(player, PF_BLESS_WEAPON) &&
             (item->tval == TV_SWORD || item->tval == TV_POLEARM) &&
             !of_has(item->flags, OF_BLESSED)) continue;
 
@@ -2287,53 +2286,53 @@ void borg_notice_swap_weapon(void)
 
        /* Clear all the swap weapon flags as I look at each one. */
         weapon_swap_digger = 0;
-        weapon_swap_slay_animal = FALSE;
-        weapon_swap_slay_evil = FALSE;
-        weapon_swap_slay_undead = FALSE;
-        weapon_swap_slay_demon = FALSE;
-        weapon_swap_slay_orc = FALSE;
-        weapon_swap_slay_troll = FALSE;
-        weapon_swap_slay_giant = FALSE;
-        weapon_swap_slay_dragon = FALSE;
-        weapon_swap_kill_undead = FALSE;
-        weapon_swap_kill_demon = FALSE;
-        weapon_swap_kill_dragon = FALSE;
-        weapon_swap_impact = FALSE;
-        weapon_swap_brand_acid = FALSE;
-        weapon_swap_brand_elec = FALSE;
-        weapon_swap_brand_fire = FALSE;
-        weapon_swap_brand_cold = FALSE;
-        weapon_swap_brand_pois = FALSE;
-        weapon_swap_see_infra = FALSE;
-        weapon_swap_slow_digest = FALSE;
-        weapon_swap_aggravate = FALSE;
-        weapon_swap_teleport = FALSE;
-        weapon_swap_regenerate = FALSE;
-        weapon_swap_telepathy = FALSE;
-        weapon_swap_LIGHT = FALSE;
-        weapon_swap_see_invis = FALSE;
-        weapon_swap_ffall = FALSE;
-        weapon_swap_free_act = FALSE;
-        weapon_swap_hold_life = FALSE;
-        weapon_swap_immune_fire = FALSE;
-        weapon_swap_immune_acid = FALSE;
-        weapon_swap_immune_cold = FALSE;
-        weapon_swap_immune_elec = FALSE;
-        weapon_swap_resist_acid = FALSE;
-        weapon_swap_resist_elec = FALSE;
-        weapon_swap_resist_fire = FALSE;
-        weapon_swap_resist_cold = FALSE;
-        weapon_swap_resist_pois = FALSE;
-        weapon_swap_resist_conf = FALSE;
-        weapon_swap_resist_sound = FALSE;
-        weapon_swap_resist_LIGHT = FALSE;
-        weapon_swap_resist_dark = FALSE;
-        weapon_swap_resist_chaos = FALSE;
-        weapon_swap_resist_disen = FALSE;
-        weapon_swap_resist_shard = FALSE;
-        weapon_swap_resist_nexus = FALSE;
-        weapon_swap_resist_blind = FALSE;
-        weapon_swap_resist_neth = FALSE;
+        weapon_swap_slay_animal = false;
+        weapon_swap_slay_evil = false;
+        weapon_swap_slay_undead = false;
+        weapon_swap_slay_demon = false;
+        weapon_swap_slay_orc = false;
+        weapon_swap_slay_troll = false;
+        weapon_swap_slay_giant = false;
+        weapon_swap_slay_dragon = false;
+        weapon_swap_kill_undead = false;
+        weapon_swap_kill_demon = false;
+        weapon_swap_kill_dragon = false;
+        weapon_swap_impact = false;
+        weapon_swap_brand_acid = false;
+        weapon_swap_brand_elec = false;
+        weapon_swap_brand_fire = false;
+        weapon_swap_brand_cold = false;
+        weapon_swap_brand_pois = false;
+        weapon_swap_see_infra = false;
+        weapon_swap_slow_digest = false;
+        weapon_swap_aggravate = false;
+        weapon_swap_teleport = false;
+        weapon_swap_regenerate = false;
+        weapon_swap_telepathy = false;
+        weapon_swap_LIGHT = false;
+        weapon_swap_see_invis = false;
+        weapon_swap_ffall = false;
+        weapon_swap_free_act = false;
+        weapon_swap_hold_life = false;
+        weapon_swap_immune_fire = false;
+        weapon_swap_immune_acid = false;
+        weapon_swap_immune_cold = false;
+        weapon_swap_immune_elec = false;
+        weapon_swap_resist_acid = false;
+        weapon_swap_resist_elec = false;
+        weapon_swap_resist_fire = false;
+        weapon_swap_resist_cold = false;
+        weapon_swap_resist_pois = false;
+        weapon_swap_resist_conf = false;
+        weapon_swap_resist_sound = false;
+        weapon_swap_resist_LIGHT = false;
+        weapon_swap_resist_dark = false;
+        weapon_swap_resist_chaos = false;
+        weapon_swap_resist_disen = false;
+        weapon_swap_resist_shard = false;
+        weapon_swap_resist_nexus = false;
+        weapon_swap_resist_blind = false;
+        weapon_swap_resist_neth = false;
 		weapon_swap_extra_blows = 0;
         decurse_weapon_swap =-1;
 
@@ -2363,23 +2362,23 @@ void borg_notice_swap_weapon(void)
             }
 
             /* various slays */
-            if (of_has(item->flags, OF_SLAY_ANIMAL)) weapon_swap_slay_animal = TRUE;
-            if (of_has(item->flags, OF_SLAY_EVIL))   weapon_swap_slay_evil = TRUE;
-            if (of_has(item->flags, OF_SLAY_UNDEAD)) weapon_swap_slay_undead = TRUE;
-            if (of_has(item->flags, OF_SLAY_DEMON))  weapon_swap_slay_demon = TRUE;
-            if (of_has(item->flags, OF_SLAY_ORC))    weapon_swap_slay_orc = TRUE;
-            if (of_has(item->flags, OF_SLAY_TROLL))  weapon_swap_slay_troll = TRUE;
-            if (of_has(item->flags, OF_SLAY_GIANT))  weapon_swap_slay_giant = TRUE;
-            if (of_has(item->flags, OF_SLAY_DRAGON)) weapon_swap_slay_dragon = TRUE;
-            if (of_has(item->flags, OF_KILL_UNDEAD)) weapon_swap_slay_undead = TRUE;
-            if (of_has(item->flags, OF_KILL_DEMON))  weapon_swap_slay_demon = TRUE;
-            if (of_has(item->flags, OF_KILL_DRAGON)) weapon_swap_kill_dragon = TRUE;
-            if (of_has(item->flags, OF_IMPACT))      weapon_swap_impact = TRUE;
-            if (of_has(item->flags, OF_BRAND_ACID))  weapon_swap_brand_acid = TRUE;
-            if (of_has(item->flags, OF_BRAND_ELEC))  weapon_swap_brand_elec = TRUE;
-            if (of_has(item->flags, OF_BRAND_FIRE))  weapon_swap_brand_fire = TRUE;
-            if (of_has(item->flags, OF_BRAND_COLD))  weapon_swap_brand_cold = TRUE;
-            if (of_has(item->flags, OF_BRAND_POIS))  weapon_swap_brand_pois = TRUE;
+            if (of_has(item->flags, OF_SLAY_ANIMAL)) weapon_swap_slay_animal = true;
+            if (of_has(item->flags, OF_SLAY_EVIL))   weapon_swap_slay_evil = true;
+            if (of_has(item->flags, OF_SLAY_UNDEAD)) weapon_swap_slay_undead = true;
+            if (of_has(item->flags, OF_SLAY_DEMON))  weapon_swap_slay_demon = true;
+            if (of_has(item->flags, OF_SLAY_ORC))    weapon_swap_slay_orc = true;
+            if (of_has(item->flags, OF_SLAY_TROLL))  weapon_swap_slay_troll = true;
+            if (of_has(item->flags, OF_SLAY_GIANT))  weapon_swap_slay_giant = true;
+            if (of_has(item->flags, OF_SLAY_DRAGON)) weapon_swap_slay_dragon = true;
+            if (of_has(item->flags, OF_KILL_UNDEAD)) weapon_swap_slay_undead = true;
+            if (of_has(item->flags, OF_KILL_DEMON))  weapon_swap_slay_demon = true;
+            if (of_has(item->flags, OF_KILL_DRAGON)) weapon_swap_kill_dragon = true;
+            if (of_has(item->flags, OF_IMPACT))      weapon_swap_impact = true;
+            if (of_has(item->flags, OF_BRAND_ACID))  weapon_swap_brand_acid = true;
+            if (of_has(item->flags, OF_BRAND_ELEC))  weapon_swap_brand_elec = true;
+            if (of_has(item->flags, OF_BRAND_FIRE))  weapon_swap_brand_fire = true;
+            if (of_has(item->flags, OF_BRAND_COLD))  weapon_swap_brand_cold = true;
+            if (of_has(item->flags, OF_BRAND_POIS))  weapon_swap_brand_pois = true;
 
             /* Affect infravision */
             if (of_has(item->flags, OF_INFRA)) weapon_swap_see_infra += item->pval;
@@ -2387,56 +2386,56 @@ void borg_notice_swap_weapon(void)
             /* Affect speed */
 
             /* Various flags */
-            if (of_has(item->flags, OF_SLOW_DIGEST)) weapon_swap_slow_digest = TRUE;
-            if (of_has(item->flags, OF_AGGRAVATE)) weapon_swap_aggravate = TRUE;
-            if (of_has(item->flags, OF_TELEPORT)) weapon_swap_teleport = TRUE;
-            if (of_has(item->flags, OF_REGEN)) weapon_swap_regenerate = TRUE;
-            if (of_has(item->flags, OF_TELEPATHY)) weapon_swap_telepathy = TRUE;
-            if (of_has(item->flags, OF_LIGHT)) weapon_swap_LIGHT = TRUE;
-            if (of_has(item->flags, OF_SEE_INVIS)) weapon_swap_see_invis = TRUE;
-            if (of_has(item->flags, OF_FEATHER)) weapon_swap_ffall = TRUE;
-            if (of_has(item->flags, OF_FREE_ACT)) weapon_swap_free_act = TRUE;
-            if (of_has(item->flags, OF_HOLD_LIFE)) weapon_swap_hold_life = TRUE;
+            if (of_has(item->flags, OF_SLOW_DIGEST)) weapon_swap_slow_digest = true;
+            if (of_has(item->flags, OF_AGGRAVATE)) weapon_swap_aggravate = true;
+            if (of_has(item->flags, OF_TELEPORT)) weapon_swap_teleport = true;
+            if (of_has(item->flags, OF_REGEN)) weapon_swap_regenerate = true;
+            if (of_has(item->flags, OF_TELEPATHY)) weapon_swap_telepathy = true;
+            if (of_has(item->flags, OF_LIGHT)) weapon_swap_LIGHT = true;
+            if (of_has(item->flags, OF_SEE_INVIS)) weapon_swap_see_invis = true;
+            if (of_has(item->flags, OF_FEATHER)) weapon_swap_ffall = true;
+            if (of_has(item->flags, OF_FREE_ACT)) weapon_swap_free_act = true;
+            if (of_has(item->flags, OF_HOLD_LIFE)) weapon_swap_hold_life = true;
 
             /* Immunity flags */
             /* if you are immune you automaticly resist */
             if (of_has(item->flags, OF_IM_FIRE))
             {
-                weapon_swap_immune_fire = TRUE;
-                weapon_swap_resist_fire = TRUE;
+                weapon_swap_immune_fire = true;
+                weapon_swap_resist_fire = true;
             }
             if (of_has(item->flags, OF_IM_ACID))
             {
-                weapon_swap_immune_acid = TRUE;
-                weapon_swap_resist_acid = TRUE;
+                weapon_swap_immune_acid = true;
+                weapon_swap_resist_acid = true;
             }
             if (of_has(item->flags, OF_IM_COLD))
             {
-                weapon_swap_immune_cold = TRUE;
-                weapon_swap_resist_cold = TRUE;
+                weapon_swap_immune_cold = true;
+                weapon_swap_resist_cold = true;
             }
             if (of_has(item->flags, OF_IM_ELEC))
             {
-                weapon_swap_immune_elec = TRUE;
-                weapon_swap_resist_elec = TRUE;
+                weapon_swap_immune_elec = true;
+                weapon_swap_resist_elec = true;
             }
 
             /* Resistance flags */
-            if (of_has(item->flags, OF_RES_ACID)) weapon_swap_resist_acid = TRUE;
-            if (of_has(item->flags, OF_RES_ELEC)) weapon_swap_resist_elec = TRUE;
-            if (of_has(item->flags, OF_RES_FIRE)) weapon_swap_resist_fire = TRUE;
-            if (of_has(item->flags, OF_RES_COLD)) weapon_swap_resist_cold = TRUE;
-            if (of_has(item->flags, OF_RES_POIS)) weapon_swap_resist_pois = TRUE;
-            if (of_has(item->flags, OF_RES_CONFU)) weapon_swap_resist_conf = TRUE;
-            if (of_has(item->flags, OF_RES_SOUND)) weapon_swap_resist_sound = TRUE;
-            if (of_has(item->flags, OF_RES_LIGHT)) weapon_swap_resist_LIGHT = TRUE;
-            if (of_has(item->flags, OF_RES_DARK)) weapon_swap_resist_dark = TRUE;
-            if (of_has(item->flags, OF_RES_CHAOS)) weapon_swap_resist_chaos = TRUE;
-            if (of_has(item->flags, OF_RES_DISEN)) weapon_swap_resist_disen = TRUE;
-            if (of_has(item->flags, OF_RES_SHARD)) weapon_swap_resist_shard = TRUE;
-            if (of_has(item->flags, OF_RES_NEXUS)) weapon_swap_resist_nexus = TRUE;
-            if (of_has(item->flags, OF_RES_BLIND)) weapon_swap_resist_blind = TRUE;
-            if (of_has(item->flags, OF_RES_NETHR)) weapon_swap_resist_neth = TRUE;
+            if (of_has(item->flags, OF_RES_ACID)) weapon_swap_resist_acid = true;
+            if (of_has(item->flags, OF_RES_ELEC)) weapon_swap_resist_elec = true;
+            if (of_has(item->flags, OF_RES_FIRE)) weapon_swap_resist_fire = true;
+            if (of_has(item->flags, OF_RES_COLD)) weapon_swap_resist_cold = true;
+            if (of_has(item->flags, OF_RES_POIS)) weapon_swap_resist_pois = true;
+            if (of_has(item->flags, OF_RES_CONFU)) weapon_swap_resist_conf = true;
+            if (of_has(item->flags, OF_RES_SOUND)) weapon_swap_resist_sound = true;
+            if (of_has(item->flags, OF_RES_LIGHT)) weapon_swap_resist_LIGHT = true;
+            if (of_has(item->flags, OF_RES_DARK)) weapon_swap_resist_dark = true;
+            if (of_has(item->flags, OF_RES_CHAOS)) weapon_swap_resist_chaos = true;
+            if (of_has(item->flags, OF_RES_DISEN)) weapon_swap_resist_disen = true;
+            if (of_has(item->flags, OF_RES_SHARD)) weapon_swap_resist_shard = true;
+            if (of_has(item->flags, OF_RES_NEXUS)) weapon_swap_resist_nexus = true;
+            if (of_has(item->flags, OF_RES_BLIND)) weapon_swap_resist_blind = true;
+            if (of_has(item->flags, OF_RES_NETHR)) weapon_swap_resist_neth = true;
             if (item->cursed) decurse_weapon_swap = 0;
             if (of_has(item->flags, OF_HEAVY_CURSE)) decurse_weapon_swap = 1;
 			if (of_has(item->flags, OF_BLOWS)) weapon_swap_extra_blows += item->pval;
@@ -2563,7 +2562,7 @@ void borg_notice_swap_weapon(void)
                 weapon_swap_resist_disen) v += 100000L;
 
             /* some artifacts would make good back ups for their activation */
-			v += borg_bonus_activation(i, TRUE);
+			v += borg_bonus_activation(i, true);
 
 			/* Be wary of very heavy items */
 			v -= item->weight * 50;
@@ -2602,53 +2601,53 @@ void borg_notice_swap_weapon(void)
     item = &borg_items[b_i];
 
    /* Clear all the swap weapon flags as I look at each one. */
-    weapon_swap_slay_animal = FALSE;
-    weapon_swap_slay_evil = FALSE;
-    weapon_swap_slay_undead = FALSE;
-    weapon_swap_slay_demon = FALSE;
-    weapon_swap_slay_orc = FALSE;
-    weapon_swap_slay_troll = FALSE;
-    weapon_swap_slay_giant = FALSE;
-    weapon_swap_slay_dragon = FALSE;
-    weapon_swap_kill_undead = FALSE;
-    weapon_swap_kill_demon = FALSE;
-    weapon_swap_kill_dragon = FALSE;
-    weapon_swap_impact = FALSE;
-    weapon_swap_brand_acid = FALSE;
-    weapon_swap_brand_elec = FALSE;
-    weapon_swap_brand_fire = FALSE;
-    weapon_swap_brand_cold = FALSE;
-    weapon_swap_brand_pois = FALSE;
-    weapon_swap_see_infra = FALSE;
-    weapon_swap_slow_digest = FALSE;
-    weapon_swap_aggravate = FALSE;
-    weapon_swap_teleport = FALSE;
-    weapon_swap_regenerate = FALSE;
-    weapon_swap_telepathy = FALSE;
-    weapon_swap_LIGHT = FALSE;
-    weapon_swap_see_invis = FALSE;
-    weapon_swap_ffall = FALSE;
-    weapon_swap_free_act = FALSE;
-    weapon_swap_hold_life = FALSE;
-    weapon_swap_immune_fire = FALSE;
-    weapon_swap_immune_acid = FALSE;
-    weapon_swap_immune_cold = FALSE;
-    weapon_swap_immune_elec = FALSE;
-    weapon_swap_resist_acid = FALSE;
-    weapon_swap_resist_elec = FALSE;
-    weapon_swap_resist_fire = FALSE;
-    weapon_swap_resist_cold = FALSE;
-    weapon_swap_resist_pois = FALSE;
-    weapon_swap_resist_conf = FALSE;
-    weapon_swap_resist_sound = FALSE;
-    weapon_swap_resist_LIGHT = FALSE;
-    weapon_swap_resist_dark = FALSE;
-    weapon_swap_resist_chaos = FALSE;
-    weapon_swap_resist_disen = FALSE;
-    weapon_swap_resist_shard = FALSE;
-    weapon_swap_resist_nexus = FALSE;
-    weapon_swap_resist_blind = FALSE;
-    weapon_swap_resist_neth = FALSE;
+    weapon_swap_slay_animal = false;
+    weapon_swap_slay_evil = false;
+    weapon_swap_slay_undead = false;
+    weapon_swap_slay_demon = false;
+    weapon_swap_slay_orc = false;
+    weapon_swap_slay_troll = false;
+    weapon_swap_slay_giant = false;
+    weapon_swap_slay_dragon = false;
+    weapon_swap_kill_undead = false;
+    weapon_swap_kill_demon = false;
+    weapon_swap_kill_dragon = false;
+    weapon_swap_impact = false;
+    weapon_swap_brand_acid = false;
+    weapon_swap_brand_elec = false;
+    weapon_swap_brand_fire = false;
+    weapon_swap_brand_cold = false;
+    weapon_swap_brand_pois = false;
+    weapon_swap_see_infra = false;
+    weapon_swap_slow_digest = false;
+    weapon_swap_aggravate = false;
+    weapon_swap_teleport = false;
+    weapon_swap_regenerate = false;
+    weapon_swap_telepathy = false;
+    weapon_swap_LIGHT = false;
+    weapon_swap_see_invis = false;
+    weapon_swap_ffall = false;
+    weapon_swap_free_act = false;
+    weapon_swap_hold_life = false;
+    weapon_swap_immune_fire = false;
+    weapon_swap_immune_acid = false;
+    weapon_swap_immune_cold = false;
+    weapon_swap_immune_elec = false;
+    weapon_swap_resist_acid = false;
+    weapon_swap_resist_elec = false;
+    weapon_swap_resist_fire = false;
+    weapon_swap_resist_cold = false;
+    weapon_swap_resist_pois = false;
+    weapon_swap_resist_conf = false;
+    weapon_swap_resist_sound = false;
+    weapon_swap_resist_LIGHT = false;
+    weapon_swap_resist_dark = false;
+    weapon_swap_resist_chaos = false;
+    weapon_swap_resist_disen = false;
+    weapon_swap_resist_shard = false;
+    weapon_swap_resist_nexus = false;
+    weapon_swap_resist_blind = false;
+    weapon_swap_resist_neth = false;
     decurse_weapon_swap = -1;
 
     /* Assume no enchantment needed */
@@ -2690,23 +2689,23 @@ void borg_notice_swap_weapon(void)
     }
 
     /* various slays */
-    if (of_has(item->flags, OF_SLAY_ANIMAL)) weapon_swap_slay_animal = TRUE;
-    if (of_has(item->flags, OF_SLAY_EVIL))   weapon_swap_slay_evil = TRUE;
-    if (of_has(item->flags, OF_SLAY_UNDEAD)) weapon_swap_slay_undead = TRUE;
-    if (of_has(item->flags, OF_SLAY_DEMON))  weapon_swap_slay_demon = TRUE;
-    if (of_has(item->flags, OF_SLAY_ORC))    weapon_swap_slay_orc = TRUE;
-    if (of_has(item->flags, OF_SLAY_TROLL))  weapon_swap_slay_troll = TRUE;
-    if (of_has(item->flags, OF_SLAY_GIANT))  weapon_swap_slay_giant = TRUE;
-    if (of_has(item->flags, OF_SLAY_DRAGON)) weapon_swap_slay_dragon = TRUE;
-    if (of_has(item->flags, OF_KILL_UNDEAD)) weapon_swap_kill_undead = TRUE;
-    if (of_has(item->flags, OF_KILL_DEMON))  weapon_swap_kill_demon = TRUE;
-    if (of_has(item->flags, OF_KILL_DRAGON)) weapon_swap_kill_dragon = TRUE;
-    if (of_has(item->flags, OF_IMPACT))      weapon_swap_impact = TRUE;
-    if (of_has(item->flags, OF_BRAND_ACID))  weapon_swap_brand_acid = TRUE;
-    if (of_has(item->flags, OF_BRAND_ELEC))  weapon_swap_brand_elec = TRUE;
-    if (of_has(item->flags, OF_BRAND_FIRE))  weapon_swap_brand_fire = TRUE;
-    if (of_has(item->flags, OF_BRAND_COLD))  weapon_swap_brand_cold = TRUE;
-    if (of_has(item->flags, OF_BRAND_POIS))  weapon_swap_brand_pois = TRUE;
+    if (of_has(item->flags, OF_SLAY_ANIMAL)) weapon_swap_slay_animal = true;
+    if (of_has(item->flags, OF_SLAY_EVIL))   weapon_swap_slay_evil = true;
+    if (of_has(item->flags, OF_SLAY_UNDEAD)) weapon_swap_slay_undead = true;
+    if (of_has(item->flags, OF_SLAY_DEMON))  weapon_swap_slay_demon = true;
+    if (of_has(item->flags, OF_SLAY_ORC))    weapon_swap_slay_orc = true;
+    if (of_has(item->flags, OF_SLAY_TROLL))  weapon_swap_slay_troll = true;
+    if (of_has(item->flags, OF_SLAY_GIANT))  weapon_swap_slay_giant = true;
+    if (of_has(item->flags, OF_SLAY_DRAGON)) weapon_swap_slay_dragon = true;
+    if (of_has(item->flags, OF_KILL_UNDEAD)) weapon_swap_kill_undead = true;
+    if (of_has(item->flags, OF_KILL_DEMON))  weapon_swap_kill_demon = true;
+    if (of_has(item->flags, OF_KILL_DRAGON)) weapon_swap_kill_dragon = true;
+    if (of_has(item->flags, OF_IMPACT))      weapon_swap_impact = true;
+    if (of_has(item->flags, OF_BRAND_ACID))  weapon_swap_brand_acid = true;
+    if (of_has(item->flags, OF_BRAND_ELEC))  weapon_swap_brand_elec = true;
+    if (of_has(item->flags, OF_BRAND_FIRE))  weapon_swap_brand_fire = true;
+    if (of_has(item->flags, OF_BRAND_COLD))  weapon_swap_brand_cold = true;
+    if (of_has(item->flags, OF_BRAND_POIS))  weapon_swap_brand_pois = true;
 
     /* Affect infravision */
     if (of_has(item->flags, OF_INFRA)) weapon_swap_see_infra += item->pval;
@@ -2714,56 +2713,56 @@ void borg_notice_swap_weapon(void)
     /* Affect speed */
 
     /* Various flags */
-    if (of_has(item->flags, OF_SLOW_DIGEST)) weapon_swap_slow_digest = TRUE;
-    if (of_has(item->flags, OF_AGGRAVATE)) weapon_swap_aggravate = TRUE;
-    if (of_has(item->flags, OF_TELEPORT)) weapon_swap_teleport = TRUE;
-    if (of_has(item->flags, OF_REGEN)) weapon_swap_regenerate = TRUE;
-    if (of_has(item->flags, OF_TELEPATHY)) weapon_swap_telepathy = TRUE;
-    if (of_has(item->flags, OF_LIGHT)) weapon_swap_LIGHT = TRUE;
-    if (of_has(item->flags, OF_SEE_INVIS)) weapon_swap_see_invis = TRUE;
-    if (of_has(item->flags, OF_FEATHER)) weapon_swap_ffall = TRUE;
-    if (of_has(item->flags, OF_FREE_ACT)) weapon_swap_free_act = TRUE;
-    if (of_has(item->flags, OF_HOLD_LIFE)) weapon_swap_hold_life = TRUE;
+    if (of_has(item->flags, OF_SLOW_DIGEST)) weapon_swap_slow_digest = true;
+    if (of_has(item->flags, OF_AGGRAVATE)) weapon_swap_aggravate = true;
+    if (of_has(item->flags, OF_TELEPORT)) weapon_swap_teleport = true;
+    if (of_has(item->flags, OF_REGEN)) weapon_swap_regenerate = true;
+    if (of_has(item->flags, OF_TELEPATHY)) weapon_swap_telepathy = true;
+    if (of_has(item->flags, OF_LIGHT)) weapon_swap_LIGHT = true;
+    if (of_has(item->flags, OF_SEE_INVIS)) weapon_swap_see_invis = true;
+    if (of_has(item->flags, OF_FEATHER)) weapon_swap_ffall = true;
+    if (of_has(item->flags, OF_FREE_ACT)) weapon_swap_free_act = true;
+    if (of_has(item->flags, OF_HOLD_LIFE)) weapon_swap_hold_life = true;
 
     /* Immunity flags */
     /* if you are immune you automaticly resist */
     if (of_has(item->flags, OF_IM_FIRE))
     {
-        weapon_swap_immune_fire = TRUE;
-        weapon_swap_resist_fire = TRUE;
+        weapon_swap_immune_fire = true;
+        weapon_swap_resist_fire = true;
     }
     if (of_has(item->flags, OF_IM_ACID))
     {
-        weapon_swap_immune_acid = TRUE;
-        weapon_swap_resist_acid = TRUE;
+        weapon_swap_immune_acid = true;
+        weapon_swap_resist_acid = true;
     }
     if (of_has(item->flags, OF_IM_COLD))
     {
-        weapon_swap_immune_cold = TRUE;
-        weapon_swap_resist_cold = TRUE;
+        weapon_swap_immune_cold = true;
+        weapon_swap_resist_cold = true;
     }
     if (of_has(item->flags, OF_IM_ELEC))
     {
-        weapon_swap_immune_elec = TRUE;
-        weapon_swap_resist_elec = TRUE;
+        weapon_swap_immune_elec = true;
+        weapon_swap_resist_elec = true;
     }
 
     /* Resistance flags */
-    if (of_has(item->flags, OF_RES_ACID)) weapon_swap_resist_acid = TRUE;
-    if (of_has(item->flags, OF_RES_ELEC)) weapon_swap_resist_elec = TRUE;
-    if (of_has(item->flags, OF_RES_FIRE)) weapon_swap_resist_fire = TRUE;
-    if (of_has(item->flags, OF_RES_COLD)) weapon_swap_resist_cold = TRUE;
-    if (of_has(item->flags, OF_RES_POIS)) weapon_swap_resist_pois = TRUE;
-    if (of_has(item->flags, OF_RES_CONFU)) weapon_swap_resist_conf = TRUE;
-    if (of_has(item->flags, OF_RES_SOUND)) weapon_swap_resist_sound = TRUE;
-    if (of_has(item->flags, OF_RES_LIGHT)) weapon_swap_resist_LIGHT = TRUE;
-    if (of_has(item->flags, OF_RES_DARK)) weapon_swap_resist_dark = TRUE;
-    if (of_has(item->flags, OF_RES_CHAOS)) weapon_swap_resist_chaos = TRUE;
-    if (of_has(item->flags, OF_RES_DISEN)) weapon_swap_resist_disen = TRUE;
-    if (of_has(item->flags, OF_RES_SHARD)) weapon_swap_resist_shard = TRUE;
-    if (of_has(item->flags, OF_RES_NEXUS)) weapon_swap_resist_nexus = TRUE;
-    if (of_has(item->flags, OF_RES_BLIND)) weapon_swap_resist_blind = TRUE;
-    if (of_has(item->flags, OF_RES_NETHR)) weapon_swap_resist_neth = TRUE;
+    if (of_has(item->flags, OF_RES_ACID)) weapon_swap_resist_acid = true;
+    if (of_has(item->flags, OF_RES_ELEC)) weapon_swap_resist_elec = true;
+    if (of_has(item->flags, OF_RES_FIRE)) weapon_swap_resist_fire = true;
+    if (of_has(item->flags, OF_RES_COLD)) weapon_swap_resist_cold = true;
+    if (of_has(item->flags, OF_RES_POIS)) weapon_swap_resist_pois = true;
+    if (of_has(item->flags, OF_RES_CONFU)) weapon_swap_resist_conf = true;
+    if (of_has(item->flags, OF_RES_SOUND)) weapon_swap_resist_sound = true;
+    if (of_has(item->flags, OF_RES_LIGHT)) weapon_swap_resist_LIGHT = true;
+    if (of_has(item->flags, OF_RES_DARK)) weapon_swap_resist_dark = true;
+    if (of_has(item->flags, OF_RES_CHAOS)) weapon_swap_resist_chaos = true;
+    if (of_has(item->flags, OF_RES_DISEN)) weapon_swap_resist_disen = true;
+    if (of_has(item->flags, OF_RES_SHARD)) weapon_swap_resist_shard = true;
+    if (of_has(item->flags, OF_RES_NEXUS)) weapon_swap_resist_nexus = true;
+    if (of_has(item->flags, OF_RES_BLIND)) weapon_swap_resist_blind = true;
+    if (of_has(item->flags, OF_RES_NETHR)) weapon_swap_resist_neth = true;
     if (item->cursed) decurse_weapon_swap = 0;
     if (of_has(item->flags, OF_HEAVY_CURSE)) decurse_weapon_swap = 1;
 }
@@ -2816,54 +2815,54 @@ void borg_notice_swap_armour(void)
         if (item->activation == EFF_BIZARRE) continue;
 
         /* Clear all the swap weapon flags as I look at each one. */
-        armour_swap_slay_animal = FALSE;
-        armour_swap_slay_evil = FALSE;
-        armour_swap_slay_undead = FALSE;
-        armour_swap_slay_demon = FALSE;
-        armour_swap_slay_orc = FALSE;
-        armour_swap_slay_troll = FALSE;
-        armour_swap_slay_giant = FALSE;
-        armour_swap_slay_dragon = FALSE;
-        armour_swap_kill_undead = FALSE;
-        armour_swap_kill_demon = FALSE;
-        armour_swap_kill_dragon = FALSE;
-        armour_swap_impact = FALSE;
-        armour_swap_brand_acid = FALSE;
-        armour_swap_brand_elec = FALSE;
-        armour_swap_brand_fire = FALSE;
-        armour_swap_brand_cold = FALSE;
-        armour_swap_brand_pois = FALSE;
-        armour_swap_see_infra = FALSE;
-        armour_swap_slow_digest = FALSE;
-        armour_swap_aggravate = FALSE;
-        armour_swap_teleport = FALSE;
-		armour_swap_fear = FALSE;
-        armour_swap_regenerate = FALSE;
-        armour_swap_telepathy = FALSE;
-        armour_swap_LIGHT = FALSE;
-        armour_swap_see_invis = FALSE;
-        armour_swap_ffall = FALSE;
-        armour_swap_free_act = FALSE;
-        armour_swap_hold_life = FALSE;
-        armour_swap_immune_fire = FALSE;
-        armour_swap_immune_acid = FALSE;
-        armour_swap_immune_cold = FALSE;
-        armour_swap_immune_elec = FALSE;
-        armour_swap_resist_acid = FALSE;
-        armour_swap_resist_elec = FALSE;
-        armour_swap_resist_fire = FALSE;
-        armour_swap_resist_cold = FALSE;
-        armour_swap_resist_pois = FALSE;
-        armour_swap_resist_conf = FALSE;
-        armour_swap_resist_sound = FALSE;
-        armour_swap_resist_LIGHT = FALSE;
-        armour_swap_resist_dark = FALSE;
-        armour_swap_resist_chaos = FALSE;
-        armour_swap_resist_disen = FALSE;
-        armour_swap_resist_shard = FALSE;
-        armour_swap_resist_nexus = FALSE;
-        armour_swap_resist_blind = FALSE;
-        armour_swap_resist_neth = FALSE;
+        armour_swap_slay_animal = false;
+        armour_swap_slay_evil = false;
+        armour_swap_slay_undead = false;
+        armour_swap_slay_demon = false;
+        armour_swap_slay_orc = false;
+        armour_swap_slay_troll = false;
+        armour_swap_slay_giant = false;
+        armour_swap_slay_dragon = false;
+        armour_swap_kill_undead = false;
+        armour_swap_kill_demon = false;
+        armour_swap_kill_dragon = false;
+        armour_swap_impact = false;
+        armour_swap_brand_acid = false;
+        armour_swap_brand_elec = false;
+        armour_swap_brand_fire = false;
+        armour_swap_brand_cold = false;
+        armour_swap_brand_pois = false;
+        armour_swap_see_infra = false;
+        armour_swap_slow_digest = false;
+        armour_swap_aggravate = false;
+        armour_swap_teleport = false;
+		armour_swap_fear = false;
+        armour_swap_regenerate = false;
+        armour_swap_telepathy = false;
+        armour_swap_LIGHT = false;
+        armour_swap_see_invis = false;
+        armour_swap_ffall = false;
+        armour_swap_free_act = false;
+        armour_swap_hold_life = false;
+        armour_swap_immune_fire = false;
+        armour_swap_immune_acid = false;
+        armour_swap_immune_cold = false;
+        armour_swap_immune_elec = false;
+        armour_swap_resist_acid = false;
+        armour_swap_resist_elec = false;
+        armour_swap_resist_fire = false;
+        armour_swap_resist_cold = false;
+        armour_swap_resist_pois = false;
+        armour_swap_resist_conf = false;
+        armour_swap_resist_sound = false;
+        armour_swap_resist_LIGHT = false;
+        armour_swap_resist_dark = false;
+        armour_swap_resist_chaos = false;
+        armour_swap_resist_disen = false;
+        armour_swap_resist_shard = false;
+        armour_swap_resist_nexus = false;
+        armour_swap_resist_blind = false;
+        armour_swap_resist_neth = false;
         decurse_armour_swap = -1;
 
         /* Analyze the item */
@@ -2884,23 +2883,23 @@ void borg_notice_swap_armour(void)
             /* various slays */
             /* as of 280, armours dont have slays but random artifacts might.
              */
-            if (of_has(item->flags, OF_SLAY_ANIMAL)) armour_swap_slay_animal = TRUE;
-            if (of_has(item->flags, OF_SLAY_EVIL))   armour_swap_slay_evil = TRUE;
-            if (of_has(item->flags, OF_SLAY_UNDEAD)) armour_swap_slay_undead = TRUE;
-            if (of_has(item->flags, OF_SLAY_DEMON))  armour_swap_slay_demon = TRUE;
-            if (of_has(item->flags, OF_SLAY_ORC))    armour_swap_slay_orc = TRUE;
-            if (of_has(item->flags, OF_SLAY_TROLL))  armour_swap_slay_troll = TRUE;
-            if (of_has(item->flags, OF_SLAY_GIANT))  armour_swap_slay_giant = TRUE;
-            if (of_has(item->flags, OF_SLAY_DRAGON)) armour_swap_slay_dragon = TRUE;
-            if (of_has(item->flags, OF_KILL_UNDEAD)) armour_swap_kill_undead = TRUE;
-            if (of_has(item->flags, OF_KILL_DEMON))  armour_swap_kill_demon = TRUE;
-            if (of_has(item->flags, OF_KILL_DRAGON)) armour_swap_kill_dragon = TRUE;
-            if (of_has(item->flags, OF_IMPACT))      armour_swap_impact = TRUE;
-            if (of_has(item->flags, OF_BRAND_ACID))  armour_swap_brand_acid = TRUE;
-            if (of_has(item->flags, OF_BRAND_ELEC))  armour_swap_brand_elec = TRUE;
-            if (of_has(item->flags, OF_BRAND_FIRE))  armour_swap_brand_fire = TRUE;
-            if (of_has(item->flags, OF_BRAND_COLD))  armour_swap_brand_cold = TRUE;
-            if (of_has(item->flags, OF_BRAND_POIS))  armour_swap_brand_pois = TRUE;
+            if (of_has(item->flags, OF_SLAY_ANIMAL)) armour_swap_slay_animal = true;
+            if (of_has(item->flags, OF_SLAY_EVIL))   armour_swap_slay_evil = true;
+            if (of_has(item->flags, OF_SLAY_UNDEAD)) armour_swap_slay_undead = true;
+            if (of_has(item->flags, OF_SLAY_DEMON))  armour_swap_slay_demon = true;
+            if (of_has(item->flags, OF_SLAY_ORC))    armour_swap_slay_orc = true;
+            if (of_has(item->flags, OF_SLAY_TROLL))  armour_swap_slay_troll = true;
+            if (of_has(item->flags, OF_SLAY_GIANT))  armour_swap_slay_giant = true;
+            if (of_has(item->flags, OF_SLAY_DRAGON)) armour_swap_slay_dragon = true;
+            if (of_has(item->flags, OF_KILL_UNDEAD)) armour_swap_kill_undead = true;
+            if (of_has(item->flags, OF_KILL_DEMON))  armour_swap_kill_demon = true;
+            if (of_has(item->flags, OF_KILL_DRAGON)) armour_swap_kill_dragon = true;
+            if (of_has(item->flags, OF_IMPACT))      armour_swap_impact = true;
+            if (of_has(item->flags, OF_BRAND_ACID))  armour_swap_brand_acid = true;
+            if (of_has(item->flags, OF_BRAND_ELEC))  armour_swap_brand_elec = true;
+            if (of_has(item->flags, OF_BRAND_FIRE))  armour_swap_brand_fire = true;
+            if (of_has(item->flags, OF_BRAND_COLD))  armour_swap_brand_cold = true;
+            if (of_has(item->flags, OF_BRAND_POIS))  armour_swap_brand_pois = true;
 
             /* Affect infravision */
             if (of_has(item->flags, OF_INFRA)) armour_swap_see_infra += item->pval;
@@ -2908,57 +2907,57 @@ void borg_notice_swap_armour(void)
             /* Affect speed */
 
             /* Various flags */
-            if (of_has(item->flags, OF_SLOW_DIGEST)) armour_swap_slow_digest = TRUE;
-            if (of_has(item->flags, OF_AGGRAVATE)) armour_swap_aggravate = TRUE;
-            if (of_has(item->flags, OF_AFRAID)) armour_swap_fear = TRUE;
-            if (of_has(item->flags, OF_TELEPORT)) armour_swap_teleport = TRUE;
-            if (of_has(item->flags, OF_REGEN)) armour_swap_regenerate = TRUE;
-            if (of_has(item->flags, OF_TELEPATHY)) armour_swap_telepathy = TRUE;
-            if (of_has(item->flags, OF_LIGHT)) armour_swap_LIGHT = TRUE;
-            if (of_has(item->flags, OF_SEE_INVIS)) armour_swap_see_invis = TRUE;
-            if (of_has(item->flags, OF_FEATHER)) armour_swap_ffall = TRUE;
-            if (of_has(item->flags, OF_FREE_ACT)) armour_swap_free_act = TRUE;
-            if (of_has(item->flags, OF_HOLD_LIFE)) armour_swap_hold_life = TRUE;
+            if (of_has(item->flags, OF_SLOW_DIGEST)) armour_swap_slow_digest = true;
+            if (of_has(item->flags, OF_AGGRAVATE)) armour_swap_aggravate = true;
+            if (of_has(item->flags, OF_AFRAID)) armour_swap_fear = true;
+            if (of_has(item->flags, OF_TELEPORT)) armour_swap_teleport = true;
+            if (of_has(item->flags, OF_REGEN)) armour_swap_regenerate = true;
+            if (of_has(item->flags, OF_TELEPATHY)) armour_swap_telepathy = true;
+            if (of_has(item->flags, OF_LIGHT)) armour_swap_LIGHT = true;
+            if (of_has(item->flags, OF_SEE_INVIS)) armour_swap_see_invis = true;
+            if (of_has(item->flags, OF_FEATHER)) armour_swap_ffall = true;
+            if (of_has(item->flags, OF_FREE_ACT)) armour_swap_free_act = true;
+            if (of_has(item->flags, OF_HOLD_LIFE)) armour_swap_hold_life = true;
 
             /* Immunity flags */
             /* if you are immune you automaticly resist */
             if (of_has(item->flags, OF_IM_FIRE))
             {
-                armour_swap_immune_fire = TRUE;
-                armour_swap_resist_fire = TRUE;
+                armour_swap_immune_fire = true;
+                armour_swap_resist_fire = true;
             }
             if (of_has(item->flags, OF_IM_ACID))
             {
-                armour_swap_immune_acid = TRUE;
-                armour_swap_resist_acid = TRUE;
+                armour_swap_immune_acid = true;
+                armour_swap_resist_acid = true;
             }
             if (of_has(item->flags, OF_IM_COLD))
             {
-                armour_swap_immune_cold = TRUE;
-                armour_swap_resist_cold = TRUE;
+                armour_swap_immune_cold = true;
+                armour_swap_resist_cold = true;
             }
             if (of_has(item->flags, OF_IM_ELEC))
             {
-                armour_swap_immune_elec = TRUE;
-                armour_swap_resist_elec = TRUE;
+                armour_swap_immune_elec = true;
+                armour_swap_resist_elec = true;
             }
 
             /* Resistance flags */
-            if (of_has(item->flags, OF_RES_ACID)) armour_swap_resist_acid = TRUE;
-            if (of_has(item->flags, OF_RES_ELEC)) armour_swap_resist_elec = TRUE;
-            if (of_has(item->flags, OF_RES_FIRE)) armour_swap_resist_fire = TRUE;
-            if (of_has(item->flags, OF_RES_COLD)) armour_swap_resist_cold = TRUE;
-            if (of_has(item->flags, OF_RES_POIS)) armour_swap_resist_pois = TRUE;
-            if (of_has(item->flags, OF_RES_CONFU)) armour_swap_resist_conf = TRUE;
-            if (of_has(item->flags, OF_RES_SOUND)) armour_swap_resist_sound = TRUE;
-            if (of_has(item->flags, OF_RES_LIGHT)) armour_swap_resist_LIGHT = TRUE;
-            if (of_has(item->flags, OF_RES_DARK)) armour_swap_resist_dark = TRUE;
-            if (of_has(item->flags, OF_RES_CHAOS)) armour_swap_resist_chaos = TRUE;
-            if (of_has(item->flags, OF_RES_DISEN)) armour_swap_resist_disen = TRUE;
-            if (of_has(item->flags, OF_RES_SHARD)) armour_swap_resist_shard = TRUE;
-            if (of_has(item->flags, OF_RES_NEXUS)) armour_swap_resist_nexus = TRUE;
-            if (of_has(item->flags, OF_RES_BLIND)) armour_swap_resist_blind = TRUE;
-            if (of_has(item->flags, OF_RES_NETHR)) armour_swap_resist_neth = TRUE;
+            if (of_has(item->flags, OF_RES_ACID)) armour_swap_resist_acid = true;
+            if (of_has(item->flags, OF_RES_ELEC)) armour_swap_resist_elec = true;
+            if (of_has(item->flags, OF_RES_FIRE)) armour_swap_resist_fire = true;
+            if (of_has(item->flags, OF_RES_COLD)) armour_swap_resist_cold = true;
+            if (of_has(item->flags, OF_RES_POIS)) armour_swap_resist_pois = true;
+            if (of_has(item->flags, OF_RES_CONFU)) armour_swap_resist_conf = true;
+            if (of_has(item->flags, OF_RES_SOUND)) armour_swap_resist_sound = true;
+            if (of_has(item->flags, OF_RES_LIGHT)) armour_swap_resist_LIGHT = true;
+            if (of_has(item->flags, OF_RES_DARK)) armour_swap_resist_dark = true;
+            if (of_has(item->flags, OF_RES_CHAOS)) armour_swap_resist_chaos = true;
+            if (of_has(item->flags, OF_RES_DISEN)) armour_swap_resist_disen = true;
+            if (of_has(item->flags, OF_RES_SHARD)) armour_swap_resist_shard = true;
+            if (of_has(item->flags, OF_RES_NEXUS)) armour_swap_resist_nexus = true;
+            if (of_has(item->flags, OF_RES_BLIND)) armour_swap_resist_blind = true;
+            if (of_has(item->flags, OF_RES_NETHR)) armour_swap_resist_neth = true;
             if (item->cursed) decurse_armour_swap = 0;
             if (of_has(item->flags, OF_HEAVY_CURSE)) decurse_armour_swap = 1;
 
@@ -3085,7 +3084,7 @@ void borg_notice_swap_armour(void)
             /* some artifacts would make good back ups for their activation.
 			 * and dragonscale armors do not activate for the cool effects, only breath 
 			 */
-			if (borg_items[i].tval != TV_DRAG_ARMOR) v += borg_bonus_activation(i, TRUE);
+			if (borg_items[i].tval != TV_DRAG_ARMOR) v += borg_bonus_activation(i, true);
 
             }
 
@@ -3118,71 +3117,71 @@ void borg_notice_swap_armour(void)
         item = &borg_items[b_i];
 
        /* Clear all the swap weapon flags as I look at each one. */
-        armour_swap_slay_animal = FALSE;
-        armour_swap_slay_evil = FALSE;
-        armour_swap_slay_undead = FALSE;
-        armour_swap_slay_demon = FALSE;
-        armour_swap_slay_orc = FALSE;
-        armour_swap_slay_troll = FALSE;
-        armour_swap_slay_giant = FALSE;
-        armour_swap_slay_dragon = FALSE;
-        armour_swap_kill_dragon = FALSE;
-        armour_swap_impact = FALSE;
-        armour_swap_brand_acid = FALSE;
-        armour_swap_brand_elec = FALSE;
-        armour_swap_brand_fire = FALSE;
-        armour_swap_brand_cold = FALSE;
-        armour_swap_brand_pois = FALSE;
-        armour_swap_see_infra = FALSE;
-        armour_swap_slow_digest = FALSE;
-        armour_swap_aggravate = FALSE;
-        armour_swap_teleport = FALSE;
-        armour_swap_regenerate = FALSE;
-        armour_swap_telepathy = FALSE;
-        armour_swap_LIGHT = FALSE;
-        armour_swap_see_invis = FALSE;
-        armour_swap_ffall = FALSE;
-        armour_swap_free_act = FALSE;
-        armour_swap_hold_life = FALSE;
-        armour_swap_immune_fire = FALSE;
-        armour_swap_immune_acid = FALSE;
-        armour_swap_immune_cold = FALSE;
-        armour_swap_immune_elec = FALSE;
-        armour_swap_resist_acid = FALSE;
-        armour_swap_resist_elec = FALSE;
-        armour_swap_resist_fire = FALSE;
-        armour_swap_resist_cold = FALSE;
-        armour_swap_resist_pois = FALSE;
-        armour_swap_resist_conf = FALSE;
-        armour_swap_resist_sound = FALSE;
-        armour_swap_resist_LIGHT = FALSE;
-        armour_swap_resist_dark = FALSE;
-        armour_swap_resist_chaos = FALSE;
-        armour_swap_resist_disen = FALSE;
-        armour_swap_resist_shard = FALSE;
-        armour_swap_resist_nexus = FALSE;
-        armour_swap_resist_blind = FALSE;
-        armour_swap_resist_neth = FALSE;
+        armour_swap_slay_animal = false;
+        armour_swap_slay_evil = false;
+        armour_swap_slay_undead = false;
+        armour_swap_slay_demon = false;
+        armour_swap_slay_orc = false;
+        armour_swap_slay_troll = false;
+        armour_swap_slay_giant = false;
+        armour_swap_slay_dragon = false;
+        armour_swap_kill_dragon = false;
+        armour_swap_impact = false;
+        armour_swap_brand_acid = false;
+        armour_swap_brand_elec = false;
+        armour_swap_brand_fire = false;
+        armour_swap_brand_cold = false;
+        armour_swap_brand_pois = false;
+        armour_swap_see_infra = false;
+        armour_swap_slow_digest = false;
+        armour_swap_aggravate = false;
+        armour_swap_teleport = false;
+        armour_swap_regenerate = false;
+        armour_swap_telepathy = false;
+        armour_swap_LIGHT = false;
+        armour_swap_see_invis = false;
+        armour_swap_ffall = false;
+        armour_swap_free_act = false;
+        armour_swap_hold_life = false;
+        armour_swap_immune_fire = false;
+        armour_swap_immune_acid = false;
+        armour_swap_immune_cold = false;
+        armour_swap_immune_elec = false;
+        armour_swap_resist_acid = false;
+        armour_swap_resist_elec = false;
+        armour_swap_resist_fire = false;
+        armour_swap_resist_cold = false;
+        armour_swap_resist_pois = false;
+        armour_swap_resist_conf = false;
+        armour_swap_resist_sound = false;
+        armour_swap_resist_LIGHT = false;
+        armour_swap_resist_dark = false;
+        armour_swap_resist_chaos = false;
+        armour_swap_resist_disen = false;
+        armour_swap_resist_shard = false;
+        armour_swap_resist_nexus = false;
+        armour_swap_resist_blind = false;
+        armour_swap_resist_neth = false;
         decurse_armour_swap = -1;
 
         /* various slays */
-            if (of_has(item->flags, OF_SLAY_ANIMAL)) armour_swap_slay_animal = TRUE;
-            if (of_has(item->flags, OF_SLAY_EVIL))   armour_swap_slay_evil = TRUE;
-            if (of_has(item->flags, OF_SLAY_UNDEAD)) armour_swap_slay_undead = TRUE;
-            if (of_has(item->flags, OF_SLAY_DEMON))  armour_swap_slay_demon = TRUE;
-            if (of_has(item->flags, OF_SLAY_ORC))    armour_swap_slay_orc = TRUE;
-            if (of_has(item->flags, OF_SLAY_TROLL))  armour_swap_slay_troll = TRUE;
-            if (of_has(item->flags, OF_SLAY_GIANT))  armour_swap_slay_giant = TRUE;
-            if (of_has(item->flags, OF_SLAY_DRAGON)) armour_swap_slay_dragon = TRUE;
-            if (of_has(item->flags, OF_KILL_UNDEAD)) armour_swap_kill_undead = TRUE;
-            if (of_has(item->flags, OF_KILL_DEMON)) armour_swap_kill_demon = TRUE;
-            if (of_has(item->flags, OF_KILL_DRAGON)) armour_swap_kill_dragon = TRUE;
-            if (of_has(item->flags, OF_IMPACT))      armour_swap_impact = TRUE;
-            if (of_has(item->flags, OF_BRAND_ACID))  armour_swap_brand_acid = TRUE;
-            if (of_has(item->flags, OF_BRAND_ELEC))  armour_swap_brand_elec = TRUE;
-            if (of_has(item->flags, OF_BRAND_FIRE))  armour_swap_brand_fire = TRUE;
-            if (of_has(item->flags, OF_BRAND_COLD))  armour_swap_brand_cold = TRUE;
-            if (of_has(item->flags, OF_BRAND_POIS))  armour_swap_brand_pois = TRUE;
+            if (of_has(item->flags, OF_SLAY_ANIMAL)) armour_swap_slay_animal = true;
+            if (of_has(item->flags, OF_SLAY_EVIL))   armour_swap_slay_evil = true;
+            if (of_has(item->flags, OF_SLAY_UNDEAD)) armour_swap_slay_undead = true;
+            if (of_has(item->flags, OF_SLAY_DEMON))  armour_swap_slay_demon = true;
+            if (of_has(item->flags, OF_SLAY_ORC))    armour_swap_slay_orc = true;
+            if (of_has(item->flags, OF_SLAY_TROLL))  armour_swap_slay_troll = true;
+            if (of_has(item->flags, OF_SLAY_GIANT))  armour_swap_slay_giant = true;
+            if (of_has(item->flags, OF_SLAY_DRAGON)) armour_swap_slay_dragon = true;
+            if (of_has(item->flags, OF_KILL_UNDEAD)) armour_swap_kill_undead = true;
+            if (of_has(item->flags, OF_KILL_DEMON)) armour_swap_kill_demon = true;
+            if (of_has(item->flags, OF_KILL_DRAGON)) armour_swap_kill_dragon = true;
+            if (of_has(item->flags, OF_IMPACT))      armour_swap_impact = true;
+            if (of_has(item->flags, OF_BRAND_ACID))  armour_swap_brand_acid = true;
+            if (of_has(item->flags, OF_BRAND_ELEC))  armour_swap_brand_elec = true;
+            if (of_has(item->flags, OF_BRAND_FIRE))  armour_swap_brand_fire = true;
+            if (of_has(item->flags, OF_BRAND_COLD))  armour_swap_brand_cold = true;
+            if (of_has(item->flags, OF_BRAND_POIS))  armour_swap_brand_pois = true;
 
             /* Affect infravision */
             if (of_has(item->flags, OF_INFRA)) armour_swap_see_infra += item->pval;
@@ -3190,60 +3189,60 @@ void borg_notice_swap_armour(void)
             /* Affect speed */
 
             /* Various flags */
-            if (of_has(item->flags, OF_SLOW_DIGEST)) armour_swap_slow_digest = TRUE;
-            if (of_has(item->flags, OF_AGGRAVATE)) armour_swap_aggravate = TRUE;
-            if (of_has(item->flags, OF_TELEPORT)) armour_swap_teleport = TRUE;
-            if (of_has(item->flags, OF_REGEN)) armour_swap_regenerate = TRUE;
-            if (of_has(item->flags, OF_TELEPATHY)) armour_swap_telepathy = TRUE;
-            if (of_has(item->flags, OF_LIGHT)) armour_swap_LIGHT = TRUE;
-            if (of_has(item->flags, OF_SEE_INVIS)) armour_swap_see_invis = TRUE;
-            if (of_has(item->flags, OF_FEATHER)) armour_swap_ffall = TRUE;
-            if (of_has(item->flags, OF_FREE_ACT)) armour_swap_free_act = TRUE;
-            if (of_has(item->flags, OF_HOLD_LIFE)) armour_swap_hold_life = TRUE;
+            if (of_has(item->flags, OF_SLOW_DIGEST)) armour_swap_slow_digest = true;
+            if (of_has(item->flags, OF_AGGRAVATE)) armour_swap_aggravate = true;
+            if (of_has(item->flags, OF_TELEPORT)) armour_swap_teleport = true;
+            if (of_has(item->flags, OF_REGEN)) armour_swap_regenerate = true;
+            if (of_has(item->flags, OF_TELEPATHY)) armour_swap_telepathy = true;
+            if (of_has(item->flags, OF_LIGHT)) armour_swap_LIGHT = true;
+            if (of_has(item->flags, OF_SEE_INVIS)) armour_swap_see_invis = true;
+            if (of_has(item->flags, OF_FEATHER)) armour_swap_ffall = true;
+            if (of_has(item->flags, OF_FREE_ACT)) armour_swap_free_act = true;
+            if (of_has(item->flags, OF_HOLD_LIFE)) armour_swap_hold_life = true;
 
             /* Immunity flags */
             /* if you are immune you automaticly resist */
             if (of_has(item->flags, OF_IM_FIRE))
             {
-                armour_swap_immune_fire = TRUE;
-                armour_swap_resist_fire = TRUE;
+                armour_swap_immune_fire = true;
+                armour_swap_resist_fire = true;
             }
             if (of_has(item->flags, OF_IM_ACID))
             {
-                armour_swap_immune_acid = TRUE;
-                armour_swap_resist_acid = TRUE;
+                armour_swap_immune_acid = true;
+                armour_swap_resist_acid = true;
             }
             if (of_has(item->flags, OF_IM_COLD))
             {
-                armour_swap_immune_cold = TRUE;
-                armour_swap_resist_cold = TRUE;
+                armour_swap_immune_cold = true;
+                armour_swap_resist_cold = true;
             }
             if (of_has(item->flags, OF_IM_ELEC))
             {
-                armour_swap_immune_elec = TRUE;
-                armour_swap_resist_elec = TRUE;
+                armour_swap_immune_elec = true;
+                armour_swap_resist_elec = true;
             }
 
             /* Resistance flags */
-            if (of_has(item->flags, OF_RES_ACID)) armour_swap_resist_acid = TRUE;
-            if (of_has(item->flags, OF_RES_ELEC)) armour_swap_resist_elec = TRUE;
-            if (of_has(item->flags, OF_RES_FIRE)) armour_swap_resist_fire = TRUE;
-            if (of_has(item->flags, OF_RES_COLD)) armour_swap_resist_cold = TRUE;
-            if (of_has(item->flags, OF_RES_POIS)) armour_swap_resist_pois = TRUE;
-            if (of_has(item->flags, OF_RES_CONFU)) armour_swap_resist_conf = TRUE;
-            if (of_has(item->flags, OF_RES_SOUND)) armour_swap_resist_sound = TRUE;
-            if (of_has(item->flags, OF_RES_LIGHT)) armour_swap_resist_LIGHT = TRUE;
-            if (of_has(item->flags, OF_RES_DARK)) armour_swap_resist_dark = TRUE;
-            if (of_has(item->flags, OF_RES_CHAOS)) armour_swap_resist_chaos = TRUE;
-            if (of_has(item->flags, OF_RES_DISEN)) armour_swap_resist_disen = TRUE;
-            if (of_has(item->flags, OF_RES_SHARD)) armour_swap_resist_shard = TRUE;
-            if (of_has(item->flags, OF_RES_NEXUS)) armour_swap_resist_nexus = TRUE;
-            if (of_has(item->flags, OF_RES_BLIND)) armour_swap_resist_blind = TRUE;
-            if (of_has(item->flags, OF_RES_NETHR)) armour_swap_resist_neth = TRUE;
+            if (of_has(item->flags, OF_RES_ACID)) armour_swap_resist_acid = true;
+            if (of_has(item->flags, OF_RES_ELEC)) armour_swap_resist_elec = true;
+            if (of_has(item->flags, OF_RES_FIRE)) armour_swap_resist_fire = true;
+            if (of_has(item->flags, OF_RES_COLD)) armour_swap_resist_cold = true;
+            if (of_has(item->flags, OF_RES_POIS)) armour_swap_resist_pois = true;
+            if (of_has(item->flags, OF_RES_CONFU)) armour_swap_resist_conf = true;
+            if (of_has(item->flags, OF_RES_SOUND)) armour_swap_resist_sound = true;
+            if (of_has(item->flags, OF_RES_LIGHT)) armour_swap_resist_LIGHT = true;
+            if (of_has(item->flags, OF_RES_DARK)) armour_swap_resist_dark = true;
+            if (of_has(item->flags, OF_RES_CHAOS)) armour_swap_resist_chaos = true;
+            if (of_has(item->flags, OF_RES_DISEN)) armour_swap_resist_disen = true;
+            if (of_has(item->flags, OF_RES_SHARD)) armour_swap_resist_shard = true;
+            if (of_has(item->flags, OF_RES_NEXUS)) armour_swap_resist_nexus = true;
+            if (of_has(item->flags, OF_RES_BLIND)) armour_swap_resist_blind = true;
+            if (of_has(item->flags, OF_RES_NETHR)) armour_swap_resist_neth = true;
             if (item->cursed) decurse_armour_swap = 0;
             if (of_has(item->flags, OF_HEAVY_CURSE)) decurse_armour_swap = 1;
 
-        enchant_armour_swap_to_a = 0;
+        enchant_armour_swap_distance4( = 0;
 
         /* dont look for enchantment on non armours */
         if (item->tval >= TV_LIGHT) return;
@@ -3256,14 +3255,14 @@ void borg_notice_swap_armour(void)
         {
             if (item->to_a < 10)
             {
-                enchant_armour_swap_to_a += (10 - item->to_a);
+                enchant_armour_swap_distance4( += (10 - item->to_a);
             }
         }
         else
         {
             if (item->to_a < 8)
             {
-                enchant_armour_swap_to_a += (8 - item->to_a);
+                enchant_armour_swap_distance4( += (8 - item->to_a);
             }
         }
 
@@ -3301,7 +3300,7 @@ void borg_notice(bool notice_swap, bool do_inven_equip)
 		/* Cheat the exact number from the game.  This number is available to the player
 		 * on the extra term window.
 		 */
-		my_stat_cur[i] = p_ptr->stat_cur[i];
+		my_stat_cur[i] = player->stat_cur[i];
 
         /* Max stat is the max that the cur stat ever is. */
         if (my_stat_cur[i] > my_stat_max[i])
@@ -3389,10 +3388,10 @@ void borg_notice(bool notice_swap, bool do_inven_equip)
 
     /* Hack -- Apply "encumbrance" from weight */
     /* Extract the current weight (in tenth pounds) */
-    inven_weight = p_ptr->total_weight;
+    inven_weight = player->total_weight;
 
     /* Extract the "weight limit" (in tenth pounds) */
-    carry_capacity = adj_str_wgt[my_stat_ind[A_STR]] * 100;
+    carry_capacity = adj_str_wgt[my_stat_ind[STAT_STR]] * 100;
 
     /* Apply "encumbrance" from weight */
     if (inven_weight > carry_capacity/2)
@@ -3472,12 +3471,12 @@ static void borg_notice_home_aux1(borg_item *in_item, bool no_items)
     num_sustain_con = 0;
     num_sustain_all = 0;
 
-    home_stat_add[A_STR] = 0;
-    home_stat_add[A_INT] = 0;
-    home_stat_add[A_WIS] = 0;
-    home_stat_add[A_DEX] = 0;
+    home_stat_add[STAT_STR] = 0;
+    home_stat_add[STAT_INT] = 0;
+    home_stat_add[STAT_WIS] = 0;
+    home_stat_add[STAT_DEX] = 0;
     home_stat_add[A_CON] = 0;
-    home_stat_add[A_CHR] = 0;
+    home_stat_add[STAT_CHR] = 0;
 
     num_weapons = 0;
 
@@ -3535,16 +3534,16 @@ static void borg_notice_home_aux1(borg_item *in_item, bool no_items)
     num_book[8] = 0;
 
     /* Reset various */
-    num_fix_stat[A_STR] = 0;
-    num_fix_stat[A_INT] = 0;
-    num_fix_stat[A_WIS] = 0;
-    num_fix_stat[A_DEX] = 0;
+    num_fix_stat[STAT_STR] = 0;
+    num_fix_stat[STAT_INT] = 0;
+    num_fix_stat[STAT_WIS] = 0;
+    num_fix_stat[STAT_DEX] = 0;
     num_fix_stat[A_CON] = 0;
-    num_fix_stat[A_CHR] = 0;
+    num_fix_stat[STAT_CHR] = 0;
     num_fix_stat[6] = 0;
 
     /* Reset enchantment */
-    num_enchant_to_a = 0;
+    num_enchant_distance4( = 0;
     num_enchant_to_d = 0;
     num_enchant_to_h = 0;
 
@@ -3591,7 +3590,7 @@ static void borg_notice_home_dupe(borg_item *item, bool check_sval, int i)
         /* but a defender is a defender even if one is a dagger and */
         /* one is a mace */
         if ( (item->tval == item2->tval) &&
-             (check_sval ? (item->sval == item2->sval) : TRUE) &&
+             (check_sval ? (item->sval == item2->sval) : true) &&
              (item->name1 == item2->name1) &&
              (item->name2 == item2->name2) )
         {
@@ -3708,22 +3707,22 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
         if (of_has(item->flags, OF_STR))
         {
             if (item->tval != TV_RING || item->pval > 3)
-                home_stat_add[A_STR] += item->pval * item->iqty;
+                home_stat_add[STAT_STR] += item->pval * item->iqty;
         }
         if (of_has(item->flags, OF_INT))
         {
             if (item->tval != TV_RING || item->pval > 3)
-                home_stat_add[A_INT] += item->pval * item->iqty;
+                home_stat_add[STAT_INT] += item->pval * item->iqty;
         }
         if (of_has(item->flags, OF_WIS))
         {
             if (item->tval != TV_RING || item->pval > 3)
-                home_stat_add[A_WIS] += item->pval * item->iqty;
+                home_stat_add[STAT_WIS] += item->pval * item->iqty;
         }
         if (of_has(item->flags, OF_DEX))
         {
             if (item->tval != TV_RING || item->pval > 3)
-                home_stat_add[A_DEX] += item->pval * item->iqty;
+                home_stat_add[STAT_DEX] += item->pval * item->iqty;
         }
         if (of_has(item->flags, OF_CON))
         {
@@ -3733,7 +3732,7 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
         if (of_has(item->flags, OF_CHR))
         {
             if (item->tval != TV_RING || item->pval > 3)
-                home_stat_add[A_CHR] += item->pval * item->iqty;
+                home_stat_add[STAT_CHR] += item->pval * item->iqty;
         }
 
         /* count up bonus to speed */
@@ -3759,21 +3758,21 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
                 num_armor += item->iqty;
 
                 /* see if this item is duplicated */
-                borg_notice_home_dupe( item, FALSE, i );
+                borg_notice_home_dupe( item, false, i );
                 break;
 
             case TV_DRAG_ARMOR:
                 num_armor += item->iqty;
 
                 /* see if this item is duplicated */
-                borg_notice_home_dupe( item, TRUE, i );
+                borg_notice_home_dupe( item, true, i );
                 break;
 
             case TV_CLOAK:
                 num_cloaks += item->iqty;
 
                 /* see if this item is duplicated */
-                borg_notice_home_dupe( item, FALSE, i );
+                borg_notice_home_dupe( item, false, i );
 
                 break;
 
@@ -3781,7 +3780,7 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
                 num_shields += item->iqty;
 
                 /* see if this item is duplicated */
-                borg_notice_home_dupe( item, FALSE, i );
+                borg_notice_home_dupe( item, false, i );
                 break;
 
             case TV_HELM:
@@ -3789,7 +3788,7 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
                 num_hats += item->iqty;
 
                 /* see if this item is duplicated */
-                borg_notice_home_dupe( item, FALSE, i );
+                borg_notice_home_dupe( item, false, i );
 
                 break;
 
@@ -3797,7 +3796,7 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
                 num_gloves += item->iqty;
 
                 /* most gloves hurt magic for spell-casters */
-                if (player_has(PF_CUMBER_GLOVE) && borg_skill[BI_MAXSP] > 3)
+                if (player_has(player, PF_CUMBER_GLOVE) && borg_skill[BI_MAXSP] > 3)
                 {
                     /* Penalize non-usable gloves */
                     if (item->iqty &&
@@ -3812,7 +3811,7 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
                 home_damage += item->to_d * 3;
 
                 /* see if this item is duplicated */
-                borg_notice_home_dupe( item, FALSE, i );
+                borg_notice_home_dupe( item, false, i );
 
                 break;
 
@@ -3843,7 +3842,7 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
                 num_boots += item->iqty;
 
                 /* see if this item is duplicated */
-                borg_notice_home_dupe( item, FALSE, i );
+                borg_notice_home_dupe( item, false, i );
                 break;
 
             case TV_SWORD:
@@ -3855,7 +3854,7 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
 
                 num_weapons += item->iqty;
                 /*  most edged weapons hurt magic for priests */
-                if (player_has(PF_BLESS_WEAPON))
+                if (player_has(player, PF_BLESS_WEAPON))
                 {
                     /* Penalize non-blessed edged weapons */
                     if ((item->tval == TV_SWORD || item->tval == TV_POLEARM) &&
@@ -3871,7 +3870,7 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
                 /* is kept if it is found */
                 /* It is hard to hold a heavy weapon */
                 num_blow = 1;
-                if (adj_str_hold[my_stat_ind[A_STR]] >= item->weight / 10)
+                if (adj_str_hold[my_stat_ind[STAT_STR]] >= item->weight / 10)
                 {
                     int str_index, dex_index;
                     int num = 0, wgt = 0, mul = 0, div = 0;
@@ -3903,13 +3902,13 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
                     div = ((item->weight < wgt) ? wgt : item->weight);
 
                     /* Access the strength vs weight */
-                    str_index = (adj_str_blow[my_stat_ind[A_STR]] * mul / div);
+                    str_index = (adj_str_blow[my_stat_ind[STAT_STR]] * mul / div);
 
                     /* Maximal value */
                     if (str_index > 11) str_index = 11;
 
                     /* Index by dexterity */
-                    dex_index = (adj_dex_blow[my_stat_ind[A_DEX]]);
+                    dex_index = (adj_dex_blow[my_stat_ind[STAT_DEX]]);
 
                     /* Maximal value */
                     if (dex_index > 11) dex_index = 11;
@@ -3939,7 +3938,7 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
                 }
 
                 /* see if this item is a duplicate */
-                borg_notice_home_dupe( item, FALSE, i );
+                borg_notice_home_dupe( item, false, i );
                 break;
             }
 
@@ -3947,14 +3946,14 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
                 num_bow += item->iqty;
 
                 /* see if this item is a duplicate */
-                borg_notice_home_dupe( item, FALSE, i );
+                borg_notice_home_dupe( item, false, i );
                 break;
 
             case TV_RING:
                 num_rings += item->iqty;
 
                 /* see if this item is a duplicate */
-                borg_notice_home_dupe( item, TRUE, i );
+                borg_notice_home_dupe( item, true, i );
 
                 break;
 
@@ -3962,7 +3961,7 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
                 num_neck += item->iqty;
 
                 /* see if this item is a duplicate */
-                borg_notice_home_dupe( item, TRUE, i );
+                borg_notice_home_dupe( item, true, i );
                 break;
 
 
@@ -3971,7 +3970,7 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
             case TV_PRAYER_BOOK:
 
             /* Skip incorrect books */
-            if (item->tval != p_ptr->class->spell_book) break;
+            if (item->tval != player->class->spell_book) break;
 
             /* Count the books */
             num_book[item->sval] += item->iqty;
@@ -4000,17 +3999,17 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
 
 				case SV_FOOD_PURGING:
                 num_fix_stat[A_CON] += item->iqty;
-                num_fix_stat[A_STR] += item->iqty;
+                num_fix_stat[STAT_STR] += item->iqty;
 				num_mush_purging += item->iqty;
                 break;
 
                 case SV_FOOD_RESTORING:
-                num_fix_stat[A_STR] += item->iqty;
-                num_fix_stat[A_INT] += item->iqty;
-                num_fix_stat[A_WIS] += item->iqty;
-                num_fix_stat[A_DEX] += item->iqty;
+                num_fix_stat[STAT_STR] += item->iqty;
+                num_fix_stat[STAT_INT] += item->iqty;
+                num_fix_stat[STAT_WIS] += item->iqty;
+                num_fix_stat[STAT_DEX] += item->iqty;
                 num_fix_stat[A_CON] += item->iqty;
-                num_fix_stat[A_CHR] += item->iqty;
+                num_fix_stat[STAT_CHR] += item->iqty;
                 num_fix_stat[6]     += item->iqty;
                 break;
 
@@ -4070,19 +4069,19 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
                 break;
 
                 case SV_POTION_RES_STR:
-                num_fix_stat[A_STR] += item->iqty;
+                num_fix_stat[STAT_STR] += item->iqty;
                 break;
 
                 case SV_POTION_RES_INT:
-                num_fix_stat[A_INT] += item->iqty;
+                num_fix_stat[STAT_INT] += item->iqty;
                 break;
 
                 case SV_POTION_RES_WIS:
-                num_fix_stat[A_WIS] += item->iqty;
+                num_fix_stat[STAT_WIS] += item->iqty;
                 break;
 
                 case SV_POTION_RES_DEX:
-                num_fix_stat[A_DEX] += item->iqty;
+                num_fix_stat[STAT_DEX] += item->iqty;
                 break;
 
                 case SV_POTION_RES_CON:
@@ -4090,7 +4089,7 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
                 break;
 
                 case SV_POTION_RES_CHR:
-                num_fix_stat[A_CHR] += item->iqty;
+                num_fix_stat[STAT_CHR] += item->iqty;
                 break;
 
                 case SV_POTION_RESTORE_EXP:
@@ -4157,7 +4156,7 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
                 break;
 
                 case SV_SCROLL_ENCHANT_ARMOR:
-                num_enchant_to_a += item->iqty;
+                num_enchant_distance4( += item->iqty;
                 break;
 
                 case SV_SCROLL_ENCHANT_WEAPON_TO_HIT:
@@ -4172,7 +4171,7 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
                 num_pfe += item->iqty;
                 break;
 
-                case SV_SCROLL_RUNE_OF_PROTECTION:
+                case SV_SCROLL_RUNE_PROTECTION:
                 num_glyph += item->iqty;
                 break;
 
@@ -4318,59 +4317,59 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
     /*** Process the Needs ***/
 
     /* Hack -- No need for stat repair */
-    if (borg_skill[BI_SSTR]) num_fix_stat[A_STR] += 1000;
-    if (borg_skill[BI_SINT]) num_fix_stat[A_INT] += 1000;
-    if (borg_skill[BI_SWIS]) num_fix_stat[A_WIS] += 1000;
-    if (borg_skill[BI_SDEX]) num_fix_stat[A_DEX] += 1000;
+    if (borg_skill[BI_SSTR]) num_fix_stat[STAT_STR] += 1000;
+    if (borg_skill[BI_SINT]) num_fix_stat[STAT_INT] += 1000;
+    if (borg_skill[BI_SWIS]) num_fix_stat[STAT_WIS] += 1000;
+    if (borg_skill[BI_SDEX]) num_fix_stat[STAT_DEX] += 1000;
     if (borg_skill[BI_SCON]) num_fix_stat[A_CON] += 1000;
-    if (borg_skill[BI_SCHR]) num_fix_stat[A_CHR] += 1000;
+    if (borg_skill[BI_SCHR]) num_fix_stat[STAT_CHR] += 1000;
 
     /* Extract the player flags */
     player_flags(f);
 
     /* Good flags */
-    if (rf_has(f, OF_SLOW_DIGEST)) num_slow_digest = TRUE;
-    if (rf_has(f, OF_FEATHER)) num_ffall = TRUE;
-    if (rf_has(f, OF_LIGHT)) num_LIGHT = TRUE;
-    if (rf_has(f, OF_REGEN)) num_regenerate = TRUE;
-    if (rf_has(f, OF_TELEPATHY)) num_telepathy = TRUE;
-    if (rf_has(f, OF_SEE_INVIS)) num_see_inv = TRUE;
-    if (rf_has(f, OF_FREE_ACT)) num_free_act = TRUE;
-    if (rf_has(f, OF_HOLD_LIFE)) num_hold_life = TRUE;
+    if (rf_has(f, OF_SLOW_DIGEST)) num_slow_digest = true;
+    if (rf_has(f, OF_FEATHER)) num_ffall = true;
+    if (rf_has(f, OF_LIGHT)) num_LIGHT = true;
+    if (rf_has(f, OF_REGEN)) num_regenerate = true;
+    if (rf_has(f, OF_TELEPATHY)) num_telepathy = true;
+    if (rf_has(f, OF_SEE_INVIS)) num_see_inv = true;
+    if (rf_has(f, OF_FREE_ACT)) num_free_act = true;
+    if (rf_has(f, OF_HOLD_LIFE)) num_hold_life = true;
 
     /* Weird flags */
 
     /* Bad flags */
 
     /* Immunity flags */
-    if (rf_has(f, OF_IM_FIRE)) num_immune_fire = TRUE;
-    if (rf_has(f, OF_IM_ACID)) num_immune_acid = TRUE;
-    if (rf_has(f, OF_IM_COLD)) num_immune_cold = TRUE;
-    if (rf_has(f, OF_IM_ELEC)) num_immune_elec = TRUE;
+    if (rf_has(f, OF_IM_FIRE)) num_immune_fire = true;
+    if (rf_has(f, OF_IM_ACID)) num_immune_acid = true;
+    if (rf_has(f, OF_IM_COLD)) num_immune_cold = true;
+    if (rf_has(f, OF_IM_ELEC)) num_immune_elec = true;
 
     /* Resistance flags */
-    if (rf_has(f, OF_RES_ACID)) num_resist_acid = TRUE;
-    if (rf_has(f, OF_RES_ELEC)) num_resist_elec = TRUE;
-    if (rf_has(f, OF_RES_FIRE)) num_resist_fire = TRUE;
-    if (rf_has(f, OF_RES_COLD)) num_resist_cold = TRUE;
-    if (rf_has(f, OF_RES_POIS)) num_resist_pois = TRUE;
-    if (rf_has(f, OF_RES_LIGHT)) num_resist_LIGHT = TRUE;
-    if (rf_has(f, OF_RES_DARK)) num_resist_dark = TRUE;
-    if (rf_has(f, OF_RES_BLIND)) num_resist_blind = TRUE;
-    if (rf_has(f, OF_RES_CONFU)) num_resist_conf = TRUE;
-    if (rf_has(f, OF_RES_SOUND)) num_resist_sound = TRUE;
-    if (rf_has(f, OF_RES_SHARD)) num_resist_shard = TRUE;
-    if (rf_has(f, OF_RES_NEXUS)) num_resist_nexus = TRUE;
-    if (rf_has(f, OF_RES_NETHR)) num_resist_neth = TRUE;
-    if (rf_has(f, OF_RES_CHAOS)) num_resist_chaos = TRUE;
-    if (rf_has(f, OF_RES_DISEN)) num_resist_disen = TRUE;
+    if (rf_has(f, OF_RES_ACID)) num_resist_acid = true;
+    if (rf_has(f, OF_RES_ELEC)) num_resist_elec = true;
+    if (rf_has(f, OF_RES_FIRE)) num_resist_fire = true;
+    if (rf_has(f, OF_RES_COLD)) num_resist_cold = true;
+    if (rf_has(f, OF_RES_POIS)) num_resist_pois = true;
+    if (rf_has(f, OF_RES_LIGHT)) num_resist_LIGHT = true;
+    if (rf_has(f, OF_RES_DARK)) num_resist_dark = true;
+    if (rf_has(f, OF_RES_BLIND)) num_resist_blind = true;
+    if (rf_has(f, OF_RES_CONFU)) num_resist_conf = true;
+    if (rf_has(f, OF_RES_SOUND)) num_resist_sound = true;
+    if (rf_has(f, OF_RES_SHARD)) num_resist_shard = true;
+    if (rf_has(f, OF_RES_NEXUS)) num_resist_nexus = true;
+    if (rf_has(f, OF_RES_NETHR)) num_resist_neth = true;
+    if (rf_has(f, OF_RES_CHAOS)) num_resist_chaos = true;
+    if (rf_has(f, OF_RES_DISEN)) num_resist_disen = true;
 
     /* Sustain flags */
-    if (rf_has(f, OF_SUST_STR)) num_sustain_str = TRUE;
-    if (rf_has(f, OF_SUST_INT)) num_sustain_int = TRUE;
-    if (rf_has(f, OF_SUST_WIS)) num_sustain_wis = TRUE;
-    if (rf_has(f, OF_SUST_DEX)) num_sustain_dex = TRUE;
-    if (rf_has(f, OF_SUST_CON)) num_sustain_con = TRUE;
+    if (rf_has(f, OF_SUST_STR)) num_sustain_str = true;
+    if (rf_has(f, OF_SUST_INT)) num_sustain_int = true;
+    if (rf_has(f, OF_SUST_WIS)) num_sustain_wis = true;
+    if (rf_has(f, OF_SUST_DEX)) num_sustain_dex = true;
+    if (rf_has(f, OF_SUST_CON)) num_sustain_con = true;
 
 }
 
@@ -4379,7 +4378,7 @@ static void borg_notice_home_aux2(borg_item *in_item, bool no_items)
  *
  * in_item is passed in if you want to pretend that in_item is
  *          the only item in the home.
- * no_items is passed in as TRUE if you want to pretend that the
+ * no_items is passed in as true if you want to pretend that the
  *          home is empty.
  */
 void borg_notice_home(borg_item *in_item, bool no_items)
@@ -4411,7 +4410,7 @@ extern s32b borg_power_aux1(void)
 
 
     /* Obtain the "hold" value (weight limit for weapons) */
-    hold = adj_str_hold[my_stat_ind[A_STR]];
+    hold = adj_str_hold[my_stat_ind[STAT_STR]];
 
     /*** Analyze weapon ***/
 
@@ -4423,7 +4422,7 @@ extern s32b borg_power_aux1(void)
 	 * because our weapon often has traits that we need in order to be deep (FA, SeeInvis)
 	 */
 	if (borg_skill[BI_CDEPTH] < 10 && borg_skill[BI_MAXCLEVEL] < 15 &&
-		item->iqty && item->ident != TRUE) value += 1000000;
+		item->iqty && item->ident != true) value += 1000000;
 
     /* Calculate "average" damage per "normal" blow  */
     /* and assume we can enchant up to +8 if borg_skill[BI_CLEVEL] > 25 */
@@ -4532,7 +4531,7 @@ extern s32b borg_power_aux1(void)
 	 * because our weapon often has traits that we need in order to be deep (FA, SeeInvis)
 	 */
 	if (borg_skill[BI_CDEPTH] < 10 && borg_skill[BI_MAXCLEVEL] < 15 &&
-		item->iqty && item->ident != TRUE) value += 6000000;
+		item->iqty && item->ident != true) value += 6000000;
 
 	/* Calculate "average" damage per "normal" shot (times 2) */
     if ( item->to_d > 8 || borg_skill[BI_CLEVEL] < 25 )
@@ -4557,13 +4556,13 @@ extern s32b borg_power_aux1(void)
     /* slings force you to carry heavy ammo.  Penalty for that unless you have lots of str  */
     if (item->sval == SV_SLING &&
         !item->name1 &&
-        my_stat_ind[A_STR] < 9)
+        my_stat_ind[STAT_STR] < 9)
     {
         value -= 5000L;
     }
 
 	/* Bonus if level 1 to buy a sling, they are cheap ranged weapons */
-	if (item->sval == SV_SLING && borg_skill[BI_CLEVEL] ==1 && my_stat_ind[A_STR] >= 9) value += 8000;
+	if (item->sval == SV_SLING && borg_skill[BI_CLEVEL] ==1 && my_stat_ind[STAT_STR] >= 9) value += 8000;
 
 
     /* Reward "bonus to hit" */
@@ -4577,7 +4576,7 @@ extern s32b borg_power_aux1(void)
 
 
     /* Prefer bows */
-    if (player_has(PF_EXTRA_SHOT) && my_ammo_tval == TV_ARROW) value += 30000L;
+    if (player_has(player, PF_EXTRA_SHOT) && my_ammo_tval == TV_ARROW) value += 30000L;
 
 	/*
 	 * Fudge the damage a bit in order to influence weapon selection.
@@ -4720,55 +4719,55 @@ extern s32b borg_power_aux1(void)
 
 
     /* Hack -- Reward strength bonus */
-    value += (my_stat_ind[A_STR] * 100L);
+    value += (my_stat_ind[STAT_STR] * 100L);
 
     /* Hack -- Reward intelligence bonus */
-    if ((p_ptr->class->spell_book == TV_MAGIC_BOOK) &&
-        (my_stat_ind[A_INT] <= 37 ))
+    if ((player->class->spell_book == TV_MAGIC_BOOK) &&
+        (my_stat_ind[STAT_INT] <= 37 ))
     {
-        value += (my_stat_ind[A_INT] * 500L);
+        value += (my_stat_ind[STAT_INT] * 500L);
 
         /* Bonus for sp. */
         if (borg_worships_mana)
         {
-            value += ((adj_mag_mana[my_stat_ind[A_INT]] * borg_skill[BI_CLEVEL]) / 2)  * 255L;
+            value += ((adj_mag_mana[my_stat_ind[STAT_INT]] * borg_skill[BI_CLEVEL]) / 2)  * 255L;
         }
         else
         {
-            value += ((adj_mag_mana[my_stat_ind[A_INT]] * borg_skill[BI_CLEVEL]) / 2)  * 155L;
+            value += ((adj_mag_mana[my_stat_ind[STAT_INT]] * borg_skill[BI_CLEVEL]) / 2)  * 155L;
         }
 
         /* bonus for fail rate */
-        value += adj_mag_stat[my_stat_ind[A_INT]] * 100L;
+        value += adj_mag_stat[my_stat_ind[STAT_INT]] * 100L;
 
         /* mage should try to get min fail to 0 */
-        if (player_has(PF_ZERO_FAIL))
+        if (player_has(player, PF_ZERO_FAIL))
         {
             /* other fail rates */
-            if (adj_mag_fail[my_stat_ind[A_INT]] < 1)
+            if (adj_mag_fail[my_stat_ind[STAT_INT]] < 1)
                 value += 30000L;
         }
     }
 
     /* Hack -- Reward wisdom bonus */
-    if ((p_ptr->class->spell_book == TV_PRAYER_BOOK) &&
-        (my_stat_ind[A_WIS] <= 37 ))
+    if ((player->class->spell_book == TV_PRAYER_BOOK) &&
+        (my_stat_ind[STAT_WIS] <= 37 ))
     {
-        value += (my_stat_ind[A_WIS] * 200L);
+        value += (my_stat_ind[STAT_WIS] * 200L);
 
         /* Bonus for sp. */
-        value += ((adj_mag_mana[my_stat_ind[A_WIS]] * borg_skill[BI_CLEVEL]) / 2)  * 150L;
+        value += ((adj_mag_mana[my_stat_ind[STAT_WIS]] * borg_skill[BI_CLEVEL]) / 2)  * 150L;
 
         /* bonus for fail rate */
-        value += adj_mag_stat[my_stat_ind[A_WIS]] * 50L;
+        value += adj_mag_stat[my_stat_ind[STAT_WIS]] * 50L;
 
         /* priest should try to get min fail to 0 */
-        if (player_has(PF_ZERO_FAIL))
+        if (player_has(player, PF_ZERO_FAIL))
         {
             /* Bonus for priests to in order to keep Holy Word fail rate down */
-            if (borg_prayer_legal(3, 5)) value += my_stat_ind[A_WIS] * 1000L;
+            if (borg_prayer_legal(3, 5)) value += my_stat_ind[STAT_WIS] * 1000L;
 
-            if (adj_mag_fail[my_stat_ind[A_WIS]] < 1)
+            if (adj_mag_fail[my_stat_ind[STAT_WIS]] < 1)
                 value += 20000L;
         }
 
@@ -4776,16 +4775,16 @@ extern s32b borg_power_aux1(void)
 
 
     /* Dexterity Bonus --good for attacking and ac*/
-    if (my_stat_ind[A_DEX] <= 37 )
+    if (my_stat_ind[STAT_DEX] <= 37 )
     {
         /* Hack -- Reward bonus */
-        value += (my_stat_ind[A_DEX] * 120L);
+        value += (my_stat_ind[STAT_DEX] * 120L);
     }
 
     /* Constitution Bonus */
     if (my_stat_ind[A_CON] <= 37 )
     {
-        int bonus_hp = p_ptr->player_hp[p_ptr->lev-1] + adj_con_mhp[my_stat_ind[A_CON]] * borg_skill[BI_CLEVEL] / 100;
+        int bonus_hp = player->player_hp[player->lev-1] + adj_con_mhp[my_stat_ind[A_CON]] * borg_skill[BI_CLEVEL] / 100;
 
         if (borg_worships_hp)
         {
@@ -4817,7 +4816,7 @@ extern s32b borg_power_aux1(void)
 
     /* Hack -- Reward charisma bonus up to level 25 */
     if (borg_skill[BI_CLEVEL] < 25)
-        value += (my_stat_ind[A_CHR] * 2L);
+        value += (my_stat_ind[STAT_CHR] * 2L);
 
 
 
@@ -5056,7 +5055,7 @@ extern s32b borg_power_aux1(void)
 
 
     /*** Penalize armor weight ***/
-    if (my_stat_ind[A_STR] < 15)
+    if (my_stat_ind[STAT_STR] < 15)
     {
         if (borg_items[INVEN_BODY].weight > 175)
             value -= (borg_items[INVEN_BODY].weight - 175) * 20;
@@ -5088,10 +5087,10 @@ extern s32b borg_power_aux1(void)
     cur_wgt += borg_items[INVEN_FEET].weight;
 
     /* Determine the weight allowance */
-    max_wgt = p_ptr->class->spell_weight;
+    max_wgt = player->class->spell_weight;
 
     /* Hack -- heavy armor hurts magic */
-    if (p_ptr->class->spell_book && ((cur_wgt - max_wgt) / 10) > 0)
+    if (player->class->spell_book && ((cur_wgt - max_wgt) / 10) > 0)
     {
         /* Mega-Hack -- Penalize heavy armor which hurts mana */
         if (borg_skill[BI_MAXCLEVEL] >= 47)
@@ -5110,7 +5109,7 @@ extern s32b borg_power_aux1(void)
     /*** Penalize bad magic ***/
 
     /* Hack -- most gloves hurt magic for spell-casters */
-    if (player_has(PF_CUMBER_GLOVE) && borg_class == CLASS_MAGE)
+    if (player_has(player, PF_CUMBER_GLOVE) && borg_class == CLASS_MAGE)
     {
         item = &borg_items[INVEN_HANDS];
 
@@ -5127,7 +5126,7 @@ extern s32b borg_power_aux1(void)
     }
 
     /*  Hack -- most edged weapons hurt magic for priests */
-    if (player_has(PF_BLESS_WEAPON))
+    if (player_has(player, PF_BLESS_WEAPON))
     {
         item = &borg_items[INVEN_WIELD];
 
@@ -5149,9 +5148,9 @@ extern s32b borg_power_aux1(void)
         /* protect from stat drain */
         if (borg_skill[BI_SSTR]) value += 35000L;
         /* extra bonus for spell casters */
-        if (p_ptr->class->spell_book == TV_MAGIC_BOOK && borg_skill[BI_SINT]) value += 45000L;
+        if (player->class->spell_book == TV_MAGIC_BOOK && borg_skill[BI_SINT]) value += 45000L;
         /* extra bonus for spell casters */
-        if (p_ptr->class->spell_book == TV_PRAYER_BOOK && borg_skill[BI_SWIS]) value += 35000L;
+        if (player->class->spell_book == TV_PRAYER_BOOK && borg_skill[BI_SWIS]) value += 35000L;
         if (borg_skill[BI_SCON]) value += 55000L;
         if (borg_skill[BI_SDEX]) value += 15000L;
         if (borg_skill[BI_WS_EVIL])  value += 15000L;
@@ -5201,7 +5200,7 @@ extern s32b borg_power_aux1(void)
         if (multibonus >= 2) value += 3000 * multibonus;
 	
 		/* Add value if the item has a cool activation effect */
-		value += borg_bonus_activation(i, FALSE);
+		value += borg_bonus_activation(i, false);
 	}
 
 	return (value);
@@ -5526,7 +5525,7 @@ static s32b borg_power_aux2(void)
             for (; k < 40 && k < borg_has[SHROOM_STONESKIN]; k++) value += 5000L;
 
 			/* No need to store extras in home */
-			borg_scumming_pots = FALSE;
+			borg_scumming_pots = false;
 
         }
         /* Sauron is dead -- store them unless I have enough */
@@ -5539,7 +5538,7 @@ static s32b borg_power_aux2(void)
 				(num_mana_true + borg_skill[BI_AMANA] < MAX_STACK_SIZE))
             {
                 /* leave pots at home so they dont shatter */
-				borg_scumming_pots = TRUE;
+				borg_scumming_pots = true;
             }
             /* I have enough, carry all pots, and other good stuff. */
             else
@@ -5567,7 +5566,7 @@ static s32b borg_power_aux2(void)
 				for (; k < 40 && k < borg_has[SHROOM_STONESKIN]; k++) value += 5000L;
 
 				/* No need to store extras in home */
-				borg_scumming_pots = FALSE;
+				borg_scumming_pots = false;
             }
         }
     }
@@ -5832,37 +5831,37 @@ static s32b borg_power_aux2(void)
 	}
 
 	/* Hack -- Reward add stat */
-    if (amt_add_stat[A_STR]) value += 50000;
-    if (amt_add_stat[A_INT]) value += 20000;
-    if (p_ptr->class->spell_book == TV_MAGIC_BOOK)
-        if (amt_add_stat[A_INT]) value += 50000;
+    if (amt_add_stat[STAT_STR]) value += 50000;
+    if (amt_add_stat[STAT_INT]) value += 20000;
+    if (player->class->spell_book == TV_MAGIC_BOOK)
+        if (amt_add_stat[STAT_INT]) value += 50000;
 
-    if (amt_add_stat[A_WIS]) value += 20000;
-    if (p_ptr->class->spell_book == TV_PRAYER_BOOK)
-        if (amt_add_stat[A_WIS]) value += 50000;
-    if (amt_add_stat[A_DEX]) value += 50000;
+    if (amt_add_stat[STAT_WIS]) value += 20000;
+    if (player->class->spell_book == TV_PRAYER_BOOK)
+        if (amt_add_stat[STAT_WIS]) value += 50000;
+    if (amt_add_stat[STAT_DEX]) value += 50000;
     if (amt_add_stat[A_CON]) value += 50000;
-    if (amt_add_stat[A_CHR]) value += 10000;
+    if (amt_add_stat[STAT_CHR]) value += 10000;
 
     /* Hack -- Reward stat potions */
-    if (amt_inc_stat[A_STR] && my_stat_cur[A_STR] < (18+100)) value += 550000;
-    if (amt_inc_stat[A_INT] && my_stat_cur[A_INT] < (18+100)) value += 520000;
-    if (p_ptr->class->spell_book == TV_MAGIC_BOOK)
-        if (amt_inc_stat[A_INT] && my_stat_cur[A_INT] < (18+100)) value += 575000;
-    if (amt_inc_stat[A_WIS] && my_stat_cur[A_WIS] < (18+100)) value += 520000;
-    if (p_ptr->class->spell_book == TV_PRAYER_BOOK)
-        if (amt_inc_stat[A_WIS] && my_stat_cur[A_WIS] < (18+100)) value += 575000;
-    if (amt_inc_stat[A_DEX] && my_stat_cur[A_DEX] < (18+100)) value += 550000;
+    if (amt_inc_stat[STAT_STR] && my_stat_cur[STAT_STR] < (18+100)) value += 550000;
+    if (amt_inc_stat[STAT_INT] && my_stat_cur[STAT_INT] < (18+100)) value += 520000;
+    if (player->class->spell_book == TV_MAGIC_BOOK)
+        if (amt_inc_stat[STAT_INT] && my_stat_cur[STAT_INT] < (18+100)) value += 575000;
+    if (amt_inc_stat[STAT_WIS] && my_stat_cur[STAT_WIS] < (18+100)) value += 520000;
+    if (player->class->spell_book == TV_PRAYER_BOOK)
+        if (amt_inc_stat[STAT_WIS] && my_stat_cur[STAT_WIS] < (18+100)) value += 575000;
+    if (amt_inc_stat[STAT_DEX] && my_stat_cur[STAT_DEX] < (18+100)) value += 550000;
     if (amt_inc_stat[A_CON] && my_stat_cur[A_CON] < (18+100)) value += 550000;
-    if (amt_inc_stat[A_CHR] && my_stat_cur[A_CHR] < (18+100)) value += 510000;
+    if (amt_inc_stat[STAT_CHR] && my_stat_cur[STAT_CHR] < (18+100)) value += 510000;
 
     /* Hack -- Reward fix stat */
-    if (amt_fix_stat[A_STR]) value += 10000;
-    if (amt_fix_stat[A_INT]) value += 10000;
-    if (amt_fix_stat[A_WIS]) value += 10000;
-    if (amt_fix_stat[A_DEX]) value += 10000;
+    if (amt_fix_stat[STAT_STR]) value += 10000;
+    if (amt_fix_stat[STAT_INT]) value += 10000;
+    if (amt_fix_stat[STAT_WIS]) value += 10000;
+    if (amt_fix_stat[STAT_DEX]) value += 10000;
     if (amt_fix_stat[A_CON]) value += 10000;
-    if (amt_fix_stat[A_CHR]) value += 10000;
+    if (amt_fix_stat[STAT_CHR]) value += 10000;
 
     /* Reward Remove Curse */
     if (borg_wearing_cursed)
@@ -5882,7 +5881,7 @@ static s32b borg_power_aux2(void)
 	else
 	{
 		/* Reward enchant armor */
-		if (amt_enchant_to_a < 100 && (my_need_enchant_to_a || enchant_armour_swap_to_a)) value += 2540L;
+		if (amt_enchant_distance4( < 100 && (my_need_enchant_distance4( || enchant_armour_swap_distance4()) value += 2540L;
 
 		/* Reward enchant weapon to hit */
 		if (amt_enchant_to_h < 100 && (my_need_enchant_to_h || enchant_weapon_swap_to_h) && !borg_skill[BI_NO_MELEE]) value += 2540L;
@@ -5963,10 +5962,10 @@ static s32b borg_power_aux2(void)
 
     /*  Hack -- Apply "encumbrance" from weight */
     /* Extract the current weight (in tenth pounds) */
-    inven_weight = p_ptr->total_weight;
+    inven_weight = player->total_weight;
 
     /* Extract the "weight limit" (in tenth pounds) */
-    carry_capacity = adj_str_wgt[my_stat_ind[A_STR]] * 100;
+    carry_capacity = adj_str_wgt[my_stat_ind[STAT_STR]] * 100;
 
     /* XXX XXX XXX Apply "encumbrance" from weight */
     if (inven_weight > carry_capacity/2)
@@ -5976,7 +5975,7 @@ static s32b borg_power_aux2(void)
 		/* Some items will be used immediately and should not contribute to encumbrance */
 		if (item->iqty &&
 			((item->tval == TV_SCROLL &&
-			 ((item->sval == SV_SCROLL_ENCHANT_ARMOR && amt_enchant_to_a < 1000 && my_need_enchant_to_a) ||
+			 ((item->sval == SV_SCROLL_ENCHANT_ARMOR && amt_enchant_distance4( < 1000 && my_need_enchant_distance4() ||
 			  (item->sval == SV_SCROLL_ENCHANT_WEAPON_TO_HIT && amt_enchant_to_h < 1000 && my_need_enchant_to_h) ||
 			  (item->sval == SV_SCROLL_ENCHANT_WEAPON_TO_DAM && amt_enchant_to_d < 1000 && my_need_enchant_to_d) ||
 			   item->sval == SV_SCROLL_STAR_ENCHANT_WEAPON ||
@@ -6304,23 +6303,23 @@ static s32b borg_power_home_aux1(void)
 
     /* stat gain items as well...(good to carry ring of dex +6 in */
     /*                            house even if I don't need it right now) */
-    if (home_stat_add[A_STR] < 9)
-        value += home_stat_add[A_STR] * 300L;
+    if (home_stat_add[STAT_STR] < 9)
+        value += home_stat_add[STAT_STR] * 300L;
     else
-        if (home_stat_add[A_STR] < 15)
-            value += 9 * 300L + (home_stat_add[A_STR] - 9) * 200L;
+        if (home_stat_add[STAT_STR] < 15)
+            value += 9 * 300L + (home_stat_add[STAT_STR] - 9) * 200L;
         else
             value += 9 * 300L + 6 * 200L +
-                      (home_stat_add[A_STR] - 15) * 1L;
+                      (home_stat_add[STAT_STR] - 15) * 1L;
 
-    if (home_stat_add[A_DEX] < 9)
-        value += home_stat_add[A_DEX] * 300L;
+    if (home_stat_add[STAT_DEX] < 9)
+        value += home_stat_add[STAT_DEX] * 300L;
     else
-        if (home_stat_add[A_DEX] < 15)
-            value += 9 * 300L + (home_stat_add[A_DEX] - 9) * 200L;
+        if (home_stat_add[STAT_DEX] < 15)
+            value += 9 * 300L + (home_stat_add[STAT_DEX] - 9) * 200L;
         else
             value += 9 * 300L + 6 * 200L +
-                      (home_stat_add[A_DEX] - 15) * 1L;
+                      (home_stat_add[STAT_DEX] - 15) * 1L;
 
     /* HACK extra con for thorin and other such things */
     if (home_stat_add[A_CON] < 15)
@@ -6332,28 +6331,28 @@ static s32b borg_power_home_aux1(void)
             value += 15 * 300L + 6 * 200L + (home_stat_add[A_CON] - 21) * 1L;
 
     /* int and wis are only bonused for spell casters. */
-    if (p_ptr->class->spell_book == TV_MAGIC_BOOK)
+    if (player->class->spell_book == TV_MAGIC_BOOK)
     {
-        if (home_stat_add[A_INT] < 20)
-            value += home_stat_add[A_INT] * 400L;
+        if (home_stat_add[STAT_INT] < 20)
+            value += home_stat_add[STAT_INT] * 400L;
         else
-            if (home_stat_add[A_INT] < 26)
-                value += 20 * 400L + (home_stat_add[A_INT] - 20) * 300L;
+            if (home_stat_add[STAT_INT] < 26)
+                value += 20 * 400L + (home_stat_add[STAT_INT] - 20) * 300L;
             else
                 value += 20 * 100L + 6 * 300L +
-                         (home_stat_add[A_INT] - 26) * 5L;
+                         (home_stat_add[STAT_INT] - 26) * 5L;
     }
 
-    if (p_ptr->class->spell_book == TV_PRAYER_BOOK)
+    if (player->class->spell_book == TV_PRAYER_BOOK)
     {
-        if (home_stat_add[A_WIS] < 20)
-            value += home_stat_add[A_WIS] * 400L;
+        if (home_stat_add[STAT_WIS] < 20)
+            value += home_stat_add[STAT_WIS] * 400L;
         else
-            if (home_stat_add[A_WIS] < 26)
-                value += 20 * 400L + (home_stat_add[A_WIS] - 20) * 300L;
+            if (home_stat_add[STAT_WIS] < 26)
+                value += 20 * 400L + (home_stat_add[STAT_WIS] - 20) * 300L;
             else
                 value += 20 * 400L + 6 * 300L +
-                        (home_stat_add[A_WIS] - 26) * 3L;
+                        (home_stat_add[STAT_WIS] - 26) * 3L;
     }
 
     /* Sustains */
@@ -6711,7 +6710,7 @@ static int borg_danger_aux1(int i, bool full_damage)
 
     borg_kill *kill = &borg_kills[i];
 
-    monster_race *r_ptr = &r_info[kill->r_idx];
+    struct monster_race *r_ptr = &r_info[kill->r_idx];
 
     /* shields gives +50 to ac and deflects some missiles and balls*/
     if (borg_shield || borg_stone)
@@ -6731,7 +6730,7 @@ static int borg_danger_aux1(int i, bool full_damage)
     if (kill->r_idx >= z_info->r_max) return (1000);
 
 	/* Check to see if this monster is invisible.  Used in 'immediate threat' */
-	if (rf_has(r_ptr->flags, RF_INVISIBLE)) borg_threat_invis = TRUE;
+	if (rf_has(r_ptr->flags, RF_INVISIBLE)) borg_threat_invis = true;
 
     /* Analyze each physical attack */
     for (k = 0; k < 4; k++)
@@ -6807,7 +6806,7 @@ static int borg_danger_aux1(int i, bool full_damage)
             /* if in town and low level avoid them stupid urchins */
             if (borg_skill[BI_CLEVEL] < 5) z += 50;
             power = 5;
-            if (100 <= adj_dex_safe[my_stat_ind[A_DEX]] + borg_skill[BI_CLEVEL]) break;
+            if (100 <= adj_dex_safe[my_stat_ind[STAT_DEX]] + borg_skill[BI_CLEVEL]) break;
             if (borg_gold < 100) break;
             if (borg_gold > 100000) break;
             /* Add fear for the effect */
@@ -6819,7 +6818,7 @@ static int borg_danger_aux1(int i, bool full_damage)
             case RBE_EAT_ITEM:
             z = (d_dice * d_side);
             power = 5;
-            if (100 <= adj_dex_safe[my_stat_ind[A_DEX]] + borg_skill[BI_CLEVEL]) break;
+            if (100 <= adj_dex_safe[my_stat_ind[STAT_DEX]] + borg_skill[BI_CLEVEL]) break;
             /* Add fear for the effect */
                 z += 5;
             if ((pfe) && !borg_attacking)
@@ -6900,7 +6899,7 @@ static int borg_danger_aux1(int i, bool full_damage)
             if (borg_skill[BI_RBLIND] || amt_cure_blind >= 2) break;
             /* Add fear for the effect */
                 z += 10;
-				borg_threat_blind = TRUE;
+				borg_threat_blind = true;
 			if (borg_class == CLASS_MAGE) z +=75;
             if ((pfe) && !borg_attacking)
                 z /= 2;
@@ -6912,7 +6911,7 @@ static int borg_danger_aux1(int i, bool full_damage)
             if (borg_skill[BI_RCONF] || amt_cure_confusion >= 2) break;
             /* Add fear for the effect */
                 z += 200;
-				borg_threat_conf = TRUE;
+				borg_threat_conf = true;
 			if (borg_class == CLASS_MAGE) z +=200;
             if ((pfe) && !borg_attacking)
                 z /= 2;
@@ -6933,7 +6932,7 @@ static int borg_danger_aux1(int i, bool full_damage)
             power = 2;
             if (borg_skill[BI_FRACT]) break;
             z += 200;
-				borg_threat_para = TRUE;
+				borg_threat_para = true;
             if ((pfe) && !borg_attacking)
                 z /= 2;
             break;
@@ -6941,11 +6940,11 @@ static int borg_danger_aux1(int i, bool full_damage)
             case RBE_LOSE_STR:
             z = (d_dice * d_side);
             if (borg_skill[BI_SSTR]) break;
-            if (borg_stat[A_STR] <= 3) break;
+            if (borg_stat[STAT_STR] <= 3) break;
             if (borg_prayer_legal(6, 3)) break;
             z += 100;
             /* extra scary to have str drain below 10 */
-            if (borg_stat[A_STR] < 10)
+            if (borg_stat[STAT_STR] < 10)
                 z += 150;
             if ((pfe) && !borg_attacking)
                 z /= 2;
@@ -6954,11 +6953,11 @@ static int borg_danger_aux1(int i, bool full_damage)
             case RBE_LOSE_DEX:
             z = (d_dice * d_side);
             if (borg_skill[BI_SDEX]) break;
-            if (borg_stat[A_DEX] <= 3) break;
+            if (borg_stat[STAT_DEX] <= 3) break;
             if (borg_prayer_legal(6, 3)) break;
             z += 100;
             /* extra scary to have drain below 10 */
-            if (borg_stat[A_DEX] < 10)
+            if (borg_stat[STAT_DEX] < 10)
                 z += 150;
             if ((pfe) && !borg_attacking)
                 z /= 2;
@@ -6972,7 +6971,7 @@ static int borg_danger_aux1(int i, bool full_damage)
             /* Add fear for the effect */
             z += 100;
             /* extra scary to have con drain below 8 */
-            if (borg_stat[A_STR] < 8)
+            if (borg_stat[STAT_STR] < 8)
                 z += 150;
             if ((pfe) && !borg_attacking)
                 z /= 2;
@@ -6981,11 +6980,11 @@ static int borg_danger_aux1(int i, bool full_damage)
             case RBE_LOSE_INT:
             z = (d_dice * d_side);
             if (borg_skill[BI_SINT]) break;
-            if (borg_stat[A_INT] <= 3) break;
+            if (borg_stat[STAT_INT] <= 3) break;
             if (borg_prayer_legal(6, 3)) break;
             z += 50;
             /* extra scary for spell caster */
-            if (p_ptr->class->spell_book == TV_MAGIC_BOOK)
+            if (player->class->spell_book == TV_MAGIC_BOOK)
                 z += 150;
             if ((pfe) && !borg_attacking)
                 z /= 2;
@@ -6994,11 +6993,11 @@ static int borg_danger_aux1(int i, bool full_damage)
             case RBE_LOSE_WIS:
             z = (d_dice * d_side);
             if (borg_skill[BI_SWIS]) break;
-            if (borg_stat[A_WIS] <= 3) break;
+            if (borg_stat[STAT_WIS] <= 3) break;
             if (borg_prayer_legal(6, 3)) break;
             z += 50;
             /* extra scary for pray'er */
-            if (p_ptr->class->spell_book == TV_PRAYER_BOOK)
+            if (player->class->spell_book == TV_PRAYER_BOOK)
                 z += 150;
             if ((pfe) && !borg_attacking)
                 z /= 2;
@@ -7007,7 +7006,7 @@ static int borg_danger_aux1(int i, bool full_damage)
             case RBE_LOSE_CHR:
             z = (d_dice * d_side);
             if (borg_skill[BI_SCHR]) break;
-            if (borg_stat[A_CHR] <= 3) break;
+            if (borg_stat[STAT_CHR] <= 3) break;
             if (borg_prayer_legal(6, 3)) break;
             z += 10;
             if ((pfe) && !borg_attacking)
@@ -7132,13 +7131,13 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
 
     int lev, hp, total_dam = 0, av;
 
-	bool		bolt = FALSE;
+	bool		bolt = false;
 
 	borg_kill *kill = &borg_kills[i];
 
     borg_grid   *ag;
 
-    monster_race *r_ptr = &r_info[kill->r_idx];
+    struct monster_race *r_ptr = &r_info[kill->r_idx];
 
     /*  PFE gives a protection.  */
         /* Hack -- Apply "protection from evil" */
@@ -7180,7 +7179,7 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
 
 
 	/* Check to see if this monster is invisible.  Used in 'immediate threat' */
-	if (rf_has(r_ptr->flags, RF_INVISIBLE)) borg_threat_invis = TRUE;
+	if (rf_has(r_ptr->flags, RF_INVISIBLE)) borg_threat_invis = true;
 
 	/* Extract the level */
     lev = r_ptr->level;
@@ -7219,22 +7218,22 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
 
             case 32+4:    /* RF4_ARROW_1 */
             z = (1 * 6);
-			bolt = TRUE;
+			bolt = true;
             break;
 
             case 32+5:    /* RF4_ARROW_2 */
             z = (3 * 6);
-			bolt = TRUE;
+			bolt = true;
             break;
 
             case 32+6:    /* RF4_ARROW_3 */
             z = (5 * 6);
-			bolt = TRUE;
+			bolt = true;
             break;
 
             case 32+7:    /* RF4_ARROW_4 */
             z = (7 * 6);
-			bolt = TRUE;
+			bolt = true;
             break;
 
             case 32+8:    /* RF4_BR_ACID */
@@ -7333,7 +7332,7 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
                 break;
             }
             if (borg_skill[BI_RBLIND] || amt_cure_blind >= 2) break;
-			borg_threat_blind = TRUE;
+			borg_threat_blind = true;
 			p += 20;
 			if (borg_class == CLASS_MAGE) p +=20;
             break;
@@ -7347,7 +7346,7 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
             if (borg_skill[BI_RDARK]) break;
             if (borg_skill[BI_RBLIND] || amt_cure_blind >= 2) break;
             p += 20;
-			borg_threat_blind = TRUE;
+			borg_threat_blind = true;
 			if (borg_class == CLASS_MAGE) p +=20;
             break;
 
@@ -7362,7 +7361,7 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
             /* do not count. */
             /* Add fear for the effect */
                 p += 300;
-			borg_threat_conf = TRUE;
+			borg_threat_conf = true;
 			if (borg_class == CLASS_MAGE) p +=200;
             break;
 
@@ -7516,7 +7515,7 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
 
             case 32+31:    /* RF4_BOULDER */
             z = (1 + lev / 7) * 12 / 2;
-			bolt = TRUE;
+			bolt = true;
             break;
 
             case 64+0:    /* RF5_BA_ACID */
@@ -7616,7 +7615,7 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
             /* do not count. */
             /* Add fear for the effect */
                 p += 20;
-			borg_threat_blind = TRUE;
+			borg_threat_blind = true;
 			if (borg_class == CLASS_MAGE) p +=20;
             break;
 
@@ -7682,7 +7681,7 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
             case 64+16:    /* RF5_BO_ACID */
             if (borg_skill[BI_IACID]) break;
             z = ((7 * 8) + (lev / 3));
-			bolt = TRUE;
+			bolt = true;
             if (borg_skill[BI_RACID]) z = (z + 2) / 3;
             if (borg_skill[BI_TRACID]) z = (z + 2) / 3;
             /* if looking at full damage, things that are just annoying */
@@ -7693,7 +7692,7 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
 
             case 64+17:    /* RF5_BO_ELEC */
             if (borg_skill[BI_IELEC]) break;
-			bolt = TRUE;
+			bolt = true;
             z = ((4 * 8) + (lev / 3));
             if (borg_skill[BI_RELEC]) z = (z + 2) / 3;
             if (borg_skill[BI_TRELEC]) z = (z + 2) / 3;
@@ -7705,7 +7704,7 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
 
             case 64+18:    /* RF5_BO_FIRE */
             if (borg_skill[BI_IFIRE]) break;
-			bolt = TRUE;
+			bolt = true;
             z = ((9 * 8) + (lev / 3));
             if (borg_skill[BI_RFIRE]) z = (z + 2) / 3;
             if (borg_skill[BI_TRFIRE]) z = (z + 2) / 3;
@@ -7717,7 +7716,7 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
 
             case 64+19:    /* RF5_BO_COLD */
             if (borg_skill[BI_ICOLD]) break;
-			bolt = TRUE;
+			bolt = true;
             z = ((6 * 8) + (lev / 3));
             if (borg_skill[BI_RCOLD]) z = (z + 2) / 3;
             if (borg_skill[BI_TRCOLD]) z = (z + 2) / 3;
@@ -7733,7 +7732,7 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
 
             case 64+21:    /* RF5_BO_NETH */
             z = (50 + 30 + (5 * 5) + (lev * 3) / 2);
-			bolt = TRUE;
+			bolt = true;
             if (borg_skill[BI_RNTHR]) z = (z*6)/8;
             if (borg_skill[BI_RNTHR]) break;
             /* if looking at full damage, things that are just annoying */
@@ -7743,7 +7742,7 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
             break;
 
             case 64+22:    /* RF5_BO_WATE */
-			bolt = TRUE;
+			bolt = true;
             z = ((10 * 10) + (lev));
             if (borg_skill[BI_RSND]) break;
             /* if already stunned be REALLY nervous about this */
@@ -7760,14 +7759,14 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
             break;
 
             case 64+23:    /* RF5_BO_MANA */
-			bolt = TRUE;
+			bolt = true;
             z = ((lev * 7) / 2) + 50;
             /* Add fear for the effect */
                 p += 50;
             break;
 
             case 64+24:    /* RF5_BO_PLAS */
-			bolt = TRUE;
+			bolt = true;
             z = (10 + (8 * 7) + (lev));
             if (borg_skill[BI_RSND]) break;
             /* if already stunned be REALLY nervous about this */
@@ -7778,7 +7777,7 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
             break;
 
             case 64+25:    /* RF5_BO_ICEE */
-			bolt = TRUE;
+			bolt = true;
             z = ((6 * 6) + (lev));
             /* if looking at full damage, things that are just annoying */
             /* do not count. */
@@ -7794,7 +7793,7 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
 
             case 64+26:    /* RF5_MISSILE */
             z = ((2 * 6) + (lev / 3));
-			bolt = TRUE;
+			bolt = true;
             break;
 
             case 64+27:    /* RF5_SCARE */
@@ -7811,7 +7810,7 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
             /* do not count. */
             /* Add fear for the effect */
                 p += 10;
-			borg_threat_blind = TRUE;
+			borg_threat_blind = true;
             break;
 
             case 64+29:    /* RF5_CONF */
@@ -7820,7 +7819,7 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
             /* do not count. */
             /* Add fear for the effect */
                 p += 10;
-			borg_threat_conf = TRUE;
+			borg_threat_conf = true;
             break;
 
             case 64+30:    /* RF5_SLOW */
@@ -7830,14 +7829,14 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
             /* do not count. */
             /* Add fear for the effect */
                 p += 5;
-			borg_threat_para = TRUE;
+			borg_threat_para = true;
             break;
 
             case 64+31:    /* RF5_HOLD */
             if (borg_skill[BI_FRACT]) break;
             if (borg_skill[BI_SAV] >= 100) break;
             p += 150;
-			borg_threat_para = TRUE;
+			borg_threat_para = true;
             break;
 
             case 96+0:    /* RF6_HASTE */
@@ -8664,7 +8663,7 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
         }
 
 		/* A bolt spell cannot jump monsters to hit the borg. */
-		if (bolt == TRUE && !borg_projectable_pure(kill->y, kill->x, c_y, c_x)) z = 0;
+		if (bolt == true && !borg_projectable_pure(kill->y, kill->x, c_y, c_x)) z = 0;
 
 		/* Some borgs are concerned with the 'effects' of an attack.  ie, cold attacks shatter potions,
 		 * fire attacks burn scrolls, electric attacks zap rings.
@@ -8722,11 +8721,11 @@ static int borg_danger_aux2(int i, int y, int x, bool average, bool full_damage)
      *
      * To fix this, the flag 'average' is added to the
      * borg_danger() to skip this check and return the average
-     * damage.  If the flag is FALSE then the formula below is
+     * damage.  If the flag is false then the formula below is
      * SKIPPED and the value returned with be the average.
-     * If the flag is TRUE, then the formula below will be used
+     * If the flag is true, then the formula below will be used
      * to determine the returned value.  Currently the elemental
-     * resistance spells and PFE have the flag set as FALSE.
+     * resistance spells and PFE have the flag set as false.
      *
      */
     if (!average) return (av);
@@ -8761,7 +8760,7 @@ int borg_danger_aux(int y, int x, int c, int i, bool average, bool full_damage)
 {
     borg_kill *kill = &borg_kills[i];
 
-    monster_race *r_ptr = &r_info[kill->r_idx];
+    struct monster_race *r_ptr = &r_info[kill->r_idx];
 
     int x9 = kill->x;
     int y9 = kill->y;
@@ -8780,14 +8779,14 @@ int borg_danger_aux(int y, int x, int c, int i, bool average, bool full_damage)
 
 	int ii;
     int chance;
-	bool v1_borg_threat_conf = FALSE;
-	bool v1_borg_threat_blind = FALSE;
-	bool v1_borg_threat_para = FALSE;
-	bool v1_borg_threat_invis = FALSE;
-	bool v2_borg_threat_conf = FALSE;
-	bool v2_borg_threat_blind = FALSE;
-	bool v2_borg_threat_para = FALSE;
-	bool v2_borg_threat_invis = FALSE;
+	bool v1_borg_threat_conf = false;
+	bool v1_borg_threat_blind = false;
+	bool v1_borg_threat_para = false;
+	bool v1_borg_threat_invis = false;
+	bool v2_borg_threat_conf = false;
+	bool v2_borg_threat_blind = false;
+	bool v2_borg_threat_para = false;
+	bool v2_borg_threat_invis = false;
 
     /* Paranoia */
     if (!kill->r_idx) return (0);
@@ -8853,7 +8852,7 @@ int borg_danger_aux(int y, int x, int c, int i, bool average, bool full_damage)
 	 * we need to force the full_damage so he is a bit more concerned.  Sometimes the monsters
 	 * will cast their spells intelligently.
 	 */
-	if (borg_skill[BI_CURHP] <= borg_skill[BI_MAXHP] / 3) full_damage = TRUE;
+	if (borg_skill[BI_CURHP] <= borg_skill[BI_MAXHP] / 3) full_damage = true;
 
     /* allow partial hits when not caculating full possible damage */
     if (full_damage)
@@ -9101,16 +9100,16 @@ int borg_danger_aux(int y, int x, int c, int i, bool average, bool full_damage)
 				/* legally on a wall of some sort, check for closeness*/
 			    if (rf_has(r_ptr->flags, RF_PASS_WALL))
 				{
-					if (distance(y_temp, x_temp, y, x) == 1) b_v1 = v1;
+					if (distance4(y_temp, x_temp, y, x) == 1) b_v1 = v1;
 				}
 				if (rf_has(r_ptr->flags, RF_KILL_WALL))
 				{
-					if (distance(y_temp, x_temp, y, x) == 1) b_v1 = v1;
+					if (distance4(y_temp, x_temp, y, x) == 1) b_v1 = v1;
 				}
 			}
 
 			/* Is this grid being considered adjacent to the grid for which the borg_danger() was called? */
-			if (distance(y_temp, x_temp, y, x) >1) continue;
+			if (distance4(y_temp, x_temp, y, x) >1) continue;
 
 			/* A legal floor grid */
 			if (borg_cave_floor_bold(y_temp, x_temp))
@@ -9139,23 +9138,23 @@ int borg_danger_aux(int y, int x, int c, int i, bool average, bool full_damage)
 	/* No possible threat of the 'immediate threat' of certain attack types. */
 	if (v1 == 0)
 	{
-		borg_threat_conf = FALSE;
-		borg_threat_blind = FALSE;
-		borg_threat_para = FALSE;
-		borg_threat_invis = FALSE;
+		borg_threat_conf = false;
+		borg_threat_blind = false;
+		borg_threat_para = false;
+		borg_threat_invis = false;
 	}
 
 	/* Differentiate between the v1 and v2 immediate threats */
-	if (borg_threat_conf) v1_borg_threat_conf = TRUE;
-	if (borg_threat_blind) v1_borg_threat_blind = TRUE;
-	if (borg_threat_para) v1_borg_threat_para = TRUE;
-	if (borg_threat_invis) v1_borg_threat_invis = TRUE;
+	if (borg_threat_conf) v1_borg_threat_conf = true;
+	if (borg_threat_blind) v1_borg_threat_blind = true;
+	if (borg_threat_para) v1_borg_threat_para = true;
+	if (borg_threat_invis) v1_borg_threat_invis = true;
 
 	/* Reset the immediate threats which will be used in the v2 check */
-	borg_threat_conf = FALSE;
-	borg_threat_blind = FALSE;
-	borg_threat_para = FALSE;
-	borg_threat_invis = FALSE;
+	borg_threat_conf = false;
+	borg_threat_blind = false;
+	borg_threat_para = false;
+	borg_threat_invis = false;
 
     /** Ranged Attacks **/
     v2 = borg_danger_aux2(i,y,x,average, full_damage);
@@ -9167,7 +9166,7 @@ int borg_danger_aux(int y, int x, int c, int i, bool average, bool full_damage)
     }
 
     /* Hack -- verify distance */
-    if (distance(y9, x9, y, x) > MAX_RANGE)
+    if (distance4(y9, x9, y, x) > MAX_RANGE)
     {
         v2 = 0;
     }
@@ -9359,17 +9358,17 @@ int borg_danger_aux(int y, int x, int c, int i, bool average, bool full_damage)
 	if (v2 == 0)
 	{
 		/* Seperate out the melee threats from the ranged ones */
-		if (borg_threat_conf) v2_borg_threat_conf = TRUE;
-		if (borg_threat_blind) v2_borg_threat_blind = TRUE;
-		if (borg_threat_para) v2_borg_threat_para = TRUE;
-		if (borg_threat_invis) v2_borg_threat_invis = TRUE;
+		if (borg_threat_conf) v2_borg_threat_conf = true;
+		if (borg_threat_blind) v2_borg_threat_blind = true;
+		if (borg_threat_para) v2_borg_threat_para = true;
+		if (borg_threat_invis) v2_borg_threat_invis = true;
 	}
 
 	/* Differentiate between the v1 and v2 immediate threats */
-	if (v1_borg_threat_conf || v2_borg_threat_conf) borg_threat_conf = TRUE;
-	if (v1_borg_threat_blind || v2_borg_threat_blind) borg_threat_blind = TRUE;
-	if (v1_borg_threat_para || v2_borg_threat_para) borg_threat_para = TRUE;
-	if (v1_borg_threat_invis || v2_borg_threat_invis) borg_threat_invis = TRUE;
+	if (v1_borg_threat_conf || v2_borg_threat_conf) borg_threat_conf = true;
+	if (v1_borg_threat_blind || v2_borg_threat_blind) borg_threat_blind = true;
+	if (v1_borg_threat_para || v2_borg_threat_para) borg_threat_para = true;
+	if (v1_borg_threat_invis || v2_borg_threat_invis) borg_threat_invis = true;
 
 	/* Maximal danger */
     p = MAX(v1, v2);
@@ -9399,7 +9398,7 @@ int borg_danger_aux(int y, int x, int c, int i, bool average, bool full_damage)
  * which the grid is located, which allows us to apply some "fear"
  * of invisible monsters and things of that nature.
  *
- * Generally bool Average is TRUE.
+ * Generally bool Average is true.
  */
 int borg_danger(int y, int x, int c, bool average, bool full_damage)
 {
@@ -9423,10 +9422,10 @@ int borg_danger(int y, int x, int c, bool average, bool full_damage)
 		!(cave->info[y][x] & (CAVE_ICKY))) p += borg_fear_monsters[y][x] * c;
 
 	/* Reset our 'immediate threat' variables used in swap-considerations */
-	borg_threat_conf = FALSE;
-	borg_threat_blind = FALSE;
-	borg_threat_para = FALSE;
-	borg_threat_invis = FALSE;
+	borg_threat_conf = false;
+	borg_threat_blind = false;
+	borg_threat_para = false;
+	borg_threat_invis = false;
 
 	/* Examine all the monsters */
     for (i = 1; i < borg_kills_nxt; i++)
@@ -9669,7 +9668,7 @@ static char *borg_prepared_aux(int depth)
 #endif
 
 	/* Minimal stats */
-    if (borg_stat[A_STR] < 7 && borg_skill[BI_ISFIXSTR]) return ("Fix STR");
+    if (borg_stat[STAT_STR] < 7 && borg_skill[BI_ISFIXSTR]) return ("Fix STR");
 
     /* Usually ready for level 3 and 4 */
     if (depth <= 4) return ((char *)NULL);
@@ -9796,17 +9795,17 @@ static char *borg_prepared_aux(int depth)
         if (basics < 2) return ("basic resist2");
     }
     /* have some minimal stats */
-    if (borg_stat[A_STR] < 7) return ("low STR");
+    if (borg_stat[STAT_STR] < 7) return ("low STR");
 
-    if (p_ptr->class->spell_book == TV_MAGIC_BOOK)
+    if (player->class->spell_book == TV_MAGIC_BOOK)
     {
-        if (borg_stat[A_INT] < 7) return ("low INT");
+        if (borg_stat[STAT_INT] < 7) return ("low INT");
     }
-    if (p_ptr->class->spell_book == TV_PRAYER_BOOK)
+    if (player->class->spell_book == TV_PRAYER_BOOK)
     {
-        if (borg_stat[A_WIS] < 7) return ("low WIS");
+        if (borg_stat[STAT_WIS] < 7) return ("low WIS");
     }
-    if (borg_stat[A_DEX] < 7) return ("low DEX");
+    if (borg_stat[STAT_DEX] < 7) return ("low DEX");
     if (borg_stat[A_CON] < 7) return ("low CON");
 
 #if 0
@@ -9881,17 +9880,17 @@ static char *borg_prepared_aux(int depth)
     if (!borg_skill[BI_SRPOIS]) return ("RPois");
     if (!borg_skill[BI_SRCONF])  return ("RConf");
 
-    if (borg_stat[A_STR] < 16) return ("low STR");
+    if (borg_stat[STAT_STR] < 16) return ("low STR");
 
-    if (p_ptr->class->spell_book == TV_MAGIC_BOOK)
+    if (player->class->spell_book == TV_MAGIC_BOOK)
     {
-        if (borg_stat[A_INT] < 16) return ("low INT");
+        if (borg_stat[STAT_INT] < 16) return ("low INT");
     }
-    if (p_ptr->class->spell_book == TV_PRAYER_BOOK)
+    if (player->class->spell_book == TV_PRAYER_BOOK)
     {
-        if (borg_stat[A_WIS] < 16) return ("low WIS");
+        if (borg_stat[STAT_WIS] < 16) return ("low WIS");
     }
-    if (borg_stat[A_DEX] < 16) return ("low DEX");
+    if (borg_stat[STAT_DEX] < 16) return ("low DEX");
     if (borg_stat[A_CON] < 16) return ("low CON");
 
 
@@ -10052,7 +10051,7 @@ char *borg_prep(int depth)
 	if (depth >= 82 && (num_ezheal < 10 && borg_skill[BI_AEZHEAL] < 10))
 	{
         /* Must know exact number of Potions  in home */
-        borg_notice_home(NULL, FALSE);
+        borg_notice_home(NULL, false);
 
        	strnfmt(borg_prepared_buffer, MAX_REASON, "Scumming *Heal* potions (%d to go).", 10-num_ezheal);
        	return (borg_prepared_buffer);
@@ -10062,7 +10061,7 @@ char *borg_prep(int depth)
     if (depth >= 82 && borg_skill[BI_MAXDEPTH] >= 97)
     {
         /* Must know exact number of Potions  in home */
-        borg_notice_home(NULL, FALSE);
+        borg_notice_home(NULL, false);
 
         /* Scum for 30*/
         if (num_ezheal_true + borg_skill[BI_AEZHEAL] < 30)
@@ -10093,11 +10092,11 @@ char *borg_prep(int depth)
     /* uniques are. */
     if (borg_skill[BI_MAXDEPTH] <= 98 && depth <= 98)
     {
-          monster_race *r_ptr = &r_info[borg_living_unique_index];
+          struct monster_race *r_ptr = &r_info[borg_living_unique_index];
 
 		/* are too many uniques alive */
         if (borg_numb_live_unique < 3 || borg_plays_risky ||
-        	borg_skill[BI_CLEVEL] == 50 || borg_kills_uniques == FALSE) return ((char *)NULL);
+        	borg_skill[BI_CLEVEL] == 50 || borg_kills_uniques == false) return ((char *)NULL);
 
 		/* Check for the dlevel of the unique */
 		if (depth < borg_unique_depth) return ((char *)NULL);
@@ -10116,7 +10115,7 @@ char *borg_prep(int depth)
       /* check to make sure the borg does not go to level 100 */
       /* unless all the uniques are dead. */
     {
-          monster_race *r_ptr;
+          struct monster_race *r_ptr;
 
 		  /* Access the living unique obtained from borg_update() */
           r_ptr = &r_info[borg_living_unique_index];

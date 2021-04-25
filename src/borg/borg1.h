@@ -6,12 +6,30 @@
 #define INCLUDED_BORG1_H
 
 #include "angband.h"
-#include "object/tvalsval.h"
 #include "cave.h"
+#include "monster.h"
+#include "ui-event.h"
+#include "ui-term.h"
 
 
 
 #ifdef ALLOW_BORG
+
+typedef struct player_race  player_race;
+typedef struct player_class  player_class;
+typedef struct player_state  player_state;
+typedef struct object  object_type;
+typedef struct object_kind object_kind; 
+typedef struct player_magic player_magic;
+typedef struct ego_item ego_item_type;
+typedef struct artifact artifact_type;
+typedef struct monster_race monster_race;
+typedef struct owner owner_type;
+//typedef struct magic_type magic_type;
+
+#define FREE(M) mem_free(M)
+#define ZNEW(T) (mem_zalloc(sizeof(T)))
+#define C_ZNEW(N, T) (mem_zalloc(sizeof(T) * (N)))
 
 /* Allocate a wiped array of type T[N], assign to pointer P */
 #define C_MAKE(P, N, T) \
@@ -21,6 +39,60 @@
 #define MAKE(P, T) \
 	((P) = ZNEW(T))
 
+/* Max missile range */
+#define MAX_RANGE 20
+
+/* Missing features */
+#define FEAT_GLYPH 101
+#define FEAT_TRAP_HEAD 102
+#define FEAT_TRAP_TAIL 103
+#define FEAT_WALL_EXTRA 104
+#define FEAT_PERM_SOLID 105
+#define FEAT_DOOR_HEAD 106
+#define FEAT_DOOR_TAIL 107
+#define FEAT_PERM_EXTRA 108
+#define FEAT_PERM_INNER 109
+#define FEAT_INVIS 110
+
+/* and tvals */
+#define TV_MAGIC_BOOK 106
+#define TV_PRAYER_BOOK 105
+#define TV_FLASK 104
+#define TV_STAFF TV_GADGET
+#define TV_ROD TV_DEVICE
+#define TV_RING 101
+#define TV_AMULET 102
+#define TV_POTION TV_PILL
+#define TV_CROWN 103
+#define TV_SCROLL TV_CARD
+#define TV_SKELETON 107
+#define TV_BOW TV_GUN
+#define TV_SHOT TV_AMMO_6
+#define TV_ARROW TV_AMMO_9
+#define TV_BOLT TV_AMMO_12
+
+/* and items */
+#define SV_LIGHT_TORCH 101
+#define SV_LIGHT_LANTERN 102
+#define SV_FOOD_RATION 103
+#define SV_FOOD_SLIME_MOLD 104
+#define SV_FOOD_WAYBREAD 109
+#define SV_RING_ACCURACY 105
+#define SV_RING_DAMAGE 106
+#define SV_RING_DELVING 108
+#define SV_AMULET_TELEPORTATION 107
+//#define SV_STAFF_TELEPORTATION -1
+
+/* and limits */
+#define STORE_INVEN_MAX 256
+#define PANEL_HGT 11
+#define PANEL_WID 33
+#define MAX_SIGHT 20
+#define MAX_STACK_SIZE 99
+#define QUIVER_END 256
+
+#define OBJECT_XTRA_TYPE_RESIST 100
+#define OBJECT_XTRA_TYPE_POWER 101
 
 /* Mega-Hack - indices of the player classes */
 
@@ -293,10 +365,10 @@ EFF_TRAP_GAS_SLEEP,	/* "soporific gas") */
 
 
 /*
- * Maximum possible dungeon size
+ * Maximum possible dungeon size - must be known at compile time
  */
-#define AUTO_MAX_X  DUNGEON_WID
-#define AUTO_MAX_Y  DUNGEON_HGT
+#define AUTO_MAX_X  256 // (z_info->dungeon_wid)
+#define AUTO_MAX_Y  256 // (z_info->dungeon_hgt)
 
 /* The borg_has[] needs to know certain numbers */
 #define SHROOM_STONESKIN	 22
@@ -673,32 +745,18 @@ typedef struct borg_take borg_take;
 struct borg_take
 {
     struct object_kind *kind;      /* Kind */
-
     bool    known;      /* Verified kind */
-
     bool    seen;       /* Assigned motion */
-
     bool    extra;      /* Unused */
-
 	bool	orbed;		/* Orb of Draining cast on it */
-
 	byte    x, y;       /* Location */
-
     s16b    when;       /* When last seen */
-
 	int		value;		/* Estimated value of item */
-
 	int		tval;		/* Known tval */
-
 	int		sval;
-
 	bool	quest;
-
 	int		iqty;		/* Quantity of item */
-
 	bool	crap;		/* Item is marked as crappy, dont pick up */
-
-
 };
 
 
@@ -815,8 +873,6 @@ struct borg_data
 };
 
 
-
-
 /*** Some macros ***/
 
 
@@ -825,8 +881,8 @@ struct borg_data
  * This results in "diagonals" being "correctly" ranged,
  * that is, a diagonal appears "furthur" than an adjacent.
  */
-#define double_distance(Y1,X1,Y2,X2) \
-    (distance(((int)(Y1))<<1,((int)(X1))<<1,((int)(Y2))<<1,((int)(X2))<<1))
+#define double_distance4(Y1,X1,Y2,X2) \
+    (distance4(((int)(Y1))<<1,((int)(X1))<<1,((int)(Y2))<<1,((int)(X2))<<1))
 
 
 
@@ -1401,15 +1457,15 @@ extern s16b borg_questor_died; /* time stamp */
  * Some estimated state variables
  */
 
-extern s16b my_stat_max[6]; /* Current "maximal" stat values    */
-extern s16b my_stat_cur[6]; /* Current "natural" stat values    */
-extern s16b my_stat_use[6]; /* Current "resulting" stat values  */
-extern s16b my_stat_ind[6]; /* Current "additions" to stat values   */
-extern bool my_need_stat_check[6];  /* do I need to check my stats */
+extern s16b my_stat_max[7]; /* Current "maximal" stat values    */
+extern s16b my_stat_cur[7]; /* Current "natural" stat values    */
+extern s16b my_stat_use[7]; /* Current "resulting" stat values  */
+extern s16b my_stat_ind[7]; /* Current "additions" to stat values   */
+extern bool my_need_stat_check[7];  /* do I need to check my stats */
 
-extern s16b my_stat_add[6];  /* aditions to stats */
+extern s16b my_stat_add[7];  /* aditions to stats */
 
-extern s16b home_stat_add[6];
+extern s16b home_stat_add[7];
 
 extern int  weapon_swap;   /* location of my swap weapon   */
 extern s32b weapon_swap_value;   /* value of my swap weapon   */
@@ -1560,9 +1616,9 @@ extern s16b amt_cool_staff;  /* holiness-power staff */
 extern s16b amt_cool_wand;	/* # of charges */
 extern s16b amt_book[9];
 
-extern s16b amt_add_stat[6];
-extern s16b amt_inc_stat[6];
-extern s16b amt_fix_stat[7];
+extern s16b amt_add_stat[7];
+extern s16b amt_inc_stat[7];
+extern s16b amt_fix_stat[8];
 
 extern s16b amt_fix_exp;
 
@@ -1603,7 +1659,7 @@ extern s16b num_missile;
 
 extern s16b num_book[9];
 
-extern s16b num_fix_stat[7];
+extern s16b num_fix_stat[STAT_MAX+1];
 
 extern s16b num_fix_exp;
 extern s16b num_mana;
@@ -1730,7 +1786,7 @@ extern s32b borg_exp;       /* Current experience */
 
 extern s32b borg_gold;      /* Current gold */
 
-extern int borg_stat[6];    /* Current stats */
+extern int borg_stat[STAT_MAX];    /* Current stats */
 
 extern int borg_book[9];    /* Current book slots */
 

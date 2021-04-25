@@ -3,9 +3,14 @@
 /* Purpose: Object and Spell routines for the Borg -BEN- */
 
 #include "angband.h"
-#include "object/tvalsval.h"
 #include "cave.h"
-
+#include "cmd-core.h"
+#include "init.h"
+#include "obj-desc.h"
+#include "obj-properties.h"
+#include "option.h"
+#include "player-spell.h"
+#include "store.h"
 
 #include "borg1.h"
 #include "borg3.h"
@@ -1329,7 +1334,7 @@ int borg_wield_slot(borg_item *item)
  * This function pulls the information from the screen if it is not passed
  * a *real* item.  It is only passed in *real* items if the borg is allowed
  * to 'cheat' for inventory.
- * This function returns TRUE if space needs to be pressed
+ * This function returns true if space needs to be pressed
  */
 bool borg_object_star_id_aux(borg_item *borg_item, object_type *real_item)
 {
@@ -1340,9 +1345,9 @@ bool borg_object_star_id_aux(borg_item *borg_item, object_type *real_item)
     object_flags(real_item, f);
 	for (i = 0; i < 12 && i < OF_SIZE; i++) borg_item->flags[i] = f[i];
 
-    borg_item->needs_I = FALSE;
+    borg_item->needs_I = false;
 
-    return (FALSE);
+    return (false);
 }
 
 /*
@@ -1501,7 +1506,7 @@ static s32b borg_object_value_known(borg_item *item)
     s32b value;
 
 
-    object_kind *k_ptr = &k_info[item->kind];
+    struct object_kind *k_ptr = &k_info[item->kind];
 
     /* Worthless items */
     if (!k_ptr->cost) return (0L);
@@ -1732,13 +1737,13 @@ void borg_item_analyze(borg_item *item, object_type *real_item, char *desc, int 
 
     char *scan;
 	int i;
-	bool main = FALSE;
-	bool swap = FALSE;
+	bool main = false;
+	bool swap = false;
 
 
 	/* Set some keeper flags */
-	if (item->main) main = TRUE;
-	if (item->swap) main = TRUE;
+	if (item->main) main = true;
+	if (item->swap) main = true;
 
     /* Wipe the item */
     WIPE(item, borg_item);
@@ -1759,9 +1764,9 @@ void borg_item_analyze(borg_item *item, object_type *real_item, char *desc, int 
 	/* Set certain flags */
 	if (!fake_gear)
 	{
-		if (location >= INVEN_WIELD || main == TRUE) item->main = TRUE;
-		if ((location == weapon_swap && location != 0) || swap == TRUE) item->swap = TRUE;
-		if ((location == armour_swap && location != 0) || swap == TRUE) item->swap = TRUE;
+		if (location >= INVEN_WIELD || main == true) item->main = true;
+		if ((location == weapon_swap && location != 0) || swap == true) item->swap = true;
+		if ((location == armour_swap && location != 0) || swap == true) item->swap = true;
 	}
 
     /* Empty item */
@@ -1790,7 +1795,7 @@ void borg_item_analyze(borg_item *item, object_type *real_item, char *desc, int 
 		if (object_flavor_is_aware(real_item)) item->kind = real_item->kind->kidx;
 
 		/* item has some awareness */
-		if (item->kind) item->aware = TRUE;
+		if (item->kind) item->aware = true;
 	}
 
 	/* Item has been ID'd (store, scroll, spell) */
@@ -1799,7 +1804,7 @@ void borg_item_analyze(borg_item *item, object_type *real_item, char *desc, int 
   	    (real_item->ident & IDENT_STORE) ||
 		(real_item->ident & IDENT_ATTACK) ||
 		/*(real_item->ident & IDENT_FIRED)  || */
-		(real_item->ident & IDENT_DEFENCE)) item->ident = TRUE;
+		(real_item->ident & IDENT_DEFENCE)) item->ident = true;
 
 	/* Descriptions from PseudoID trump the IDENT_SENSE */
 	if (strstr(item->note, "magical") ||
@@ -1808,21 +1813,21 @@ void borg_item_analyze(borg_item *item, object_type *real_item, char *desc, int 
 		strstr(item->note, "splendid") ||
 		strstr(item->note, "special") ||
 		strstr(item->note, "terrible") ||
-		strstr(item->note, "indestructible")) item->ident = FALSE;        
+		strstr(item->note, "indestructible")) item->ident = false;        
 
 	/* Item has been *ID*'d (store, scroll, spell) */
   	if ((real_item->ident & IDENT_KNOWN) /*||
-  	    (real_item->ident & IDENT_MENTAL)*/) item->fully_identified = TRUE;
+  	    (real_item->ident & IDENT_MENTAL)*/) item->fully_identified = true;
 
     /* Kind index -- Only if partially ID*/
     if (item->aware) item->kind = real_item->kind->kidx;
 
 	/* Some items do not need full ID */
-	if (real_item->tval == TV_SCROLL && item->kind) item->ident = TRUE;
-	if (item->kind && easy_know(real_item)) item->ident = TRUE;
+	if (real_item->tval == TV_SCROLL && item->kind) item->ident = true;
+	if (item->kind && easy_know(real_item)) item->ident = true;
 
 	/* power value -- Only if ID'd */
-  	if (item->ident) item->pval = real_item->pval[DEFAULT_PVAL];
+  	if (item->ident) item->pval = real_item->pval ;
 
 	/* does it have an activation or effect? */
 	if (item->ident) item->activation = k_info[item->kind].effect;
@@ -1887,7 +1892,7 @@ void borg_item_analyze(borg_item *item, object_type *real_item, char *desc, int 
 		item->pval =1;
 
 		/* if Known, get correct pval */
-		if (item->ident) item->pval = real_item->pval[DEFAULT_PVAL];
+		if (item->ident) item->pval = real_item->pval ;
 
 		/* Gotta know charges */
 		/* if (!object_known_p(real_item)) item->pval = 0; */
@@ -2009,18 +2014,18 @@ void borg_item_analyze(borg_item *item, object_type *real_item, char *desc, int 
 	}
 
 	/* Try to set the Quest Item flag correctly the first time the item is anayzed. */
-	if (strstr(item->note,"Quest")) item->quest = TRUE;
+	if (strstr(item->note,"Quest")) item->quest = true;
 	else
 	{
 		for (i = 0; i <= good_obj_num; i++)
 		{
 			if (good_obj_tval[i] == item->tval &&
 				good_obj_sval[i] == item->sval &&
-				distance(good_obj_y[i], good_obj_x[i], c_y, c_x) <= 3 &&
+				distance4(good_obj_y[i], good_obj_x[i], c_y, c_x) <= 3 &&
 				item->iqty >= 1 &&
 				location < INVEN_WIELD)
 			{
-					item->quest = TRUE;
+					item->quest = true;
 			}
 		}
 	}
@@ -2099,7 +2104,7 @@ void borg_item_analyze(borg_item *item, object_type *real_item, char *desc, int 
 		strstr(item->note, "cursed"))) item->value = 999999;
 
     /* XXX XXX XXX Repair various "ego-items" */
-	if (item->kind == RING_DOG) item->pval = real_item->pval[DEFAULT_PVAL];
+	if (item->kind == RING_DOG) item->pval = real_item->pval ;
 	if (item->tval == TV_AMULET && item->sval == SV_AMULET_TELEPORTATION) item->value = 0; 
 
 	/* Repair the Planatir of Westerness. The borg thinks
@@ -2255,14 +2260,14 @@ void borg_item_analyze(borg_item *item, object_type *real_item, char *desc, int 
 	}
 
 	/* Assume not fully Identified. */
-    item->needs_I = TRUE;
-    item->fully_identified = FALSE;
+    item->needs_I = true;
+    item->fully_identified = false;
 
 	/* Unless its easy_know */
 	if (item->kind && easy_know(real_item))
 	{
-		item->needs_I = FALSE;
-		item->fully_identified = TRUE;
+		item->needs_I = false;
+		item->fully_identified = true;
 
 	}
 
@@ -2365,13 +2370,13 @@ bool borg_refuel_torch(void)
     int i=-1;
 
 	/* No need if wielding a light source */
-	if (borg_items[INVEN_LIGHT].iqty) return(FALSE);
+	if (borg_items[INVEN_LIGHT].iqty) return(false);
 
 	/* Look for a torch */
     i = borg_slot(TV_LIGHT, SV_LIGHT_TORCH);
 
     /* None available */
-    if (i < 0) return (FALSE);
+    if (i < 0) return (false);
 
     /* Log the message */
     borg_note(format("# Refueling with %s.", borg_items[i].desc));
@@ -2384,7 +2389,7 @@ bool borg_refuel_torch(void)
     goal_shop = goal_ware = goal_item = -1;
 
     /* Success */
-    return (TRUE);
+    return (true);
 
 }
 
@@ -2409,12 +2414,12 @@ bool borg_refuel_lantern(void)
 	}
 
 	/* Still none */
-	if (i < 0) return (FALSE);
+	if (i < 0) return (false);
 
     /* Cant refuel a torch with oil */
     if (borg_items[INVEN_LIGHT].sval != SV_LIGHT_LANTERN)
     {
-        return (FALSE);
+        return (false);
     }
 
     /* Log the message */
@@ -2428,7 +2433,7 @@ bool borg_refuel_lantern(void)
     goal_shop = goal_ware = goal_item = -1;
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 
 
@@ -2445,7 +2450,7 @@ bool borg_eat_food(int sval)
     i = borg_slot(TV_FOOD, sval);
 
     /* None available */
-    if (i < 0) return (FALSE);
+    if (i < 0) return (false);
 
     /* Log the message */
     borg_note(format("# Eating %s.", borg_items[i].desc));
@@ -2458,7 +2463,7 @@ bool borg_eat_food(int sval)
     goal_shop = goal_ware = goal_item = -1;
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 
 /*
@@ -2479,27 +2484,27 @@ bool borg_quaff_crit( bool no_check )
         if (borg_quaff_potion(SV_POTION_CURE_CRITICAL))
         {
             when_last_quaff = borg_t;
-            return (TRUE);
+            return (true);
         }
-        return (FALSE);
+        return (false);
     }
 
     /* Avoid drinking CCW twice in a row */
     if (when_last_quaff > (borg_t-4) &&
         when_last_quaff <= borg_t  &&
         (randint1(100) < 75))
-        return FALSE;
+        return false;
 
     /* Save the last two for when we really need them */
     if (borg_skill[BI_ACCW] < 2)
-        return FALSE;
+        return false;
 
     if (borg_quaff_potion(SV_POTION_CURE_CRITICAL))
     {
         when_last_quaff = borg_t;
-        return (TRUE);
+        return (true);
     }
-    return (FALSE);
+    return (false);
 }
 
 
@@ -2514,7 +2519,7 @@ bool borg_quaff_potion(int sval)
     i = borg_slot(TV_POTION, sval);
 
     /* None available */
-    if (i < 0) return (FALSE);
+    if (i < 0) return (false);
 
     /* Log the message */
     borg_note(format("# Quaffing %s.", borg_items[i].desc));
@@ -2527,7 +2532,7 @@ bool borg_quaff_potion(int sval)
     goal_shop = goal_ware = goal_item = -1;
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 /*
  * Hack -- attempt to quaff an unknown potion
@@ -2556,7 +2561,7 @@ bool borg_quaff_unknown(void)
 
 
     /* None available */
-    if (n < 0) return (FALSE);
+    if (n < 0) return (false);
 
     /* Log the message */
     borg_note(format("# Quaffing unknown potion %s.", borg_items[n].desc));
@@ -2569,7 +2574,7 @@ bool borg_quaff_unknown(void)
     goal_shop = goal_ware = goal_item = -1;
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 
 /*
@@ -2600,13 +2605,13 @@ bool borg_read_unknown(void)
 
 
     /* None available */
-    if (n < 0) return (FALSE);
+    if (n < 0) return (false);
 
     /* Dark */
-    if (no_light()) return (FALSE);
+    if (no_light()) return (false);
 
     /* Blind or Confused */
-    if (borg_skill[BI_ISBLIND] || borg_skill[BI_ISCONFUSED]) return (FALSE);
+    if (borg_skill[BI_ISBLIND] || borg_skill[BI_ISCONFUSED]) return (false);
 
     /* Log the message */
     borg_note(format("# Reading unknown scroll %s.", borg_items[n].desc));
@@ -2622,7 +2627,7 @@ bool borg_read_unknown(void)
     goal_shop = goal_ware = goal_item = -1;
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 
 
@@ -2653,7 +2658,7 @@ bool borg_eat_unknown(void)
 
 
     /* None available */
-    if (n < 0) return (FALSE);
+    if (n < 0) return (false);
 
     /* Log the message */
     borg_note(format("# Eating unknown mushroom %s.", borg_items[n].desc));
@@ -2666,7 +2671,7 @@ bool borg_eat_unknown(void)
     goal_shop = goal_ware = goal_item = -1;
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 
 /*
@@ -2696,7 +2701,7 @@ bool borg_use_unknown(void)
 
 
     /* None available */
-    if (n < 0) return (FALSE);
+    if (n < 0) return (false);
 
     /* Log the message */
     borg_note(format("# Using unknown Staff %s.", borg_items[n].desc));
@@ -2712,7 +2717,7 @@ bool borg_use_unknown(void)
     borg_keypress(ESCAPE);
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 
 
@@ -2725,17 +2730,17 @@ bool borg_read_scroll(int sval)
     borg_grid *ag = &borg_grids[c_y][c_x];
 
     /* Dark */
-    if (no_light()) return (FALSE);
+    if (no_light()) return (false);
 
     /* Blind or Confused or Amnesia*/
     if (borg_skill[BI_ISBLIND] || borg_skill[BI_ISCONFUSED] ||
-    	borg_skill[BI_ISFORGET]) return (FALSE);
+    	borg_skill[BI_ISFORGET]) return (false);
 
     /* Look for that scroll */
     i = borg_slot(TV_SCROLL, sval);
 
     /* None available */
-    if (i < 0) return (FALSE);
+    if (i < 0) return (false);
 
     /* Log the message */
     borg_note(format("# Reading %s.", borg_items[i].desc));
@@ -2750,7 +2755,7 @@ bool borg_read_scroll(int sval)
     goal_shop = goal_ware = goal_item = -1;
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 
 /* Return the relative chance for failure to activate an item.
@@ -2803,10 +2808,10 @@ bool borg_equips_rod(int sval)
     i = borg_slot(TV_ROD, sval);
 
     /* None available */
-    if (i < 0) return (FALSE);
+    if (i < 0) return (false);
 
     /* No charges */
-    if (!borg_items[i].pval) return (FALSE);
+    if (!borg_items[i].pval) return (false);
 
     /* Extract the item level */
     lev = (borg_items[i].level);
@@ -2821,10 +2826,10 @@ bool borg_equips_rod(int sval)
     fail = 100 * ((skill - lev) - (141 - 1)) / ((lev - skill) - (100 - 10));
 	 
     /* Roll for usage (at least 1/2 chance of success. */
-    if (fail > 500) return (FALSE);
+    if (fail > 500) return (false);
 
     /* Yep we got one */
-    return (TRUE);
+    return (true);
 }
 
 
@@ -2841,10 +2846,10 @@ bool borg_zap_rod(int sval)
     i = borg_slot(TV_ROD, sval);
 
     /* None available */
-    if (i < 0) return (FALSE);
+    if (i < 0) return (false);
 
     /* Hack -- Still charging */
-    if (!borg_items[i].pval) return (FALSE);
+    if (!borg_items[i].pval) return (false);
 
     /* Extract the item level */
     lev = (borg_items[i].level);
@@ -2861,7 +2866,7 @@ bool borg_zap_rod(int sval)
     /* Roll for usage */
     if (sval != SV_ROD_RECALL)
     {
-		if (fail > 500) return (FALSE);
+		if (fail > 500) return (false);
 	}
 
     /* Log the message */
@@ -2872,7 +2877,7 @@ bool borg_zap_rod(int sval)
     borg_keypress(I2A(i));
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 
 
@@ -2887,10 +2892,10 @@ bool borg_aim_wand(int sval)
     i = borg_slot(TV_WAND, sval);
 
     /* None available */
-    if (i < 0) return (FALSE);
+    if (i < 0) return (false);
 
     /* No charges */
-    if (!borg_items[i].pval) return (FALSE);
+    if (!borg_items[i].pval) return (false);
 
     /* record the address to avoid certain bugs with inscriptions&amnesia */
     zap_slot = i;
@@ -2903,7 +2908,7 @@ bool borg_aim_wand(int sval)
     borg_keypress(I2A(i));
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 
 
@@ -2918,10 +2923,10 @@ bool borg_use_staff(int sval)
     i = borg_slot(TV_STAFF, sval);
 
     /* None available */
-    if (i < 0) return (FALSE);
+    if (i < 0) return (false);
 
     /* No charges */
-    if (!borg_items[i].pval) return (FALSE);
+    if (!borg_items[i].pval) return (false);
 
     /* record the address to avoid certain bugs with inscriptions&amnesia */
     zap_slot = i;
@@ -2934,7 +2939,7 @@ bool borg_use_staff(int sval)
     borg_keypress(I2A(i));
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 
 /*
@@ -2950,10 +2955,10 @@ bool borg_use_staff_fail(int sval)
     i = borg_slot(TV_STAFF, sval);
 
     /* None available */
-    if (i < 0) return (FALSE);
+    if (i < 0) return (false);
 
     /* No charges */
-    if (!borg_items[i].pval) return (FALSE);
+    if (!borg_items[i].pval) return (false);
 
     /* record the address to avoid certain bugs with inscriptions&amnesia */
     zap_slot = i;
@@ -2975,14 +2980,14 @@ bool borg_use_staff_fail(int sval)
     {
         if (sval != SV_STAFF_TELEPORTATION)
         {
-            return (FALSE);
+            return (false);
         }
 
         /* We need to give some "desparation attempt to teleport staff" */
         if (!borg_skill[BI_ISCONFUSED] && !borg_skill[BI_ISBLIND]) /* Dark? */
         {
             /* We really have no chance, return false, attempt the scroll */
-            if (fail > 500) return (FALSE);
+            if (fail > 500) return (false);
         }
         /* We might have a slight chance, or we cannot not read */
     }
@@ -2999,7 +3004,7 @@ bool borg_use_staff_fail(int sval)
     borg_keypress(I2A(i));
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 /*
  * Hack -- checks staff (by sval) and
@@ -3014,10 +3019,10 @@ bool borg_equips_staff_fail(int sval)
     i = borg_slot(TV_STAFF, sval);
 
     /* None available */
-    if (i < 0) return (FALSE);
+    if (i < 0) return (false);
 
     /* No charges */
-    if (!borg_items[i].pval) return (FALSE);
+    if (!borg_items[i].pval) return (false);
 
     /* Extract the item level */
     lev = (borg_items[i].level);
@@ -3034,7 +3039,7 @@ bool borg_equips_staff_fail(int sval)
 	/* If its a Destruction, we only use it in emergencies, attempt it */
 	if (sval == SV_STAFF_DESTRUCTION)
 	{
-		return (TRUE);
+		return (true);
 	}
 
     /* Roll for usage, but if its a Teleport be generous. */
@@ -3043,21 +3048,21 @@ bool borg_equips_staff_fail(int sval)
         /* No real chance of success on other types of staffs */
         if (sval != SV_STAFF_TELEPORTATION)
         {
-            return (FALSE);
+            return (false);
         }
 
         /* We need to give some "desparation attempt to teleport staff" */
         if (sval == SV_STAFF_TELEPORTATION && !borg_skill[BI_ISCONFUSED])
         {
             /* We really have no chance, return false, attempt the scroll */
-            if (fail < 650) return (FALSE);
+            if (fail < 650) return (false);
         }
 
         /* We might have a slight chance (or its a Destruction), continue on */
     }
 
     /* Yep we got one */
-    return (TRUE);
+    return (true);
 }
 
 
@@ -3103,13 +3108,13 @@ bool borg_activate_artifact(int activation, int location)
          * of the resists that go with the artifact.
          * Lights dont need *id* just regular id.
          */
-        if  ((op_ptr->opt[OPT_birth_randarts]) && (item->activation != EFF_ILLUMINATION &&
+        if  ((OPT(player,birth_randarts) && (item->activation != EFF_ILLUMINATION &&
               item->activation != EFF_MAPPING &&
               item->activation != EFF_CLAIRVOYANCE) &&
              (!item->fully_identified))
         {
             borg_note(format("# %s must be *ID*'d before activation.", item->desc));
-            return (FALSE);
+            return (false);
         }
 
         /* Log the message */
@@ -3120,11 +3125,11 @@ bool borg_activate_artifact(int activation, int location)
         borg_keypress(I2A(i - INVEN_WIELD));
 
         /* Success */
-        return (TRUE);
+        return (true);
     }
 
     /* Oops */
-    return (FALSE);
+    return (false);
 }
 
 
@@ -3175,21 +3180,21 @@ bool borg_equips_artifact(int activation, int location)
          * of the resists that go with the artifact.
          * Lights dont need *id* just regular id.
          */
-        if  ((op_ptr->opt[OPT_birth_randarts]) && (item->activation != EFF_ILLUMINATION &&
+        if  ((OPT(player,birth_randarts) && (item->activation != EFF_ILLUMINATION &&
               item->activation != EFF_MAPPING &&
               item->activation != EFF_CLAIRVOYANCE) &&
              (!item->fully_identified))
         {
             borg_note(format("# %s must be *ID*'d before activation.", item->desc));
-            return (FALSE);
+            return (false);
         }
 
         /* Success */
-        return (TRUE);
+        return (true);
     }
 
     /* I do not have it or it is not charged */
-    return (FALSE);
+    return (false);
 }
 
 /*
@@ -3236,7 +3241,7 @@ bool borg_equips_item(int tval, int sval)
 		}
 
 		/* Potions do not have a fail rate */
-		if (item->tval == TV_POTION || item->tval == TV_SCROLL) return (TRUE);
+		if (item->tval == TV_POTION || item->tval == TV_SCROLL) return (true);
 
 		/* Extract the item level for fail rate check*/
         lev = item->level;
@@ -3254,12 +3259,12 @@ bool borg_equips_item(int tval, int sval)
         if (fail > 500) continue;
 
         /* Success */
-        return (TRUE);
+        return (true);
 
     }
 
     /* I guess I dont have it, or it is not ready, or too hard to activate. */
-    return (FALSE);
+    return (false);
 }
 
 /*
@@ -3295,11 +3300,11 @@ bool borg_activate_item(int tval, int sval, bool target)
 		}
 
         /* Success */
-        return (TRUE);
+        return (true);
     }
 
     /* Oops */
-    return (FALSE);
+    return (false);
 }
 
 /*
@@ -3405,12 +3410,12 @@ bool borg_has_effect(int effect, bool legal, bool infinite)
         if (fail > 500) continue;
 
         /* Success */
-        return (TRUE);
+        return (true);
 
     }
 
     /* I guess I dont have it, or it is not ready, or too hard to activate. */
-    return (FALSE);
+    return (false);
 }
 
 /*
@@ -3422,7 +3427,7 @@ bool borg_activate_effect(int effect, bool target)
 	int start = 0;
 
 	/* make sure the right keyset is selected */
-	if (OPT(rogue_like_commands)) option_set("rogue_like_commands", FALSE);
+	if (OPT(player, rogue_like_commands)) option_set("rogue_like_commands", false);
 
 
     /* Check the entire inventory and equipment */
@@ -3502,11 +3507,11 @@ bool borg_activate_effect(int effect, bool target)
 		}
 
         /* Success */
-        return (TRUE);
+        return (true);
     }
 
     /* Oops */
-    return (FALSE);
+    return (false);
 }
 /*
  * Hack -- check and see if borg is wielding a dragon armor and if
@@ -3523,14 +3528,14 @@ bool borg_equips_dragon(int drag_sval)
        borg_item *item = &borg_items[INVEN_BODY];
 
         /* Skip incorrect armours */
-        if (item->tval !=TV_DRAG_ARMOR) return (FALSE);
-        if (item->sval != drag_sval) return (FALSE);
+        if (item->tval !=TV_DRAG_ARMOR) return (false);
+        if (item->sval != drag_sval) return (false);
 
         /* Check charge */
-        if (item->timeout) return (FALSE);
+        if (item->timeout) return (false);
 
         /*  Make Sure Mail is IDed */
-        if (!item->ident) return (FALSE);
+        if (!item->ident) return (false);
 
 
        /* check on fail rate
@@ -3561,10 +3566,10 @@ bool borg_equips_dragon(int drag_sval)
 		fail = (100 * numerator) / denominator;
 		 
 		/* Roll for usage, but if its a Teleport be generous. */
-		if (fail > 500) return (FALSE);
+		if (fail > 500) return (false);
 
         /* Success */
-        return (TRUE);
+        return (true);
 
 }
 
@@ -3578,14 +3583,14 @@ bool borg_activate_dragon(int drag_sval)
       borg_item *item = &borg_items[INVEN_BODY];
 
         /* Skip incorrect mails */
-        if (item->tval != TV_DRAG_ARMOR) return (FALSE);
-        if (item->sval != drag_sval) return (FALSE);
+        if (item->tval != TV_DRAG_ARMOR) return (false);
+        if (item->sval != drag_sval) return (false);
 
 		/* Check charge */
-        if (item->timeout) return (FALSE);
+        if (item->timeout) return (false);
 
         /*  Make Sure Mail is IDed */
-        if (!item->ident) return (FALSE);
+        if (!item->ident) return (false);
 
         /* Log the message */
         borg_note(format("# Activating dragon scale %s.", item->desc));
@@ -3595,7 +3600,7 @@ bool borg_activate_dragon(int drag_sval)
         borg_keypress(I2A(INVEN_BODY - INVEN_WIELD));
 
         /* Success */
-        return (TRUE);
+        return (true);
 }
 
 /*
@@ -3640,10 +3645,10 @@ bool borg_equips_ring(int ring_sval)
 		if (fail > 500) continue;
 
         /* Success */
-        return (TRUE);
+        return (true);
 	}
 
-	return (FALSE);
+	return (false);
 
 }
 
@@ -3654,7 +3659,7 @@ bool borg_activate_ring(int ring_sval)
 {
 
 	int i;
-
+#ifdef undef
     /* Check the equipment */
     for (i = INVEN_LEFT; i <= INVEN_RIGHT; i++)
     {
@@ -3678,10 +3683,10 @@ bool borg_activate_ring(int ring_sval)
         borg_keypress(I2A(i - INVEN_WIELD));
 
         /* Success */
-        return (TRUE);
+        return (true);
 	}
-
-	return (FALSE);
+#endif
+	return (false);
 }
 
 /*
@@ -3692,19 +3697,20 @@ bool borg_spell_legal(int book, int what)
     borg_magic *as = &borg_magics[book][what];
 
     /* The borg must be able to "cast" spells */
-    if (p_ptr->class->spell_book != TV_MAGIC_BOOK) return (FALSE);
+    //if (player->class->spell_book != TV_MAGIC_BOOK) 
+    return (false);
 
     /* The book must be possessed */
-    if (amt_book[book] <= 0) return (FALSE);
+    if (amt_book[book] <= 0) return (false);
 
     /* The spell must be "known" */
-    if (as->status < BORG_MAGIC_TEST) return (FALSE);
+    if (as->status < BORG_MAGIC_TEST) return (false);
 
     /* The spell must be affordable (when rested) */
-    if (as->power > borg_skill[BI_MAXSP]) return (FALSE);
+    if (as->power > borg_skill[BI_MAXSP]) return (false);
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 
 /*
@@ -3719,7 +3725,7 @@ bool borg_spell_okay(int book, int what)
     borg_grid *ag = &borg_grids[c_y][c_x];
 
     /* Dark */
-    if (no_light()) return (FALSE);
+    if (no_light()) return (false);
 
     /* Define reserve_mana for each class */
     if (borg_class == CLASS_MAGE) reserve_mana = 6;
@@ -3730,36 +3736,36 @@ bool borg_spell_okay(int book, int what)
     if (borg_skill[BI_CLEVEL] < 35) reserve_mana = 0;
 
     /* Require ability (when rested) */
-    if (!borg_spell_legal(book, what)) return (FALSE);
+    if (!borg_spell_legal(book, what)) return (false);
 
     /* Hack -- blind/confused/amnesia */
-    if (borg_skill[BI_ISBLIND] || borg_skill[BI_ISCONFUSED]) return (FALSE);
+    if (borg_skill[BI_ISBLIND] || borg_skill[BI_ISCONFUSED]) return (false);
 
 
     /* The spell must be affordable (now) */
-    if (as->power > borg_skill[BI_CURSP]) return (FALSE);
+    if (as->power > borg_skill[BI_CURSP]) return (false);
 
     /* Do not cut into reserve mana (for final teleport) */
     if (borg_skill[BI_CURSP] - as->power < reserve_mana)
     {
         /* Phase spells ok */
-        if (book == 0 && what == 2) return (TRUE);
+        if (book == 0 && what == 2) return (true);
 
         /* Teleport spells ok */
-        if (book == 1 && what == 5) return (TRUE);
+        if (book == 1 && what == 5) return (true);
 
         /* Satisfy Hunger OK */
-        if (book == 2 && what == 0) return (TRUE);
+        if (book == 2 && what == 0) return (true);
 
 		/* Magic Missile OK */
-        if (book == 0 && what == 0 && borg_skill[BI_CDEPTH] <= 35) return (TRUE);
+        if (book == 0 && what == 0 && borg_skill[BI_CDEPTH] <= 35) return (true);
 
         /* others are rejected */
-        return (FALSE);
+        return (false);
     }
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 
 /*
@@ -3777,16 +3783,16 @@ int borg_spell_fail_rate(int book, int what)
     chance -= 3 * (borg_skill[BI_CLEVEL] - as->level);
 
     /* Reduce failure rate by INT/WIS adjustment */
-    chance -= (adj_mag_stat[my_stat_ind[A_INT]]);
+    chance -= (adj_mag_stat[my_stat_ind[STAT_INT]]);
 
 	/* Fear makes the failrate higher */
 	if (borg_skill[BI_ISAFRAID]) chance += 20;
 
     /* Extract the minimum failure rate */
-    minfail = adj_mag_fail[my_stat_ind[A_INT]];
+    minfail = adj_mag_fail[my_stat_ind[STAT_INT]];
 
     /* Non mage characters never get too good */
-    if (!player_has(PF_ZERO_FAIL))
+    if (!player_has(player, PF_ZERO_FAIL))
     {
         if (minfail < 5) minfail = 5;
     }
@@ -3817,7 +3823,7 @@ int borg_spell_fail_rate(int book, int what)
 bool borg_spell_okay_fail(int book, int what, int allow_fail )
 {
     if (borg_spell_fail_rate(book, what) > allow_fail)
-        return FALSE;
+        return false;
     return borg_spell_okay( book, what );
 }
 
@@ -3827,7 +3833,7 @@ bool borg_spell_okay_fail(int book, int what, int allow_fail )
 bool borg_spell_fail(int book, int what, int allow_fail)
 {
     if (borg_spell_fail_rate(book, what) > allow_fail)
-        return FALSE;
+        return false;
     return borg_spell( book, what );
 }
 
@@ -3837,7 +3843,7 @@ bool borg_spell_fail(int book, int what, int allow_fail)
 bool borg_spell_legal_fail(int book, int what, int allow_fail)
 {
     if (borg_spell_fail_rate(book, what) > allow_fail)
-        return FALSE;
+        return false;
     return borg_spell_legal( book, what );
 }
 
@@ -3851,13 +3857,13 @@ bool borg_spell(int book, int what)
     borg_magic *as = &borg_magics[book][what];
 
     /* Require ability (right now) */
-    if (!borg_spell_okay(book, what)) return (FALSE);
+    if (!borg_spell_okay(book, what)) return (false);
 
     /* Look for the book */
     i = borg_book[book];
 
     /* Paranoia */
-    if (i < 0) return (FALSE);
+    if (i < 0) return (false);
 
     /* Debugging Info */
     borg_note(format("# Casting %s (%d,%d).", as->name, book, what));
@@ -3871,7 +3877,7 @@ bool borg_spell(int book, int what)
     as->times ++;
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 
 
@@ -3883,19 +3889,19 @@ bool borg_prayer_legal(int book, int what)
     borg_magic *as = &borg_magics[book][what];
 
     /* The borg must be able to "pray" prayers */
-    if (p_ptr->class->spell_book != TV_PRAYER_BOOK) return (FALSE);
+    if (player->class->spell_book != TV_PRAYER_BOOK) return (false);
 
     /* Look for the book */
-    if (amt_book[book] <= 0) return (FALSE);
+    if (amt_book[book] <= 0) return (false);
 
     /* The prayer must be "known" */
-    if (as->status < BORG_MAGIC_TEST) return (FALSE);
+    if (as->status < BORG_MAGIC_TEST) return (false);
 
     /* The prayer must be affordable (when fully rested) */
-    if (as->power > borg_skill[BI_MAXSP]) return (FALSE);
+    if (as->power > borg_skill[BI_MAXSP]) return (false);
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 
 /*
@@ -3910,7 +3916,7 @@ bool borg_prayer_okay(int book, int what)
     borg_grid *ag = &borg_grids[c_y][c_x];
 
     /* Dark */
-    if (no_light()) return (FALSE);
+    if (no_light()) return (false);
 
     /* define reserve_mana */
     if (borg_class == CLASS_PRIEST) reserve_mana = 8;
@@ -3920,37 +3926,37 @@ bool borg_prayer_okay(int book, int what)
     if (borg_skill[BI_CLEVEL] < 35) reserve_mana = 0;
 
     /* Require ability (when rested) */
-    if (!borg_prayer_legal(book, what)) return (FALSE);
+    if (!borg_prayer_legal(book, what)) return (false);
 
     /* Hack -- blind/confused/amnesia */
-    if (borg_skill[BI_ISBLIND] || borg_skill[BI_ISCONFUSED]) return (FALSE);
+    if (borg_skill[BI_ISBLIND] || borg_skill[BI_ISCONFUSED]) return (false);
 
     /* The prayer must be affordable (right now) */
-    if (as->power > borg_skill[BI_CURSP]) return (FALSE);
+    if (as->power > borg_skill[BI_CURSP]) return (false);
 
     /* Do not cut into reserve mana (for final teleport) */
     if (borg_skill[BI_CURSP] - as->power < reserve_mana)
     {
         /* Phase spells ok */
-        if (book == 1 && what == 1) return (TRUE);
-        if (book == 4 && what == 0) return (TRUE);
+        if (book == 1 && what == 1) return (true);
+        if (book == 4 && what == 0) return (true);
 
         /* Teleport spells ok */
-        if (book == 4 && what == 1) return (TRUE);
+        if (book == 4 && what == 1) return (true);
 
         /* Satisfy Hunger spells ok */
-        if (book == 1 && what == 5) return (TRUE);
+        if (book == 1 && what == 5) return (true);
 
 		/* Banishment is OK, */
-        if (book == 8 && what == 2) return (TRUE);
+        if (book == 8 && what == 2) return (true);
 
 
         /* others are rejected */
-        return (FALSE);
+        return (false);
     }
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 
 int borg_prayer_fail_rate(int book, int what)
@@ -3965,19 +3971,19 @@ int borg_prayer_fail_rate(int book, int what)
     chance -= 3 * (borg_skill[BI_CLEVEL] - as->level);
 
     /* Reduce failure rate by INT/WIS adjustment */
-    chance -= (adj_mag_stat[my_stat_ind[A_WIS]]);
+    chance -= (adj_mag_stat[my_stat_ind[STAT_WIS]]);
 
     /* Extract the minimum failure rate */
-    minfail = adj_mag_fail[my_stat_ind[A_WIS]];
+    minfail = adj_mag_fail[my_stat_ind[STAT_WIS]];
 
     /* Non priest characters never get too good */
-    if (!player_has(PF_ZERO_FAIL))
+    if (!player_has(player, PF_ZERO_FAIL))
     {
         if (minfail < 5) minfail = 5;
     }
 
     /*  Hack -- Priest prayer penalty for "edged" weapons  -DGK */
-    if (player_has(PF_BLESS_WEAPON))
+    if (player_has(player, PF_BLESS_WEAPON))
     {
         borg_item       *item;
 
@@ -4018,7 +4024,7 @@ int borg_prayer_fail_rate(int book, int what)
 bool borg_prayer_okay_fail(int book, int what, int allow_fail )
 {
     if (borg_prayer_fail_rate(book, what) > allow_fail)
-        return FALSE;
+        return false;
     return borg_prayer_okay( book, what );
 }
 
@@ -4028,7 +4034,7 @@ bool borg_prayer_okay_fail(int book, int what, int allow_fail )
 bool borg_prayer_fail(int book, int what, int allow_fail)
 {
     if (borg_prayer_fail_rate(book, what) > allow_fail)
-        return FALSE;
+        return false;
     return borg_prayer( book, what );
 }
 
@@ -4038,7 +4044,7 @@ bool borg_prayer_fail(int book, int what, int allow_fail)
 bool borg_prayer_legal_fail(int book, int what, int allow_fail)
 {
     if (borg_prayer_fail_rate(book, what) > allow_fail)
-        return FALSE;
+        return false;
     return borg_prayer_legal( book, what );
 }
 
@@ -4052,13 +4058,13 @@ bool borg_prayer(int book, int what)
     borg_magic *as = &borg_magics[book][what];
 
     /* Require ability (right now) */
-    if (!borg_prayer_okay(book, what)) return (FALSE);
+    if (!borg_prayer_okay(book, what)) return (false);
 
     /* Look for the book */
     i = borg_book[book];
 
     /* Paranoia */
-    if (i < 0) return (FALSE);
+    if (i < 0) return (false);
 
     /* Debugging Info */
     borg_note(format("# Praying %s (%d,%d).", as->name, book, what));
@@ -4072,18 +4078,18 @@ bool borg_prayer(int book, int what)
     /* Because we have no launch message to indicate failure */
     if (book ==3 && what ==4)
     {
-        borg_casted_glyph = TRUE;
+        borg_casted_glyph = true;
     }
     else
     {
-        borg_casted_glyph = FALSE;
+        borg_casted_glyph = false;
     }
 
     /* increment the spell counter */
     as->times ++;
 
     /* Success */
-    return (TRUE);
+    return (true);
 }
 
 
@@ -4120,7 +4126,7 @@ extern bool borg_inscribe_food(void)
                 strcat(name, food_syllable2[randint0(sizeof(food_syllable2) / sizeof(char*))]);
 
                 borg_send_inscribe(ii, name);
-                return (TRUE);
+                return (true);
             }
 
             if (item->sval == SV_FOOD_SLIME_MOLD)
@@ -4131,14 +4137,14 @@ extern bool borg_inscribe_food(void)
                 strcat(name, mold_syllable3[randint0(sizeof(mold_syllable3) / sizeof(char*))]);
 
                 borg_send_inscribe(ii, name);
-                return (TRUE);
+                return (true);
             }
 
         }
     }
 
     /* all done */
-    return (FALSE);
+    return (false);
 }
 /*
  * Send a command to de-inscribe item number "i" .
@@ -4196,13 +4202,13 @@ extern bool borg_needed_deinscribe(void)
 		   (strstr(item->note, "Quest") && item->fully_identified)) 
 		{
 			   borg_send_deinscribe(ii);
-			   return (TRUE);
+			   return (true);
 		}
 
     }
 
     /* all done */
-    return (FALSE);
+    return (false);
 }
 /*
  * Return the owner struct for the given store.
@@ -4214,8 +4220,8 @@ static struct owner *store_owner(int st) {
 /* (This is copied from store.c)
  * Determine the price of an object (qty one) in a store.
  *
- *  store_buying == TRUE  means the shop is buying, player selling
- *               == FALSE means the shop is selling, player buying
+ *  store_buying == true  means the shop is buying, player selling
+ *               == false means the shop is selling, player buying
  *
  * This function takes into account the player's charisma, but
  * never lets a shop-keeper lose money in a transaction.
@@ -4237,9 +4243,9 @@ s32b borg_price_item(const object_type *o_ptr, bool store_buying, int qty, int t
 
 	/* Get the value of the stack of wands, or a single item */
 	if ((o_ptr->tval == TV_WAND) || (o_ptr->tval == TV_STAFF))
-		price = object_value(o_ptr, qty, FALSE);
+		price = object_value(o_ptr, qty, false);
 	else
-		price = object_value(o_ptr, 1, FALSE);
+		price = object_value(o_ptr, 1, false);
 
 	/* Worthless items */
 	if (price <= 0) return (0L);
@@ -4249,7 +4255,7 @@ s32b borg_price_item(const object_type *o_ptr, bool store_buying, int qty, int t
 	if (this_store == STORE_B_MARKET)
 		adjust = 150;
 	else
-		adjust = adj_chr_gold[p_ptr->state.stat_ind[A_CHR]];
+		adjust = 110; //adj_chr_gold[player->state.stat_ind[STAT_CHR]];
 
 
 	/* Shop is buying */
@@ -4266,7 +4272,7 @@ s32b borg_price_item(const object_type *o_ptr, bool store_buying, int qty, int t
 		if (this_store == STORE_B_MARKET) price = price / 2;
 
 		/* Check for no_selling option */
-		if (OPT(birth_no_selling)) return (0L);
+		if (OPT(player, birth_no_selling)) return (0L);
 	}
 
 	/* Shop is selling */
@@ -4310,7 +4316,7 @@ void borg_cheat_equip(bool fake_gear)
     for (i = INVEN_WIELD; i < ALL_INVEN_TOTAL; i++)
     {
 		/* skip non items */
-		if (!p_ptr->inventory[i].kind)
+		if (!player->inventory[i].kind)
 		{
 			/* Be sure to wipe it from the borg equip */
 			WIPE(&borg_items[i], borg_item);
@@ -4320,19 +4326,19 @@ void borg_cheat_equip(bool fake_gear)
         buf[0] = '\0';
 
         /* Describe a real item */
-        if (p_ptr->inventory[i].kind)
+        if (player->inventory[i].kind)
         {
             /* Describe it */
-            object_desc(buf, sizeof(buf), &p_ptr->inventory[i], ODESC_FULL);
+            object_desc(buf, sizeof(buf), &player->inventory[i], ODESC_FULL);
 
 			/* Analyze the item (no price) */
-			borg_item_analyze(&borg_items[i], &p_ptr->inventory[i], buf,i, fake_gear);
+			borg_item_analyze(&borg_items[i], &player->inventory[i], buf,i, fake_gear);
 
 			/* get the fully id stuff */
-			if (p_ptr->inventory[i].ident & (IDENT_KNOWN | IDENT_EFFECT))
+			if (player->inventory[i].ident & (IDENT_KNOWN | IDENT_EFFECT))
 			{
-				borg_items[i].fully_identified = TRUE;
-				borg_items[i].needs_I = FALSE;
+				borg_items[i].fully_identified = true;
+				borg_items[i].needs_I = false;
     		}
 
 		}
@@ -4350,13 +4356,13 @@ void borg_cheat_inven(bool fake_gear)
     char buf[256];
 
     /* Extract the current weight */
-    borg_cur_wgt = p_ptr->total_weight;
+    borg_cur_wgt = player->total_weight;
 
     /* Extract the inventory */
     for (i = 0; i < INVEN_MAX_PACK; i++)
     {
 		/* Skip non-items */
-		if (!p_ptr->inventory[i].kind)
+		if (!player->inventory[i].kind)
 		{
 			/* Wipe from borg lists */
 			WIPE(&borg_items[i], borg_item);
@@ -4366,26 +4372,26 @@ void borg_cheat_inven(bool fake_gear)
         buf[0] = '\0';
 
         /* Describe it */
-        object_desc(buf, sizeof(buf), &p_ptr->inventory[i], ODESC_FULL);
+        object_desc(buf, sizeof(buf), &player->inventory[i], ODESC_FULL);
 
 		/* Skip Empty slots */
 		if (streq(buf,"(nothing)")) continue;
 
 
     	/* Analyze the item (no price) */
-    	borg_item_analyze(&borg_items[i], &p_ptr->inventory[i], buf, i, fake_gear);
+    	borg_item_analyze(&borg_items[i], &player->inventory[i], buf, i, fake_gear);
 
     	/* get the fully id stuff */
-    	if (p_ptr->inventory[i].ident & (IDENT_KNOWN | IDENT_EFFECT))
+    	if (player->inventory[i].ident & (IDENT_KNOWN | IDENT_EFFECT))
     	{
-    	    borg_items[i].fully_identified = TRUE;
-    	    borg_items[i].needs_I = FALSE;
+    	    borg_items[i].fully_identified = true;
+    	    borg_items[i].needs_I = false;
     	}
 
     	/* Note changed inventory */
-    	borg_do_crush_junk = TRUE;
-    	borg_do_crush_hole = TRUE;
-    	borg_do_crush_slow = TRUE;
+    	borg_do_crush_junk = true;
+    	borg_do_crush_hole = true;
+    	borg_do_crush_slow = true;
 
 	}
 }
@@ -4441,7 +4447,7 @@ void borg_cheat_store(void)
 			strcpy(borg_shops[shop_num].ware[slot].desc, buf);
 
 			/* Analyze the item */
-			borg_item_analyze(&borg_shops[shop_num].ware[slot], &stores[shop_num].stock[slot], buf, slot, TRUE);
+			borg_item_analyze(&borg_shops[shop_num].ware[slot], &stores[shop_num].stock[slot], buf, slot, true);
 
 			/*need to be able to analize the home inventory to see if it was */
 			/* *fully ID*d. */
@@ -4453,7 +4459,7 @@ void borg_cheat_store(void)
 				/*   home. */
 				borg_object_star_id_aux( &borg_shops[shop_num].ware[slot],
 										 &stores[shop_num].stock[slot]);
-				borg_shops[shop_num].ware[slot].fully_identified = TRUE;
+				borg_shops[shop_num].ware[slot].fully_identified = true;
 			}
 
 			/* hack -- see of store is selling food.  Needed for Money Scumming */
@@ -4481,7 +4487,7 @@ void borg_cheat_store(void)
 			}
 
 			/* Hack -- Save the declared cost */
-			borg_shops[shop_num].ware[slot].cost = borg_price_item(j_ptr, FALSE,1, shop_num);
+			borg_shops[shop_num].ware[slot].cost = borg_price_item(j_ptr, false,1, shop_num);
 		}
 	}
 }
@@ -4497,7 +4503,8 @@ void borg_cheat_spell(int book)
 
 
     /* Can we use spells/prayers? */
-    if (!p_ptr->class->spell_book) return;
+   // if (!player->class->spell_book) return;
+   return;
 
 	/* Process the Books */
 /*	for (book = 0; book < 9; book++) */
@@ -4512,7 +4519,7 @@ void borg_cheat_spell(int book)
 			if (as->status == BORG_MAGIC_ICKY) continue;
 
 			/* Note "forgotten" spells */
-			if (p_ptr->spell_flags[as->cheat] & PY_SPELL_FORGOTTEN)
+			if (player->spell_flags[as->cheat] & PY_SPELL_FORGOTTEN)
 			{
 	            /* Forgotten */
 				as->status = BORG_MAGIC_LOST;
@@ -4526,14 +4533,14 @@ void borg_cheat_spell(int book)
 			}
 
 			/* Note "Unknown" spells */
-	        else if (!(p_ptr->spell_flags[as->cheat] & PY_SPELL_LEARNED))
+	        else if (!(player->spell_flags[as->cheat] & PY_SPELL_LEARNED))
 		    {
 			    /* UnKnown */
 				as->status = BORG_MAGIC_OKAY;
 	        }
 
 		    /* Note "untried" spells */
-			else if (!(p_ptr->spell_flags[as->cheat] & PY_SPELL_WORKED))
+			else if (!(player->spell_flags[as->cheat] & PY_SPELL_WORKED))
 	        {
 		        /* Untried */
 			    as->status = BORG_MAGIC_TEST;
@@ -4587,10 +4594,11 @@ static void prepare_book_info(void)
     }
 
     /* Can we use spells/prayers? */
-    if (!p_ptr->class->spell_book) return;
+    //if (!player->class->spell_book) 
+    return;
 
     /* define the spell type */
-    if (p_ptr->class->spell_book == TV_MAGIC_BOOK)
+    if (1)//player->class->spell_book == TV_MAGIC_BOOK)
     {
         /* Mage book */
         index = 0;
@@ -4608,10 +4616,10 @@ static void prepare_book_info(void)
         {
             borg_magic *as = &borg_magics[book][what];
 
-            const magic_type *spell_ptr;
+            //const magic_type *spell_ptr;
 
             /* access the game index */
-            spell_ptr = &p_ptr->class->spells.info[borg_magic_index[index][book][what]];
+            //spell_ptr = &player->class->spells.info[borg_magic_index[index][book][what]];
 
             /* Save the spell index */
             as->cheat = borg_magic_index[index][book][what];
@@ -4632,11 +4640,11 @@ static void prepare_book_info(void)
             if (as->cheat == 99) continue;
 
             /* Save the spell level */
-            as->level = spell_ptr->slevel;
+            as->level = 0;//spell_ptr->slevel;
             /* Save the spell mana */
-            as->power = spell_ptr->smana;
+            as->power = 0;//spell_ptr->smana;
             /* Save the spell fail ratename */
-            as->sfail = spell_ptr->sfail;
+            as->sfail = 0;//spell_ptr->sfail;
         }
 
     }
@@ -4720,7 +4728,7 @@ void borg_init_3(void)
         object_type hack;
 
         /* Get the kind */
-        object_kind *k_ptr = &k_info[k];
+        struct object_kind *k_ptr = &k_info[k];
 
         /* Skip "empty" items */
         if (!k_ptr->name) continue;
@@ -4779,7 +4787,7 @@ void borg_init_3(void)
         object_type hack;
 
         /* Get the kind */
-        object_kind *k_ptr = &k_info[k];
+        struct object_kind *k_ptr = &k_info[k];
 
         /* Skip "empty" items */
         if (!k_ptr->name) continue;

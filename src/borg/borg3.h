@@ -5,7 +5,6 @@
 #define INCLUDED_BORG3_H
 
 #include "angband.h"
-#include "object/tvalsval.h"
 #include "cave.h"
 
 #ifdef ALLOW_BORG
@@ -58,12 +57,12 @@ struct borg_item
 
     s16b kind;      /* Kind index */
 
-    bool ident;      /* True if item is identified */
+    bool ident;      /* true if item is identified */
 	bool aware;		/* Player is aware of the effects */
 
-    bool fully_identified; /* True if item is fully identified (AJG) */
+    bool fully_identified; /* true if item is fully identified (AJG) */
 
-    bool needs_I;   /* True if item needs to be 'I'd (AJG) */
+    bool needs_I;   /* true if item needs to be 'I'd (AJG) */
 
     bool quest;      /* dropped by unique */
 	bool swap;		/* was a swap at one time */
@@ -115,7 +114,7 @@ struct borg_shop
     s16b page;      /* Current page */
     s16b more;      /* Number of pages */
 
-    borg_item ware[24]; /* Store contents */
+    borg_item ware[256]; /* Store contents */
 };
 
 

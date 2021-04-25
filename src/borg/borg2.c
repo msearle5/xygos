@@ -2,8 +2,9 @@
 /* Purpose: Low level dungeon mapping skills -BEN- */
 
 #include "angband.h"
-#include "object/tvalsval.h"
 #include "cave.h"
+#include "init.h"
+#include "project.h"
 
 
 #ifdef ALLOW_BORG
@@ -310,9 +311,9 @@ bool borg_cave_floor_bold(int Y, int X)
 			(borg_grids[Y][X].feat == FEAT_MORE) ||
 			(borg_grids[Y][X].feat == FEAT_BROKEN) ||
 			(borg_grids[Y][X].feat == FEAT_OPEN) ||
-			(borg_grids[Y][X].feat == FEAT_GLYPH)) return (TRUE);
+			(borg_grids[Y][X].feat == FEAT_GLYPH)) return (true);
 	}
-	return (FALSE);
+	return (false);
 }
 
 /*
@@ -348,7 +349,7 @@ bool borg_los(int y1, int x1, int y2, int x2)
 
     borg_kill *kill;
 
-    monster_race *r_ptr;
+    struct monster_race *r_ptr;
 
 	/* Determine which has the monster */
     ag = &borg_grids[y1][x1];
@@ -377,17 +378,17 @@ bool borg_los(int y1, int x1, int y2, int x2)
 
 	
     /* Handle adjacent (or identical) grids */
-    if ((ax < 2) && (ay < 2)) return (TRUE);
+    if ((ax < 2) && (ay < 2)) return (true);
 
 
     /* Paranoia -- require "safe" origin */
-    if (!in_bounds_fully(y1, x1)) return (FALSE);
+    if (!in_bounds_fully(y1, x1)) return (false);
 
 	/* We have to address a specific event which happens early in the game.
 	 * The borg might have infravision,a torch, and see a monster a few grids
 	 * away.  That monster might be in a unlit region of the dungeon.  
 	 * The borg only sees the monster because of the infravision.
-	 * The lower half of the LOS() routine would return a FALSE in this case
+	 * The lower half of the LOS() routine would return a false in this case
 	 * because the grids 2 or 3 spaces away from the borg are not lit by the 
 	 * torch nor dungeon illuminated.  If the game is allowing the borg to 
 	 * see the monster, then it must be LOS().  An example illustrated below.
@@ -403,7 +404,7 @@ bool borg_los(int y1, int x1, int y2, int x2)
 	if (ag->kill && borg_skill[BI_INFRA] && !borg_skill[BI_ESP])
 	{
 		/* Is the monster within the infravision range */
-		if (distance(y1, x1, y2, x2) <= borg_skill[BI_INFRA])
+		if (distance4(y1, x1, y2, x2) <= borg_skill[BI_INFRA])
 		{
 			/* Was the monster recently seen (as opposed to detected via spells) */
 			if (kill->when + 2 > borg_t)
@@ -412,7 +413,7 @@ bool borg_los(int y1, int x1, int y2, int x2)
 				if (!(rf_has(r_info->flags, RF_COLD_BLOOD)))
 				{
 					/* Then that grid is most likely LOS */
-					return (TRUE);
+					return (true);
 				}
 			}
 		}
@@ -426,7 +427,7 @@ bool borg_los(int y1, int x1, int y2, int x2)
         {
             for (ty = y1 + 1; ty < y2; ty++)
             {
-                if (!borg_cave_floor_bold(ty, x1)) return (FALSE);
+                if (!borg_cave_floor_bold(ty, x1)) return (false);
             }
         }
 
@@ -435,12 +436,12 @@ bool borg_los(int y1, int x1, int y2, int x2)
         {
             for (ty = y1 - 1; ty > y2; ty--)
             {
-                if (!borg_cave_floor_bold(ty, x1)) return (FALSE);
+                if (!borg_cave_floor_bold(ty, x1)) return (false);
             }
         }
 
         /* Assume los */
-        return (TRUE);
+        return (true);
     }
 
     /* Directly East/West */
@@ -451,7 +452,7 @@ bool borg_los(int y1, int x1, int y2, int x2)
         {
             for (tx = x1 + 1; tx < x2; tx++)
             {
-                if (!borg_cave_floor_bold(y1, tx)) return (FALSE);
+                if (!borg_cave_floor_bold(y1, tx)) return (false);
             }
         }
 
@@ -460,12 +461,12 @@ bool borg_los(int y1, int x1, int y2, int x2)
         {
             for (tx = x1 - 1; tx > x2; tx--)
             {
-                if (!borg_cave_floor_bold(y1, tx)) return (FALSE);
+                if (!borg_cave_floor_bold(y1, tx)) return (false);
             }
         }
 
         /* Assume los */
-        return (TRUE);
+        return (true);
     }
 
 
@@ -479,7 +480,7 @@ bool borg_los(int y1, int x1, int y2, int x2)
     {
         if (ay == 2)
         {
-            if (borg_cave_floor_bold(y1 + sy, x1)) return (TRUE);
+            if (borg_cave_floor_bold(y1 + sy, x1)) return (true);
         }
     }
 
@@ -488,7 +489,7 @@ bool borg_los(int y1, int x1, int y2, int x2)
     {
         if (ax == 2)
         {
-            if (borg_cave_floor_bold(y1, x1 + sx)) return (TRUE);
+            if (borg_cave_floor_bold(y1, x1 + sx)) return (true);
         }
     }
 
@@ -524,7 +525,7 @@ bool borg_los(int y1, int x1, int y2, int x2)
         /* the LOS exactly meets the corner of a tile. */
         while (x2 - tx)
         {
-            if (!borg_cave_floor_bold(ty, tx)) return (FALSE);
+            if (!borg_cave_floor_bold(ty, tx)) return (false);
 
             qy += m;
 
@@ -535,7 +536,7 @@ bool borg_los(int y1, int x1, int y2, int x2)
             else if (qy > f2)
             {
                 ty += sy;
-                if (!borg_cave_floor_bold(ty, tx)) return (FALSE);
+                if (!borg_cave_floor_bold(ty, tx)) return (false);
                 qy -= f1;
                 tx += sx;
             }
@@ -571,7 +572,7 @@ bool borg_los(int y1, int x1, int y2, int x2)
         /* the LOS exactly meets the corner of a tile. */
         while (y2 - ty)
         {
-            if (!borg_cave_floor_bold(ty, tx)) return (FALSE);
+            if (!borg_cave_floor_bold(ty, tx)) return (false);
 
             qx += m;
 
@@ -582,7 +583,7 @@ bool borg_los(int y1, int x1, int y2, int x2)
             else if (qx > f2)
             {
                 tx += sx;
-                if (!borg_cave_floor_bold(ty, tx)) return (FALSE);
+                if (!borg_cave_floor_bold(ty, tx)) return (false);
                 qx -= f1;
                 ty += sy;
             }
@@ -596,7 +597,7 @@ bool borg_los(int y1, int x1, int y2, int x2)
     }
 
     /* Assume los */
-    return (TRUE);
+    return (true);
 
 
 }
@@ -658,10 +659,10 @@ bool borg_projectable(int y1, int x1, int y2, int x2)
 			 */
             if ((dist > MAX_RANGE) && (ag->feat == FEAT_NONE)) break;
 		}
-		else if (borg_detect_wall[(w_y / PANEL_HGT)+0][(w_x / PANEL_WID)+0] == TRUE &&
-				borg_detect_wall[(w_y / PANEL_HGT)+0][(w_x / PANEL_WID)+1] == TRUE &&
-				borg_detect_wall[(w_y / PANEL_HGT)+1][(w_x / PANEL_WID)+0] == TRUE &&
-				borg_detect_wall[(w_y / PANEL_HGT)+1][(w_x / PANEL_WID)+1] == TRUE)
+		else if (borg_detect_wall[(w_y / PANEL_HGT)+0][(w_x / PANEL_WID)+0] == true &&
+				borg_detect_wall[(w_y / PANEL_HGT)+0][(w_x / PANEL_WID)+1] == true &&
+				borg_detect_wall[(w_y / PANEL_HGT)+1][(w_x / PANEL_WID)+0] == true &&
+				borg_detect_wall[(w_y / PANEL_HGT)+1][(w_x / PANEL_WID)+1] == true)
 		{
 				/* This area has been magic mapped, so I should be able to see the unknown grids */
 		}
@@ -677,14 +678,14 @@ bool borg_projectable(int y1, int x1, int y2, int x2)
         if (dist && (!borg_cave_floor_grid(ag))) break;
 
         /* Check for arrival at "final target" */
-        if ((x == x2) && (y == y2)) return (TRUE);
+        if ((x == x2) && (y == y2)) return (true);
 
         /* Calculate the new location */
         mmove2(&y, &x, y1, x1, y2, x2);
     }
 
     /* Assume obstruction */
-    return (FALSE);
+    return (false);
 }
 
 
@@ -716,14 +717,14 @@ bool borg_offset_projectable(int y1, int x1, int y2, int x2)
         if (dist && (!borg_cave_floor_grid(ag))) break;
 
         /* Check for arrival at "final target" */
-        if ((x == x2) && (y == y2)) return (TRUE);
+        if ((x == x2) && (y == y2)) return (true);
 
         /* Calculate the new location */
         mmove2(&y, &x, y1, x1, y2, x2);
     }
 
     /* Assume obstruction */
-    return (FALSE);
+    return (false);
 }
 
 
@@ -755,7 +756,7 @@ bool borg_projectable_pure(int y1, int x1, int y2, int x2)
         if (dist && (!borg_cave_floor_grid(ag))) break;
 
         /* Check for arrival at "final target" */
-        if ((x == x2) && (y == y2)) return (TRUE);
+        if ((x == x2) && (y == y2)) return (true);
 
         /* Stop at other monsters, not the source monster */
         if (ag->kill && (x != x1 || y != y1)) break;
@@ -765,7 +766,7 @@ bool borg_projectable_pure(int y1, int x1, int y2, int x2)
     }
 
     /* Assume obstruction */
-    return (FALSE);
+    return (false);
 }
 
 /*
@@ -800,7 +801,7 @@ bool borg_projectable_dark(int y1, int x1, int y2, int x2)
         if (dist && (!borg_cave_floor_grid(ag))) break;
 
         /* Check for arrival at "final target" */
-        if ((x == x2) && (y == y2) && unknown >= 1) return (TRUE);
+        if ((x == x2) && (y == y2) && unknown >= 1) return (true);
 
         /* Stop at monsters */
         if (ag->kill && dist != 0) break;
@@ -810,7 +811,7 @@ bool borg_projectable_dark(int y1, int x1, int y2, int x2)
     }
 
     /* Assume obstruction */
-    return (FALSE);
+    return (false);
 }
 
 
@@ -1107,7 +1108,7 @@ static bool borg_update_view_aux(int y, int x, int y1, int x1, int y2, int x2)
     f2 = (borg_cave_floor_grid(g2_ag));
 
     /* Totally blocked by physical walls */
-    if (!f1 && !f2) return (TRUE);
+    if (!f1 && !f2) return (true);
 
 
     /* Check for visibility */
@@ -1115,7 +1116,7 @@ static bool borg_update_view_aux(int y, int x, int y1, int x1, int y2, int x2)
     v2 = (f2 && (g2_ag->info & BORG_VIEW));
 
     /* Totally blocked by "unviewable neighbors" */
-    if (!v1 && !v2) return (TRUE);
+    if (!v1 && !v2) return (true);
 
 
     /* Access the grid */
@@ -1179,7 +1180,7 @@ static bool borg_update_view_aux(int y, int x, int y1, int x1, int y2, int x2)
 
 
     /* Assume no line of sight. */
-    return (TRUE);
+    return (true);
 }
 
 
