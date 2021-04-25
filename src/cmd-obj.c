@@ -1076,7 +1076,11 @@ void do_cmd_cast(struct command *cmd)
 
 	/* Cool down? */
 	if (player->cooldown[spell_index] > 0) {
-		msg("You can't use that technique for another %d turns.", player->cooldown[spell_index]);
+		if (player->cooldown[spell_index] > 1) {
+			msg("You can't use that technique for another %d turns.", player->cooldown[spell_index]);
+		} else {
+			msg("You can't use that technique until next turn.", player->cooldown[spell_index]);
+		}
 		return;
 	}
 
