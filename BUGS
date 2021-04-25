@@ -1,20 +1,17 @@
 BUGS
 ====
-BUG: "You can't use that technique again for another *1 turns*"
-
 BUG: "You failed to concentrate hard enough" may be inappropriate. Per spell?
 		- with a default per primary stat? With concentrate for INT.
 	- also the 'fail' field doesn't appear to influence fail rate
 
-BUG: "You knock out the MlM" -> "The MlM flees in terror!" -> "The MlM can move again" (after making amove!)
+BUG: "You knock out the MlM" -> "The MlM flees in terror!" -> "The MlM can move again" (after making a move!)
 
 BUG: Delete the savefile, make a new character, check a store's name.
 	  Save, reload. The store name will sometimes have changed.
 	  Save, reload again and it won't.
 	  It does this with or without random names being used for that store,
 	  although it has only been tested with the random name diff in place.
-
-BUG: effect_handler_CLIMBING is incomplete
+	  Doesnt happen with a newly rolled char, only a 'based on last' - and the name is then the same as the previous character.
 
 BUG: After the success/failure message from a quest, ESC is the only way to get back out.
 
@@ -79,6 +76,12 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+BUG: "You can't use that technique again for another *1 turns*"
+	Fixed: 0dda55596112c6aa25a757a5f71b3a9d099a97c0
+
+BUG: effect_handler_CLIMBING is incomplete
+	Fixed bd37da1ef492704f91388b975cc73e506d0e0188
+
 BUG: Classes don't have + to TP defined in the .txt, they should.
 	Fixed  6fb05ea53fb3061c1fd240c19ab5a76b4c251c95
 

@@ -469,7 +469,8 @@ void store_reset(void) {
 			s->layaway_idx = -1;
 
 			/* Random store names */
-			if (t == 0) {
+			if (t == 0) 
+			{
 				struct owner *own = s->owners;
 				while (own) {
 					if (own->name) {
