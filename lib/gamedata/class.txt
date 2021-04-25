@@ -145,6 +145,7 @@ skill-throw:55:45
 skill-dig:0:0
 hitdie:275
 exp:20
+talents:-2:-1
 max-attacks:6
 min-weight:30
 strength-multiplier:5
@@ -203,6 +204,7 @@ skill-shoot:72:45
 skill-throw:66:30
 skill-dig:0:0
 exp:0
+talents:0:0
 hitdie:130
 max-attacks:5
 min-weight:40
@@ -227,6 +229,7 @@ skill-melee:25:20
 skill-shoot:15:20
 skill-throw:15:30
 exp:5
+talents:-1:-1
 hitdie:330
 max-attacks:4
 min-weight:40
@@ -262,6 +265,7 @@ title:Magician
 title:Mentalist
 #Puppetmaster? 
 exp:10
+talents:-1:0
 hitdie:50
 skill-disarm-phys:15:30
 skill-disarm-magic:15:25
@@ -308,6 +312,7 @@ title:Hunter
 title:Bounder
 title:Shadowlord
 exp:10
+talents:-1:1
 hitdie:90
 # FIXME: skills
 max-attacks:5
@@ -346,6 +351,7 @@ skill-throw:25:35
 skill-dig:0:0
 hitdie:30
 exp:-30
+talents:-2:3
 max-attacks:5
 min-weight:40
 strength-multiplier:4
@@ -368,6 +374,7 @@ hitdie:190
 max-attacks:5
 min-weight:40
 exp:5
+talents:0:0
 #Digger, climber, diver, excavator, explorer, mapper, pathfinder, cave finder...
 title:Climber
 title:Spelunker
@@ -411,6 +418,7 @@ title:Knight
 title:Master
 title:Grand Master
 exp:20
+talents:0:1
 cdesc:Jedi are famous for skill with a lightsaber - you'll excel with melee energy weapons and do well with other melee weapons. Eventually you'll even be able to construct your own. Ranged weapons are not you, but you'll be supported by a number of subtle powers as you advance. There are also Dark Jedi... who are powerful, yes, but at a cost!
 
 ############### ENGINEER #####################
@@ -436,6 +444,7 @@ skill-throw:20:15
 skill-dig:0:0
 hitdie:0
 exp:0
+talents:1:2
 max-attacks:4
 min-weight:40
 strength-multiplier:2

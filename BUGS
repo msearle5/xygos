@@ -1,8 +1,5 @@
 BUGS
 ====
-
-BUG: "You cannot carry that many items" in store with 1 item - presumably caused by the pulled fix and the reason that the unit tests fail
-
 BUG: "You failed to concentrate hard enough" may be inappropriate. Per spell?
 		- with a default per primary stat? With concentrate for INT.
 	- also the 'fail' field doesn't appear to influence fail rate
@@ -82,6 +79,14 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+BUG: Rare Card: sometimes has wrong info (dur 12d17453895, cost 9), and XP for learn (and "untried")
+		happens iff you reload a save. The 40 exp is also wrong.
+	- doesn't take effect eithera
+	Fixed: de93d655a724e0e3bffc136f5cfb286551a42624
+
+BUG: "You cannot carry that many items" in store with 1 item - presumably caused by the pulled fix and the reason that the unit tests fail
+	Fixed ffff8218968f3e0d47e80ae89b2a0bafe8f92603
+
 BUG: The info on how to gani new talents is wrong:
 	'Alt-T' or Ctrl-T, not S not gain talents "at any time"
 	Fixed 64e37b29094475ff217aff2b01a8d975d209d069
