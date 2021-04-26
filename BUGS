@@ -1,5 +1,8 @@
 BUGS
 ====
+BUG: Bombs (e.g. pineapple) give excess messages - "The X fails to harm the Y." "The X detonates!" "The Y screams!".
+	The first should be removed.
+
 BUG: "You failed to concentrate hard enough" may be inappropriate. Per spell?
 		- with a default per primary stat? With concentrate for INT.
 	- also the 'fail' field doesn't appear to influence fail rate

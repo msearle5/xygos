@@ -983,6 +983,7 @@ bool object_destroyed(struct object *obj, struct loc loc)
 	static int lithium;
 	static int alcohol;
 	static int pineapple;
+	static int pie;
 	if (first) {
 		atomic = lookup_sval(TV_BATTERY, "atomic cell");
 		hydrogen = lookup_sval(TV_BATTERY, "hydrogen cell");
@@ -990,6 +991,7 @@ bool object_destroyed(struct object *obj, struct loc loc)
 		lithium = lookup_sval(TV_BATTERY, "lithium battery");
 		pineapple = lookup_sval(TV_FOOD, "pineapple");
 		durian = lookup_sval(TV_FOOD, "durian");
+		pie = lookup_sval(TV_FOOD, "Hunter's pie");
 	}
 
 	int sv = obj->kind->sval;
@@ -1020,12 +1022,17 @@ bool object_destroyed(struct object *obj, struct loc loc)
 		case TV_FOOD: {
 			if (sv == pineapple) {
 				msg("The pineapple detonates!");
-				project(source_object(obj), 5, loc, 10 + damroll(2, 20), ELEM_SHARD,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
+				project(source_object(obj), 5, loc, 10 + damroll(2, 20), ELEM_SHARD,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY | PROJECT_LOL, 0, 20, obj);
 				return true;
 			}
 			else if (sv == durian) {
 				msg("The durian splatters!");
-				project(source_object(obj), 3, loc, 8 + damroll(2, 10), ELEM_POIS,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
+				project(source_object(obj), 3, loc, 8 + damroll(2, 10), ELEM_POIS,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY | PROJECT_LOL, 0, 20, obj);
+				return true;
+			}
+			else if (sv == pie) {
+				msg("The pie goes splat!");
+				project(source_object(obj), 1, loc, 15 + damroll(2, 15), PROJ_MON_CONF,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY | PROJECT_LOL, 0, 20, obj);
 				return true;
 			}
 			break;
