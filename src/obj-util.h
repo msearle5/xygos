@@ -21,6 +21,9 @@
 
 #include "obj-ignore.h"
 
+/* Perfect resistance, given by this res_level */
+#define IMMUNITY	127
+
 /* An item's pval (for charges, amount of cash, etc) is limited to s16b */
 #define MAX_PVAL  32767
 

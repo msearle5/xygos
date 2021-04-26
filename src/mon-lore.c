@@ -155,7 +155,7 @@ static int spell_color(struct player *p, const struct monster_race *race,
 				break;
 			/* All other elements */
 			default:
-				if (p->known_state.el_info[eff->subtype].res_level == 3) {
+				if (p->known_state.el_info[eff->subtype].res_level == IMMUNITY) {
 					return level->lore_attr_immune;
 				} else if (p->known_state.el_info[eff->subtype].res_level > 0) {
 					return level->lore_attr_resist;
@@ -194,7 +194,7 @@ int blow_color(struct player *p, int blow_idx)
 			}
 		}
 
-		if (p->known_state.el_info[i].res_level == 3) {
+		if (p->known_state.el_info[i].res_level == IMMUNITY) {
 			return blow->lore_attr_immune;
 		} else if (p->known_state.el_info[i].res_level > 0) {
 			return blow->lore_attr_resist;

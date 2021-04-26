@@ -663,7 +663,7 @@ static int element_power(const struct object *obj, int p)
 				p += q;
 				log_obj(format("Add %d power for resistance to %s, total is %d\n", q, el_powers[i].name, p));
 			}
-		} else if (obj->el_info[i].res_level == 3) {
+		} else if (obj->el_info[i].res_level == IMMUNITY) {
 			if (el_powers[i].im_power != 0) {
 				q = (el_powers[i].im_power + el_powers[i].res_power);
 				p += q;

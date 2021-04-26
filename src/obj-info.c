@@ -222,7 +222,7 @@ static bool describe_elements(textblock *tb,
 
 	/* Immunities */
 	for (i = 0; i < ELEM_MAX; i++)
-		list[i] = (el_info[i].res_level == 3);
+		list[i] = (el_info[i].res_level == IMMUNITY);
 	count = element_info_collect(list, i_descs);
 	if (count) {
 		textblock_append(tb, "Provides immunity to ");

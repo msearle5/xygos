@@ -1408,17 +1408,17 @@ static void calc_shapechange(struct player_state *state,
 			/* Shape resists cancel, immunities trump, vulnerabilities */
 			if (shape->el_info[i].res_level == 1) {
 				state->el_info[i].res_level = 0;
-			} else if (shape->el_info[i].res_level == 3) {
-				state->el_info[i].res_level = 3;
+			} else if (shape->el_info[i].res_level == IMMUNITY) {
+				state->el_info[i].res_level = IMMUNITY;
 			}
 		} else if (state->el_info[i].res_level == 1) {
 			/* Shape vulnerabilities cancel, immunities enhance, resists */
 			if (shape->el_info[i].res_level == -1) {
 				state->el_info[i].res_level = 0;
-			} else if (shape->el_info[i].res_level == 3) {
-				state->el_info[i].res_level = 3;
+			} else if (shape->el_info[i].res_level == IMMUNITY) {
+				state->el_info[i].res_level = IMMUNITY;
 			}
-		} else if (state->el_info[i].res_level == 3) {
+		} else if (state->el_info[i].res_level == IMMUNITY) {
 			/* Immunity, shape has no effect */
 		}
 	}
@@ -1858,7 +1858,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 
 	/* Now deal with vulnerabilities */
 	for (i = 0; i < ELEM_MAX; i++) {
-		if (vuln[i] && (state->el_info[i].res_level < 3))
+		if (vuln[i] && (state->el_info[i].res_level < IMMUNITY))
 			state->el_info[i].res_level--;
 	}
 

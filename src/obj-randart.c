@@ -774,10 +774,10 @@ void count_low_resists(const struct artifact *art,
 	int num = 0;
 
 	/* Count up immunities for this item, if any */
-	if (art->el_info[ELEM_ACID].res_level == 3) num++;
-	if (art->el_info[ELEM_ELEC].res_level == 3) num++;
-	if (art->el_info[ELEM_FIRE].res_level == 3) num++;
-	if (art->el_info[ELEM_COLD].res_level == 3) num++;
+	if (art->el_info[ELEM_ACID].res_level == IMMUNITY) num++;
+	if (art->el_info[ELEM_ELEC].res_level == IMMUNITY) num++;
+	if (art->el_info[ELEM_FIRE].res_level == IMMUNITY) num++;
+	if (art->el_info[ELEM_COLD].res_level == IMMUNITY) num++;
 	file_putf(log_file, "Adding %d for immunities.\n", num);
 
 	(data->art_probs[ART_IDX_GEN_IMMUNE]) += num;
@@ -1720,7 +1720,7 @@ static bool add_resist(struct artifact *art, int element)
 static void add_immunity(struct artifact *art)
 {
 	int r = randint0(4);
-	art->el_info[r].res_level = 3;
+	art->el_info[r].res_level = IMMUNITY;
 	file_putf(log_file, "Adding immunity to %s\n", projections[r].name);
 }
 
