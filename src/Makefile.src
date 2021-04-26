@@ -6,7 +6,7 @@
 #
 
 NAME = Xygos
-VERSION = 0.0.2
+VERSION = 0.0.3
 COPYRIGHT = (c) 1995-2021 Xygos, Angband contributors
 PROGNAME = xygos
 

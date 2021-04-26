@@ -1,4 +1,4 @@
-# Xygos 0.0.2
+# Xygos 0.0.3
 
 <p align="center">
   <img src="screenshots/title.png" width="425"/>
