@@ -2385,28 +2385,6 @@ blow:TOUCH:POISON:2d6
 desc:It appears to be a pile of silver nuggets.
 mimic:cash:silver nuggets
 
-name:snaga
-base:orc
-color:U
-speed:110
-hit-points:36
-hearing:20
-smell:20
-armor-class:48
-sleepiness:70
-depth:6
-rarity:1
-experience:15
-blow:HIT:HURT:1d8
-flags:DROP_20
-flags:HURT_LIGHT
-innate-freq:15
-spells:ARROW
-friends:30:1d3:Crow
-friends:100:2d9:Same
-desc:He is one of the many weaker 'slave' orcs, often mistakenly known as a
-desc: goblin.
-
 name:rattlesnake
 base:snake
 color:r
@@ -2483,27 +2461,6 @@ spell-power:4
 spells:WOUND
 desc:A crook-beaked bird with bedraggled black feathers.  It mocks you, and you
 desc: realise that its scorn can kill.
-
-name:cave orc
-base:orc
-color:G
-speed:110
-hit-points:55
-hearing:20
-smell:20
-armor-class:48
-sleepiness:70
-depth:7
-rarity:1
-experience:20
-blow:HIT:HURT:1d8
-flags:DROP_20
-flags:HURT_LIGHT
-innate-freq:13
-spells:ARROW
-friends:50:1d8:snaga
-friends:100:2d6:Same
-desc:He is often found in huge numbers in deep caves.
 
 name:wood spider
 base:spider
@@ -2709,55 +2666,6 @@ desc:Strong and powerful, for a kobold.
 
 ### Dungeon level 8 ###
 
-name:Wormtongue, Agent of Saruman
-base:person
-color:B
-speed:110
-hit-points:250
-hearing:20
-armor-class:45
-sleepiness:10
-depth:8
-rarity:1
-experience:150
-blow:HIT:HURT:1d5
-blow:HIT:HURT:1d5
-blow:TOUCH:EAT_GOLD
-blow:INSULT
-flags:UNIQUE | MALE | EVIL
-flags:DROP_1 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
-flags:OPEN_DOOR | TAKE_ITEM
-flags:FORCE_SLEEP
-spell-freq:5
-spells:HEAL | SLOW | TRAPS
-spells:BA_POIS
-spells:BO_COLD
-desc:He's been spying for Saruman.  He is a snivelling wretch with no morals and
-desc: disgusting habits.
-
-name:Lagduf, the Snaga
-base:orc
-color:y
-speed:110
-hit-points:190
-hearing:20
-smell:20
-armor-class:48
-sleepiness:50
-depth:8
-rarity:2
-experience:80
-blow:HIT:HURT:1d10
-blow:HIT:HURT:1d10
-blow:HIT:HURT:1d9
-blow:HIT:HURT:1d9
-flags:UNIQUE
-flags:DROP_1 | DROP_GOOD | ONLY_ITEM
-friends:80:2d7:Wolf
-friends:100:5d4:snaga:servant
-desc:A captain of a regiment of weaker orcs, Lagduf keeps his troop in order
-desc: with displays of excessive violence.
-
 name:terrified yeek
 base:yeek
 color:u
@@ -2811,22 +2719,6 @@ flags:EMPTY_MIND | STUPID
 flags:IM_ACID
 desc:It is a strange growth on the dungeon floor.
 
-name:skeleton orc
-base:skeleton
-color:w
-speed:110
-hit-points:45
-hearing:20
-armor-class:54
-sleepiness:70
-depth:8
-rarity:1
-experience:26
-blow:HIT:HURT:2d5
-flags:ORC | EMPTY_MIND
-flags:OPEN_DOOR | BASH_DOOR
-desc:It is an animated orc skeleton.
-
 name:lemure
 base:minor demon
 color:U
@@ -2843,25 +2735,6 @@ flags:OPEN_DOOR | BASH_DOOR
 flags:NO_FEAR
 friends:100:2d7:Same
 desc:It is a minor but aggressive demon.
-
-name:orc tracker
-base:orc
-color:u
-speed:110
-hit-points:55
-hearing:40
-smell:50
-armor-class:40
-sleepiness:20
-depth:8
-rarity:1
-experience:25
-blow:HIT:HURT:1d8
-flags:DROP_20
-flags:HURT_LIGHT
-innate-freq:12
-spells:ARROW
-desc:A small orc with wide and snuffling nostrils.
 
 name:ruffian
 base:person
@@ -2953,47 +2826,6 @@ flags:MULTIPLY
 flags:RAND_25
 desc:It is a rodent of unusual size.
 
-name:black harpy
-plural:black harpies
-base:hybrid
-color:D
-speed:120
-hit-points:14
-hearing:16
-smell:20
-armor-class:26
-sleepiness:10
-depth:9
-rarity:1
-experience:19
-blow:CLAW:HURT:1d2
-blow:CLAW:HURT:1d2
-blow:BITE:HURT:1d3
-flags:FEMALE | EVIL | ANIMAL
-flags:RAND_25
-desc:A woman's face on the body of a vicious black bird.
-
-name:orc shaman
-base:orc
-color:r
-speed:110
-hit-points:41
-hearing:20
-smell:20
-armor-class:22
-sleepiness:50
-depth:9
-rarity:1
-experience:30
-blow:HIT:HURT:1d6
-blow:HIT:HURT:1d6
-flags:DROP_60
-flags:HURT_LIGHT
-flags:FORCE_SLEEP
-spell-freq:8
-spells:BLINK | WOUND | MISSILE
-desc:An orc dressed in skins who gestures wildly.
-
 name:giant red ant
 base:ant
 color:r
@@ -3009,27 +2841,6 @@ experience:22
 blow:BITE:HURT:1d4
 blow:STING:LOSE_STR:1d4
 desc:It is large and has venomous mandibles.
-
-name:Brodda, the Easterling
-base:person
-color:U
-speed:110
-hit-points:210
-light:2
-hearing:20
-armor-class:37
-sleepiness:40
-depth:9
-rarity:2
-experience:100
-blow:HIT:HURT:1d12
-blow:HIT:HURT:1d12
-blow:HIT:HURT:1d12
-blow:HIT:HURT:1d12
-flags:UNIQUE | MALE
-flags:DROP_1 | DROP_GOOD | ONLY_ITEM
-flags:OPEN_DOOR
-desc:A nasty piece of work, Brodda picks on defenseless women and children.
 
 name:king cobra
 base:snake
@@ -3184,29 +2995,6 @@ flags:NEVER_MOVE
 flags:ATTR_CLEAR
 desc:Yum!  It looks quite tasty.
 
-name:Grishnákh, the Hill Orc
-base:orc
-color:y
-speed:110
-hit-points:230
-hearing:20
-smell:20
-armor-class:30
-sleepiness:50
-depth:10
-rarity:3
-experience:160
-blow:HIT:HURT:1d12
-blow:HIT:HURT:1d10
-blow:HIT:HURT:1d12
-blow:HIT:HURT:1d10
-flags:UNIQUE
-flags:DROP_1 | DROP_GOOD | ONLY_ITEM
-friends:50:2d5:snaga:servant
-friends:80:2d7:Wolf
-friends:100:5d4:Hill orc:servant
-desc:He is a cunning and devious orc with a chaotic nature.
-
 name:giant white tick
 base:spider
 color:w
@@ -3257,26 +3045,6 @@ flags:ATTR_MULTI
 spell-freq:11
 spells:DRAIN_MANA
 desc:It is a strange glowing growth on the dungeon floor.
-
-name:tengu
-plural:tengu
-base:minor demon
-color:R
-speed:120
-hit-points:80
-hearing:20
-armor-class:38
-sleepiness:30
-depth:10
-rarity:1
-experience:40
-blow:HIT:HURT:1d8
-flags:OPEN_DOOR | BASH_DOOR
-flags:NO_FEAR
-spell-freq:3
-spells:BLINK | TELE_TO
-desc:It is a fast-moving demon that blinks quickly in and out of existence; no
-desc: other demon matches its teleporting mastery.
 
 name:creeping gold coins
 plural:piles of creeping gold coins
@@ -3349,32 +3117,6 @@ flags:BASH_DOOR
 desc:A large black cat, stalking you with intent.  It thinks you're its next
 desc: meal.
 
-name:witch
-plural:witches
-base:person
-color:P
-speed:110
-hit-points:41
-hearing:20
-armor-class:48
-sleepiness:5
-depth:10
-rarity:2
-experience:35
-blow:HIT:HURT:1d6
-flags:FEMALE | EVIL
-flags:DROP_1
-flags:OPEN_DOOR | TAKE_ITEM
-innate-freq:5
-spell-freq:8
-spells:WHIP
-spells:WOUND | SCARE | DARKNESS
-friends:50:1d2:Illusionist
-friends:50:1d2:Priest
-friends:50:1d2:warrior
-friends:50:1d2:Same
-desc:She is dressed in black and smells of decay.
-
 ### Dungeon level 11 ###
 
 name:hippogriff
@@ -3394,24 +3136,6 @@ blow:BITE:HURT:2d5
 flags:ANIMAL
 flags:BASH_DOOR
 desc:A strange hybrid of eagle and horse.  It looks weird.
-
-name:zombified orc
-base:zombie
-color:s
-speed:110
-hit-points:50
-hearing:20
-armor-class:36
-sleepiness:90
-depth:11
-rarity:1
-experience:30
-blow:HIT:HURT:1d4
-blow:HIT:HURT:1d4
-blow:HIT:HURT:1d4
-flags:ORC | EMPTY_MIND
-flags:NO_FEAR
-desc:It is a shambling orcish corpse leaving behind a trail of flesh.
 
 name:drúadan mage
 base:person
@@ -3434,25 +3158,6 @@ spells:BO_COLD
 spells:S_MONSTER
 friends:100:4d4:Same
 desc:A mage of short stature with stumpy legs and a wispy beard.
-
-name:old forest tree
-base:tree
-color:g
-speed:100
-hit-points:800
-hearing:20
-armor-class:50
-sleepiness:20
-depth:11
-rarity:2
-experience:100
-blow:CRUSH:HURT:1d20
-flags:NEVER_MOVE | WEIRD_MIND
-flags:NO_STUN | NO_SLOW
-spell-freq:12
-spells:CONF
-friends:100:2d4:same
-desc:An ancient tree that seems to be watching you.
 
 ### Dungeon level 12 ###
 
@@ -3532,32 +3237,6 @@ flags:RAND_25 | RAND_50 | BASH_DOOR
 flags:HURT_LIGHT | NO_FEAR | IM_RADIATION
 desc:It is a disgusting mass of dark worms, eating each other, the floor, the
 desc: air, you....
-
-name:Golfimbul, the Hill Orc Chief
-base:orc
-color:Y
-speed:110
-hit-points:240
-hearing:20
-smell:20
-armor-class:90
-sleepiness:40
-depth:12
-rarity:3
-experience:230
-blow:HIT:HURT:1d12
-blow:HIT:HURT:1d12
-blow:HIT:HURT:1d10
-blow:HIT:HURT:1d10
-flags:UNIQUE
-flags:DROP_2 | DROP_GOOD | ONLY_ITEM
-flags:IM_COLD | IM_ELEC | IM_FIRE | IM_POIS
-friends:50:4d4:snaga:servant
-friends:80:2d7:Warg
-friends:100:5d4:Hill orc:servant
-friends:100:1d1:Bullroarer the Hobbit
-friends:100:1d1:Grishnákh, the Hill Orc
-desc:A leader of a band of raiding orcs, he picks on hobbits.
 
 name:master yeek
 base:yeek
@@ -3846,24 +3525,6 @@ friends:100:2d4:Master yeek:servant
 friends:100:1d1:Orfax, Son of Boldor
 desc:A great yeek, powerful in magic and sorcery, but a yeek all the same.
 
-name:ogre
-base:ogre
-color:U
-speed:110
-hit-points:65
-hearing:20
-smell:20
-armor-class:49
-sleepiness:50
-depth:13
-rarity:2
-experience:50
-blow:HIT:HURT:2d8
-flags:DROP_40
-friends-base:100:2d4:orc
-friends:100:2d4:Same
-desc:A hideous, smallish giant that is often found near or with orcs.
-
 name:creeping platinum
 plural:piles of creeping platinum
 base:creeping coins
@@ -3933,28 +3594,6 @@ spells:BO_POIS | BO_FIRE | SHAPECHANGE
 spells:S_ANIMAL
 desc:A priest devoted to Nature.
 
-name:orc archer
-base:orc
-color:m
-speed:110
-hit-points:66
-hearing:20
-smell:20
-armor-class:54
-sleepiness:60
-depth:13
-rarity:1
-experience:45
-blow:HIT:HURT:2d4
-blow:HIT:HURT:2d4
-flags:DROP_20
-flags:HURT_LIGHT
-innate-freq:3
-spell-power:16
-spells:ARROW
-friends:100:1d3:Same
-desc:He has a bow of horn and a quiver full of black-feathered arrows.
-
 ### Dungeon level 14 ###
 
 name:giant flea
@@ -3971,31 +3610,6 @@ experience:4
 blow:BITE:HURT:1d2
 flags:BASH_DOOR
 desc:It makes you itch just to look at it.
-
-name:Ufthak of Cirith Ungol
-base:orc
-color:g
-speed:110
-hit-points:320
-hearing:20
-smell:20
-armor-class:75
-sleepiness:40
-depth:14
-rarity:3
-experience:250
-blow:HIT:HURT:3d4
-blow:HIT:HURT:3d4
-blow:HIT:HURT:3d4
-blow:HIT:HURT:3d4
-flags:UNIQUE
-flags:DROP_1 | DROP_GOOD | ONLY_ITEM
-flags:IM_COLD
-friends:50:2d2:orc archer
-friends:100:4d4:snaga
-friends:100:3d4:cave orc
-desc:A strong orc guarding the pass of Cirith Ungol.  He is mortally afraid of
-desc: spiders.
 
 name:blue icky thing
 base:icky thing
@@ -4099,26 +3713,6 @@ spells:BO_COLD
 desc:A large rat with glowing red eyes.  The wererat is a disgusting creature,
 desc: relishing in filth and disease.
 
-name:black ogre
-base:ogre
-color:D
-speed:110
-hit-points:100
-hearing:20
-smell:20
-armor-class:49
-sleepiness:50
-depth:15
-rarity:2
-experience:75
-blow:HIT:HURT:2d8
-blow:HIT:HURT:2d8
-flags:DROP_40
-flags:RAND_25
-friends:60:2d4:Ogre
-friends:100:3d4:Same
-desc:A massive orc-like figure with black skin and powerful arms.
-
 name:magic mushroom patch
 plural:magic mushroom patches
 base:mushroom
@@ -4206,30 +3800,6 @@ spells:BR_DARK
 friends:100:2d7:Same
 desc:A hole in the air in the shape of a huge hound.  No light falls upon its
 desc: form.
-
-name:half-orc
-base:orc
-color:s
-speed:110
-hit-points:88
-hearing:20
-smell:20
-armor-class:60
-sleepiness:50
-depth:15
-rarity:2
-experience:50
-blow:HIT:HURT:3d4
-blow:HIT:HURT:3d4
-flags:DROP_20
-innate-freq:10
-spells:ARROW
-friends:50:2d4:Warg
-friends:50:1d2:orc tracker
-friends:100:4d4:Same
-desc:He is a hideous deformed cross-breed with man and orc, combining man's
-desc: strength and cunning with orcish evil.  The traitorous wizard Saruman is
-desc: generally believed to be responsible for this abomination.
 
 name:giant tarantula
 base:spider
@@ -4482,30 +4052,6 @@ spells:BLIND | BLINK | CONF | SCARE | TELE_LEVEL | TELE_TO
 spells:TPORT
 desc:A demon of small stature with an annoying bite.
 
-name:uruk
-base:orc
-color:B
-speed:110
-hit-points:70
-hearing:20
-smell:20
-armor-class:75
-sleepiness:30
-depth:16
-rarity:1
-experience:60
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-flags:DROP_20
-innate-freq:9
-spells:ARROW | WHIP
-friends:40:1d4:Half-orc
-friends:80:2d5:Warg
-friends:50:1d2:orc tracker
-friends:50:1d2:orc archer
-friends:100:3d3:Same
-desc:A cunning orc of power, as tall as a man, and stronger.  It fears little.
-
 name:grizzly bear
 base:quadruped
 color:U
@@ -4570,27 +4116,6 @@ spell-freq:10
 spells:BLIND | BLINK | CONF | SCARE | TELE_LEVEL | TELE_TO
 spells:TPORT
 desc:A poisonous little mischief-maker.
-
-name:forest troll
-base:troll
-color:g
-speed:110
-hit-points:110
-hearing:20
-smell:20
-armor-class:75
-sleepiness:80
-depth:17
-rarity:1
-experience:70
-blow:HIT:HURT:1d4
-blow:HIT:HURT:1d4
-blow:BITE:HURT:1d6
-flags:MALE
-flags:DROP_20
-flags:HURT_LIGHT
-friends:100:4d4:Same
-desc:He is green skinned, ugly and stupid.
 
 name:Nár, the Dwarf
 base:humanoid
@@ -4707,33 +4232,6 @@ experience:4
 blow:BITE:CONFUSE:2d2
 flags:MOVE_BODY
 desc:A giant buzzing wasp, its stinger drips venom.
-
-name:orc captain
-base:orc
-color:o
-speed:110
-hit-points:110
-hearing:20
-smell:20
-armor-class:88
-sleepiness:30
-depth:18
-rarity:3
-experience:80
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-flags:DROP_60
-innate-freq:9
-spells:ARROW
-friends:50:1d5:Wolf
-friends:50:1d5:Warg
-friends:80:1d2:orc tracker:servant
-friends:80:1d4:orc archer:servant
-friends-base:50:1d5:orc:servant
-friends-base:50:1d5:orc:servant
-friends-base:50:1d5:orc:servant
-desc:An armoured orc with an air of authority.
 
 name:blackguard
 base:person
@@ -4921,58 +4419,6 @@ desc: do anything except approach it in horrified fascination.
 
 ### Dungeon level 19 ###
 
-name:Shagrat, the Orc Captain
-base:orc
-color:g
-speed:110
-hit-points:400
-hearing:20
-smell:20
-armor-class:72
-sleepiness:20
-depth:19
-rarity:2
-experience:400
-blow:HIT:HURT:3d8
-blow:HIT:HURT:3d8
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-flags:UNIQUE
-flags:DROP_1 | DROP_GOOD | ONLY_ITEM
-friends:50:3d4:snaga:servant
-friends:80:2d4:cave orc:servant
-friends:80:1d2:orc tracker:servant
-friends:100:1d2:orc archer:servant
-friends:100:2d4:uruk:servant
-desc:He is an orc of power and great cunning, leader of the garrison at Cirith
-desc: Ungol.
-
-name:Gorbag, the Orc Captain
-base:orc
-color:g
-speed:110
-hit-points:400
-hearing:20
-smell:20
-armor-class:72
-sleepiness:20
-depth:19
-rarity:2
-experience:400
-blow:HIT:HURT:3d8
-blow:HIT:HURT:3d8
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-flags:UNIQUE
-flags:DROP_1 | DROP_GOOD | ONLY_ITEM
-friends:50:3d4:snaga:servant
-friends:80:2d4:cave orc:servant
-friends:80:1d2:orc tracker:servant
-friends:100:1d2:orc archer:servant
-friends:100:2d4:uruk:servant
-desc:He is an orc of power and great cunning, leader of the garrison at Minas
-desc: Morgul.
-
 name:stone golem
 base:golem
 color:W
@@ -5009,32 +4455,6 @@ flags:IM_FIRE
 flags-off:HURT_FIRE
 desc:It is a strange red growth on the dungeon floor; it seems to burn with
 desc: flame.
-
-name:Old Man Willow
-base:tree
-color:s
-speed:110
-hit-points:1000
-hearing:20
-armor-class:100
-sleepiness:20
-depth:19
-rarity:3
-experience:3000
-blow:TOUCH:PARALYZE:1d14
-blow:TOUCH:PARALYZE:1d14
-blow:CRUSH:HURT:2d12
-flags:NEVER_MOVE
-flags:EMPTY_MIND | UNIQUE | FORCE_SLEEP
-flags:IM_POIS | IM_ACID
-flags:DROP_1 | DROP_GOOD | ONLY_ITEM
-spell-freq:10
-spells:TELE_TO | HOLD
-desc:The ancient grey willow tree, ruler of the Old Forest. He despises
-desc: trespassers in his territory.  "...a huge willow-tree, old and hoary.
-desc:  Enormous it looked, its sprawling branches going up like racing arms
-desc: with many long-fingered hands, its knotted and twisted trunk gaping in
-desc: wide fissures that creaked faintly as the boughs moved."
 
 ########## DUNGEON LEVELS 20-29 ##########
 
@@ -5082,32 +4502,6 @@ spells:WEAVE
 friends:100:2d7:Same
 desc:A strong and powerful spider from Mirkwood forest.  Cunning and evil, it
 desc: seeks to taste your juicy insides.
-
-name:Bolg, Son of Azog
-base:orc
-color:P
-speed:120
-hit-points:500
-hearing:20
-smell:20
-armor-class:60
-sleepiness:20
-depth:20
-rarity:4
-experience:800
-blow:HIT:HURT:3d6
-blow:HIT:HURT:3d6
-blow:HIT:HURT:3d6
-blow:HIT:HURT:3d6
-flags:UNIQUE | MOVE_BODY
-flags:DROP_2 | DROP_GOOD | ONLY_ITEM
-friends:50:3d4:cave orc:servant
-friends:80:2d7:Warg
-friends:100:2d2:orc tracker
-friends:100:4d2:orc archer
-friends:100:4d4:Uruk:bodyguard
-desc:A large and powerful orc, he looks just like his father.  He is tall and
-desc: fast, but fortunately blessed with orcish brains.
 
 name:3-headed hydra
 base:hydra
@@ -5364,30 +4758,6 @@ desc: enemy.
 
 ### Dungeon level 21 ###
 
-name:Lugdush, the Uruk
-base:orc
-color:b
-speed:110
-hit-points:640
-hearing:20
-smell:20
-armor-class:108
-sleepiness:20
-depth:21
-rarity:4
-experience:550
-blow:HIT:HURT:3d7
-blow:HIT:HURT:3d7
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-flags:UNIQUE
-flags:DROP_1 | DROP_GOOD | ONLY_ITEM
-friends:50:3d4:Half-orc:servant
-friends:80:2d7:Warg
-friends:50:1d3:Orc captain
-friends:100:4d4:Uruk:servant
-desc:A large and powerful orc, captain of one of Saruman's orcish regiments.
-
 name:blue dragon bat
 base:bat
 color:b
@@ -5492,24 +4862,6 @@ innate-freq:4
 spells:BR_COLD
 desc:A twisting whirlpool of frost.
 
-name:mummified orc
-base:zombie
-color:w
-speed:110
-hit-points:86
-hearing:20
-armor-class:33
-sleepiness:75
-depth:21
-rarity:1
-experience:56
-blow:HIT:HURT:2d4
-blow:HIT:HURT:2d4
-flags:ORC | EMPTY_MIND
-flags:DROP_20
-flags:NO_FEAR
-desc:It is an orcish figure covered in wrappings.
-
 ### Dungeon level 22 ###
 
 name:neekerbreeker
@@ -5531,32 +4883,6 @@ desc:Believed to be an evil relative of the cricket, this creature gets its name
 desc: from its incessant squeaking, which can best be described as "neek-breek,
 desc: neek-breek".  The noise can drive people frantic, and worse still, can be
 desc: heard for quite some distance, alerting other monsters to your presence.
-
-name:Uglúk, the Uruk
-base:orc
-color:b
-speed:110
-hit-points:720
-hearing:20
-smell:20
-armor-class:114
-sleepiness:20
-depth:22
-rarity:3
-experience:600
-blow:HIT:HURT:3d8
-blow:HIT:HURT:3d8
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-flags:UNIQUE | MOVE_BODY
-flags:DROP_1 | DROP_GOOD | ONLY_ITEM
-flags:IM_COLD | IM_FIRE | IM_POIS | NO_CONF | NO_SLEEP | NO_HOLD
-friends:50:2d4:Half-orc:servant
-friends:80:2d5:Warg
-friends:100:4d4:Uruk:bodyguard
-friends:80:1d3:Orc captain:servant
-friends:100:1d1:Lugdush, the Uruk:servant
-desc:A strong and cunning orc warrior, the commander of Saruman's orcish horde.
 
 name:killer stag beetle
 base:killer beetle
@@ -5681,34 +5007,6 @@ friends:50:1d1:Ranger
 friends:50:1d1:Mage
 friends:50:1d1:Paladin
 desc:A scarred warrior who wields an axe and moves with confidence.
-
-name:Azog, Enemy of the Dwarves
-base:orc
-color:R
-speed:120
-hit-points:900
-hearing:20
-smell:20
-armor-class:96
-sleepiness:20
-depth:23
-rarity:5
-experience:1111
-blow:HIT:HURT:5d5
-blow:HIT:HURT:5d5
-blow:HIT:HURT:5d5
-flags:UNIQUE | MOVE_BODY
-flags:DROP_2 | DROP_GOOD | ONLY_ITEM
-friends:50:3d4:cave orc:servant
-friends:80:2d7:Warg
-friends:100:2d2:orc tracker
-friends:100:4d2:orc archer
-friends:100:4d4:Uruk:bodyguard
-friends:50:1d3:Orc captain:servant
-friends:100:1d1:Bolg, son of Azog
-desc:A great orc with a huge iron-clad head, agile and strong.  He is notorious
-desc: for starting the War of the Dwarves and Orcs by killing Durin's heir,
-desc: Thrór.
 
 name:brigand
 base:person
@@ -6097,28 +5395,6 @@ spells:BO_ACID
 desc:A stumpy figure carved from stone, with glittering eyes, this sentinel
 desc: strides towards you with deadly intent.
 
-name:stone troll
-base:troll
-color:W
-speed:110
-hit-points:127
-hearing:20
-smell:20
-armor-class:60
-sleepiness:70
-depth:25
-rarity:1
-experience:85
-blow:HIT:HURT:1d6
-blow:HIT:HURT:1d6
-blow:BITE:HURT:3d4
-flags:MALE
-flags:DROP_20
-flags:HURT_ROCK | HURT_LIGHT
-friends:50:1d5:Earth hound
-friends:100:3d3:Same
-desc:He is a large, lumpish troll with scabrous black skin.
-
 name:carrion crawler
 base:centipede
 color:o
@@ -6272,26 +5548,6 @@ innate-freq:20
 spells:SPIT
 desc:It is smoking and burning with great heat.
 
-name:cave ogre
-base:ogre
-color:u
-speed:110
-hit-points:150
-hearing:20
-smell:20
-armor-class:49
-sleepiness:40
-depth:26
-rarity:2
-experience:80
-blow:HIT:HURT:3d8
-blow:HIT:HURT:3d8
-flags:DROP_40
-friends:50:2d4:Ogre
-friends:50:2d4:Black ogre
-friends:100:2d4:Same
-desc:A giant orc-like figure with an awesomely muscled frame.
-
 name:disenchanter bat
 base:bat
 color:v
@@ -6429,28 +5685,6 @@ flags:IM_ACID
 desc:It appears to be a pile of unobtainium wafers, slithering
 desc: toward you on lots of tiny legs.
 mimic:cash:unobtainium wafers
-
-name:troll scavenger
-base:troll
-color:o
-speed:110
-hit-points:137
-hearing:20
-smell:20
-armor-class:90
-sleepiness:50
-depth:27
-rarity:1
-experience:150
-blow:CLAW:POISON:3d3
-blow:CLAW:POISON:3d3
-blow:BITE:HURT:1d6
-flags:DROP_20
-flags:IM_POIS | HURT_LIGHT
-friends:30:1d5:Forest Troll
-friends:100:3d3:Same
-desc:A powerful, man-eating troll, its claws foul with the traces of its last
-desc: kill.
 
 name:vibration hound
 base:zephyr hound
@@ -6814,30 +6048,6 @@ innate-freq:8
 spells:BR_POIS
 desc:A vile reptile that preys on unsuspecting travellers.  Its eyes stare
 desc: deeply at you and your soul starts to wilt!
-
-name:snow troll
-base:troll
-color:w
-speed:110
-hit-points:132
-hearing:20
-smell:20
-armor-class:67
-sleepiness:50
-depth:28
-rarity:1
-experience:200
-blow:CLAW:HURT:1d5
-blow:CLAW:HURT:1d5
-blow:BITE:COLD:2d6
-blow:BITE:COLD:2d6
-flags:MALE
-flags:DROP_20
-flags:HURT_LIGHT | IM_COLD
-friends:40:1d5:Cold hound
-friends:60:2d7:White wolf
-friends:100:4d4:Same
-desc:He is a white troll with shaggy fur and powerfully clawed hands.
 
 name:bat of Gorgoroth
 plural:bats of Gorgoroth
@@ -7216,140 +6426,6 @@ blow:BITE:HURT:7d8
 desc:It is a beetle with deadly sharp cutting mandibles and a rock-hard
 desc: carapace.
 
-name:ogre chieftain
-base:ogre
-color:b
-speed:120
-hit-points:240
-hearing:20
-smell:20
-armor-class:66
-sleepiness:30
-depth:30
-rarity:5
-experience:600
-blow:HIT:HURT:3d8
-blow:HIT:HURT:3d8
-blow:HIT:HURT:3d8
-blow:HIT:HURT:3d8
-flags:MALE
-flags:DROP_60 | ONLY_ITEM
-flags:MOVE_BODY
-flags:FORCE_SLEEP
-friends:50:2d4:Ogre:servant
-friends:100:2d4:Black ogre:servant
-friends:100:2d4:Cave ogre:servant
-friends:50:1d2:Ogre mage:servant
-friends:50:1d2:Ogre shaman:servant
-desc:This ogre is leader of his tribe.  He sneers at you as he advances towards
-desc: you, wielding a huge club and pushing his own followers rudely aside.
-
-name:ghast
-base:zombie
-color:u
-speed:120
-hit-points:165
-hearing:30
-armor-class:60
-sleepiness:20
-depth:30
-rarity:3
-experience:130
-blow:CLAW:PARALYZE:2d4
-blow:CLAW:PARALYZE:2d4
-blow:BITE:LOSE_CON:2d4
-flags:DROP_40
-flags:HURT_LIGHT
-spell-freq:7
-spells:HOLD | SCARE
-friends:20:1d3:Zombified kobold
-friends:20:1d3:Zombified orc
-friends:20:1d3:Zombified human
-friends:40:1d3:Mummified orc
-friends:40:1d3:Mummified human
-friends:40:1d3:Mummified troll
-friends:100:4d4:Ghoul
-desc:This vile abomination is a relative of ghouls, and often leads packs of
-desc: them.  It smells foul, and its bite carries a rotting disease.
-
-name:Bert the Stone Troll
-base:troll
-color:s
-speed:120
-hit-points:1100
-hearing:20
-smell:20
-armor-class:84
-sleepiness:50
-depth:30
-rarity:7
-experience:2000
-blow:HIT:HURT:6d6
-blow:HIT:HURT:6d6
-blow:BITE:HURT:3d10
-flags:UNIQUE | MALE
-flags:DROP_1 | DROP_GOOD | ONLY_ITEM
-flags:MOVE_BODY | TAKE_ITEM
-flags:HURT_ROCK | HURT_LIGHT | IM_COLD
-innate-freq:7
-spells:BOULDER
-friends:100:1d1:Tom the Stone Troll
-friends:100:1d1:Bill the Stone Troll
-desc:Big, brawny, powerful and with a taste for hobbit.  He has friends called
-desc: Bill and Tom.
-
-name:Bill the Stone Troll
-base:troll
-color:s
-speed:120
-hit-points:1100
-hearing:20
-smell:20
-armor-class:84
-sleepiness:50
-depth:30
-rarity:7
-experience:2000
-blow:HIT:HURT:6d6
-blow:HIT:HURT:6d6
-blow:BITE:HURT:3d10
-flags:UNIQUE | MALE
-flags:DROP_1 | DROP_GOOD | ONLY_ITEM
-flags:MOVE_BODY | TAKE_ITEM
-flags:HURT_ROCK | HURT_LIGHT | IM_COLD
-innate-freq:7
-spells:BOULDER
-friends:100:1d1:Bert the Stone Troll
-friends:100:1d1:Tom the Stone Troll
-desc:Big, brawny, powerful and with a taste for hobbit.  He has friends called
-desc: Bert and Tom.
-
-name:Tom the Stone Troll
-base:troll
-color:s
-speed:120
-hit-points:1100
-hearing:20
-smell:20
-armor-class:84
-sleepiness:50
-depth:30
-rarity:7
-experience:2000
-blow:HIT:HURT:6d6
-blow:HIT:HURT:6d6
-blow:BITE:HURT:3d10
-flags:UNIQUE | MALE
-flags:DROP_1 | DROP_GOOD | ONLY_ITEM
-flags:MOVE_BODY | TAKE_ITEM
-flags:HURT_ROCK | HURT_LIGHT | IM_COLD
-innate-freq:7
-spells:BOULDER
-friends:100:1d1:Bert the Stone Troll
-friends:100:1d1:Bill the Stone Troll
-desc:Big, brawny, powerful and with a taste for hobbit.  He has friends called
-desc: Bert and Bill.
-
 ### Dungeon level 31 ###
 
 name:ghost
@@ -7437,30 +6513,6 @@ spell-freq:8
 spells:HOLD | BLIND | CONF
 desc:A great serpent, with coils of steel, a lunge faster than the eye can see,
 desc: and fangs that drip with acidic poison.  Its eyes are mesmerizing.
-
-name:ogre mage
-base:ogre
-color:B
-speed:115
-hit-points:220
-hearing:20
-smell:20
-armor-class:60
-sleepiness:40
-depth:32
-rarity:2
-experience:300
-blow:HIT:HURT:3d8
-blow:HIT:HURT:3d8
-blow:HIT:HURT:3d8
-blow:HIT:HURT:3d8
-flags:DROP_1
-flags:FORCE_SLEEP
-spell-freq:4
-spells:HEAL | HOLD | TRAPS
-spells:BA_COLD
-spells:S_MONSTER
-desc:A hideous ogre wrapped in black sorcerous robes.
 
 name:nexus quylthulg
 base:quylthulg
@@ -7591,30 +6643,6 @@ friends:60:1d7:Earth hound
 friends:80:1d3:Same
 desc:It is eighteen feet tall and looking at you.
 
-name:cave troll
-base:troll
-color:u
-speed:110
-hit-points:156
-hearing:20
-smell:20
-armor-class:60
-sleepiness:50
-depth:33
-rarity:1
-experience:350
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-blow:BITE:HURT:1d8
-blow:BITE:HURT:1d8
-flags:MALE
-flags:DROP_20
-flags:HURT_LIGHT
-friends:30:1d5:stone troll
-friends:30:1d5:troll scavenger
-friends:100:3d3:Same
-desc:He is a vicious monster, feared for his ferocity.
-
 name:mystic
 base:person
 color:o
@@ -7728,30 +6756,6 @@ desc:It is a towering tempest of water.
 
 ### Dungeon level 34 ###
 
-name:troll priest
-base:troll
-color:G
-speed:110
-hit-points:340
-hearing:20
-smell:20
-armor-class:75
-sleepiness:60
-depth:34
-rarity:1
-experience:120
-blow:HIT:HURT:2d5
-blow:HIT:HURT:2d5
-blow:BITE:HURT:3d5
-blow:BITE:HURT:3d5
-flags:MALE
-flags:DROP_60
-flags:HURT_LIGHT | NO_CONF | NO_SLEEP
-flags:FORCE_SLEEP
-spell-freq:5
-spells:BLINK | WOUND | DARKNESS | SCARE
-desc:A troll who is so bright he knows how to read.
-
 name:Maia
 plural:Maiar
 base:ainu
@@ -7777,30 +6781,6 @@ desc: shining with glorious light.  Whether this being has taken allegiance to
 desc: Morgoth or faces you in combat for some other reason is not clear; all
 desc: you know is that it stands before you, its eyes ablaze as it prepares its
 desc: next volley of spells.
-
-name:troll blackguard
-base:troll
-color:U
-speed:110
-hit-points:340
-hearing:20
-smell:20
-armor-class:60
-sleepiness:50
-depth:34
-rarity:2
-experience:400
-blow:CLAW:POISON:2d5
-blow:CLAW:POISON:2d5
-blow:BITE:HURT:2d8
-blow:BITE:HURT:2d8
-flags:MALE
-flags:DROP_20 | ONLY_ITEM
-spell-freq:6
-spells:HASTE | SCARE | DARKNESS
-friends-base:100:3d4:troll
-desc:A half-smart, vicious troll with some rudimentary magic and a love of
-desc: violence.
 
 name:shade
 base:ghost
@@ -7993,55 +6973,6 @@ flags:BASH_DOOR
 flags:IM_ACID
 desc:A huge wormlike shape dripping acid, twisted by evil sorcery into a foul
 desc: monster that breeds on death.
-
-name:Lokkak, the Ogre Chieftain
-base:ogre
-color:v
-speed:120
-hit-points:1500
-hearing:20
-smell:20
-armor-class:120
-sleepiness:20
-depth:35
-rarity:2
-experience:1500
-blow:HIT:HURT:6d6
-blow:HIT:HURT:6d6
-blow:HIT:HURT:6d6
-flags:UNIQUE | MALE | MOVE_BODY
-flags:DROP_2 | DROP_GOOD | ONLY_ITEM
-friends:100:3d3:Ogre:servant
-friends:100:3d3:Black ogre:servant
-friends:100:3d3:Cave ogre:bodyguard
-friends:80:1d2:Ogre mage:servant
-friends:80:1d2:Ogre shaman:servant
-friends:50:1d2:Ogre chieftain:servant
-desc:An ogre renowned for acts of surpassing cruelty, Lokkak quickly became the
-desc: leader of a large band of violent ogres.
-
-name:hill troll
-base:troll
-color:m
-speed:110
-hit-points:316
-hearing:20
-smell:20
-armor-class:60
-sleepiness:50
-depth:35
-rarity:1
-experience:420
-blow:HIT:HURT:2d9
-blow:HIT:HURT:2d9
-blow:BITE:HURT:2d4
-blow:BITE:HURT:2d4
-flags:MALE
-flags:DROP_20
-friends:100:4d4:Same
-desc:Clad only in close-fitting mesh of horny scales (unless that is his skin)
-desc: this troll strides toward you roaring like a beast, wielding a heavy
-desc: hammer in his knotted hand.
 
 name:invisible stalker
 base:elemental
@@ -8597,25 +7528,6 @@ spells:BA_COLD
 spells:BO_ICE
 desc:It is a towering glacier of ice.
 
-name:mummified troll
-base:zombie
-color:w
-speed:110
-hit-points:207
-hearing:20
-armor-class:75
-sleepiness:70
-depth:37
-rarity:1
-experience:420
-blow:HIT:HURT:2d6
-blow:HIT:HURT:2d6
-flags:TROLL | EMPTY_MIND
-flags:DROP_20
-flags:NO_FEAR
-desc:It is a massive figure clothed in wrappings.  You are wary of its massive
-desc: fists.
-
 name:spectre
 base:ghost
 color:U
@@ -8787,41 +7699,6 @@ desc:Your life force is torn from your body as this powerful unearthly being
 desc: approaches.
 
 ### Dungeon level 38 ###
-
-name:mummified chieftain
-base:zombie
-color:y
-speed:115
-hit-points:299
-hearing:30
-armor-class:102
-sleepiness:90
-depth:38
-rarity:3
-experience:800
-blow:CLAW:LOSE_CON:3d6
-blow:CLAW:LOSE_CON:3d6
-blow:GAZE:EXP_40:3d4
-blow:GAZE:TERRIFY:3d4
-flags:MALE | SMART | ATTR_FLICKER
-flags:DROP_2 | ONLY_ITEM
-flags:MOVE_BODY | TAKE_ITEM
-flags:IM_ACID | IM_ELEC | NO_FEAR
-flags:FORCE_SLEEP
-innate-freq:9
-spell-freq:3
-spells:SHRIEK
-spells:BLIND | WOUND | DARKNESS | DRAIN_MANA | FORGET | HASTE
-spells:HEAL | MIND_BLAST | SCARE
-spells:BA_COLD | BA_POIS
-spells:BO_RADI
-spells:S_UNDEAD
-friends:100:2d3:Mummified orc:servant
-friends:100:2d3:Mummified human:servant
-friends:100:2d3:Mummified troll:servant
-desc:A powerful ruler who refused the summons of Mandos on death, preferring
-desc: to re-occupy his now embalmed body.  He commands a legion of his former
-desc: subjects with unearthly shrieks.
 
 name:will o' the wisp
 base:elemental
@@ -9381,35 +8258,6 @@ friends:30:1d1:Berserker
 desc:A priest of great power, he is convinced of the righteousness of his
 desc: beliefs.  Stand in his way at your peril.
 
-name:troll chieftain
-base:troll
-color:P
-speed:120
-hit-points:792
-hearing:30
-smell:20
-armor-class:60
-sleepiness:20
-depth:40
-rarity:5
-experience:3000
-blow:HIT:HURT:2d12
-blow:HIT:HURT:2d12
-blow:BITE:HURT:3d6
-blow:BITE:HURT:3d6
-flags:SMART
-flags:DROP_1
-flags:MOVE_BODY | TAKE_ITEM
-flags:NO_FEAR
-friends:60:2d3:forest troll:servant
-friends:60:2d3:stone troll:servant
-friends:60:2d3:snow troll:servant
-friends:60:2d3:hill troll:servant
-friends:60:2d3:cave troll:servant
-friends:60:2d3:olog:servant
-desc:This troll's great strength and size have won it the place of chieftain of
-desc: its tribe.  It fears nothing.
-
 ### Dungeon level 41 ###
 
 name:stiffbeard sorcerer
@@ -9608,36 +8456,6 @@ friends:60:2d3:Giant blue ant:servant
 friends:60:2d3:Giant fire ant:servant
 friends:100:3d3:Giant army ant:bodyguard
 desc:She's upset because you hurt her children.
-
-name:Rogrog the Black Troll
-base:troll
-color:D
-speed:120
-hit-points:2000
-hearing:20
-smell:20
-armor-class:105
-sleepiness:30
-depth:42
-rarity:3
-experience:5000
-blow:HIT:HURT:6d7
-blow:HIT:HURT:6d7
-blow:BITE:HURT:4d10
-blow:SPIT:ACID:4d8
-flags:UNIQUE | MALE | REGENERATE
-flags:DROP_3 | DROP_GOOD | ONLY_ITEM
-flags:MOVE_BODY | TAKE_ITEM
-flags:IM_COLD
-innate-freq:7
-spells:BOULDER
-friends:60:2d3:troll scavenger:servant
-friends:60:2d3:cave troll:servant
-friends:40:2d3:hill troll:servant
-friends:30:1d2:mountain troll:servant
-friends:100:4d4:olog:bodyguard
-desc:A massive and cruel troll of great power, drool slides caustically down his
-desc: muscular frame.  Despite his bulk, he strikes with stunning speed.
 
 ### Dungeon level 43 ###
 
@@ -10464,37 +9282,6 @@ desc:A mighty spirit of darkness of vaguely humanoid form.  Razor-edged claws
 desc: reach out to end your life as it glides towards you, seeking to suck the
 desc: energy from your soul to feed its power.
 
-name:The Balrog of Moria
-base:major demon
-color:v
-speed:130
-hit-points:3000
-light:2
-hearing:20
-armor-class:150
-sleepiness:20
-depth:50
-rarity:3
-experience:30000
-blow:HIT:FIRE:6d12
-blow:HIT:FIRE:6d12
-blow:CRUSH:HURT:5d12
-blow:TOUCH:DRAIN_CHARGES
-flags:UNIQUE | MALE | POWERFUL
-flags:DROP_4 | DROP_GOOD
-flags:MOVE_BODY
-flags:IM_FIRE
-innate-freq:15
-spell-freq:5
-spells:CONF | SCARE
-spells:BR_FIRE
-spells:S_DEMON | S_UNDEAD
-friends:100:4d4:cave orc:servant
-friends:100:3d4:cave troll:servant
-desc:A huge Balrog surrounded by raging pillars of fire, this is indeed a
-desc: terrible opponent.  Wielding a great whip of fire and a blazing sword,
-desc: his fury blisters your skin and melts your flesh!
-
 ### Dungeon level 51 ###
 
 name:radiation hound
@@ -10815,39 +9602,6 @@ desc:A form that hurts the eye, death permeates the air around it.  As it nears
 desc: you, a coldness saps your soul.
 
 ### Dungeon level 55 ###
-
-name:Shelob, Spider of Darkness
-base:spider
-color:D
-speed:120
-hit-points:3500
-light:-3
-hearing:30
-armor-class:180
-sleepiness:20
-depth:55
-rarity:3
-experience:27000
-blow:CLAW:POISON:5d6
-blow:CLAW:POISON:5d6
-blow:BITE:PARALYZE:5d10
-blow:STING:LOSE_STR:5d4
-flags:UNIQUE | FEMALE | EVIL | ANIMAL | SMART | SPIRIT
-flags:DROP_2 | DROP_GOOD | ONLY_ITEM
-flags:HURT_LIGHT | IM_ACID | IM_POIS | NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-innate-freq:20
-spell-freq:4
-spells:BLIND | WOUND | CONF | HEAL | SCARE
-spells:SLOW | WEAVE
-spells:BR_DARK | BR_POIS
-spells:S_KIN
-friends:80:4d4:uruk
-friends:100:3d7:mirkwood spider
-desc:Shelob is an enormous bloated spider, the last daughter of Ungoliant the
-desc: Unlight.  Her poison is legendary, as is her ego.  She normally guards the
-desc: pass through Cirith Ungol, but occasionally goes out foraging for food to
-desc: feed her voracious appetite.
 
 name:Ar-Pharazôn the Golden
 base:person
@@ -11248,38 +10002,6 @@ spells:BR_ACID | BR_CHAO | BR_COLD | BR_DARK | BR_ELEC
 spells:BR_FIRE | BR_GRAV | BR_INER | BR_LIGHT | BR_RADI | BR_NEXU
 spells:BR_PLAS | BR_POIS | BR_SHAR | BR_SOUN | BR_TIME | BR_WALL
 desc:An awesome vortex of pure magic, power radiates from its frame.
-
-name:Saruman of Many Colours
-base:ainu
-color:v
-speed:120
-hit-points:5000
-light:2
-hearing:100
-armor-class:120
-sleepiness:0
-depth:60
-rarity:1
-experience:35000
-blow:HIT:DISENCHANT:6d8
-blow:HIT:DISENCHANT:6d8
-blow:HIT:HURT:5d5
-blow:HIT:HURT:5d5
-flags:UNIQUE | MALE | EVIL
-flags:DROP_4 | DROP_GOOD | DROP_GREAT
-flags:IM_ELEC
-flags:ATTR_MULTI
-spell-freq:2
-spells:BLIND | WOUND | FORGET | HASTE | HEAL | MIND_BLAST
-spells:SCARE | TELE_AWAY | TPORT | TRAPS
-spells:BA_ACID | BA_COLD | BA_FIRE | BA_WATE
-spells:BO_ICE
-spells:S_ANIMAL | S_DEMON | S_MONSTERS | S_UNDEAD
-friends:100:1d1:Wormtongue, Agent of Saruman:servant
-desc:Originally known as the White, Saruman fell prey to Sauron's wiles.  He
-desc: seeks to emulate him and breeds orcs and trolls to fight for him.  He
-desc: searches forever for the One Ring, to become a mighty Sorcerer-King of
-desc: the world.
 
 ### Dungeon level 61 ###
 
@@ -13032,38 +11754,6 @@ desc: all violence, and recruits any beings of like abilities to her service.
 
 ### Dungeon level 88 ###
 
-name:Lungorthin, the Balrog of White Fire
-base:major demon
-color:v
-speed:130
-hit-points:7000
-light:2
-hearing:20
-armor-class:187
-sleepiness:10
-depth:88
-rarity:2
-experience:37000
-blow:HIT:FIRE:8d12
-blow:HIT:FIRE:8d12
-blow:CRUSH:HURT:8d12
-blow:TOUCH:DRAIN_CHARGES
-flags:UNIQUE | MALE | POWERFUL
-flags:DROP_4 | DROP_GOOD
-flags:MOVE_BODY | KILL_WALL
-flags:IM_FIRE | IM_PLASMA
-innate-freq:12
-spell-freq:6
-spells:BLIND | CONF | SCARE
-spells:BR_FIRE | BR_PLAS
-spells:S_HI_DEMON | S_UNDEAD
-friends:100:1d3:Lesser Balrog:servant
-friends:50:1d2:Greater Balrog:servant
-friends:100:1d1:The Balrog of Moria
-desc:A massive form cloaked in flame.  Lungorthin stares balefully at you with
-desc: eyes that smoulder red.  The dungeon floor where he stands is scorched by
-desc: the heat of his body.
-
 
 ########## DUNGEON LEVELS 90-100 ##########
 
@@ -13130,42 +11820,6 @@ desc: deadly opponent in combat.
 
 ### Dungeon level 92 ###
 
-name:Vecna, the Emperor Lich
-base:lich
-color:p
-speed:130
-hit-points:6000
-hearing:100
-armor-class:120
-sleepiness:0
-depth:92
-rarity:3
-experience:45000
-blow:HIT:EXP_80:7d12
-blow:HIT:LOSE_DEX:7d12
-blow:HIT:DRAIN_CHARGES:7d12
-blow:HIT:DRAIN_CHARGES:7d12
-flags:UNIQUE | MALE
-flags:DROP_4 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
-flags:IM_ELEC | IM_FIRE
-spell-freq:2
-spells:BLIND | WOUND | SCARE | TPORT | BRAIN_SMASH
-spells:BA_FIRE | BA_MANA | BA_RADI
-spells:BO_MANA
-spells:S_HI_DEMON | S_HI_UNDEAD | S_KIN | S_MONSTERS
-friends:50:1d3:mummified chieftain:servant
-friends:50:1d3:Skeleton etten:servant
-friends:50:1d3:Night mare:servant
-friends:30:1d2:Dreadlord:servant
-friends:40:1d2:Archlich:servant
-friends:30:1d2:Nightwing:servant
-friends:30:1d2:Nightcrawler:servant
-friends:20:1d2:Nightwalker:servant
-friends:20:1d2:Bone golem:servant
-friends:20:1d2:Black reaver:servant
-desc:The greatest of all undead sorcerers, even the gods once feared him.  This
-desc: ancient shadow of death wilts every living thing it passes.
-
 ### Dungeon level 95 ###
 
 name:storm of Unmagic
@@ -13191,43 +11845,6 @@ innate-freq:3
 spells:BR_CHAO | BR_DISE | BR_TIME
 desc:Howling through the disintegrating dungeon, this whirlpool of Unmagic rips
 desc: the enchantments from everything it touches.
-
-name:Gothmog, the High Captain of Balrogs
-base:major demon
-color:v
-speed:130
-hit-points:8000
-light:2
-hearing:100
-armor-class:168
-sleepiness:0
-depth:95
-rarity:1
-experience:43000
-blow:HIT:FIRE:9d12
-blow:HIT:FIRE:9d12
-blow:CRUSH:HURT:8d12
-blow:TOUCH:DRAIN_CHARGES
-flags:UNIQUE | MALE | POWERFUL
-flags:DROP_4 | DROP_GOOD | DROP_GREAT
-flags:MOVE_BODY | KILL_WALL
-flags:IM_ELEC | IM_FIRE | IM_PLASMA
-innate-freq:8
-spell-freq:4
-spells:BLIND | CONF | SCARE
-spells:BR_FIRE | BR_PLAS
-spells:S_HI_DEMON | S_HI_UNDEAD
-friends:100:1d5:Lesser Balrog:servant
-friends:30:1d3:Osyluth:servant
-friends:30:1d3:Gelugon:servant
-friends:30:1d3:Pit fiend:servant
-friends:100:1d2:Greater Balrog:bodyguard
-friends:100:1d1:The Balrog of Moria:servant
-friends:100:1d1:Lungorthin, the Balrog of White Fire:servant
-desc:Gothmog is the Chief Balrog in Morgoth's personal guard.  He is renowned
-desc: for slaying Fëanor and Fingon, two of the High Kings of the Noldor,
-desc: and has never been defeated in combat.  With his whip of flame and
-desc: awesome fiery breath he saved his master from Ungoliant's rage.
 
 ### Dungeon level 99 ###
 
