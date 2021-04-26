@@ -572,13 +572,6 @@ static void prt_ext(int row, int col) {
 		prt_field(player->extension->name, row, col);
 	}
 }
-static void prt_class(int row, int col) {
-	if (player_is_shapechanged(player)) {
-		prt_field("", row, col);
-	} else {
-		prt_field(player->class->name, row, col);
-	}
-}
 
 /**
  * Prints level
@@ -778,7 +771,7 @@ static const struct side_handler_t
 	{ prt_ext,     21, EVENT_RACE_CLASS },
 	{ prt_race,    20, EVENT_RACE_CLASS },
 	{ prt_title,   16, EVENT_PLAYERTITLE },
-	{ prt_class,   19, EVENT_RACE_CLASS },
+	{ NULL,        19, 0 },
 	{ prt_level,   12, EVENT_PLAYERLEVEL },
 	{ prt_exp,     10, EVENT_EXPERIENCE },
 	{ prt_gold,    11, EVENT_GOLD },
