@@ -41,8 +41,6 @@
 #include "target.h"
 #include "trap.h"
 
-static bool check_shapechanged(void);
-
 /**
  * ------------------------------------------------------------------------
  * Utility bits and bobs

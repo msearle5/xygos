@@ -18,7 +18,7 @@ int teardown_tests(void *state) {
 	struct player_class *c = parser_priv(state);
 	int i;
 	string_free((char *)c->name);
-	for (i = 0; i < c->titles; i++) {
+	for (i = 0; i < (int)(c->titles); i++) {
 		string_free((char *)c->title[i]);
 	}
 	mem_free(c);

@@ -26,6 +26,7 @@
 #include "ui-prefs.h"
 
 #ifdef USE_GCU
+
 #include "main.h"
 
 /**
@@ -48,6 +49,8 @@
 #else
 # include <curses.h>
 #endif
+
+int mvwaddnwstr(WINDOW *win, int y, int x, const wchar_t *str, int n);
 
 #include <term.h>
 

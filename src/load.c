@@ -384,7 +384,7 @@ static void rd_trap(struct trap *trap)
 	rd_byte(&trap->power);
 	rd_byte(&trap->timeout);
 
-	for (i = 0; i < trf_size; i++)
+	for (i = 0; i < (int)(MAX(TRF_SIZE, trf_size)); i++)
 		rd_byte(&trap->flags[i]);
 }
 
