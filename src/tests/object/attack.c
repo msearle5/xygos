@@ -11,7 +11,6 @@ extern struct init_module obj_make_module;
 
 
 int setup_tests(void **state) {
-	struct alloc_test_state *st;
 
 	player = &test_player;
 

@@ -1731,7 +1731,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 					of_union(collect_f, ability[i]->oflags);
 
 					/* Sum abilities giving speed based on momentum */
-					if (ability[i]->mom_speed) {
+					if ((bool)ability[i]->mom_speed) {
 						for(int j=0;j<MOM_SPEED_MAX;j++)
 							mom_speed[j] += ability[i]->mom_speed[j];
 					}

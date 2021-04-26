@@ -26,6 +26,7 @@
 #include "ui-prefs.h"
 
 #ifdef USE_GCU
+
 #include "main.h"
 
 /**

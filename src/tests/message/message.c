@@ -452,7 +452,6 @@ int test_msgt(void *state)
 {
 	struct test_message_event_state *st = state;
 	const char expected1[] = "msg1";
-	const char expected2[] = "msg2";
 	const char *txt;
 	u16b n, mtype;
 
@@ -478,6 +477,7 @@ int test_msgt(void *state)
 	eq(st->n_other, 0);
 
 #ifdef SOUND
+	const char expected2[] = "msg2";
 	player->opts.opt[OPT_use_sound] = true;
 	msgt(MSG_WALK, "%s", expected2);
 	n = messages_num();
