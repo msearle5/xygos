@@ -949,6 +949,12 @@ struct monster *choose_nearby_injured_kin(struct chunk *c,
 	return found;
 }
 
+/* Special effects on death */ 
+void death_special(struct monster *mon)
+{
+	const char *name = mon->race->name;
+	if (streq(mon->
+}
 
 /**
  * ------------------------------------------------------------------------
@@ -1030,6 +1036,11 @@ void monster_death(struct monster *mon, bool stats)
 
 	/* Remove it from the level */
 	square_set_mon(cave, mon->grid, 0);
+
+	/* Special cases */
+	if (rf_has(mon->race->flags, RF_DEATH_SPECIAL)) {
+		death_special(mon);
+	}
 
 	/* Fire off any death-spells */
 	for(int i=FLAG_START;i<RSF_MAX;i++) {

@@ -464,7 +464,7 @@ flags:NO_SLEEP | NO_CONF | NO_FEAR
 spell-freq:3
 spell-power:0
 spells:S_KIN
-desc:A lemming painted in gaudy designs, waving a carved device. Where it leads hordes follow.
+desc:A lemming painted in gaudy designs, waving a carved staff. Where it leads hordes follow.
 
 name:bungee lemming
 base:lemming
@@ -616,10 +616,311 @@ rarity:5
 experience:500
 blow:CRUSH:HURT:10d12
 flags:SMART | COLD_BLOOD | WEIRD_MIND | RAND_25 | BASH_DOOR | KILL_BODY | KILL_ITEM
+desc:The primeval Beast itself. Many hunt the Wumpus, few return...
 
 
+##### MISC CREATURES #####
+# (typically non-humanoid aliens)
 
+name:red horror
+color:Red
+depth:12
+rarity:4
+desc:An ugly screaming little red alien.
+grow:pink horror
+hit-points:39
+armor-class:25
+sleepiness:20
+blow:CLAW:FEAR:1d5
+blow:CLAW:FEAR:1d6
+blow:BITE:FIRE:1d9
+flags:EVIL | NO_FEAR | NO_CONFUSE | IM_FIRE | SMART | WEIRD_MIND | OPEN_DOOR
+spell-freq:8
+spell-power:6
+spells:BO_FIRE
 
+name:green horror
+color:Green
+depth:13
+rarity:4
+desc:An ugly screaming little green alien.
+grow:yellow horror
+hit-points:42
+armor-class:25
+sleepiness:20
+blow:CLAW:FEAR:1d5
+blow:CLAW:FEAR:1d7
+blow:BITE:POISON:1d10
+flags:NO_FEAR | EVIL | NO_CONF | IM_POIS | SMART | WEIRD_MIND | OPEN_DOOR
+spell-freq:7
+spell-power:7
+spells:BO_POIS
+
+# should these two be P's?
+name:blue horror
+color:Blue
+depth:14
+rarity:4
+desc:An ugly screaming little blue alien.
+grow:turquoise horror
+hit-points:45
+armor-class:25
+sleepiness:20
+blow:CLAW:FEAR:1d6
+blow:CLAW:FEAR:1d8
+blow:BITE:ELEC:1d10
+flags:EVIL | NO_FEAR | NO_CONF | IM_ELEC | SMART | WEIRD_MIND | OPEN_DOOR
+spell-freq:6
+spell-power:8
+spells:BO_ELEC
+
+name:yeti
+plural:yeti
+base:yeti
+color:w
+speed:110
+hit-points:55
+hearing:20
+smell:20
+armor-class:36
+sleepiness:30
+depth:9
+rarity:3
+experience:30
+blow:CLAW:HURT:1d3
+blow:CLAW:HURT:1d3
+blow:BITE:HURT:1d4
+desc:A large white figure covered in shaggy fur.
+
+name:umber hulk
+base:xorn
+color:U
+speed:110
+hit-points:110
+hearing:20
+armor-class:75
+sleepiness:30
+depth:16
+rarity:1
+experience:75
+blow:GAZE:CONFUSE
+blow:HIT:HURT:1d6
+blow:HIT:HURT:1d6
+blow:BITE:HURT:2d6
+flags:EVIL | ANIMAL
+flags:BASH_DOOR | KILL_WALL
+desc:This bizarre creature has glaring eyes and large mandibles capable of
+desc: slicing through rock.
+
+name:corpser
+color:Green
+depth:28
+rarity:10
+speed:120
+hit-points:172
+armor-class:37
+sleepiness:120
+blow:CRUSH:HURT:2d8
+blow:CRUSH:HURT:2d8
+blow:CRUSH:HURT:2d8
+blow:CRUSH:HURT:2d8
+flags:INVIS | EVIL | NO_CONF | NO_SLEEP | NEVER_MOVE | WEIRD_MIND
+desc:A creature who lives underground and eats surface dwellers whom it catches with its poisonous tentacle, which is the only part of the creature that is ever seen. Perhaps it is better not to see the part which remains underground... 
+
+name:pink horror
+color:Magenta
+depth:30
+rarity:4
+desc:An ugly screaming pink alien.
+grow:white horror
+speed:110
+hit-points:45
+armor-class:20
+sleepiness:20
+blow:CLAW:FIRE:2d6
+blow:CLAW:ELEC:2d6
+blow:BITE:CONFUSE:1d6
+blow:STING:FEAR:1d6
+flags:EVIL | NO_FEAR | NO_CONF | IM_FIRE | IM_ELEC | OPEN_DOOR | DEATH_SPECIAL | OPEN_DOOR | SMART | WEIRD_MIND
+spell-freq:4
+spell-power:15
+spells:BA_ELEC | BA_FIRE | BO_PLAS | CONF | SCARE
+
+#name?
+name:yellow horror
+color:Yellow
+depth:32
+rarity:4
+desc:An ugly screaming yellow alien.
+grow:white horror
+speed:110
+hit-points:50
+armor-class:20
+sleepiness:20
+blow:CLAW:FIRE:2d6
+blow:CLAW:POISON:2d6
+blow:BITE:CONFUSE:1d6
+blow:STING:FEAR:1d6
+flags:EVIL | NO_FEAR | NO_CONF | IM_FIRE | IM_POIS | OPEN_DOOR | DEATH_SPECIAL | OPEN_DOOR | SMART | WEIRD_MIND
+spell-freq:4
+spell-power:20
+spells:BO_FIRE | BO_POIS | BA_POIS | BA_FIRE | CONF | SCARE
+
+name:turquoise horror
+color:Cyan
+depth:34
+rarity:4
+desc:An ugly screaming blue-green alien.
+grow:white horror
+speed:110
+hit-points:55
+armor-class:20
+sleepiness:20
+blow:CLAW:POISON:2d6
+blow:CLAW:ELEC:2d6
+blow:BITE:CONFUSE:1d6
+blow:STING:FEAR:1d6
+hook("death:special"
+flags:EVIL | NO_FEAR | NO_CONF | IM_ELEC | IM_POIS | OPEN_DOOR | SMART | WEIRD_MIND | DEATH_SPECIAL
+spell-freq:4
+spell-power:22
+spells:BO_PLAS | BA_POIS | BA_ELEC | CONFUSE | SCARE
+
+name:sasquatch
+plural:sasquatches
+base:yeti
+color:g
+speed:120
+hit-points:200
+hearing:15
+smell:20
+armor-class:60
+sleepiness:20
+depth:20
+rarity:3
+experience:180
+blow:CLAW:HURT:1d10
+blow:CLAW:HURT:1d10
+blow:BITE:HURT:2d8
+desc:A tall shaggy, furry humanoid, it could call the yeti brother.
+
+name:xenomorph
+color:SlateGray
+depth:38, 15
+grow:facehugger
+speed:110
+hit-points:245
+hearing:250
+armor-class:45
+sleepiness:0
+blow:BITE:ACID:1d9
+blow:BITE:ACID:1d9
+blow:CLAW:HURT:2d8
+blow:CLAW:HURT:2d8
+flags:NO_FEAR | NO_CONF | NO_SLEEP
+flags:EVIL | IM_ACID | SMART | WEIRD_MIND
+spells:BR_ACID | MULTIPLY_GROW
+spell-power:15
+spell-freq:6
+innate-freq:30
+desc:A sleek black darting acidic alien. It is looking for genetic material - you!
+
+name:xorn
+base:xorn
+color:u
+speed:110
+hit-points:140
+hearing:20
+armor-class:96
+sleepiness:10
+depth:36
+rarity:2
+experience:650
+blow:HIT:HURT:1d6
+blow:HIT:HURT:1d6
+blow:HIT:HURT:1d6
+blow:HIT:HURT:1d6
+flags:PASS_WALL | KILL_ITEM
+flags:IM_COLD | IM_ELEC | IM_FIRE
+desc:A huge creature of the element Earth.  Able to merge with its element, it
+desc: has four huge arms protruding from its enormous torso.
+
+name:facehugger
+color:Beige
+depth:38
+rarity:8
+desc:A scuttling spider-like alien with a long tail. You feel a sudden pain inside your ribcage as it scuttles towards you. 
+grow:xenomorph
+speed:120
+hit-points:9
+hearing:200
+armor-class:15
+sleepiness:0
+blow:ENGULF:DISEASE:1d12
+blow:BITE:ACID:1d12
+blow:CRUSH:PARALYZE:1d6
+flags:NO_FEAR | NO_CONF | NO_SLEEP | IM_ACID | KILL_BODY | EVIL | GROW
+spell-power:1
+spell-freq:40
+
+name:white horror
+color:White
+depth:49
+rarity:4
+speed:110
+hit-points:55
+armor-class:20
+sleepiness:20
+blow:CLAW:FIRE:3d8
+blow:CLAW:ELEC:3d8
+blow:STING:POISON:1d12
+blow:BITE:CONFUSE:1d12
+flags:EVIL | NO_FEAR | NO_CONF | IM_FIRE | IM_POIS | IM_ELEC | OPEN_DOOR | DEATH_SPECIAL
+flags:SMART | WEIRD_MIND
+spell-freq:3
+spell-power:40
+spells:BO_PLAS | BE_ELEC | BA_POIS | BA_ELEC | BA_FIRE
+spells:CONFUSE | SCARE | HOLD
+desc:An big ugly screaming white alien. 
+
+name:xaren
+base:xorn
+color:s
+speed:120
+hit-points:280
+hearing:20
+armor-class:96
+sleepiness:10
+depth:40
+rarity:1
+experience:1200
+blow:HIT:HURT:3d4
+blow:HIT:HURT:3d4
+blow:HIT:HURT:3d4
+blow:HIT:HURT:3d4
+flags:DROP_2 | ONLY_GOLD
+flags:PASS_WALL | KILL_ITEM
+flags:IM_COLD | IM_ELEC | IM_FIRE
+desc:It is a tougher relative of the Xorn.  Its hide glitters with metal ores.
+
+name:shambler
+color:LightYellow
+depth:92
+rarity:8
+speed:120
+hit-points:3500
+hearing:40
+armor-class:75
+sleepiness:50
+blow:CLAW:HURT:3d12
+blow:CLAW:HURT:3d12
+blow:CRUSH:HURT:8d12
+blow:CRUSH:HURT:8d12
+flags:IM_WATER | EVIL | NO_CONF | NO_SLEEP | OPEN_DOOR | FORCE_SLEEP | SMART
+spell-power:120
+spell-freq:3
+spells:BR_ELEC
+desc:This elemental creature is power incarnate; it looks like a huge polar bear with a huge gaping maw instead of a head.
 
 
 
@@ -2773,24 +3074,6 @@ experience:3
 blow:BITE:HURT:1d2
 desc:It makes you itch just to look at it.
 
-name:yeti
-plural:yeti
-base:yeti
-color:w
-speed:110
-hit-points:55
-hearing:20
-smell:20
-armor-class:36
-sleepiness:30
-depth:9
-rarity:3
-experience:30
-blow:CLAW:HURT:1d3
-blow:CLAW:HURT:1d3
-blow:BITE:HURT:1d4
-desc:A large white figure covered in shaggy fur.
-
 name:bloodshot icky thing
 base:icky thing
 color:r
@@ -3935,26 +4218,6 @@ desc: noise.
 
 ### Dungeon level 16 ###
 
-name:umber hulk
-base:xorn
-color:U
-speed:110
-hit-points:110
-hearing:20
-armor-class:75
-sleepiness:30
-depth:16
-rarity:1
-experience:75
-blow:GAZE:CONFUSE
-blow:HIT:HURT:1d6
-blow:HIT:HURT:1d6
-blow:BITE:HURT:2d6
-flags:EVIL | ANIMAL
-flags:BASH_DOOR | KILL_WALL
-desc:This bizarre creature has glaring eyes and large mandibles capable of
-desc: slicing through rock.
-
 name:gelatinous cube
 base:jelly
 color:G
@@ -4633,24 +4896,6 @@ spell-freq:4
 spells:BLINK
 spells:S_MONSTER
 desc:It is a strange pulsing mound of flesh.
-
-name:sasquatch
-plural:sasquatches
-base:yeti
-color:g
-speed:120
-hit-points:200
-hearing:15
-smell:20
-armor-class:60
-sleepiness:20
-depth:20
-rarity:3
-experience:180
-blow:CLAW:HURT:1d10
-blow:CLAW:HURT:1d10
-blow:BITE:HURT:2d8
-desc:A tall shaggy, furry humanoid, it could call the yeti brother.
 
 name:werewolf
 plural:werewolves
@@ -7309,26 +7554,6 @@ spells:DARKNESS
 spells:BO_FIRE
 desc:It is a towering blackened form, crackling with heat.
 
-name:xorn
-base:xorn
-color:u
-speed:110
-hit-points:140
-hearing:20
-armor-class:96
-sleepiness:10
-depth:36
-rarity:2
-experience:650
-blow:HIT:HURT:1d6
-blow:HIT:HURT:1d6
-blow:HIT:HURT:1d6
-blow:HIT:HURT:1d6
-flags:PASS_WALL | KILL_ITEM
-flags:IM_COLD | IM_ELEC | IM_FIRE
-desc:A huge creature of the element Earth.  Able to merge with its element, it
-desc: has four huge arms protruding from its enormous torso.
-
 name:colossus
 plural:colossi
 base:golem
@@ -8120,26 +8345,6 @@ friends:30:1d1:Patriarch
 friends:30:1d1:Berserker
 desc:A human figure in robes, he moves with magically improved speed, and his
 desc: hands are ablur with spell casting.
-
-name:xaren
-base:xorn
-color:s
-speed:120
-hit-points:280
-hearing:20
-armor-class:96
-sleepiness:10
-depth:40
-rarity:1
-experience:1200
-blow:HIT:HURT:3d4
-blow:HIT:HURT:3d4
-blow:HIT:HURT:3d4
-blow:HIT:HURT:3d4
-flags:DROP_2 | ONLY_GOLD
-flags:PASS_WALL | KILL_ITEM
-flags:IM_COLD | IM_ELEC | IM_FIRE
-desc:It is a tougher relative of the Xorn.  Its hide glitters with metal ores.
 
 name:giant roc
 base:bird
