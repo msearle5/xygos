@@ -1102,3 +1102,13 @@ lore:summon uniques
 lore-color-base:Light Red
 message-vis:{name} summons {pronoun} servants.
 message-invis:You hear powerful things appear nearby!
+
+name:MULTIPLY_GROW
+msgt:SUM_GROW
+hit:100
+effect:SUMMON:GROW
+dice:8
+lore:spawn
+lore-color-base:Light Red
+message-vis:{name} spawns.
+message-invis:You hear something appear nearby!

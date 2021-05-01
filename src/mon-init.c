@@ -34,6 +34,7 @@
 #include "player-spell.h"
 #include "project.h"
 #include "ui-visuals.h"
+#include "z-rand.h"
 
 struct blow_method *blow_methods;
 struct blow_effect *blow_effects;
@@ -1085,6 +1086,7 @@ static enum parser_error parse_monster_name(struct parser *p) {
 	struct monster_race *r = mem_zalloc(sizeof *r);
 	r->next = h;
 	r->name = string_make(parser_getstr(p, "name"));
+	r->speed = 110;
 	parser_setpriv(p, r);
 	return PARSE_ERROR_NONE;
 }
@@ -1503,6 +1505,16 @@ static enum parser_error parse_monster_friends(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_monster_grow(struct parser *p) {
+	struct monster_race *r = parser_priv(p);
+
+	if (!r)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	r->grow = string_make(parser_getstr(p, "grow"));
+
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_monster_friends_base(struct parser *p) {
 	struct monster_race *r = parser_priv(p);
 	struct monster_friends_base *f;
@@ -1620,6 +1632,7 @@ static enum parser_error parse_monster_color_cycle(struct parser *p)
 	IPML( "plural ?str plural", parse_monster_plural); \
 	IPML( "glyph char glyph", parse_monster_glyph); \
 	IPML( "color sym color", parse_monster_color); \
+	IPML( "grow str grow", parse_monster_grow); \
 	IPML( "speed int speed", parse_monster_speed); \
 	IPML( "hit-points int hp", parse_monster_hit_points); \
 	IPML( "light int light", parse_monster_light); \
@@ -1663,6 +1676,65 @@ struct parser *init_parse_monster(void) {
 
 static errr run_parse_monster(struct parser *p) {
 	return parse_file_quit_not_found(p, "monster");
+}
+
+static int guess_exp(struct monster_race *r) {
+	assert(r->level >= 0);
+	assert(r->level <= 100);
+	static const int level_to_exp[101] = {
+		0,		2,		6,		12,		14,				16,		18,		21,		25,		30,
+		35,		40,		45,		50,		55,				60,		65,		70,		75,		85,
+		100,	110,	120,	130,	150,			170,	190,	220,	255,	280,
+		300,	320,	375,	400,	440,			500,	580,	700,	1000,	1400,
+		2000,	2400,	2700,	2900,	3100,			3300,	3500,	3700,	4000,	4300,
+		4600,	4900,	5100,	5200,	5300,			5400,	5500,	5600,	5700,	5800,
+		6000,	6400,	6800,	7200,	7600,			8000,	8400,	8800,	9200,	9600,
+		10000,	10500,	11000,	11500,	12000,			13000,	14000,	15000,	16500,	18000,
+		20000,	22000,	24000,	26000,	28000,			30000,	32000,	34000,	36000,	38000,
+		40000,	42000,	44000,	46000,	48000,			50000,	55000,	60000,	65000,	70000,
+		80000,
+	};
+	int e = level_to_exp[r->level];
+
+	struct monster_blow *b = r->blow;
+	while (b) {
+		e += randcalc(b->dice, 0, RANDOMISE);
+		b = b->next;
+	}
+	const int speed_prop = 50;
+	e = (e * (r->speed - (110 - speed_prop))) / speed_prop;
+
+	const int uniq_prop = 220;
+	if (rf_has(r->flags, RF_UNIQUE))
+		e = 20 + ((e * uniq_prop) / 100);
+
+	int level_hp = 1 + ((3+r->level) / 4) + ((15+(r->level * r->level)) / 16);
+	if (r->avg_hp < level_hp)
+		e -= ((level_hp - r->avg_hp) * e) / (level_hp * 2);
+	if (rf_has(r->flags, RF_RAND_25))
+		e -= e/8;
+	if (rf_has(r->flags, RF_RAND_50))
+		e -= e/4;
+	if (rf_has(r->flags, RF_ANIMAL))
+		e -= e/4;
+	if (rf_has(r->flags, RF_NEVER_BLOW))
+		e -= e/3;
+	if (rf_has(r->flags, RF_NEVER_MOVE))
+		e -= e/2;
+	if (rf_has(r->flags, RF_MULTIPLY))
+		e /= 5;
+	if (e < 1)
+		e = 1;
+	if (e > 100) {
+		if (e < 1000) {
+			e = (e / 10) * 10;
+		} else if (e < 10000) {
+			e = (e / 100) * 100;
+		} else {
+			e = (e / 1000) * 1000;
+		}
+	}
+	return e;
 }
 
 static errr finish_parse_monster(struct parser *p) {
@@ -1772,6 +1844,33 @@ static errr finish_parse_monster(struct parser *p) {
 		l->blows = mem_zalloc(z_info->mon_blows_max * sizeof(struct monster_blow));
 		l->blow_known = mem_zalloc(z_info->mon_blows_max * sizeof(bool));
 	}
+
+	/* Verify exp */
+	int worst = 0;
+	int count = 0;
+	for (i = 0; i < z_info->r_max; i++) {
+		struct monster_race *race = &r_info[i];
+		if (race->level == 0)
+			continue;
+		int e = guess_exp(race);
+		if (!race->mexp) {
+	#ifdef DEBUG_EXP
+			fprintf(stderr,"Warning: %s: no exp, using guess %d\n", race->name, e);
+	#endif
+			race->mexp = e;
+		} else {
+			int m = race->mexp;
+			int diff = MAX((e * e) / (m * m), (m * m) / (e * e));
+			if (diff >= 4) {
+				count++;
+				if (diff > worst)
+					worst = diff;
+			}
+		}
+	}
+	#ifdef DEBUG_EXP
+	fprintf(stderr,"%d off, worst %d\n", count, worst);
+	#endif
 
 	parser_destroy(p);
 	return 0;

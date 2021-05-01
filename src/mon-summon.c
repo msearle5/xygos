@@ -225,14 +225,17 @@ struct file_parser summon_parser = {
  */
 int summon_name_to_idx(const char *name)
 {
-    int i;
-    for (i = 0; i < summon_max; i++) {
-        if (name && streq(name, summons[i].name)) {
-            return i;
-		}
-    }
+	int i;
+	if (!name)
+		return -1;
 
-    return -1;
+	for (i = 0; i < summon_max; i++) {
+		if (summons[i].name && streq(name, summons[i].name)) {
+			return i;
+		}
+	}
+
+	return -1;
 }
 
 /**

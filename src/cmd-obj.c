@@ -40,6 +40,7 @@
 #include "player-util.h"
 #include "target.h"
 #include "trap.h"
+#include "ui-input.h"
 
 /**
  * ------------------------------------------------------------------------
@@ -511,6 +512,7 @@ static void use_aux(struct command *cmd, struct object *obj, enum use use,
 
 		/* Do effect; use original not copy (proj. effect handling) */
 		target_fix();
+
 		used = effect_do(effect,
 							source_player(),
 							obj,
@@ -745,7 +747,6 @@ void do_cmd_zap_rod(struct command *cmd)
 		msg("That gadget is still charging.");
 		return;
 	}
-
 	use_aux(cmd, obj, USE_TIMEOUT, MSG_ZAP_ROD, 0);
 }
 

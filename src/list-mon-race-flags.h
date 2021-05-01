@@ -94,4 +94,5 @@ RF(NO_CONF,		RFT_PROT,		"confused")
 RF(NO_SLEEP,	RFT_PROT,		"slept")
 RF(NO_HOLD,		RFT_PROT,		"held")
 RF(NO_SLOW,		RFT_PROT,		"slowed")
+RF(DEATH_SPECIAL, RFT_BEHAV,	"")
 /* end flags */

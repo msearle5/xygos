@@ -404,7 +404,7 @@ static void show_message(struct monster_race_message *msg)
 }
 
 /**
- * Show and then cler all stacked monster messages.
+ * Show and then clear all stacked monster messages.
  */
 void show_monster_messages(void)
 {

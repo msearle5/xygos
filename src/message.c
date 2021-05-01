@@ -115,10 +115,6 @@ void message_add(const char *str, u16b type)
 {
 	message_t *m;
 
-	if (strstr(str, "fail to the")) {
-		abort();
-	}
-
 	if (messages->head &&
 	    messages->head->type == type &&
 	    !strcmp(messages->head->str, str) &&
@@ -432,7 +428,7 @@ void msg(const char *fmt, ...)
 
 /**
  * Display a formatted message with a given type, making a sound
- * relevant to the message tyoe.
+ * relevant to the message type.
  *
  * \param type MSG_ constant
  * \param fmt Format string

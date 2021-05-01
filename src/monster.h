@@ -312,6 +312,7 @@ struct monster_race {
 	char *name;
 	char *text;
 	char *plural;			/* Optional pluralized name */
+	char *grow;
 
 	struct monster_base *base;
 	

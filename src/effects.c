@@ -2632,6 +2632,7 @@ bool effect_handler_SUMMON(effect_handler_context_t *context)
 	int message_type = summon_message_type(summon_type);
 	int fallback_type = summon_fallback_type(summon_type);
 	int count = 0, val = 0, attempts = 0;
+	char *grow = NULL;
 
 	sound(message_type);
 
@@ -2648,36 +2649,21 @@ bool effect_handler_SUMMON(effect_handler_context_t *context)
 		/* Set the kin_base if necessary */
 		if (summon_type == summon_name_to_idx("KIN")) {
 			kin_base = mon->race->base;
+		} else if (summon_type == summon_name_to_idx("GROW")) {
+			grow = mon->race->grow;
 		}
 
-		/* Continue summoning until we reach the current dungeon level */
-		rlev = mon->race->level;
-		while ((val < player->depth * rlev) && (attempts < summon_max)) {
-			int temp;
-
-			/* Get a monster */
-			temp = summon_specific(mon->grid, rlev + level_boost, summon_type,
-								   false, false);
-
-			val += temp * temp;
-
-			/* Increase the attempt in case no monsters were available. */
-			attempts++;
-
-			/* Increase count of summoned monsters */
-			if (val > 0)
-				count++;
-		}
-
-		/* If the summon failed and there's a fallback type, use that */
-		if ((count == 0) && (fallback_type >= 0)) {
-			attempts = 0;
+		if (grow) {
+			count = summon_named_near(player->grid, grow);
+		} else {
+			/* Continue summoning until we reach the current dungeon level */
+			rlev = mon->race->level;
 			while ((val < player->depth * rlev) && (attempts < summon_max)) {
 				int temp;
 
 				/* Get a monster */
-				temp = summon_specific(mon->grid, rlev + level_boost,
-									   fallback_type, false, false);
+				temp = summon_specific(mon->grid, rlev + level_boost, summon_type,
+									   false, false);
 
 				val += temp * temp;
 
@@ -2688,11 +2674,36 @@ bool effect_handler_SUMMON(effect_handler_context_t *context)
 				if (val > 0)
 					count++;
 			}
+
+			/* If the summon failed and there's a fallback type, use that */
+			if ((count == 0) && (fallback_type >= 0)) {
+				attempts = 0;
+				while ((val < player->depth * rlev) && (attempts < summon_max)) {
+					int temp;
+
+					/* Get a monster */
+					temp = summon_specific(mon->grid, rlev + level_boost,
+										   fallback_type, false, false);
+
+					val += temp * temp;
+
+					/* Increase the attempt in case no monsters were available. */
+					attempts++;
+
+					/* Increase count of summoned monsters */
+					if (val > 0)
+						count++;
+				}
+			}
 		}
 
 		/* Summoner failed */
-		if (!count)
-			msg("But nothing comes.");
+		if (!count) {
+			if (grow)
+				msg("But nothing happens.");
+			else
+				msg("But nothing comes.");
+		}
 	} else {
 		/* If not a monster summon, it's simple */
 		while (summon_max) {

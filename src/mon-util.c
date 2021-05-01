@@ -953,7 +953,34 @@ struct monster *choose_nearby_injured_kin(struct chunk *c,
 void death_special(struct monster *mon)
 {
 	const char *name = mon->race->name;
-	if (streq(mon->
+	char *newmon[8] = {0};
+	int nnewmon = 0;
+
+	if (streq(name, "yellow horror")) {
+		newmon[nnewmon++] = "red horror";
+		newmon[nnewmon++] = "green horror";
+	} else if (streq(name, "pink horror")) {
+		newmon[nnewmon++] = "red horror";
+		newmon[nnewmon++] = "blue horror";
+	} else if (streq(name, "turquoise horror")) {
+		newmon[nnewmon++] = "green horror";
+		newmon[nnewmon++] = "blue horror";
+	} else if (streq(name, "white horror")) {
+		newmon[nnewmon++] = "turquoise horror";
+		newmon[nnewmon++] = "pink horror";
+		newmon[nnewmon++] = "yellow horror";
+	}
+
+	if (nnewmon) {
+		int summoned = 0;
+		for(int i=0; i<nnewmon; i++) {
+			summoned += summon_named_near(mon->grid, newmon[i]);
+		}
+		if (summoned) {
+			show_monster_messages();
+			msg("Or maybe not!");
+		}
+	}
 }
 
 /**
