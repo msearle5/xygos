@@ -261,7 +261,7 @@ alloc:3:18 to 100
 attack:2d5:12:14
 armor:0:0
 flags:PROT_FEAR
-values:RES_FIRE[3] | RES_ACID[1]
+values:IMM_FIRE | RES_ACID[1]
 slay:DRAGON_5
 desc:Azaghâl, Dwarf-king of Belegost, fell before Glaurung in the Battle
 desc: of Unnumbered Tears.  With his final breath, Azaghâl plunged this
@@ -693,7 +693,7 @@ flags:AGGRAVATE
 act:FIRE_BALL
 time:15
 values:STR[3] | INT[-3] | DEX[-3] | WIS[-3] | LIGHT[1]
-values:RES_FIRE[3] | RES_ELEC[1] | RES_DARK[1]
+values:IMM_FIRE | RES_ELEC[1] | RES_DARK[1]
 brand:FIRE_3
 slay:ANIMAL_2
 slay:DRAGON_5
@@ -744,7 +744,7 @@ cost:35000
 alloc:7:20 to 100
 attack:2d6:15:17
 armor:0:2
-values:RES_FIRE[3]
+values:IMM_FIRE
 brand:FIRE_3
 act:FIRE_BOLT72
 time:20
@@ -795,7 +795,7 @@ cost:50000
 alloc:7:20 to 100
 attack:3d6:12:12
 armor:0:0
-values:RES_ELEC[3]
+values:IMM_ELEC
 brand:ELEC_3
 slay:DRAGON_5
 act:HASTE1
@@ -888,7 +888,7 @@ armor:0:0
 # F:DRAIN_MANA | 
 flags:AGGRAVATE
 values:STR[6] | TUNNEL[4]
-values:RES_FIRE[3] | RES_DARK[1] | RES_CHAOS[1] | RES_DISEN[1]
+values:IMM_FIRE | RES_DARK[1] | RES_CHAOS[1] | RES_DISEN[1]
 brand:FIRE_3
 slay:DRAGON_3
 slay:ANIMAL_2
@@ -1001,7 +1001,7 @@ alloc:1:30 to 127
 attack:4d10:15:19
 armor:0:0
 flags:FREE_ACT | HOLD_LIFE | SEE_INVIS | SLOW_DIGEST | REGEN | BLESSED
-values:DEX[4] | RES_ACID[3] | RES_RADIATION[1]
+values:DEX[4] | IMM_ACID | RES_RADIATION[1]
 slay:DRAGON_3
 slay:ANIMAL_2
 act:TELE_OTHER
@@ -1179,7 +1179,7 @@ alloc:1:40 to 127
 attack:5d4:15:18
 armor:0:8
 flags:PROT_FEAR | FREE_ACT | SEE_INVIS | BLESSED
-values:STR[2] | INT[2] | WIS[2] | DEX[2] | CON[2] | RES_COLD[3]
+values:STR[2] | INT[2] | WIS[2] | DEX[2] | CON[2] | IMM_COLD
 brand:COLD_3
 slay:EVIL_2
 slay:UNDEAD_3
@@ -1249,7 +1249,7 @@ armor:0:8
 flags:BLESSED | REGEN
 act:DRAIN_LIFE1
 time:40
-values:WIS[4] | INFRA[4] | LIGHT[1] | RES_COLD[3] | RES_LIGHT[1]
+values:WIS[4] | INFRA[4] | LIGHT[1] | IMM_COLD | RES_LIGHT[1]
 brand:COLD_3
 slay:ORC_3
 desc:Once wielded by the High Priest of Meneltarma, this great mace gleams
@@ -1467,7 +1467,7 @@ cost:40000
 alloc:3:60 to 127
 attack:1d1:0:0
 armor:8:24
-values:SPD[6] | RES_ELEC[3] | RES_SOUND[1]
+values:SPD[6] | IMM_ELEC | RES_SOUND[1]
 act:BERSERKER
 time:100
 desc:And they hewed off Gelmir's hands and feet, and his head last, within
@@ -1752,7 +1752,7 @@ alloc:2:70 to 127
 attack:0d0:0:0
 armor:6:12
 flags:FREE_ACT | SEE_INVIS
-values:STEALTH[4] | DEX[4] | RES_ACID[3]
+values:STEALTH[4] | DEX[4] | IMM_ACID
 desc:The great cloak given to Tuor by the Dweller in the Deep.  As you wrap
 desc: yourself from head to foot the words of Ulmo echo: "Thus thou shalt
 desc: walk under my shadow".
@@ -1866,7 +1866,7 @@ alloc:3:55 to 127
 attack:1d1:0:0
 armor:3:14
 flags:FREE_ACT | FEATHER | AGGRAVATE
-values:INT[3] | RES_ELEC[1] | RES_DARK[1] | RES_POIS[1] | RES_FIRE[3]
+values:INT[3] | RES_ELEC[1] | RES_DARK[1] | RES_POIS[1] | IMM_FIRE
 act:MANA_BOLT
 time:30+d30
 desc:The iron-shod gauntlets of the Dark Elven smith Eöl, who imbued them
@@ -1913,7 +1913,7 @@ alloc:14:40 to 127
 attack:1d2:0:0
 armor:5:25
 flags:PROT_FEAR | FREE_ACT
-values:CON[4] | STR[3] | STEALTH[-1] | RES_SOUND[1] | RES_ACID[3] | RES_CHAOS[1]
+values:CON[4] | STR[3] | STEALTH[-1] | RES_SOUND[1] | IMM_ACID | RES_CHAOS[1]
 desc:Invoking the strength and endurance of Thorin, King under the Mountain,
 desc: this little metal shield is proof against the Element of Earth.
 
@@ -2007,7 +2007,7 @@ alloc:11:90 to 127
 attack:2d4:-4:0
 armor:50:25
 flags:FREE_ACT | SEE_INVIS | AGGRAVATE
-values:LIGHT[1] | RES_ELEC[3] | RES_DISEN[1] | RES_ACID[1] | RES_FIRE[1]
+values:LIGHT[1] | IMM_ELEC | RES_DISEN[1] | RES_ACID[1] | RES_FIRE[1]
 values:RES_COLD[1] | RES_POIS[1] | RES_LIGHT[1] | RES_DARK[1]
 act:STAR_BALL
 time:50

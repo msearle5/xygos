@@ -1945,24 +1945,29 @@ static enum parser_error parse_object_pval(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-static enum parser_error parse_object_values(struct parser *p) {
-	struct object_kind *k = parser_priv(p);
+static enum parser_error parse_values(const char *text, random_value *mods, struct element_info *elems, int *imods) {
 	char *s;
 	char *t;
-	assert(k);
-
-	s = string_make(parser_getstr(p, "values"));
+	s = string_make(text);
 	t = strtok(s, " |");
 
 	while (t) {
 		int value = 0;
 		int index = 0;
 		bool found = false;
-		if (!grab_rand_value(k->modifiers, obj_mods, t))
-			found = true;
+		if (mods)
+			if (!grab_rand_value(mods, obj_mods, t))
+				found = true;
+		if (imods)
+			if (!grab_int_value(imods, obj_mods, t))
+				found = true;
 		if (!grab_index_and_int(&value, &index, element_names, "RES_", t)) {
 			found = true;
-			k->el_info[index].res_level = value;
+			elems[index].res_level = value;
+		}
+		if (!grab_index(&index, element_names, "IMM_", t)) {
+			found = true;
+			elems[index].res_level = IMMUNITY;
 		}
 		if (!found)
 			break;
@@ -1972,6 +1977,13 @@ static enum parser_error parse_object_values(struct parser *p) {
 
 	mem_free(s);
 	return t ? PARSE_ERROR_INVALID_VALUE : PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_object_values(struct parser *p) {
+	struct object_kind *k = parser_priv(p);
+	assert(k);
+
+	return parse_values(parser_getstr(p, "values"), k->modifiers, k->el_info, NULL);
 }
 
 static enum parser_error parse_object_slay(struct parser *p) {
@@ -2430,35 +2442,13 @@ static enum parser_error parse_ego_flags_off(struct parser *p) {
 
 static enum parser_error parse_ego_values(struct parser *p) {
 	struct ego_item *e = parser_priv(p);
-	char *s; 
-	char *t;
 
 	if (!e)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 	if (!parser_hasval(p, "values"))
 		return PARSE_ERROR_MISSING_FIELD;
 
-	s = string_make(parser_getstr(p, "values"));
-	t = strtok(s, " |");
-
-	while (t) {
-		bool found = false;
-		int value = 0;
-		int index = 0;
-		if (!grab_rand_value(e->modifiers, obj_mods, t))
-			found = true;
-		if (!grab_index_and_int(&value, &index, element_names, "RES_", t)) {
-			found = true;
-			e->el_info[index].res_level = value;
-		}
-		if (!found)
-			break;
-
-		t = strtok(NULL, " |");
-	}
-
-	mem_free(s);
-	return t ? PARSE_ERROR_INVALID_VALUE : PARSE_ERROR_NONE;
+	return parse_values(parser_getstr(p, "values"), e->modifiers, e->el_info, NULL);
 }
 
 static enum parser_error parse_ego_min_val(struct parser *p) {
@@ -2854,31 +2844,9 @@ static enum parser_error parse_artifact_msg(struct parser *p) {
 
 static enum parser_error parse_artifact_values(struct parser *p) {
 	struct artifact *a = parser_priv(p);
-	char *s; 
-	char *t;
 	assert(a);
 
-	s = string_make(parser_getstr(p, "values"));
-	t = strtok(s, " |");
-
-	while (t) {
-		bool found = false;
-		int value = 0;
-		int index = 0;
-		if (!grab_int_value(a->modifiers, obj_mods, t))
-			found = true;
-		if (!grab_index_and_int(&value, &index, element_names, "RES_", t)) {
-			found = true;
-			a->el_info[index].res_level = value;
-		}
-		if (!found)
-			break;
-
-		t = strtok(NULL, " |");
-	}
-
-	mem_free(s);
-	return t ? PARSE_ERROR_INVALID_VALUE : PARSE_ERROR_NONE;
+	return parse_values(parser_getstr(p, "values"), NULL, a->el_info, a->modifiers);
 }
 
 static enum parser_error parse_artifact_desc(struct parser *p) {
