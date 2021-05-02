@@ -66,12 +66,24 @@ int resist_to_percent(int resist, int type)
 	if (resist >= (int)sizeof(dam_dec_resist))
 		resist = sizeof(dam_dec_resist) - 1;
 	int percent = dam_dec_resist[resist];
-	
-	/* Scale by percentage and variable resist */
-	//int denom = randcalc(projections[type].denominator, 0, AVERAGE);
-	//return (projections[type].numerator * percent * 3) / denom;
-fprintf(stderr,"r2p: res %d, per %d\n", resist, percent);
-	return percent; 
+
+	/* This is correct for an element, i.e. a projection with numerator = 1, denominator = 3.
+	 * (Meaning that 2 steps - 66% - should reduce damage to 1/3.)
+	 *  => (percent * denominator) / (numerator * 3) => (% * 3) / (1 * 3) => percent.
+	 *
+	 * Others may be scaled differently:
+	 * e.g. sound: numerator:6, denominator:8+1d4
+	 * This means that 2 steps should reduce damage to minimum 6/9, maximum 6/12, average 6/10.5.
+	 * So sound should return (percent * 10.5) / (6 * 3)
+	 * => (percent * (10.5, denominator)) / ((6, numerator) * 3) => (% * 10.5) / (6 * 3) => percent * (10.5 / 18) => 38.5%
+	 */
+
+	/* For accuracy, avoid AVERAGE and used the midpoint of minimum and maximum. */
+	int min_denom = randcalc(projections[type].denominator, 0, MINIMISE);
+	int max_denom = randcalc(projections[type].denominator, 0, MAXIMISE);
+
+	/* Scaled by 100. 50 is because the wanted average is (min_denom+max_denom/2) */
+	return (percent * 50 * (min_denom + max_denom)) / (300 * projections[type].numerator);
 }
 
 /**

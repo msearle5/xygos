@@ -497,35 +497,47 @@ static void display_resistance_panel(int ipart, struct char_sheet_config *config
 
 		combine_ui_entry_values(entry, vals, auxs, player->body.count + 1);
 
+		int val = vals[player->body.count + 1];
+		int aux = auxs[player->body.count + 1];
+		int sum;
+		if ((val < IMMUNITY) && (aux < IMMUNITY))
+			sum = MIN(IMMUNITY-1, (val + aux));
+		else {
+			sum = MAX(val, aux);
+			if ((sum != UI_ENTRY_UNKNOWN_VALUE) && (sum != UI_ENTRY_VALUE_NOT_PRESENT))
+				sum = val = IMMUNITY;
+		}
+		vals[player->body.count + 1] = val;
+
 		render_details.label_position.y = row;
 		render_details.value_position.y = row;
 		render_details.known_icon = is_ui_entry_for_known_icon(entry, player);
 		ui_entry_renderer_apply(get_ui_entry_renderer_index(entry), config->resists_by_region[ipart][i].label, config->label_width[ipart], vals, auxs, player->body.count + 2, &render_details);
 		if (percentmode && (ipart == 0)) {
 			char buf[32];
-			int val = vals[player->body.count + 1];
-			int aux = auxs[player->body.count + 1];
-			int sum;
-			if ((val < IMMUNITY) && (aux < IMMUNITY))
-				sum = MIN(IMMUNITY-1, (val + aux));
-			else
-				sum = MAX(val, aux);
-fprintf(stderr,"v %d a %d s %d\n", val, aux, sum);
 			bool perm = (sum == val);
 			int colour = COLOUR_WHITE;
 			if (sum == UI_ENTRY_UNKNOWN_VALUE)
-				strnfmt(buf, sizeof(buf), "  ?!");
-			else if (sum == UI_ENTRY_VALUE_NOT_PRESENT)
 				strnfmt(buf, sizeof(buf), "  ??");
-			else {
+			else if (sum == UI_ENTRY_VALUE_NOT_PRESENT) {
+				strnfmt(buf, sizeof(buf), "  ??");
+				colour = COLOUR_SLATE;
+			} else {
 				sum = resist_to_percent(sum, i);
-fprintf(stderr,"=> sum %d\n", sum);
 				strnfmt(buf, sizeof(buf), "%3d%%", sum);
-				colour = COLOUR_YELLOW;
-				if (sum >= 50)
-					colour = COLOUR_GREEN;
-				if (sum < 0)
-					colour = COLOUR_RED;
+				if (perm) {
+					colour = COLOUR_YELLOW;
+					if (sum >= 10)
+						colour = COLOUR_GREEN;
+					if (sum < 0)
+						colour = COLOUR_RED;
+				} else {
+					colour = COLOUR_L_YELLOW;
+					if (sum >= 10)
+						colour = COLOUR_L_GREEN;
+					if (sum < 0)
+						colour = COLOUR_L_RED;
+				}
 			}
 			Term_putstr(config->res_regions[config->sustain_region].col, row, config->res_cols[config->sustain_region], colour, buf);
 		}

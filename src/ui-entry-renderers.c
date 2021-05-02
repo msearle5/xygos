@@ -1336,7 +1336,6 @@ static void renderer_NUMERIC_RENDERER_WITH_TIMED_AUX(
 					sum = 9;
 			}
 		}
-fprintf(stderr,"val %d aux %d sum %d\n", val, aux, sum);
 		if (sum == IMMUNITY) {
 			palette_index = 4;
 			format_int(0, false, info->symbols[4],
