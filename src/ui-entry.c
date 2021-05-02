@@ -733,10 +733,11 @@ void compute_ui_entry_values_for_object(const struct ui_entry *entry,
 				break;
 
 			case OBJ_PROPERTY_RESIST:
-			case OBJ_PROPERTY_VULN:
-			case OBJ_PROPERTY_IMM:
+			//case OBJ_PROPERTY_VULN:
+			//case OBJ_PROPERTY_IMM:
 				if (!p || object_element_is_known(p, obj, ind)) {
 					int v = obj->el_info[ind].res_level;
+					fprintf(stderr,"res %d: level %d\n", ind, obj->el_info[ind].res_level);
 					int a = 0;
 
 					if (v && entry->obj_props[i].have_value) {
@@ -752,9 +753,11 @@ void compute_ui_entry_values_for_object(const struct ui_entry *entry,
 						all_unknown = false;
 					}
 					if (first) {
+						fprintf(stderr,"res %d: init %d\n", ind, v); 
 						(*combiner.init_func)(v, a, &cst);
 						first = false;
 					} else {
+						fprintf(stderr,"res %d: acc %d\n", ind, v); 
 						(*combiner.accum_func)(v, a, &cst);
 					}
 				}
@@ -945,8 +948,8 @@ void compute_ui_entry_values_for_gear(const struct ui_entry *entry,
 					break;
 
 				case OBJ_PROPERTY_RESIST:
-				case OBJ_PROPERTY_VULN:
-				case OBJ_PROPERTY_IMM:
+				//case OBJ_PROPERTY_VULN:
+				//case OBJ_PROPERTY_IMM:
 					if (object_element_is_known(p, obj, ind)) {
 						int v = obj->el_info[ind].res_level;
 						int a = 0;
@@ -1055,8 +1058,10 @@ void compute_ui_entry_values_for_player(const struct ui_entry *entry,
 	if (ui_entry_combiner_get_funcs(entry->combiner_index, &combiner)) {
 		assert(0);
 	}
+	fprintf(stderr,"compute_ui_entry_values_for_player()\n");
 	for (i = 0; i < entry->n_p_ability; ++i) {
 		int ind = entry->p_abilities[i].ability->index;
+		fprintf(stderr,"compute_ui_entry_values_for_player: i %d, ind %d\n", i, ind);
 
 		if ((entry->flags & ENTRY_FLAG_TIMED_AUX) &&
 			entry->p_abilities[i].isaux) {
@@ -1187,13 +1192,14 @@ void compute_ui_entry_values_for_player(const struct ui_entry *entry,
 				}
 				(*combiner.accum_func)(v, a, &cst);
 			}
-		} else if (streq(entry->p_abilities[i].ability->type,
-			"element")) {
-			int v = MAX(p->race->el_info[ind].res_level, p->extension->el_info[ind].res_level);
+		} else if ((i == 0) && (streq(entry->p_abilities[i].ability->type,
+			"element"))) {
+			int v = MAX( p->race->el_info[ind].res_level, p->extension->el_info[ind].res_level);
 			int a;
 
 			if (entry->flags & ENTRY_FLAG_TIMED_AUX) {
 				a = get_timed_element_effect(p, ind);
+				fprintf(stderr,"aux read v=%d a=%d\n", v, a);
 			} else {
 				a = 0;
 			}
@@ -1204,9 +1210,11 @@ void compute_ui_entry_values_for_player(const struct ui_entry *entry,
 				a = t;
 			}
 			if (first) {
+				fprintf(stderr,"aux init %d %d\n", v, a);
 				(*combiner.init_func)(v, a, &cst);
 				first = false;
 			} else {
+				fprintf(stderr,"aux acc %d %d\n", v, a);
 				(*combiner.accum_func)(v, a, &cst);
 			}
 			v = p->shape->el_info[ind].res_level;

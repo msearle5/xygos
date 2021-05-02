@@ -13,6 +13,8 @@
  *    and not for profit purposes provided that this copyright and statement
  *    are included in all such copies.  Other copyrights may also apply.
  */
+
+#include "obj-util.h"
 #include "ui-entry-combiner.h"
 #include "z-virt.h"
 
@@ -609,14 +611,14 @@ static void resist_0_combine_finish(struct ui_entry_combiner_state *st)
 	if (work[0] < 0 && work[0] != UI_ENTRY_UNKNOWN_VALUE &&
 		work[0] != UI_ENTRY_VALUE_NOT_PRESENT) {
 		/* A vulnerability cancels a resist but not an immunity. */
-		if (st->accum < 3 && st->accum != UI_ENTRY_UNKNOWN_VALUE &&
+		if (st->accum < IMMUNITY && st->accum != UI_ENTRY_UNKNOWN_VALUE &&
 			st->accum != UI_ENTRY_VALUE_NOT_PRESENT) {
 			--st->accum;
 		}
 	}
 	if (work[1] < 0 && work[1] != UI_ENTRY_UNKNOWN_VALUE &&
 		work[1] != UI_ENTRY_VALUE_NOT_PRESENT) {
-		if (st->accum_aux < 3 &&
+		if (st->accum_aux < IMMUNITY &&
 			st->accum_aux != UI_ENTRY_UNKNOWN_VALUE &&
 			st->accum_aux != UI_ENTRY_VALUE_NOT_PRESENT) {
 			--st->accum_aux;
@@ -640,7 +642,7 @@ static void resist_0_vec(int n, const int *vals, const int *auxs,
 	if (neg < 0 && neg != UI_ENTRY_UNKNOWN_VALUE &&
 		neg != UI_ENTRY_VALUE_NOT_PRESENT) {
 		/* A vulnerability cancels a resist but not an immunity. */
-		if (*accum < 3 && *accum != UI_ENTRY_UNKNOWN_VALUE &&
+		if (*accum < IMMUNITY && *accum != UI_ENTRY_UNKNOWN_VALUE &&
 			*accum != UI_ENTRY_VALUE_NOT_PRESENT) {
 			--*accum;
 		}
@@ -653,7 +655,7 @@ static void resist_0_vec(int n, const int *vals, const int *auxs,
 	}
 	if (neg < 0 && neg != UI_ENTRY_UNKNOWN_VALUE &&
 		neg != UI_ENTRY_VALUE_NOT_PRESENT) {
-		if (*accum_aux < 3 && *accum_aux != UI_ENTRY_UNKNOWN_VALUE &&
+		if (*accum_aux < IMMUNITY && *accum_aux != UI_ENTRY_UNKNOWN_VALUE &&
 			*accum_aux != UI_ENTRY_VALUE_NOT_PRESENT) {
 			--*accum_aux;
 		}
