@@ -216,7 +216,7 @@ static bool describe_elements(textblock *tb,
 	const char *i_descs[ELEM_MAX];
 	const char *r_descs[ELEM_MAX];
 	const char *v_descs[ELEM_MAX];
-	size_t i, count;
+	size_t i, j, count;
 
 	bool list[ELEM_MAX], prev = false;
 
@@ -230,14 +230,30 @@ static bool describe_elements(textblock *tb,
 		prev = true;
 	}
 
-	/* Resistances */
+	static const char *super[] = {
+		"", "", "double ", "triple ", "quadruple ",
+	};
+
+	/* Super Resistances */
 	for (i = 0; i < ELEM_MAX; i++)
-		list[i] = (el_info[i].res_level == 1);
+		list[i] = ((el_info[i].res_level > 4) && (el_info[i].res_level < IMMUNITY));
 	count = element_info_collect(list, r_descs);
 	if (count) {
-		textblock_append(tb, "Provides resistance to ");
+		textblock_append(tb, "Provides extraordinary resistance to ");
 		info_out_list_tolower(tb, r_descs, count);
 		prev = true;
+	}
+
+	/* Resistances */
+	for(j = 4; j>=1; j--) {
+		for (i = 0; i < ELEM_MAX; i++)
+			list[i] = (el_info[i].res_level == (int)j);
+		count = element_info_collect(list, r_descs);
+		if (count) {
+			textblock_append(tb, "Provides %sresistance to ", super[j]);
+			info_out_list_tolower(tb, r_descs, count);
+			prev = true;
+		}
 	}
 
 	/* Vulnerabilities */
