@@ -1794,7 +1794,7 @@ static bool describe_effect(textblock *tb, const struct object *obj,
 		}
 
 		char *recharge = "recharge";
-		if (!kf_has(obj->kind->kind_flags, KF_EASY_KNOW)) {	/* => candle-like */
+		if (!kf_has(obj->kind->kind_flags, KF_EASY_KNOW) && (!obj->artifact)) {	/* => candle-like */
 			recharge = "burn down";
 		}
 		textblock_append(tb, " turns to %s", recharge);
