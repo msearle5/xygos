@@ -1422,7 +1422,7 @@ bool player_resists(struct player *p, int element)
  */
 bool player_is_immune(struct player *p, int element)
 {
-	return (p->state.el_info[element].res_level == 3);
+	return (p->state.el_info[element].res_level == IMMUNITY);
 }
 
 /**

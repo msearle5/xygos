@@ -19,6 +19,8 @@
 #ifndef OBJ_IGNORE_H
 #define OBJ_IGNORE_H
 
+#include "object.h"
+
 /*
  * Used for mapping the values below to names.
  */

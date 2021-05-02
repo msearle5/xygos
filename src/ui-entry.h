@@ -29,6 +29,7 @@ struct ui_entry_iterator;
 struct cached_object_data;
 struct cached_player_data;
 
+void combine_ui_entry_values(const struct ui_entry *entry, int *vals, int *auxs, int n);
 int bind_object_property_to_ui_entry_by_name(const char *name, int type,
 	int index, int value, bool have_value, bool isaux);
 int bind_player_ability_to_ui_entry_by_name(const char *name,

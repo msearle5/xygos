@@ -31,6 +31,7 @@
 #include "player-calcs.h"
 #include "player-timed.h"
 #include "player-util.h"
+#include "project.h"
 #include "store.h"
 #include "ui-display.h"
 #include "ui-entry.h"
@@ -145,7 +146,7 @@ struct char_sheet_config {
 	int sustain_region;
 };
 static struct char_sheet_config *cached_config = NULL;
-static void display_resistance_panel(int ipart, struct char_sheet_config* config);
+static void display_resistance_panel(int ipart, struct char_sheet_config* config, bool percentmode);
 
 
 static bool have_valid_char_sheet_config(void)
@@ -186,7 +187,7 @@ static bool check_for_two_categories(const struct ui_entry* entry,
 }
 
 
-static void configure_char_sheet(bool minimum_size)
+static void configure_char_sheet(bool minimum_size, bool percentmode)
 {
 	char* region_categories[] = {
 		"resistances",
@@ -197,6 +198,7 @@ static void configure_char_sheet(bool minimum_size)
 	char* test_categories[2];
 	struct ui_entry_iterator* ui_iter;
 	int i, n;
+	const int percent_width = 5;
 
 	release_char_sheet_config();
 
@@ -221,7 +223,12 @@ static void configure_char_sheet(bool minimum_size)
 		offset = wid+1;
 		low = wid;
 		for(int i=0;i<cached_config->regions;i++) {
-			offset -= cached_config->label_width[i] + 3 + player->body.count;
+			int width = 2 + player->body.count + cached_config->label_width[i];
+
+			if ((percentmode) && (i == cached_config->sustain_region))
+				width = percent_width;
+
+			offset -= width + 1;
 			if (cached_config->label_width[i] < low) {
 				low = cached_config->label_width[i];
 				lowi = i;
@@ -255,6 +262,7 @@ static void configure_char_sheet(bool minimum_size)
 	if (n > STAT_MAX) {
 	    n = STAT_MAX;
 	}
+
 	cached_config->n_stat_mod_entries = n;
 	cached_config->stat_mod_entries = mem_alloc(n * sizeof(*cached_config->stat_mod_entries));
 	for (i = 0; i < n; ++i) {
@@ -268,13 +276,18 @@ static void configure_char_sheet(bool minimum_size)
 		int j;
 
 		cached_config->res_cols[i] = cached_config->label_width[i] + 2 + player->body.count;
+
+		if ((percentmode) && (i == cached_config->sustain_region))
+			cached_config->res_cols[i] = percent_width;
+
 		int col = 0;
 		if (i > 0)
 			col = cached_config->res_cols[i-1] + cached_config->res_regions[i-1].col + 1;
 
 		cached_config->res_regions[i].col = col;
+
 		int row = 2 + STAT_MAX;
-		if (i != cached_config->sustain_region)
+		if ((percentmode) || (i != cached_config->sustain_region))
 			row = 1;
 		cached_config->res_regions[i].row = row;
 		cached_config->res_regions[i].width = cached_config->res_cols[i];
@@ -282,6 +295,10 @@ static void configure_char_sheet(bool minimum_size)
 		test_categories[1] = region_categories[i];
 		ui_iter = initialize_ui_entry_iterator(check_for_two_categories, test_categories, region_categories[i]);
 		n = count_ui_entry_iterator(ui_iter);
+
+		if ((percentmode) && (i == cached_config->sustain_region))
+			n = 0;
+
 		/*
 		 * Fit in 24 row display; leave at least one row blank before
 		 * prompt on last row.
@@ -431,7 +448,7 @@ static void display_player_header(struct char_sheet_config *config, int region, 
 	Term_putstr(col, row, config->res_cols[region], COLOUR_WHITE, buf);
 }
 
-static void display_resistance_panel(int ipart, struct char_sheet_config *config)
+static void display_resistance_panel(int ipart, struct char_sheet_config *config, bool percentmode)
 {
 	int *vals = mem_alloc((player->body.count + 2) * sizeof(*vals));
 	int *auxs = mem_alloc((player->body.count + 2) * sizeof(*auxs));
@@ -456,6 +473,10 @@ static void display_resistance_panel(int ipart, struct char_sheet_config *config
 		display_player_equippy(row++, col + config->label_width[ipart]);
 
 		display_player_header(config, ipart, row++, col);
+	} else {
+		if (percentmode) {
+			Term_putstr(col, row, config->res_cols[ipart], COLOUR_WHITE, "% Res");
+		}
 	}
 
 	render_details.label_position.x = col;
@@ -474,10 +495,52 @@ static void display_resistance_panel(int ipart, struct char_sheet_config *config
 		compute_ui_entry_values_for_gear(entry, player, &gcache, vals + player->body.count, auxs + player->body.count);
 		compute_ui_entry_values_for_player(entry, player, &pcache, vals + player->body.count + 1, auxs + player->body.count + 1);
 
+		combine_ui_entry_values(entry, vals, auxs, player->body.count + 1);
+
+		int val = vals[player->body.count + 1];
+		int aux = auxs[player->body.count + 1];
+		int sum;
+		if ((val < IMMUNITY) && (aux < IMMUNITY))
+			sum = MIN(IMMUNITY-1, (val + aux));
+		else {
+			sum = MAX(val, aux);
+			if ((sum != UI_ENTRY_UNKNOWN_VALUE) && (sum != UI_ENTRY_VALUE_NOT_PRESENT))
+				sum = val = IMMUNITY;
+		}
+		vals[player->body.count + 1] = val;
+
 		render_details.label_position.y = row;
 		render_details.value_position.y = row;
 		render_details.known_icon = is_ui_entry_for_known_icon(entry, player);
 		ui_entry_renderer_apply(get_ui_entry_renderer_index(entry), config->resists_by_region[ipart][i].label, config->label_width[ipart], vals, auxs, player->body.count + 2, &render_details);
+		if (percentmode && (ipart == 0)) {
+			char buf[32];
+			bool perm = (sum == val);
+			int colour = COLOUR_WHITE;
+			if (sum == UI_ENTRY_UNKNOWN_VALUE)
+				strnfmt(buf, sizeof(buf), "  ??");
+			else if (sum == UI_ENTRY_VALUE_NOT_PRESENT) {
+				strnfmt(buf, sizeof(buf), "  ??");
+				colour = COLOUR_SLATE;
+			} else {
+				sum = resist_to_percent(sum, i);
+				strnfmt(buf, sizeof(buf), "%3d%%", sum);
+				if (perm) {
+					colour = COLOUR_YELLOW;
+					if (sum >= 10)
+						colour = COLOUR_GREEN;
+					if (sum < 0)
+						colour = COLOUR_RED;
+				} else {
+					colour = COLOUR_L_YELLOW;
+					if (sum >= 10)
+						colour = COLOUR_L_GREEN;
+					if (sum < 0)
+						colour = COLOUR_L_RED;
+				}
+			}
+			Term_putstr(config->res_regions[config->sustain_region].col, row, config->res_cols[config->sustain_region], colour, buf);
+		}
 	}
 
 	if (pcache) {
@@ -497,12 +560,12 @@ static void display_resistance_panel(int ipart, struct char_sheet_config *config
 	mem_free(vals);
 }
 
-static void display_player_flag_info(void)
+static void display_player_flag_info(bool percentmode)
 {
 	int i;
 
 	for (i = 0; i < 4; i++)
-		display_resistance_panel(i, cached_config);
+		display_resistance_panel(i, cached_config, percentmode);
 }
 
 static void display_player_stat(int i, int row, int statcol)
@@ -997,13 +1060,14 @@ void display_player_xtra_info(void)
  *
  * Mode 0 = standard display with skills/history
  * Mode 1 = special display with equipment flags
- * Mode 2 = ", 80x24 (for character dumps).
+ * Mode 3 = ", 80x24 (for character dumps).
+ * Mode 2 = special display with equipment flags and percentages
  */
 void display_player(int mode)
 {
 	static int lastmode = -1;
 	if (!have_valid_char_sheet_config() || (mode != lastmode)) {
-		configure_char_sheet(mode == 2);
+		configure_char_sheet(mode == 3, mode == 2);
 		lastmode = mode;
 	}
 
@@ -1013,18 +1077,25 @@ void display_player(int mode)
 	/* When not playing, do not display in subwindows */
 	if (Term != angband_term[0] && !player->upkeep->playing) return;
 
-	if (mode) {
-		/* Stat/Sustain flags */
-		display_player_sust_info(cached_config);
+	switch(mode) {
+		case 2:
+			/* Other flags */
+			display_player_flag_info(true);
+			break;
+		case 1:
+		case 3:
+			/* Stat/Sustain flags */
+			display_player_sust_info(cached_config);
 
-		/* Other flags */
-		display_player_flag_info();
-	} else {
-		/* Extra info */
-		display_player_xtra_info();
+			/* Other flags */
+			display_player_flag_info(false);
+			break;
+		case 0:
+			/* Extra info */
+			display_player_xtra_info();
 
-		/* Stat info */
-		display_player_stat_info(false);
+			/* Stat info */
+			display_player_stat_info(false);
 	}
 
 }
@@ -1048,7 +1119,7 @@ void write_character_dump(ang_file *fff)
 	int n;
 	char *buf, *p;
 
-	configure_char_sheet(true);
+	configure_char_sheet(true, false);
 
 	n = 80;
 	if (n < 2 * cached_config->res_cols[0] + 1) {
@@ -1292,7 +1363,7 @@ bool dump_save(const char *path)
 
 
 
-#define INFO_SCREENS 2 /* Number of screens in character info mode */
+#define INFO_SCREENS 3 /* Number of screens in character info mode */
 
 
 /**

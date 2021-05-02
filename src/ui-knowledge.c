@@ -3267,7 +3267,7 @@ static void shape_lore_append_resistances(textblock *tb,
 		if (s->el_info[i].res_level < 0) {
 			vul[nvul] = projections[i].name;
 			++nvul;
-		} else if (s->el_info[i].res_level >= 3) {
+		} else if (s->el_info[i].res_level >= IMMUNITY) {
 			imm[nimm] = projections[i].name;
 			++nimm;
 		} else if (s->el_info[i].res_level != 0) {

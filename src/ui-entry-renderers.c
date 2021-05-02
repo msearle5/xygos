@@ -14,6 +14,7 @@
  *    are included in all such copies.  Other copyrights may also apply.
  */
 
+#include "obj-util.h"
 #include "ui-entry-init.h"
 #include "ui-entry-renderers.h"
 #include "ui-term.h"
@@ -113,7 +114,16 @@ static void renderer_NUMERIC_RENDERER_WITH_BOOL_AUX(
 	const struct renderer_info *info);
 static int valuewidth_NUMERIC_RENDERER_WITH_BOOL_AUX(
 	const struct renderer_info *info);
-
+static void renderer_NUMERIC_RENDERER_WITH_TIMED_AUX(
+	const wchar_t *label,
+	int nlabel,
+	const int *vals,
+	const int *auxvals,
+	int n,
+	const struct ui_entry_details *details,
+	const struct renderer_info *info);
+static int valuewidth_NUMERIC_RENDERER_WITH_TIMED_AUX(
+	const struct renderer_info *info);
 struct backend_info {
 	renderer_func func;
 	valuewidth_func vw_func;
@@ -1134,6 +1144,11 @@ static int valuewidth_NUMERIC_RENDERER_WITH_COMBINED_AUX(
 		info->units_nlabel;
 }
 
+static int valuewidth_NUMERIC_RENDERER_WITH_TIMED_AUX(
+	const struct renderer_info *info)
+{
+	return valuewidth_NUMERIC_RENDERER_WITH_COMBINED_AUX(info);
+}
 
 static void renderer_NUMERIC_RENDERER_WITH_BOOL_AUX(
 	const wchar_t *label,
@@ -1278,6 +1293,165 @@ static void renderer_NUMERIC_RENDERER_WITH_BOOL_AUX(
 	}
 }
 
+
+static void renderer_NUMERIC_RENDERER_WITH_TIMED_AUX(
+	const wchar_t *label,
+	int nlabel,
+	const int *vals,
+	const int *auxvals,
+	int n,
+	const struct ui_entry_details *details,
+	const struct renderer_info *info)
+{
+	struct loc p = details->value_position;
+	int color_offset = (details->alternate_color_first) ? 8 : 0;
+	int nbuf = info->ndigit + ((info->sign == UI_ENTRY_NO_SIGN) ? 0 : 1);
+	wchar_t *buffer = mem_alloc(nbuf * sizeof(*buffer));
+	struct ui_entry_combiner_funcs combiner;
+	int vc, ac;
+	int i;
+
+	/* Check for defaults that are too short in list-ui-entry-renders.h. */
+	assert(info->ncolors >= 16 && info->nlabcolors >= 7 && info->nsym >= 6);
+
+	for (i = 0; i < n; ++i) {
+		int palette_index;
+
+		int val = vals[i];
+		int aux = auxvals[i];
+		int sum;
+		if ((val == IMMUNITY) || (aux == IMMUNITY)) {
+			sum = IMMUNITY;
+		}
+		else {
+			if ((val != UI_ENTRY_UNKNOWN_VALUE) && (val != UI_ENTRY_VALUE_NOT_PRESENT)) {
+				sum = val + aux;
+			} else {
+				sum = aux;
+			}
+			if ((sum != UI_ENTRY_UNKNOWN_VALUE) && (sum != UI_ENTRY_VALUE_NOT_PRESENT)) {
+				if (sum < -9)
+					sum = -9;
+				if (sum > 9)
+					sum = 9;
+			}
+		}
+		if (sum == IMMUNITY) {
+			palette_index = 4;
+			format_int(0, false, info->symbols[4],
+				info->symbols[5 ], true,
+				info->sign == UI_ENTRY_ALWAYS_SIGN, nbuf,
+				buffer);
+		} else if (sum == UI_ENTRY_UNKNOWN_VALUE) {
+			palette_index = 0;
+			format_int(0, false, info->symbols[0],
+				info->symbols[0], true,
+ 				info->sign == UI_ENTRY_ALWAYS_SIGN, nbuf,
+				buffer);
+		} else if (sum == UI_ENTRY_VALUE_NOT_PRESENT) {
+			palette_index = 1;
+			format_int(0, false, info->symbols[1],
+				info->symbols[1], true,
+				info->sign == UI_ENTRY_ALWAYS_SIGN, nbuf,
+				buffer);
+		} else if (sum > 0) {
+			if (aux != 0 &&
+				aux != UI_ENTRY_UNKNOWN_VALUE &&
+				aux != UI_ENTRY_VALUE_NOT_PRESENT) {
+				palette_index = 5;
+			} else {
+				palette_index = 4;
+			}
+			format_int(sum, false, info->symbols[2],
+				info->symbols[4], true,
+				info->sign == UI_ENTRY_ALWAYS_SIGN,
+				nbuf, buffer);
+		} else if (sum < 0) {
+			if (aux != 0 &&
+				aux != UI_ENTRY_UNKNOWN_VALUE &&
+				aux != UI_ENTRY_VALUE_NOT_PRESENT) {
+				palette_index = 7;
+			} else {
+				palette_index = 6;
+			}
+			format_int(-sum, false, info->symbols[2],
+				info->symbols[5], true,
+				info->sign == UI_ENTRY_ALWAYS_SIGN,
+				nbuf, buffer);
+		} else {
+			int zerosym;
+
+			if (aux != 0 &&
+				aux != UI_ENTRY_UNKNOWN_VALUE &&
+				aux != UI_ENTRY_VALUE_NOT_PRESENT) {
+				palette_index = 3;
+				zerosym = 3;
+			} else {
+				palette_index = 2;
+				zerosym = 2;
+			}
+			format_int(0, false, info->symbols[zerosym],
+				info->symbols[4], true,
+				info->sign == UI_ENTRY_ALWAYS_SIGN,
+				nbuf, buffer);
+		}
+		safe_queue_chars(p.x, p.y, nbuf,
+			info->colors[palette_index + color_offset], buffer);
+		if (info->units_nlabel != 0) {
+			safe_queue_chars(p.x + nbuf, p.y, info->units_nlabel,
+				info->colors[palette_index + color_offset],
+				info->units_label);
+		}
+		p = loc_sum(p, details->position_step);
+		color_offset ^= 8;
+	}
+
+	mem_free(buffer);
+
+	if (nlabel <= 0 && !details->show_combined) {
+		return;
+	}
+
+	if (ui_entry_combiner_get_funcs(info->combiner_index, &combiner)) {
+		assert(0);
+	}
+	(*combiner.vec_func)(n, vals, auxvals, &vc, &ac);
+
+	if (nlabel > 0) {
+		
+		bool acbool = ac && ac != UI_ENTRY_UNKNOWN_VALUE &&
+			ac != UI_ENTRY_VALUE_NOT_PRESENT;
+		int palette_index;
+
+		if (! details->known_icon) {
+			palette_index = 0;
+		} else if (vc == 0 || vc == UI_ENTRY_UNKNOWN_VALUE ||
+			vc == UI_ENTRY_VALUE_NOT_PRESENT) {
+			palette_index = (acbool) ? 6 : 5;
+		} else if (vc > 0) {
+			palette_index = (acbool) ? 2 : 1;
+		} else {
+			palette_index = (acbool) ? 4 : 3;
+		}
+		if (details->vertical_label) {
+			p = details->label_position;
+			for (i = 0; i < nlabel; ++i) {
+				Term_putch(p.x, p.y,
+					info->label_colors[palette_index],
+					label[i]);
+				p.y += 1;
+			}
+		} else {
+			safe_queue_chars(details->label_position.x,
+				details->label_position.y, nlabel,
+				info->label_colors[palette_index], label);
+		}
+	}
+
+	if (details->show_combined) {
+		show_combined_generic(info, details, vc, ac);
+	}
+}
 
 static int valuewidth_NUMERIC_RENDERER_WITH_BOOL_AUX(
 	const struct renderer_info *info)

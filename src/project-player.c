@@ -26,12 +26,65 @@
 #include "obj-desc.h"
 #include "obj-gear.h"
 #include "obj-knowledge.h"
+#include "obj-util.h"
 #include "player-calcs.h"
 #include "player-timed.h"
 #include "player-util.h"
 #include "project.h"
 #include "source.h"
 #include "trap.h"
+
+/* Vulnerability: % extra damage from 1 or more levels of vulnerability */
+const byte dam_inc_vuln[] = {
+	0, 33, 50, 60, 64, 66
+};
+
+/* Resistance: % damage reduction from 1 or more levels of resistance */
+const byte dam_dec_resist[] = {
+	0,  50, 66, 72, 75, 77, 78, 79, 80, 81, 
+	82, 83, 84, 85, 86, 87, 88, 89, 89, 90,
+	90, 91, 91, 91, 92, 92, 92, 92, 92, 93,
+	93, 93, 93, 93, 93, 93, 93, 93, 93, 93,
+	94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 
+	94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 
+	94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 
+	94, 94, 94, 94, 94, 94, 94, 94, 94, 95, 
+};
+
+int resist_to_percent(int resist, int type)
+{
+	if (resist >= IMMUNITY)
+		return 100;
+
+	if (resist < 0) {
+		resist = -resist;
+		if (resist >= (int)sizeof(dam_inc_vuln))
+			resist = sizeof(dam_inc_vuln) - 1;
+		return -dam_inc_vuln[resist];
+	}
+
+	if (resist >= (int)sizeof(dam_dec_resist))
+		resist = sizeof(dam_dec_resist) - 1;
+	int percent = dam_dec_resist[resist];
+
+	/* This is correct for an element, i.e. a projection with numerator = 1, denominator = 3.
+	 * (Meaning that 2 steps - 66% - should reduce damage to 1/3.)
+	 *  => (percent * denominator) / (numerator * 3) => (% * 3) / (1 * 3) => percent.
+	 *
+	 * Others may be scaled differently:
+	 * e.g. sound: numerator:6, denominator:8+1d4
+	 * This means that 2 steps should reduce damage to minimum 6/9, maximum 6/12, average 6/10.5.
+	 * So sound should return (percent * 10.5) / (6 * 3)
+	 * => (percent * (10.5, denominator)) / ((6, numerator) * 3) => (% * 10.5) / (6 * 3) => percent * (10.5 / 18) => 38.5%
+	 */
+
+	/* For accuracy, avoid AVERAGE and used the midpoint of minimum and maximum. */
+	int min_denom = randcalc(projections[type].denominator, 0, MINIMISE);
+	int max_denom = randcalc(projections[type].denominator, 0, MAXIMISE);
+
+	/* Scaled by 100. 50 is because the wanted average is (min_denom+max_denom/2) */
+	return (percent * 50 * (min_denom + max_denom)) / (300 * projections[type].numerator);
+}
 
 /**
  * Adjust damage according to resistance or vulnerability.
@@ -45,8 +98,7 @@
 int adjust_dam(struct player *p, int type, int dam, aspect dam_aspect,
 			   int resist, bool actual)
 {
-	int i, denom = 0;
-
+	int denom = 0;
 	/* If an actual player exists, get their actual resist */
 	if (p && p->race) {
 		/* Ice is a special case */
@@ -59,15 +111,27 @@ int adjust_dam(struct player *p, int type, int dam, aspect dam_aspect,
 		}
 	}
 
-	if (resist == 3) /* immune */
+	if (resist == IMMUNITY) /* immune */
 		return 0;
 
-	/* Hack - acid damage is halved by armour */
+	/* If armour is damaged, add one effective level of resistance */
 	if (type == PROJ_ACID && p && minus_ac(p))
-		dam = (dam + 1) / 2;
+		resist++;
+ 
+	/* Vulnerable - increase damage by a percentage taken from the dam_inc_vuln
+	 * array. This doesn't care about denominator/divisor.
+	 **/
+	if (resist < 0) {
+		resist = -resist;
+		if (resist >= (int)sizeof(dam_inc_vuln))
+			resist = sizeof(dam_inc_vuln) - 1;
+		return (dam * dam_inc_vuln[resist]) / 100;
+	}
 
-	if (resist < 0) /* vulnerable */
-		return dam * ((3 - resist) / 3);
+	/* Resistant; convert to a percentage (scaled for a 1/3 element) */
+	if (resist >= (int)sizeof(dam_dec_resist))
+		resist = sizeof(dam_dec_resist) - 1;
+	int percent = dam_dec_resist[resist];
 
 	/* Variable resists vary the denominator, so we need to invert the logic
 	 * of dam_aspect. (m_bonus is unused) */
@@ -87,9 +151,9 @@ int adjust_dam(struct player *p, int type, int dam, aspect dam_aspect,
 			assert(0);
 	}
 
-	for (i = resist; i > 0; i--)
-		if (denom)
-			dam = dam * projections[type].numerator / denom;
+	/* Scale by percentage and variable resist */
+	dam = dam * projections[type].numerator * (100 - percent) * 3;
+	dam = dam / (100 * denom);
 
 	return dam;
 }

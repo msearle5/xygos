@@ -1,5 +1,7 @@
 BUGS
 ====
+BUG: Taratol is described: "Takes 141 to 280 turns to *burn* down at your current speed."
+
 BUG: Bombs (e.g. pineapple) give excess messages - "The X fails to harm the Y." "The X detonates!" "The Y screams!".
 	The first should be removed.
 

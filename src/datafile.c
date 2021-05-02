@@ -190,7 +190,7 @@ errr grab_rand_value(random_value *value, const char **value_type,
 	dice_t *dice;
 
 	/* Get a rewritable string */
-	my_strcpy(value_name, name_and_value, strlen(name_and_value));
+	my_strcpy(value_name, name_and_value, sizeof(value_name));
 
 	/* Parse the value expression */
 	if (!find_value_arg(value_name, dice_string, NULL))
@@ -229,7 +229,7 @@ errr grab_short_value(s16b *value, const char **value_type,
 	char value_name[80];
 
 	/* Get a rewritable string */
-	my_strcpy(value_name, name_and_value, strlen(name_and_value));
+	my_strcpy(value_name, name_and_value, sizeof(value_name));
 
 	/* Parse the value expression */
 	if (!find_value_arg(value_name, NULL, &val))
@@ -259,7 +259,7 @@ errr grab_int_value(int *value, const char **value_type,
 	char value_name[80];
 
 	/* Get a rewritable string */
-	my_strcpy(value_name, name_and_value, strlen(name_and_value));
+	my_strcpy(value_name, name_and_value, sizeof(value_name));
 
 	/* Parse the value expression */
 	if (!find_value_arg(value_name, NULL, &val))
@@ -272,6 +272,38 @@ errr grab_int_value(int *value, const char **value_type,
 		value[i] = val;
 
 	return value_type[i] ? PARSE_ERROR_NONE : PARSE_ERROR_INTERNAL;
+}
+
+/**
+ * Get the index in the value_type array of the suffix used to build the value string
+ * \param index the information on where to put it (eg array index)
+ * \param value_type the variable suffix of the possible value strings
+ * \param prefix the constant prefix of the possible value strings
+ * \param name the expression being matched
+ * \return 0 if successful, otherwise an error value
+ */
+errr grab_index(int *index, const char **value_type,
+						const char *prefix, const char *name)
+{
+	int i;
+	char value_name[80];
+	char value_string[80];
+
+	/* Get a rewritable string */
+	my_strcpy(value_name, name, sizeof(value_name));
+
+	/* Compose the value string and look for it */
+	for (i = 0; value_type[i]; i++) {
+		my_strcpy(value_string, prefix, sizeof(value_string));
+		my_strcat(value_string, value_type[i],
+				  sizeof(value_string) - strlen(value_string));
+		if (streq(value_string, value_name)) break;
+	}
+
+	if (value_type[i])
+		*index = i;
+
+	return value_type[i] ? PARSE_ERROR_NONE : PARSE_ERROR_INVALID_VALUE;
 }
 
 /**
@@ -292,7 +324,7 @@ errr grab_index_and_int(int *value, int *index, const char **value_type,
 	char value_string[80];
 
 	/* Get a rewritable string */
-	my_strcpy(value_name, name_and_value, strlen(name_and_value));
+	my_strcpy(value_name, name_and_value, sizeof(value_name));
 
 	/* Parse the value expression */
 	if (!find_value_arg(value_name, NULL, value))
@@ -325,7 +357,7 @@ errr grab_base_and_int(int *value, char **base, const char *name_and_value)
 	char value_name[80];
 
 	/* Get a rewritable string */
-	my_strcpy(value_name, name_and_value, strlen(name_and_value));
+	my_strcpy(value_name, name_and_value, sizeof(value_name));
 
 	/* Parse the value expression */
 	if (!find_value_arg(value_name, NULL, value))
