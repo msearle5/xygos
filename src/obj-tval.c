@@ -315,6 +315,17 @@ bool tval_is_wearable(const struct object *obj)
 	}
 }
 
+bool tval_is_food_or_mushroom(const struct object *obj)
+{
+	switch (obj->tval) {
+		case TV_FOOD:
+		case TV_MUSHROOM:
+			return true;
+		default:
+			return false;
+	}
+}
+
 bool tval_is_edible(const struct object *obj)
 {
 	switch (obj->tval) {

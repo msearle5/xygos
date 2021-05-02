@@ -46,6 +46,7 @@ bool tval_is_chest(const struct object *obj);
 bool tval_is_food(const struct object *obj);
 bool tval_is_food_k(const struct object_kind *kind);
 bool tval_is_mushroom(const struct object *obj);
+bool tval_is_food_or_mushroom(const struct object *obj);
 bool tval_is_mushroom_k(const struct object_kind *kind);
 bool tval_is_fuel(const struct object *obj);
 bool tval_is_head_armor(const struct object *obj);

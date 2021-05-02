@@ -81,6 +81,15 @@ lore-color-resist:Light Green
 effect-type:eat-food
 lash-type:MISSILE
 
+name:EAT_PILLS
+power:0
+eval:5
+desc:eat your pills
+lore-color-base:Yellow
+lore-color-resist:Light Green
+effect-type:eat-pills
+lash-type:MISSILE
+
 name:EAT_LIGHT
 power:0
 eval:5

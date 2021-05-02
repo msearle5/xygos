@@ -599,6 +599,40 @@ flags:RAND_25
 flags:NO_FEAR
 desc:Lemmings hung with weights for their dive from the cliff tops.
 
+##### INSECTS / BUGS #####
+
+name:pill bug
+base:bug
+color:Tan
+speed:90
+hit-points:6
+hearing:2
+smell:10
+armor-class:20
+sleepiness:10
+depth:1
+rarity:5
+drop-base:pill:70:1:1
+experience:2
+blow:BITE:HURT:1d2
+blow:CRAWL:EAT_PILLS
+desc:A small rounded brown creature with overlapping layers of armor and extended jaws.
+
+name:giant white louse
+plural:giant white lice
+base:insect
+color:w
+speed:120
+hit-points:1
+hearing:6
+smell:20
+armor-class:6
+sleepiness:10
+depth:3
+rarity:1
+experience:1
+blow:BITE:HURT:1d1
+desc:It is six inches long.
 
 ##### QUADRUPEDS #####
 
@@ -1950,22 +1984,6 @@ blow:CRAWL:HURT:1d2
 blow:STING:ELEC:1d2
 flags:RAND_50 | BASH_DOOR
 desc:It is about four feet long and carnivorous.
-
-name:giant white louse
-plural:giant white lice
-base:insect
-color:w
-speed:120
-hit-points:1
-hearing:6
-smell:20
-armor-class:6
-sleepiness:10
-depth:3
-rarity:1
-experience:1
-blow:BITE:HURT:1d1
-desc:It is six inches long.
 
 name:black naga
 base:naga

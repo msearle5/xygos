@@ -772,10 +772,7 @@ static void melee_effect_handler_EAT_ITEM(melee_effect_handler_context_t *contex
 	}
 }
 
-/**
- * Melee effect handler: Eat the player's food.
- */
-static void melee_effect_handler_EAT_FOOD(melee_effect_handler_context_t *context)
+static void do_eat_stuff(melee_effect_handler_context_t *context, bool (*edible)(const struct object *))
 {
 	int tries;
 
@@ -797,7 +794,7 @@ static void melee_effect_handler_EAT_FOOD(melee_effect_handler_context_t *contex
 		if (obj == NULL) continue;
 
 		/* Skip non-food objects */
-		if (!tval_is_edible(obj)) continue;
+		if (!edible(obj)) continue;
 
 		if (obj->number == 1) {
 			object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
@@ -821,6 +818,22 @@ static void melee_effect_handler_EAT_FOOD(melee_effect_handler_context_t *contex
 		/* Done */
 		break;
 	}
+}
+
+/**
+ * Melee effect handler: Eat the player's food, including mushrooms.
+ */
+static void melee_effect_handler_EAT_FOOD(melee_effect_handler_context_t *context)
+{
+	do_eat_stuff(context, tval_is_food_or_mushroom);
+}
+
+/**
+ * Melee effect handler: Eat the player's food, mushrooms or pills.
+ */
+static void melee_effect_handler_EAT_PILLS(melee_effect_handler_context_t *context)
+{
+	do_eat_stuff(context, tval_is_edible);
 }
 
 /**
@@ -1105,6 +1118,7 @@ melee_effect_handler_f melee_handler_for_blow_effect(const char *name)
 		{ "EAT_GOLD", melee_effect_handler_EAT_GOLD },
 		{ "EAT_ITEM", melee_effect_handler_EAT_ITEM },
 		{ "EAT_FOOD", melee_effect_handler_EAT_FOOD },
+		{ "EAT_PILLS", melee_effect_handler_EAT_PILLS },
 		{ "EAT_LIGHT", melee_effect_handler_EAT_LIGHT },
 		{ "ACID", melee_effect_handler_ACID },
 		{ "ELEC", melee_effect_handler_ELEC },

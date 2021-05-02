@@ -204,6 +204,13 @@ flags:ANIMAL | WEIRD_MIND | MULTIPLY
 flags:RAND_50 | RAND_25
 desc:Insect
 
+# For insects that don't fit the pattern (not breeders or randomly moving)
+name:bug
+glyph:I
+pain:7
+flags:ANIMAL | WEIRD_MIND
+desc:Insect
+
 # Mostly non-moving creatures which touch for various effects
 name:jelly
 glyph:j
