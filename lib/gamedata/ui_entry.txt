@@ -84,7 +84,6 @@ name:resist_ui_compact_0
 parameter:element
 renderer:char_screen1_num_resist_renderer
 combine:ADD
-#RESIST_0
 priority:negative_index
 category:resistances
 flags:TIMED_AS_AUX

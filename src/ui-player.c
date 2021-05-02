@@ -495,6 +495,8 @@ static void display_resistance_panel(int ipart, struct char_sheet_config *config
 		compute_ui_entry_values_for_gear(entry, player, &gcache, vals + player->body.count, auxs + player->body.count);
 		compute_ui_entry_values_for_player(entry, player, &pcache, vals + player->body.count + 1, auxs + player->body.count + 1);
 
+		combine_ui_entry_values(entry, vals, auxs, player->body.count + 1);
+
 		render_details.label_position.y = row;
 		render_details.value_position.y = row;
 		render_details.known_icon = is_ui_entry_for_known_icon(entry, player);

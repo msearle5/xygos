@@ -182,6 +182,22 @@ static int n_entry = 0;
 static int nalloc_entry = 0;
 static struct ui_entry **entries = NULL;
 
+void combine_ui_entry_values(const struct ui_entry *entry, int *vals, int *auxs, int n)
+{
+	struct ui_entry_combiner_state cst = { 0, 0, 0 };
+	struct ui_entry_combiner_funcs combiner;
+	if (ui_entry_combiner_get_funcs(entry->combiner_index, &combiner)) {
+		assert(0);
+	}
+
+	(*combiner.init_func)(vals[0], auxs[0], &cst);
+	for (int j = 1; j <= n; j++) {
+		(*combiner.accum_func)(vals[j], auxs[j], &cst);
+	}
+	(*combiner.finish_func)(&cst);
+	vals[n] = cst.accum;
+	auxs[n] = cst.accum_aux;
+}
 
 /**
  * Binds an object property, given by type and index, to a user interface
@@ -924,34 +940,6 @@ void compute_ui_entry_values_for_gear(const struct ui_entry *entry,
 					if (object_element_is_known(p, obj, ind)) {
 						int v = (obj->el_info[ind].flags &
 							EL_INFO_IGNORE) ? 1 : 0;
-						int a = 0;
-
-						if (v && entry->obj_props[i].have_value) {
-							v = entry->obj_props[i].value;
-						}
-						if (entry->obj_props[i].isaux) {
-							int t = a;
-
-							a = v;
-							v = t;
-							all_aux_unknown = false;
-						} else {
-							all_unknown = false;
-						}
-						if (first) {
-							(*combiner.init_func)(v, a, &cst);
-							first = false;
-						} else {
-							(*combiner.accum_func)(v, a, &cst);
-						}
-					}
-					break;
-
-				case OBJ_PROPERTY_RESIST:
-				//case OBJ_PROPERTY_VULN:
-				//case OBJ_PROPERTY_IMM:
-					if (object_element_is_known(p, obj, ind)) {
-						int v = obj->el_info[ind].res_level;
 						int a = 0;
 
 						if (v && entry->obj_props[i].have_value) {

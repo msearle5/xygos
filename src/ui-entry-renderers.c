@@ -1375,8 +1375,9 @@ fprintf(stderr,"val %d aux %d sum %d\n", val, aux, sum);
 			} else {
 				palette_index = 6;
 			}
-			format_int(sum, false, info->symbols[2], info->symbols[5],
-				false, info->sign != UI_ENTRY_NO_SIGN,
+			format_int(-sum, false, info->symbols[2],
+				info->symbols[5], true,
+				info->sign == UI_ENTRY_ALWAYS_SIGN,
 				nbuf, buffer);
 		} else {
 			int zerosym;
