@@ -40,6 +40,9 @@ const struct slot_info slot_table[] = {
 	{ EQUIP_MAX, false, false, 0, 0, NULL, NULL, NULL }
 };
 
+/**
+ * Return the slot number for a given name, or quit game
+ */
 int slot_by_name(struct player *p, const char *name)
 {
 	int i;
@@ -50,6 +53,8 @@ int slot_by_name(struct player *p, const char *name)
 			break;
 		}
 	}
+
+	assert(i < p->body.count);
 
 	/* Index for that slot */
 	return i;
@@ -90,8 +95,14 @@ bool slot_type_is(int slot, int type)
 	return body.slots[slot].type == type ? true : false;
 }
 
+/**
+ * Get the object in a specific slot (if any).  Quit if slot index is invalid.
+ */
 struct object *slot_object(struct player *p, int slot)
 {
+	/* Check bounds */
+	assert(slot >= 0 && slot < p->body.count);
+
 	/* Ensure a valid body */
 	if (p->body.slots && p->body.slots[slot].obj) {
 		return p->body.slots[slot].obj;
