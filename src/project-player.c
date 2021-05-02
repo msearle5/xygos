@@ -135,25 +135,29 @@ int adjust_dam(struct player *p, int type, int dam, aspect dam_aspect,
 
 	/* Variable resists vary the denominator, so we need to invert the logic
 	 * of dam_aspect. (m_bonus is unused) */
-	switch (dam_aspect) {
-		case MINIMISE:
-			denom = randcalc(projections[type].denominator, 0, MAXIMISE);
-			break;
-		case MAXIMISE:
-			denom = randcalc(projections[type].denominator, 0, MINIMISE);
-			break;
-		case AVERAGE:
-		case EXTREMIFY:
-		case RANDOMISE:
-			denom = randcalc(projections[type].denominator, 0, dam_aspect);
-			break;
-		default:
-			assert(0);
-	}
+	if (resist > 0) {
+		switch (dam_aspect) {
+			case MINIMISE:
+				denom = randcalc(projections[type].denominator, 0, MAXIMISE);
+				break;
+			case MAXIMISE:
+				denom = randcalc(projections[type].denominator, 0, MINIMISE);
+				break;
+			case AVERAGE:
+			case EXTREMIFY:
+			case RANDOMISE:
+				denom = randcalc(projections[type].denominator, 0, dam_aspect);
+				break;
+			default:
+				assert(0);
+		}
 
-	/* Scale by percentage and variable resist */
-	dam = dam * projections[type].numerator * (100 - percent) * 3;
-	dam = dam / (100 * denom);
+		if (denom > 0) {
+			/* Scale by percentage and variable resist */
+			dam = dam * projections[type].numerator * (100 - percent) * 3;
+			dam = dam / (100 * denom);
+		}
+	}
 
 	return dam;
 }
@@ -175,14 +179,8 @@ static void project_player_drain_stats(int num)
 	const char *act = NULL;
 
 	for (i = 0; i < num; i++) {
-		switch (randint1(5)) {
-			case 1: k = STAT_STR; act = "strong"; break;
-			case 2: k = STAT_INT; act = "bright"; break;
-			case 3: k = STAT_WIS; act = "wise"; break;
-			case 4: k = STAT_DEX; act = "agile"; break;
-			case 5: k = STAT_CON; act = "hale"; break;
-		}
-
+		k = randint0(STAT_MAX);
+		act = obj_properties[k+1].drain_adj;
 		msg("You're not as %s as you used to be...", act);
 		player_stat_dec(player, k, false);
 	}

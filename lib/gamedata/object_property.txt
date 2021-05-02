@@ -17,6 +17,8 @@
 #            only used by stats
 # neg-adjective: adjective describing the opposite of the property as a player
 #                attribute, currently only used by stats
+# drain-adjective: adjective describing the property as a a positive term for
+#            something being reduced ("You're not as X as you used to be")
 # msg: message printed on noticing a property, currently used for flags which
 #      are identified after time or on an effect
 # bindui: Binds the property to a user interface element in ui_entry.txt.
@@ -39,6 +41,7 @@ power:9
 mult:13
 adjective:strong
 neg-adjective:weak
+drain-adjective:strong
 bindui:stat_mod_ui_compact_0<STR>:0
 
 name:intelligence
@@ -48,6 +51,7 @@ power:5
 mult:10
 adjective:smart
 neg-adjective:stupid
+drain-adjective:bright
 bindui:stat_mod_ui_compact_0<INT>:0
 
 name:wisdom
@@ -57,6 +61,7 @@ power:5
 mult:10
 adjective:wise
 neg-adjective:naive
+drain-adjective:wise
 bindui:stat_mod_ui_compact_0<WIS>:0
 
 name:dexterity
@@ -67,6 +72,7 @@ mult:10
 type-mult:gloves:2
 adjective:dextrous
 neg-adjective:clumsy
+drain-adjective:agile
 bindui:stat_mod_ui_compact_0<DEX>:0
 
 name:constitution
@@ -76,6 +82,7 @@ power:12
 mult:15
 adjective:healthy
 neg-adjective:sickly
+drain-adjective:hale
 bindui:stat_mod_ui_compact_0<CON>:0
 
 name:charisma
@@ -85,6 +92,7 @@ power:1
 mult:5
 adjective:confident
 neg-adjective:ugly
+drain-adjective:confident
 bindui:stat_mod_ui_compact_0<CHR>:0
 
 name:speed
@@ -94,6 +102,7 @@ power:20
 mult:20
 adjective:quick
 neg-adjective:sluggish
+drain-adjective:quick
 bindui:stat_mod_ui_compact_0<SPD>:0
 
 name:stealth
