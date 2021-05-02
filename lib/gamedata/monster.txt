@@ -839,11 +839,10 @@ hearing:200
 armor-class:15
 sleepiness:0
 experience:800
-#blow:ENGULF:DISEASE:1d12
+blow:ENGULF:POISON:1d12
 blow:BITE:ACID:1d12
 blow:CRUSH:PARALYZE:1d6
 flags:NO_FEAR | NO_CONF | NO_SLEEP | IM_ACID | KILL_BODY | EVIL
-# | GROW
 spell-power:1
 spell-freq:40
 
