@@ -51,6 +51,29 @@ const byte dam_dec_resist[] = {
 	94, 94, 94, 94, 94, 94, 94, 94, 94, 95, 
 };
 
+int resist_to_percent(int resist, int type)
+{
+	if (resist >= IMMUNITY)
+		return 100;
+
+	if (resist < 0) {
+		resist = -resist;
+		if (resist >= (int)sizeof(dam_inc_vuln))
+			resist = sizeof(dam_inc_vuln) - 1;
+		return -dam_inc_vuln[resist];
+	}
+
+	if (resist >= (int)sizeof(dam_dec_resist))
+		resist = sizeof(dam_dec_resist) - 1;
+	int percent = dam_dec_resist[resist];
+	
+	/* Scale by percentage and variable resist */
+	//int denom = randcalc(projections[type].denominator, 0, AVERAGE);
+	//return (projections[type].numerator * percent * 3) / denom;
+fprintf(stderr,"r2p: res %d, per %d\n", resist, percent);
+	return percent; 
+}
+
 /**
  * Adjust damage according to resistance or vulnerability.
  *

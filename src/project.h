@@ -129,5 +129,6 @@ struct loc origin_get_loc(struct source origin);
 bool project(struct source origin, int rad, struct loc finish, int dam, int typ,
 			 int flg, int degrees_of_arc, byte diameter_of_source,
 			 const struct object *obj);
+int resist_to_percent(int resist, int type);
 
 #endif /* !PROJECT_H */
