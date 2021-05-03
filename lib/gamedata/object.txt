@@ -2543,19 +2543,19 @@ desc:It's a form of teleportation. It grabs a few items - hopefully valuable one
 
 ### Killing cards ###
 
-name:Dispel Undead
-type:card
-graphics:-:Deep Light Blue
-level:40
-weight:5g
-cost:200
-alloc:40:40 to 100
-pile:25:2
-power:9
-effect:PROJECT_LOS:DISP_UNDEAD:0:1
-dice:60
+#name:Dispel Undead
+#type:card
+#graphics:-:Deep Light Blue
+#level:40
+#weight:5g
+#cost:200
+#alloc:40:40 to 100
+#pile:25:2
+#power:9
+#effect:PROJECT_LOS:DISP_UNDEAD:0:1
+#dice:60
 
-name:Banishment
+name:extermination
 type:card
 graphics:-:Deep Light Blue
 level:40
@@ -2565,7 +2565,7 @@ alloc:25:40 to 100
 power:20
 effect:BANISH
 
-name:Mass Banishment
+name:mass extermination
 type:card
 graphics:-:Deep Light Blue
 level:50
@@ -2639,54 +2639,54 @@ effect:DEEP_DESCENT
 
 ### "Holy" spells ###
 
-name:Blessing
-type:card
-graphics:-:Deep Light Blue
-level:1
-weight:5g
-cost:15
-alloc:50:1 to 50
-pile:70:1d3
-power:6
-effect:TIMED_INC:BLESSED
-dice:6+1d12
+#name:Blessing
+#type:card
+#graphics:-:Deep Light Blue
+#level:1
+#weight:5g
+#cost:15
+#alloc:50:1 to 50
+#pile:70:1d3
+#power:6
+#effect:TIMED_INC:BLESSED
+#dice:6+1d12
 
-name:Holy Chant
-type:card
-graphics:-:Deep Light Blue
-level:10
-weight:5g
-cost:40
-alloc:40:10 to 70
-pile:25:2
-power:7
-effect:TIMED_INC:BLESSED
-dice:12+1d24
+#name:Holy Chant
+#type:card
+#graphics:-:Deep Light Blue
+#level:10
+#weight:5g
+#cost:40
+#alloc:40:10 to 70
+#pile:25:2
+#power:7
+#effect:TIMED_INC:BLESSED
+#dice:12+1d24
 
-name:Holy Prayer
-type:card
-graphics:-:Deep Light Blue
-level:25
-weight:5g
-cost:80
-alloc:40:50 to 100
-pile:25:2
-power:8
-effect:TIMED_INC:BLESSED
-dice:24+1d48
+#name:Holy Prayer
+#type:card
+#graphics:-:Deep Light Blue
+#level:25
+#weight:5g
+#cost:80
+#alloc:40:50 to 100
+#pile:25:2
+#power:8
+#effect:TIMED_INC:BLESSED
+#dice:24+1d48
 
-name:Protection from Evil
-type:card
-graphics:-:Deep Light Blue
-level:30
-weight:5g
-cost:50
-alloc:40:30 to 100
-pile:25:2
-power:6
-effect:TIMED_INC:PROTEVIL
-dice:$B+1d25
-expr:B:PLAYER_LEVEL:* 3
+#name:Protection from Evil
+#type:card
+#graphics:-:Deep Light Blue
+#level:30
+#weight:5g
+#cost:50
+#alloc:40:30 to 100
+#pile:25:2
+#power:6
+#effect:TIMED_INC:PROTEVIL
+#dice:$B+1d25
+#expr:B:PLAYER_LEVEL:* 3
 
 
 ### Misc. ###
@@ -2726,7 +2726,7 @@ alloc:30:70 to 100
 power:20
 effect:GLYPH:WARDING
 
-name:destruction
+name:disinto
 type:card
 graphics:-:Deep Light Blue
 level:40
@@ -3277,7 +3277,7 @@ desc:A cheap knock-off, built from last-generation nanotechnology. It will somet
 
 ### Knowledge ###
 
-name:Enlightenment
+name:enlightenment
 type:pill
 graphics:!:d
 level:25
@@ -3289,7 +3289,7 @@ power:22
 effect:LIGHT_LEVEL
 dice:1
 
-name:*Enlightenment*
+name:*enlightenment*
 type:pill
 graphics:!:d
 level:70
@@ -3558,6 +3558,7 @@ effect:TIMED_INC:SLOW
 dice:15+1d25
 effect:NOURISH:INC_BY
 dice:1
+desc:A pill that slows your reactions and movements for a while.
 
 name:mystery
 type:pill
@@ -3577,6 +3578,7 @@ effect:DRAIN_STAT:INT
 effect:DRAIN_STAT:WIS
 effect:TIMED_INC:STONE_SKIN
 dice:20+1d20
+desc:An unlabelled pill - you'll have to try it to see what it does.
 
 name:emetic
 type:pill
@@ -3593,11 +3595,12 @@ dice:2
 effect:CURE:POISONED
 effect:TIMED_INC_NO_RES:PARALYZED
 dice:4
+desc:A pill which makes you throw up.
 
 
 ### Weird one ###
 
-name:Dragon Breath
+name:breather
 type:pill
 graphics:!:d
 level:0
@@ -4090,7 +4093,7 @@ dice:100
 ### Bad devices ###
 
 #attractor? bionic acquisitor?
-name:Summoning
+name:& tractor beam~
 type:device
 graphics:_:d
 level:10
@@ -4224,19 +4227,19 @@ effect:DETECT_INVISIBLE_MONSTERS
 effect-yx:22:40
 
 # remove or replace?
-name:Detect Evil
-type:device
-graphics:_:d
-level:20
-weight:50
-cost:350
-alloc:30:20 to 100
-attack:1d2:0:0
-armor:0:0
-charges:8+d15
-power:6
-effect:DETECT_EVIL
-effect-yx:22:40
+#name:Detect Evil
+#type:device
+#graphics:_:d
+#level:20
+#weight:50
+#cost:350
+#alloc:30:20 to 100
+#attack:1d2:0:0
+#armor:0:0
+#charges:8+d15
+#power:6
+#effect:DETECT_EVIL
+#effect-yx:22:40
 
 #navigation module?
 name:& mapping device~

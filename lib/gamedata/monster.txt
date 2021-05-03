@@ -5091,12 +5091,13 @@ spells:S_MONSTER
 spells:BLIND | WOUND | CONF | SCARE
 desc:A strange creature that disguises itself as a discarded card to lure
 desc: unsuspecting adventurers within reach of its venomous claws.
-mimic:card:Banishment
-mimic:card:Mass Banishment
-mimic:card:Teleport Level
+mimic:card:extermination
+mimic:card:mass extermination
+mimic:card:vertical teleport
+mimic:card:portal
 mimic:card:acquisition
 mimic:card:mass acquisition
-mimic:card:*Destruction*
+mimic:card:disinto
 
 name:fire vortex
 plural:fire vortices

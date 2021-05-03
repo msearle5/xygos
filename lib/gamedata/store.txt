@@ -165,15 +165,13 @@ owner:0:0:-
 slots:0:2
 turnover:9
 danger:60:75
-always:card:Word of Recall
+always:card:recall
 always:card:blinking
 always:card:repair
-normal:card:Monster Confusion
+normal:card:confusion
 normal:card:mapping
 normal:card:detection
-normal:card:Recharging
-normal:card:Blessing
-normal:card:Holy Chant
+normal:card:recharging
 buy:card
 buy:printer
 buy:block
@@ -239,10 +237,9 @@ normal:wand:mini-missile launcher
 normal:wand:cloudmaker
 normal:wand:mining rig
 normal:device:teleporter
-normal:device:Light
+normal:device:floodlight
 normal:device:mapping
 normal:device:anti-stealth radar
-normal:device:Detect Evil
 normal:wand
 normal:device
 normal:gadget
