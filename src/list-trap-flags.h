@@ -12,6 +12,7 @@
 TRF(NONE,		"")
 TRF(GLYPH,		"Is a glyph")
 TRF(TRAP,		"Is a player trap")
+TRF(HOMEMADE,	"You made it")
 TRF(VISIBLE,	"Is visible")
 TRF(INVISIBLE,	"Is invisible") // UNUSED
 TRF(FLOOR,		"Can be set on a floor")

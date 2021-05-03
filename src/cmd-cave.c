@@ -817,23 +817,28 @@ static bool do_cmd_disarm_aux(struct loc grid)
 	/* Always have a small chance of success */
 	if (chance < 2) chance = 2;
 
-	/* Two chances - one to disarm, one not to set the trap off */
-	if (randint0(100) < chance) {
-		msgt(MSG_DISARM, "You have disarmed the %s.", trap->kind->name);
-		player_exp_gain(player, 1 + power);
-
-		/* Trap is gone */
-		square_forget(cave, grid);
-		square_destroy_trap(cave, grid);
-	} else if (randint0(100) < chance) {
-		event_signal(EVENT_INPUT_FLUSH);
-		msg("You failed to disarm the %s.", trap->kind->name);
-
-		/* Player can try again */
-		more = true;
-	} else {
-		msg("You set off the %s!", trap->kind->name);
+	/* If you made it yourself, assume that you don't want to disarm it */
+	if (trf_has(trap->flags, TRF_HOMEMADE)) {
 		hit_trap(grid, -1);
+	} else {
+		/* Two chances - one to disarm, one not to set the trap off */
+		if (randint0(100) < chance) {
+			msgt(MSG_DISARM, "You have disarmed the %s.", trap->kind->name);
+			player_exp_gain(player, 1 + power);
+
+			/* Trap is gone */
+			square_forget(cave, grid);
+			square_destroy_trap(cave, grid);
+		} else if (randint0(100) < chance) {
+			event_signal(EVENT_INPUT_FLUSH);
+			msg("You failed to disarm the %s.", trap->kind->name);
+
+			/* Player can try again */
+			more = true;
+		} else {
+			msg("You set off the %s!", trap->kind->name);
+			hit_trap(grid, -1);
+		}
 	}
 
 	/* Result */

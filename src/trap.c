@@ -127,10 +127,10 @@ static bool square_verify_trap(struct chunk *c, struct loc grid, int vis)
 			return true;
 
 		/* Accept traps that match visibility requirements */
-		if ((vis == 1) && trf_has(trap->flags, TRF_VISIBLE)) 
+		if ((vis == 1) && trf_has(trap->flags, TRF_VISIBLE))
 			return true;
 
-		if ((vis == -1)  && !trf_has(trap->flags, TRF_VISIBLE)) 
+		if ((vis == -1) && !trf_has(trap->flags, TRF_VISIBLE)) 
 			return true;
 
 		/* Note that a trap does exist */
@@ -344,20 +344,20 @@ static int pick_trap(struct chunk *c, int feat, int trap_level)
  * This should be the only function that places traps in the dungeon
  * except the savefile loading code.
  */
-void place_trap(struct chunk *c, struct loc grid, int t_idx, int trap_level)
+struct trap * place_trap(struct chunk *c, struct loc grid, int t_idx, int trap_level)
 {
 	struct trap *new_trap;
 
     /* We've been called with an illegal index; choose a random trap */
     if ((t_idx <= 0) || (t_idx >= z_info->trap_max)) {
-		/* Require the correct terrain */
-		if (!square_player_trap_allowed(c, grid)) return;
-
 		t_idx = pick_trap(c, square(c, grid)->feat, trap_level);
     }
 
+	/* Require the correct terrain */
+	if (!square_player_trap_allowed(c, grid)) return NULL;
+
     /* Failure */
-    if (t_idx < 0) return;
+    if (t_idx < 0) return NULL;
 
 	/* Allocate a new trap for this grid (at the front of the list) */
 	new_trap = mem_zalloc(sizeof(*new_trap));
@@ -377,6 +377,7 @@ void place_trap(struct chunk *c, struct loc grid, int t_idx, int trap_level)
 	/* Redraw the grid */
 	square_note_spot(c, grid);
 	square_light_spot(c, grid);
+	return new_trap;
 }
 
 /**

@@ -210,11 +210,13 @@ name:strange markings:portal
 graphics:^:r
 appear:1:1:0
 visibility:30+d30
-flags:TRAP | FLOOR | MAGICAL
+flags:TRAP | VISIBLE | FLOOR | MAGICAL
 effect:PORTAL
 dice:M80
-desc:A hidden device which teleports you to another portal.
-msg:You stepped through a portal!
+desc:A device (sometimes hidden) which teleports you to another portal.
+msg:You step into a portal!
+msg-good:But it fizzles out.
+msg-bad:You are carried away...
 
 # rune -- teleport
 

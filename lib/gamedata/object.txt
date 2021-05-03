@@ -2293,6 +2293,7 @@ pile:100:2d3
 power:5
 effect:TELEPORT
 dice:10
+desc:Instantly transports you a short distance. The location is randomly chosen. It's safe in the sense that it will not drop you inside solid rock or into hostile terrain such as lava or water - although of course, there's nothing to prevent it from being in sight of worse monsters than you are now. It can be used as an escape if you have nothing else, but it's usually better used for tactical positioning.
 
 name:teleport
 type:card
@@ -2305,6 +2306,21 @@ pile:25:2
 power:6
 effect:TELEPORT
 dice:M60
+desc:Instantly transports you a long distance. The location is randomly chosen. It's safe in the sense that it will not drop you inside solid rock or into hostile terrain such as lava or water. It's a reliable escape, so long as you can run it and there isn't anything nasty at other other end.
+
+name:portal
+type:card
+graphics:-:Deep Light Blue
+level:15
+weight:5g
+cost:130
+alloc:15:15 to 100
+pile:25:2
+power:9
+effect:CREATE_PORTAL
+dice:35
+effect:PORTAL
+desc:Creates a pair of portals, and jumps through. This isn't necessarily going to land you at the one you just created: portals are not locked to their original destination, but always send you to the nearest portal.
 
 name:vertical teleport
 type:card
@@ -2316,6 +2332,7 @@ alloc:16:20 to 100
 pile:10:2
 power:15
 effect:TELEPORT_LEVEL
+desc:Instantly transports you up or down to another level.
 
 
 ### Detection ###
@@ -2332,7 +2349,7 @@ power:10
 effect:MAP_AREA
 effect-yx:22:40
 
-name:Treasure Detection
+name:detection
 type:card
 graphics:-:Deep Light Blue
 level:0
@@ -2346,7 +2363,7 @@ effect-yx:22:40
 effect:SENSE_OBJECTS
 effect-yx:22:40
 
-name:Detect Invisible
+name:scanning
 type:card
 graphics:-:Deep Light Blue
 level:1
@@ -3133,7 +3150,7 @@ desc:An antidote to most common forms of poison, including those causing blindne
 
 # removed: old stat restoration
 
-name:Restore Life Levels
+name:relive nano-
 type:pill
 graphics:!:d
 level:40
@@ -3312,7 +3329,7 @@ power:10
 effect:TIMED_INC:FAST:0:5
 dice:20+2d10
 
-name:Heroism
+name:combat
 type:pill
 graphics:!:d
 level:1
@@ -3328,7 +3345,7 @@ effect:TIMED_INC:HERO
 dice:25+1d25
 
 #combat drugs?
-name:Berserk Strength
+name:max-combat
 type:pill
 graphics:!:d
 level:3
@@ -3343,16 +3360,16 @@ effect:CURE:AFRAID
 effect:TIMED_INC:SHERO
 dice:25+1d25
 
-name:Boldness
-type:pill
-graphics:!:d
-level:1
-weight:1g
-cost:8
-alloc:40:1 to 90
-pile:25:2
-power:2
-effect:CURE:AFRAID
+#name:Boldness
+#type:pill
+#graphics:!:d
+#level:1
+#weight:1g
+#cost:8
+#alloc:40:1 to 90
+#pile:25:2
+#power:2
+#effect:CURE:AFRAID
 
 name:fireproofing
 type:pill

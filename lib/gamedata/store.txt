@@ -169,8 +169,8 @@ always:card:Word of Recall
 always:card:blinking
 always:card:repair
 normal:card:Monster Confusion
-normal:card:Magic Mapping
-normal:card:Detect Invisible
+normal:card:mapping
+normal:card:detection
 normal:card:Recharging
 normal:card:Blessing
 normal:card:Holy Chant
@@ -197,15 +197,14 @@ slots:4:6
 turnover:2
 danger:70:90
 always:pill:curing
-normal:pill:Boldness
-normal:pill:Berserk Strength
+normal:pill:combat:8000
+normal:pill:max-combat:6000
 normal:pill:fireproofing
 normal:pill:polarizing
-normal:pill:Restore Life Levels
-normal:pill:Neutralize Poison
+normal:pill:relive nano-
 normal:pill:extra-curing
 normal:pill:critical curing
-normal:pill:Resist Poison:200+M2500
+normal:pill:anti-toxin:200+M2500
 normal:pill:healing:M2000
 normal:pill:nutria:1500
 normal:pill:mega-healing:-500+M1000

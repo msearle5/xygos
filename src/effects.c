@@ -2920,8 +2920,10 @@ bool effect_handler_PORTAL(effect_handler_context_t *context)
 	bool found = false;
 	for (grid.y = 1; grid.y < cave->height - 1; grid.y++) {
 		for (grid.x = 1; grid.x < cave->width - 1; grid.x++) {
-			/* Not this portal */
-			if ((grid.x == start.x) && (grid.y == start.y))
+			/* Not this portal. That includes being one step away, as you would be if
+			 * setting off a trap as you enter the grid.
+			 **/
+			if ((ABS(grid.x - start.x) <= 1) && (ABS(grid.y - start.y) <= 1))
 				continue;
 			/* Not a portal */
 			if (!square_trap_specific(cave, grid, portal->tidx))
@@ -2964,6 +2966,157 @@ bool effect_handler_PORTAL(effect_handler_context_t *context)
 	return true;
 }
 
+/** Find a teleportable-to grid, returned in result.
+ * Returns true if one can be found.
+ * The grid is as close to distance 'dis' from 'start' as possible, but can be anywhere on the level
+ * if this isn't available.
+ */
+static bool find_teleportable(struct loc start, int dis, struct loc *result, bool is_player, bool is_trap)
+{
+	struct loc grid;
+	bool only_vault_grids_possible = true;
+	int pick;
+	int num_spots = 0;
+	int current_score = 2 * MAX(z_info->dungeon_wid, z_info->dungeon_hgt);
+
+	struct jumps {
+		struct loc grid;
+		struct jumps *next;
+	} *spots = NULL;
+
+	/* Make a list of the best grids, scoring by how good an approximation
+	 * the distance from the start is to the distance we want */
+	for (grid.y = 1; grid.y < cave->height - 1; grid.y++) {
+		for (grid.x = 1; grid.x < cave->width - 1; grid.x++) {
+			int d = distance(grid, start);
+			int score = ABS(d - dis);
+			struct jumps *new;
+
+			/* Must move */
+			if (d == 0) continue;
+
+			/* Require "naked" floor space */
+			if (!square_isempty(cave, grid)) continue;
+
+			/* Require acceptable place for a trap */
+			if ((is_trap) && (!square_player_trap_allowed(cave, grid))) continue;
+
+			/* No monster teleport onto glyph of warding */
+			if (!is_player && square_iswarded(cave, grid)) continue;
+
+			/* No teleporting into vaults and such, unless there's no choice */
+			if (square_isvault(cave, grid)) {
+				if (!only_vault_grids_possible) {
+					continue;
+				}
+			} else {
+				/* Just starting to consider non-vault grids, so reset score */
+				if (only_vault_grids_possible) {
+					current_score = 2 * MAX(z_info->dungeon_wid,
+											z_info->dungeon_hgt);
+				}
+				only_vault_grids_possible = false;
+			}
+
+			/* Do we have better spots already? */
+			if (score > current_score) continue;
+
+			/* Make a new spot */
+			new = mem_zalloc(sizeof(struct jumps));
+			new->grid = grid;
+
+			/* If improving start a new list, otherwise extend the old one */
+			if (score < current_score) {
+				current_score = score;
+				while (spots) {
+					struct jumps *next = spots->next;
+					mem_free(spots);
+					spots = next;
+				}
+				spots = new;
+				num_spots = 1;
+			} else {
+				new->next = spots;
+				spots = new;
+				num_spots++;
+			}
+		}
+	}
+
+	/* Report failure (very unlikely) */
+	if (!num_spots) {
+		msg("Failed to find teleport destination!");
+		return false;
+	}
+
+	/* Pick a spot */
+	pick = randint0(num_spots);
+	while (pick) {
+		struct jumps *next = spots->next;
+		mem_free(spots);
+		spots = next;
+		pick--;
+	}
+
+	*result = spots->grid;
+
+	while (spots) {
+		struct jumps *next = spots->next;
+		mem_free(spots);
+		spots = next;
+	}
+
+	return true;
+}
+
+/** Create a portal pair. Doesn't jump through. */
+bool effect_handler_CREATE_PORTAL(effect_handler_context_t *context)
+{
+	/* Find a place to teleport to */
+	struct loc start = loc(context->x, context->y);
+	int dis = context->value.base;
+	dis += randint0(dis / 2) - (dis / 4);
+	struct loc result;
+
+	/* Get start position */
+	if (loc_is_zero(start))
+		start = player->grid;
+
+	/* Find a target position */
+	if (!find_teleportable(start, dis, &result, true, true)) {
+		msg("Failed to find portal destination!");
+		return true;
+	}
+
+	struct trap_kind *trap_kind = lookup_trap("portal");
+	assert(trap_kind);
+
+	/* Make them visible and friendly */
+	struct trap *trap = place_trap(cave, start, trap_kind->tidx, 0);
+	if (trap) {
+		trf_on(trap->flags, TRF_HOMEMADE);
+		trf_on(trap->flags, TRF_VISIBLE);
+		square_reveal_trap(cave, start, true, false);
+	}
+	struct trap *trap_far = place_trap(cave, result, trap_kind->tidx, 0);
+	if (trap_far) {
+		trf_on(trap_far->flags, TRF_HOMEMADE);
+		trf_on(trap_far->flags, TRF_VISIBLE);
+		square_reveal_trap(cave, result, true, false);
+	}
+
+	if ((!trap) || (!trap_far)) {
+		const char *end = "";
+		if (trap)
+			end = " at the far end";
+		else if (trap_far)
+			end = " under you";
+		msg("Something prevents the portal from taking hold%s.", end);
+	}
+
+	return true;
+}
+
 /**
  * Teleport player or monster up to context->value.base grids away.
  *
@@ -2978,16 +3131,6 @@ bool effect_handler_TELEPORT(effect_handler_context_t *context)
 	struct loc start = loc(context->x, context->y);
 	int dis = context->value.base;
 	int perc = context->value.m_bonus;
-	int pick;
-	struct loc grid;
-
-	struct jumps {
-		struct loc grid;
-		struct jumps *next;
-	} *spots = NULL;
-	int num_spots = 0;
-	int current_score = 2 * MAX(z_info->dungeon_wid, z_info->dungeon_hgt);
-	bool only_vault_grids_possible = true;
 
 	bool is_player = (context->origin.what != SRC_MONSTER || context->subtype);
 	struct monster *t_mon = monster_target_monster(context);
@@ -3046,85 +3189,20 @@ bool effect_handler_TELEPORT(effect_handler_context_t *context)
 		dis += randint0(dis / 4);
 	}
 
-	/* Make a list of the best grids, scoring by how good an approximation
-	 * the distance from the start is to the distance we want */
-	for (grid.y = 1; grid.y < cave->height - 1; grid.y++) {
-		for (grid.x = 1; grid.x < cave->width - 1; grid.x++) {
-			int d = distance(grid, start);
-			int score = ABS(d - dis);
-			struct jumps *new;
-
-			/* Must move */
-			if (d == 0) continue;
-
-			/* Require "naked" floor space */
-			if (!square_isempty(cave, grid)) continue;
-
-			/* No monster teleport onto glyph of warding */
-			if (!is_player && square_iswarded(cave, grid)) continue;
-
-			/* No teleporting into vaults and such, unless there's no choice */
-			if (square_isvault(cave, grid)) {
-				if (!only_vault_grids_possible) {
-					continue;
-				}
-			} else {
-				/* Just starting to consider non-vault grids, so reset score */
-				if (only_vault_grids_possible) {
-					current_score = 2 * MAX(z_info->dungeon_wid,
-											z_info->dungeon_hgt);
-				}
-				only_vault_grids_possible = false;
-			}
-
-			/* Do we have better spots already? */
-			if (score > current_score) continue;
-
-			/* Make a new spot */
-			new = mem_zalloc(sizeof(struct jumps));
-			new->grid = grid;
-
-			/* If improving start a new list, otherwise extend the old one */
-			if (score < current_score) {
-				current_score = score;
-				while (spots) {
-					struct jumps *next = spots->next;
-					mem_free(spots);
-					spots = next;
-				}
-				spots = new;
-				num_spots = 1;
-			} else {
-				new->next = spots;
-				spots = new;
-				num_spots++;
-			}
-		}
-	}
-
-	/* Report failure (very unlikely) */
-	if (!num_spots) {
+	struct loc result;
+	if (!find_teleportable(start, dis, &result, is_player, false)) {
 		msg("Failed to find teleport destination!");
 		return true;
-	}
-
-	/* Pick a spot */
-	pick = randint0(num_spots);
-	while (pick) {
-		struct jumps *next = spots->next;
-		mem_free(spots);
-		spots = next;
-		pick--;
 	}
 
 	/* Sound */
 	sound(is_player ? MSG_TELEPORT : MSG_TPOTHER);
 
 	/* Move player */
-	monster_swap(start, spots->grid);
+	monster_swap(start, result);
 
 	/* Clear any projection marker to prevent double processing */
-	sqinfo_off(square(cave, spots->grid)->info, SQUARE_PROJECT);
+	sqinfo_off(square(cave, result)->info, SQUARE_PROJECT);
 
 	/* Clear monster target if it's no longer visible */
 	if (!target_able(target_get_monster())) {
@@ -3133,12 +3211,6 @@ bool effect_handler_TELEPORT(effect_handler_context_t *context)
 
 	/* Lots of updates after monster_swap */
 	handle_stuff(player);
-
-	while (spots) {
-		struct jumps *next = spots->next;
-		mem_free(spots);
-		spots = next;
-	}
 
 	return true;
 }
