@@ -658,19 +658,47 @@ void do_cmd_run_card(struct command *cmd)
 			USE_INVEN | USE_FLOOR) != CMD_OK) return;
 
 	int alt = 0;
+	int yourlevel = levels_in_class(get_class_by_name("Clown")->cidx);
+	int cardlevel = card_level(obj);
+	bool retain = false;
+
 	if (player->timed[TMD_RARE_CARD]) {
 		player_set_timed(player, TMD_RARE_CARD, 0, false);
-		int cardlevel = card_level(obj);
-		int yourlevel = levels_in_class(get_class_by_name("Clown")->cidx);
 		if (yourlevel >= cardlevel) {
 			alt = 1;
 			msg("You pull out a rare card!");
 		} else {
 			msg("You don't have the skill to switch this card.");
 		}
+	} else {
+		/* Possibly retain the card */
+		if (yourlevel) {
+			/* This should never be certain, but should make a difference even at low level.
+			 * So a function of your level and the card's should be used.
+			 * e.g. level-in-class / card-level
+			 * This isn't a good fit as is, though.
+			 * It could work though if combined with a linear fail chance (e.g. 60% at level 1 -> 25% at level 50).
+			 */
+			/* Linear fail */
+			int plinfail = 6072 - ((yourlevel * 10000) / 140);
+			if (randint0(10000) >= plinfail) {
+				/* Item level based fail */
+				int chance = yourlevel * 10000 / cardlevel;
+				if (randint0(chance + 10000) >= 10000) {
+					retain = true;
+				}
+			}
+		}
 	}
 
-	use_aux(cmd, obj, USE_SINGLE, MSG_GENERIC, alt);
+	use_aux(cmd, obj, retain ? 0 : USE_SINGLE, MSG_GENERIC, alt);
+
+	/* Not ok = card is consumed normally, and as is ths is normal there is no message.
+	 * OK = don't eat the card and signal this.
+	 */
+	if (retain) {
+		msg("...but here is is!");
+	}
 }
 
 /**
