@@ -108,5 +108,6 @@ struct artifact_set_data {
 
 char *artifact_gen_name(struct artifact *a, const char ***wordlist);
 void do_randart(u32b randart_seed, bool create_file);
+extern struct file_parser artinames_parser;
 
 #endif /* OBJECT_RANDART_H */

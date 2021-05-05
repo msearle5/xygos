@@ -4003,6 +4003,7 @@ static struct {
 	{ "player races", &p_race_parser },
 	{ "player classes", &class_parser },
 	{ "artifacts", &artifact_parser },
+	{ "artifact names", &artinames_parser },
 	{ "object properties", &object_property_parser },
 	{ "blow methods", &meth_parser },
 	{ "blow effects", &eff_parser },

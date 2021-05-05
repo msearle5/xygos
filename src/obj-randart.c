@@ -83,7 +83,7 @@ static enum parser_error parse_bad_artiname(struct parser *p) {
 
 static enum parser_error parse_tag_artiname(struct parser *p) {
 	struct artiname *h = parser_priv(p);
-	char *newtag = parser_getstr(p, "text");
+	const char *newtag = parser_getstr(p, "text");
 	if (newtag) {
 		if (h->tags) {
 			int length = strlen(newtag) + strlen(h->tags) + 2;
@@ -132,7 +132,7 @@ static void cleanup_artinames(void)
 	n_artinames = n_good_artinames = 0;
 }
 
-static struct file_parser artinames_parser = {
+struct file_parser artinames_parser = {
 	"artinames",
 	init_parse_artinames,
 	run_parse_artinames,
