@@ -476,7 +476,13 @@ static void print_rel_map(wchar_t c, byte a, int y, int x)
 		Term_queue_char(t, kx, ky, a, c, 0, 0);
 
 		if ((tile_width > 1) || (tile_height > 1))
-			Term_big_queue_char(t, kx, ky, a, c, 0, 0);
+			/*
+			 * The overhead view can make use of the last row in
+			 * the terminal.  Others leave it be.
+			 */
+			Term_big_queue_char(t, kx, ky, t->hgt -
+				((window_flag[j] & PW_OVERHEAD) ? 0 : 1),
+				a, c, 0, 0);
 	}
 }
 
@@ -519,7 +525,8 @@ void print_rel(wchar_t c, byte a, int y, int x)
 	Term_queue_char(Term, vx, vy, a, c, 0, 0);
 
 	if ((tile_width > 1) || (tile_height > 1))
-		Term_big_queue_char(Term, vx, vy, a, c, 0, 0);
+		Term_big_queue_char(Term, vx, vy, ROW_MAP + SCREEN_ROWS,
+			a, c, 0, 0);
   
 }
 
@@ -539,6 +546,7 @@ static void prt_map_aux(void)
 	/* Scan windows */
 	for (j = 0; j < ANGBAND_TERM_MAX; j++) {
 		term *t = angband_term[j];
+		int clipy;
 
 		/* No window */
 		if (!t) continue;
@@ -550,6 +558,12 @@ static void prt_map_aux(void)
 		ty = t->offset_y + (t->hgt / tile_height);
 		tx = t->offset_x + (t->wid / tile_width);
 
+		/*
+		 * The overhead view can use the last row of the terminal.
+		 * Others can not.
+		 */
+		clipy = t->hgt - ((window_flag[j] & PW_OVERHEAD) ? 0 : 1);
+
 		/* Dump the map */
 		for (y = t->offset_y, vy = 0; y < ty; vy += tile_height, y++) {
 			for (x = t->offset_x, vx = 0; x < tx; vx += tile_width, x++) {
@@ -560,7 +574,7 @@ static void prt_map_aux(void)
 						0, 0);
 					if (tile_width > 1 || tile_height > 1) {
 						Term_big_queue_char(t, vx, vy,
-							t->attr_blank,
+							clipy, t->attr_blank,
 							t->char_blank, 0, 0);
 					}
 					continue;
@@ -572,7 +586,8 @@ static void prt_map_aux(void)
 				Term_queue_char(t, vx, vy, a, c, ta, tc);
 
 				if ((tile_width > 1) || (tile_height > 1))
-					Term_big_queue_char(t, vx, vy, 255, -1, 0, 0);
+					Term_big_queue_char(t, vx, vy, clipy,
+						255, -1, 0, 0);
 			}
 			/* Clear partial tile at the end of each line. */
 			for (; vx < t->wid; ++vx) {
@@ -608,6 +623,7 @@ void prt_map(void)
 	int y, x;
 	int vy, vx;
 	int ty, tx;
+	int clipy;
 
 	/* Redraw map sub-windows */
 	prt_map_aux();
@@ -615,6 +631,9 @@ void prt_map(void)
 	/* Assume screen */
 	ty = Term->offset_y + SCREEN_HGT;
 	tx = Term->offset_x + SCREEN_WID;
+
+	/* Avoid overwriting the last row with padding for big tiles. */
+	clipy = ROW_MAP + SCREEN_ROWS;
 
 	/* Dump the map */
 	for (y = Term->offset_y, vy = ROW_MAP; y < ty; vy += tile_height, y++)
@@ -630,7 +649,8 @@ void prt_map(void)
 			Term_queue_char(Term, vx, vy, a, c, ta, tc);
 
 			if ((tile_width > 1) || (tile_height > 1))
-				Term_big_queue_char(Term, vx, vy, a, c, COLOUR_WHITE, L' ');
+				Term_big_queue_char(Term, vx, vy, clipy, a, c,
+					COLOUR_WHITE, L' ');
 		}
 }
 
@@ -724,7 +744,9 @@ void display_map(int *cy, int *cx)
 				Term_queue_char(Term, col + 1, row + 1, a, c, ta, tc);
 
 				if ((tile_width > 1) || (tile_height > 1))
-					Term_big_queue_char(Term, col + 1, row + 1, 255, -1, 0, 0);
+					Term_big_queue_char(Term, col + 1,
+						row + 1, Term->hgt - 1,
+						255, -1, 0, 0);
 
 				/* Save priority */
 				mp[row][col] = tp;
