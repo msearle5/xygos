@@ -2691,7 +2691,7 @@ struct chunk *quest_gen(struct player *p, int min_height, int min_width)
 
 	/* Encase in perma-rock */
     draw_rectangle(c, 0, 0, c->height - 1, c->width - 1,
-				   FEAT_PERM, SQUARE_NONE);
+				   FEAT_PERM, SQUARE_NONE, true);
 
 	/* Dimensions */
 	int centre_cavern_ypos = (z_info->dungeon_hgt - vault->height) / 2;
