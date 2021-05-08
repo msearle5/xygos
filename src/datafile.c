@@ -149,7 +149,7 @@ int code_index_in_array(const char *code_name[], const char *code)
  */
 bool find_value_arg(char *value_name, char *string, int *num)
 {
-	char *t;
+	char *t = NULL;
 
 	/* Find the first bracket */
 	for (t = value_name; *t && (*t != '['); ++t)
@@ -255,8 +255,8 @@ errr grab_short_value(s16b *value, const char **value_type,
 errr grab_int_value(int *value, const char **value_type,
 					const char *name_and_value)
 {
-	int val, i = 0;
-	char value_name[80];
+	int val = 0, i = 0;
+	char value_name[80] = {0};
 
 	/* Get a rewritable string */
 	my_strcpy(value_name, name_and_value, sizeof(value_name));
@@ -319,9 +319,9 @@ errr grab_index(int *index, const char **value_type,
 errr grab_index_and_int(int *value, int *index, const char **value_type,
 						const char *prefix, const char *name_and_value)
 {
-	int i;
-	char value_name[80];
-	char value_string[80];
+	int i = 0;
+	char value_name[80] = {0};
+	char value_string[80] = {0};
 
 	/* Get a rewritable string */
 	my_strcpy(value_name, name_and_value, sizeof(value_name));

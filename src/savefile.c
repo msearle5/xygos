@@ -714,6 +714,7 @@ bool savefile_load(const char *path, bool cheat_death)
 
 	ok = try_load(f, loaders);
 	player_hook(loadsave, true);
+
 	file_close(f);
 
 	if (player->is_dead && cheat_death) {

@@ -40,10 +40,12 @@ static void soldier_loadsave(bool complete) {
 
 	if (complete) {
 		struct store *store = get_store_by_name("Field HQ");
-		if (store->owner->name)
-			mem_free(store->owner->name);
-		state = (struct soldier_state *)get_class_by_name("Soldier")->state;
-		store->owner->name = string_make(state->storename);
+		if ((store) && (store->owner)) {
+			if (store->owner->name)
+				mem_free(store->owner->name);
+			state = (struct soldier_state *)get_class_by_name("Soldier")->state;
+			store->owner->name = string_make(state->storename);
+		}
 	} else {
 		if (get_class_by_name("Soldier")->state == NULL)
 			get_class_by_name("Soldier")->state = mem_zalloc(sizeof(struct soldier_state));

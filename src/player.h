@@ -55,8 +55,8 @@ enum
 
 extern struct player_class **ordered_classes(void);
 
-#define player_hookz(X)			{ struct player_class *c = classes; while (c) { if (c->X) { c->X(); } c=c->next; } } if (player->race->X) { player->race->X(); } if (player->extension->X) { player->extension->X(); }
-#define player_hook(X, ...)		{ struct player_class *c = classes; while (c) { if (c->X) { c->X(__VA_ARGS__); } c=c->next; } } if (player->race->X) player->race->X(__VA_ARGS__); if (player->extension->X) player->extension->X(__VA_ARGS__);
+#define player_hookz(X)			{ struct player_class *c = classes; while (c) { if (c->X) { c->X(); } c=c->next; } } if((player->race) && (player->race->X)) { player->race->X(); } if ((player->extension) && (player->extension->X)) { player->extension->X(); }
+#define player_hook(X, ...)		{ struct player_class *c = classes; while (c) { if (c->X) { c->X(__VA_ARGS__); } c=c->next; } } if ((player->race) && (player->race->X)) player->race->X(__VA_ARGS__); if ((player->extension) && (player->extension->X)) player->extension->X(__VA_ARGS__);
 
 #define pf_has(f, flag)        flag_has_dbg(f, PF_SIZE, flag, #f, #flag)
 #define pf_next(f, flag)       flag_next(f, PF_SIZE, flag)

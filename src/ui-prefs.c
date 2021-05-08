@@ -1409,8 +1409,8 @@ void textui_prefs_init(void)
 
 	monster_x_attr = mem_zalloc(z_info->r_max * sizeof(byte));
 	monster_x_char = mem_zalloc(z_info->r_max * sizeof(wchar_t));
-	kind_x_attr = mem_zalloc(z_info->k_max * sizeof(byte));
-	kind_x_char = mem_zalloc(z_info->k_max * sizeof(wchar_t));
+	kind_x_attr = mem_zalloc((z_info->k_max + 1) * sizeof(byte));
+	kind_x_char = mem_zalloc((z_info->k_max + 1) * sizeof(wchar_t));
 	for (i = 0; i < LIGHTING_MAX; i++) {
 		feat_x_attr[i] = mem_zalloc(z_info->f_max * sizeof(byte));
 		feat_x_char[i] = mem_zalloc(z_info->f_max * sizeof(wchar_t));
@@ -1436,9 +1436,13 @@ void textui_prefs_free(void)
 	int i;
 
 	mem_free(monster_x_attr);
+	monster_x_attr = NULL;
 	mem_free(monster_x_char);
+	monster_x_char = NULL;
 	mem_free(kind_x_attr);
+	kind_x_attr = NULL;
 	mem_free(kind_x_char);
+	kind_x_char = NULL;
 	for (i = 0; i < LIGHTING_MAX; i++) {
 		mem_free(feat_x_attr[i]);
 		mem_free(feat_x_char[i]);
@@ -1448,7 +1452,9 @@ void textui_prefs_free(void)
 		mem_free(trap_x_char[i]);
 	}
 	mem_free(flavor_x_attr);
+	flavor_x_attr = NULL;
 	mem_free(flavor_x_char);
+	flavor_x_char = NULL;
 }
 
 /**

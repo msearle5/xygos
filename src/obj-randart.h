@@ -94,6 +94,8 @@ struct artifact_set_data {
 	int *avg_tv_power;
 	int *min_tv_power;
 	int *max_tv_power;
+	int *power;
+	bool *bad;
 
 	/* Base item levels */
 	int *base_item_level;
@@ -103,10 +105,12 @@ struct artifact_set_data {
 
 	/* Artifact rarities */
 	int *base_art_alloc;
+
+	/* Set if name has been used */
+	bool *name_used;
 };
 
-
-char *artifact_gen_name(struct artifact *a, const char ***wordlist);
+char *artifact_gen_name(struct artifact_set_data *data, struct artifact *a, const char ***words, int power, int tval, bool bad);
 void do_randart(u32b randart_seed, bool create_file);
 extern struct file_parser artinames_parser;
 

@@ -47,12 +47,19 @@ struct activation *activations;
 struct artiname {
 	struct artiname *next;
 	char *name;
-	char *tags;
+	bitflag tval_tags[TV_SIZE];
 };
 
 static struct artiname *artiname;
 static int n_artinames;
 static int n_good_artinames;
+
+static const char *list_tvals[TV_MAX] =
+{
+	#define TV(a, b, c) #a,
+	#include "list-tvals.h"
+	#undef TV
+};
 
 /**
  * ------------------------------------------------------------------------
@@ -85,16 +92,8 @@ static enum parser_error parse_tag_artiname(struct parser *p) {
 	struct artiname *h = parser_priv(p);
 	const char *newtag = parser_getstr(p, "text");
 	if (newtag) {
-		if (h->tags) {
-			int length = strlen(newtag) + strlen(h->tags) + 2;
-			char *buf = mem_zalloc(length);
-			snprintf(buf, length, "%s %s", newtag, h->tags);
-			string_free(h->tags);
-			h->tags = string_make(buf);
-			mem_free(buf);
-		} else {
-			h->tags = string_make(newtag);
-		}
+		if (grab_flag(h->tval_tags, sizeof(h->tval_tags), list_tvals, newtag))
+			return PARSE_ERROR_INVALID_FLAG;
 	}
 	return PARSE_ERROR_NONE;
 }
@@ -114,8 +113,13 @@ static errr run_parse_artinames(struct parser *p) {
 
 static errr finish_parse_artinames(struct parser *p) {
 	artiname = mem_zalloc(sizeof(*artiname) * n_artinames);
+	struct artiname *h = parser_priv(p);
+	struct artiname *prev;
 	for(int i=0; i<n_artinames; i++) {
-		parser_priv(p);
+		memcpy((artiname - 1) + (n_artinames - i), h, sizeof(*artiname));
+		prev = h;
+		h = h->next;
+		mem_free(prev);
 	}
 	parser_destroy(p);
 	return 0;
@@ -125,7 +129,6 @@ static void cleanup_artinames(void)
 {
 	for(int i=0;i<n_artinames;i++) {
 		string_free(artiname[i].name);
-		string_free(artiname[i].tags);
 	}
 	mem_free(artiname);
 	artiname = NULL;
@@ -1177,29 +1180,33 @@ static void collect_artifact_data(struct artifact_set_data *data)
 		kind = lookup_kind(art->tval, art->sval);
 
 		/* Special cases -- don't parse these! */
-		if (strstr(art->name, "The One Ring") ||
-			kf_has(kind->kind_flags, KF_QUEST_ART))
-			continue;
+		if (kind) {
+			if (strstr(art->name, "The One Ring") ||
+				kf_has(kind->kind_flags, KF_QUEST_ART))
+				continue;
 
-		/* Add the base item tval to the tv_probs array */
-		data->tv_probs[kind->tval]++;
-		file_putf(log_file, "Base item is %d\n", kind->kidx);
+			/* Add the base item tval to the tv_probs array */
+			data->tv_probs[kind->tval]++;
+			file_putf(log_file, "Base item is %d\n", kind->kidx);
 
-		/* Count combat abilities broken up by type */
-		if (art->tval == TV_DIGGING || art->tval == TV_HAFTED ||
-			art->tval == TV_POLEARM || art->tval == TV_SWORD) {
-			count_weapon_abilities(art, data);
-		} else if (art->tval == TV_GUN) {
-			count_GUN_abilities(art, data);
+			/* Count combat abilities broken up by type */
+			if (art->tval == TV_DIGGING || art->tval == TV_HAFTED ||
+				art->tval == TV_POLEARM || art->tval == TV_SWORD) {
+				count_weapon_abilities(art, data);
+			} else if (art->tval == TV_GUN) {
+				count_GUN_abilities(art, data);
+			} else {
+				count_nonweapon_abilities(art, data);
+			}
+
+			/* Count other properties  */
+			count_modifiers(art, data);
+			count_low_resists(art, data);
+			count_high_resists(art, data);
+			count_abilities(art, data);
 		} else {
-			count_nonweapon_abilities(art, data);
+			file_putf(log_file, "Base item is unknown (tv %d sv %d)\n", art->tval, art->sval);
 		}
-
-		/* Count other properties  */
-		count_modifiers(art, data);
-		count_low_resists(art, data);
-		count_high_resists(art, data);
-		count_abilities(art, data);
 	}
 }
 
@@ -1231,7 +1238,7 @@ static void rescale_freqs(struct artifact_set_data *data)
 	for (i = 0; i < N_ELEMENTS(art_idx_gun); i++)
 		data->art_probs[art_idx_gun[i]] =
 			(data->art_probs[art_idx_gun[i]] * data->total)
-			/ (data->gun_total);
+			/ (data->gun_total ? data->gun_total : 1);
 
 	/* All weapon abilities */
 	for (i = 0; i < N_ELEMENTS(art_idx_weapon); i++)
@@ -1264,7 +1271,7 @@ static void rescale_freqs(struct artifact_set_data *data)
 	for (i = 0; i < N_ELEMENTS(art_idx_boot); i++)
 		data->art_probs[art_idx_boot[i]] =
 			(data->art_probs[art_idx_boot[i]] *	data->total)
-			/ data->boot_total;
+			/ (data->boot_total ? data->boot_total : 1);
 
 	/* Gloves */
 	for (i = 0; i < N_ELEMENTS(art_idx_glove); i++)
@@ -1294,7 +1301,7 @@ static void rescale_freqs(struct artifact_set_data *data)
 	for (i = 0; i < N_ELEMENTS(art_idx_cloak); i++)
 		data->art_probs[art_idx_belt[i]] =
 			(data->art_probs[art_idx_belt[i]] * data->total)
-			/ data->belt_total;
+			/ (data->belt_total ? data->belt_total : 1);
 
 	/* Body armor */
 	for (i = 0; i < N_ELEMENTS(art_idx_armor); i++)
@@ -1465,7 +1472,7 @@ static struct object_kind *get_base_item(struct artifact_set_data *data,
 		kind = lookup_kind(tval, r);
 
 		/* No items based on quest artifacts */
-		if (kf_has(kind->kind_flags, KF_QUEST_ART))
+		if (kind && kf_has(kind->kind_flags, KF_QUEST_ART))
 			kind = NULL;
 	}
 
@@ -2613,21 +2620,126 @@ static void copy_artifact(struct artifact *a_src, struct artifact *a_dst)
  * ------------------------------------------------------------------------
  * Generation of a set of random artifacts
  * ------------------------------------------------------------------------ */
+
+/** Name matches tval */
+bool artifact_name_tval(int tval, int name_i)
+{
+	struct artiname *an = artiname+name_i;
+	return tvf_has(an->tval_tags, tval);
+}
+
 /**
- * Use W. Sheldon Simms' random name generator.
+ * Use names from a file if available.
+ * Fall back to using W. Sheldon Simms' random name generator if there aren't enough.
  */
-char *artifact_gen_name(struct artifact *a, const char ***words) {
+char *artifact_gen_name(struct artifact_set_data *data, struct artifact *a, const char ***words, int power, int tval, bool bad) {
 	char buf[BUFLEN];
 	char word[MAX_NAME_LEN + 1];
 
-	randname_make(RANDNAME_TOLKIEN, MIN_NAME_LEN, MAX_NAME_LEN, word,
-				  sizeof(word), words);
-	my_strcap(word);
+	/* If it's bad, the order doesn't matter except in that it shouldn't be predictable.
+	 * So select a bad-artifact name at random from those available.
+	 * If it's good, want to get as close as possible to the described power - and if the best is far enough off, bail.
+	 * In both cases, the tval must match.
+	 */
+	int name = -1;
+	int names = 0;
+	int min_power = 0;
+	int max_power = 0;
+	if (bad) {
+		for(int i=n_good_artinames; i<n_artinames; i++) {
+			if (!data->name_used[i])
+				if (artifact_name_tval(tval, i))
+					names++;
+		}
+		if (names) {
+			int name_i = randint0(names);
+			names = 0;
+			for(int i=n_good_artinames; i<n_artinames; i++) {
+				if (!data->name_used[i]) {
+					if (artifact_name_tval(tval, i)) {
+						if (names == name_i) {
+							name = i;
+							break;
+						}
+						names++;
+					}
+				}
+			}
+		}
+	} else {
+		/* Scale power and find a band to accept in */
 
-	if (one_in_(3))
-		strnfmt(buf, sizeof(buf), "'%s'", word);
-	else
-		strnfmt(buf, sizeof(buf), "of %s", word);
+		file_putf(log_file, "init power %d, depth %d, scale %d, ", power, a->alloc_min, z_info->a_max);
+		int nextpower = ((power + 1) * n_good_artinames) / z_info->a_max;
+
+		/* Avoid preferring some names because of there being more names than artifacts */
+		power = (power * n_good_artinames) / z_info->a_max;
+		power += randint0(nextpower - power);
+		min_power = MAX(0, power - 2);
+		max_power = MIN(n_good_artinames, power + 2);
+
+		/* Stretch if needed */
+		do {
+			names = 0;
+			for(int i=min_power; i<max_power; i++) {
+				if (!data->name_used[i])
+					if (artifact_name_tval(tval, i))
+						names++;
+			}
+			if (!names) {
+				if (min_power > 0) min_power--;
+				 if (max_power < n_good_artinames) max_power++;
+			}
+		} while ((names == 0) && ((min_power > 0) && (max_power < n_good_artinames)));
+
+		/* Find a name at random, select it with a weight dependent on how close it is to the center,
+		 * repeat until found.
+		 */
+		if (names) {
+			do {
+				int name_i = randint0(names);
+				names = 0;
+				for(int i=min_power; i<max_power; i++) {
+					if (!data->name_used[i]) {
+						if (artifact_name_tval(tval, i)) {
+							if (names == name_i) {
+								if (randint0(2+(ABS(i - power))) == 0) {
+									name = i;
+									break;
+								}
+							}
+							names++;
+						}
+					}
+				}
+			} while (name < 0);
+		}
+	}
+
+file_putf(log_file, "power %d, minpower %d, maxpower %d, n_art %d, n_good %d, ",
+	power, min_power, max_power, n_artinames, n_good_artinames);
+file_putf(log_file, "names %d, tv %d, bad? %d, name %d (diff %d) (%s)\n",
+	names, tval, bad, name, name - power, (name >= 0) ? artiname[name].name : "-");
+
+	/* Got a name, use it and set the flag to prevent it being used again */
+	if (name >= 0) {
+		data->name_used[name] = true;
+		if (!strncmp(artiname[name].name, "of", 2))
+			strnfmt(buf, sizeof(buf), "%s", artiname[name].name);
+		else
+			strnfmt(buf, sizeof(buf), "'%s'", artiname[name].name);
+	} else {
+		/* Otherwise randomize it */
+		randname_make(RANDNAME_TOLKIEN, MIN_NAME_LEN, MAX_NAME_LEN, word,
+					  sizeof(word), words);
+		my_strcap(word);
+
+		if (one_in_(3))
+			strnfmt(buf, sizeof(buf), "'%s'", word);
+		else
+			strnfmt(buf, sizeof(buf), "of %s", word);
+	}
+
 	return string_make(buf);
 }
 
@@ -2644,6 +2756,22 @@ static void describe_artifact(int aidx, int power)
 	art->text = string_make(desc);
 }
 
+static void name_artifact(struct artifact_set_data *data, int aidx)
+{
+	struct artifact *art = &a_info[aidx];
+
+	/* Power, tval, badness */
+	int ap = data->power[aidx];
+	int tval = art->tval;
+	bool is_bad = data->bad[aidx];
+
+	/* Choose a name */
+	char *new_name = artifact_gen_name(data, art, name_sections, ap, tval, is_bad);
+
+	/* Apply the new name */
+	string_free(art->name);
+	art->name = new_name;
+}
 
 /**
  * Design a random artifact given a tval
@@ -2677,25 +2805,17 @@ static void design_artifact(struct artifact_set_data *data, int tv, int *aidx)
 							data->min_tv_power[tval],
 							20, 20);
 
-	/* Choose a name */
-	char *new_name = artifact_gen_name(art, name_sections);
-
 	/* Skip fixed artifacts */
 	while (strstr(art->name, "The One Ring") ||
-		kf_has(kind->kind_flags, KF_QUEST_ART)) {
+		(kind && kf_has(kind->kind_flags, KF_QUEST_ART))) {
 		(*aidx)++;
 		if ((*aidx) >= z_info->a_max) {
-			string_free(new_name);
 			mem_free(a_old);
 			return;
 		}
 		art = &a_info[*aidx];
 		art_level = art->level;
 	}
-
-	/* Apply the new name */
-	string_free(art->name);
-	art->name = new_name;
 
 	file_putf(log_file, ">>>>>>>>>>>>>>>>>>>>>>>>>> CREATING NEW ARTIFACT\n");
 	file_putf(log_file, "Artifact %d: power = %d\n", *aidx, power);
@@ -2706,7 +2826,7 @@ static void design_artifact(struct artifact_set_data *data, int tv, int *aidx)
 		power = -power;
 	}
 
-	/* Choose a base item typen not too powerful, so we'll have to add to it. */
+	/* Choose a base item type not too powerful, so we'll have to add to it. */
 	for (tries = 0; tries < MAX_TRIES; tries++) {
 		int base_power = 0;
 
@@ -2758,6 +2878,7 @@ static void design_artifact(struct artifact_set_data *data, int tv, int *aidx)
 	}
 
 	/* Do the actual artifact design */
+	bool is_bad = false;
 	for (tries = 0; tries < MAX_TRIES; tries++) {
 		/* Copy artifact info temporarily. */
 		copy_artifact(art, a_old);
@@ -2775,6 +2896,7 @@ static void design_artifact(struct artifact_set_data *data, int tv, int *aidx)
 
 		/* Damage the designated artifacts */
 		if (hurt_me) {
+			is_bad = true;
 			make_bad(art, art_level);
 			if (one_in_(3)) {
 				hurt_me = false;
@@ -2803,13 +2925,16 @@ static void design_artifact(struct artifact_set_data *data, int tv, int *aidx)
 	mem_free(a_old->faults);
 	mem_free(a_old);
 
+	/* Store it for later pass */
+	data->power[*aidx] = ap;
+	data->bad[*aidx] = is_bad;
+
 	/* Set rarity based on power */
 	alloc_new = 4000000 / (ap * ap);
 	alloc_new /= (kind->alloc_prob ? kind->alloc_prob : 20);
 	if (alloc_new > 99) alloc_new = 99;
 	if (alloc_new < 1) alloc_new = 1;
 	art->alloc_prob = alloc_new;
-
 
 	/* Set depth according to power */
 	art->alloc_max = MIN(127, (ap * 3) / 5);
@@ -2881,6 +3006,27 @@ void create_artifact_set(struct artifact_set_data *data)
 		aidx++;
 	}
 
+	/* Finish up */
+	int *newpower = mem_zalloc(sizeof(int) * z_info->a_max);
+	for(int j=1; j<z_info->a_max - 1; j++) {
+		int highpower = 0;
+		int highindex = 0;
+		for(int i=1; i<z_info->a_max - 1; i++) {
+			if (data->power[i] >= highpower) {
+				highpower = data->power[i];
+				highindex = i;
+			}
+		}
+		newpower[highindex] = j;
+		data->power[highindex] = -1;
+	}
+	mem_free(data->power);
+	data->power = newpower;
+
+	for(int i=1; i<z_info->a_max - 1; i++) {
+		name_artifact(data, i);
+	}
+
 	mem_free(tval_total);
 }
 
@@ -2902,6 +3048,9 @@ static struct artifact_set_data *artifact_set_data_new(void)
 	data->tv_num = mem_zalloc(TV_MAX * sizeof(int));
 	data->art_probs = mem_zalloc(ART_IDX_TOTAL * sizeof(int));
 	data->tv_freq = mem_zalloc(TV_MAX * sizeof(int));
+	data->name_used = mem_zalloc(n_artinames * sizeof(bool));
+	data->power = mem_zalloc(z_info->a_max * sizeof(int));
+	data->bad = mem_zalloc(n_artinames * sizeof(bool));
 
 	/* Mean start and increment values for to_hit, to_dam and AC.  Update these
 	 * if the algorithm changes.  They are used in frequency generation. */
@@ -2931,6 +3080,9 @@ static void artifact_set_data_free(struct artifact_set_data *data)
 	mem_free(data->tv_num);
 	mem_free(data->art_probs);
 	mem_free(data->tv_freq);
+	mem_free(data->name_used);
+	mem_free(data->power);
+	mem_free(data->bad);
 	mem_free(data);
 }
 

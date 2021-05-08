@@ -122,16 +122,6 @@ static enum parser_error write_dummy_object_record(struct artifact *art, const c
 	int i;
 	char mod_name[100];
 
-	/* Extend by 1 and realloc */
-	z_info->k_max += 1;
-	temp = mem_realloc(k_info, (z_info->k_max + 1) * sizeof(*temp));
-
-	/* Copy if no errors */
-	if (!temp)
-		return PARSE_ERROR_INTERNAL;
-	else
-		k_info = temp;
-
 	/* Use the (second) last entry for the dummy */
 	dummy = &k_info[z_info->k_max - 1];
 	memset(dummy, 0, sizeof(*dummy));
@@ -2118,7 +2108,7 @@ static errr finish_parse_object(struct parser *p) {
 	}
 
 	/* allocate the direct access list and copy the data to it */
-	k_info = mem_zalloc((z_info->k_max + 1) * sizeof(*k));
+	k_info = mem_zalloc((z_info->k_max + 2) * sizeof(*k));
 	kidx = z_info->k_max - 1;
 	for (k = parser_priv(p); k; k = next, kidx--) {
 		assert(kidx >= 0);

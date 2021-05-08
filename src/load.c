@@ -563,7 +563,7 @@ int rd_object_memory(void)
 	/* Object Memory */
 	rd_u16b(&tmp16u);
 	if (tmp16u > z_info->k_max) {
-		note(format("Too many (%u) object kinds!", tmp16u));
+		note(format("Too many (%u, not %u) object kinds!", tmp16u, z_info->k_max));
 		return (-1);
 	}
 

@@ -26,6 +26,9 @@
  */
 #define SV_UNKNOWN			0
 
+#define TV_SIZE 			FLAG_SIZE(TV_MAX)
+#define tvf_has(f, flag) 	flag_has_dbg(f, TV_SIZE, flag, #f, #flag)
+
 bool tval_is_legs(const struct object *obj);
 bool tval_is_arms(const struct object *obj);
 bool tval_is_implant(const struct object *obj);
