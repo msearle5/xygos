@@ -920,7 +920,7 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear)
 /* Skill for the current weapon */
 int weapon_skill(struct player *p)
 {
-	struct object *weapon = slot_object(p, slot_by_name(p, "weapon"));
+	struct object *weapon = equipped_item_by_slot_name(p, "weapon");
 	return weapon ? p->state.skills[SKILL_TO_HIT_MELEE] : p->state.skills[SKILL_TO_HIT_MARTIAL];
 }
 
@@ -929,8 +929,8 @@ int weapon_skill(struct player *p)
  */
 bool attempt_shield_bash(struct player *p, struct monster *mon, bool *fear)
 {
-	struct object *weapon = slot_object(p, slot_by_name(p, "weapon"));
-	struct object *shield = slot_object(p, slot_by_name(p, "arm"));
+	struct object *weapon = equipped_item_by_slot_name(p, "weapon");
+	struct object *shield = equipped_item_by_slot_name(p, "arm");
 	int nblows = p->state.num_blows / 100;
 	int bash_quality, bash_dam, energy_lost;
 

@@ -1444,6 +1444,9 @@ void do_cmd_accept_character(struct command *cmd)
 	/* No quest in progress */
 	player->active_quest = -1;
 
+	/* Embody */
+	player_embody(player);
+
 	/* Make a world: towns */
 	world_init_towns();
 
@@ -1459,9 +1462,6 @@ void do_cmd_accept_character(struct command *cmd)
 	message_add("====================", MSG_GENERIC);
 	message_add("  ", MSG_GENERIC);
 	message_add(" ", MSG_GENERIC);
-
-	/* Embody */
-	player_embody(player);
 
 	/* Give the player some money */
 	get_money();
