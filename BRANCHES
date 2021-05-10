@@ -1,7 +1,8 @@
 master
 borg		active, experimental	Porting the Borg
 artifacts	active, experimental	Randarts / halfarts etc.
-resist		inactive, merged	Resistance by steps
+mutants		active, experimental	Mutated monsters
+resist		inactive, merged		Resistance by steps
 sliding		inactive, merged		Sliding (mixed) classes
 champions	active, experimental	Champions (ghosts)
 world		inactive, merged		Multi-town world
