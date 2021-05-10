@@ -267,8 +267,8 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 	const char *modstr = obj_desc_get_modstr(obj->kind);
 
 	/* Some items have unadorned names */
-	if ((obj->tval == TV_WAND) || (obj->tval == TV_DEVICE) ||
-		(obj->tval == TV_GADGET) || (obj->tval == TV_LIGHT)) {
+	if (((obj->tval == TV_WAND) || (obj->tval == TV_DEVICE) ||
+		(obj->tval == TV_GADGET) || (obj->tval == TV_LIGHT)) && (!object_is_known_artifact(obj))) {
 		const char *name = obj->kind->name;
 		bool show_flavor = !terse && obj->kind->flavor && !store;
 		char buf2[256];
@@ -295,7 +295,7 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 		end = obj_desc_name_format(buf, max, end, name, modstr, plural);
 	} else {
 		/* Prepend extra names */
-		if (obj->kind->flavor && aware && !mimic) {
+		if (obj->kind->flavor && aware && !mimic && (!object_is_known_artifact(obj))) {
 			const char *space = " ";
 			char buf2[256];
 			*buf2 = 0;

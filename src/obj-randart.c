@@ -1518,6 +1518,10 @@ static struct object_kind *get_base_item(struct artifact_set_data *data,
 		/* No items based on quest artifacts */
 		if (kind && kf_has(kind->kind_flags, KF_QUEST_ART))
 			kind = NULL;
+
+		/* No items based on one-time-use lights */
+		if (kind && of_has(kind->flags, OF_BURNS_OUT))
+			kind = NULL;
 	}
 
 	object_short_name(name, sizeof name, kind->name);

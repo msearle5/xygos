@@ -40,6 +40,7 @@
 #include "obj-tval.h"
 #include "obj-util.h"
 #include "object.h"
+#include "player-birth.h"
 #include "player-calcs.h"
 #include "player-history.h"
 #include "player-quest.h"

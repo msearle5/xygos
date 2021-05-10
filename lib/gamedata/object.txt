@@ -464,7 +464,7 @@ material:plastic
 pval:500
 values:USE_ENERGY[1]
 flags:BURNS_OUT | EASY_KNOW | LIGHT_3 | IGNORE_FIRE
-desc:A small, light yet reasonably bright LED light. It won't last long, though and it cannot be recharged.
+desc:A small, light yet reasonably bright LED light. It won't last long though, and it cannot be recharged.
 
 name:& glowstick~
 type:light

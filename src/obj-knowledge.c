@@ -709,11 +709,6 @@ static bool object_non_fault_icons_known(const struct object *obj)
 	/* No known object */
 	if (!obj->known) return false;
 
-	/* Not all combat details known */
-	if (obj->known->to_a != obj->to_a) return false;
-	if (obj->known->to_h != obj->to_h) return false;
-	if (obj->known->to_d != obj->to_d) return false;
-
 	/* Not all modifiers known */
 	for (i = 0; i < OBJ_MOD_MAX; i++)
 		if (obj->modifiers[i] != obj->known->modifiers[i])
