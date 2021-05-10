@@ -5,7 +5,7 @@
 
 # === Understanding artifact.txt ===
 
-# name: serial number : item name
+# name: item name
 # base-object: tval : sval
 # graphics: symbol : color
 # level: level
@@ -21,8 +21,7 @@
 # values: label[value] | label[value] | etc.
 # desc: description
 
-# 'name' indicates the beginning of an entry. The serial number must
-# increase for each new item.
+# 'name' indicates the beginning of an entry.
 
 # 'base-object' is for base object type. The tval is for the type of item, the
 # sval identifies the subtype.  If the sval is not a standard object kind

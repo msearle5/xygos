@@ -27,30 +27,31 @@
 struct angband_constants
 {
 	/* Array bounds etc, set on parsing edit files */
-	u16b f_max;			/**< Maximum number of terrain features */
-	u16b trap_max;		/**< Maximum number of trap kinds */
-	u16b k_max;			/**< Maximum number of object base kinds */
-	u16b a_max;			/**< Maximum number of artifact kinds */
-	u16b e_max;			/**< Maximum number of ego-item kinds */
-	u16b r_max;			/**< Maximum number of monster races */
-	u16b mp_max;		/**< Maximum number of monster pain message sets */
-	u16b s_max;			/**< Maximum number of magic spells */
-	u16b pit_max;		/**< Maximum number of monster pit types */
-	u16b act_max;		/**< Maximum number of activations for randarts */
-	u16b fault_max;		/**< Maximum number of faults */
-	u16b slay_max;		/**< Maximum number of slays */
-	u16b brand_max;		/**< Maximum number of brands */
-	u16b mon_blows_max;	/**< Maximum number of monster blows */
+	u16b f_max;				/**< Maximum number of terrain features */
+	u16b trap_max;			/**< Maximum number of trap kinds */
+	u16b k_max;				/**< Maximum number of object base kinds */
+	u16b a_max;				/**< Maximum number of artifact kinds */
+	u16b a_base;			/**< Maximum number of artifact kinds (directly defined, not random) */
+	u16b e_max;				/**< Maximum number of ego-item kinds */
+	u16b r_max;				/**< Maximum number of monster races */
+	u16b mp_max;			/**< Maximum number of monster pain message sets */
+	u16b s_max;				/**< Maximum number of magic spells */
+	u16b pit_max;			/**< Maximum number of monster pit types */
+	u16b act_max;			/**< Maximum number of activations for randarts */
+	u16b fault_max;			/**< Maximum number of faults */
+	u16b slay_max;			/**< Maximum number of slays */
+	u16b brand_max;			/**< Maximum number of brands */
+	u16b mon_blows_max;		/**< Maximum number of monster blows */
 	u16b blow_methods_max;	/**< Maximum number of monster blow methods */
 	u16b blow_effects_max;	/**< Maximum number of monster blow effects */
 	u16b equip_slots_max;	/**< Maximum number of player equipment slots */
-	u16b profile_max;	/**< Maximum number of cave_profiles */
-	u16b quest_max;		/**< Maximum number of quests */
+	u16b profile_max;		/**< Maximum number of cave_profiles */
+	u16b quest_max;			/**< Maximum number of quests */
 	u16b projection_max;	/**< Maximum number of projection types */
 	u16b calculation_max;	/**< Maximum number of object power calculations */
-	u16b property_max;	/**< Maximum number of object properties */
+	u16b property_max;		/**< Maximum number of object properties */
 	u16b ordinary_kind_max;	/**< Maximum number of objects in object.txt */
-	u16b shape_max;		/**< Maximum number of player shapes */
+	u16b shape_max;			/**< Maximum number of player shapes */
 
 	/* Maxima of things on a given level, read from constants.txt */
 	u16b level_monster_max;	/**< Maximum number of monsters on a given level */
@@ -122,6 +123,7 @@ struct angband_constants
 	u16b fuel_torch;	/* Maximum amount of fuel in a torch */
 	u16b fuel_lamp;		/* Maximum amount of fuel in a lantern */
 	u16b default_lamp;	/* Default amount of fuel in a lantern  */
+	u16b rand_art;		/* Number of random artifacts */
 
 	/* Player constants, read from constants.txt */
 	u16b max_sight;		/* Maximum visual range */

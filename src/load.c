@@ -1035,11 +1035,19 @@ int rd_misc(void)
 	//if (player->is_dead)
 	//	return 0;
 
-	/* Handle randart file parsing */
+	/* Restore the standard artifacts (randarts may have been loaded) */
+	cleanup_parser(&randart_parser);
+	deactivate_randart_file();
+	run_parser(&artifact_parser);
+
+	/* Determine number of artifacts to use */
+	z_info->a_max = z_info->a_base;
+	if (OPT(player, birth_randarts))
+		z_info->a_max += z_info->rand_art;
+
+	/* Now only randomize the artifacts if required */
 	if (OPT(player, birth_randarts)) {
-		cleanup_parser(&artifact_parser);
-		activate_randart_file();
-		run_parser(&randart_parser);
+		do_randart(seed_randart, false);
 		deactivate_randart_file();
 	}
 
@@ -1094,7 +1102,7 @@ int rd_artifacts(void)
 
 	/* Load the Artifacts */
 	rd_u16b(&tmp16u);
-	if (tmp16u > z_info->a_max) {
+	if (tmp16u > z_info->a_base + z_info->rand_art) {
 		note(format("Too many (%u) artifacts!", tmp16u));
 		return (-1);
 	}
@@ -1111,6 +1119,11 @@ int rd_artifacts(void)
 		a_info[i].everseen = tmp8u ? true : false;
 		rd_byte(&tmp8u);
 	}
+
+	/* Determine number of artifacts to use */
+	z_info->a_max = z_info->a_base;
+	if (OPT(player, birth_randarts))
+		z_info->a_max += z_info->rand_art;
 
 	return 0;
 }

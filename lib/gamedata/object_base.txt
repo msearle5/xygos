@@ -13,6 +13,10 @@
 # max-stack: maximum number that can appear in a stack
 # flags: default flags
 # material: default material
+# randart: min avg max prob total
+#          Minimum, average and maximum powers of randarts of this tval
+#          Prob - probability of a randart being of this tval
+#          Total - randart set must include at least this many of this tval
 
 default:break-chance:10
 default:max-stack:99
@@ -67,12 +71,14 @@ graphics:umber
 flags:HATES_ACID
 flags:SHOW_MULT
 material:steel
+randart:150:200:300:8:7
 
 name:digger:Digger~
 graphics:slate
 # max-stack:1
 flags:SHOW_DICE
 material:steel
+randart:75:175:300:2:0
 
 name:hafted:Hafted weapon~
 graphics:white
@@ -80,6 +86,7 @@ graphics:white
 flags:HATES_ACID | HATES_FIRE
 flags:SHOW_DICE
 material:steel
+randart:135:280:450:4:2
 
 name:polearm:Polearm~
 graphics:white
@@ -87,6 +94,7 @@ graphics:white
 flags:HATES_ACID | HATES_FIRE
 flags:SHOW_DICE
 material:steel
+randart:80:230:350:3:2
 
 name:sword:Bladed weapon~
 graphics:white
@@ -94,22 +102,26 @@ graphics:white
 flags:HATES_ACID
 flags:SHOW_DICE
 material:steel
+randart:80:200:450:20:10
 
 name:boots:Boot~
 graphics:light umber
 # max-stack:1
 flags:HATES_ACID | HATES_FIRE
+randart:75:200:375:6:4
 
 name:gloves:Glove~
 graphics:light umber
 # max-stack:1
 flags:HATES_ACID | HATES_FIRE
+randart:60:135:260:8:4
 
 name:helm:Helm~
 graphics:light umber
 # max-stack:1
 flags:HATES_ACID
 material:steel
+randart:25:150:320:7:4
 
 name:crown:Crown~
 graphics:light umber
@@ -122,30 +134,35 @@ graphics:light green
 # max-stack:1
 flags:HATES_ELEC | HATES_FIRE
 material:plastic
+randart:150:250:330:1:2
 
 name:shield:Shield~
 graphics:light umber
 # max-stack:1
 flags:HATES_ACID
 material:leather
+randart:120:180:230:7:4
 
 name:cloak:Cloak~
 graphics:light umber
 # max-stack:1
 flags:HATES_ACID | HATES_FIRE
 material:cloth
+randart:60:120:220:7:4
 
 name:soft armor:Soft Armor~
 graphics:slate
 # max-stack:1
 flags:HATES_ACID | HATES_FIRE
 material:leather
+randart:170:200:240:3:3
 
 name:hard armor:Hard Armor~
 graphics:slate
 # max-stack:1
 flags:HATES_ACID
 material:steel
+randart:190:280:380:7:3
 
 name:dragon armor:Dragon Armor~
 graphics:slate
@@ -157,6 +174,7 @@ graphics:yellow
 break:50
 # max-stack:10
 flags:HATES_FIRE
+randart:40:80:120:3:3
 
 name:device:Device~
 graphics:light umber
@@ -220,6 +238,7 @@ break:0
 flags:HATES_FIRE | HATES_ELEC
 flags:EASY_KNOW | NO_EQUIP
 material:titanium
+randart:150:250:400:1:1
 
 name:arms:arm implant~
 graphics:white
@@ -227,3 +246,4 @@ break:0
 flags:HATES_FIRE | HATES_ELEC
 flags:EASY_KNOW | NO_EQUIP
 material:titanium
+randart:120:220:330:1:1

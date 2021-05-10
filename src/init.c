@@ -618,6 +618,8 @@ static enum parser_error parse_constants_obj_make(struct parser *p) {
 		z->fuel_lamp = value;
 	else if (streq(label, "default-lamp"))
 		z->default_lamp = value;
+	else if (streq(label, "rand-art"))
+		z->rand_art = value;
 	else
 		return PARSE_ERROR_UNDEFINED_DIRECTIVE;
 

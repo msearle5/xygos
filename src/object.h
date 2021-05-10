@@ -181,6 +181,12 @@ struct object_base {
 	bitflag kind_flags[KF_SIZE];			/**< Kind flags */
 	struct element_info el_info[ELEM_MAX];
 
+	int randart_min;	/** Minimum power of a randart using this tval */
+	int randart_avg;	/** Average power */
+	int randart_max;	/** Maximum power */
+	int randart_prob;	/** Probability of generation */
+	int randart_total;	/** (Minimum) Total number of randarts */
+
 	int break_perc;
 	int max_stack;
 	int num_svals;

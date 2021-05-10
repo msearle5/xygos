@@ -118,7 +118,7 @@ static bool grab_element_flag(struct element_info *info, const char *flag_name)
 
 static enum parser_error write_dummy_object_record(struct artifact *art, const char *name)
 {
-	struct object_kind *temp, *dummy;
+	struct object_kind *dummy;
 	int i;
 	char mod_name[100];
 
@@ -527,6 +527,24 @@ static enum parser_error parse_object_base_break(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_object_base_randart(struct parser *p) {
+	struct object_base *kb;
+
+	struct kb_parsedata *d = parser_priv(p);
+	assert(d);
+
+	kb = d->kb;
+	assert(kb);
+
+	kb->randart_min = parser_getint(p, "min");
+	kb->randart_avg = parser_getint(p, "avg");
+	kb->randart_max = parser_getint(p, "max");
+	kb->randart_prob = parser_getint(p, "prob");
+	kb->randart_total = parser_getint(p, "total");
+
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_object_base_max_stack(struct parser *p) {
 
 	struct kb_parsedata *d = parser_priv(p);
@@ -597,6 +615,7 @@ struct parser *init_parse_object_base(void) {
 	parser_reg(p, "max-stack int size", parse_object_base_max_stack);
 	parser_reg(p, "flags str flags", parse_object_base_flags);
 	parser_reg(p, "material sym name", parse_object_base_material);
+	parser_reg(p, "randart int min int avg int max int prob int total", parse_object_base_randart);
 	return p;
 }
 
@@ -2709,11 +2728,9 @@ static enum parser_error parse_artifact_weight(struct parser *p) {
 	assert(k);
 
 	errr err = parse_getweight(p, "weight", &a->weight);
-	if (err ==  PARSE_ERROR_NONE) {
-		/* Set kind weight for special artifacts */
-		if (k->kidx >= z_info->ordinary_kind_max) {
-			k->weight = a->weight;
-		}
+	if (err == PARSE_ERROR_NONE) {
+		/* Set kind weight */
+		k->weight = a->weight;
 	}
 
 	return err;
@@ -2947,7 +2964,7 @@ static errr finish_parse_artifact(struct parser *p) {
 	}
 
 	/* Allocate the direct access list and copy the data to it */
-	a_info = mem_zalloc((z_info->a_max + 1) * sizeof(*a));
+	a_info = mem_zalloc((z_info->a_max + 2 + z_info->rand_art) * sizeof(*a));
 	aidx = z_info->a_max;
 	for (a = parser_priv(p); a; a = n, aidx--) {
 		assert(aidx > 0);
@@ -2962,7 +2979,7 @@ static errr finish_parse_artifact(struct parser *p) {
 
 		mem_free(a);
 	}
-	z_info->a_max += 1;
+	z_info->a_base = z_info->a_max;
 
 	/* Now we're done with object kinds, deal with object-like things */
 	none = tval_find_idx("none");
@@ -3022,7 +3039,7 @@ static errr finish_parse_randart(struct parser *p) {
 	}
 
 	/* Allocate the direct access list and copy the data to it */
-	a_info = mem_zalloc((z_info->a_max + 1) * sizeof(*a));
+	a_info = mem_zalloc((z_info->a_max + 2 + z_info->rand_art) * sizeof(*a));
 	aidx = z_info->a_max;
 	for (a = parser_priv(p); a; a = n, aidx--) {
 		assert(aidx > 0);

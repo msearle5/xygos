@@ -720,7 +720,7 @@ void wr_artifacts(void)
 	u16b tmp16u;
 
 	/* Hack -- Dump the artifacts */
-	tmp16u = z_info->a_max;
+	tmp16u = z_info->a_base + z_info->rand_art;
 	wr_u16b(tmp16u);
 	for (i = 0; i < tmp16u; i++) {
 		struct artifact *art = &a_info[i];

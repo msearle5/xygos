@@ -491,11 +491,17 @@ void player_init(struct player *p)
 {
 	int i;
 	struct player_options opts_save = p->opts;
+	bool randarts = OPT(p, birth_randarts);
 
 	player_cleanup_members(p);
 
 	/* Wipe the player */
 	memset(p, 0, sizeof(struct player));
+
+	/* Determine number of artifacts to use */
+	z_info->a_max = z_info->a_base;
+	if (randarts)
+		z_info->a_max += z_info->rand_art;
 
 	/* Start with no artifacts made yet */
 	for (i = 0; z_info && i < z_info->a_max; i++) {
@@ -1485,6 +1491,11 @@ void do_cmd_accept_character(struct command *cmd)
 	cleanup_parser(&randart_parser);
 	deactivate_randart_file();
 	run_parser(&artifact_parser);
+
+	/* Determine number of artifacts to use */
+	z_info->a_max = z_info->a_base;
+	if (OPT(player, birth_randarts))
+		z_info->a_max += z_info->rand_art;
 
 	/* Now only randomize the artifacts if required */
 	if (OPT(player, birth_randarts)) {

@@ -204,6 +204,8 @@ obj-make:fuel-lamp:15000
 # Default amount of fuel in a lantern
 obj-make:default-lamp:7500
 
+# Number of random artifacts to generate
+obj-make:rand-art:110
 
 #---------------------------------------------------------------------
 # Player constants

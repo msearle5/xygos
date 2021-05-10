@@ -54,6 +54,10 @@ static struct artiname *artiname;
 static int n_artinames;
 static int n_good_artinames;
 
+static int first_randart;
+static int last_randart;
+static int n_randarts;
+
 static const char *list_tvals[TV_MAX] =
 {
 	#define TV(a, b, c) #a,
@@ -223,7 +227,8 @@ static s16b art_idx_armor[] = {
 	ART_IDX_ARMOR_CON,
 	ART_IDX_ARMOR_LRES,
 	ART_IDX_ARMOR_ALLRES,
-	ART_IDX_ARMOR_HRES};
+	ART_IDX_ARMOR_HRES
+};
 static s16b art_idx_gen[] = {
 	ART_IDX_GEN_STAT,
 	ART_IDX_GEN_SUST,
@@ -277,6 +282,10 @@ static s16b art_idx_high_resist[] =	{
 	ART_IDX_GEN_PSTUN
 };
 
+
+static void accum_frequencies( struct artifact_set_data *data);
+
+
 /**
  * ------------------------------------------------------------------------
  * Calculation of the statistics of an artifact set
@@ -314,6 +323,36 @@ static int artifact_power(int a_idx, char *reason, bool verbose)
 	return power;
 }
 
+/**
+ * Reset the tval and artifact ability frequencies to a fixed set.
+ */
+static void fixed_frequencies(struct artifact_set_data *data)
+{
+	/* Tval min, max and average power, and frequency */
+	for (int i = 0; i < TV_MAX; i++) {
+		data->min_tv_power[i] = kb_info[i].randart_min;
+		data->avg_tv_power[i] = kb_info[i].randart_avg;
+		data->max_tv_power[i] = kb_info[i].randart_max;
+		data->max_power = MAX(data->max_tv_power[i], data->max_power);
+		data->tv_probs[i] = kb_info[i].randart_prob;
+	}
+
+
+	static const int art_idx_prob[ART_IDX_TOTAL+1] =
+	{
+		#define ART_IDX(a, b, c) c,
+		#include "list-randart-properties.h"
+		#undef ART_IDX
+	};
+
+	/* Read frequencies */
+	for (int i = 0; i < ART_IDX_TOTAL; i++) {
+		data->art_probs[i] = art_idx_prob[i];
+	}
+
+	/* Build the frequency table */
+	accum_frequencies(data);
+}
 
 /**
  * Store the original artifact power ratings as a baseline
@@ -329,48 +368,48 @@ static void store_base_power(struct artifact_set_data *data)
 	data->max_power = 0;
 	data->min_power = INHIBIT_POWER + 1;
 	data->var_power = 0;
-	fake_total_power = mem_zalloc(z_info->a_max * sizeof(int));
+	fake_total_power = mem_zalloc(last_randart * sizeof(int));
 	fake_tv_power = mem_zalloc(TV_MAX * sizeof(int*));
 	for (i = 0; i < TV_MAX; i++) {
-		fake_tv_power[i] = mem_zalloc(z_info->a_max * sizeof(int));
+		fake_tv_power[i] = mem_zalloc(last_randart * sizeof(int));
 		data->min_tv_power[i] = INHIBIT_POWER + 1;
 		data->max_tv_power[i] = 0;
 	}
 	num = 0;
 
-	for (i = 0; i < z_info->a_max; i++, num++) {
-		data->base_power[i] = artifact_power(i, "for original power", true);
+	for (i = first_randart; i < last_randart; i++, num++) {
+	   data->base_power[i] = artifact_power(i, "for original power", true);
 
-		/* Capture power stats, ignoring faulty and uber arts */
-		if (data->base_power[i] > data->max_power &&
-			data->base_power[i] < INHIBIT_POWER)
-			data->max_power = data->base_power[i];
-		if (data->base_power[i] < data->min_power && data->base_power[i] > 0)
-			data->min_power = data->base_power[i];
-		if (data->base_power[i] > 0 && data->base_power[i] < INHIBIT_POWER) {
-			int tval = a_info[i].tval;
-			fake_total_power[num] = (int)data->base_power[i];
-			fake_tv_power[tval][data->tv_num[tval]++] = data->base_power[i];
-			if (data->base_power[i] < data->min_tv_power[tval]) {
-				data->min_tv_power[tval] = data->base_power[i];
-			}
-			if (data->base_power[i] > data->max_tv_power[tval]) {
-				data->max_tv_power[tval] = data->base_power[i];
-			}
-		} else {
-			num--;
-		}
-		if (data->base_power[i] < 0) {
-			data->neg_power_total++;
-		}
+	   /* Capture power stats, ignoring faulty and uber arts */
+	   if (data->base_power[i] > data->max_power &&
+			   data->base_power[i] < INHIBIT_POWER)
+			   data->max_power = data->base_power[i];
+	   if (data->base_power[i] < data->min_power && data->base_power[i] > 0)
+			   data->min_power = data->base_power[i];
+	   if (data->base_power[i] > 0 && data->base_power[i] < INHIBIT_POWER) {
+			   int tval = a_info[i].tval;
+			   fake_total_power[num] = (int)data->base_power[i];
+			   fake_tv_power[tval][data->tv_num[tval]++] = data->base_power[i];
+			   if (data->base_power[i] < data->min_tv_power[tval]) {
+					   data->min_tv_power[tval] = data->base_power[i];
+			   }
+			   if (data->base_power[i] > data->max_tv_power[tval]) {
+					   data->max_tv_power[tval] = data->base_power[i];
+			   }
+	   } else {
+			   num--;
+	   }
+	   if (data->base_power[i] < 0) {
+			   data->neg_power_total++;
+	   }
 
-		if (!data->base_power[i]) continue;
-		art = &a_info[i];
-		kind = lookup_kind(art->tval, art->sval);
-		data->base_item_level[i] = kind->level;
-		data->base_item_prob[i] = kind->alloc_prob;
-		data->base_art_alloc[i] = art->alloc_prob;
-	}
+	   if (!data->base_power[i]) continue;
+	   art = &a_info[i];
+	   kind = lookup_kind(art->tval, art->sval);
+	   data->base_item_level[i] = kind->level;
+	   data->base_item_prob[i] = kind->alloc_prob;
+	   data->base_art_alloc[i] = art->alloc_prob;
+   }
 
 	data->avg_power = mean(fake_total_power, num);
 	data->var_power = variance(fake_total_power, num);
@@ -394,7 +433,7 @@ static void store_base_power(struct artifact_set_data *data)
 
 	/* Store the number of different types, for use later */
 	/* ToDo: replace this with full combination tracking */
-	for (i = 0; i < z_info->a_max; i++) {
+	for (i = first_randart; i < last_randart; i++) {
 		switch (a_info[i].tval)
 		{
 		case TV_SWORD:
@@ -1164,10 +1203,8 @@ void count_abilities(const struct artifact *art, struct artifact_set_data *data)
  */
 static void collect_artifact_data(struct artifact_set_data *data)
 {
-	size_t i;
-
 	/* Go through the list of all artifacts */
-	for (i = 0; i < z_info->a_max; i++) {
+	for (int i = 0; i < first_randart; i++) {
 		struct object_kind *kind;
 		const struct artifact *art = &a_info[i];
 
@@ -1181,8 +1218,7 @@ static void collect_artifact_data(struct artifact_set_data *data)
 
 		/* Special cases -- don't parse these! */
 		if (kind) {
-			if (strstr(art->name, "The One Ring") ||
-				kf_has(kind->kind_flags, KF_QUEST_ART))
+			if (kf_has(kind->kind_flags, KF_QUEST_ART))
 				continue;
 
 			/* Add the base item tval to the tv_probs array */
@@ -1387,7 +1423,6 @@ static void adjust_freqs(struct artifact_set_data *data)
 static void parse_frequencies(struct artifact_set_data *data)
 {
 	size_t i;
-	int j;
 
 	file_putf(log_file, "\n****** BEGINNING GENERATION OF FREQUENCIES\n\n");
 
@@ -1419,6 +1454,15 @@ static void parse_frequencies(struct artifact_set_data *data)
 
 	/* Perform any additional rescaling and adjustment, if required. */
 	adjust_freqs(data);
+
+	/* Build a cumulative frequency table for tvals */
+	accum_frequencies(data);
+}
+
+static void accum_frequencies( struct artifact_set_data *data)
+{
+	size_t i;
+	int j;
 
 	/* Log the final frequencies to check that everything's correct */
 	for (i = 0; i < ART_IDX_TOTAL; i++)
@@ -1704,12 +1748,12 @@ static void try_supercharge(struct artifact *art, s32b target_power,
 	if (art->tval == TV_DIGGING || art->tval == TV_HAFTED ||
 		art->tval == TV_POLEARM || art->tval == TV_SWORD) {
 		/* Damage dice */
-		if (randint0(z_info->a_max) <
+		if (randint0(n_randarts) <
 			data->art_probs[ART_IDX_MELEE_DICE_SUPER]) {
 			art->dd += 3 + randint0(4);
 			file_putf(log_file, "Supercharging damage dice!  (Now %d dice)\n",
 					  art->dd);
-		} else if (randint0(z_info->a_max) <
+		} else if (randint0(n_randarts) <
 				   data->art_probs[ART_IDX_MELEE_BLOWS_SUPER]) {
 			/* Blows */
 			art->modifiers[OBJ_MOD_BLOWS] = INHIBIT_BLOWS - 1;
@@ -1720,12 +1764,12 @@ static void try_supercharge(struct artifact *art, s32b target_power,
 
 	/* Guns - max might or shots */
 	if (art->tval == TV_GUN) {
-		if (randint0(z_info->a_max)
+		if (randint0(n_randarts)
 			< data->art_probs[ART_IDX_GUN_SHOTS_SUPER]) {
 			art->modifiers[OBJ_MOD_SHOTS] = INHIBIT_SHOTS - 1;
 			file_putf(log_file, "Supercharging shots! (%+d extra shots)\n",
 				INHIBIT_SHOTS - 1);
-		} else if (randint0(z_info->a_max) <
+		} else if (randint0(n_randarts) <
 				   data->art_probs[ART_IDX_GUN_MIGHT_SUPER]) {
 			art->modifiers[OBJ_MOD_MIGHT] = INHIBIT_MIGHT - 1;
 			file_putf(log_file, "Supercharging might! (%+d extra might)\n",
@@ -1734,8 +1778,8 @@ static void try_supercharge(struct artifact *art, s32b target_power,
 	}
 
 	/* Big speed bonus - any item (potentially) but more likely on boots */
-	if (randint0(z_info->a_max) < data->art_probs[ART_IDX_GEN_SPEED_SUPER] ||
-		(art->tval == TV_BOOTS && randint0(z_info->a_max) <
+	if (randint0(n_randarts) < data->art_probs[ART_IDX_GEN_SPEED_SUPER] ||
+		(art->tval == TV_BOOTS && randint0(n_randarts) <
 		data->art_probs[ART_IDX_BOOT_SPEED])) {
 		art->modifiers[OBJ_MOD_SPD] = 5 + randint0(6);
 		if (INHIBIT_WEAK)
@@ -1748,7 +1792,7 @@ static void try_supercharge(struct artifact *art, s32b target_power,
 	/* Big AC bonus */
 	if (art->tval == TV_DIGGING || art->tval == TV_HAFTED ||
 		art->tval == TV_POLEARM || art->tval == TV_SWORD) {
-		if (randint0(z_info->a_max) < data->art_probs[ART_IDX_MELEE_AC_SUPER]) {
+		if (randint0(n_randarts) < data->art_probs[ART_IDX_MELEE_AC_SUPER]) {
 			art->to_a += 19 + randint1(11);
 			if (INHIBIT_WEAK)
 				art->to_a += randint1(10);
@@ -1758,7 +1802,7 @@ static void try_supercharge(struct artifact *art, s32b target_power,
 					  art->to_a);
 		}
 	} else if ((art->tval != TV_GUN) &&
-			   (randint0(z_info->a_max) <
+			   (randint0(n_randarts) <
 				data->art_probs[ART_IDX_GEN_AC_SUPER])) {
 		art->to_a += 19 + randint1(11);
 		if (INHIBIT_WEAK)
@@ -1773,13 +1817,13 @@ static void try_supercharge(struct artifact *art, s32b target_power,
 	if (art->tval == TV_GUN || art->tval == TV_DIGGING ||
 		art->tval == TV_HAFTED || art->tval == TV_POLEARM ||
 		art->tval == TV_SWORD) {
-		if ((randint0(z_info->a_max) < data->art_probs[ART_IDX_WEAPON_AGGR]) &&
+		if ((randint0(n_randarts) < data->art_probs[ART_IDX_WEAPON_AGGR]) &&
 		    (target_power > AGGR_POWER)) {
 			of_on(art->flags, OF_AGGRAVATE);
 			file_putf(log_file, "Adding aggravation\n");
 		}
 	} else {
-		if ((randint0(z_info->a_max)
+		if ((randint0(n_randarts)
 			 < data->art_probs[ART_IDX_NONWEAPON_AGGR]) &&
 			(target_power > AGGR_POWER)) {
 			of_on(art->flags, OF_AGGRAVATE);
@@ -2669,11 +2713,11 @@ char *artifact_gen_name(struct artifact_set_data *data, struct artifact *a, cons
 	} else {
 		/* Scale power and find a band to accept in */
 
-		file_putf(log_file, "init power %d, depth %d, scale %d, ", power, a->alloc_min, z_info->a_max);
-		int nextpower = ((power + 1) * n_good_artinames) / z_info->a_max;
+		file_putf(log_file, "init power %d, depth %d, scale %d, ", power, a->alloc_min, n_randarts);
+		int nextpower = ((power + 1) * n_good_artinames) / n_randarts;
 
 		/* Avoid preferring some names because of there being more names than artifacts */
-		power = (power * n_good_artinames) / z_info->a_max;
+		power = (power * n_good_artinames) / n_randarts;
 		power += randint0(nextpower - power);
 		min_power = MAX(0, power - 2);
 		max_power = MIN(n_good_artinames, power + 2);
@@ -2688,7 +2732,7 @@ char *artifact_gen_name(struct artifact_set_data *data, struct artifact *a, cons
 			}
 			if (!names) {
 				if (min_power > 0) min_power--;
-				 if (max_power < n_good_artinames) max_power++;
+				if (max_power < n_good_artinames) max_power++;
 			}
 		} while ((names == 0) && ((min_power > 0) && (max_power < n_good_artinames)));
 
@@ -2716,10 +2760,10 @@ char *artifact_gen_name(struct artifact_set_data *data, struct artifact *a, cons
 		}
 	}
 
-file_putf(log_file, "power %d, minpower %d, maxpower %d, n_art %d, n_good %d, ",
-	power, min_power, max_power, n_artinames, n_good_artinames);
-file_putf(log_file, "names %d, tv %d, bad? %d, name %d (diff %d) (%s)\n",
-	names, tval, bad, name, name - power, (name >= 0) ? artiname[name].name : "-");
+	file_putf(log_file, "power %d, minpower %d, maxpower %d, n_art %d, n_good %d, ",
+		power, min_power, max_power, n_artinames, n_good_artinames);
+	file_putf(log_file, "names %d, tv %d, bad? %d, name %d (diff %d) (%s)\n",
+		names, tval, bad, name, name - power, (name >= 0) ? artiname[name].name : "-");
 
 	/* Got a name, use it and set the flag to prevent it being used again */
 	if (name >= 0) {
@@ -2785,7 +2829,7 @@ static void name_artifact(struct artifact_set_data *data, int aidx)
 static void design_artifact(struct artifact_set_data *data, int tv, int *aidx)
 {
 	struct artifact *art = &a_info[*aidx];
-	struct object_kind *kind = lookup_kind(art->tval, art->sval);
+	struct object_kind *kind;
 	int art_freq[ART_IDX_TOTAL];
 	int art_level = art->level;
 	int tries;
@@ -2806,10 +2850,9 @@ static void design_artifact(struct artifact_set_data *data, int tv, int *aidx)
 							20, 20);
 
 	/* Skip fixed artifacts */
-	while (strstr(art->name, "The One Ring") ||
-		(kind && kf_has(kind->kind_flags, KF_QUEST_ART))) {
+	while ((kind = lookup_kind(art->tval, art->sval)) && kf_has(kind->kind_flags, KF_QUEST_ART)) {
 		(*aidx)++;
-		if ((*aidx) >= z_info->a_max) {
+		if ((*aidx) >= last_randart) {
 			mem_free(a_old);
 			return;
 		}
@@ -2873,7 +2916,7 @@ static void design_artifact(struct artifact_set_data *data, int tv, int *aidx)
 	}
 
 	/* Give this artifact a chance to be faulty - note it retains its power */
-	if (one_in_(z_info->a_max / MAX(2, data->neg_power_total))) {
+	if (one_in_(n_randarts / MAX(2, data->neg_power_total))) {
 		hurt_me = true;
 	}
 
@@ -2967,22 +3010,18 @@ static void design_artifact(struct artifact_set_data *data, int tv, int *aidx)
 
 /**
  * Create a random artifact set
- *
- * The resulting set will have at least 80% the number of artifacts from any
- * given tval as the original artifact set.  This means that tvals with less
- * than 5 artifacts in the original set will always have equal or increased
- * numbers on the new set.
  */
 void create_artifact_set(struct artifact_set_data *data)
 {
-	int i, aidx = 1;
+	int i;
+	int base = first_randart;
+	int aidx = base;
 	int *tval_total = mem_zalloc(TV_MAX * sizeof(int));
 	bool not_done = true;
 
 	/* Get min tval frequencies for the new artifacts */
 	for (i = 0; i < TV_MAX; i++) {
-		/* At least 80% as many for each tval */
-		tval_total[i] = (4 * (data->tv_num[i] + 1)) / 5;
+		tval_total[i] = kb_info[i].randart_total;
 	}
 
 	/* Allocate a minimal set of artifacts to the tvals */
@@ -3001,30 +3040,40 @@ void create_artifact_set(struct artifact_set_data *data)
 	}
 
 	/* Allocate remaining artifacts at random */
-	while (aidx < z_info->a_max - 1) {
+	while (aidx < last_randart) {
 		design_artifact(data, TV_NULL, &aidx);
 		aidx++;
 	}
 
-	/* Finish up */
-	int *newpower = mem_zalloc(sizeof(int) * z_info->a_max);
-	for(int j=1; j<z_info->a_max - 1; j++) {
+	/* Finish up - convert power into order-by-power, then generate names */
+	int *newpower = mem_zalloc(sizeof(int) * last_randart);
+	int *oldpower = mem_zalloc(sizeof(int) * last_randart);
+	memcpy(oldpower, data->power, sizeof(int) * last_randart);
+	for(int j=base; j<last_randart; j++) {
 		int highpower = 0;
 		int highindex = 0;
-		for(int i=1; i<z_info->a_max - 1; i++) {
+		for(int i=base; i<last_randart; i++) {
 			if (data->power[i] >= highpower) {
 				highpower = data->power[i];
 				highindex = i;
 			}
 		}
-		newpower[highindex] = j;
+		newpower[highindex] = j - first_randart;
 		data->power[highindex] = -1;
 	}
+	for(int i=base; i<last_randart; i++) {
+		file_putf(log_file, "Art %d: power %d: order %d\n",
+			i, oldpower[i], newpower[i]);
+	}
 	mem_free(data->power);
+	mem_free(oldpower);
 	data->power = newpower;
 
-	for(int i=1; i<z_info->a_max - 1; i++) {
-		name_artifact(data, i);
+	for(int i=base; i<last_randart; i++) {
+		struct artifact *art = a_info + i;
+		struct object_kind *kind = lookup_kind(art->tval, art->sval);
+		if (!kind || !kf_has(kind->kind_flags, KF_QUEST_ART))
+			name_artifact(data, i);
 	}
 
 	mem_free(tval_total);
@@ -3037,19 +3086,19 @@ static struct artifact_set_data *artifact_set_data_new(void)
 {
 	struct artifact_set_data *data = mem_zalloc(sizeof(*data));
 
-	data->base_power = mem_zalloc(z_info->a_max * sizeof(int));
+	data->base_power = mem_zalloc(last_randart * sizeof(int));
 	data->avg_tv_power = mem_zalloc(TV_MAX * sizeof(int));
 	data->min_tv_power = mem_zalloc(TV_MAX * sizeof(int));
 	data->max_tv_power = mem_zalloc(TV_MAX * sizeof(int));
-	data->base_item_level = mem_zalloc(z_info->a_max * sizeof(int));
-	data->base_item_prob = mem_zalloc(z_info->a_max * sizeof(int));
-	data->base_art_alloc = mem_zalloc(z_info->a_max * sizeof(int));
+	data->base_item_level = mem_zalloc(last_randart * sizeof(int));
+	data->base_item_prob = mem_zalloc(last_randart * sizeof(int));
+	data->base_art_alloc = mem_zalloc(last_randart * sizeof(int));
 	data->tv_probs = mem_zalloc(TV_MAX * sizeof(int));
 	data->tv_num = mem_zalloc(TV_MAX * sizeof(int));
 	data->art_probs = mem_zalloc(ART_IDX_TOTAL * sizeof(int));
 	data->tv_freq = mem_zalloc(TV_MAX * sizeof(int));
 	data->name_used = mem_zalloc(n_artinames * sizeof(bool));
-	data->power = mem_zalloc(z_info->a_max * sizeof(int));
+	data->power = mem_zalloc(last_randart * sizeof(int));
 	data->bad = mem_zalloc(n_artinames * sizeof(bool));
 
 	/* Mean start and increment values for to_hit, to_dam and AC.  Update these
@@ -3196,6 +3245,13 @@ void write_randart_entry(ang_file *fff, struct artifact *art)
 void do_randart(u32b randart_seed, bool create_file)
 {
 	char fname[1024];
+
+	first_randart = z_info->a_base;
+	last_randart = z_info->a_max;
+	if (last_randart == first_randart)
+		last_randart += z_info->rand_art;
+	n_randarts = last_randart - first_randart;
+
 	struct artifact_set_data *standarts = artifact_set_data_new();
 	struct artifact_set_data *randarts;
 
@@ -3212,11 +3268,7 @@ void do_randart(u32b randart_seed, bool create_file)
 		exit(1);
 	}
 
-	/* Store the original power ratings */
-	store_base_power(standarts);
-
-	/* Determine the generation probabilities */
-	parse_frequencies(standarts);
+	fixed_frequencies(standarts);
 
 	/* Generate the random artifacts */
 	create_artifact_set(standarts);
@@ -3245,7 +3297,7 @@ void do_randart(u32b randart_seed, bool create_file)
 				  randart_seed);
 
 		/* Write individual entries */
-		for (i = 1; i < z_info->a_max; i++) {
+		for (i = first_randart; i < last_randart; i++) {
 			struct artifact *art = &a_info[i];
 			write_randart_entry(log_file, art);
 		}

@@ -51,7 +51,7 @@
  * These are to make the code more readable.
  */
 enum {
-	#define ART_IDX(a, b) ART_IDX_##a,
+	#define ART_IDX(a, b, c) ART_IDX_##a,
 	#include "list-randart-properties.h"
 	#undef ART_IDX
 };

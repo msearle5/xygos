@@ -4,6 +4,7 @@ config.log
 config.status
 configure
 lib/scores/scores.*
+lib/archive
 *.out
 *.exe
 *.elf
