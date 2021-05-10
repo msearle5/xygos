@@ -23,8 +23,9 @@
 #include "datafile.h"
 #include "effects.h"
 #include "init.h"
-#include "obj-fault.h"
 #include "obj-desc.h"
+#include "obj-fault.h"
+#include "obj-init.h"
 #include "obj-make.h"
 #include "obj-pile.h"
 #include "obj-power.h"
@@ -48,6 +49,8 @@ struct artiname {
 	struct artiname *next;
 	char *name;
 	bitflag tval_tags[TV_SIZE];
+	bitflag any_flags[OF_SIZE];
+	struct element_info el_info[ELEM_MAX];
 };
 
 static struct artiname *artiname;
@@ -102,11 +105,48 @@ static enum parser_error parse_tag_artiname(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_any_artiname(struct parser *p) {
+	struct artiname *h = parser_priv(p);
+	char *s = string_make(parser_getstr(p, "text"));
+	char *t;
+	int value, index;
+	assert(h);
+
+	t = strtok(s, " |");
+	while (t) {
+		bool found = false;
+		if (get_property_by_name(t))
+			found = true;
+#ifdef undef
+		else if (!grab_flag(h->any_flags, OF_SIZE, obj_flags, t))
+			found = true;
+		else if (grab_element_flag(h->el_info, t))
+			found = true;
+		else if (!grab_index_and_int(&value, &index, element_names, "RES_", t)) {
+			found = true;
+			h->el_info[index].res_level = value;
+		}
+		else if (!grab_index(&index, element_names, "IMM_", t)) {
+			found = true;
+			h->el_info[index].res_level = IMMUNITY;
+		}
+#endif
+		if (!found)
+			break;
+
+		t = strtok(NULL, " |");
+	}
+
+	mem_free(s);
+	return t ? PARSE_ERROR_INVALID_FLAG : PARSE_ERROR_NONE;
+}
+
 struct parser *init_parse_artinames(void) {
 	struct parser *p = parser_new();
 	parser_reg(p, "N str text", parse_good_artiname);
 	parser_reg(p, "B str text", parse_bad_artiname);
 	parser_reg(p, "T str text", parse_tag_artiname);
+	parser_reg(p, "Any str text", parse_any_artiname);
 	n_artinames = n_good_artinames = 0;
 	return p;
 }

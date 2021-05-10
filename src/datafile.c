@@ -396,7 +396,9 @@ errr grab_name(const char *from, const char *what, const char *list[], int max,
 errr grab_flag(bitflag *flags, const size_t size, const char **flag_table, const char *flag_name) {
 	int flag = lookup_flag(flag_table, flag_name);
 
-	if (flag == FLAG_END) return PARSE_ERROR_INVALID_FLAG;
+	if (flag == FLAG_END) {
+		return PARSE_ERROR_INVALID_FLAG;
+	}
 
 	flag_on(flags, size, flag);
 
