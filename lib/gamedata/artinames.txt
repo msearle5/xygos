@@ -13,7 +13,8 @@
 # Format:
 # N:Name
 # B:Name
-# T:Type
+# T:Type	(tval)
+# Any:Flags (Object flags, at least one required. Separated with |)
 
 N:Death of Worlds
 T:SWORD
@@ -681,6 +682,9 @@ T:POLEARM
 T:DIGGING
 T:GUN
 T:LIGHT
+Any:LIGHT
+# | LIGHT_2 | LIGHT_3 | LIGHT_4 | LIGHT_5
+# | RES_FIRE | FIRE_3 | FIRE_2
 
 N:Ever Ready
 T:SHIELD
@@ -2333,6 +2337,21 @@ T:DIGGING
 T:GUN
 T:LIGHT
 
+N:of the Sun
+T:SHIELD
+T:HELM
+T:CROWN
+T:BOOTS
+T:HARD_ARMOR
+T:DRAG_ARMOR
+T:SOFT_ARMOR
+T:BELT
+T:CLOAK
+T:GLOVES
+T:LIGHT
+T:ARMS
+T:LEGS
+
 N:Hotshot
 T:SWORD
 T:HAFTED
@@ -2561,6 +2580,11 @@ T:POLEARM
 T:DIGGING
 T:GUN
 
+N:of Hitting
+T:HAFTED
+T:POLEARM
+T:DIGGING
+
 N:Pop Gun
 T:GUN
 
@@ -2640,21 +2664,6 @@ T:SWORD
 T:HAFTED
 T:POLEARM
 T:DIGGING
-
-N:of the Sun
-T:SHIELD
-T:HELM
-T:CROWN
-T:BOOTS
-T:HARD_ARMOR
-T:DRAG_ARMOR
-T:SOFT_ARMOR
-T:BELT
-T:CLOAK
-T:GLOVES
-T:LIGHT
-T:ARMS
-T:LEGS
 
 N:Duck and Cover
 T:SHIELD
