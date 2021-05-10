@@ -1040,10 +1040,7 @@ int rd_misc(void)
 	deactivate_randart_file();
 	run_parser(&artifact_parser);
 
-	/* Determine number of artifacts to use */
-	z_info->a_max = z_info->a_base;
-	if (OPT(player, birth_randarts))
-		z_info->a_max += z_info->rand_art;
+	select_artifact_max();
 
 	/* Now only randomize the artifacts if required */
 	if (OPT(player, birth_randarts)) {

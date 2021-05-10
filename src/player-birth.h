@@ -35,6 +35,8 @@ extern int hitdie_class(const struct player_class *c);
 extern bool player_make_simple(const char *nrace, const char *next, const char *nclass,
 	const char *nplayer);
 
+extern void select_artifact_max(void);
+
 void do_cmd_birth_init(struct command *cmd);
 void do_cmd_birth_reset(struct command *cmd);
 void do_cmd_choose_race(struct command *cmd);

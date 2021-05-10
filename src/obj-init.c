@@ -2960,6 +2960,9 @@ static errr finish_parse_artifact(struct parser *p) {
 	a = parser_priv(p);
 	while (a) {
 		z_info->a_max++;
+		struct object_kind *kind = lookup_kind(a->tval, a->sval);
+		if ((kind) && kf_has(kind->kind_flags, KF_QUEST_ART))
+			z_info->a_quest = z_info->a_max;
 		a = a->next;
 	}
 

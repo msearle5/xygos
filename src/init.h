@@ -32,6 +32,7 @@ struct angband_constants
 	u16b k_max;				/**< Maximum number of object base kinds */
 	u16b a_max;				/**< Maximum number of artifact kinds */
 	u16b a_base;			/**< Maximum number of artifact kinds (directly defined, not random) */
+	u16b a_quest;			/**< Maximum number of quest artifact (so always present, even with standarts off) kinds */
 	u16b e_max;				/**< Maximum number of ego-item kinds */
 	u16b r_max;				/**< Maximum number of monster races */
 	u16b mp_max;			/**< Maximum number of monster pain message sets */

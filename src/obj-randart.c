@@ -2817,6 +2817,29 @@ static void name_artifact(struct artifact_set_data *data, int aidx)
 	art->name = new_name;
 }
 
+/** Determine number of artifacts to use, based on options */
+void select_artifact_max(void)
+{
+	if (OPT(player, birth_randarts)) {
+		if (OPT(player, birth_botharts)) {
+			/* Use both random and non-random artifacts */
+			 z_info->a_max = z_info->a_base + z_info->rand_art;
+		} else {
+			/* Use randarts only. The only standard artifacts used are the quest artifacts */
+			z_info->a_base = z_info->a_quest;
+			z_info->a_max = z_info->a_base + z_info->rand_art;
+		}
+	} else {
+		if (OPT(player, birth_botharts)) {
+			/* Use both random and non-random artifacts */
+			 z_info->a_max = z_info->a_base + z_info->rand_art;
+		} else {
+			/* Use standarts only. */
+			;
+		}
+	}
+}
+
 /**
  * Design a random artifact given a tval
  *
