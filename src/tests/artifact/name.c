@@ -7,6 +7,9 @@
 #include "obj-tval.h"
 #include "object.h"
 
+void artifact_set_data_free(struct artifact_set_data *data);
+struct artifact_set_data *artifact_set_data_new(void);
+
 int setup_tests(void **state) {
 	k_info = mem_zalloc(2 * sizeof(struct object_kind));
 	k_info[1] = test_torch;
@@ -42,7 +45,12 @@ const char **p[] = { names, names };
 int test_names(void *state) {
 	struct artifact a;
 	char *n;
+	struct artifact_set_data *data = artifact_set_data_new();
 	int i;
+
+	z_info->a_base = 0;
+	z_info->a_max = 50;
+	z_info->rand_art = 50;
 
 	a.aidx = 1;
 	a.tval = TV_LIGHT;
@@ -50,13 +58,15 @@ int test_names(void *state) {
 	a.name = "of Prometheus";
 
 	for (i = 0; i < NAMES_TRIES; i++) {
-		n = artifact_gen_name(&a, p);
+		n = artifact_gen_name(data, &a, p, 42, TV_LIGHT, false);
 		if (strchr(n, '\''))
 			require(strchr(n, '\'') != strrchr(n, '\''));
 		else
 			require(strstr(n, "of "));
 		mem_free(n);
 	}
+
+	artifact_set_data_free(data);
 
 	ok;
 }

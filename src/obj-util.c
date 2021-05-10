@@ -203,10 +203,13 @@ void flavor_init(void)
 		}
 		for (f = flavors; f; f = f->next) {
 			f->sval = SV_UNKNOWN;
+			if (f->text)
+				string_free(f->text);
+			f->text = NULL;
 		}
 		cleanup_parser(&flavor_parser);
-		run_parser(&flavor_parser);
 	}
+	run_parser(&flavor_parser);
 
 	if (OPT(player, birth_randarts))
 		flavor_reset_fixed();
@@ -239,13 +242,14 @@ void flavor_init(void)
 	for (struct flavor *f = flavors; f; f = f->next) {
 		if (f->tval == TV_PILL && f->sval == SV_UNKNOWN) {
 			char *suffix = strchr(f->text, '|');
-			assert(suffix);
-			suffix++;
-			char buf[16];
-			strncpy(buf, suffix, sizeof(buf));
-			buf[sizeof(buf)-1] = 0;
-			insert_string(buf, pills, &suff, &n_suff);
-			pills++;
+			if (suffix) {
+				suffix++;
+				char buf[16];
+				strncpy(buf, suffix, sizeof(buf));
+				buf[sizeof(buf)-1] = 0;
+				insert_string(buf, pills, &suff, &n_suff);
+				pills++;
+			}
 		}
 	}
 

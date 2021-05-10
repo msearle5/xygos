@@ -14,6 +14,7 @@ xygos.nds
 lib/save/*
 .project
 .cproject
+*/randart.log
 *.orig
 *.rej
 *.app

@@ -2716,12 +2716,13 @@ char *artifact_gen_name(struct artifact_set_data *data, struct artifact *a, cons
 		}
 	} else {
 		/* Scale power and find a band to accept in */
+		int randarts = n_randarts ? n_randarts : 1;
 
-		file_putf(log_file, "init power %d, depth %d, scale %d, ", power, a->alloc_min, n_randarts);
-		int nextpower = ((power + 1) * n_good_artinames) / n_randarts;
+		file_putf(log_file, "init power %d, depth %d, scale %d, ", power, a->alloc_min, randarts);
+		int nextpower = ((power + 1) * n_good_artinames) / randarts;
 
 		/* Avoid preferring some names because of there being more names than artifacts */
-		power = (power * n_good_artinames) / n_randarts;
+		power = (power * n_good_artinames) / randarts;
 		power += randint0(nextpower - power);
 		min_power = MAX(0, power - 2);
 		max_power = MIN(n_good_artinames, power + 2);
@@ -3109,7 +3110,7 @@ void create_artifact_set(struct artifact_set_data *data)
 /**
  * Allocate a new artifact set data structure
  */
-static struct artifact_set_data *artifact_set_data_new(void)
+struct artifact_set_data *artifact_set_data_new(void)
 {
 	struct artifact_set_data *data = mem_zalloc(sizeof(*data));
 
@@ -3143,7 +3144,7 @@ static struct artifact_set_data *artifact_set_data_new(void)
 /**
  * Allocate a new artifact set data structure
  */
-static void artifact_set_data_free(struct artifact_set_data *data)
+void artifact_set_data_free(struct artifact_set_data *data)
 {
 	mem_free(data->base_power);
 	mem_free(data->avg_tv_power);
