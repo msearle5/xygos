@@ -555,7 +555,7 @@ static void melee_effect_handler_HURT(melee_effect_handler_context_t *context)
 /**
  * Melee effect handler: Poison the player.
  *
- * We can't use melee_effect_timed(), because this is both and elemental attack
+ * We can't use melee_effect_timed(), because this is both an elemental attack
  * and a status attack. Note the false value for pure_element for
  * melee_effect_elemental().
  */
@@ -574,6 +574,30 @@ static void melee_effect_handler_POISON(melee_effect_handler_context_t *context)
 
 	/* Learn about the player */
 	update_smart_learn(context->mon, context->p, 0, 0, ELEM_POIS);
+}
+
+/**
+ * Melee effect handler: Wound the player.
+ *
+ * This takes damage directly and adds to the cuts status.
+ */
+static void melee_effect_handler_WOUND(melee_effect_handler_context_t *context)
+{
+	/* Obvious */
+	context->obvious = true;
+
+	/* Armor reduces total damage */
+	context->damage = adjust_dam_armor(context->damage, context->ac);
+
+	/* Take damage */
+	(void) monster_damage_target(context, true);
+
+	/* Player is dead or not attacked */
+	if (!context->p || context->p->is_dead)
+		return;
+
+	/* Take "cut" effect */
+	player_inc_timed(context->p, TMD_CUT, 5 + randint1(context->damage), true, true);
 }
 
 /**
@@ -1112,6 +1136,7 @@ melee_effect_handler_f melee_handler_for_blow_effect(const char *name)
 	} effect_handlers[] = {
 		{ "NONE", melee_effect_handler_NONE },
 		{ "HURT", melee_effect_handler_HURT },
+		{ "WOUND", melee_effect_handler_WOUND },
 		{ "POISON", melee_effect_handler_POISON },
 		{ "DISENCHANT", melee_effect_handler_DISENCHANT },
 		{ "DRAIN_CHARGES", melee_effect_handler_DRAIN_CHARGES },

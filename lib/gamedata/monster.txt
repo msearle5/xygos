@@ -323,6 +323,7 @@ spell-freq:5
 spells:BR_FIRE | BO_FIRE
 flags:UNIQUE | SPECIAL_GEN
 
+
 ##### HUMANS #####
 
 name:Nijel, the Rat
@@ -368,6 +369,207 @@ flags:UNIQUE | EVIL
 flags:DROP_60 | DROP_40 | DROP_20
 flags:OPEN_DOOR | SMART | SPIRIT | TAKE_ITEM
 flags:FEMALE | SPECIAL_GEN | QUESTOR
+
+
+##### b is for BAT #####
+# Bats should be common early, but get rare in later levels. A few
+# powerful bats are OK though.
+
+name:fruit bat
+base:bat
+grow:vampire bat
+color:o
+speed:120
+hit-points:4
+hearing:20
+armor-class:3
+sleepiness:10
+depth:1
+rarity:1
+experience:1
+blow:BITE:HURT:1d1
+flags:RAND_25
+desc:A furry orange pest, fast and hard to hit.
+
+name:great brown bat
+grow:vampire bat
+base:bat
+color:u
+speed:130
+hit-points:14
+hearing:10
+armor-class:18
+sleepiness:30
+depth:6
+rarity:1
+experience:10
+blow:BITE:HURT:1d3
+flags:RAND_50
+desc:It screeches as it attacks.
+
+name:ur-bat
+grow:vampire bat
+base:bat
+color:U
+speed:130
+hit-points:14
+hearing:12
+armor-class:30
+sleepiness:10
+depth:15
+rarity:2
+experience:18
+blow:BITE:TERRIFY:1d3
+blow:CLAW:HURT:1d2
+blow:CLAW:HURT:1d2
+flags:RAND_25
+flags:FORCE_SLEEP
+friends:100:2d6:Same
+desc:A giant bat, the beating of whose wings produces a strangely unnerving noise.
+
+name:lightning bat
+grow:vampire bat
+base:bat
+color:b
+speed:130
+hit-points:10
+hearing:12
+armor-class:39
+sleepiness:10
+depth:21
+rarity:1
+experience:54
+blow:BITE:ELEC:1d3
+flags:RAND_50
+flags:IM_ELEC
+flags:FORCE_SLEEP
+innate-freq:4
+spells:BR_ELEC
+desc:It is a glowing blue bat with a sharp tail and sparks crackling in its gaping mouth.
+
+name:dragon bat
+grow:vampire bat
+base:bat
+color:r
+speed:130
+hit-points:14
+light:2
+hearing:12
+armor-class:42
+sleepiness:10
+depth:23
+rarity:1
+experience:60
+blow:BITE:FIRE:1d3
+flags:RAND_50
+flags:IM_FIRE
+flags:FORCE_SLEEP
+innate-freq:4
+spells:BR_FIRE
+desc:It is a sharp-tailed bat, wreathed in fire.
+
+name:vampire bat
+grow:razor bat
+base:bat
+color:D
+speed:120
+hit-points:50
+hearing:12
+armor-class:60
+sleepiness:10
+depth:24
+rarity:2
+experience:150
+blow:BITE:EXP_40:1d4
+blow:BITE:EXP_40:1d4
+flags:COLD_BLOOD | REGENERATE
+flags:RAND_50
+flags:IM_COLD | NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
+desc:A blood-sucking bat that flies at your neck hungrily.
+
+name:grue-bat
+grow:super-bat
+base:bat
+color:g
+speed:120
+hit-points:110
+hearing:20
+armor-class:36
+sleepiness:30
+depth:28
+rarity:3
+experience:100
+blow:BITE:POISON:1d10
+blow:CLAW:EAT_LIGHT:1d4
+flags:WEIRD_MIND
+flags:DROP_40
+flags:RAND_25 | BASH_DOOR | MOVE_BODY | HURT_LIGHT
+flags:IM_POIS
+innate-freq:12
+spell-freq:25
+spells:SCARE
+spells:BR_DARK | BR_POIS
+friends:100:2d7:Same
+desc:A pack of venomous, slavering creatures hiding in the shadows.
+
+name:razor bat
+grow:super-bat
+base:bat
+color:s
+speed:120
+hit-points:60
+hearing:12
+armor-class:80
+sleepiness:10
+depth:30
+rarity:2
+experience:150
+blow:BITE:WOUND:3d8
+blow:BITE:EXP_40:3d4
+flags:COLD_BLOOD | REGENERATE | METAL
+flags:RAND_50
+flags:IM_COLD | NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
+desc:Steel-grey blood-sucking bats, with a deadly bite.
+
+name:Lou, the Cybat
+base:bat
+color:Silver
+speed:120
+hit-points:140
+hearing:12
+armor-class:60
+sleepiness:10
+depth:33
+rarity:2
+experience:220
+blow:HIT:WOUND:3d4
+blow:HIT:WOUND:3d4
+blow:BITE:ELEC:2d12
+flags:COLD_BLOOD | REGENERATE | METAL
+flags:RAND_50
+flags:IM_COLD | NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
+desc:A silvery fast-flapping mechanical bat. It looks lethal.
+
+name:super-bat
+base:bat
+color:LimeGreen
+speed:105
+hit-points:260
+hearing:12
+armor-class:40
+sleepiness:8
+depth:36
+rarity:2
+experience:350
+blow:BITE:HURT:1d10
+blow:CLAW:WOUND:3d4
+blow:CLAW:WOUND:3d4
+flags:COLD_BLOOD | REGENERATE | TAKE_ITEM | BASH_DOOR
+flags:RAND_50
+flags:IM_COLD | NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
+desc:Green bats of immense size with vicious claws, said to have picked up unfortunate explorers and carried them away.
+
+
 
 
 ##### LEMMINGS #####
@@ -1504,21 +1706,6 @@ rarity:1
 experience:3
 blow:BITE:HURT:1d2
 desc:A large ant with powerful mandibles.
-
-name:fruit bat
-base:bat
-color:o
-speed:120
-hit-points:4
-hearing:20
-armor-class:3
-sleepiness:10
-depth:1
-rarity:1
-experience:1
-blow:BITE:HURT:1d1
-flags:RAND_25
-desc:A fast-moving pest.
 
 ### Dungeon level 2 ###
 
@@ -2699,21 +2886,6 @@ experience:20
 blow:SPORE:CONFUSE:1d4
 flags:EMPTY_MIND | STUPID
 desc:A strange brown growth on the dungeon floor.
-
-name:giant brown bat
-base:bat
-color:u
-speed:130
-hit-points:14
-hearing:10
-armor-class:18
-sleepiness:30
-depth:6
-rarity:1
-experience:10
-blow:BITE:HURT:1d3
-flags:RAND_50
-desc:It screeches as it attacks.
 
 name:creeping silver
 plural:piles of creeping silver
@@ -4242,26 +4414,6 @@ flags:BASH_DOOR
 flags:HURT_ROCK | IM_COLD | IM_FIRE | IM_POIS
 desc:It is a massive animated statue made out of hardened clay.
 
-name:giant tan bat
-base:bat
-color:U
-speed:130
-hit-points:14
-hearing:12
-armor-class:30
-sleepiness:10
-depth:15
-rarity:2
-experience:18
-blow:BITE:TERRIFY:1d3
-blow:CLAW:HURT:1d2
-blow:CLAW:HURT:1d2
-flags:RAND_25
-flags:FORCE_SLEEP
-friends:100:2d6:Same
-desc:A giant bat, the beating of whose wings produces a strangely unnerving
-desc: noise.
-
 ### Dungeon level 16 ###
 
 name:gelatinous cube
@@ -5049,25 +5201,6 @@ desc: enemy.
 
 ### Dungeon level 21 ###
 
-name:blue dragon bat
-base:bat
-color:b
-speed:130
-hit-points:10
-hearing:12
-armor-class:39
-sleepiness:10
-depth:21
-rarity:1
-experience:54
-blow:BITE:ELEC:1d3
-flags:RAND_50 | BASH_DOOR
-flags:IM_ELEC
-flags:FORCE_SLEEP
-innate-freq:4
-spells:BR_ELEC
-desc:It is a glowing blue bat with a sharp tail.
-
 name:card mimic
 base:mimic
 glyph:?
@@ -5326,26 +5459,6 @@ friends:50:1d1:Mage
 friends:50:1d1:Paladin
 desc:A thief of great power and shifty speed.
 
-name:red dragon bat
-base:bat
-color:r
-speed:130
-hit-points:14
-light:2
-hearing:12
-armor-class:42
-sleepiness:10
-depth:23
-rarity:1
-experience:60
-blow:BITE:FIRE:1d3
-flags:RAND_50 | BASH_DOOR
-flags:IM_FIRE
-flags:FORCE_SLEEP
-innate-freq:4
-spells:BR_FIRE
-desc:It is a sharp-tailed bat, wreathed in fire.
-
 name:giant silver ant
 base:ant
 color:W
@@ -5477,24 +5590,6 @@ flags:EMPTY_MIND
 flags:DROP_60 | ONLY_ITEM
 flags:NO_FEAR
 desc:It is a human form encased in mouldy wrappings.
-
-name:vampire bat
-base:bat
-color:D
-speed:120
-hit-points:50
-hearing:12
-armor-class:60
-sleepiness:10
-depth:24
-rarity:2
-experience:150
-blow:BITE:EXP_40:1d4
-blow:BITE:EXP_40:1d4
-flags:UNDEAD | EVIL | COLD_BLOOD | REGENERATE
-flags:RAND_50
-flags:IM_COLD | NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
-desc:A blood-sucking bat that flies at your neck hungrily.
 
 name:Sangahyando of Umbar
 base:person
@@ -5839,23 +5934,6 @@ flags:IM_FIRE
 innate-freq:20
 spells:SPIT
 desc:It is smoking and burning with great heat.
-
-name:disenchanter bat
-base:bat
-color:v
-speed:130
-hit-points:27
-hearing:12
-armor-class:42
-sleepiness:10
-depth:26
-rarity:4
-experience:75
-blow:HIT:DISENCHANT
-flags:RAND_50
-flags:IM_DISEN
-flags:ATTR_MULTI | FORCE_SLEEP
-desc:A giant bat which feeds on raw magical energy.
 
 name:wolf chieftain
 base:canine
@@ -6340,32 +6418,6 @@ innate-freq:8
 spells:BR_POIS
 desc:A vile reptile that preys on unsuspecting travellers.  Its eyes stare
 desc: deeply at you and your soul starts to wilt!
-
-name:bat of Gorgoroth
-plural:bats of Gorgoroth
-base:bat
-color:g
-speed:120
-hit-points:110
-hearing:20
-armor-class:36
-sleepiness:30
-depth:28
-rarity:3
-experience:100
-blow:BITE:POISON:1d10
-blow:CLAW:HURT:1d4
-flags:WEIRD_MIND
-flags:DROP_40
-flags:RAND_25 | BASH_DOOR | MOVE_BODY
-flags:IM_POIS
-innate-freq:12
-spell-freq:25
-spells:SCARE
-spells:BR_DARK | BR_POIS
-friends:100:2d7:Same
-desc:Fed with horrid meats and grown to enormous size, this slavering creature
-desc: seeks livelier prey.
 
 name:spectator
 base:eye
@@ -6864,28 +6916,6 @@ spell-freq:6
 spells:FORGET
 desc:A mass of green vegetation.  You don't remember seeing anything like it
 desc: before.
-
-
-name:doombat
-base:bat
-color:R
-speed:130
-hit-points:180
-light:2
-hearing:16
-armor-class:112
-sleepiness:20
-depth:32
-rarity:2
-experience:250
-blow:BITE:FIRE:5d4
-blow:BITE:FIRE:5d4
-blow:BITE:FIRE:5d4
-flags:WEIRD_MIND
-flags:BASH_DOOR
-flags:IM_FIRE
-desc:It is a fast moving creature of chaos, a gigantic black bat surrounded by
-desc: flickering bright red flames.
 
 ### Dungeon level 33 ###
 

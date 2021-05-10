@@ -25,6 +25,13 @@ desc:attack
 lore-color-base:Light Green
 lash-type:MISSILE
 
+name:WOUND
+power:30
+eval:5
+desc:attack
+lore-color-base:Light Green
+lash-type:MISSILE
+
 name:POISON
 power:20
 eval:10
