@@ -30,6 +30,7 @@ extern struct file_parser monster_parser;
 extern struct file_parser mon_base_parser;
 extern struct file_parser pit_parser;
 extern struct file_parser pain_parser;
+extern struct file_parser monster_mut_parser;
 
 
 #endif /* MONSTER_INIT_H_ */
