@@ -652,6 +652,22 @@ static void wiz_create_item_drop_object(struct object *obj, bool id)
 	drop_near(cave, &obj, 0, player->grid, true, true);
 }
 
+/** Create one item for every ego */
+static void do_cmd_wiz_egos(void)
+{
+	struct start_item item = { 0, 0, 1, 1, NULL, NULL, NULL };
+	for (int i = 1; i < z_info->e_max; i++) {
+		if (e_info[i].poss_items) {
+			struct poss_item *poss = e_info[i].poss_items;
+			while (poss->next) poss = poss->next;
+			item.tval = k_info[poss->kidx].tval;
+			item.sval = k_info[poss->kidx].sval;
+			item.ego = e_info+i;
+			add_start_items(player, &item, false, false, ORIGIN_CHEAT);
+		}
+	}
+}
+
 static bool wiz_create_item_id = true;
 
 /**
@@ -2288,6 +2304,13 @@ void get_debug_command(void)
 		case 'o':
 		{
 			do_cmd_wiz_play();
+			break;
+		}
+
+		/* Ego Objects */
+		case 'O':
+		{
+			do_cmd_wiz_egos();
 			break;
 		}
 

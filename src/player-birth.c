@@ -695,7 +695,10 @@ void add_start_items(struct player *p, const struct start_item *si, bool skip, b
 			p->au -= object_value_real(obj, obj->number);
 
 		/* Carry the item */
-		inven_carry(p, obj, true, false);
+		if (pack_slots_used(p) <= z_info->pack_size)
+			inven_carry(p, obj, true, false);
+		else
+			drop_near(cave, &obj, 0, player->grid, true, true);
 		kind->everseen = true;
 	}
 }

@@ -188,7 +188,7 @@ H:Sing Beck: "I'm a loser, baby dragon, so why don't you kill me?" Suicide, ha!
 H:Sing CCR: "Before you kill me take a look at yourself." Reflection-shields!
 H:Sing Crowded House: "Always take your weather with you!" Yeah, have a breath.
 H:Sing Fury: "This is not the time to wonder, this is not the time to cry!"
-H:Sing Garbage: "The trick is keep on breathing." Wear dragon scale mail!
+#H:Sing Garbage: "The trick is keep on breathing." Wear dragon scale mail!
 H:Sing Morisette: "Life has a funny way, helping you out." So innovate!
 H:Sing Pythons: "Always look on the bright side of death." Only a breath away!
 H:Some pills (combat, heroism and boldness) will protect you from being scared.
@@ -235,6 +235,7 @@ H:They say that an empty stomach is one's worst enemy.
 H:They say that bananas can be bad for your health.
 H:They say that careful cave explorers don't bring just one lamp.
 H:They say that carrots may improve your vision.
+H:They say that carrying stinky cheese is not recommended.
 H:They say that creatures made of rock don't like being turned into mud.
 H:They say that death incarnate wears heavy metal boots...
 H:They say that entering a vault can be deadly.

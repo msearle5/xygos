@@ -581,6 +581,18 @@ bool object_is_known_artifact(const struct object *obj)
 }
 
 /**
+ * Checks whether the object is known to be an ego
+ *
+ * \param obj is the object
+ */
+bool object_is_known_ego(const struct object *obj)
+{
+	if (!obj->known) return false;
+	if (!obj->known->ego) return false;
+	return player_knows_ego(player, obj->ego, obj);
+}
+
+/**
  * Checks whether the object is in a store (not the home)
  *
  * \param obj is the object

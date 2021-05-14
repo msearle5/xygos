@@ -95,7 +95,7 @@ static void print_tomb(void)
 	put_str_centred(line++, 8, 8+31, "%s", player->class->name);
 	put_str_centred(line++, 8, 8+31, "Level: %d", (int)player->lev);
 	put_str_centred(line++, 8, 8+31, "Exp: %d", (int)player->exp);
-	put_str_centred(line++, 8, 8+31, "AU: %d", (int)player->au);
+	put_str_centred(line++, 8, 8+31, "$: %d", (int)player->au);
 	if (player->active_quest >= 0) {
 		struct quest *q = &player->quests[player->active_quest];
 		put_str_centred(line++, 8, 8+31, "Killed in '%s'", q->name);
@@ -119,9 +119,8 @@ static void display_winner(void)
 	ang_file *fp;
 
 	int wid, hgt;
-	int i = 2;
+	int i = 0;
 	int width = 0;
-
 
 	path_build(buf, sizeof(buf), ANGBAND_DIR_SCREENS, "crown.txt");
 	fp = file_open(buf, MODE_READ, FTYPE_TEXT);
@@ -142,8 +141,6 @@ static void display_winner(void)
 
 		file_close(fp);
 	}
-
-	put_str_centred(i, 0, wid, "All Hail the Mighty Champion!");
 
 	event_signal(EVENT_INPUT_FLUSH);
 	pause_line(Term);

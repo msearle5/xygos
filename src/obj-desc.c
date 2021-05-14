@@ -33,7 +33,7 @@ void object_base_name(char *buf, size_t max, int tval, bool plural)
 	struct object_base *kb = &kb_info[tval];
 	size_t end = 0;
 
-	if (kb->name && kb->name[0]) 
+	if (kb->name && kb->name[0])
 		(void) obj_desc_name_format(buf, max, end, kb->name, NULL, plural);
 }
 
@@ -268,7 +268,7 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 
 	/* Some items have unadorned names */
 	if (((obj->tval == TV_WAND) || (obj->tval == TV_DEVICE) ||
-		(obj->tval == TV_GADGET) || (obj->tval == TV_LIGHT)) && (!object_is_known_artifact(obj))) {
+		(obj->tval == TV_GADGET) || (obj->tval == TV_LIGHT)) && (!object_is_known_artifact(obj)) && (!object_is_known_ego(obj))) {
 		const char *name = obj->kind->name;
 		bool show_flavor = !terse && obj->kind->flavor && !store;
 		char buf2[256];
@@ -295,7 +295,7 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 		end = obj_desc_name_format(buf, max, end, name, modstr, plural);
 	} else {
 		/* Prepend extra names */
-		if (obj->kind->flavor && aware && !mimic && (!object_is_known_artifact(obj))) {
+		if (obj->kind->flavor && aware && !mimic && (!object_is_known_artifact(obj)) && (!object_is_known_ego(obj))) {
 			const char *space = " ";
 			char buf2[256];
 			*buf2 = 0;
@@ -327,13 +327,17 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 		if ((object_is_known_artifact(obj)) && (obj->artifact->name) && (obj->artifact->name[0] == '<'))
 			strnfcat(buf, max, &end, "%s ", obj->artifact->name + 1);
 
+		/* Prepend ego name, for egos using a <-name */
+		if ((object_is_known_ego(obj)) && (obj->ego->name) && (obj->ego->name[0] == '<'))
+			strnfcat(buf, max, &end, "%s ", obj->ego->name + 1);
+
 		/* Base name */
 		end = obj_desc_name_format(buf, max, end, basename, modstr, plural);
 
 		/* Append extra names of various kinds */
 		if ((object_is_known_artifact(obj)) && (obj->artifact->name) && (obj->artifact->name[0] != '<'))
 			strnfcat(buf, max, &end, " %s", obj->artifact->name);
-		else if ((obj->known->ego && !(mode & ODESC_NOEGO)) || (obj->ego && store))
+		else if (((obj->known->ego && !(mode & ODESC_NOEGO)) || (obj->ego && store)) && (obj->ego->name[0] !='<'))
 			strnfcat(buf, max, &end, " %s", obj->ego->name);
 		else if (aware && !obj->artifact &&
 				 (obj->kind->flavor || obj->kind->tval == TV_CARD)) {
