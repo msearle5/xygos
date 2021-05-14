@@ -17,7 +17,7 @@ H:A creature made of stone can be killed by an effect that turns stone to mud.
 H:A good item will not corrode.
 H:A greedy banishment can be a fatal mistake, especially if you are low on hits.
 H:A restore pill will not restore your drained life experience.
-H:A wounded enemy's spells are as strong as a healthy one's.
+H:A wounded enemy's ranged attacks are as strong as a healthy one's.
 H:Acid can destroy your stuff - fight acid users at a distance if possible.
 H:Acid can destroy your stuff - watch out for water hounds and water vortices.
 H:Acid damage can destroy items in your inventory.
@@ -48,19 +48,19 @@ H:Beware the Jabberwock, my son! The jaws that bite, the claws that catch...
 H:Blind? Eat a carrot!
 H:Blink and you're dead.
 H:Blink can be a good escape, but only if the terrain is appropriate.
+H:Blinking is a good escape if the terrain is appropriate.
 H:Bought items come *identified*, knowledge secure from blank mind attacks.
 H:Breath aside, a wounded enemy's attacks are as strong as a healthy one's.
 H:Buy at least one antitoxin and one healing pill before you leave town.
 H:Buy at least one blink card before you leave town.
 H:Can't keep track of all the information on the screen? Add extra windows.
-H:Carry around extra copies of town spellbooks in case one gets burned.
 H:Cave dwellers are accustomed to darkness and rarely enjoy bright light.
 H:Close eXamination of splendid shop-wares will provide precious insights.
 H:Close the door!  You're letting the heat out!
 H:Cold damage can destroy potions in your inventory.
 H:Collect resistances for your own sake.
 H:Confident - Cocky - Lazy - Dead. The Old Man's mantra, and a serious good one.
-H:Confused monsters cannot cast spells reliably and may misstep.
+H:Confused monsters cannot make ranged attacks reliably and may misstep.
 H:Containers may contain very useful things - and some nasty traps.
 H:Cool guys can resist fire.
 H:Curing pills can reduce or eliminate cuts, stunning and poison.
@@ -68,18 +68,24 @@ H:Deep waters are a nice separation against some poisonous animals.
 H:Deep waters may contain poisonous animals.
 H:Descent will send you further down.
 H:Destruction will cause a 15x15 area to change completely, but you undamaged.
+H:Devices can be used even when confused and blinded.
 H:Don't believe every rumor you find. Many of them are just plain wrong.
 H:Don't believe everything *they* say.
 H:Don't eat too much: you might start hiccoughing!
 H:Don't let yourself get surrounded.
 H:Don't worry about money. The best artifacts are free.
+H:Don't worry about using up your consumables to stay alive.
 H:Don't worry about using up your pills, cards, etc. to stay alive.
 H:Drain charge attacks remove charges from your items and heal the monster!
 H:Electrical damage can destroy valuable items in your inventory.
 H:Even among the same type, some enemies will be faster or slower than others.
+H:Even among the same type, some enemies will be faster or slower than others.
+H:Even the most powerful characters can be made useless by blindness.
 H:Even the most powerful characters can be made useless by blindness.
 H:Even the most powerful characters can be made useless by confusion.
+H:Even the most powerful characters can be made useless by confusion.
 H:Ever tried using a card while confused?
+H:Finding a way to resist blindness and confusion is critical to survival.
 H:Finding a way to resist blindness and confusion is critical to survival.
 H:Fire damage can destroy ammo, cards and pills in your inventory.
 H:Fireproof items still aren't indestructible.
@@ -120,6 +126,7 @@ H:If you hear heavy steps - watch out!
 H:If you hear something smash into splinters, you had better watch out.
 H:If you teleport away a tough monster, beware of teleporting afterwards!
 H:If you're in a bad situation, take a breather and "I"nspect all your gear.
+H:If you're in a bad situation, take a breather and "I"nspect all your gear.
 H:If you're in extreme need of food, curing potions might do you good.
 H:Immunity to an element prevents inventory destruction from that element.
 H:In a vault, any form of teleportation will always teleport you outside.
@@ -147,6 +154,7 @@ H:Many items are bad, but few are force-locked and unable to be removed.
 H:Melee attacks, damage, and some effects will wake sleeping monsters.
 H:Monsters that breathe fire, acid, electricity, or cold can deal big damage.
 H:Monsters' breath weapons grow less dangerous as they lose hitpoints.
+H:Monsters' breath weapons grow less dangerous as they lose hitpoints.
 H:Mutations may not increase your beauty, but surely your repertoire!
 H:Never be too afraid to run away.
 H:Never go exploring without an escape option.
@@ -160,18 +168,8 @@ H:Not satisfied with the artifacts you find? Then create your own!
 H:Once no recall is left the way up will seem never ending to you.
 H:Overeating can be bad for your health if there are others nearby.
 H:Pay attention to how your enemies move - some are erratic, some can blink.
-H:Blinking is a good escape if the terrain is appropriate.
-H:Poison will kill you slowly.
-H:Even among the same type, some enemies will be faster or slower than others.
-H:Monsters' breath weapons grow less dangerous as they lose hitpoints.
-H:A wounded enemy's spells are as strong as a healthy one's.
-H:Don't worry about using up your consumables to stay alive.
-H:If you're in a bad situation, take a breather and "I"nspect all your gear.
-H:When a character dies, memories of monsters she has fought are passed on.
-H:Even the most powerful characters can be made useless by blindness.
-H:Even the most powerful characters can be made useless by confusion.
-H:Finding a way to resist blindness and confusion is critical to survival.
 H:Pills are available which can will protect you from being scared.
+H:Poison will kill you slowly.
 H:Probing an enemy to learn its abilities is always useful.
 H:Quivers can hold different types of ammo in one inventory slot (max. 40).
 H:Recall will send you to and from the depths.
@@ -194,7 +192,6 @@ H:Sing Pythons: "Always look on the bright side of death." Only a breath away!
 H:Some pills (combat and max-combat) will protect you from being scared.
 H:Someone's been spiking the pits!
 H:Stairway creation may be slower than level teleportation, but it's safer...
-H:Devices can be used even when confused and blinded.
 H:Staying on a level too long can cause awake random monsters to spawn.
 H:Stealth is very helpful against sleeping monsters but not against alert ones.
 H:Strength always matters, not just for fighters. You can only carry so much!
@@ -229,9 +226,9 @@ H:They say that a fortune only has one line, but you can read between it.
 H:They say that a secret recipe is valuable everywhere.
 H:They say that a visit to 3250m can be quite an experience.
 H:They say that a visit to 3250m will only get you killed.
-H:They say that an opponent picking up your candles might regret it.
 H:They say that alcohol is bad for your health.
 H:They say that an empty stomach is one's worst enemy.
+H:They say that an opponent picking up your candles might regret it.
 H:They say that bananas can be bad for your health.
 H:They say that careful cave explorers don't bring just one lamp.
 H:They say that carrots may improve your vision.
@@ -244,17 +241,17 @@ H:They say that experienced adventurers bring multiple means of teleportation.
 H:They say that free action lets you act freely.
 H:They say that greater vaults are hiding places for artifacts.
 H:They say that guns are for show, knives are for a pro.
-H:They say that if you live by the sword, you'll die by the sword.
 H:They say that if you live by the sword, you'll die by the gun.
+H:They say that if you live by the sword, you'll die by the sword.
+H:They say that if you think you are playing Pacman, you might be confused.
+H:They say that if you think you are playing Pacman, you must be blind.
+H:They say that if you think you are playing Pacman, you should chill out.
+H:They say that if you think you are playing Pacman, you should run away.
 H:They say that immunization is good for your health.
 H:They say that in the big picture money is only small change.
 H:They say that lemmings are fearless.
 H:They say that mold can be bad for your health.
 H:They say that once a truly special item is lost, it is lost for ever.
-H:They say that if you think you are playing Pacman, you might be confused.
-H:They say that if you think you are playing Pacman, you should run away.
-H:They say that if you think you are playing Pacman, you should chill out.
-H:They say that if you think you are playing Pacman, you must be blind.
 H:They say that peppers are hot stuff.
 H:They say that playing Worms might be helpful.
 H:They say that radiation isn't always bad for your health.
@@ -278,8 +275,8 @@ H:They say that you should not slow down in your final fight.
 H:They say that you should watch out for heavy breathers.
 H:They say that you shouldn't avoid the black market.
 H:They say that you shouldn't bring a knife to a gun fight.
-H:They say that you won't grow big unless you eat your greens.
 H:They say that you will need to be cool and still warm - basically, insulated.
+H:They say that you won't grow big unless you eat your greens.
 H:Those who seek knowledge of the sources must be experienced hunters of hints.
 H:Time attacks are not mitigated by sustains.
 H:Time heals all wounds?? But surely time wounds all heels!
@@ -299,6 +296,7 @@ H:Walking around with lots of heavy weapons is not necessarily a good idea.
 H:Wands and devices sell for a good price even with 0 charges.
 H:Weak dangers? You may be overwhelmed by sheer numbers.
 H:Wear armor, going naked seems to offend public decency in here.
+H:When a character dies, memories of monsters she has fought are passed on.
 H:When a character dies, memories of monsters she has fought are passed on.
 H:When all else fails, read the instructions.
 H:When running from a nasty monster, go back the way you came.
