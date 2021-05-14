@@ -188,10 +188,10 @@ H:Sing Beck: "I'm a loser, baby dragon, so why don't you kill me?" Suicide, ha!
 H:Sing CCR: "Before you kill me take a look at yourself." Reflection-shields!
 H:Sing Crowded House: "Always take your weather with you!" Yeah, have a breath.
 H:Sing Fury: "This is not the time to wonder, this is not the time to cry!"
-#H:Sing Garbage: "The trick is keep on breathing." Wear dragon scale mail!
+H:Sing Garbage: "The trick is keep on breathing." - or was it the RHCPs?
 H:Sing Morisette: "Life has a funny way, helping you out." So innovate!
 H:Sing Pythons: "Always look on the bright side of death." Only a breath away!
-H:Some pills (combat, heroism and boldness) will protect you from being scared.
+H:Some pills (combat and max-combat) will protect you from being scared.
 H:Someone's been spiking the pits!
 H:Stairway creation may be slower than level teleportation, but it's safer...
 H:Devices can be used even when confused and blinded.
@@ -200,7 +200,7 @@ H:Stealth is very helpful against sleeping monsters but not against alert ones.
 H:Strength always matters, not just for fighters. You can only carry so much!
 H:Stumble on a death mold: another unsettling occurrence in an unsettling world.
 H:Stunned monsters deal less damage in melee and sometimes miss a turn.
-H:Synthesis cards produce better items and worse monsters when used deeper down.
+H:Summoning cards produce worse monsters if you run them deeper down.
 H:The best way to fill a gear gap is by creating your own artifact.
 H:The better fed you are, the faster you recover hitpoints.
 H:The deep water's dangerous even for the one who can swim.
@@ -245,6 +245,7 @@ H:They say that free action lets you act freely.
 H:They say that greater vaults are hiding places for artifacts.
 H:They say that guns are for show, knives are for a pro.
 H:They say that if you live by the sword, you'll die by the sword.
+H:They say that if you live by the sword, you'll die by the gun.
 H:They say that immunization is good for your health.
 H:They say that in the big picture money is only small change.
 H:They say that lemmings are fearless.
