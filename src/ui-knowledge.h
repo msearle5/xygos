@@ -38,6 +38,7 @@ struct location {
 struct object *locate_object(struct object * (*fn )(struct object *, void *), void *data, struct location *location);
 void textui_browse_object_knowledge(const char *name, int row);
 void textui_knowledge_init(void);
+void textui_knowledge_cleanup(void);
 void textui_browse_knowledge(void);
 void do_cmd_message_one(void);
 void do_cmd_messages(void);
