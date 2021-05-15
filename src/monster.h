@@ -315,7 +315,7 @@ struct monster_race {
 	char *grow;
 
 	struct monster_base *base;
-	
+
 	int avg_hp;				/* Average HP for this creature */
 
 	int ac;					/* Armour Class */
@@ -336,6 +336,8 @@ struct monster_race {
 	bitflag spell_flags[RSF_SIZE];  /* Spell flags */
 	bitflag death_spell_flags[RSF_SIZE];  /* Spell flags (to use on death) */
 
+	byte mut_chance;		/* Chance of mutation */
+
 	struct monster_blow *blow; /* Melee blows */
 
 	int level;				/* Level of creature */
@@ -348,11 +350,11 @@ struct monster_race {
 	int cur_num;			/* Monster population on current level */
 
 	struct monster_drop *drops;
-    
+
     struct monster_friends *friends;
-	
+
     struct monster_friends_base *friends_base;
-    
+
 	struct monster_mimic *mimic_kinds;
 
 	struct monster_shape *shapes;
@@ -371,6 +373,7 @@ struct monster_race {
 struct monster {
 	struct monster_race *race;			/* Monster's (current) race */
 	struct monster_race *original_race;	/* Changed monster's original race */
+
 	int midx;
 
 	struct loc grid;					/* Location on map */

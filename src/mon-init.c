@@ -1904,7 +1904,6 @@ static errr run_parse_monster_mut(struct parser *p) {
 
 static errr finish_parse_monster_mut(struct parser *p) {
 	struct monster_race *r, *n;
-	size_t i;
 	int ridx;
 
 	/* Scan the list for the max id */
@@ -1921,6 +1920,12 @@ static errr finish_parse_monster_mut(struct parser *p) {
 	ridx = z_info->mm_max - 1;
 	for (r = parser_priv(p); r; r = n, ridx--) {
 		assert(ridx >= 0);
+
+		/* Set the mutation or mod flags */
+		if (rf_has(mm_info[ridx].flags, RF_NONLIVING))
+			rf_on(mm_info[ridx].flags, RF_MODIFIED);
+		else
+			rf_on(mm_info[ridx].flags, RF_MUTANT);
 
 		/* Main record */
 		memcpy(&mm_info[ridx], r, sizeof(*r));

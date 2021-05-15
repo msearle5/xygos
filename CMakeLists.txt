@@ -74,6 +74,7 @@ ADD_EXECUTABLE(Xygos
         src/mon-make.c
         src/mon-move.c
         src/mon-msg.c
+        src/mon-mutant.c
         src/mon-predicate.c
         src/mon-spell.c
         src/mon-summon.c

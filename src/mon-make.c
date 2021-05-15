@@ -320,6 +320,11 @@ struct monster_race *get_mon_num(int level)
 		if (race->level < old->level) race = old;
 	}
 
+	/* Occasionally try for a mutant */
+	if ((race->mut_chance) && (one_in_(race->mut_chance))) {
+		mutate_monster(&race, true);
+	}
+
 	/* Result */
 	return race;
 }
