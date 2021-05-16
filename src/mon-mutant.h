@@ -16,4 +16,6 @@
  *    are included in all such copies.  Other copyrights may also apply.
  */
 
-struct monster_race *mutate_monster(struct monster_race **mon, bool birth);
+struct monster_race *mutate_monster(struct monster_race **mon, bool birth, int level);
+struct monster_race *get_mutant_race_by_name(const char *name);
+struct monster_race *select_mutation(struct monster_race *race, bool birth, int level);

@@ -25,6 +25,7 @@
 #include "mon-group.h"
 #include "mon-lore.h"
 #include "mon-make.h"
+#include "mon-mutant.h"
 #include "mon-spell.h"
 #include "mon-util.h"
 #include "monster.h"
@@ -281,8 +282,11 @@ static bool rd_monster(struct chunk *c, struct monster *mon)
 	rd_string(race_name, sizeof(race_name));
 	mon->race = lookup_monster(race_name);
 	if (!mon->race) {
-		note(format("Monster race %s no longer exists!", race_name));
-		return false;
+		mon->race = get_mutant_race_by_name(race_name);
+		if (!mon->race) {
+			note(format("Monster race %s no longer exists!", race_name));
+			return false;
+		}
 	}
 	rd_string(race_name, sizeof(race_name));
 	if (streq(race_name, "none")) {

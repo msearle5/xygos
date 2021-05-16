@@ -42,7 +42,7 @@ struct monster_pain *pain_messages;
 struct monster_spell *monster_spells;
 struct monster_base *rb_info;
 struct monster_race *r_info;
-struct monster_race *mm_info;
+struct monster_mutation *mm_info;
 const struct monster_race *ref_race = NULL;
 struct monster_lore *l_list;
 
@@ -1090,6 +1090,7 @@ static enum parser_error parse_monster_name(struct parser *p) {
 	r->next = h;
 	r->name = string_make(parser_getstr(p, "name"));
 	r->speed = 110;
+	r->mut_chance = z_info->mutant_chance;
 	parser_setpriv(p, r);
 	return PARSE_ERROR_NONE;
 }
@@ -1903,7 +1904,7 @@ static errr run_parse_monster_mut(struct parser *p) {
 }
 
 static errr finish_parse_monster_mut(struct parser *p) {
-	struct monster_race *r, *n;
+	struct monster_mutation *r, *n;
 	int ridx;
 
 	/* Scan the list for the max id */
@@ -1912,7 +1913,7 @@ static errr finish_parse_monster_mut(struct parser *p) {
 	r = parser_priv(p);
 	while (r) {
 		z_info->mm_max++;
-		r = r->next;
+		r = (struct monster_mutation *)r->race.next;
 	}
 
 	/* Allocate the direct access list and copy the mutation records to it */
@@ -1922,19 +1923,19 @@ static errr finish_parse_monster_mut(struct parser *p) {
 		assert(ridx >= 0);
 
 		/* Set the mutation or mod flags */
-		if (rf_has(mm_info[ridx].flags, RF_NONLIVING))
-			rf_on(mm_info[ridx].flags, RF_MODIFIED);
+		if (rf_has(mm_info[ridx].race.flags, RF_NONLIVING))
+			rf_on(mm_info[ridx].race.flags, RF_MODIFIED);
 		else
-			rf_on(mm_info[ridx].flags, RF_MUTANT);
+			rf_on(mm_info[ridx].race.flags, RF_MUTANT);
 
 		/* Main record */
 		memcpy(&mm_info[ridx], r, sizeof(*r));
-		mm_info[ridx].ridx = ridx;
-		n = r->next;
+		mm_info[ridx].race.ridx = ridx;
+		n = (struct monster_mutation *)r->race.next;
 		if (ridx < z_info->r_max - 1)
-			mm_info[ridx].next = &mm_info[ridx + 1];
+			mm_info[ridx].race.next = (struct monster_race *)&mm_info[ridx + 1];
 		else
-			mm_info[ridx].next = NULL;
+			mm_info[ridx].race.next = NULL;
 	}
 	z_info->r_max += 1;
 
@@ -1944,7 +1945,8 @@ static errr finish_parse_monster_mut(struct parser *p) {
 
 static enum parser_error parse_monster_mut_name(struct parser *p) {
 	struct monster_race *h = parser_priv(p);
-	struct monster_race *r = mem_zalloc(sizeof *r);
+	/* Allocate a monster_mutation, of which the first entry is monster_race */
+	struct monster_race *r = mem_zalloc(sizeof(struct monster_mutation));
 	r->next = h;
 	r->name = string_make(parser_getstr(p, "name"));
 	parser_setpriv(p, r);
@@ -1952,11 +1954,11 @@ static enum parser_error parse_monster_mut_name(struct parser *p) {
 }
 
 static enum parser_error parse_monster_mut_level(struct parser *p) {
-	struct monster_race *r = parser_priv(p);
-	assert(r);
-	int from, to;
-	from = parser_getuint(p, "from");
-	to = parser_getuint(p, "to");
+	struct monster_mutation *mm = parser_priv(p);
+	assert(mm);
+
+	mm->min_level = parser_getuint(p, "from");
+	mm->max_level = parser_getuint(p, "to");
 	return PARSE_ERROR_NONE;
 }
 
@@ -1988,7 +1990,7 @@ static void cleanup_monster_mut(void)
 	int ridx;
 
 	for (ridx = 0; ridx < z_info->mm_max; ridx++)
-		cleanup_monster_race(&mm_info[ridx]);
+		cleanup_monster_race(&mm_info[ridx].race);
 
 	mem_free(mm_info);
 }

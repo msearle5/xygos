@@ -422,6 +422,8 @@ static enum parser_error parse_constants_mon_gen(struct parser *p) {
 		z->monster_group_max = value;
 	else if (streq(label, "group-dist"))
 		z->monster_group_dist = value;
+	else if (streq(label, "mutant-chance"))
+		z->mutant_chance = value;
 	else if (streq(label, "turns-easy"))
 		z->town_easy_turns = value;
 	else if (streq(label, "turns-level"))

@@ -31,7 +31,7 @@ extern struct file_parser mon_base_parser;
 extern struct file_parser pit_parser;
 extern struct file_parser pain_parser;
 extern struct file_parser monster_mut_parser;
-extern struct monster_race *mm_info;
+extern struct monster_mutation *mm_info;
 
 
 #endif /* MONSTER_INIT_H_ */

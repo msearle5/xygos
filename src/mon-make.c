@@ -23,6 +23,7 @@
 #include "mon-group.h"
 #include "mon-lore.h"
 #include "mon-make.h"
+#include "mon-mutant.h"
 #include "mon-predicate.h"
 #include "mon-timed.h"
 #include "mon-util.h"
@@ -322,7 +323,7 @@ struct monster_race *get_mon_num(int level)
 
 	/* Occasionally try for a mutant */
 	if ((race->mut_chance) && (one_in_(race->mut_chance))) {
-		mutate_monster(&race, true);
+		mutate_monster(&race, true, level);
 	}
 
 	/* Result */

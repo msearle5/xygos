@@ -67,6 +67,7 @@ struct angband_constants
 	u16b ood_monster_chance;	/**< Chance of OoD monster is 1 in this */
 	u16b ood_monster_amount;	/**< Max number of levels OoD */
 	u16b monster_group_max;		/**< Maximum size of a group */
+	u16b mutant_chance;			/**< Chance to try for a mutation */
 	u16b monster_group_dist;	/**< Max dist of a group from a related group */
 	u16b town_easy_turns;		/**< Number of turns before difficulty increases */
 	u16b town_levelup_turns;	/**< Number of turns between difficulty increases */

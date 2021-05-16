@@ -361,6 +361,13 @@ struct monster_race {
 	int num_shapes;
 };
 
+/* Monster mutation: extends race to add a min and max level */
+struct monster_mutation {
+	struct monster_race race;	/* This must be first as it is used as a base structure */
+	int min_level;
+	int max_level;
+};
+
 
 /**
  * Monster information, for a specific monster.
