@@ -422,6 +422,8 @@ static enum parser_error parse_constants_mon_gen(struct parser *p) {
 		z->monster_group_max = value;
 	else if (streq(label, "group-dist"))
 		z->monster_group_dist = value;
+	else if (streq(label, "mutant-chance"))
+		z->mutant_chance = value;
 	else if (streq(label, "turns-easy"))
 		z->town_easy_turns = value;
 	else if (streq(label, "turns-level"))
@@ -4010,6 +4012,7 @@ static struct {
 	{ "blow methods", &meth_parser },
 	{ "blow effects", &eff_parser },
 	{ "monster spells", &mon_spell_parser },
+	{ "monster mutations", &monster_mut_parser },
 	{ "monsters", &monster_parser },
 	{ "monster pits" , &pit_parser },
 	{ "monster lore" , &lore_parser },

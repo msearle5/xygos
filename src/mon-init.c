@@ -42,8 +42,11 @@ struct monster_pain *pain_messages;
 struct monster_spell *monster_spells;
 struct monster_base *rb_info;
 struct monster_race *r_info;
+struct monster_mutation *mm_info;
 const struct monster_race *ref_race = NULL;
 struct monster_lore *l_list;
+
+static void cleanup_monster_race(struct monster_race *r);
 
 const char *r_info_flags[] =
 {
@@ -1087,6 +1090,7 @@ static enum parser_error parse_monster_name(struct parser *p) {
 	r->next = h;
 	r->name = string_make(parser_getstr(p, "name"));
 	r->speed = 110;
+	r->mut_chance = z_info->mutant_chance;
 	parser_setpriv(p, r);
 	return PARSE_ERROR_NONE;
 }
@@ -1142,6 +1146,18 @@ static enum parser_error parse_monster_speed(struct parser *p) {
 	if (!r)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 	r->speed = parser_getint(p, "speed");
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_monster_mutate(struct parser *p) {
+	struct monster_race *r = parser_priv(p);
+
+	if (!r)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	int chance = parser_getint(p, "mutate");
+	r->mut_chance = chance;
+	if (chance != r->mut_chance)
+		return PARSE_ERROR_INVALID_VALUE;
 	return PARSE_ERROR_NONE;
 }
 
@@ -1649,6 +1665,7 @@ static enum parser_error parse_monster_color_cycle(struct parser *p)
 	IPML( "spell-freq int freq", parse_monster_spell_freq); \
 	IPML( "spell-power uint power", parse_monster_spell_power); \
 	IPML( "shape str name", parse_monster_shape); \
+	IPML( "mutate int mutate", parse_monster_mutate); \
 	IPML( "deathspells str spells", parse_monster_deathspells); \
 	IPML( "color-cycle sym group sym cycle", parse_monster_color_cycle)
 
@@ -1876,53 +1893,13 @@ static errr finish_parse_monster(struct parser *p) {
 	return 0;
 }
 
+
 static void cleanup_monster(void)
 {
 	int ridx;
 
-	for (ridx = 0; ridx < z_info->r_max; ridx++) {
-		struct monster_race *r = &r_info[ridx];
-		struct monster_drop *d;
-		struct monster_friends *f;
-		struct monster_friends_base *fb;
-		struct monster_mimic *m;
-		struct monster_shape *s;
-
-		d = r->drops;
-		while (d) {
-			struct monster_drop *dn = d->next;
-			mem_free(d);
-			d = dn;
-		}
-		f = r->friends;
-		while (f) {
-			struct monster_friends *fn = f->next;
-			mem_free(f);
-			f = fn;
-		}
-		fb = r->friends_base;
-		while (fb) {
-			struct monster_friends_base *fbn = fb->next;
-			mem_free(fb);
-			fb = fbn;
-		}		
-		m = r->mimic_kinds;
-		while (m) {
-			struct monster_mimic *mn = m->next;
-			mem_free(m);
-			m = mn;
-		}
-		s = r->shapes;
-		while (s) {
-			struct monster_shape *sn = s->next;
-			mem_free(s);
-			s = sn;
-		}
-		string_free(r->plural);
-		string_free(r->text);
-		string_free(r->name);
-		mem_free(r->blow);
-	}
+	for (ridx = 0; ridx < z_info->r_max; ridx++)
+		cleanup_monster_race(&r_info[ridx]);
 
 	mem_free(r_info);
 }
@@ -1933,6 +1910,154 @@ struct file_parser monster_parser = {
 	run_parse_monster,
 	finish_parse_monster,
 	cleanup_monster
+};
+
+static errr run_parse_monster_mut(struct parser *p) {
+	return parse_file_quit_not_found(p, "monster_mutation");
+}
+
+static errr finish_parse_monster_mut(struct parser *p) {
+	struct monster_mutation *r, *n;
+	int ridx;
+
+	/* Scan the list for the max id */
+	z_info->mm_max = 0;
+	z_info->mon_blows_max = 0;
+	r = parser_priv(p);
+	while (r) {
+		z_info->mm_max++;
+		r = (struct monster_mutation *)r->race.next;
+	}
+
+	/* Allocate the direct access list and copy the mutation records to it */
+	mm_info = mem_zalloc((z_info->mm_max + 1) * sizeof(*r));
+	ridx = z_info->mm_max - 1;
+	for (r = parser_priv(p); r; r = n, ridx--) {
+		assert(ridx >= 0);
+
+		/* Set the mutation or mod flags */
+		if (rf_has(mm_info[ridx].race.flags, RF_NONLIVING))
+			rf_on(mm_info[ridx].race.flags, RF_MODIFIED);
+		else
+			rf_on(mm_info[ridx].race.flags, RF_MUTANT);
+
+		/* Main record */
+		memcpy(&mm_info[ridx], r, sizeof(*r));
+		mm_info[ridx].race.ridx = ridx;
+		n = (struct monster_mutation *)r->race.next;
+		if (ridx < z_info->r_max - 1)
+			mm_info[ridx].race.next = (struct monster_race *)&mm_info[ridx + 1];
+		else
+			mm_info[ridx].race.next = NULL;
+	}
+	z_info->r_max += 1;
+
+	parser_destroy(p);
+	return 0;
+}
+
+static enum parser_error parse_monster_mut_name(struct parser *p) {
+	struct monster_race *h = parser_priv(p);
+	/* Allocate a monster_mutation, of which the first entry is monster_race */
+	struct monster_race *r = mem_zalloc(sizeof(struct monster_mutation));
+	r->next = h;
+	r->name = string_make(parser_getstr(p, "name"));
+	parser_setpriv(p, r);
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_monster_mut_level(struct parser *p) {
+	struct monster_mutation *mm = parser_priv(p);
+	assert(mm);
+
+	mm->min_level = parser_getuint(p, "from");
+	mm->max_level = parser_getuint(p, "to");
+	return PARSE_ERROR_NONE;
+}
+
+struct parser *init_parse_monster_mut(void) {
+	struct parser *p = parser_new();
+	parser_setpriv(p, NULL);
+	#define IPML(A, B) parser_reg(p, A, B );
+
+	parser_reg(p, "name str name", parse_monster_mut_name);
+	parser_reg(p, "level uint from uint to", parse_monster_mut_level);
+	parser_reg(p, "base sym base", parse_monster_base);
+	parser_reg(p, "blow sym method ?sym effect ?rand damage", parse_monster_blow);
+	parser_reg(p, "flags ?str flags", parse_monster_flags);
+	parser_reg(p, "spells str spells", parse_monster_spells);
+	parser_reg(p, "drop sym tval sym sval uint chance uint min uint max", parse_monster_drop);
+	parser_reg(p, "drop-base sym tval uint chance uint min uint max", parse_monster_drop_base);
+	parser_reg(p, "friends uint chance rand number sym name ?sym role", parse_monster_friends);
+	parser_reg(p, "friends-base uint chance rand number sym name ?sym role", parse_monster_friends_base);
+	parser_reg(p, "mimic sym tval sym sval", parse_monster_mimic);
+
+	IPMLS();
+
+	#undef IPML
+	return p;
+}
+
+static void cleanup_monster_mut(void)
+{
+	int ridx;
+
+	for (ridx = 0; ridx < z_info->mm_max; ridx++)
+		cleanup_monster_race(&mm_info[ridx].race);
+
+	mem_free(mm_info);
+}
+
+static void cleanup_monster_race(struct monster_race *r)
+{
+	struct monster_drop *d;
+	struct monster_friends *f;
+	struct monster_friends_base *fb;
+	struct monster_mimic *m;
+	struct monster_shape *s;
+
+	d = r->drops;
+	while (d) {
+		struct monster_drop *dn = d->next;
+		mem_free(d);
+		d = dn;
+	}
+	f = r->friends;
+	while (f) {
+		struct monster_friends *fn = f->next;
+		mem_free(f);
+		f = fn;
+	}
+	fb = r->friends_base;
+	while (fb) {
+		struct monster_friends_base *fbn = fb->next;
+		mem_free(fb);
+		fb = fbn;
+	}
+	m = r->mimic_kinds;
+	while (m) {
+		struct monster_mimic *mn = m->next;
+		mem_free(m);
+		m = mn;
+	}
+	s = r->shapes;
+	while (s) {
+		struct monster_shape *sn = s->next;
+		mem_free(s);
+		s = sn;
+	}
+	string_free(r->plural);
+	string_free(r->text);
+	string_free(r->name);
+	mem_free(r->blow);
+}
+
+struct file_parser monster_mut_parser = {
+	"monster_mutation",
+	init_parse_monster_mut,
+	run_parse_monster_mut,
+	finish_parse_monster_mut,
+	cleanup_monster_mut
 };
 
 /**

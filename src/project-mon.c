@@ -25,6 +25,7 @@
 #include "mon-make.h"
 #include "mon-move.h"
 #include "mon-msg.h"
+#include "mon-mutant.h"
 #include "mon-predicate.h"
 #include "mon-spell.h"
 #include "mon-timed.h"
@@ -242,6 +243,7 @@ typedef struct project_monster_handler_context_s {
 	bool skipped;
 	u16b flag;
 	int do_poly;
+	bool do_grow;
 	int teleport_distance;
 	int proj_flags;
 	enum mon_messages hurt_msg;
@@ -591,6 +593,45 @@ static void project_monster_handler_RADIATION(project_monster_handler_context_t 
 		context->hurt_msg = MON_MSG_RESIST;
 		context->dam *= 3;
 		context->dam /= (randint1(6)+6);
+	} else {
+		/* If the monster isn't radiation resistant, and hasn't been killed by the hit, and
+		 * the hit is big enough - then there may be side effects. Mutation, growth, splitting,
+		 * polymorphing...
+		 */
+		if (context->dam < context->mon->hp) {
+			if (randint0(2 * context->mon->race->avg_hp) < context->dam) {
+				bool can_poly = (poly_race(context->mon->race) != context->mon->race);
+				bool can_split = rf_has(context->mon->race->flags, RF_MULTIPLY);
+				bool can_mutate = select_mutation(context->mon->race, false, 127);
+				bool can_grow = context->mon->race->grow && lookup_monster(context->mon->race->grow);
+				bool visible = monster_is_visible(context->mon);
+				const char *name = context->mon->race->name;
+				char buf[1024];
+				*buf = 0;
+				if (can_poly || can_split || can_mutate || can_grow) {
+					bool done = false;
+					do {
+						if (can_grow && one_in_(10)) {
+							context->do_poly = context->dam;
+							context->do_grow = true;
+							done = true;
+						} else if (can_split && one_in_(2)) {
+							strnfmt(buf, sizeof(buf), "The %s tears in half!", name);
+							done = true;
+						} else if (can_poly && one_in_(4)) {
+							context->do_poly = context->dam;
+							done = true;
+						} else if (can_mutate) {
+							mutate_monster(&context->mon->race, false, 127);
+							strnfmt(buf, sizeof(buf), "The %s transforms strangely!", name);
+							done = true;
+						}
+					} while (!done);
+					if (visible && *buf)
+						msg(buf);
+				}
+			}
+		}
 	}
 }
 
@@ -1112,6 +1153,63 @@ static bool project_m_player_attack(project_monster_handler_context_t *context)
 	return mon_died;
 }
 
+void monster_polymorph(project_monster_handler_context_t *context, int m_idx, int power, bool grow)
+{
+	struct monster *mon = context->mon;
+	int typ = context->type;
+	enum mon_messages hurt_msg = MON_MSG_UNAFFECTED;
+	const struct loc grid = context->grid;
+	int savelvl = 0;
+	struct monster_race *old;
+	struct monster_race *new;
+
+	/* Uniques cannot be polymorphed */
+	if (rf_has(mon->race->flags, RF_UNIQUE)) {
+		add_monster_message(mon, hurt_msg, false);
+		return;
+	}
+
+	if (context->seen) context->obvious = true;
+
+	/* Saving throws depend on damage for direct poly, random for chaos
+	 * There is no saving throw against the (usually beneficial) growth effect
+	 **/
+	if (!grow) {
+		if (typ == PROJ_MON_POLY)
+			savelvl = randint1(MAX(1, power - 10)) + 10;
+		else
+			savelvl = randint1(90);
+		if (mon->race->level > savelvl) {
+			if (typ == PROJ_MON_POLY) hurt_msg = MON_MSG_MAINTAIN_SHAPE;
+			add_monster_message(mon, hurt_msg, false);
+			return;
+		}
+	}
+
+	old = mon->race;
+	if (grow)
+		new = lookup_monster(old->grow);
+	else
+		new = poly_race(old);
+
+	/* Handle polymorph */
+	if (new && (new != old)) {
+		struct monster_group_info info = {0, 0 };
+
+		/* Report the polymorph before changing the monster */
+		hurt_msg = MON_MSG_CHANGE;
+		add_monster_message(mon, hurt_msg, false);
+
+		/* Delete the old monster, and return a new one */
+		delete_monster_idx(m_idx);
+		place_new_monster(cave, grid, new, false, false, info,
+						  ORIGIN_DROP_POLY);
+		context->mon = square_monster(cave, grid);
+	} else {
+		add_monster_message(mon, hurt_msg, false);
+	}
+}
+
 /**
  * Apply side effects from an attack onto a monster.
  *
@@ -1123,7 +1221,6 @@ static bool project_m_player_attack(project_monster_handler_context_t *context)
  */
 static void project_m_apply_side_effects(project_monster_handler_context_t *context, int m_idx)
 {
-	int typ = context->type;
 	struct monster *mon = context->mon;
 
 	/*
@@ -1134,50 +1231,7 @@ static void project_m_apply_side_effects(project_monster_handler_context_t *cont
 	 * monster.
 	 */
 	if (context->do_poly) {
-		enum mon_messages hurt_msg = MON_MSG_UNAFFECTED;
-		const struct loc grid = context->grid;
-		int savelvl = 0;
-		struct monster_race *old;
-		struct monster_race *new;
-
-		/* Uniques cannot be polymorphed */
-		if (rf_has(mon->race->flags, RF_UNIQUE)) {
-			add_monster_message(mon, hurt_msg, false);
-			return;
-		}
-
-		if (context->seen) context->obvious = true;
-
-		/* Saving throws depend on damage for direct poly, random for chaos */
-		if (typ == PROJ_MON_POLY)
-			savelvl = randint1(MAX(1, context->do_poly - 10)) + 10;
-		else
-			savelvl = randint1(90);
-		if (mon->race->level > savelvl) {
-			if (typ == PROJ_MON_POLY) hurt_msg = MON_MSG_MAINTAIN_SHAPE;
-			add_monster_message(mon, hurt_msg, false);
-			return;
-		}
-
-		old = mon->race;
-		new = poly_race(old);
-
-		/* Handle polymorph */
-		if (new != old) {
-			struct monster_group_info info = {0, 0 };
-
-			/* Report the polymorph before changing the monster */
-			hurt_msg = MON_MSG_CHANGE;
-			add_monster_message(mon, hurt_msg, false);
-
-			/* Delete the old monster, and return a new one */
-			delete_monster_idx(m_idx);
-			place_new_monster(cave, grid, new, false, false, info,
-							  ORIGIN_DROP_POLY);
-			context->mon = square_monster(cave, grid);
-		} else {
-			add_monster_message(mon, hurt_msg, false);
-		}
+		monster_polymorph(context, m_idx, context->do_poly, context->do_grow);
 	} else if (context->teleport_distance > 0) {
 		char dice[5];
 		strnfmt(dice, sizeof(dice), "%d", context->teleport_distance);
@@ -1296,6 +1350,7 @@ void project_m(struct source origin, int r, struct loc grid, int dam, int typ,
 		false, /* skipped */
 		0, /* flag */
 		0, /* do_poly */
+		false, /* do_grow */
 		0, /* teleport_distance */
 		flg, /* projection flags */
 		MON_MSG_NONE, /* hurt_msg */

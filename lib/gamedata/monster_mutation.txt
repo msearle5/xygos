@@ -1,0 +1,217 @@
+# File: monster-mutation.txt
+
+# This file is used to initialize the "monster mutation" information for Angband.
+
+# Do not modify this file unless you know exactly what you are doing, unless
+# you wish to risk possible system crashes and broken savefiles.
+
+# === Understanding monster-mutation.txt ===
+
+# name: mutation name
+# level: from: to - this mutation will only be applied to monsters in this range of levels
+# flags: flag | flag | etc	- added to the base monster's flags
+# desc: Description (appended to the base monster's)
+# speed : + to monster speed
+# hit-points : multiplier (100 = x1) to average hit points
+# armor-class : + to armor class
+# depth: + levels to usual depth
+# light: + to monster's light intensity
+
+# glyph: symbol
+# color: color
+# hearing : hearing sensitivity
+# sleepiness : initial sleep value
+# rarity: inverse probability of generation
+# experience: experience per depth level
+# blow: attack method : attack effect : damage
+# innate-freq: frequency of innate attacks
+# spell-freq: spell frequency
+# spell-power: spell power
+# spells: spell type | spell type | etc
+# desc: Description
+# drop: item type : item name : percent drop chance : min : max
+# drop-base: item type : percent drop chance : min : max
+# mimic: tval : sval
+# friends: chance: number: name : ?role
+# friends-base: chance: number: name : ?role
+
+# 'name' indicates the beginning of an entry
+
+name:screaming
+level:1:25
+rarity:20
+experience:110
+depth:1
+spells:SHRIEK
+
+name:scary
+level:1:25
+rarity:20
+experience:110
+depth:1
+spells:SCARE
+
+name:berserk
+level:4:33
+rarity:30
+experience:120
+depth:2
+armor-class:-20
+hit-points:130
+speed:2
+flags:NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
+
+name:terrified
+level:1:15
+rarity:40
+experience:90
+depth:0
+flags:FRIGHTENED
+spells:TPORT
+
+name:glowing
+level:1:25
+rarity:50
+experience:105
+depth:1
+light:2
+
+#name:shady
+#level:1:40
+#rarity:40
+#experience:115
+#depth:2
+#flags:EAT_LIGHT
+
+name:armored
+level:4:40
+rarity:25
+experience:130
+depth:2
+speed:-2
+armor-class:40
+
+name:robust
+level:5:50
+rarity:30
+experience:140
+depth:3
+speed:-2
+hit-points:180
+flags:REGENERATE
+
+name:grabby
+spells:HOLD | TELE_TO
+level:15:100
+rarity:70
+experience:200
+depth:6
+
+name:quick
+level:1:10
+rarity:60
+experience:140
+depth:2
+speed:5
+
+name:suicide
+level:5:20
+rarity:70
+experience:120
+depth:2
+flags:NO_FEAR
+deathspells:EXPLODE
+
+name:drunk
+level:2:25
+rarity:50
+experience:75
+depth:-1 
+flags:RAND_25 | RAND_50 | NO_FEAR
+
+name:radioactive
+level:10:100
+rarity:60
+experience:180
+depth:6
+flags:IM_RADIATION
+spells:BR_RADI
+
+name:gruesome
+level:5:80
+rarity:70
+experience:140
+depth:4
+flags:HURT_LIGHT
+spells:BR_DARK | DARKNESS | BLIND
+
+name:friendly
+level:5:100
+rarity:70
+experience:120
+depth:5
+spells:S_KIN
+
+name:stealthy
+level:1:100
+flags:EMPTY_MIND | COLD_BLOOD
+rarity:40
+experience:120
+depth:3
+
+name:evasive
+level:4:45
+rarity:70
+experience:160
+depth:0
+armor-class:20
+speed:5
+spells:BLINK
+
+name:speedy
+level:10:60
+rarity:40
+experience:180
+depth:5
+speed:10
+
+name:gigantic
+level:35:70
+rarity:50
+experience:200
+depth:5
+speed:-2
+hit-points:200
+armor-class:50
+
+name:venomous
+level:15:50
+rarity:40
+experience:135
+depth:5
+flags:IM_POIS
+spells:BR_POIS
+
+name:flaming
+level:12:40
+rarity:40
+experience:125
+depth:4
+flags:IM_COLD
+spells:BR_COLD
+
+name:cryo
+level:12:40
+rarity:40
+experience:125
+depth:4
+flags:IM_FIRE
+spells:BR_FIRE
+
+name:electric
+level:12:40
+rarity:40
+experience:125
+depth:4
+flags:IM_ELEC
+spells:BR_ELEC

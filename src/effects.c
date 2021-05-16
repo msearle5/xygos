@@ -6080,22 +6080,27 @@ bool effect_handler_WONDER(effect_handler_context_t *context)
 		subtype = PROJ_MON_DRAIN;
 		value.base = 75;
 		handler = effect_handler_BOLT;
-	} else if (die < 81) {
+	} else if (die < 80) {
 		subtype = PROJ_ELEC;
 		value.base = 30 + plev / 2;
 		radius = 2;
 		handler = effect_handler_BALL;
-	} else if (die < 86) {
+	} else if (die < 84) {
 		subtype = PROJ_ACID;
 		value.base = 40 + plev;
 		radius = 2;
 		handler = effect_handler_BALL;
-	} else if (die < 91) {
+	} else if (die < 88) {
 		subtype = PROJ_ICE;
 		value.base = 70 + plev;
 		radius = 3;
 		handler = effect_handler_BALL;
-	} else if (die < 96) {
+	} else if (die < 92) {
+		subtype = PROJ_RADIATION;
+		value.base = 60 + plev;
+		radius = 5;
+		handler = effect_handler_BALL;
+	} else if (die < 97) {
 		subtype = PROJ_FIRE;
 		value.base = 80 + plev;
 		radius = 3;

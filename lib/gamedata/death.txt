@@ -48,10 +48,10 @@ D:Hah! Just because your hitpoints are negative, doesn't mean you are dead.
 D:He hit me for HOW MUCH?????
 D:Hey dude! You're food!
 D:Hey! Killin' ain't cool.
-D:I don't choose targets, I clear levels dammit!
 D:I didn't like violence anyway!
 D:I didn't mean it when I said 'Bite me'
 D:I didn't want to live anyway.
+D:I don't choose targets, I clear levels dammit!
 D:I don't wanna die, I'm a god, why can't I live on?
 D:I hate the RNG...
 D:I have got you back now, na-na-na-na-na-naaaa!
@@ -123,6 +123,7 @@ D:The higher you walk, the farther you fall.
 D:The keys were right next to each other...
 D:The monsters rejoice, the hero has been defeated.
 D:The rest is silence.
+D:They called me mad! I'll SHOW you mad!!
 D:They couldn't hit an elephant at this distance!
 D:They say blood will have blood...
 D:This HAS to be an illusion. I attempt to disbelieve it.

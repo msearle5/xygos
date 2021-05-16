@@ -35,6 +35,7 @@ struct angband_constants
 	u16b a_quest;			/**< Maximum number of quest artifact (so always present, even with standarts off) kinds */
 	u16b e_max;				/**< Maximum number of ego-item kinds */
 	u16b r_max;				/**< Maximum number of monster races */
+	u16b mm_max;			/**< Maximum number of monster mutations */
 	u16b mp_max;			/**< Maximum number of monster pain message sets */
 	u16b s_max;				/**< Maximum number of magic spells */
 	u16b pit_max;			/**< Maximum number of monster pit types */
@@ -66,6 +67,7 @@ struct angband_constants
 	u16b ood_monster_chance;	/**< Chance of OoD monster is 1 in this */
 	u16b ood_monster_amount;	/**< Max number of levels OoD */
 	u16b monster_group_max;		/**< Maximum size of a group */
+	u16b mutant_chance;			/**< Chance to try for a mutation */
 	u16b monster_group_dist;	/**< Max dist of a group from a related group */
 	u16b town_easy_turns;		/**< Number of turns before difficulty increases */
 	u16b town_levelup_turns;	/**< Number of turns between difficulty increases */

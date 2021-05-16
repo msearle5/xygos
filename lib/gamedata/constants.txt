@@ -41,6 +41,9 @@ mon-gen:group-max:25
 # Maximum distance of a group of monsters from a related group
 mon-gen:group-dist:5
 
+# Default chance that a created monster will try for a mutation is one-in-this
+mon-gen:mutant-chance:25
+
 # Time before town gets dungeon p, and the dungeon gets first level deeper
 mon-gen:turns-easy:20000
 

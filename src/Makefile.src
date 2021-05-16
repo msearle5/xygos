@@ -120,6 +120,7 @@ ANGFILES = \
 	mon-make.o \
 	mon-move.o \
 	mon-msg.o \
+	mon-mutant.o \
 	mon-predicate.o \
 	mon-spell.o \
 	mon-summon.o \
