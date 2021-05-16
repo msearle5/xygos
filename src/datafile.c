@@ -325,6 +325,7 @@ errr grab_index_and_int(int *value, int *index, const char **value_type,
 
 	/* Get a rewritable string */
 	my_strcpy(value_name, name_and_value, sizeof(value_name));
+	//fprintf(stderr,"GII:'%s'/'%s'\n", prefix, value_name);
 
 	/* Parse the value expression */
 	if (!find_value_arg(value_name, NULL, value))
@@ -335,6 +336,7 @@ errr grab_index_and_int(int *value, int *index, const char **value_type,
 		my_strcpy(value_string, prefix, sizeof(value_string));
 		my_strcat(value_string, value_type[i],
 				  sizeof(value_string) - strlen(value_string));
+		//fprintf(stderr,"'%s'/'%s'\n", value_string, value_name);
 		if (streq(value_string, value_name)) break;
 	}
 

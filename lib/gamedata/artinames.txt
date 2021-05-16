@@ -14,7 +14,7 @@
 # N:Name
 # B:Name
 # T:Type	(tval)
-# Any:Flags (Object flags, at least one required. Separated with |)
+# Any:Flags (Object flags, resistances/immunities, brands. At least one required. Separated with |)
 
 N:Death of Worlds
 T:SWORD
@@ -682,9 +682,7 @@ T:POLEARM
 T:DIGGING
 T:GUN
 T:LIGHT
-Any:LIGHT
-# | LIGHT_2 | LIGHT_3 | LIGHT_4 | LIGHT_5
-# | RES_FIRE | FIRE_3 | FIRE_2
+Any:LIGHT_2 | LIGHT_3 | LIGHT_4 | LIGHT_5 | RES_FIRE[1] | FIRE_2 | FIRE_3
 
 N:Ever Ready
 T:SHIELD
