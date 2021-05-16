@@ -128,7 +128,7 @@ static enum parser_error parse_any_artiname(struct parser *p) {
 		}
 		else {
 			for (int i = 1; i < z_info->brand_max; i++) {
-				if (streq(s, brands[i].code)) {
+				if (streq(t, brands[i].code)) {
 					found = true;
 					if (!h->brands)
 						h->brands = mem_zalloc(z_info->brand_max * sizeof(bool));
@@ -2819,7 +2819,8 @@ char *artifact_gen_name(struct artifact_set_data *data, struct artifact *a, cons
 			for(int i=min_power; i<max_power; i++) {
 				if (!data->name_used[i])
 					if (artifact_name_tval(tval, i))
-						names++;
+						if (name_is_suitable(i, a))
+							names++;
 			}
 			if (!names) {
 				if (min_power > 0) min_power--;
