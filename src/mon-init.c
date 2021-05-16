@@ -1149,6 +1149,18 @@ static enum parser_error parse_monster_speed(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_monster_mutate(struct parser *p) {
+	struct monster_race *r = parser_priv(p);
+
+	if (!r)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	int chance = parser_getint(p, "mutate");
+	r->mut_chance = chance;
+	if (chance != r->mut_chance)
+		return PARSE_ERROR_INVALID_VALUE;
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_monster_hit_points(struct parser *p) {
 	struct monster_race *r = parser_priv(p);
 
@@ -1653,6 +1665,7 @@ static enum parser_error parse_monster_color_cycle(struct parser *p)
 	IPML( "spell-freq int freq", parse_monster_spell_freq); \
 	IPML( "spell-power uint power", parse_monster_spell_power); \
 	IPML( "shape str name", parse_monster_shape); \
+	IPML( "mutate int mutate", parse_monster_mutate); \
 	IPML( "deathspells str spells", parse_monster_deathspells); \
 	IPML( "color-cycle sym group sym cycle", parse_monster_color_cycle)
 
