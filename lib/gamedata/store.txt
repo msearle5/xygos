@@ -98,7 +98,6 @@ normal:gloves
 normal:shield
 buy:boots
 buy:gloves
-buy:crown
 buy:helm
 buy:shield
 buy:cloak

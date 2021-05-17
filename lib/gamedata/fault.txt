@@ -23,7 +23,6 @@ desc:attracts opponents and weakens the defences
 
 name:teleportation
 type:helm
-type:crown
 effect:TELEPORT
 dice:40
 time:d100
@@ -34,13 +33,11 @@ conflict-flags:NO_TELEPORT
 
 name:dullness
 type:helm
-type:crown
 values:INT[-5] | WIS[-5] | CHR[-5]
 desc:makes you mentally slow
 
 name:sickliness
 type:helm
-type:crown
 values:STR[-5] | DEX[-5] | CON[-5]
 desc:makes you frail
 
@@ -96,7 +93,6 @@ type:sword
 type:boots
 type:gloves
 type:helm
-type:crown
 type:shield
 type:cloak
 type:soft armor
@@ -117,7 +113,6 @@ type:sword
 type:boots
 type:gloves
 type:helm
-type:crown
 type:shield
 type:cloak
 type:soft armor
@@ -138,7 +133,6 @@ type:sword
 type:boots
 type:gloves
 type:helm
-type:crown
 type:shield
 type:cloak
 type:soft armor
@@ -159,7 +153,6 @@ type:sword
 type:boots
 type:gloves
 type:helm
-type:crown
 type:shield
 type:cloak
 type:soft armor
@@ -212,7 +205,6 @@ type:digger
 type:boots
 type:gloves
 type:helm
-type:crown
 type:shield
 type:cloak
 type:soft armor
@@ -227,7 +219,6 @@ type:digger
 type:boots
 type:gloves
 type:helm
-type:crown
 type:shield
 type:cloak
 type:soft armor
@@ -244,7 +235,6 @@ type:hafted
 type:polearm
 type:sword
 type:helm
-type:crown
 type:shield
 type:hard armor
 type:light
@@ -278,7 +268,6 @@ name:burning
 type:boots
 type:gloves
 type:helm
-type:crown
 type:shield
 type:cloak
 type:soft armor
@@ -292,7 +281,6 @@ name:chilling
 type:boots
 type:gloves
 type:helm
-type:crown
 type:shield
 type:cloak
 type:soft armor

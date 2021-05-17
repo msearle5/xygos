@@ -156,7 +156,7 @@ bool tval_is_body_armor(const struct object *obj)
 
 bool tval_is_head_armor(const struct object *obj)
 {
-	return obj->tval == TV_HELM || obj->tval == TV_CROWN;
+	return (obj->tval == TV_HELM);
 }
 
 bool tval_is_ammo(const struct object *obj)
@@ -246,7 +246,6 @@ static bool tv_is_armor(int tv)
 		case TV_SHIELD:
 		case TV_CLOAK:
 		case TV_BELT:
-		case TV_CROWN:
 		case TV_HELM:
 		case TV_BOOTS:
 		case TV_GLOVES:
@@ -301,13 +300,11 @@ bool tval_is_wearable(const struct object *obj)
 		case TV_BOOTS:
 		case TV_GLOVES:
 		case TV_HELM:
-		case TV_CROWN:
 		case TV_SHIELD:
 		case TV_CLOAK:
 		case TV_BELT:
 		case TV_SOFT_ARMOR:
 		case TV_HARD_ARMOR:
-		case TV_DRAG_ARMOR:
 		case TV_LIGHT:
 			return true;
 		default:

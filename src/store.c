@@ -1918,12 +1918,10 @@ int find_inven(const struct object *obj)
 			case TV_GLOVES:
 			case TV_BELT:
 			case TV_HELM:
-			case TV_CROWN:
 			case TV_SHIELD:
 			case TV_CLOAK:
 			case TV_SOFT_ARMOR:
 			case TV_HARD_ARMOR:
-			case TV_DRAG_ARMOR:
 			case TV_LIGHT:
 			case TV_AMMO_12:
 			case TV_AMMO_9:

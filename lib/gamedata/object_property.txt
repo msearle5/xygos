@@ -153,7 +153,6 @@ type-mult:dragon armor:3
 type-mult:cloak:3
 type-mult:shield:3
 type-mult:helm:3
-type-mult:crown:3
 type-mult:gloves:3
 type-mult:boots:3
 bindui:blows_ui_compact_0:0
@@ -174,7 +173,6 @@ type-mult:dragon armor:4
 type-mult:cloak:4
 type-mult:shield:4
 type-mult:helm:4
-type-mult:crown:4
 type-mult:gloves:4
 type-mult:boots:4
 bindui:shots_ui_compact_0:0
@@ -195,7 +193,6 @@ type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
-type-mult:crown:0
 type-mult:gloves:0
 type-mult:boots:0
 bindui:shooting_power_ui_compact_0:0
@@ -216,7 +213,6 @@ type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
-type-mult:crown:0
 type-mult:gloves:0
 type-mult:boots:0
 bindui:movement_speed_ui_compact_0:0
@@ -372,7 +368,6 @@ type-mult:dragon armor:2
 type-mult:cloak:2
 type-mult:shield:2
 type-mult:helm:2
-type-mult:crown:2
 type-mult:gloves:2
 type-mult:boots:2
 msg:You note that your {name} is speeding up your recovery.
@@ -391,7 +386,6 @@ type-mult:dragon armor:2
 type-mult:cloak:2
 type-mult:shield:2
 type-mult:helm:2
-type-mult:crown:2
 type-mult:gloves:2
 type-mult:boots:2
 power:35
@@ -428,7 +422,6 @@ type-mult:dragon armor:2
 type-mult:cloak:2
 type-mult:shield:2
 type-mult:helm:2
-type-mult:crown:2
 type-mult:gloves:2
 type-mult:boots:2
 power:6
@@ -448,7 +441,6 @@ type-mult:dragon armor:2
 type-mult:cloak:2
 type-mult:shield:2
 type-mult:helm:2
-type-mult:crown:2
 type-mult:gloves:5
 type-mult:boots:2
 msg:Your {name} keeps you moving.
@@ -468,7 +460,6 @@ type-mult:dragon armor:2
 type-mult:cloak:2
 type-mult:shield:2
 type-mult:helm:2
-type-mult:crown:2
 type-mult:gloves:2
 type-mult:boots:2
 msg:Your {name} warms your spirit.
@@ -489,7 +480,6 @@ type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
-type-mult:crown:0
 type-mult:gloves:0
 type-mult:boots:0
 msg:Your {name} causes an earthquake!
@@ -509,7 +499,6 @@ type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
-type-mult:crown:0
 type-mult:gloves:0
 type-mult:boots:0
 bindui:bless_ui_compact_0:0
@@ -532,7 +521,6 @@ type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
-type-mult:crown:0
 type-mult:gloves:0
 type-mult:boots:0
 
@@ -553,7 +541,6 @@ type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
-type-mult:crown:0
 type-mult:gloves:0
 type-mult:boots:0
 
@@ -574,7 +561,6 @@ type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
-type-mult:crown:0
 type-mult:gloves:0
 type-mult:boots:0
 
@@ -680,7 +666,6 @@ type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
-type-mult:crown:0
 type-mult:gloves:0
 type-mult:boots:0
 
@@ -701,7 +686,6 @@ type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
-type-mult:crown:0
 type-mult:gloves:0
 type-mult:boots:0
 
@@ -722,7 +706,6 @@ type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
-type-mult:crown:0
 type-mult:gloves:0
 type-mult:boots:0
 
@@ -743,7 +726,6 @@ type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
-type-mult:crown:0
 type-mult:gloves:0
 type-mult:boots:0
 
@@ -788,7 +770,6 @@ type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
-type-mult:crown:0
 type-mult:gloves:0
 type-mult:boots:0
 
@@ -805,7 +786,6 @@ type-mult:dragon armor:2
 type-mult:cloak:2
 type-mult:shield:2
 type-mult:helm:2
-type-mult:crown:2
 type-mult:gloves:2
 type-mult:boots:2
 msg:Your {name} stops you from setting off the trap.

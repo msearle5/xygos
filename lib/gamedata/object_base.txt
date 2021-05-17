@@ -123,12 +123,6 @@ flags:HATES_ACID
 material:steel
 randart:25:150:320:7:4
 
-name:crown:Crown~
-graphics:light umber
-# max-stack:1
-flags:HATES_ACID
-material:gold
-
 name:belt:Belt~
 graphics:light green
 # max-stack:1

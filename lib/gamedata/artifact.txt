@@ -145,7 +145,7 @@ desc:The mighty Hammer of the Underworld, blackened by doomspells of shattering.
 desc:  Its wielder holds the lives of all Morgoth's servants in his hand.
 
 name:of Morgoth
-base-object:crown:Massive Iron Crown
+base-object:helm:Massive Iron Crown
 level:100
 weight:400
 cost:10000000

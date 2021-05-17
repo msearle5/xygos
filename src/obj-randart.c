@@ -490,14 +490,12 @@ static void store_base_power(struct artifact_set_data *data)
 			data->gun_total++; break;
 		case TV_SOFT_ARMOR:
 		case TV_HARD_ARMOR:
-		case TV_DRAG_ARMOR:
 			data->armor_total++; break;
 		case TV_SHIELD:
 			data->shield_total++; break;
 		case TV_CLOAK:
 			data->cloak_total++; break;
 		case TV_HELM:
-		case TV_CROWN:
 			data->headgear_total++; break;
 		case TV_GLOVES:
 			data->glove_total++; break;
@@ -718,7 +716,7 @@ void count_nonweapon_abilities(const struct artifact *art,
 		} else if (art->tval == TV_GLOVES) {
 			file_putf(log_file, "Adding %d for AC bonus - gloves\n", bonus);
 			(data->art_probs[ART_IDX_GLOVE_AC]) += bonus;
-		} else if (art->tval == TV_HELM || art->tval == TV_CROWN) {
+		} else if (art->tval == TV_HELM) {
 			file_putf(log_file, "Adding %d for AC bonus - hat\n", bonus);
 			(data->art_probs[ART_IDX_HELM_AC]) += bonus;
 		} else if (art->tval == TV_SHIELD) {
@@ -731,8 +729,7 @@ void count_nonweapon_abilities(const struct artifact *art,
 			file_putf(log_file, "Adding %d for AC bonus - belt\n", bonus);
 			(data->art_probs[ART_IDX_CLOAK_AC]) += bonus;
 		} else if (art->tval == TV_SOFT_ARMOR ||
-				   art->tval == TV_HARD_ARMOR ||
-				   art->tval == TV_DRAG_ARMOR) {
+				   art->tval == TV_HARD_ARMOR) {
 			file_putf(log_file, "Adding %d for AC bonus - body armor\n", bonus);
 			(data->art_probs[ART_IDX_ARMOR_AC]) += bonus;
 		} else {
@@ -851,9 +848,9 @@ void count_modifiers(const struct artifact *art, struct artifact_set_data *data)
 	}
 
 	/* Handle a few special cases separately. */
-	if ((art->tval == TV_HELM || art->tval == TV_CROWN) &&
+	if ((art->tval == TV_HELM) &&
 		(art->modifiers[OBJ_MOD_WIS] > 0 || art->modifiers[OBJ_MOD_INT] > 0)) {
-		/* Handle WIS and INT on helms and crowns */
+		/* Handle WIS and INT on headgear */
 		if (art->modifiers[OBJ_MOD_WIS] > 0) {
 			file_putf(log_file, "Adding 1 for WIS bonus on headgear.\n");
 			(data->art_probs[ART_IDX_HELM_WIS])++;
@@ -1061,8 +1058,8 @@ void count_high_resists(const struct artifact *art,
 	}
 
 	if (of_has(art->flags, OF_PROT_BLIND)) {
-		/* Resist blind ability - helms/crowns are separate */
-		if (art->tval == TV_HELM || art->tval == TV_CROWN) {
+		/* Resist blind ability - hedgear is separate */
+		if (art->tval == TV_HELM) {
 			file_putf(log_file, "Adding 1 for resist blindness - headgear.\n");
 			(data->art_probs[ART_IDX_HELM_RBLIND])++;
 		} else {
@@ -1186,12 +1183,12 @@ void count_abilities(const struct artifact *art, struct artifact_set_data *data)
 
 	if (of_has(art->flags, OF_SEE_INVIS)) {
 		/*
-		 * Handle see invisible - do helms / crowns separately
+		 * Handle see invisible - do headgear separately
 		 * (Weapons were done already so exclude them)
 		 */
 		if(!(art->tval == TV_DIGGING || art->tval == TV_HAFTED ||
 			 art->tval == TV_POLEARM || art->tval == TV_SWORD)) {
-			if (art->tval == TV_HELM || art->tval == TV_CROWN) {
+			if (art->tval == TV_HELM) {
 				file_putf(log_file, "Adding 1 for see invisible - headgear.\n");
 				(data->art_probs[ART_IDX_HELM_SINV])++;
 			} else {
@@ -1202,8 +1199,8 @@ void count_abilities(const struct artifact *art, struct artifact_set_data *data)
 	}
 
 	if (of_has(art->flags, OF_TELEPATHY)) {
-		/* ESP case.  Handle helms/crowns separately. */
-		if (art->tval == TV_HELM || art->tval == TV_CROWN) {
+		/* ESP case.  Handle headgear separately. */
+		if (art->tval == TV_HELM) {
 			file_putf(log_file, "Adding 1 for ESP on headgear.\n");
 			(data->art_probs[ART_IDX_HELM_ESP])++;
 		} else {
@@ -1630,13 +1627,11 @@ void artifact_prep(struct artifact *art, const struct object_kind *kind,
 		case TV_BOOTS:
 		case TV_GLOVES:
 		case TV_HELM:
-		case TV_CROWN:
 		case TV_SHIELD:
 		case TV_CLOAK:
 		case TV_BELT:
 		case TV_SOFT_ARMOR:
 		case TV_HARD_ARMOR:
-		case TV_DRAG_ARMOR:
 			art->to_a += (s16b)(data->ac_startval / 2 +
 								randint0(data->ac_startval));
 			file_putf(log_file, "Assigned basic stats, AC bonus: %d\n",
@@ -1716,10 +1711,9 @@ static void build_freq_table(struct artifact *art, int *freq,
 
 	/* General armor abilities */
 	if (art->tval == TV_BOOTS || art->tval == TV_GLOVES ||
-		art->tval == TV_HELM || art->tval == TV_CROWN ||
+		art->tval == TV_HELM ||
 		art->tval == TV_SHIELD || art->tval == TV_CLOAK || art->tval == TV_BELT ||
-		art->tval == TV_SOFT_ARMOR || art->tval == TV_HARD_ARMOR ||
-		art->tval == TV_DRAG_ARMOR) {
+		art->tval == TV_SOFT_ARMOR || art->tval == TV_HARD_ARMOR) {
 		size_t n = N_ELEMENTS(art_idx_allarmor);
 		for (j = 0; j < n; j++)
 			f_temp[art_idx_allarmor[j]] = data->art_probs[art_idx_allarmor[j]];
@@ -1740,7 +1734,7 @@ static void build_freq_table(struct artifact *art, int *freq,
 	}
 
 	/* Headgear abilities */
-	if (art->tval == TV_HELM || art->tval == TV_CROWN) {
+	if (art->tval == TV_HELM) {
 		size_t n = N_ELEMENTS(art_idx_headgear);
 		for (j = 0; j < n; j++)
 			f_temp[art_idx_headgear[j]] = data->art_probs[art_idx_headgear[j]];

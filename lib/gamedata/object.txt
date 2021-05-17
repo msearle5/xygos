@@ -5283,7 +5283,7 @@ armor:0:0
 flags:INSTA_ART | QUEST_ART
 
 name:& Massive Iron Crown~
-type:crown
+type:helm
 graphics:]:D
 level:44
 weight:20
