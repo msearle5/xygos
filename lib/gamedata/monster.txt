@@ -588,6 +588,24 @@ flags:IM_COLD | NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
 desc:Green bats of immense size with vicious claws, said to have picked up unfortunate explorers and carried them away.
 
 
+name:Testy M. Boss
+base:lemming
+color:Green
+speed:110
+hit-points:2
+hearing:4
+smell:4
+armor-class:1
+sleepiness:80
+depth:25
+rarity:4
+experience:1
+blow:BITE:HURT:1d2
+flags:COLD_BLOOD | WEIRD_MIND | DEATH_SPECIAL
+flags:UNIQUE | QUESTOR | FORCE_DEPTH | FORCE_SLEEP
+flags:NO_FEAR
+desc:Test
+
 
 
 ##### LEMMINGS #####

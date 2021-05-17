@@ -45,7 +45,9 @@
 #include "player-timed.h"
 #include "player-util.h"
 #include "project.h"
+#include "store.h"
 #include "trap.h"
+#include "world.h"
 #include "z-set.h"
 
 
@@ -949,13 +951,38 @@ struct monster *choose_nearby_injured_kin(struct chunk *c,
 	return found;
 }
 
-/* Special effects on death */ 
+/** Special effects on death */
 void death_special(struct monster *mon)
 {
 	const char *name = mon->race->name;
 	char *newmon[8] = {0};
 	int nnewmon = 0;
+	const char *boxtext = NULL;
 
+	/* Quest complete: cast Detect Box Text */
+	if (rf_has(mon->race->flags, RF_QUESTOR)) {
+		if (rf_has(mon->race->flags, RF_FORCE_DEPTH)) {
+			/* Dungeon guardian, midboss or final boss */
+			switch(mon->race->level) {
+				/* 1st Midboss */
+				case 25:
+					boxtext = "Foo bar";
+					break;
+				/* Bottom of main dungeon */
+				case 100:
+					boxtext = "Triax lies dead. The scarred planet has been saved from his machinations and can begin the long process of rebuilding. You are undoubtedly a hero - and yet a still greater task now lies before you. Triax's aim was to rule not just Xygos but every inhabited system, and his cloned mind in the orbital station above could still dominate the galaxy if left unchecked. To truly defeat him then you must launch to orbit from the airport, descend to the center of the space station and destroy it!";
+					player->orbitable = true;
+					player->town->stores[STORE_AIR].open = true;
+					break;
+			}
+
+		} else {
+			/* Town quest target */
+			;
+		}
+	}
+
+	/* RGB Horrors split */
 	if (streq(name, "yellow horror")) {
 		newmon[nnewmon++] = "red horror";
 		newmon[nnewmon++] = "green horror";
@@ -971,6 +998,7 @@ void death_special(struct monster *mon)
 		newmon[nnewmon++] = "yellow horror";
 	}
 
+	/* New monsters */
 	if (nnewmon) {
 		int summoned = 0;
 		for(int i=0; i<nnewmon; i++) {
@@ -980,6 +1008,11 @@ void death_special(struct monster *mon)
 			show_monster_messages();
 			msg("Or maybe not!");
 		}
+	}
+
+	/* Display box text */
+	if (boxtext) {
+		ui_text_box(boxtext);
 	}
 }
 

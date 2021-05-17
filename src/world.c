@@ -88,7 +88,8 @@ void world_change_town(struct town *t)
 {
 	player->upkeep->last_level = player->town ? player->town->name : NULL;
 	player->town = t;
-	stores = player->town->stores;
+	if (t)
+		stores = player->town->stores;
 }
 
 /**
@@ -547,6 +548,8 @@ static void world_town_level(struct town *town, const char *dungeon)
  * Connect a town to a dungeon. Dungeon name must be non-null, but strings
  * which are not prefixes of any level are allowed (they disconnect the town
  * from all levels, like passing NULL to world_town_level)
+ * It is OK to pass no town (NULL) in which case world_town_level() will not
+ * be called and so the town will not be connected.
  */
 static void world_town_dungeon(struct town *town, const char *dungeon)
 {
@@ -564,7 +567,8 @@ static void world_town_dungeon(struct town *town, const char *dungeon)
 		}
 		lev = lev->next;
 	} while (lev);
-	world_town_level(town, bestname);
+	if (town)
+		world_town_level(town, bestname);
 }
 
 /** Assign a location (town and store) to quests.
@@ -782,6 +786,9 @@ bool world_init_towns(void)
 
 	world_town_dungeon(t = world_new_town(), "Stores");
 	t->underground = "an abandoned bunker, once a deadly secret.";
+
+	/* Space Station doesn't have an associated town */
+	world_town_dungeon(NULL, "Spacestation");
 
 	/* The 5 non-volcano towns.
 	 * One has a lake (and no street?)

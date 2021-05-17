@@ -59,6 +59,9 @@
 #include "z-debug.h"
 #include "z-rand.h"
 
+#define ORBIT_DAYTIME 900
+#define ORBIT_DURATION 1350
+#define ORBIT_FARE 90000
 
 /**
  * Shopkeeper welcome messages.
@@ -364,22 +367,39 @@ static void store_display_entry(struct menu *menu, int oid, bool cursor, int row
 
 	if (store->sidx == STORE_AIR) {
 		/* Airports display tickets, but these aren't actual items */
+		if (oid >= world_connections(player->town)) {
+			/* Destination */
+			colour = COLOUR_MAGENTA;
+			c_put_str(colour, "Orbital Station", row, col);
 
-		/* Destination */
-		colour = (oid & 1) ? COLOUR_L_BLUE : COLOUR_DEEP_L_BLUE;
-		c_put_str(colour, player->town->connect[oid]->name, row, col);
+			/* Airline */
+			c_put_str(colour, player->town->stores[STORE_AIR].owner->name, row, 30);
 
-		/* Airline */
-		c_put_str(colour, player->town->connect[oid]->stores[STORE_AIR].owner->name, row, 30);
+			/* Travel Time */
+			c_put_str(colour, format_duration(ORBIT_DURATION), row, 48);
 
-		/* Travel Time */
-		c_put_str(colour, format_duration(world_flight_time(player->town, player->town->connect[oid])), row, 48);
+			/* Departure Time */
+			c_put_str(colour, format_time(ORBIT_DAYTIME), row, ctx->scr_places_x[LOC_WEIGHT]);
 
-		/* Departure Time */
-		c_put_str(colour, format_time(world_departure_time(player->town, player->town->connect[oid])), row, ctx->scr_places_x[LOC_WEIGHT]);
+			/* Price */
+			c_put_str(colour, format("%d", ORBIT_FARE), row, ctx->scr_places_x[LOC_PRICE] + 4);
+		} else {
+			/* Destination */
+			colour = (oid & 1) ? COLOUR_L_BLUE : COLOUR_DEEP_L_BLUE;
+			c_put_str(colour, player->town->connect[oid]->name, row, col);
 
-		/* Price */
-		c_put_str(colour, format("%d", world_airline_fare(player->town, player->town->connect[oid])), row, ctx->scr_places_x[LOC_PRICE] + 4);
+			/* Airline */
+			c_put_str(colour, player->town->connect[oid]->stores[STORE_AIR].owner->name, row, 30);
+
+			/* Travel Time */
+			c_put_str(colour, format_duration(world_flight_time(player->town, player->town->connect[oid])), row, 48);
+
+			/* Departure Time */
+			c_put_str(colour, format_time(world_departure_time(player->town, player->town->connect[oid])), row, ctx->scr_places_x[LOC_WEIGHT]);
+
+			/* Price */
+			c_put_str(colour, format("%d", world_airline_fare(player->town, player->town->connect[oid])), row, ctx->scr_places_x[LOC_PRICE] + 4);
+		}
 	} else {
 
 		/* Get the object */
@@ -835,7 +855,7 @@ void store_your_name(struct store *store)
 /**
  * Buy an object from a store
  */
-static bool store_purchase(struct store_context *ctx, int item, bool single)
+static bool store_purchase(struct store_context *ctx, int item, bool single, bool *exit)
 {
 	struct store *store = ctx->store;
 
@@ -854,7 +874,18 @@ static bool store_purchase(struct store_context *ctx, int item, bool single)
 
 	if (store->sidx == STORE_AIR) {
 		/* Check if the player can afford it */
-		if ((int)player->au < world_airline_fare(player->town, player->town->connect[item])) {
+		int fare = ORBIT_FARE;
+		int departs = ORBIT_DAYTIME;
+		int flighttime = ORBIT_DURATION;
+		const char *name = "the space station";
+		if (item < world_connections(player->town)) {
+			fare = world_airline_fare(player->town, player->town->connect[item]);
+			departs = world_departure_time(player->town, player->town->connect[item]);
+			flighttime = world_flight_time(player->town, player->town->connect[item]);
+			name = player->town->connect[item]->name;
+		}
+
+		if ((int)player->au < fare) {
 			msg("You do not have enough money for this ticket.");
 			return false;
 		}
@@ -869,16 +900,18 @@ static bool store_purchase(struct store_context *ctx, int item, bool single)
 		}
 
 		/* Check if they are sure */
-		if (store_get_check(format("Fly to %s? [ESC, any other key to accept]", player->town->connect[item]->name))) {
+		if (store_get_check(format("Fly to %s? [ESC, any other key to accept]", name))) {
 
 			/* Deduct payment */
-			player->au -= world_airline_fare(player->town, player->town->connect[item]);
-
-			int departs = world_departure_time(player->town, player->town->connect[item]);
+			player->au -= fare;
 
 			/* Describe the flight */
-			msg("You wait until the %s flight, take off and land in %s.",
-				format_time(departs), player->town->connect[item]->name);
+			if (item < world_connections(player->town)) {
+				msg("You wait until the %s flight, take off and land in %s.",
+					format_time(departs), player->town->connect[item]->name);
+			} else {
+				ui_text_box("You climb into the waiting Kerbalspace Sisto and blast off into the wild black yonder. Surprisingly quickly a bright star ahead resolves into the complex, gleaming shape of the Xygos Orbital Station. There's a brief deceleration, a slight jolt, a hiss of gas - and you are docked. This is it!");
+			}
 
 			/* Take time */
 			int turns;
@@ -890,7 +923,7 @@ static bool store_purchase(struct store_context *ctx, int item, bool single)
 				/* Tomorrow */
 				turns = (departs + (10L * z_info->day_length)) - timeofday;
 			}
-			turns += world_flight_time(player->town, player->town->connect[item]);
+			turns += flighttime;
 			turn += turns;
 
 			/* Change the danger level (for prices, if nothing else) */
@@ -904,18 +937,28 @@ static bool store_purchase(struct store_context *ctx, int item, bool single)
 
 			/* Signal to move to outside the Airport */
 			player->upkeep->flight_level = true;
+			*exit = true;
 
-			/* Move to the new town */
-			world_change_town(player->town->connect[item]);
+			if (item < world_connections(player->town)) {
+				/* Move to the new town */
+				world_change_town(player->town->connect[item]);
 
-			/* Take a turn */
-			player->upkeep->energy_use = z_info->move_energy;
+				/* Take a turn */
+				player->upkeep->energy_use = z_info->move_energy;
 
-			/* Change level */
-			dungeon_change_level(player, 0);
+				/* Change level */
+				dungeon_change_level(player, 0);
 
-			/* Update the store context (as you are now in a different airport, in a new town!) */
-			ctx->store = get_store_by_idx(STORE_AIR);
+				/* Update the store context (as you are now in a different airport, in a new town!) */
+				ctx->store = get_store_by_idx(STORE_AIR);
+			} else {
+				/* No town */
+				world_change_town(NULL);
+
+				/* Space station: no town, start at level 100 */
+				dungeon_change_level(player, 100);
+				return false;
+			}
 		}
 
 		/* Update the display */
@@ -1320,7 +1363,7 @@ static void store_steal(struct store_context *ctx, bool *exit)
 	/* Show price */
 	prt(format("Price: %d, Diff %d", price, difficulty), 1, 0);
 
-	/* Confirm purchase */
+	/* Confirm stealing */
 	response = store_get_check(format("Steal %s? [ESC, any other key to accept]", o_name));
 	screen_load();
 
@@ -1895,9 +1938,14 @@ static void store_examine(struct store_context *ctx, int item)
 	if (item < 0) return;
 
 	if (ctx->store->sidx == STORE_AIR) {
-		sprintf(header, "Fly to %s!", player->town->connect[item]->name);
 		tb = textblock_new();
-		textblock_append(tb, world_describe_town(player->town->connect[item]));
+		if (item < world_connections(player->town)) {
+			sprintf(header, "Fly to %s!", player->town->connect[item]->name);
+			textblock_append(tb, world_describe_town(player->town->connect[item]));
+		} else {
+			sprintf(header, "The Orbital Station!");
+			textblock_append(tb, "Yes, you too can be an astronaut! See the world roll away below you from 300km up from the Xygos Orbital Station. Flights are available every morning for a very reasonable price!");
+		}
 	} else {
 		/* Get the actual object */
 		obj = ctx->list[item];
@@ -1950,8 +1998,11 @@ static void store_menu_recalc(struct menu *m)
 {
 	struct store_context *ctx = menu_priv(m);
 	int entries = ctx->store->stock_num;
-	if (ctx->store->sidx == STORE_AIR)
+	if (ctx->store->sidx == STORE_AIR) {
 		entries = world_connections(player->town);
+		if (player->orbitable)
+			entries++;
+	}
 	menu_setpriv(m, entries, ctx);
 }
 
@@ -2040,7 +2091,7 @@ enum {
 	ACT_EXIT
 };
 
-/* pick the context menu options appropiate for a store */
+/* pick the context menu options appropriate for a store */
 static int context_menu_store(struct store_context *ctx, const int oid, int mx, int my)
 {
 	struct store *store = ctx->store;
@@ -2085,7 +2136,7 @@ static int context_menu_store(struct store_context *ctx, const int oid, int mx, 
 	return true;
 }
 
-/* pick the context menu options appropiate for an item available in a store */
+/* pick the context menu options appropriate for an item available in a store */
 static void context_menu_store_item(struct store_context *ctx, const int oid, int mx, int my)
 {
 	struct store *store = ctx->store;
@@ -2124,15 +2175,16 @@ static void context_menu_store_item(struct store_context *ctx, const int oid, in
 
 	screen_load();
 
+	bool exit = false;
 	switch (selected) {
 		case ACT_EXAMINE:
 			store_examine(ctx, oid);
 			break;
 		case ACT_BUY:
-			store_purchase(ctx, oid, false);
+			store_purchase(ctx, oid, false, &exit);
 			break;
 		case ACT_BUY_ONE:
-			store_purchase(ctx, oid, true);
+			store_purchase(ctx, oid, true, &exit);
 			break;
 	}
 }
@@ -2145,7 +2197,7 @@ static bool store_menu_handle(struct menu *m, const ui_event *event, int oid, bo
 	bool processed = true;
 	struct store_context *ctx = menu_priv(m);
 	struct store *store = ctx->store;
-	
+
 	if (event->type == EVT_SELECT) {
 		/* Nothing for now, except "handle" the event */
 		return true;
@@ -2223,7 +2275,7 @@ static bool store_menu_handle(struct menu *m, const ui_event *event, int oid, bo
 				oid = store_get_stock(m, oid);
 				prt("", 0, 0);
 				if (oid >= 0) {
-					store_purchase(ctx, oid, false);
+					store_purchase(ctx, oid, false, exit);
 				}
 				break;
 			case 'l':

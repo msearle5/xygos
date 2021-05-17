@@ -1054,6 +1054,39 @@ void display_player_xtra_info(void)
 }
 
 /**
+ * Display box text, wait for a key, return to play.
+ */
+void ui_text_box(const char *text)
+{
+	/* Save the screen */
+	Term_save();
+
+	/* Erase screen */
+	clear_from(0);
+
+	/* When not playing, do not display in subwindows */
+	if (Term != angband_term[0] && !player->upkeep->playing) return;
+
+	/* Display the message */
+	int w, h;
+	Term_get_size(&w, &h);
+	text_out_wrap = (w/2) + 32;
+	text_out_indent = (w/2) - 32;
+	Term_gotoxy(text_out_indent, (h/2) - (strlen(text) / 64));
+	text_out_to_screen(COLOUR_WHITE, text);
+
+	/* Prompt for a key */
+	c_put_str(COLOUR_L_BLUE, "Press any key to continue", h-3, (w/2) - 12);
+
+	/* Wait for a key */
+	Term_flush();
+	inkey_ex();
+
+	/* Restore the screen */
+	Term_load();
+}
+
+/**
  * Display the character on the screen (two different modes)
  *
  * The top two lines, and the bottom line (or two) are left blank.

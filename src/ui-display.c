@@ -502,7 +502,7 @@ static int fmt_depth(char buf[], int max)
 			if (danger_depth(player) > 0) {
 				strnfmt(buf, max, "(L%d)", danger_depth(player));
 			} else {
-				my_strcpy(buf, player->town ? player->town->name : "Town", max);
+				my_strcpy(buf, player->town ? player->town->name : "Spacestation", max);
 			}
 		}
 		else
