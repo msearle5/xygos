@@ -66,6 +66,7 @@ EFFECT(MASS_BANISH,					false,	NULL,		0,		EFINFO_NONE,	"removes all nearby creat
 EFFECT(PROBE,						false,	NULL,		0,		EFINFO_NONE,	"gives you information on the health and abilities of monsters you can see")
 EFFECT(PORTAL,						false,	"range",	2,		EFINFO_TELE,	"teleports %s to the nearest portal, or if there is none randomly %s")
 EFFECT(CREATE_PORTAL,				false,	"range",	2,		EFINFO_TELE,	"creates a pair of portals, at your position and a random distant spot")
+EFFECT(HOP,							false,	"range",	2,		EFINFO_TELE,	"jumps %s randomly %s")
 EFFECT(TELEPORT,					false,	"range",	2,		EFINFO_TELE,	"teleports %s randomly %s")
 EFFECT(TELEPORT_TO,					false,	NULL,		0,		EFINFO_NONE,	"teleports toward a target")
 EFFECT(TELEPORT_LEVEL,				false,	NULL,		0,		EFINFO_NONE,	"teleports you one level up or down")

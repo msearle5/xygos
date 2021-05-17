@@ -2971,7 +2971,7 @@ bool effect_handler_PORTAL(effect_handler_context_t *context)
  * The grid is as close to distance 'dis' from 'start' as possible, but can be anywhere on the level
  * if this isn't available.
  */
-static bool find_teleportable(struct loc start, int dis, struct loc *result, bool is_player, bool is_trap)
+static bool find_teleportable(struct loc start, int dis, struct loc *result, bool is_player, bool is_trap, bool fixed_dis, bool in_los)
 {
 	struct loc grid;
 	bool only_vault_grids_possible = true;
@@ -2992,6 +2992,9 @@ static bool find_teleportable(struct loc start, int dis, struct loc *result, boo
 			int score = ABS(d - dis);
 			struct jumps *new;
 
+			/* If "fixed_dis" then only exact distances are acceptable */
+			if ((d != dis) && (fixed_dis)) continue;
+
 			/* Must move */
 			if (d == 0) continue;
 
@@ -3003,6 +3006,9 @@ static bool find_teleportable(struct loc start, int dis, struct loc *result, boo
 
 			/* No monster teleport onto glyph of warding */
 			if (!is_player && square_iswarded(cave, grid)) continue;
+
+			/* If "in_los" then there must be nothing in the way */
+			if (in_los && (!los(cave, start, grid))) continue;
 
 			/* No teleporting into vaults and such, unless there's no choice */
 			if (square_isvault(cave, grid)) {
@@ -3083,7 +3089,7 @@ bool effect_handler_CREATE_PORTAL(effect_handler_context_t *context)
 		start = player->grid;
 
 	/* Find a target position */
-	if (!find_teleportable(start, dis, &result, true, true)) {
+	if (!find_teleportable(start, dis, &result, true, true, false, false)) {
 		msg("Failed to find portal destination!");
 		return true;
 	}
@@ -3113,6 +3119,60 @@ bool effect_handler_CREATE_PORTAL(effect_handler_context_t *context)
 			end = " under you";
 		msg("Something prevents the portal from taking hold%s.", end);
 	}
+
+	return true;
+}
+
+/** Teleport player or monster exactly context->value.base grids away.
+ * There must be a clear line of movement to that point - it can't cross walls,
+ * although it can cross traps, hostile terrain and monsters.
+ * 
+ * This is not considered to be a form of teleportation - just rapid movement.
+ * So it's not blocked by arenas, etc.
+ */
+bool effect_handler_HOP(effect_handler_context_t *context)
+{
+	struct loc start = loc(context->x, context->y);
+	int dis = context->value.base;
+	bool is_player = (context->origin.what != SRC_MONSTER || context->subtype);
+	struct monster *t_mon = monster_target_monster(context);
+
+	/* Establish the coordinates to teleport from, if we don't know already */
+	if (!loc_is_zero(start)) {
+		/* We're good */
+	} else if (t_mon) {
+		/* Monster targeting another monster */
+		start = t_mon->grid;
+	} else if (is_player) {
+		start = player->grid;
+	} else {
+		assert(context->origin.what == SRC_MONSTER);
+		struct monster *mon = cave_monster(cave, context->origin.which.monster);
+		start = mon->grid;
+	}
+
+	struct loc result;
+	if (!find_teleportable(start, dis, &result, is_player, false, true, true)) {
+		/* Hop failed - this is common, no message */
+		return true;
+	}
+
+	/* Sound */
+	sound(is_player ? MSG_TELEPORT : MSG_TPOTHER);
+
+	/* Move player/monster */
+	monster_swap(start, result);
+
+	/* Clear any projection marker to prevent double processing */
+	sqinfo_off(square(cave, result)->info, SQUARE_PROJECT);
+
+	/* Clear monster target if it's no longer visible */
+	if (!target_able(target_get_monster())) {
+		target_set_monster(NULL);
+	}
+
+	/* Lots of updates after monster_swap */
+	handle_stuff(player);
 
 	return true;
 }
@@ -3190,7 +3250,7 @@ bool effect_handler_TELEPORT(effect_handler_context_t *context)
 	}
 
 	struct loc result;
-	if (!find_teleportable(start, dis, &result, is_player, false)) {
+	if (!find_teleportable(start, dis, &result, is_player, false, false, false)) {
 		msg("Failed to find teleport destination!");
 		return true;
 	}

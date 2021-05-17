@@ -1,6 +1,6 @@
 master
 borg		active, experimental	Porting the Borg
-artifacts	active, experimental	Randarts / halfarts etc.
+artifacts	inactive, merged		Randarts / halfarts etc.
 mutants		inactive, merged		Mutated monsters
 resist		inactive, merged		Resistance by steps
 sliding		inactive, merged		Sliding (mixed) classes

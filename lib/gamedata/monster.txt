@@ -801,6 +801,7 @@ flags:RAND_25
 flags:NO_FEAR
 desc:Lemmings hung with weights for their dive from the cliff tops.
 
+
 ##### INSECTS / BUGS #####
 
 name:pill bug
@@ -836,7 +837,8 @@ experience:1
 blow:BITE:HURT:1d1
 desc:It is six inches long.
 
-##### QUADRUPEDS #####
+
+##### q - QUADRUPEDS #####
 
 name:wumpus
 base:quadruped
@@ -853,6 +855,60 @@ experience:500
 blow:CRUSH:HURT:10d12
 flags:SMART | COLD_BLOOD | WEIRD_MIND | RAND_25 | BASH_DOOR | KILL_BODY | KILL_ITEM
 desc:The primeval Beast itself. Many hunt the Wumpus, few return...
+
+
+##### R - REPTILES (and amphibians) #####
+# Should this be l or :, leaving R for robots?
+
+name:rock lizard
+base:reptile
+color:U
+speed:110
+hit-points:8
+hearing:20
+smell:20
+armor-class:20
+sleepiness:15
+depth:2
+rarity:1
+experience:6
+blow:BITE:HURT:1d1
+desc:It is a small lizard with a hardened hide.
+
+name:giant green frog
+base:reptile
+color:g
+speed:110
+hit-points:9
+hearing:12
+smell:20
+armor-class:9
+sleepiness:30
+depth:3
+rarity:1
+experience:8
+blow:BITE:HURT:1d3
+flags:RAND_25 | BASH_DOOR
+spell-freq:8
+spells:HOP
+desc:A mountain chicken - a green frog as big as a wolf.
+
+name:lazy lizard
+base:reptile
+color:b
+speed:100
+hit-points:14
+hearing:8
+smell:20
+armor-class:6
+sleepiness:250
+depth:4
+rarity:1
+experience:15
+blow:BITE:PARALYZE:1d1
+flags:RAND_25
+flags:NO_SLEEP
+desc:A small blue lizard, creeping half-heartedly around with eyes half-shut.
 
 
 ##### X - MISC CREATURES #####
@@ -1660,21 +1716,6 @@ flags:NEVER_MOVE
 flags:HURT_LIGHT | NO_FEAR
 desc:A disembodied eye, floating a few feet above the ground.
 
-name:rock lizard
-base:reptile
-color:U
-speed:110
-hit-points:8
-hearing:20
-smell:20
-armor-class:4
-sleepiness:15
-depth:1
-rarity:1
-experience:2
-blow:BITE:HURT:1d1
-desc:It is a small lizard with a hardened hide.
-
 name:wild dog
 base:canine
 color:U
@@ -1909,22 +1950,6 @@ flags:NEVER_MOVE
 flags:HURT_LIGHT | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
 desc:It's a large pile of white flesh.
 
-name:giant green frog
-base:reptile
-color:g
-speed:110
-hit-points:9
-hearing:12
-smell:20
-armor-class:9
-sleepiness:30
-depth:2
-rarity:1
-experience:6
-blow:BITE:HURT:1d3
-flags:RAND_25 | BASH_DOOR
-desc:It is as big as a wolf.
-
 name:giant black ant
 base:ant
 color:D
@@ -1940,23 +1965,6 @@ experience:8
 blow:BITE:HURT:1d4
 flags:RAND_25
 desc:It is about three feet long.
-
-name:salamander
-base:reptile
-color:o
-speed:110
-hit-points:14
-hearing:8
-smell:20
-armor-class:24
-sleepiness:80
-depth:2
-rarity:1
-experience:10
-blow:BITE:FIRE:1d3
-flags:RAND_25
-flags:IM_FIRE
-desc:A small black and orange lizard.
 
 name:white harpy
 plural:white harpies
@@ -6374,30 +6382,6 @@ friends-base:50:1d3:minor demon:servant
 friends:100:2d4:Imp:servant
 desc:An intensely irritating git of a monster.
 
-name:basilisk
-base:reptile
-color:s
-speed:120
-hit-points:310
-hearing:15
-smell:20
-armor-class:108
-sleepiness:30
-depth:28
-rarity:3
-experience:300
-blow:GAZE:PARALYZE
-blow:BITE:HURT:2d12
-blow:BITE:HURT:2d12
-blow:BITE:HURT:2d12
-flags:DROP_1 | ONLY_ITEM
-flags:OPEN_DOOR | BASH_DOOR
-flags:IM_POIS | NO_CONF | NO_SLEEP | NO_HOLD
-innate-freq:8
-spells:BR_POIS
-desc:A vile reptile that preys on unsuspecting travellers.  Its eyes stare
-desc: deeply at you and your soul starts to wilt!
-
 name:spectator
 base:eye
 color:B
@@ -8996,30 +8980,6 @@ spells:S_DEMON
 desc:A pile of pulsing flesh that glows with an inner hellish fire.  The world
 desc: itself seems to cry out against it.
 
-name:greater basilisk
-base:reptile
-color:D
-speed:120
-hit-points:1010
-hearing:25
-smell:20
-armor-class:120
-sleepiness:15
-depth:45
-rarity:2
-experience:10000
-blow:GAZE:PARALYZE:3d12
-blow:GAZE:PARALYZE:3d12
-blow:BITE:POISON:2d12
-blow:BITE:POISON:2d12
-flags:EVIL | POWERFUL | ATTR_FLICKER
-flags:DROP_1 | ONLY_ITEM
-flags:OPEN_DOOR | BASH_DOOR
-flags:IM_POIS | IM_NEXUS | NO_CONF | NO_SLEEP | NO_HOLD
-innate-freq:8
-spells:BR_DARK | BR_NEXU | BR_POIS
-desc:A large basilisk, whose shape resembles that of a great wyrm.
-
 name:berserker
 base:person
 color:u
@@ -11476,33 +11436,6 @@ desc: demonic servants.  With its flaming whip and sword it seeks to destroy
 desc: you.
 
 ### Dungeon level 86 ###
-
-name:The Tarrasque
-base:reptile
-color:v
-speed:130
-hit-points:8500
-hearing:50
-smell:20
-armor-class:222
-sleepiness:20
-depth:86
-rarity:2
-experience:35000
-blow:HIT:HURT:10d10
-blow:HIT:HURT:10d10
-blow:TOUCH:DRAIN_CHARGES
-blow:TOUCH:DRAIN_CHARGES
-flags:UNIQUE | POWERFUL
-flags:DROP_4 | DROP_GOOD | ONLY_ITEM
-flags:OPEN_DOOR | BASH_DOOR | MOVE_BODY
-flags:IM_COLD | IM_FIRE | IM_DISEN | NO_CONF | NO_SLEEP | NO_HOLD
-flags:ATTR_MULTI | FORCE_SLEEP
-flags-off:HURT_COLD
-innate-freq:2
-spells:BR_COLD | BR_DISE | BR_FIRE
-desc:The Tarrasque is a massive reptile of legend, rumoured to be unkillable and
-desc: immune to magic.  Fear its anger, for its devastation is unmatched!
 
 ### Dungeon level 87 ###
 

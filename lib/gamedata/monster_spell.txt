@@ -866,6 +866,15 @@ lore-color-base:Yellow
 message-vis:{name} tries to heal {pronoun} comrades.
 message-invis:Something mutters.
 
+name:HOP
+hit:100
+effect:HOP
+dice:3
+lore:blink-self
+lore-color-base:Light Green
+message-vis:{name} hops.
+message-invis:You hear a flop.
+
 name:BLINK
 hit:100
 effect:TELEPORT
