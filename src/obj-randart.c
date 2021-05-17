@@ -23,8 +23,9 @@
 #include "datafile.h"
 #include "effects.h"
 #include "init.h"
-#include "obj-fault.h"
 #include "obj-desc.h"
+#include "obj-fault.h"
+#include "obj-init.h"
 #include "obj-make.h"
 #include "obj-pile.h"
 #include "obj-power.h"
@@ -48,6 +49,9 @@ struct artiname {
 	struct artiname *next;
 	char *name;
 	bitflag tval_tags[TV_SIZE];
+	bitflag any_flags[OF_SIZE];
+	struct element_info el_info[ELEM_MAX];
+	bool *brands;
 };
 
 static struct artiname *artiname;
@@ -102,11 +106,53 @@ static enum parser_error parse_tag_artiname(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_any_artiname(struct parser *p) {
+	struct artiname *h = parser_priv(p);
+	char *s = string_make(parser_getstr(p, "text"));
+	char *t;
+	int value, index;
+	assert(h);
+
+	t = strtok(s, " |");
+	while (t) {
+		bool found = false;
+		if (!grab_flag(h->any_flags, OF_SIZE, obj_flags, t))
+			found = true;
+		else if (!grab_index_and_int(&value, &index, list_element_names, "RES_", t)) {
+			found = true;
+			h->el_info[index].res_level = value;
+		}
+		else if (!grab_index(&index, list_element_names, "IMM_", t)) {
+			found = true;
+			h->el_info[index].res_level = IMMUNITY;
+		}
+		else {
+			for (int i = 1; i < z_info->brand_max; i++) {
+				if (streq(t, brands[i].code)) {
+					found = true;
+					if (!h->brands)
+						h->brands = mem_zalloc(z_info->brand_max * sizeof(bool));
+					h->brands[index] = true;
+					break;
+				}
+			}
+		}
+		if (!found)
+			break;
+
+		t = strtok(NULL, " |");
+	}
+
+	mem_free(s);
+	return t ? PARSE_ERROR_INVALID_FLAG : PARSE_ERROR_NONE;
+}
+
 struct parser *init_parse_artinames(void) {
 	struct parser *p = parser_new();
 	parser_reg(p, "N str text", parse_good_artiname);
 	parser_reg(p, "B str text", parse_bad_artiname);
 	parser_reg(p, "T str text", parse_tag_artiname);
+	parser_reg(p, "Any str text", parse_any_artiname);
 	n_artinames = n_good_artinames = 0;
 	return p;
 }
@@ -2669,6 +2715,47 @@ static void copy_artifact(struct artifact *a_src, struct artifact *a_dst)
  * Generation of a set of random artifacts
  * ------------------------------------------------------------------------ */
 
+/** Name is appropriate for the artifact.
+ * This doesn't check level or tval - that has already been done in artifact_gen_name.
+ * It checks whether any requirements (object flags, resists etc.) have been met.
+ * For example, 'Sunfire' needs to have at least one light- or fire-related property.
+ */
+bool name_is_suitable(int name_i, struct artifact *a)
+{
+	struct artiname *name = artiname+name_i;
+	int reqs = 0;
+	int matches = 0;
+	for(int i=0; i<(int)OF_SIZE; i++) {
+		if (of_has(name->any_flags, i)) {
+			reqs++;
+			if (of_has(a->flags, i)) {
+				matches++;
+			}
+		}
+	}
+	for(int i=0; i<ELEM_MAX; i++) {
+		if (name->el_info[i].res_level > 0) {
+			reqs++;
+			if (a->el_info[i].res_level >= name->el_info[i].res_level) {
+				matches++;
+			}
+		}
+	}
+	if (name->brands) {
+		for (int i=0;i<z_info->brand_max;i++) {
+			if (name->brands[i]) {
+				reqs++;
+				if ((a->brands) && (a->brands[i])) {
+					matches++;
+				}
+			}
+		}
+	}
+	if ((reqs == 0) || (matches > 0))
+		return true;
+	return false;
+}
+
 /** Name matches tval */
 bool artifact_name_tval(int tval, int name_i)
 {
@@ -2733,7 +2820,8 @@ char *artifact_gen_name(struct artifact_set_data *data, struct artifact *a, cons
 			for(int i=min_power; i<max_power; i++) {
 				if (!data->name_used[i])
 					if (artifact_name_tval(tval, i))
-						names++;
+						if (name_is_suitable(i, a))
+							names++;
 			}
 			if (!names) {
 				if (min_power > 0) min_power--;
@@ -2753,8 +2841,10 @@ char *artifact_gen_name(struct artifact_set_data *data, struct artifact *a, cons
 						if (artifact_name_tval(tval, i)) {
 							if (names == name_i) {
 								if (randint0(2+(ABS(i - power))) == 0) {
-									name = i;
-									break;
+									if (name_is_suitable(i, a)) {
+										name = i;
+										break;
+									}
 								}
 							}
 							names++;

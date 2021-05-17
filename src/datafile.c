@@ -331,6 +331,7 @@ errr grab_index_and_int(int *value, int *index, const char **value_type,
 
 	/* Get a rewritable string */
 	my_strcpy(value_name, name_and_value, sizeof(value_name));
+	//fprintf(stderr,"GII:'%s'/'%s'\n", prefix, value_name);
 
 	/* Parse the value expression */
 	if (!find_value_arg(value_name, NULL, value))
@@ -341,6 +342,7 @@ errr grab_index_and_int(int *value, int *index, const char **value_type,
 		my_strcpy(value_string, prefix, sizeof(value_string));
 		my_strcat(value_string, value_type[i],
 				  sizeof(value_string) - strlen(value_string));
+		//fprintf(stderr,"'%s'/'%s'\n", value_string, value_name);
 		if (streq(value_string, value_name)) break;
 	}
 
@@ -402,7 +404,9 @@ errr grab_name(const char *from, const char *what, const char *list[], int max,
 errr grab_flag(bitflag *flags, const size_t size, const char **flag_table, const char *flag_name) {
 	int flag = lookup_flag(flag_table, flag_name);
 
-	if (flag == FLAG_END) return PARSE_ERROR_INVALID_FLAG;
+	if (flag == FLAG_END) {
+		return PARSE_ERROR_INVALID_FLAG;
+	}
 
 	flag_on(flags, size, flag);
 

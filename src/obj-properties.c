@@ -21,6 +21,22 @@
 
 struct obj_property *obj_properties;
 
+/** Return a property matching the given name, or NULL if there is none */
+struct obj_property *get_property_by_name(const char *name)
+{
+	struct obj_property *prop;
+	assert(name);
+
+	/* Find the right property */
+	for (int i = 0; i < z_info->property_max; i++) {
+		prop = &obj_properties[i];
+		if ((prop->name) && (!my_stricmp(prop->name, name)))
+			return prop;
+	}
+
+	return NULL;
+}
+
 struct obj_property *lookup_obj_property(int type, int index)
 {
 	struct obj_property *prop;

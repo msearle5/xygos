@@ -54,7 +54,7 @@ static const char *mon_race_flags[] =
 	NULL
 };
 
-static const char *obj_flags[] = {
+const char *obj_flags[] = {
 	"NONE",
 	#define OF(a, b) #a,
 	#include "list-object-flags.h"
@@ -69,7 +69,7 @@ static const char *kind_flags[] = {
 	NULL
 };
 
-static const char *element_names[] = {
+const char *element_names[] = {
 	#define ELEM(a, ...) #a,
 	#include "list-elements.h"
 	#undef ELEM
@@ -91,7 +91,7 @@ const struct object_material material[] = {
 };
 #undef MATERIAL
 
-static bool grab_element_flag(struct element_info *info, const char *flag_name)
+bool grab_element_flag(struct element_info *info, const char *flag_name)
 {
 	char prefix[20];
 	char suffix[20];
