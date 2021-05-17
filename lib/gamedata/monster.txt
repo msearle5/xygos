@@ -323,6 +323,24 @@ spell-freq:5
 spells:BR_FIRE | BO_FIRE
 flags:UNIQUE | SPECIAL_GEN
 
+##### a is for ANT #####
+
+name:giant white ant
+base:ant
+color:w
+speed:110
+hit-points:11
+hearing:8
+smell:20
+armor-class:19
+sleepiness:80
+depth:3
+rarity:1
+experience:7
+blow:BITE:HURT:1d4
+friends:100:4d4:same
+desc:It is about two feet long and has sharp pincers.
+
 
 ##### HUMANS #####
 
@@ -802,7 +820,7 @@ flags:NO_FEAR
 desc:Lemmings hung with weights for their dive from the cliff tops.
 
 
-##### INSECTS / BUGS #####
+##### I is for INSECTS / BUGS #####
 
 name:pill bug
 base:bug
@@ -836,6 +854,29 @@ rarity:1
 experience:1
 blow:BITE:HURT:1d1
 desc:It is six inches long.
+
+
+##### K is for KILLER BEETLE #####
+
+name:killer iridescent beetle
+base:killer beetle
+color:b
+speed:110
+hit-points:330
+hearing:16
+armor-class:90
+sleepiness:30
+depth:37
+rarity:2
+experience:850
+blow:CLAW:ELEC:2d12
+blow:CLAW:ELEC:2d12
+blow:GAZE:PARALYZE
+flags:IM_ELEC
+flags:ATTR_FLICKER
+innate-freq:6
+spells:SPIT
+desc:It is a giant beetle, whose carapace shimmers with vibrant energies.
 
 
 ##### q - QUADRUPEDS #####
@@ -909,6 +950,28 @@ blow:BITE:PARALYZE:1d1
 flags:RAND_25
 flags:NO_SLEEP
 desc:A small blue lizard, creeping half-heartedly around with eyes half-shut.
+
+
+##### w is for WORM #####
+
+name:purple worm
+base:worm
+color:P
+speed:110
+hit-points:293
+hearing:14
+armor-class:78
+sleepiness:30
+depth:29
+rarity:3
+experience:400
+blow:HIT:HURT:1d8
+blow:BITE:ACID:2d8
+blow:STING:POISON:1d8
+flags:BASH_DOOR
+flags:IM_ACID | IM_POIS
+desc:It is a massive worm form, many feet in length.  Its vast maw drips acid
+desc: and poison.
 
 
 ##### X - MISC CREATURES #####
@@ -2271,22 +2334,6 @@ flags:DROP_60
 flags:TAKE_ITEM
 desc:A short little guy, in bedraggled clothes.  He appears to be looking for a
 desc: good tavern.
-
-name:giant white ant
-base:ant
-color:w
-speed:110
-hit-points:11
-hearing:8
-smell:20
-armor-class:19
-sleepiness:80
-depth:3
-rarity:1
-experience:7
-blow:BITE:HURT:1d4
-friends:100:4d4:same
-desc:It is about two feet long and has sharp pincers.
 
 name:yellow mold
 base:mold
@@ -5560,24 +5607,6 @@ spell-freq:7
 spells:SCARE
 desc:A 3-headed hydra with an extra, smouldering, head.
 
-name:mummified human
-base:zombie
-color:w
-speed:110
-hit-points:105
-hearing:20
-armor-class:51
-sleepiness:70
-depth:24
-rarity:1
-experience:70
-blow:HIT:HURT:2d4
-blow:HIT:HURT:2d4
-flags:EMPTY_MIND
-flags:DROP_60 | ONLY_ITEM
-flags:NO_FEAR
-desc:It is a human form encased in mouldy wrappings.
-
 name:Sangahyando of Umbar
 base:person
 color:U
@@ -5630,26 +5659,6 @@ spells:CONF | SLOW
 friends:100:1d1:Sangahyando of Umbar
 desc:A Black Númenórean who hates the men of the west.
 
-name:banshee
-base:ghost
-color:b
-speed:120
-hit-points:27
-hearing:20
-armor-class:28
-sleepiness:10
-depth:24
-rarity:2
-experience:60
-blow:WAIL:TERRIFY
-blow:TOUCH:EXP_20
-flags:FEMALE
-flags:DROP_1
-flags:RAND_50 | TAKE_ITEM
-spell-freq:15
-spells:DRAIN_MANA | TPORT
-desc:It is a ghostly woman's form that wails mournfully.
-
 name:werebear
 base:quadruped
 color:D
@@ -5675,54 +5684,6 @@ desc: animal cunning, human intelligence and the great physical strength of the
 desc: bear makes for a dangerous enemy.
 
 ### Dungeon level 25 ###
-
-name:nruling
-base:minor demon
-color:R
-speed:120
-hit-points:50
-hearing:20
-armor-class:16
-sleepiness:8
-depth:25
-rarity:2
-experience:75
-blow:HIT:FIRE:1d8
-flags:FORCE_SLEEP | OPEN_DOOR
-flags:NO_FEAR
-flags:RAND_50 | ONLY_ITEM | DROP_60
-innate-freq:3
-spell-freq:2
-spell-power:10
-spells:BLINK | TELE_SELF_TO | BLIND | SLOW | WOUND
-spells:WHIP | BO_FIRE
-friends:100:2d7:Same
-desc:Little sparks of flame that dance around you, lashing whips and cursing
-desc: horribly.
-
-name:necromancer
-base:person
-color:P
-speed:110
-hit-points:164
-hearing:20
-armor-class:55
-sleepiness:20
-depth:25
-rarity:2
-experience:330
-blow:HIT:HURT:2d4
-blow:HIT:HURT:2d4
-flags:MALE | EVIL | SMART
-flags:DROP_60 | ONLY_ITEM
-flags:OPEN_DOOR
-flags:FORCE_SLEEP
-spell-freq:5
-spells:BLIND | WOUND | DARKNESS | SCARE
-spells:BO_RADI
-spells:S_UNDEAD
-friends-base:80:1d3:skeleton
-desc:A gaunt figure, clothed in black robes.
 
 name:hill giant
 base:giant
@@ -6502,25 +6463,6 @@ flags:IM_POIS
 desc:A gleaming black scorpion as large as a lion, with a pulsating stinger
 desc: and two great deadly claws.
 
-name:purple worm
-base:worm
-color:P
-speed:110
-hit-points:293
-hearing:14
-armor-class:78
-sleepiness:30
-depth:29
-rarity:3
-experience:400
-blow:HIT:HURT:1d8
-blow:BITE:ACID:2d8
-blow:STING:POISON:1d8
-flags:BASH_DOOR
-flags:IM_ACID | IM_POIS
-desc:It is a massive worm form, many feet in length.  Its vast maw drips acid
-desc: and poison.
-
 name:catoblepas
 plural:catoblepones
 base:quadruped
@@ -7103,30 +7045,6 @@ desc:A short and swarthy Easterling dressed in black.  He and his three sons
 desc: once openly swore allegiance to the High Elves, but were secretly in the
 desc: pay of Morgoth.
 
-name:lich
-plural:liches
-base:lich
-color:o
-speed:110
-hit-points:264
-hearing:20
-armor-class:72
-sleepiness:60
-depth:34
-rarity:2
-experience:1000
-blow:TOUCH:EXP_40
-blow:TOUCH:DRAIN_CHARGES
-blow:TOUCH:LOSE_DEX:2d8
-blow:TOUCH:LOSE_DEX:2d8
-flags:DROP_1
-flags:HURT_LIGHT
-spell-freq:4
-spells:BLIND | BLINK | WOUND | DRAIN_MANA | HOLD | BRAIN_SMASH
-spells:SCARE | SLOW | TELE_AWAY | TELE_TO
-friends-base:70:1d3:skeleton
-desc:It is a skeletal form dressed in robes.  It radiates vastly evil power.
-
 name:earth elemental
 base:elemental
 color:u
@@ -7673,33 +7591,6 @@ friends:100:2d5:Easterling champion:bodyguard
 desc:A mighty warrior from the east, Lorgan hates everything that he cannot
 desc: control.
 
-name:demonologist
-base:person
-color:R
-speed:120
-hit-points:246
-light:2
-hearing:20
-armor-class:75
-sleepiness:20
-depth:36
-rarity:2
-experience:700
-blow:HIT:HURT:2d6
-blow:HIT:HURT:2d6
-blow:HIT:HURT:2d6
-flags:MALE | EVIL | SMART
-flags:DROP_1 | ONLY_ITEM
-flags:OPEN_DOOR
-flags:FORCE_SLEEP
-spell-freq:2
-spells:HOLD | TPORT
-spells:BO_FIRE
-spells:S_DEMON
-friends-base:50:1d3:minor demon:servant
-friends:100:1d1:Quasit:servant
-desc:A figure twisted by evil standing in robes of deepest crimson.
-
 name:gauth
 base:eye
 color:D
@@ -7750,28 +7641,6 @@ spells:BA_COLD
 spells:BO_ICE
 desc:It is a towering glacier of ice.
 
-name:spectre
-base:ghost
-color:U
-speed:120
-hit-points:167
-hearing:20
-armor-class:36
-sleepiness:10
-depth:37
-rarity:3
-experience:380
-blow:WAIL:TERRIFY
-blow:TOUCH:EXP_40
-blow:CLAW:LOSE_WIS:5d5
-flags:DROP_2 | ONLY_ITEM
-flags:RAND_25 | TAKE_ITEM
-flags:FORCE_SLEEP
-spell-freq:15
-spells:BLIND | DRAIN_MANA | HOLD
-desc:A phantasmal shrieking spirit.  Its wail drives the intense cold of pure
-desc: evil deep within your body.
-
 name:magma elemental
 base:elemental
 color:o
@@ -7795,26 +7664,6 @@ spell-freq:7
 spells:BA_FIRE
 spells:BO_PLAS
 desc:It is a towering glowing form of molten hate.
-
-name:killer iridescent beetle
-base:killer beetle
-color:b
-speed:110
-hit-points:330
-hearing:16
-armor-class:90
-sleepiness:30
-depth:37
-rarity:2
-experience:850
-blow:CLAW:ELEC:2d12
-blow:CLAW:ELEC:2d12
-blow:GAZE:PARALYZE
-flags:IM_ELEC
-flags:ATTR_FLICKER
-innate-freq:6
-spells:SPIT
-desc:It is a giant beetle, whose carapace shimmers with vibrant energies.
 
 name:nexus vortex
 plural:nexus vortices
@@ -8905,32 +8754,6 @@ spell-freq:2
 spells:BLINK | TPORT
 spells:S_UNDEAD
 desc:It is a pulsing flesh mound that reeks of death and putrefaction.
-
-name:nalfeshnee
-base:major demon
-color:r
-speed:110
-hit-points:792
-light:2
-hearing:20
-armor-class:60
-sleepiness:80
-depth:45
-rarity:2
-experience:5000
-blow:HIT:HURT:3d4
-blow:HIT:HURT:3d4
-blow:HIT:HURT:3d4
-flags:POWERFUL
-flags:DROP_1
-flags:IM_FIRE
-innate-freq:30
-spell-freq:12
-spells:BLIND | CONF
-spells:BR_FIRE
-spells:S_DEMON
-desc:It is a large demon with the head of a giant boar.  Flames run up and down
-desc: its length.
 
 name:undead beholder
 base:eye
