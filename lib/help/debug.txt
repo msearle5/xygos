@@ -25,6 +25,7 @@ M: Dump a map of the current level as HTML.
 n: Summon named monster
 N: Create normal quality objects
 o: Object mods (quantity, etc)
+O: Create one of each ego item
 p: Phase door (aka blinking)
 P: Monster pit stats
 q: Query the dungeon
