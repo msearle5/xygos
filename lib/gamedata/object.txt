@@ -4503,7 +4503,7 @@ effect:DETECT_VISIBLE_MONSTERS
 effect-yx:22:40
 time:100
 
-name:&galactic map~
+name:& galactic map~
 type:gadget
 graphics:-:d
 level:65
@@ -4533,7 +4533,7 @@ time:100
 
 ### Bolts ###
 
-name:Fire Bolts
+name:& auto flame thrower~
 type:gadget
 graphics:-:d
 level:30
@@ -4547,7 +4547,7 @@ effect:BOLT_OR_BEAM:FIRE
 dice:12d8
 time:15
 
-name:Frost Bolts
+name:& auto icer~
 type:gadget
 graphics:-:d
 level:25
@@ -4561,7 +4561,7 @@ effect:BOLT:COLD
 dice:12d8
 time:13
 
-name:Lightning Bolts
+name:& auto beam taser~
 type:gadget
 graphics:-:d
 level:20
@@ -4575,7 +4575,7 @@ effect:BEAM:ELEC
 dice:6d6
 time:11
 
-name:Acid Bolts
+name:& auto squirt gun~
 type:gadget
 graphics:-:d
 level:40
@@ -4592,7 +4592,7 @@ time:12
 
 ### Balls ###
 
-name:Fire Balls
+name:& auto fireballista~
 type:gadget
 graphics:-:d
 level:75
@@ -4606,7 +4606,7 @@ effect:BALL:FIRE:2
 dice:144
 time:30
 
-name:Cold Balls
+name:& auto cryosplat gun~
 type:gadget
 graphics:-:d
 level:60
@@ -4620,7 +4620,7 @@ effect:BALL:COLD:2
 dice:100
 time:25
 
-name:Lightning Balls
+name:& auto mass taser~
 type:gadget
 graphics:-:d
 level:55
@@ -4635,7 +4635,7 @@ effect:BALL:ELEC:2
 dice:64
 time:23
 
-name:Acid Balls
+name:auto super soaker~
 type:gadget
 graphics:-:d
 level:70
@@ -4652,7 +4652,7 @@ time:27
 
 ### Status-affecting ###
 
-name:Slow Monster
+name:& slugga~
 type:gadget
 graphics:-:d
 level:30
@@ -4683,7 +4683,7 @@ time:40
 
 ### Healing ###
 
-name:Curing
+name:& detox autodoc~
 type:gadget
 graphics:-:d
 level:65
@@ -4700,7 +4700,7 @@ effect:CURE:STUN
 effect:CURE:CONFUSED
 time:100
 
-name:Healing
+name:& emergency autodoc~
 type:gadget
 graphics:-:d
 level:80
@@ -4717,7 +4717,7 @@ effect:CURE:CUT
 effect:CURE:STUN
 time:1000
 
-name:Restoration
+name:& rebuild autodoc~
 type:gadget
 graphics:-:d
 level:80
@@ -4928,7 +4928,7 @@ cost:12000
 weight:45kg
 pval:800
 effect:PRINT:250:2
-desc:A very large and heavy printer, not intended to be portable, but capable of producing the largest items in any common material (steel, titanium, aluminium, plastic)
+desc:A very large and heavy printer, not intended to be portable, but capable of producing the largest items in any common material (steel, titanium, aluminium, plastic).
 material:steel
 
 name:& X-15 printer~
