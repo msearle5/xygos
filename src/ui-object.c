@@ -254,7 +254,7 @@ static void show_obj(int obj_num, int row, int col, bool cursor,
 	if (mode & OLIST_WEIGHT) {
 		int weight = obj->weight * obj->number;
 		fmt_weight(weight, buf);
-		put_str(buf, row + obj_num, col + ex_offset_ctr);
+		c_put_str(COLOUR_L_BLUE, buf, row + obj_num, col + ex_offset_ctr);
 	}
 }
 
