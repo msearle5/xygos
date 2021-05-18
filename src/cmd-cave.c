@@ -73,6 +73,12 @@ void do_cmd_go_up(struct command *cmd)
 		return;
 	}
 
+	/* Endgame */
+	if ((!player->town) && (!player->total_winner)) {
+		msg("The airlock is sealed - you cannot go back up.");
+		return;
+	}
+
 	ascend_to = dungeon_get_next_level(player->depth, -1);
 
 	/* Exit a quest */
@@ -130,7 +136,7 @@ void do_cmd_go_down(struct command *cmd)
 
 	/* Paranoia, no descent from z_info->max_depth - 1 */
 	if (player->depth == z_info->max_depth - 1) {
-		msg("The fortress does not appear to extend deeper");
+		msg("The fortress does not appear to extend deeper.");
 		return;
 	}
 
@@ -140,6 +146,11 @@ void do_cmd_go_down(struct command *cmd)
 		if (is_quest(descend_to) &&
 			!get_check("Are you sure you want to descend? "))
 			return;
+	}
+
+	/* Endgame */
+	if ((!player->town) && (!player->total_winner)) {
+		msg("You pass through an airlock, which seals behind you.");
 	}
 
 	/* Enter The Quest! */
