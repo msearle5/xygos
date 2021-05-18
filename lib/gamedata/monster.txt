@@ -388,6 +388,35 @@ flags:DROP_60 | DROP_40 | DROP_20
 flags:OPEN_DOOR | SMART | SPIRIT | TAKE_ITEM
 flags:FEMALE | SPECIAL_GEN | QUESTOR
 
+name:Triax, the Emperor
+base:person
+color:D
+speed:140
+hit-points:20000
+hearing:100
+armor-class:180
+sleepiness:0
+depth:100
+rarity:1
+experience:500000
+drop:hafted:Mighty Hammer:100:1:1
+blow:HIT:SHATTER:20d10
+blow:HIT:SHATTER:20d10
+blow:HIT:LOSE_ALL:10d12
+blow:TOUCH:DRAIN_CHARGES
+flags:UNIQUE | QUESTOR | DEATH_SPECIAL
+flags:MALE | EVIL | SMART | SPIRIT
+flags:DROP_4 | DROP_3 | DROP_2 | DROP_1 | DROP_60 | DROP_40 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
+flags:SMASH_WALL | MOVE_BODY | ATTR_FLICKER | REGENERATE
+flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS
+flags:NO_CONF | NO_SLEEP | NO_HOLD | NO_FEAR
+flags:FORCE_DEPTH | FORCE_SLEEP
+spell-freq:2
+spells:BRAIN_SMASH
+spells:BA_RADI | BA_POIS | BA_LIGHT | BA_SHAR | BA_WATE | BA_DARK
+spells:S_MONSTERS | S_UNIQUE
+desc:The Emperor. Or at least that is how he styles himself - and what he intends to be. A tyrant who has destroyed Xygos in nuclear fire in order to further his ambition of crushing all the Galaxy's systems in his fist. The maker of every deadly robot or unnatural creature, the puppet-master behind every other enemy of freedom that fought against you, and a lethal combatant in his own right - blurring faster than lightning, through rock as if it were air, combining every form of cybernetic enhancement you can imagine and then more.
+
 
 ##### b is for BAT #####
 # Bats should be common early, but get rare in later levels. A few
@@ -11531,41 +11560,3 @@ spells:S_HI_DEMON | S_HI_UNDEAD
 desc:Sauron's form as a vampire, great as a dark cloud across the moon.
 
 ### Dungeon level 100 ###
-
-name:Morgoth, Lord of Darkness
-base:Morgoth
-color:D
-speed:140
-hit-points:20000
-hearing:100
-armor-class:180
-sleepiness:0
-depth:100
-rarity:1
-experience:60000
-blow:HIT:SHATTER:20d10
-blow:HIT:SHATTER:20d10
-blow:HIT:LOSE_ALL:10d12
-blow:TOUCH:DRAIN_CHARGES
-flags:UNIQUE | QUESTOR | MALE | EVIL | SMART | REGENERATE | SPIRIT
-flags:DROP_4 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
-flags:SMASH_WALL | MOVE_BODY | ATTR_FLICKER
-flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS | NO_FEAR
-flags:NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_DEPTH | FORCE_SLEEP
-spell-freq:3
-spells:BRAIN_SMASH
-spells:BA_MANA | BA_RADI
-spells:BO_MANA
-spells:S_HI_DEMON | S_HI_UNDEAD | S_MONSTERS | S_UNIQUE
-desc:He is the Master of the Pits of Angband.  His figure is like a black
-desc: mountain crowned with lightning.  He rages with everlasting anger, his
-desc: body scarred by Fingolfin's eight mighty wounds.  He can never rest from
-desc: his pain, but seeks forever to dominate all that is light and good in the
-desc: world.  He is the origin of man's fear of darkness and created many foul
-desc: creatures with his evil powers.  Orcs, Dragons, and Trolls are his most
-desc: foul corruptions, causing much pain and suffering in the world to please
-desc: him.  His disgusting visage, twisted with evil, is crowned with iron, the
-desc: two remaining Silmarils forever burning him.  Grond, the mighty Hammer of
-desc: the Underworld, cries defiance as he strides towards you to crush you to
-desc: a pulp!

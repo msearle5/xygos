@@ -785,6 +785,7 @@ static bool mon_create_drop(struct chunk *c, struct monster *mon, byte origin)
 	level = MAX((monlevel + player->depth) / 2, monlevel);
     level = MIN(level, 100);
 
+#ifdef undef
 	/* Morgoth currently drops all artifacts with the QUEST_ART flag */
 	if (rf_has(mon->race->flags, RF_QUESTOR) && (mon->race->level == 100)) {
 		/* Search all the artifacts */
@@ -818,6 +819,7 @@ static bool mon_create_drop(struct chunk *c, struct monster *mon, byte origin)
 			}
 		}
 	}
+#endif
 
 	/* Specified drops */
 	for (drop = mon->race->drops; drop; drop = drop->next) {

@@ -102,9 +102,9 @@ intro:Foo
 number:1
 flags:active | essential
 
-name:Morgoth
+name:Triax
 level:100
-race:Morgoth, Lord of Darkness
-desc:Get rid of the big bad P
+race:Triax, the Emperor
+desc:Kill the tyrant Emperor to free Xygos
 number:1
 flags:active | essential
