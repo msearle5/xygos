@@ -955,7 +955,7 @@ dice:15
 desc:A strange fungal growth, prone to moving if not observed.  Not very tasty
 desc: but quite filling.
 
-name:& Ration~ of Food
+name:& survival ration~
 type:food
 graphics:,:U
 level:0
@@ -964,12 +964,10 @@ cost:3
 alloc:40:0 to 50
 pile:100:1d5
 power:0
-msg:That tastes good.
+msg:That tastes like cardboard. Blech.
 effect:NOURISH:INC_BY
 dice:30
-desc:This nutritious but fairly bland food, called cram by the Lake-men who
-desc: make it is familiar to anyone contemplating long journeys.  It is
-desc: sustaining, but very uninteresting except as a chewing exercise.
+desc:Sealed packets of dried food-like substance, a military and vault-dweller mainstay. It's compact, nutritious and it won't become any less tasty even after decades of storage - because, well, how could it?
 
 name:& scrap~ of flesh
 type:food
@@ -1031,23 +1029,23 @@ desc:have never been disclosed but do seem to keep customers coming back for mor
 desc:the high price. It's named after the first baker to come up with the secret recipe 
 desc:(so yes, it's vegetarian:), and still made as it was before the War.
 
-name:& Piece~ of Elvish Waybread
-type:food
-graphics:,:B
-level:5
-weight:3
-cost:10
-alloc:20:30 to 100
-pile:10:1d3
-power:4
-msg:That tastes great.
-effect:NOURISH:INC_TO
-dice:75
-effect:CURE:POISONED
-effect:HEAL_HP
-dice:20
-desc:Food of the elves is always good; their waybread is no exception.  These
-desc: thin cakes are wrapped in leaves and keep their tastiness for months.
+#name:& Piece~ of Elvish Waybread
+#type:food
+#graphics:,:B
+#level:5
+#weight:3
+#cost:10
+#alloc:20:30 to 100
+#pile:10:1d3
+#power:4
+#msg:That tastes great.
+#effect:NOURISH:INC_TO
+#dice:75
+#effect:CURE:POISONED
+#effect:HEAL_HP
+#dice:20
+#desc:Food of the elves is always good; their waybread is no exception.  These
+#desc: thin cakes are wrapped in leaves and keep their tastiness for months.
 
 name:& bottle~ of whiskey
 type:food
@@ -1063,7 +1061,7 @@ effect:TIMED_INC:CONFUSED
 dice:-1+1d5
 desc:It raises your spirits.
 
-name:& Pint~ of Fine Wine
+name:& bottle~ of wine
 type:food
 graphics:,:r
 level:0
@@ -1077,23 +1075,23 @@ effect:TIMED_INC:BOLD
 dice:79+1d41
 desc:A fine way to wash down some otherwise unappetising rations.
 
-name:& Sip~ of Miruvor
-type:food
-graphics:,:w
-level:0
-weight:2
-cost:100
-alloc:20:10 to 50
-power:0
-msg:You feel your heart warm.
-effect:NOURISH:INC_BY
-dice:3
-effect:RESTORE_STAT:STR
-effect:RESTORE_STAT:CON
-desc:Just a little of this warm and fragrant liquor gives you fresh hope and
-desc: vigour.
+#name:& Sip~ of Miruvor
+#type:food
+#graphics:,:w
+#level:0
+#weight:2
+#cost:100
+#alloc:20:10 to 50
+#power:0
+#msg:You feel your heart warm.
+#effect:NOURISH:INC_BY
+#dice:3
+#effect:RESTORE_STAT:STR
+#effect:RESTORE_STAT:CON
+#desc:Just a little of this warm and fragrant liquor gives you fresh hope and
+#desc: vigour.
 
-name:& Swig~ of Orcish Liquor
+name:& jar~ of moonshine
 type:food
 graphics:,:m
 level:0
@@ -1111,23 +1109,23 @@ effect:TIMED_SET:SLOW
 dice:2+1d3
 desc:This is a dirty brown color; you don't trust it.
 
-name:& Draught~ of the Ents
-type:food
-graphics:,:w
-level:0
-weight:10
-cost:2000
-alloc:10:60 to 100
-power:0
-msg:Refreshing!
-effect:NOURISH:INC_TO
-dice:60
-effect:RESTORE_STAT:STR
-effect:RESTORE_STAT:CON
-effect:GAIN_STAT:STR
-effect:GAIN_STAT:CON
-desc:This looks like pure water, but its scent reminds you of the smell of a
-desc: distant wood borne from afar by a cool breeze at night.
+#name:& Draught~ of the Ents
+#type:food
+#graphics:,:w
+#level:0
+#weight:10
+#cost:2000
+#alloc:10:60 to 100
+#power:0
+#msg:Refreshing!
+#effect:NOURISH:INC_TO
+#dice:60
+#effect:RESTORE_STAT:STR
+#effect:RESTORE_STAT:CON
+#effect:GAIN_STAT:STR
+#effect:GAIN_STAT:CON
+#desc:This looks like pure water, but its scent reminds you of the smell of a
+#desc: distant wood borne from afar by a cool breeze at night.
 
 ### The shrooms, an interesting collection ###
 
@@ -1339,7 +1337,7 @@ desc:It makes you very stealthy for a short while.
 
 ##### Weapons #####
 
-### Swords ###
+### Edged weapons ###
 
 name:& pocket kni|fe|ves|
 type:sword
@@ -1729,6 +1727,17 @@ values:RES_FIRE[1]
 desc:A narrow axe head, backed with a spike on a long, bright red handle.
 material:steel
 
+name:& felling axe~
+type:polearm
+graphics:/:Red
+level:15
+weight:2200g
+cost:350
+alloc:10:15 to 100
+attack:2d9:0:0
+armor:0:0
+desc:A broad axe head on a long shaft.
+material:steel
 
 ##### Guns #####
 
@@ -1833,7 +1842,7 @@ desc:12mm ammunition, suitable for any gun of that caliber.
 
 ##### Digging Tools #####
 
-name:& Shovel~
+name:& shovel~
 type:digger
 graphics:\:s
 level:1
@@ -1845,7 +1854,7 @@ armor:0:0
 flags:DIG_1
 desc:A compact and sturdy spade.
 
-name:& Pick~
+name:& pick~
 type:digger
 graphics:\:g
 level:30
@@ -1858,7 +1867,7 @@ flags:DIG_2
 desc:A heavy mining tool with a long, slightly curved head that tapers
 desc: to chisel points on both ends.
 
-name:& Mattock~
+name:& mattock~
 type:digger
 graphics:\:D
 level:50
@@ -1869,7 +1878,7 @@ attack:1d8:0:0
 armor:0:0
 flags:DIG_3
 desc:A digging tool with a broad horizontal blade balanced by a smaller
-desc: vertical blade.  Used as a weapon of war by dwarves.
+desc: vertical blade.
 
 
 ##### Armor #####

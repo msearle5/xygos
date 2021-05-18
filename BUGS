@@ -1,5 +1,9 @@
 BUGS
 ====
+BUG: "*enlightenment*pill"
+
+BUG: Ranged attacks from gadgets and pills (at least) hit yourself. Bolts hurt, balls/breaths don't.
+
 BUG: Bombs (e.g. pineapple) give excess messages - "The X fails to harm the Y." "The X detonates!" "The Y screams!".
 	The first should be removed.
 

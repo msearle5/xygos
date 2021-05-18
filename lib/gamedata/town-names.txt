@@ -44,6 +44,7 @@ S:Fallover
 S:Fenceline
 S:Firetop
 S:Fiveroads
+S:Fountainhead
 S:Friendly
 S:Green Slime
 S:Greywater
@@ -52,6 +53,7 @@ S:Haystacks
 S:Highway
 S:Itch Scratch
 S:Landfill
+S:Last Stop
 S:Leadmine
 S:Marshlight
 S:Millstones
