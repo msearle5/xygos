@@ -578,6 +578,7 @@ N:Sommersby
 N:Sorton
 N:Sparks
 N:Sparrow
+N:Speculoos
 N:Speer
 N:Spencer
 N:Springo
@@ -603,8 +604,8 @@ N:Tarrant
 N:Teacox
 N:Tedder
 N:Tekkani
+N:Teredo
 N:Tgape
-N:Thomas
 N:Thorsson
 N:Thorston
 N:Tiffanly
