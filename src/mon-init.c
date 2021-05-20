@@ -1438,26 +1438,34 @@ static enum parser_error parse_monster_drop(struct parser *p) {
 	struct monster_race *r = parser_priv(p);
 	struct monster_drop *d;
 	struct object_kind *k;
-	int tval, sval;
+	struct artifact *a;
+	int tval = 0;
+	int sval = 0;
 
 	if (!r)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
-	tval = tval_find_idx(parser_getsym(p, "tval"));
-	if (tval < 0)
-		return PARSE_ERROR_UNRECOGNISED_TVAL;
-	sval = lookup_sval(tval, parser_getsym(p, "sval"));
-	if (sval < 0)
-		return PARSE_ERROR_UNRECOGNISED_SVAL;
 
-	if (parser_getuint(p, "min") > 99 || parser_getuint(p, "max") > 99)
-		return PARSE_ERROR_INVALID_ITEM_NUMBER;
+	const char *sv_name = parser_getsym(p, "sval");
+	a = lookup_artifact_name(sv_name);
+	if (!a) {
+		tval = tval_find_idx(parser_getsym(p, "tval"));
+		if (tval < 0)
+			return PARSE_ERROR_UNRECOGNISED_TVAL;
+		sval = lookup_sval(tval, sv_name);
+		if (sval < 0)
+			return PARSE_ERROR_UNRECOGNISED_SVAL;
 
-	k = lookup_kind(tval, sval);
-	if (!k)
-		return PARSE_ERROR_UNRECOGNISED_SVAL;
-		
+		if (parser_getuint(p, "min") > 99 || parser_getuint(p, "max") > 99)
+			return PARSE_ERROR_INVALID_ITEM_NUMBER;
+
+		k = lookup_kind(tval, sval);
+		if (!k)
+			return PARSE_ERROR_UNRECOGNISED_SVAL;
+	}
+
 	d = mem_zalloc(sizeof *d);
 	d->kind = k;
+	d->art = string_make(sv_name); 
 	d->percent_chance = parser_getuint(p, "chance");
 	d->min = parser_getuint(p, "min");
 	d->max = parser_getuint(p, "max");

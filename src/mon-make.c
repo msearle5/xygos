@@ -756,7 +756,7 @@ static bool mon_create_drop(struct chunk *c, struct monster *mon, byte origin)
 
 	int number = 0, level, j, monlevel;
 
-	struct object *obj;
+	struct object *obj = NULL;
 
 	assert(mon);
 
@@ -785,58 +785,44 @@ static bool mon_create_drop(struct chunk *c, struct monster *mon, byte origin)
 	level = MAX((monlevel + player->depth) / 2, monlevel);
     level = MIN(level, 100);
 
-#ifdef undef
-	/* Morgoth currently drops all artifacts with the QUEST_ART flag */
-	if (rf_has(mon->race->flags, RF_QUESTOR) && (mon->race->level == 100)) {
-		/* Search all the artifacts */
-		for (j = 1; j < z_info->a_max; j++) {
-			struct artifact *art = &a_info[j];
-			struct object_kind *kind = lookup_kind(art->tval, art->sval);
-			if (!kf_has(kind->kind_flags, KF_QUEST_ART)) {
-				continue;
-			}
-
-			/* Allocate by hand, prep, apply magic */
-			obj = mem_zalloc(sizeof(*obj));
-			object_prep(obj, kind, 100, RANDOMISE);
-			obj->artifact = art;
-			copy_artifact_data(obj, obj->artifact);
-			obj->artifact->created = true;
-
-			/* Set origin details */
-			obj->origin = origin;
-			obj->origin_depth = player->depth;
-			obj->origin_race = mon->race;
-			obj->number = 1;
-
-			/* Try to carry */
-			if (monster_carry(c, mon, obj)) {
-				any = true;
-			} else {
-				obj->artifact->created = false;
-				object_wipe(obj);
-				mem_free(obj);
-			}
-		}
-	}
-#endif
-
 	/* Specified drops */
 	for (drop = mon->race->drops; drop; drop = drop->next) {
 		if ((unsigned int)randint0(100) >= drop->percent_chance)
 			continue;
 
-		/* Specified by tval or by kind */
-		if (drop->kind) {
-			/* Allocate by hand, prep, apply magic */
-			obj = mem_zalloc(sizeof(*obj));
-			object_prep(obj, drop->kind, level, RANDOMISE);
-			apply_magic(obj, level, true, good, great, extra_roll);
+		/* Specified by artifact, by tval or by kind */
+		if (drop->art) {
+			struct artifact *art = lookup_artifact_name(drop->art);
+			if (art) {
+				struct object_kind *kind = lookup_kind(art->tval, art->sval);
+
+				/* Allocate by hand, prep, apply magic */
+				if (kind) {
+					obj = mem_zalloc(sizeof(*obj));
+					object_prep(obj, kind, 100, RANDOMISE);
+					obj->artifact = art;
+					copy_artifact_data(obj, obj->artifact);
+					obj->artifact->created = true;
+
+					/* Set origin details */
+					obj->origin = origin;
+					obj->origin_depth = player->depth;
+					obj->origin_race = mon->race;
+					obj->number = 1;
+				}
+			}
 		} else {
-			/* Choose by set tval */
-			assert(drop->tval);
-			obj = make_object(c, level, good, great, extra_roll, NULL,
-							  drop->tval);
+			if (drop->kind) {
+				/* Allocate by hand, prep, apply magic */
+				obj = mem_zalloc(sizeof(*obj));
+				object_prep(obj, drop->kind, level, RANDOMISE);
+				apply_magic(obj, level, true, good, great, extra_roll);
+			} else {
+				/* Choose by set tval */
+				assert(drop->tval);
+				obj = make_object(c, level, good, great, extra_roll, NULL,
+								  drop->tval);
+			}
 		}
 
 		/* Abort if no good object is found */

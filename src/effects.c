@@ -55,6 +55,7 @@
 #include "source.h"
 #include "target.h"
 #include "trap.h"
+#include "ui-command.h"
 #include "ui-display.h"
 #include "ui-input.h"
 #include "ui-output.h"

@@ -399,7 +399,7 @@ sleepiness:0
 depth:100
 rarity:1
 experience:500000
-drop:hafted:Mighty Hammer:100:1:1
+drop:hafted:Grond:100:1:1
 blow:HIT:SHATTER:20d10
 blow:HIT:SHATTER:20d10
 blow:HIT:LOSE_ALL:10d12
