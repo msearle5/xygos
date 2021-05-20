@@ -236,6 +236,18 @@ ELSEIF(SUPPORT_SDL2_FRONTEND)
 
     ENDIF()
 
+ELSEIF(SUPPORT_SDL2_FRONTEND)
+
+    INCLUDE(src/cmake/macros/SDL2_Frontend.cmake)
+    CONFIGURE_SDL2_FRONTEND(Angband)
+
+    IF (SUPPORT_SDL2_SOUND)
+
+        INCLUDE(src/cmake/macros/SDL2_Sound.cmake)
+        CONFIGURE_SDL2_SOUND(Angband)
+
+    ENDIF()
+
 ENDIF()
 
 IF (SUPPORT_SPOIL_FRONTEND)

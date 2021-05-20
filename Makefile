@@ -8,7 +8,8 @@ CLEAN = config.status config.log *.dll *.exe
 tests:
 	$(MAKE) -C src tests
 
-TAG = xygos-`cd scripts && ./version.sh`(only will have a visible effect if "git rev-parse" fails and then attempt to get the version from the version stamp file).
+TAG = xygos-`cd scripts && ./version.sh`
+
 OUT = $(TAG).tar.gz
 
 manual:
