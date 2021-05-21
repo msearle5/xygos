@@ -314,8 +314,8 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 			 * and suffix when it doesn't take a class name
 			 **/
 			const char *spacename = obj->kind->name;
-			if (!isalpha(spacename[strlen(spacename)-1]))
-					space = "";
+			if (!isalpha(spacename[strlen(spacename)-1]) && (spacename[strlen(spacename)-1] != '*'))
+				space = "";
 			strnfcat(buf, max, &end, "%s%s%s", buf2, obj->kind->name, space);
 		} else {
 			/* Quantity prefix */

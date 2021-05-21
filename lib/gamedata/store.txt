@@ -51,7 +51,7 @@ normal:boots:pair of flip flops
 normal:boots:pair of trainers
 normal:light:keyfob light
 normal:battery:alkaline battery
-normal:food:Pint of Fine Wine
+normal:food:bottle of wine
 normal:food:Slime Mold
 normal:food:bottle of whiskey
 normal:mushroom:Stoneskin
