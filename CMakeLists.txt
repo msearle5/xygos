@@ -241,7 +241,8 @@ ELSEIF(SUPPORT_SDL_FRONTEND)
     IF (SUPPORT_SDL_SOUND)
 
         INCLUDE(src/cmake/macros/SDL_Sound.cmake)
-        CONFIGURE_SDL_SOUND(Xygos)
+        CONFIGURE_SDL_SOUND(Xygos NO)
+        CONFIGURE_SDL_SOUND(XygosCoreLib YES)
 
     ENDIF()
 
@@ -253,19 +254,8 @@ ELSEIF(SUPPORT_SDL2_FRONTEND)
     IF (SUPPORT_SDL2_SOUND)
 
         INCLUDE(src/cmake/macros/SDL2_Sound.cmake)
-        CONFIGURE_SDL2_SOUND(Xygos)
-
-    ENDIF()
-
-ELSEIF(SUPPORT_SDL2_FRONTEND)
-
-    INCLUDE(src/cmake/macros/SDL2_Frontend.cmake)
-    CONFIGURE_SDL2_FRONTEND(Xygos)
-
-    IF (SUPPORT_SDL2_SOUND)
-
-        INCLUDE(src/cmake/macros/SDL2_Sound.cmake)
-        CONFIGURE_SDL2_SOUND(Xygos)
+        CONFIGURE_SDL2_SOUND(Xygos NO)
+        CONFIGURE_SDL2_SOUND(XygosCoreLib YES)
 
     ENDIF()
 
