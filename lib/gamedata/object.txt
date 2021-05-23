@@ -5267,33 +5267,7 @@ graphics:$:AliceBlue
 material:unobtainium
 
 
-##### "Morgoth Artifacts" #####
-
-# These objects are never created without being turned into artifacts.
-# This simplifies the code for "killing the winner monster".
-
-name:& Mighty Hammer~
-type:hafted
-graphics:\:D
-level:15
-weight:200
-cost:1000
-attack:3d9:0:0
-armor:0:0
-flags:INSTA_ART | QUEST_ART
-
-name:& Massive Iron Crown~
-type:helm
-graphics:]:D
-level:44
-weight:20
-cost:1000
-attack:1d1:0:0
-armor:0:0
-flags:INSTA_ART | QUEST_ART
-
-
-#The "Special Artifacts" are now automatically generated from artifact.txt
+#The "Quest / Morgoth / Special Artifacts" are now automatically generated from artifact.txt
 
 name:& chocolate egg~
 type:food

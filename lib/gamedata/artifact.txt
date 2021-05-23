@@ -123,6 +123,24 @@ desc:A helmet with a high pointed plume above each ear. Shielding you from unple
 
 ### Shields ###
 
+### Randomized quest artifacts ###
+# base-object must be present and unique but otherwise doesn't matter.
+
+name:of the First Midboss
+base-object:helm:X1
+level:25
+flags:QUEST_ART | RANDOM_ART
+power:150
+desc:Blah1
+
+name:of the Second Midboss
+base-object:helm:X2
+level:50
+flags:QUEST_ART | RANDOM_ART
+power:250
+desc:Blah2
+
+
 ### Quest artifacts ###
 
 name:'Grond'
@@ -133,6 +151,7 @@ cost:500000
 alloc:0:100 to 100
 attack:9d9:5:25
 armor:0:10
+flags:QUEST_ART
 flags:IMPACT | SEE_INVIS | TELEPATHY | AGGRAVATE
 slay:DRAGON_5
 slay:ANIMAL_2
@@ -152,6 +171,7 @@ cost:10000000
 alloc:0:100 to 100
 attack:1d1:0:0
 armor:0:0
+flags:QUEST_ART
 flags:PROT_CONF | SEE_INVIS | TELEPATHY | PROT_FEAR | STICKY
 values:STR[50] | INT[50] | WIS[50] | DEX[50] | CON[50] | INFRA[50]
 values:LIGHT[1]

@@ -610,6 +610,9 @@ static double make_artifact_probs(double *prob, int lev, int tval, bool max)
 		/* Make sure the kind was found */
 		if (!kind) continue;
 
+		/* Special generation */
+		if (kf_has(kind->kind_flags, KF_QUEST_ART)) continue;
+
 		/* Cannot make an artifact twice */
 		if (art->created) continue;
 

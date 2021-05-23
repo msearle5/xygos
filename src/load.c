@@ -1049,7 +1049,7 @@ int rd_misc(void)
 
 	/* Now only randomize the artifacts if required */
 	if (OPT(player, birth_randarts)) {
-		do_randart(seed_randart, false);
+		do_randart(seed_randart, false, false);
 		deactivate_randart_file();
 	}
 

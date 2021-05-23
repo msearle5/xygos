@@ -109,8 +109,9 @@ static enum parser_error parse_tag_artiname(struct parser *p) {
 static enum parser_error parse_any_artiname(struct parser *p) {
 	struct artiname *h = parser_priv(p);
 	char *s = string_make(parser_getstr(p, "text"));
-	char *t;
-	int value, index;
+	char *t = NULL;
+	int value = 0;
+	int index = 0;
 	assert(h);
 
 	t = strtok(s, " |");
@@ -132,7 +133,7 @@ static enum parser_error parse_any_artiname(struct parser *p) {
 					found = true;
 					if (!h->brands)
 						h->brands = mem_zalloc(z_info->brand_max * sizeof(bool));
-					h->brands[index] = true;
+					h->brands[i] = true;
 					break;
 				}
 			}
@@ -2915,7 +2916,6 @@ void select_artifact_max(void)
 			 z_info->a_max = z_info->a_base + z_info->rand_art;
 		} else {
 			/* Use randarts only. The only standard artifacts used are the quest artifacts */
-			z_info->a_base = z_info->a_quest;
 			z_info->a_max = z_info->a_base + z_info->rand_art;
 		}
 	} else {
@@ -2938,7 +2938,7 @@ void select_artifact_max(void)
  * close enough to the target power - currently this means between 19/20 and
  * 23/20 of the target power.
  */
-static void design_artifact(struct artifact_set_data *data, int tv, int *aidx)
+static void design_artifact(struct artifact_set_data *data, int tv, int *aidx, int power)
 {
 	struct artifact *art = &a_info[*aidx];
 	struct object_kind *kind;
@@ -2948,6 +2948,7 @@ static void design_artifact(struct artifact_set_data *data, int tv, int *aidx)
 	int alloc_new;
 	int ap = 0;
 	bool hurt_me = false;
+	bool preserve = true;
 
 	/* Set tval if necessary */
 	int tval = (tv == TV_NULL) ? get_base_item_tval(data) : tv;
@@ -2956,13 +2957,16 @@ static void design_artifact(struct artifact_set_data *data, int tv, int *aidx)
 	struct artifact *a_old = mem_zalloc(sizeof *a_old);
 
 	/* Choose a power for the artifact */
-	int power = Rand_sample(data->avg_tv_power[tval],
+	if (power <= 0) {
+		power = Rand_sample(data->avg_tv_power[tval],
 							data->max_tv_power[tval],
 							data->min_tv_power[tval],
 							20, 20);
+		preserve = false;
+	}
 
 	/* Skip fixed artifacts */
-	while ((kind = lookup_kind(art->tval, art->sval)) && kf_has(kind->kind_flags, KF_QUEST_ART)) {
+	while ((kind = lookup_kind(art->tval, art->sval)) && kf_has(kind->kind_flags, KF_QUEST_ART) && !kf_has(kind->kind_flags, KF_RANDOM_ART)) {
 		(*aidx)++;
 		if ((*aidx) >= last_randart) {
 			mem_free(a_old);
@@ -3081,49 +3085,53 @@ static void design_artifact(struct artifact_set_data *data, int tv, int *aidx)
 	mem_free(a_old);
 
 	/* Store it for later pass */
-	data->power[*aidx] = ap;
-	data->bad[*aidx] = is_bad;
+	if (!preserve) {
+		data->power[*aidx] = ap;
+		data->bad[*aidx] = is_bad;
 
-	/* Set rarity based on power */
-	alloc_new = 4000000 / (ap * ap);
-	alloc_new /= (kind->alloc_prob ? kind->alloc_prob : 20);
-	if (alloc_new > 99) alloc_new = 99;
-	if (alloc_new < 1) alloc_new = 1;
-	art->alloc_prob = alloc_new;
+		/* Set rarity based on power */
+		alloc_new = 4000000 / (ap * ap);
+		alloc_new /= (kind->alloc_prob ? kind->alloc_prob : 20);
+		if (alloc_new > 99) alloc_new = 99;
+		if (alloc_new < 1) alloc_new = 1;
+		art->alloc_prob = alloc_new;
 
-	/* Set depth according to power */
-	art->alloc_max = MIN(127, (ap * 3) / 5);
-	art->alloc_min = MIN(100, ((ap + 100) * 100 / data->max_power));
+		/* Set depth according to power */
+		art->alloc_max = MIN(127, (ap * 3) / 5);
+		art->alloc_min = MIN(100, ((ap + 100) * 100 / data->max_power));
 
-	/* Have a chance to be less rare or deep, more likely the less power */
-	if (one_in_(5 + (power / 20))) {
-		art->alloc_prob += randint1(20);
-		if (art->alloc_prob > 99) art->alloc_prob = 99;
-	} else if (one_in_(5 + (power / 20))) {
-		art->alloc_min /= 2;
-		if (art->alloc_min < 1) art->alloc_min = 1;
+		/* Have a chance to be less rare or deep, more likely the less power */
+		if (one_in_(5 + (power / 20))) {
+			art->alloc_prob += randint1(20);
+			if (art->alloc_prob > 99) art->alloc_prob = 99;
+		} else if (one_in_(5 + (power / 20))) {
+			art->alloc_min /= 2;
+			if (art->alloc_min < 1) art->alloc_min = 1;
+		}
+
+		/* Sanity check */
+		art->alloc_max = MAX(art->alloc_max, MIN(art->alloc_min * 2, 127));
+
+		file_putf(log_file, "New depths are min %d, max %d\n", art->alloc_min,
+				  art->alloc_max);
+		file_putf(log_file, "Power-based alloc_prob is %d\n", art->alloc_prob);
+
+		/* Success */
+		file_putf(log_file, "<<<<<<<<<<<<<<<<<<<<<<<<<< ARTIFACT COMPLETED\n");
+		file_putf(log_file, "Number of tries for artifact %d was: %d\n", *aidx,
+				  tries);
+
+		/* Describe it */
+		describe_artifact(*aidx, ap);
+	} else {
+		data->power[*aidx] = -1;
 	}
-
-	/* Sanity check */
-	art->alloc_max = MAX(art->alloc_max, MIN(art->alloc_min * 2, 127));
-
-	file_putf(log_file, "New depths are min %d, max %d\n", art->alloc_min,
-			  art->alloc_max);
-	file_putf(log_file, "Power-based alloc_prob is %d\n", art->alloc_prob);
-
-	/* Success */
-	file_putf(log_file, "<<<<<<<<<<<<<<<<<<<<<<<<<< ARTIFACT COMPLETED\n");
-	file_putf(log_file, "Number of tries for artifact %d was: %d\n", *aidx,
-			  tries);
-
-	/* Describe it */
-	describe_artifact(*aidx, ap);
 }
 
 /**
  * Create a random artifact set
  */
-void create_artifact_set(struct artifact_set_data *data)
+void create_artifact_set(struct artifact_set_data *data, bool qa_only)
 {
 	int i;
 	int base = first_randart;
@@ -3136,59 +3144,77 @@ void create_artifact_set(struct artifact_set_data *data)
 		tval_total[i] = kb_info[i].randart_total;
 	}
 
-	/* Allocate a minimal set of artifacts to the tvals */
-	while (not_done) {
-		not_done = false;
+	if (!qa_only) {
+		/* Allocate a minimal set of artifacts to the tvals */
+		while (not_done) {
+			not_done = false;
 
-		/* Multiple passes through tvals until all have enough artifacts */ 
-		for (i = 0; i < TV_MAX; i++) {
-			if (tval_total[i] > 0) {
-				design_artifact(data, i, &aidx);
-				tval_total[i]--;
-				aidx++;
-				not_done = true;
+			/* Multiple passes through tvals until all have enough artifacts */
+			for (i = 0; i < TV_MAX; i++) {
+				if (tval_total[i] > 0) {
+					design_artifact(data, i, &aidx, 0);
+					tval_total[i]--;
+					aidx++;
+					if (aidx < last_randart)
+						not_done = true;
+				}
 			}
+		}
+
+		/* Allocate remaining artifacts at random */
+		while (aidx < last_randart) {
+			design_artifact(data, TV_NULL, &aidx, 0);
+			aidx++;
+		}
+	} else {
+		base = z_info->a_max;
+	}
+
+	/* Randomized quest artifacts */
+	for(int i=0; i<z_info->a_max;i++) {
+		aidx = i;
+		struct artifact *a = &a_info[i];
+		struct object_kind *kind = lookup_kind(a->tval, a->sval);
+		if ((kind) && kf_has(kind->kind_flags, KF_RANDOM_ART)) {
+			design_artifact(data, TV_NULL, &aidx, kind->power);
 		}
 	}
 
-	/* Allocate remaining artifacts at random */
-	while (aidx < last_randart) {
-		design_artifact(data, TV_NULL, &aidx);
-		aidx++;
-	}
+	if (!qa_only) {
 
-	/* Finish up - convert power into order-by-power, then generate names */
-	int *newpower = mem_zalloc(sizeof(int) * last_randart);
-	int *oldpower = mem_zalloc(sizeof(int) * last_randart);
-	memcpy(oldpower, data->power, sizeof(int) * last_randart);
-	for(int j=base; j<last_randart; j++) {
-		int highpower = 0;
-		int highindex = 0;
+		/* Finish up - convert power into order-by-power, then generate names */
+		int *newpower = mem_zalloc(sizeof(int) * last_randart);
+		int *oldpower = mem_zalloc(sizeof(int) * last_randart);
+		memcpy(oldpower, data->power, sizeof(int) * last_randart);
+		for(int j=base; j<last_randart; j++) {
+			int highpower = 0;
+			int highindex = 0;
+			for(int i=base; i<last_randart; i++) {
+				if (data->power[i] >= highpower) {
+					highpower = data->power[i];
+					highindex = i;
+				}
+			}
+			newpower[highindex] = j - first_randart;
+			data->power[highindex] = -1;
+		}
 		for(int i=base; i<last_randart; i++) {
-			if (data->power[i] >= highpower) {
-				highpower = data->power[i];
-				highindex = i;
-			}
+			file_putf(log_file, "Art %d: power %d: order %d\n",
+				i, oldpower[i], newpower[i]);
 		}
-		newpower[highindex] = j - first_randart;
-		data->power[highindex] = -1;
-	}
-	for(int i=base; i<last_randart; i++) {
-		file_putf(log_file, "Art %d: power %d: order %d\n",
-			i, oldpower[i], newpower[i]);
-	}
-	mem_free(data->power);
-	mem_free(oldpower);
-	data->power = newpower;
+		mem_free(data->power);
+		mem_free(oldpower);
+		data->power = newpower;
 
-	for(int i=base; i<last_randart; i++) {
-		struct artifact *art = a_info + i;
-		struct object_kind *kind = lookup_kind(art->tval, art->sval);
-		if (!kind || !kf_has(kind->kind_flags, KF_QUEST_ART))
-			name_artifact(data, i);
-	}
+		for(int i=base; i<last_randart; i++) {
+			struct artifact *art = a_info + i;
+			struct object_kind *kind = lookup_kind(art->tval, art->sval);
+			if (!kind || !kf_has(kind->kind_flags, KF_QUEST_ART))
+				name_artifact(data, i);
+		}
 
-	mem_free(tval_total);
+		mem_free(tval_total);
+	}
 }
 
 /**
@@ -3354,9 +3380,17 @@ void write_randart_entry(ang_file *fff, struct artifact *art)
 /**
  * Randomize the artifacts
  */
-void do_randart(u32b randart_seed, bool create_file)
+void do_randart(u32b randart_seed, bool create_file, bool qa_only)
 {
 	char fname[1024];
+
+	if (qa_only) {
+		struct artifact_set_data *standarts = artifact_set_data_new();
+		fixed_frequencies(standarts);
+		create_artifact_set(standarts, qa_only);
+		artifact_set_data_free(standarts);
+		return;
+	}
 
 	first_randart = z_info->a_base;
 	last_randart = z_info->a_max;
@@ -3383,7 +3417,7 @@ void do_randart(u32b randart_seed, bool create_file)
 	fixed_frequencies(standarts);
 
 	/* Generate the random artifacts */
-	create_artifact_set(standarts);
+	create_artifact_set(standarts, qa_only);
 	artifact_set_data_free(standarts);
 
 	/* Look at the frequencies on the finished items */

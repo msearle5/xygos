@@ -1917,10 +1917,9 @@ static void describe_flavor_text(textblock *tb, const struct object *obj,
 								 bool ego)
 {
 	/* Display the known artifact or object description */
-	if (!OPT(player, birth_randarts) && obj->artifact &&
-		obj->known->artifact && obj->artifact->text) {
-		textblock_append(tb, "%s\n\n", obj->artifact->text);
-
+	if ((obj->artifact && obj->known->artifact && obj->artifact->text) &&
+		((player->wizard) || (strncmp(obj->artifact->text, "Random", 6)))) {
+			textblock_append(tb, "%s\n\n", obj->artifact->text);
 	} else if (object_flavor_is_aware(obj) || ego || kf_has(obj->kind->kind_flags, KF_MIMIC_KNOW)) {
 		bool did_desc = false;
 		if (!ego && obj->kind->text) {
