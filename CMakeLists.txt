@@ -34,12 +34,6 @@ IF (SUPPORT_SDL2_FRONTEND OR SUPPORT_SDL2_SOUND)
         MESSAGE(FATAL_ERROR "Can not configure with support for both SDL and SDL2")
     ENDIF()
 ENDIF()
-IF (NOT SUPPORT_SDL_FRONTEND)
-    SET(SUPPORT_SDL_SOUND OFF)
-ENDIF()
-IF (NOT SUPPORT_SDL2_FRONTEND)
-    SET(SUPPORT_SDL2_SOUND OFF)
-ENDIF()
 
 ADD_LIBRARY(XygosCoreLib OBJECT
         src/buildid.c
@@ -238,27 +232,23 @@ ELSEIF(SUPPORT_SDL_FRONTEND)
     INCLUDE(src/cmake/macros/SDL_Frontend.cmake)
     CONFIGURE_SDL_FRONTEND(Xygos)
 
-    IF (SUPPORT_SDL_SOUND)
-
-        INCLUDE(src/cmake/macros/SDL_Sound.cmake)
-        CONFIGURE_SDL_SOUND(Xygos NO)
-        CONFIGURE_SDL_SOUND(XygosCoreLib YES)
-
-    ENDIF()
-
 ELSEIF(SUPPORT_SDL2_FRONTEND)
 
     INCLUDE(src/cmake/macros/SDL2_Frontend.cmake)
     CONFIGURE_SDL2_FRONTEND(Xygos)
 
-    IF (SUPPORT_SDL2_SOUND)
+ENDIF()
 
-        INCLUDE(src/cmake/macros/SDL2_Sound.cmake)
-        CONFIGURE_SDL2_SOUND(Xygos NO)
-        CONFIGURE_SDL2_SOUND(XygosCoreLib YES)
+IF(SUPPORT_SDL_SOUND)
+    INCLUDE(src/cmake/macros/SDL_Sound.cmake)
+    CONFIGURE_SDL_SOUND(Xygos NO)
+    CONFIGURE_SDL_SOUND(XygosCoreLib YES)
+ENDIF()
 
-    ENDIF()
-
+IF (SUPPORT_SDL2_SOUND)
+    INCLUDE(src/cmake/macros/SDL2_Sound.cmake)
+    CONFIGURE_SDL2_SOUND(Xygos NO)
+    CONFIGURE_SDL2_SOUND(XygosCoreLib YES)
 ENDIF()
 
 IF (SUPPORT_SPOIL_FRONTEND)
@@ -270,13 +260,13 @@ ENDIF()
 
 IF(SUPPORT_STATS_FRONTEND)
     INCLUDE(src/cmake/macros/STATS_Frontend.cmake)
-    CONFIGURE_STATS_FRONTEND(Angband)
+    CONFIGURE_STATS_FRONTEND(Xygos)
 ENDIF()
 
 IF(SUPPORT_STATS_BACKEND)
     INCLUDE(src/cmake/macros/STATS_Backend.cmake)
-    CONFIGURE_STATS_BACKEND(Angband)
-    CONFIGURE_STATS_BACKEND(AngbandCoreLib)
+    CONFIGURE_STATS_BACKEND(Xygos)
+    CONFIGURE_STATS_BACKEND(XygosCoreLib)
 ENDIF()
 
 IF(SUPPORT_TEST_FRONTEND)
