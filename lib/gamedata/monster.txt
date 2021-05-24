@@ -327,8 +327,7 @@ name:Holo-Triax
 base:hologram
 color:Violet
 speed:110
-hit-points:4
-#50
+hit-points:450
 hearing:20
 armor-class:90
 sleepiness:120
@@ -1014,8 +1013,7 @@ name:Impy, the Tyrannosaur
 base:reptile
 color:Violet
 speed:120
-hit-points:2
-#800
+hit-points:2800
 hearing:20
 armor-class:140
 sleepiness:50
@@ -1030,7 +1028,7 @@ blow:CRUSH:HURT:4d6
 flags:UNIQUE | QUESTOR | SMART | FORCE_DEPTH
 flags:POWERFUL
 flags:BASH_DOOR
-friends:100:2d2:tyrannosaur:servant
+friends:100:3d2:tyrannosaur:servant
 desc:An unnaturally large, tough, intelligent, vicious and fast-moving tyrannosaur - Triax's pet and frequent experimental subject for cybernetic treatments. It makes a formidable guard for the lower half of the fortress!
 
 
