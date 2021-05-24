@@ -357,7 +357,7 @@ desc:Quylthulg
 
 # Mostly early monsters, but later ones are dangerous.  Not fast for depth
 name:reptile
-glyph:R
+glyph:L
 pain:5
 flags:ANIMAL | HURT_COLD | CLEAR_WEB
 desc:Reptile/Amphibian
@@ -368,6 +368,15 @@ glyph:r
 pain:4
 flags:ANIMAL | CLEAR_WEB
 desc:Rodent
+
+# Robots - probably best to split out flying ones?
+# Also doesn't include cyborgs, and maybe not robots in animal-like form.
+name:robot
+glyph:R
+pain:9
+flags:COLD_BLOOD | CLEAR_WEB | WEIRD_MIND | METAL
+flags:IM_COLD | IM_POIS | NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
+desc:Robot
 
 # The non-unique skeletons break into two (early and late) groups:
 # 1. Empty minded animated skeletons with movement and melee but no spells

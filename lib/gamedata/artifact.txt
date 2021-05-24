@@ -140,6 +140,20 @@ flags:QUEST_ART | RANDOM_ART
 power:250
 desc:Blah2
 
+name:of Mecha-Triax
+base-object:helm:X3
+level:75
+flags:QUEST_ART | RANDOM_ART
+power:450
+desc:Blah3
+
+name:of the Grey Rat
+base-object:helm:X4
+level:9
+flags:QUEST_ART | RANDOM_ART
+power:25
+desc:Blah4
+
 
 ### Quest artifacts ###
 

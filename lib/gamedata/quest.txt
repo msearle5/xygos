@@ -94,10 +94,10 @@ desc:Hunt the Wumpus
 succeed:The traditional wumpus hunter's prize isn't worth much, but I think you'll like this boomstick!
 failure:Well, I saw you walking boldly into the wumpus's den - so I will admit that although you didn't manage to defeat it, you aren't just a poseur. So I'll reluctantly allow you in to see more stuff, but you can't expect a real reward. You do still get the traditional wumpus hunter's prize, though, for what that's worth.
 
-name:Sauron
-level:99
-race:Sauron, the Sorcerer
-desc:Get rid of the big bad p
+name:Mecha-Triax
+level:75
+race:Mecha-Triax
+desc:Triax has a formidable robot bodyguard which must be destroyed to progress.
 intro:Foo
 number:1
 flags:active | essential
@@ -105,6 +105,6 @@ flags:active | essential
 name:Triax
 level:100
 race:Triax, the Emperor
-desc:Kill the tyrant Emperor to free Xygos
+desc:Kill the tyrant Emperor to free Xygos!
 number:1
 flags:active | essential

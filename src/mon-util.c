@@ -47,6 +47,7 @@
 #include "project.h"
 #include "store.h"
 #include "trap.h"
+#include "ui-player.h"
 #include "world.h"
 #include "z-set.h"
 
