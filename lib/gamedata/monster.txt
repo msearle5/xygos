@@ -323,6 +323,38 @@ spell-freq:5
 spells:BR_FIRE | BO_FIRE
 flags:UNIQUE | SPECIAL_GEN
 
+name:Holo-Triax
+base:hologram
+color:Violet
+speed:110
+hit-points:4
+#50
+hearing:20
+armor-class:90
+sleepiness:120
+depth:25
+rarity:1
+experience:2500
+drop:0:Holo-Triax:100:1:1
+blow:GAZE:TERRIFY
+blow:GAZE:CONFUSE:2d8
+blow:TOUCH:FIRE:3d8
+blow:TOUCH:COLD:3d8
+flags:MALE | QUESTOR | UNIQUE | SMART | REGENERATE | WEIRD_MIND
+flags:INVISIBLE
+flags:DROP_2 | DROP_20 | DROP_40 | DROP_GOOD | ONLY_ITEM
+flags:OPEN_DOOR
+flags:NO_CONF | NO_SLEEP | NO_FEAR | IM_POIS
+flags:FORCE_SLEEP | FORCE_DEPTH
+spell-freq:5
+spells:BLIND | DARKNESS | HEAL | MIND_BLAST | HOLD
+spells:BLINK | TPORT | TELE_TO
+innate-freq:3
+spells:BR_SOUN | BR_LIGHT
+desc:At first panicked glimpse it looked like Triax himself! But a moment later you realise that it is just a translucent image: a hologram. Light and sound. Insubstantial, in a sense. But light and sound can still hurt and so you should not underestimate him just because he isn't really there.
+
+
+
 ##### a is for ANT #####
 
 name:giant white ant
@@ -400,7 +432,7 @@ sleepiness:0
 depth:100
 rarity:1
 experience:500000
-drop:hafted:Grond:100:1:1
+drop:hafted:Dominion:100:1:1
 blow:HIT:SHATTER:20d10
 blow:HIT:SHATTER:20d10
 blow:HIT:LOSE_ALL:10d12
@@ -907,52 +939,6 @@ spells:SPIT
 desc:It is a giant beetle, whose carapace shimmers with vibrant energies.
 
 
-##### q - QUADRUPEDS #####
-
-name:wumpus
-base:quadruped
-color:DarkGreen
-speed:100
-hit-points:450
-hearing:4
-smell:4
-armor-class:50
-sleepiness:200
-depth:38
-rarity:5
-experience:500
-blow:CRUSH:HURT:10d12
-flags:SMART | COLD_BLOOD | WEIRD_MIND | RAND_25 | BASH_DOOR | KILL_BODY | KILL_ITEM
-desc:The primeval Beast itself. Many hunt the Wumpus, few return...
-
-##### R - ROBOTS #####
-
-name:Mecha-Triax
-base:robot
-color:D
-speed:120
-hit-points:8000
-hearing:30
-armor-class:192
-sleepiness:15
-depth:75
-rarity:1
-experience:250000
-blow:HIT:SHATTER:13d13
-blow:HIT:CONFUSE:13d13
-blow:HIT:SHATTER:13d13
-blow:HIT:CONFUSE:13d13
-spell-freq:1
-spell-power:97
-spells:BE_ELEC
-drop:0:of Mecha-Triax:100:1:1
-flags:UNIQUE | QUESTOR | FORCE_DEPTH | MALE | REGENERATE | SMART | PREFER_MELEE
-flags:DROP_4 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
-flags:KILL_WALL | KILL_BODY
-flags:IM_ACID
-desc:A robot which ego-tastic Triax has had built in the shape of his head. Gold plated and 10 meters tall... so life size, even if not literally. But this is no statue - it's approaching at an alarming rate and if it's capable of smashing its way through solid rock, imagine what it could do to you!
-
-
 ##### L(izard) - REPTILES (and amphibians) #####
 
 name:rock lizard
@@ -1004,6 +990,94 @@ blow:BITE:PARALYZE:1d1
 flags:RAND_25
 flags:NO_SLEEP
 desc:A small blue lizard, creeping half-heartedly around with eyes half-shut.
+
+name:tyrannosaur
+base:reptile
+color:G
+speed:110
+hit-points:600
+hearing:20
+armor-class:110
+sleepiness:50
+depth:37
+rarity:4
+experience:700
+blow:BITE:HURT:2d40
+blow:CLAW:HURT:1d6
+blow:CLAW:HURT:1d6
+blow:CRUSH:HURT:4d4
+flags:POWERFUL | RAND_25
+flags:BASH_DOOR | KILL_BODY
+desc:King of dinosaurs. Immense muscular legs support a heavy tail, an almost comically tiny pair of clawed arms and a mouth big enough to climb inside. Although I wouldn't recommend it.
+
+name:Impy, the Tyrannosaur
+base:reptile
+color:Violet
+speed:120
+hit-points:2
+#800
+hearing:20
+armor-class:140
+sleepiness:50
+depth:50
+rarity:1
+experience:75000
+drop:0:Deep Time:100:1:1
+blow:BITE:HURT:2d70
+blow:CLAW:HURT:1d8
+blow:CLAW:HURT:1d8
+blow:CRUSH:HURT:4d6
+flags:UNIQUE | QUESTOR | SMART | FORCE_DEPTH
+flags:POWERFUL
+flags:BASH_DOOR
+friends:100:2d2:tyrannosaur:servant
+desc:An unnaturally large, tough, intelligent, vicious and fast-moving tyrannosaur - Triax's pet and frequent experimental subject for cybernetic treatments. It makes a formidable guard for the lower half of the fortress!
+
+
+##### q - QUADRUPEDS #####
+
+name:wumpus
+base:quadruped
+color:DarkGreen
+speed:100
+hit-points:450
+hearing:4
+smell:4
+armor-class:50
+sleepiness:200
+depth:38
+rarity:5
+experience:500
+blow:CRUSH:HURT:10d12
+flags:SMART | COLD_BLOOD | WEIRD_MIND | RAND_25 | BASH_DOOR | KILL_BODY | KILL_ITEM
+desc:The primeval Beast itself. Many hunt the Wumpus, few return...
+
+##### R - ROBOTS #####
+
+name:Mecha-Triax
+base:robot
+color:D
+speed:120
+hit-points:8000
+hearing:30
+armor-class:192
+sleepiness:15
+depth:75
+rarity:1
+experience:250000
+blow:HIT:SHATTER:13d13
+blow:HIT:CONFUSE:13d13
+blow:HIT:SHATTER:13d13
+blow:HIT:CONFUSE:13d13
+spell-freq:1
+spell-power:97
+spells:BE_ELEC
+drop:0:of Mecha-Triax:100:1:1
+flags:UNIQUE | QUESTOR | FORCE_DEPTH | MALE | REGENERATE | SMART | PREFER_MELEE
+flags:DROP_4 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
+flags:KILL_WALL | KILL_BODY
+flags:IM_ACID
+desc:A robot which ego-tastic Triax has had built in the shape of his head. Gold plated and 10 meters tall... so life size, even if not literally. But this is no statue - it's approaching at an alarming rate and if it's capable of smashing its way through solid rock, imagine what it could do to you!
 
 
 ##### w is for WORM #####
