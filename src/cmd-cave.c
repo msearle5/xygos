@@ -1557,7 +1557,7 @@ static const char *mon_feeling_text[] =
 	"This place does not seem too risky",
 	"This place seems reasonably safe",
 	"This seems a tame, sheltered place",
-	"This seems a quiet, peaceful place"
+	"This seems a quiet, peaceful place",
 };
 
 /**
@@ -1580,9 +1580,15 @@ void display_feeling(bool obj_only)
 		return;
 	}
 
-	/* Or in a quest */
+	/* Or in a town-quest */
 	if (player->active_quest >= 0) {
 		msg("You have no intuition about what there might be in this place.");
+		return;
+	}
+
+	/* Or on a quest-monster level */
+	if (is_active_quest(player->depth)) {
+		msg("You feel a terrible presence here!");
 		return;
 	}
 

@@ -40,5 +40,6 @@ bool quest_is_rewardable(const struct quest *q);
 bool quest_special_endings(struct store_context *ctx);
 bool quest_selling_object(struct object *obj, struct store_context *ctx);
 const char *quest_get_intro(const struct quest *q);
+bool is_active_quest(int level);
 
 #endif /* QUEST_H */

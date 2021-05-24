@@ -341,6 +341,31 @@ bool is_quest(int level)
 }
 
 /**
+ * Check if the given level is an active quest level.
+ * For quests involving a monster, that means at least one of the targeted
+ * monstrer is present. For other quests, they are always active if you
+ * are on their level.
+ */
+bool is_active_quest(int level)
+{
+	size_t i;
+
+	/* Town is never a quest */
+	if (!level) return false;
+
+	for (i = 0; i < z_info->quest_max; i++) {
+		if (player->quests[i].level == level) {
+			if (!player->quests[i].race)
+				return true;
+			else if (player->quests[i].race->cur_num)
+				return true;
+		}
+	}
+
+	return false;
+}
+
+/**
  * Copy all the standard quests to the player quest history
  */
 void player_quests_reset(struct player *p)
