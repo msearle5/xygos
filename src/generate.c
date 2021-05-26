@@ -93,8 +93,8 @@ static const char *room_flags[] = {
  * Parsing functions for dungeon_profile.txt
  */
 static enum parser_error parse_profile_name(struct parser *p) {
-    struct cave_profile *h = parser_priv(p);
-    struct cave_profile *c = mem_zalloc(sizeof *c);
+	struct cave_profile *h = parser_priv(p);
+	struct cave_profile *c = mem_zalloc(sizeof *c);
 	size_t i;
 
 	c->name = string_make(parser_getstr(p, "name"));
@@ -111,7 +111,7 @@ static enum parser_error parse_profile_name(struct parser *p) {
 }
 
 static enum parser_error parse_profile_params(struct parser *p) {
-    struct cave_profile *c = parser_priv(p);
+	struct cave_profile *c = parser_priv(p);
 
 	if (!c)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
@@ -123,7 +123,7 @@ static enum parser_error parse_profile_params(struct parser *p) {
 }
 
 static enum parser_error parse_profile_tunnel(struct parser *p) {
-    struct cave_profile *c = parser_priv(p);
+	struct cave_profile *c = parser_priv(p);
 
 	if (!c)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
@@ -136,7 +136,7 @@ static enum parser_error parse_profile_tunnel(struct parser *p) {
 }
 
 static enum parser_error parse_profile_streamer(struct parser *p) {
-    struct cave_profile *c = parser_priv(p);
+	struct cave_profile *c = parser_priv(p);
 
 	if (!c)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
@@ -150,7 +150,7 @@ static enum parser_error parse_profile_streamer(struct parser *p) {
 }
 
 static enum parser_error parse_profile_room(struct parser *p) {
-    struct cave_profile *c = parser_priv(p);
+	struct cave_profile *c = parser_priv(p);
 	struct room_profile *r = c->room_profiles;
 	size_t i;
 
@@ -178,17 +178,17 @@ static enum parser_error parse_profile_room(struct parser *p) {
 		return PARSE_ERROR_NO_ROOM_FOUND;
 	r->builder = room_builders[i].builder;
 	r->rating = parser_getint(p, "rating");
-    r->height = parser_getint(p, "height");
-    r->width = parser_getint(p, "width");
-    r->level = parser_getint(p, "level");
-    r->pit = (parser_getint(p, "pit") == 1);
-    r->rarity = parser_getint(p, "rarity");
-    r->cutoff = parser_getint(p, "cutoff");
+	r->height = parser_getint(p, "height");
+	r->width = parser_getint(p, "width");
+	r->level = parser_getint(p, "level");
+	r->pit = (parser_getint(p, "pit") == 1);
+	r->rarity = parser_getint(p, "rarity");
+	r->cutoff = parser_getint(p, "cutoff");
 	return PARSE_ERROR_NONE;
 }
 
 static enum parser_error parse_profile_min_level(struct parser *p) {
-    struct cave_profile *c = parser_priv(p);
+	struct cave_profile *c = parser_priv(p);
 
 	if (!c)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
@@ -197,7 +197,7 @@ static enum parser_error parse_profile_min_level(struct parser *p) {
 }
 
 static enum parser_error parse_profile_alloc(struct parser *p) {
-    struct cave_profile *c = parser_priv(p);
+	struct cave_profile *c = parser_priv(p);
 
 	if (!c)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
@@ -956,7 +956,7 @@ static void get_join_info(struct player *p, struct dun_data *dun)
  * Check the size of the level above or below the next level to be generated
  * to make sure stairs can connect
  */
-static void	get_min_level_size(struct chunk *check, int *min_height,
+static void get_min_level_size(struct chunk *check, int *min_height,
 							   int *min_width, bool above)
 {
 	struct connector *join = check->join;
