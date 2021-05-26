@@ -424,8 +424,7 @@ name:Triax, the Emperor
 base:person
 color:D
 speed:140
-hit-points:2
-#0000
+hit-points:20000
 hearing:100
 armor-class:180
 sleepiness:0
@@ -1082,8 +1081,7 @@ name:The Core
 base:robot
 color:Violet
 speed:140
-hit-points:2
-#5000
+hit-points:25000
 hearing:10
 armor-class:250
 sleepiness:0

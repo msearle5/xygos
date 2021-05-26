@@ -84,16 +84,20 @@ static void display_score_page(const struct high_score scores[], int start,
 		 * score->dungeon includes the level, as quests etc shouldn't show this.
 		 * (and other special locations may treat it differently)
 		 **/
-		if (!cdun)
-			strnfmt(out_val, sizeof(out_val), "%s in the town",
-					score->how);
-		else
-			strnfmt(out_val, sizeof(out_val),
-					"%s %s", score->how, score->dungeon);
+		if (strstr(score->how, "Saved")) {
+			strnfmt(out_val, sizeof(out_val), "%s", score->how);
+		} else {
+			if (!cdun)
+				strnfmt(out_val, sizeof(out_val), "%s in the town",
+						score->how);
+			else
+				strnfmt(out_val, sizeof(out_val),
+						"%s %s", score->how, score->dungeon);
 
-		/* Append a "maximum level" */
-		if (mdun > cdun)
-			my_strcat(out_val, format(" (Max %d)", mdun), sizeof(out_val));
+			/* Append a "maximum level" */
+			if (mdun > cdun)
+				my_strcat(out_val, format(" (Max %d)", mdun), sizeof(out_val));
+		}
 
 		/* Dump the info */
 		c_put_str(attr, out_val, n * 4 + 3, 15);
