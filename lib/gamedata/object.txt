@@ -2065,6 +2065,21 @@ armor:6:0
 desc:A smoothly curved full-face helmet that covers your entire head with tough plastic - including a clear plastic flip-up visor in front.
 material:plastic
 
+# This only exists for the artifact (of the Core)
+name:& Coronet~
+type:helm
+graphics:]:y
+level:100
+weight:30
+cost:100000
+alloc:0:100 to 100
+attack:1d1:0:0
+armor:0:0
+flags:IGNORE_ACID
+desc:An elegant golden circlet, with slender spines thrusting upward.
+desc:  It looks like it should be resting over the brow of a king.
+material:gold
+
 #combat helmet?
 
 ### Body armours ###

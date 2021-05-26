@@ -440,13 +440,13 @@ lore:produce shardstorms
 lore-color-base:Orange
 lore-color-resist:Light Green
 message-vis:{name} calls up a whirlwind of shards.
-message-invis:Something mumbles.
+message-invis:You hear breaking glass.
 power-cutoff:70
-lore:invoke storms of knives
+lore:fire blasts of shrapnel
 lore-color-base:Light Red
 lore-color-resist:Light Green
-message-vis:{name} invokes a storm of knives!
-message-invis:Something chants powerfully.
+message-vis:{name} fires a blast of shrapnel!
+message-invis:You hear a shattering crash.
 
 name:BA_RADI
 hit:100
@@ -456,14 +456,14 @@ expr:B:SPELL_POWER:* 4
 lore:produce radiation balls
 lore-color-base:Orange
 lore-color-resist:Light Green
-message-vis:{name} casts a ball of radiation.
-message-invis:Something whispers nastily.
+message-vis:{name} fires a ball of radiation.
+message-invis:Something whirs and hums.
 power-cutoff:80
 lore:produce radiation storms
 lore-color-base:Orange
 lore-color-resist:Light Green
-message-vis:{name} creates a storm of radiation magics.
-message-invis:Something intones with deadly menace.
+message-vis:{name} projects a storm of radiation.
+message-invis:Something thrums powerfully.
 
 name:BA_WATE
 hit:100
@@ -475,6 +475,46 @@ lore-color-base:Light Red
 lore-color-resist:Orange
 message-vis:{name} creates a whirlpool of water.
 message-invis:Something gurgles.
+
+name:BA_PLAS
+hit:100
+effect:BALL:PLASMA:3
+dice:$B+10d10
+expr:B:SPELL_POWER:* 5
+lore:launch plasma balls
+lore-color-base:Light Red
+message-vis:{name} projects a storm of plasma.
+message-invis:You feel a tingling heat for a moment.
+
+name:BA_TIME
+hit:100
+effect:BALL:TIME:3
+dice:$B+10d10
+expr:B:SPELL_POWER:* 4
+lore:launch plasma balls
+lore-color-base:Light Red
+message-vis:{name} fires a chronic storm!
+message-invis:You remember being screamed at.
+
+name:BA_GRAV
+hit:100
+effect:BALL:GRAVITY:3
+dice:$B+10d10
+expr:B:SPELL_POWER:* 4
+lore:launch plasma balls
+lore-color-base:Light Red
+message-vis:{name} projects a gravitic storm!
+message-invis:You feel heavy for a moment.
+
+name:BA_INER
+hit:100
+effect:BALL:INERTIA:3
+dice:$B+10d10
+expr:B:SPELL_POWER:* 4
+lore:launch plasma balls
+lore-color-base:Light Red
+message-vis:{name} projects an inertia-storm!
+message-invis:You feel a wave of inertia pass through you.
 
 name:BA_MANA
 hit:100

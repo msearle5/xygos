@@ -129,3 +129,10 @@ race:Triax, the Emperor
 desc:You must kill Triax the tyrant Emperor to free Xygos!
 number:1
 flags:essential
+
+name:Core
+level:120
+race:The Core
+desc:Triax has uploaded his mind into the orbital station. To stop him for good you must return to the surface, fly to the station, descend and destroy him. Beware that once you launch there is no going back until you succeed.
+number:1
+flags:essential

@@ -1443,8 +1443,8 @@ bool effect_handler_RECALL(effect_handler_context_t *context)
 		} else {
 			/* If you are a Total Winner, this is another (equivalent, maybe more intuitive) way to ascend */
 			textui_cmd_suicide();
-			return true;
 		}
+		return true;
 	}
 
 	/* No recall from quest levels with force_descend */

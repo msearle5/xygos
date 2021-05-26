@@ -3005,6 +3005,7 @@ static errr finish_parse_artifact(struct parser *p) {
 
 		mem_free(a);
 	}
+	z_info->a_max++;
 	z_info->a_base = z_info->a_max;
 
 	/* Now we're done with object kinds, deal with object-like things */

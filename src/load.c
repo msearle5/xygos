@@ -1279,7 +1279,11 @@ static int rd_stores_aux(rd_item_t rd_item_version)
 		memcpy(t_info[t].stores, stores_init, MAX_STORES * sizeof(*t_info[t].stores));
 	}
 
-	stores = player->town->stores;
+	if (player->town)
+		stores = player->town->stores;
+	else
+		stores = NULL;
+
 	stores_copy(stores_init);
 
 	for(int t=0; t<z_info->town_max; t++) {

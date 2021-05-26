@@ -3124,7 +3124,8 @@ static void design_artifact(struct artifact_set_data *data, int tv, int *aidx, i
 		/* Describe it */
 		describe_artifact(*aidx, ap);
 	} else {
-		data->power[*aidx] = -1;
+		if (data->power)
+			data->power[*aidx] = -1;
 	}
 }
 
@@ -3384,11 +3385,24 @@ void do_randart(u32b randart_seed, bool create_file, bool qa_only)
 {
 	char fname[1024];
 
+	/* Open the log file for writing */
+	path_build(fname, sizeof(fname), ANGBAND_DIR_USER, "randart.log");
+	log_file = file_open(fname, MODE_WRITE, FTYPE_TEXT);
+	if (!log_file) {
+		msg("Error - can't open randart.log for writing.");
+		exit(1);
+	}
+
 	if (qa_only) {
 		struct artifact_set_data *standarts = artifact_set_data_new();
 		fixed_frequencies(standarts);
 		create_artifact_set(standarts, qa_only);
 		artifact_set_data_free(standarts);
+		/* Close the log file */
+		if (!file_close(log_file)) {
+			msg("Error - can't close randart.log file.");
+			exit(1);
+		}
 		return;
 	}
 
@@ -3404,15 +3418,6 @@ void do_randart(u32b randart_seed, bool create_file, bool qa_only)
 	/* Prepare to use the Angband "simple" RNG. */
 	Rand_value = randart_seed;
 	Rand_quick = true;
-
-	/* Open the log file for writing */
-	path_build(fname, sizeof(fname), ANGBAND_DIR_USER, "randart.log");
-	log_file = file_open(fname, MODE_WRITE, FTYPE_TEXT);
-	if (!log_file) {
-		msg("Error - can't open randart.log for writing.");
-		artifact_set_data_free(standarts);
-		exit(1);
-	}
 
 	fixed_frequencies(standarts);
 

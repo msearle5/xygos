@@ -424,7 +424,8 @@ name:Triax, the Emperor
 base:person
 color:D
 speed:140
-hit-points:20000
+hit-points:2
+#0000
 hearing:100
 armor-class:180
 sleepiness:0
@@ -445,7 +446,7 @@ flags:NO_CONF | NO_SLEEP | NO_HOLD | NO_FEAR
 flags:FORCE_DEPTH | FORCE_SLEEP
 spell-freq:2
 spells:BRAIN_SMASH
-spells:BA_RADI | BA_POIS | BA_LIGHT | BA_SHAR | BA_WATE | BA_DARK
+spells:BA_RADI | BA_POIS | BA_LIGHT | BA_SHAR | BA_WATE | BA_DARK | BA_GRAV | BA_PLAS
 spells:S_MONSTERS | S_UNIQUE
 desc:The Emperor. Or at least that is how he styles himself - and what he intends to be. A tyrant who has destroyed Xygos in nuclear fire in order to further his ambition of crushing all the Galaxy's systems in his fist. The maker of every deadly robot or unnatural creature, the puppet-master behind every other enemy of freedom that fought against you, and a lethal combatant in his own right - blurring faster than lightning, through rock as if it were air, combining every form of cybernetic enhancement you can imagine and then more.
 
@@ -1054,7 +1055,7 @@ desc:The primeval Beast itself. Many hunt the Wumpus, few return...
 
 name:Mecha-Triax
 base:robot
-color:D
+color:Violet
 speed:120
 hit-points:8000
 hearing:30
@@ -1071,11 +1072,40 @@ spell-freq:1
 spell-power:97
 spells:BE_ELEC
 drop:0:of Mecha-Triax:100:1:1
-flags:UNIQUE | QUESTOR | FORCE_DEPTH | MALE | REGENERATE | SMART | PREFER_MELEE
+flags:UNIQUE | QUESTOR | FORCE_DEPTH | REGENERATE | SMART | PREFER_MELEE
 flags:DROP_4 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
 flags:KILL_WALL | KILL_BODY
 flags:IM_ACID
 desc:A robot which ego-tastic Triax has had built in the shape of his head. Gold plated and 10 meters tall... so life size, even if not literally. But this is no statue - it's approaching at an alarming rate and if it's capable of smashing its way through solid rock, imagine what it could do to you!
+
+name:The Core
+base:robot
+color:Violet
+speed:140
+hit-points:2
+#5000
+hearing:10
+armor-class:250
+sleepiness:0
+depth:120
+rarity:1
+experience:1000000
+blow:HIT:SHATTER:15d15
+blow:HIT:SHATTER:15d15
+blow:HIT:SHATTER:15d15
+blow:HIT:SHATTER:15d15
+spell-freq:1
+spell-power:150
+spells:BLINK | TELE_TO | TELE_SELF_TO | BRAIN_SMASH
+spells:BA_RADI | BA_POIS | BA_LIGHT | BA_SHAR | BA_WATE | BA_DARK | BA_GRAV | BA_TIME | BA_PLAS
+spells:S_UNIQUE
+drop:0:of the Core:100:1:1
+flags:UNIQUE | QUESTOR | FORCE_DEPTH | REGENERATE | SMART | SPIRIT | EVIL
+flags:KILL_BODY | ATTR_FLICKER | REGENERATE
+flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS
+flags:NO_CONF | NO_SLEEP | NO_HOLD | NO_FEAR
+flags:FORCE_DEPTH | FORCE_SLEEP
+desc:Artificial intelligence, or natural insanity? It's hard to tell where one leaves off and the other begins, when you are facing the demon core: a silicon replica of Triax's brilliant but thoroughly evil mind. Physically, it's simply a vast cuboid of gleaming metal. It has no conventional means of locomotion - it doesn't need any, with its mastery of teleportation. It does however have extensive means of defense...
 
 
 ##### w is for WORM #####
