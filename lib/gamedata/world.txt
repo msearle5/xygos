@@ -9,7 +9,7 @@
 # dungeon:1:127:Fortress
 # level:0:Town:None:Fortress 1
 
-dungeon:1:127:Fortress
+dungeon:1:115:Fortress
 level:0:Town:None:Fortress 1
 
 dungeon:1:1+2d2:Stores
@@ -18,3 +18,4 @@ dungeon:1:6+3d3:Mine
 dungeon:1:9+4d3:Caverns
 dungeon:1:8+4d4:Volcano
 
+dungeon:100:127:Spacestation

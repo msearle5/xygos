@@ -72,8 +72,8 @@ size_t highscore_where(const struct high_score *entry,
 	for (i = 0; i < sz; i++) {
 		long entry_pts = strtoul(entry->pts, NULL, 0);
 		long score_pts = strtoul(scores[i].pts, NULL, 0);
-		bool entry_winner = streq(entry->how, "Ripe Old Age");
-		bool score_winner = streq(scores[i].how, "Ripe Old Age");
+		bool entry_winner = streq(entry->how, "Saved the galaxy and retired a hero");
+		bool score_winner = streq(scores[i].how, "Saved the galaxy and retired a hero");
 
 		if (entry_winner && !score_winner)
 			return i;
@@ -243,10 +243,16 @@ void build_score(struct high_score *entry, const char *died_from,
 	}
 
 	/* Cause of death */
-	if (alive)
-		my_strcpy(entry->how, "Still alive", sizeof(entry->how));
-	else
-		strnfmt(entry->how, sizeof(entry->how), "Killed by %s", died_from);
+	bool winner = player->total_winner;
+	if (winner) {
+		my_strcpy(entry->how, "Saved the galaxy and retired a hero", sizeof(entry->how));
+		*entry->dungeon = 0;
+	} else {
+		if (alive)
+			my_strcpy(entry->how, "Still alive", sizeof(entry->how));
+		else
+			strnfmt(entry->how, sizeof(entry->how), "Killed by %s", died_from);
+	}
 }
 
 

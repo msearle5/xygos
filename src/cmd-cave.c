@@ -73,6 +73,12 @@ void do_cmd_go_up(struct command *cmd)
 		return;
 	}
 
+	/* Endgame */
+	if ((!player->town) && (!player->total_winner)) {
+		msg("The airlock is sealed - you cannot go back up.");
+		return;
+	}
+
 	ascend_to = dungeon_get_next_level(player->depth, -1);
 
 	/* Exit a quest */
@@ -130,7 +136,7 @@ void do_cmd_go_down(struct command *cmd)
 
 	/* Paranoia, no descent from z_info->max_depth - 1 */
 	if (player->depth == z_info->max_depth - 1) {
-		msg("The fortress does not appear to extend deeper");
+		msg("The fortress does not appear to extend deeper.");
 		return;
 	}
 
@@ -140,6 +146,11 @@ void do_cmd_go_down(struct command *cmd)
 		if (is_quest(descend_to) &&
 			!get_check("Are you sure you want to descend? "))
 			return;
+	}
+
+	/* Endgame */
+	if ((!player->town) && (!player->total_winner)) {
+		msg("You pass through an airlock, which seals behind you.");
 	}
 
 	/* Enter The Quest! */
@@ -1546,7 +1557,7 @@ static const char *mon_feeling_text[] =
 	"This place does not seem too risky",
 	"This place seems reasonably safe",
 	"This seems a tame, sheltered place",
-	"This seems a quiet, peaceful place"
+	"This seems a quiet, peaceful place",
 };
 
 /**
@@ -1569,9 +1580,15 @@ void display_feeling(bool obj_only)
 		return;
 	}
 
-	/* Or in a quest */
+	/* Or in a town-quest */
 	if (player->active_quest >= 0) {
 		msg("You have no intuition about what there might be in this place.");
+		return;
+	}
+
+	/* Or on a quest-monster level */
+	if (is_active_quest(player->depth)) {
+		msg("You feel a terrible presence here!");
 		return;
 	}
 

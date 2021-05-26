@@ -1438,26 +1438,34 @@ static enum parser_error parse_monster_drop(struct parser *p) {
 	struct monster_race *r = parser_priv(p);
 	struct monster_drop *d;
 	struct object_kind *k;
-	int tval, sval;
+	struct artifact *a;
+	int tval = 0;
+	int sval = 0;
 
 	if (!r)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
-	tval = tval_find_idx(parser_getsym(p, "tval"));
-	if (tval < 0)
-		return PARSE_ERROR_UNRECOGNISED_TVAL;
-	sval = lookup_sval(tval, parser_getsym(p, "sval"));
-	if (sval < 0)
-		return PARSE_ERROR_UNRECOGNISED_SVAL;
 
-	if (parser_getuint(p, "min") > 99 || parser_getuint(p, "max") > 99)
-		return PARSE_ERROR_INVALID_ITEM_NUMBER;
+	const char *sv_name = parser_getsym(p, "sval");
+	a = lookup_artifact_name(sv_name);
+	if (!a) {
+		tval = tval_find_idx(parser_getsym(p, "tval"));
+		if (tval < 0)
+			return PARSE_ERROR_UNRECOGNISED_TVAL;
+		sval = lookup_sval(tval, sv_name);
+		if (sval < 0)
+			return PARSE_ERROR_UNRECOGNISED_SVAL;
 
-	k = lookup_kind(tval, sval);
-	if (!k)
-		return PARSE_ERROR_UNRECOGNISED_SVAL;
-		
+		if (parser_getuint(p, "min") > 99 || parser_getuint(p, "max") > 99)
+			return PARSE_ERROR_INVALID_ITEM_NUMBER;
+
+		k = lookup_kind(tval, sval);
+		if (!k)
+			return PARSE_ERROR_UNRECOGNISED_SVAL;
+	}
+
 	d = mem_zalloc(sizeof *d);
 	d->kind = k;
+	d->art = string_make(sv_name); 
 	d->percent_chance = parser_getuint(p, "chance");
 	d->min = parser_getuint(p, "min");
 	d->max = parser_getuint(p, "max");
@@ -1697,8 +1705,8 @@ static errr run_parse_monster(struct parser *p) {
 
 static int guess_exp(struct monster_race *r) {
 	assert(r->level >= 0);
-	assert(r->level <= 100);
-	static const int level_to_exp[101] = {
+	assert(r->level <= 120);
+	static const int level_to_exp[121] = {
 		0,		2,		6,		12,		14,				16,		18,		21,		25,		30,
 		35,		40,		45,		50,		55,				60,		65,		70,		75,		85,
 		100,	110,	120,	130,	150,			170,	190,	220,	255,	280,
@@ -1709,7 +1717,9 @@ static int guess_exp(struct monster_race *r) {
 		10000,	10500,	11000,	11500,	12000,			13000,	14000,	15000,	16500,	18000,
 		20000,	22000,	24000,	26000,	28000,			30000,	32000,	34000,	36000,	38000,
 		40000,	42000,	44000,	46000,	48000,			50000,	55000,	60000,	65000,	70000,
-		80000,
+		80000,	82500,	85000,	87500,	90000,			92500,	95000,	100000,	102500, 105000,
+		107500, 110000, 112500, 115000, 117500, 		120000, 122500, 125000, 127500, 130000,
+		135000
 	};
 	int e = level_to_exp[r->level];
 

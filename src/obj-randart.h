@@ -111,7 +111,7 @@ struct artifact_set_data {
 };
 
 char *artifact_gen_name(struct artifact_set_data *data, struct artifact *a, const char ***words, int power, int tval, bool bad);
-void do_randart(u32b randart_seed, bool create_file);
+void do_randart(u32b randart_seed, bool create_file, bool qa_only);
 extern struct file_parser artinames_parser;
 
 #endif /* OBJECT_RANDART_H */

@@ -121,6 +121,8 @@ static struct store *store_new(int idx) {
  * Return the store with the given index, or NULL if there is none
  */
 struct store *get_store_by_idx(int idx) {
+	if (!stores)
+		return NULL;
 	for(int i=0; i< MAX_STORES; i++) {
 		struct store *store = stores + i;
 		if ((int)store->sidx == idx)
@@ -133,7 +135,7 @@ struct store *get_store_by_idx(int idx) {
  * Return the store with the given name, or NULL if there is none
  */
 struct store *get_store_by_name(const char *name) {
-	if (!name)
+	if (!name || !stores)
 		return NULL;
 	for(int i=0; i< MAX_STORES; i++) {
 		struct store *store = stores + i;

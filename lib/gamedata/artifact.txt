@@ -123,17 +123,50 @@ desc:A helmet with a high pointed plume above each ear. Shielding you from unple
 
 ### Shields ###
 
+### Randomized quest artifacts ###
+# base-object must be present and unique but otherwise doesn't matter.
+
+name:of the Grey Rat
+base-object:helm:X4
+level:9
+flags:QUEST_ART | RANDOM_ART
+power:25
+desc:Favored above all others by Nijel, which means... well, it doesn't really mean a whole lot actually.
+
+name:of Holo-Triax
+base-object:helm:X1
+level:25
+flags:QUEST_ART | RANDOM_ART
+power:150
+desc:A mysterious but unmistakably powerful item guarded (along with the way into the next section of the Fortress) by Triax's hologram.
+
+name:'Deep Time'
+base-object:helm:X2
+level:50
+flags:QUEST_ART | RANDOM_ART
+power:250
+desc:An ancient artifact of unknown provenance but unarguable power, once kept safe from all but the most resourceful thieves by a pack of tyrannosaurs.
+
+name:of Mecha-Triax
+base-object:helm:X3
+level:75
+flags:QUEST_ART | RANDOM_ART
+power:450
+desc:Triax, big-headed as ever, maintained a giant golden face of himself - a lethal robot, armed to the gold teeth. Now destroyed, and inside that lovely pinata was this extraordinarily powerful object. No wonder he wanted to keep it for himself!
+
+
 ### Quest artifacts ###
 
-name:'Grond'
-base-object:hafted:Mighty Hammer
+name:'Dominion'
+base-object:sword:dual darksaber
 level:100
-weight:1000
-cost:500000
 alloc:0:100 to 100
-attack:9d9:5:25
-armor:0:10
-flags:IMPACT | SEE_INVIS | TELEPATHY | AGGRAVATE
+cost:500000
+weight:1150g
+attack:2d20:25:35
+brand:DARK_3
+values:RES_DARK[5] | BLOWS[5] | DEX[5] | STR[5]
+flags:SEE_INVIS | TELEPATHY | AGGRAVATE
 slay:DRAGON_5
 slay:ANIMAL_2
 slay:EVIL_2
@@ -141,13 +174,12 @@ slay:UNDEAD_5
 slay:DEMON_5
 slay:TROLL_3
 slay:ORC_3
-desc:The mighty Hammer of the Underworld, blackened by doomspells of shattering.
-desc:  Its wielder holds the lives of all Morgoth's servants in his hand.
+desc:Twin absorption beams, glowing deep red shot with streaks of white, extend in both directions. The uniquely powerful weapon that Triax defeated all his enemies except yourself with, nothing could move faster.
 
-name:of Morgoth
-base-object:helm:Massive Iron Crown
+name:of the Core
+base-object:helm:Coronet
 level:100
-weight:400
+weight:320g
 cost:10000000
 alloc:0:100 to 100
 attack:1d1:0:0
@@ -157,6 +189,4 @@ values:STR[50] | INT[50] | WIS[50] | DEX[50] | CON[50] | INFRA[50]
 values:LIGHT[1]
 values:RES_ACID[1] | RES_ELEC[1] | RES_FIRE[1] | RES_COLD[1] | RES_POIS[1]
 values:RES_LIGHT[1] | RES_DARK[1] | RES_NEXUS[1] | RES_RADIATION[1]
-desc:Containing much of the power of he who once was mightiest among the Ainur,
-desc: this plain iron crown has mounted upon it the two remaining Silmarils,
-desc: greatest treasures of Middle-Earth.
+desc:A slender golden band which you recognize and fear as both a device allowing control of machines through your thoughts - and one forcing your thoughts to be controlled. It's the path for the wearer's domination of the galaxy, or if you would prefer not to be a Dark Lord then simply your ticket home.

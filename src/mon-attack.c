@@ -385,6 +385,11 @@ bool make_ranged_attack(struct monster *mon)
 	/* Smart monsters can use "desperate" spells */
 	if (monster_is_smart(mon) && mon->hp < mon->maxhp / 10 && one_in_(2)) {
 		ignore_spells(f, RST_DAMAGE);
+	} else {
+		/* Monsters that prefer melee will not cast if in melee range, unless in trouble */
+		if ((rf_has(mon->race->flags, RF_PREFER_MELEE)) && (distance(mon->grid, player->grid) <= 1)) {
+			return false;
+		}
 	}
 
 	/* Non-stupid monsters do some filtering */

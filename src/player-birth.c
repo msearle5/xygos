@@ -1498,11 +1498,13 @@ void do_cmd_accept_character(struct command *cmd)
 	select_artifact_max();
 
 	/* Now only randomize the artifacts if required */
+	seed_randart = randint0(0x10000000);
 	if (OPT(player, birth_randarts)) {
-		seed_randart = randint0(0x10000000);
-		do_randart(seed_randart, true);
-		deactivate_randart_file();
+		do_randart(seed_randart, true, false);
+	} else {
+		do_randart(seed_randart, true, true);
 	}
+	deactivate_randart_file();
 
 	/* Seed for flavors */
 	seed_flavor = randint0(0x10000000);

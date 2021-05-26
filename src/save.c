@@ -466,6 +466,9 @@ void rdwr_player(void)
 	/* Flying? */
 	rdwr_bool(&player->flying);
 
+	/* Ready for the endgame? */
+	rdwr_bool(&player->orbitable);
+
 	/* Factions */
 	rdwr_s32b(&player->bm_faction);
 	rdwr_s32b(&player->town_faction);

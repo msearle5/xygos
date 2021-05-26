@@ -35,6 +35,7 @@
 #include "obj-pile.h"
 #include "obj-util.h"
 #include "player-calcs.h"
+#include "player-quest.h"
 #include "player-timed.h"
 #include "player-util.h"
 #include "player.h"
@@ -502,7 +503,7 @@ static int fmt_depth(char buf[], int max)
 			if (danger_depth(player) > 0) {
 				strnfmt(buf, max, "(L%d)", danger_depth(player));
 			} else {
-				my_strcpy(buf, player->town ? player->town->name : "Town", max);
+				my_strcpy(buf, player->town ? player->town->name : "Spacestation", max);
 			}
 		}
 		else
@@ -542,7 +543,7 @@ static void prt_dungeon(int row, int col)
 			/* Right-Adjust the "name", and clear old values */
 			put_str(format("%-13s", dungeon), row, col);
 		} else if (danger_depth(player) > 0) {
-			put_str(format("%-13s", player->town ? player->town->name : "Town"), row, col);
+			put_str(format("%-13s", player->town ? player->town->name : "Spacestation"), row, col);
 		}
 	}
 }
@@ -1051,60 +1052,70 @@ static size_t prt_level_feeling(int row, int col)
 	/* No useful feeling in town or on a quest */
 	if ((!player->depth) || (player->active_quest >= 0)) return 0;
 
-	/* Get feelings */
-	obj_feeling = cave->feeling / 10;
-	mon_feeling = cave->feeling - (10 * obj_feeling);
+	/* Quest levels are special - the feeling is ignored */
+	bool quest = is_active_quest(player->depth);
 
-	/*
-	 *   Convert object feeling to a symbol easier to parse
-	 * for a human.
-	 *   0 -> * "Looks like any other level."
-	 *   1 -> $ "you sense an item of wondrous power!" (special feeling)
-	 *   2 to 10 are feelings from 2 meaning superb feeling to 10
-	 * meaning naught but cobwebs.
-	 *   It is easier for the player to have poor feelings as a
-	 * low number and superb feelings as a higher one. So for
-	 * display we reverse this numbers and subtract 1.
-	 *   Thus (2-10) becomes (1-9 reversed)
-	 *
-	 *   But before that check if the player has explored enough
-	 * to get a feeling. If not display as ?
-	 */
-	if (cave->feeling_squares < feeling_need(player)) {
-		my_strcpy(obj_feeling_str, "?", sizeof(obj_feeling_str));
-		obj_feeling_color_print = COLOUR_WHITE;
-	} else {
-		obj_feeling_color_print = obj_feeling_color[obj_feeling];
-		if (obj_feeling == 0)
-			my_strcpy(obj_feeling_str, "*", sizeof(obj_feeling_str));
-		else if (obj_feeling == 1)
-			my_strcpy(obj_feeling_str, "$", sizeof(obj_feeling_str));
-		else
-			strnfmt(obj_feeling_str, 5, "%d", (unsigned int) (11-obj_feeling));
-	}
-
-	/* 
-	 *   Convert monster feeling to a symbol easier to parse
-	 * for a human.
-	 *   0 -> ? . Monster feeling should never be 0, but we check
-	 * it just in case.
-	 *   1 to 9 are feelings from omens of death to quiet, peaceful.
-	 * We also reverse this so that what we show is a danger feeling.
-	 */
-	if (mon_feeling == 0)
-		my_strcpy( mon_feeling_str, "?", sizeof(mon_feeling_str) );
-	else
-		strnfmt(mon_feeling_str, 5, "%d", (unsigned int) ( 10-mon_feeling ));
-
-	/* Display it */
+	/* Otherwise, get feelings. */
 	c_put_str(COLOUR_WHITE, "LF:", row, col);
 	new_col = col + 3;
-	c_put_str(mon_feeling_color[mon_feeling], mon_feeling_str, row, new_col);
-	new_col += strlen( mon_feeling_str );
-	c_put_str(COLOUR_WHITE, "-", row, new_col);
-	++new_col;
-	c_put_str(obj_feeling_color_print, obj_feeling_str,	row, new_col);
-	new_col += strlen( obj_feeling_str ) + 1;
+	if (quest) {
+		const char *feeling = "!!!";
+		c_put_str(COLOUR_MAGENTA, feeling, row, new_col);
+		new_col += strlen( feeling ) + 1;
+	} else {
+		obj_feeling = cave->feeling / 10;
+		mon_feeling = cave->feeling - (10 * obj_feeling);
+
+
+		/*
+		 *   Convert object feeling to a symbol easier to parse
+		 * for a human.
+		 *   0 -> * "Looks like any other level."
+		 *   1 -> $ "you sense an item of wondrous power!" (special feeling)
+		 *   2 to 10 are feelings from 2 meaning superb feeling to 10
+		 * meaning naught but cobwebs.
+		 *   It is easier for the player to have poor feelings as a
+		 * low number and superb feelings as a higher one. So for
+		 * display we reverse this numbers and subtract 1.
+		 *   Thus (2-10) becomes (1-9 reversed)
+		 *
+		 *   But before that check if the player has explored enough
+		 * to get a feeling. If not display as ?
+		 */
+		if (cave->feeling_squares < feeling_need(player)) {
+			my_strcpy(obj_feeling_str, "?", sizeof(obj_feeling_str));
+			obj_feeling_color_print = COLOUR_WHITE;
+		} else {
+			obj_feeling_color_print = obj_feeling_color[obj_feeling];
+			if (obj_feeling == 0)
+				my_strcpy(obj_feeling_str, "*", sizeof(obj_feeling_str));
+			else if (obj_feeling == 1)
+				my_strcpy(obj_feeling_str, "$", sizeof(obj_feeling_str));
+			else
+				strnfmt(obj_feeling_str, 5, "%d", (unsigned int) (11-obj_feeling));
+		}
+
+		/*
+		 *   Convert monster feeling to a symbol easier to parse
+		 * for a human.
+		 *   0 -> ? . Monster feeling should never be 0, but we check
+		 * it just in case.
+		 *   1 to 9 are feelings from omens of death to quiet, peaceful.
+		 * We also reverse this so that what we show is a danger feeling.
+		 */
+		if (mon_feeling == 0)
+			my_strcpy( mon_feeling_str, "?", sizeof(mon_feeling_str) );
+		else
+			strnfmt(mon_feeling_str, 5, "%d", (unsigned int) ( 10-mon_feeling ));
+
+		/* Display it */
+		c_put_str(mon_feeling_color[mon_feeling], mon_feeling_str, row, new_col);
+		new_col += strlen( mon_feeling_str );
+		c_put_str(COLOUR_WHITE, "-", row, new_col);
+		++new_col;
+		c_put_str(obj_feeling_color_print, obj_feeling_str,	row, new_col);
+		new_col += strlen( obj_feeling_str ) + 1;
+	}
 
 	return new_col - col;
 }

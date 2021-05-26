@@ -55,6 +55,7 @@
 #include "source.h"
 #include "target.h"
 #include "trap.h"
+#include "ui-command.h"
 #include "ui-display.h"
 #include "ui-input.h"
 #include "ui-output.h"
@@ -1427,20 +1428,34 @@ bool effect_handler_RECALL(effect_handler_context_t *context)
 	context->ident = true;
 
 	/* No recall */
-	if (OPT(player, birth_no_recall) && !player->total_winner) {
-		msg("Nothing happens.");
+	if (OPT(player, birth_no_recall) && !player->orbitable) {
+		msg("Nothing happens - you have chosen not to recall until Xygos is free.");
+		return true;
+	}
+
+	/* No recall in the endgame */
+	if (!player->town) {
+		if (!player->total_winner) {
+			if (is_quest(player->depth))
+				msg("Nothing happens - something nearby is blocking it.");
+			else
+				msg("Nothing happens - something below you is blocking it.");
+		} else {
+			/* If you are a Total Winner, this is another (equivalent, maybe more intuitive) way to ascend */
+			textui_cmd_suicide();
+		}
 		return true;
 	}
 
 	/* No recall from quest levels with force_descend */
 	if (OPT(player, birth_force_descend) && (is_quest(player->depth))) {
-		msg("Nothing happens.");
+		msg("Nothing happens - something nearby is blocking it.");
 		return true;
 	}
 
 	/* No recall from single combat */
 	if (player->upkeep->arena_level) {
-		msg("Nothing happens.");
+		msg("Nothing happens - the room you are in blocks it.");
 		return true;
 	}
 
@@ -1477,7 +1492,7 @@ bool effect_handler_RECALL(effect_handler_context_t *context)
 		msg("The air about you becomes charged...");
 	} else {
 		/* Deactivate recall */
-		if (!get_check("Word of Recall is already active.  Do you want to cancel it? "))
+		if (!get_check("Recall is already active.  Do you want to cancel it? "))
 			return false;
 
 		player->word_recall = 0;
@@ -1499,7 +1514,13 @@ bool effect_handler_DEEP_DESCENT(effect_handler_context_t *context)
 	int target_increment = (4 / z_info->stair_skip) + 1;
 	int target_depth = dungeon_get_next_level(player->max_depth,
 											  target_increment);
-	for (i = 5; i > 0; i--) {
+	int levels = 5;
+
+	/* Endgame */
+	if (!player->town)
+		levels = 1;
+
+	for (i = levels; i > 0; i--) {
 		if (is_quest(target_depth)) break;
 		if (target_depth >= z_info->max_depth - 1) break;
 
@@ -3441,8 +3462,8 @@ static bool effect_change_level(effect_handler_context_t *context, const char *r
 		}
 	}
 
-	/* No going up with force_descend or in the town */
-	if (OPT(player, birth_force_descend) || !player->depth)
+	/* No going up with force_descend, in the endgame or in the town */
+	if (OPT(player, birth_force_descend) || !player->depth || (!player->town && !player->total_winner))
 		up = false;
 
 	/* No forcing player down to quest levels if they can't leave */

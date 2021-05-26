@@ -637,6 +637,7 @@ struct player {
 	bool flying;						/* Currently flying (using a Pilot ability) */
 	s32b active_quest;					/* Currently active quest */
 	u16b total_winner;					/* Total winner */
+	bool orbitable;						/* Ready to go to the orbital station */
 	s32b bm_faction;					/* Faction with the black market */
 	s32b cyber_faction;					/* with the cyber salon */
 	s32b town_faction;					/* and with the rest of town */

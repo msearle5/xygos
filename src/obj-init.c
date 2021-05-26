@@ -123,8 +123,10 @@ static enum parser_error write_dummy_object_record(struct artifact *art, const c
 	char mod_name[100];
 
 	/* Use the (second) last entry for the dummy */
+	k_info = mem_realloc(k_info, sizeof(*k_info) * (z_info->k_max + 1));
 	dummy = &k_info[z_info->k_max - 1];
-	memset(dummy, 0, sizeof(*dummy));
+	z_info->k_max++;
+	memset(dummy, 0, sizeof(*dummy) * 2);
 
 	/* Copy the tval, base and level */
 	dummy->tval = art->tval;
@@ -2697,11 +2699,10 @@ static enum parser_error parse_artifact_graphics(struct parser *p) {
 	wchar_t glyph = parser_getchar(p, "glyph");
 	const char *color = parser_getsym(p, "color");
 	struct artifact *a = parser_priv(p);
-	struct object_kind *k = lookup_kind(a->tval, a->sval);
 	assert(a);
-	assert(k);
+	struct object_kind *k = lookup_kind(a->tval, a->sval);
 
-	if (!kf_has(k->kind_flags, KF_INSTA_ART))
+	if ((!k) || (!kf_has(k->kind_flags, KF_INSTA_ART)))
 		return PARSE_ERROR_NOT_SPECIAL_ARTIFACT;
 
 	k->d_char = glyph;
@@ -2713,6 +2714,16 @@ static enum parser_error parse_artifact_graphics(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_artifact_power(struct parser *p) {
+	struct artifact *a = parser_priv(p);
+	assert(a);
+	struct object_kind *k = lookup_kind(a->tval, a->sval);
+	if ((!k) || (!kf_has(k->kind_flags, KF_INSTA_ART)))
+		return PARSE_ERROR_NOT_SPECIAL_ARTIFACT;
+
+	k->power = parser_getint(p, "power");
+	return PARSE_ERROR_NONE;
+}
 static enum parser_error parse_artifact_level(struct parser *p) {
 	struct artifact *a = parser_priv(p);
 	assert(a);
@@ -2785,6 +2796,7 @@ static enum parser_error parse_artifact_armor(struct parser *p) {
 
 static enum parser_error parse_artifact_flags(struct parser *p) {
 	struct artifact *a = parser_priv(p);
+	struct object_kind *k = lookup_kind(a->tval, a->sval);
 	char *s;
 	char *t;
 	assert(a);
@@ -2796,6 +2808,15 @@ static enum parser_error parse_artifact_flags(struct parser *p) {
 	t = strtok(s, " |");
 	while (t) {
 		bool found = false;
+
+		if (k) {
+			if (!grab_flag(k->kind_flags, KF_SIZE, kind_flags, t)) {
+				found = true;
+				if (!kf_has(k->kind_flags, KF_INSTA_ART))
+					return PARSE_ERROR_NOT_SPECIAL_ARTIFACT;
+			}
+		}
+
 		if (!grab_flag(a->flags, OF_SIZE, obj_flags, t))
 			found = true;
 		if (!grab_flag(a->pflags, PF_SIZE, py_flags, t))
@@ -2929,6 +2950,7 @@ struct parser *init_parse_artifact(void) {
 	parser_reg(p, "base-object sym tval sym sval", parse_artifact_base_object);
 	parser_reg(p, "graphics char glyph sym color", parse_artifact_graphics);
 	parser_reg(p, "level int level", parse_artifact_level);
+	parser_reg(p, "power int power", parse_artifact_power);
 	parser_reg(p, "weight str weight", parse_artifact_weight);
 	parser_reg(p, "cost int cost", parse_artifact_cost);
 	parser_reg(p, "alloc int common str minmax", parse_artifact_alloc);
@@ -2961,8 +2983,9 @@ static errr finish_parse_artifact(struct parser *p) {
 	while (a) {
 		z_info->a_max++;
 		struct object_kind *kind = lookup_kind(a->tval, a->sval);
-		if ((kind) && kf_has(kind->kind_flags, KF_QUEST_ART))
+		if ((kind) && kf_has(kind->kind_flags, KF_QUEST_ART)) {
 			z_info->a_quest = z_info->a_max;
+		}
 		a = a->next;
 	}
 
@@ -2982,6 +3005,7 @@ static errr finish_parse_artifact(struct parser *p) {
 
 		mem_free(a);
 	}
+	z_info->a_max++;
 	z_info->a_base = z_info->a_max;
 
 	/* Now we're done with object kinds, deal with object-like things */

@@ -609,6 +609,7 @@ struct object_kind *lookup_kind(int tval, int sval)
 
 	/* Failure */
 	msg("No object: %d:%d (%s)", tval, sval, tval_find_name(tval));
+
 	return NULL;
 }
 

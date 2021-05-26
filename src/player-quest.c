@@ -300,6 +300,23 @@ static void succeed_quest(struct quest *q) {
 	q->flags &= ~QF_FAILED;
 }
 
+/** Complete the current quest, successfully and reward it */
+static void reward_quest(struct quest *q) {
+	if (!(q->flags & QF_SUCCEEDED))
+		msgt(MSG_LEVEL, "Your task is complete!");
+	q->flags |= QF_SUCCEEDED;
+	q->flags &= ~QF_UNREWARDED;
+	q->flags &= ~QF_FAILED;
+}
+
+/** Make a quest active */
+static void activate_quest(struct quest *q) {
+	q->flags |= QF_ACTIVE;
+	q->flags &= ~QF_SUCCEEDED;
+	q->flags &= ~QF_UNREWARDED;
+	q->flags &= ~QF_FAILED;
+}
+
 /** Complete the current quest, unsuccessfully */
 static void fail_quest(struct quest *q) {
 	if (!(q->flags & QF_FAILED))
@@ -336,6 +353,31 @@ bool is_quest(int level)
 	for (i = 0; i < z_info->quest_max; i++)
 		if (player->quests[i].level == level)
 			return true;
+
+	return false;
+}
+
+/**
+ * Check if the given level is an active quest level.
+ * For quests involving a monster, that means at least one of the targeted
+ * monstrer is present. For other quests, they are always active if you
+ * are on their level.
+ */
+bool is_active_quest(int level)
+{
+	size_t i;
+
+	/* Town is never a quest */
+	if (!level) return false;
+
+	for (i = 0; i < z_info->quest_max; i++) {
+		if (player->quests[i].level == level) {
+			if (!player->quests[i].race)
+				return true;
+			else if (player->quests[i].race->cur_num)
+				return true;
+		}
+	}
 
 	return false;
 }
@@ -452,7 +494,7 @@ struct quest *get_quest_by_name(const char *name)
 		return NULL;
 	for (int i = 0; i < z_info->quest_max; i++) {
 		struct quest *q = &player->quests[i];
-		if (streq(q->name, name))
+		if (strstr(name, q->name))
 			return q;
 	}
 	return NULL;
@@ -1073,6 +1115,18 @@ bool quest_check(const struct monster *m) {
 		if (streq(m->race->name, "Ky, the Pie Spy")) {
 			succeed_quest(get_quest_by_name("Soldier, Sailor, Chef, Pie"));
 			return true;
+		} else {
+			struct quest *q = get_quest_by_name(m->race->name);
+			/* Currently these are all level-guardian quests, so there is no separate reward.
+			 * This also implies that they are contiguous.
+			 */
+			if (q) {
+				reward_quest(q);
+				if (q != (player->quests + (z_info->quest_max - 1))) {
+					q++;
+					activate_quest(q);
+				}
+			}
 		}
 	}
 
@@ -1102,7 +1156,7 @@ bool quest_check(const struct monster *m) {
 		player->upkeep->redraw |= (PR_TITLE);
 		msg("*** CONGRATULATIONS ***");
 		msg("You have won the game!");
-		msg("You may retire (commit suicide) when you are ready.");
+		msg("You may retire (Ctrl-C, \"commit suicide\") when you are ready.");
 	}
 
 	return true;

@@ -394,14 +394,14 @@ void take_hit(struct player *p, int dam, const char *kb_str)
  */
 void death_knowledge(struct player *p)
 {
-	struct store *home = &stores[STORE_HOME];
+	struct store *home = stores ? &stores[STORE_HOME] : NULL;
 	struct object *obj;
 	time_t death_time = (time_t)0;
 
 	/* Retire in the town in a good state */
 	if (p->total_winner) {
 		p->depth = 0;
-		my_strcpy(p->died_from, "Ripe Old Age", sizeof(p->died_from));
+		my_strcpy(p->died_from, "Saved the galaxy and retired a hero", sizeof(p->died_from));
 		p->exp = p->max_exp;
 		p->lev = p->max_lev;
 		p->au += 10000000L;
@@ -414,10 +414,12 @@ void death_knowledge(struct player *p)
 		obj->known->activation = obj->activation;
 	}
 
-	for (obj = home->stock; obj; obj = obj->next) {
-		object_flavor_aware(obj);
-		obj->known->effect = obj->effect;
-		obj->known->activation = obj->activation;
+	if (home) {
+		for (obj = home->stock; obj; obj = obj->next) {
+			object_flavor_aware(obj);
+			obj->known->effect = obj->effect;
+			obj->known->activation = obj->activation;
+		}
 	}
 
 	history_unmask_unknown(p);

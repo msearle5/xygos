@@ -94,17 +94,45 @@ desc:Hunt the Wumpus
 succeed:The traditional wumpus hunter's prize isn't worth much, but I think you'll like this boomstick!
 failure:Well, I saw you walking boldly into the wumpus's den - so I will admit that although you didn't manage to defeat it, you aren't just a poseur. So I'll reluctantly allow you in to see more stuff, but you can't expect a real reward. You do still get the traditional wumpus hunter's prize, though, for what that's worth.
 
-name:Sauron
-level:99
-race:Sauron, the Sorcerer
-desc:Get rid of the big bad p
+####################################
+# The win-quest sequence.
+#
+# These MUST be in order of depth and at the end of the file for the hactivation-of-next-quest code to work.
+
+name:Holo-Triax
+level:25
+race:Holo-Triax
+desc:Triax's hologram stands in the way of your descent.
 intro:Foo
 number:1
 flags:active | essential
 
-name:Morgoth
-level:100
-race:Morgoth, Lord of Darkness
-desc:Get rid of the big bad P
+name:Impy
+level:50
+race:Impy
+desc:Triax has a pet T-Rex. With cybernetically enhanced ferocity, natch. Unfortunately, it's in your way...
+intro:Foo
 number:1
-flags:active | essential
+flags:essential
+
+name:Mecha-Triax
+level:75
+race:Mecha-Triax
+desc:Triax has a formidable robot bodyguard which must be destroyed to progress.
+intro:Foo
+number:1
+flags:essential
+
+name:Triax
+level:100
+race:Triax, the Emperor
+desc:You must kill Triax the tyrant Emperor to free Xygos!
+number:1
+flags:essential
+
+name:Core
+level:120
+race:The Core
+desc:Triax has uploaded his mind into the orbital station. To stop him for good you must return to the surface, fly to the station, descend and destroy him. Beware that once you launch there is no going back until you succeed.
+number:1
+flags:essential

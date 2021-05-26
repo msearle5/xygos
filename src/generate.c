@@ -1244,7 +1244,7 @@ void prepare_next_level(struct chunk **c, struct player *p)
 			}
 		} else {
 			/* Save the town */
-			if (!((*c)->depth) && !chunk_find_name(player->town->name)) {
+			if (!((*c)->depth) && player->town && !chunk_find_name(player->town->name)) {
 				assert(player->town->name);
 				char *oldname = player->upkeep->last_level;
 				if (!oldname) {

@@ -1562,7 +1562,7 @@ static void clearing_stats(void)
 			run_parser(&artifact_parser);
 
 			/* regen randarts */
-			do_randart(seed_randart, false);
+			do_randart(seed_randart, false, false);
 		}
 
 		/* Do game iterations */
