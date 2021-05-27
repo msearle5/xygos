@@ -514,7 +514,7 @@ static void use_aux(struct command *cmd, struct object *obj, enum use use,
 		target_fix();
 
 		used = effect_do(effect,
-							source_object(obj),
+							source_player(), //object(obj),
 							obj,
 							&ident,
 							was_aware,
