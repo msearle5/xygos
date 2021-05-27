@@ -885,15 +885,26 @@ static errr finish_parse_town_names(struct parser *p) {
 
 static void cleanup_town_names(void)
 {
-	for(int i=0;i<town_full_names;i++)
-		mem_free(town_full_name[i]);
-	mem_free(town_full_name);
-	for(int i=0;i<town_front_names;i++)
-		mem_free(town_front_name[i]);
-	mem_free(town_front_name);
-	for(int i=0;i<town_back_names;i++)
-		mem_free(town_back_name[i]);
-	mem_free(town_back_name);
+	if (town_full_name) {
+		for(int i=0;i<town_full_names;i++)
+			mem_free(town_full_name[i]);
+		mem_free(town_full_name);
+		town_full_name = NULL;
+	}
+
+	if (town_front_name) {
+		for(int i=0;i<town_front_names;i++)
+			mem_free(town_front_name[i]);
+		mem_free(town_front_name);
+		town_front_name = NULL;
+	}
+
+	if (town_back_name) {
+		for(int i=0;i<town_back_names;i++)
+			mem_free(town_back_name[i]);
+		mem_free(town_back_name);
+		town_back_name = NULL;
+	}
 }
 
 struct file_parser town_names_parser = {
