@@ -1,6 +1,10 @@
 BUGS
 ====
+BUG: If Triax is killed after all airports are destroyed, the game becomes unwinnable.
+	Similarly if Triax is still alive and you are caught in a non-fortress town with its airport gone.
+
 BUG: Ranged attacks from gadgets and pills (at least) hit yourself. Bolts hurt, balls/breaths don't.
+	Or at other times it aims at a fixed point (0,0?) This is the same whether using a dir key or a target.
 
 BUG: Bombs (e.g. pineapple) give excess messages - "The X fails to harm the Y." "The X detonates!" "The Y screams!".
 	The first should be removed.
