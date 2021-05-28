@@ -1,7 +1,11 @@
 BUGS
 ====
-BUG: If Triax is killed after all airports are destroyed, the game becomes unwinnable.
+BUG: If Triax is killed after all airports are destroyed, the game becomes unwinnable (as you can't go to the station)
+		- Could rebuild if "Orbitable", only offering that destination. 
 	Similarly if Triax is still alive and you are caught in a non-fortress town with its airport gone.
+		- Send you when you reach the surface to Fortress-town?
+		- Also don't offer flights to a town with no airport
+	- ALthough the simplest way to handle this is just to never destroy airports.
 
 BUG: Bombs (e.g. pineapple) give excess messages - "The X fails to harm the Y." "The X detonates!" "The Y screams!".
 	The first should be removed.
@@ -85,6 +89,15 @@ Fixed
 BUG: Ranged attacks from gadgets and pills (at least) hit yourself. Bolts hurt, balls/breaths don't.
 	Or at other times it aims at a fixed point (0,0?) This is the same whether using a dir key or a target.
 	Fixed 6b94c16e257ea1b52c448e991354d7112cf34c52
+b2ea88cea54a65faea635820ef0d87e7cd4b8095 has the bug = is the fault:
+
+diff --git a/src/cmd-obj.c b/src/cmd-obj.c
+index ddd617c7..d87121b4 100644
+--- a/src/cmd-obj.c
++++ b/src/cmd-obj.c
+@@ -514,7 +514,7 @@ static void use_aux(struct command *cmd, struct object *obj,
+-                                                       source_player(),
++                                                       source_object(obj),
 
 BUG: Taratol is described: "Takes 141 to 280 turns to *burn* down at your current speed."
 	Fixed c75e182cc2775a3deefc30cd184b8b15a4f156f4

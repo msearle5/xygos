@@ -1106,6 +1106,59 @@ flags:FORCE_DEPTH | FORCE_SLEEP
 desc:Artificial intelligence, or natural insanity? It's hard to tell where one leaves off and the other begins, when you are facing the demon core: a silicon replica of Triax's brilliant but thoroughly evil mind. Physically, it's simply a vast cuboid of gleaming metal. It has no conventional means of locomotion - it doesn't need any, with its mastery of teleportation. It does however have extensive means of defense...
 
 
+#### S in for SPIDER ####
+
+name:money spider
+base:spider
+color:OrangeRed
+speed:120
+hit-points:5
+hearing:8
+armor-class:25
+sleepiness:80
+depth:1
+rarity:10
+experience:6
+blow:BITE:HURT:1d4
+flags:ANIMAL | SMART | ONLY_GOLD | DROP_1 | DROP_60 | DROP_40 | DROP_20
+desc:It is a small red fast-moving spider, carrying something behind it in a silk purse.
+
+name:cave spider
+base:spider
+color:p
+speed:120
+hit-points:7
+hearing:8
+armor-class:19
+sleepiness:80
+depth:2
+rarity:1
+experience:7
+blow:BITE:HURT:1d4
+flags:ANIMAL | WEIRD_MIND
+flags:GROUP_AI
+friends:100:2d8:Same
+desc:It is a black spider that moves in fits and starts.
+
+name:wood spider
+base:spider
+color:U
+speed:120
+hit-points:11
+hearing:8
+armor-class:19
+sleepiness:80
+depth:7
+rarity:3
+experience:15
+blow:BITE:HURT:1d3
+blow:STING:POISON:1d4
+flags:ANIMAL | WEIRD_MIND
+flags:IM_POIS | GROUP_AI
+friends:100:2d7:Same
+desc:It scuttles towards you.
+
+
 ##### w is for WORM #####
 
 name:purple worm
@@ -2274,23 +2327,6 @@ flags:RAND_25 | RAND_50
 flags:HURT_LIGHT | IM_ACID | NO_FEAR
 desc:It is a large slimy mass of worms.
 
-name:cave spider
-base:spider
-color:p
-speed:120
-hit-points:7
-hearing:8
-armor-class:19
-sleepiness:80
-depth:2
-rarity:1
-experience:7
-blow:BITE:HURT:1d4
-flags:ANIMAL | WEIRD_MIND
-flags:GROUP_AI
-friends:100:2d8:Same
-desc:It is a black spider that moves in fits and starts.
-
 name:wild cat
 base:feline
 color:U
@@ -3189,24 +3225,6 @@ spell-power:4
 spells:WOUND
 desc:A crook-beaked bird with bedraggled black feathers.  It mocks you, and you
 desc: realise that its scorn can kill.
-
-name:wood spider
-base:spider
-color:U
-speed:120
-hit-points:11
-hearing:8
-armor-class:19
-sleepiness:80
-depth:7
-rarity:3
-experience:15
-blow:BITE:HURT:1d3
-blow:STING:POISON:1d4
-flags:ANIMAL | WEIRD_MIND
-flags:IM_POIS | GROUP_AI
-friends:100:2d7:Same
-desc:It scuttles towards you.
 
 name:bloodshot eye
 base:eye
