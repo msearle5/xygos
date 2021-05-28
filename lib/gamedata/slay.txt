@@ -31,6 +31,15 @@ power:115
 melee-verb:smite
 range-verb:pierces
 
+code:HOLOGRAM_3
+name:holograms
+race-flag:HOLOGRAM
+multiplier:3
+o-multiplier:25
+power:101
+melee-verb:disrupt
+range-verb:disrupts
+
 code:ORC_3
 name:orcs
 race-flag:ORC

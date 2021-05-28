@@ -3,9 +3,6 @@ BUGS
 BUG: If Triax is killed after all airports are destroyed, the game becomes unwinnable.
 	Similarly if Triax is still alive and you are caught in a non-fortress town with its airport gone.
 
-BUG: Ranged attacks from gadgets and pills (at least) hit yourself. Bolts hurt, balls/breaths don't.
-	Or at other times it aims at a fixed point (0,0?) This is the same whether using a dir key or a target.
-
 BUG: Bombs (e.g. pineapple) give excess messages - "The X fails to harm the Y." "The X detonates!" "The Y screams!".
 	The first should be removed.
 
@@ -85,6 +82,10 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+BUG: Ranged attacks from gadgets and pills (at least) hit yourself. Bolts hurt, balls/breaths don't.
+	Or at other times it aims at a fixed point (0,0?) This is the same whether using a dir key or a target.
+	Fixed 6b94c16e257ea1b52c448e991354d7112cf34c52
+
 BUG: Taratol is described: "Takes 141 to 280 turns to *burn* down at your current speed."
 	Fixed c75e182cc2775a3deefc30cd184b8b15a4f156f4
 
@@ -105,7 +106,7 @@ BUG: Rare Card: sometimes has wrong info (dur 12d17453895, cost 9), and XP for l
 BUG: "You cannot carry that many items" in store with 1 item - presumably caused by the pulled fix and the reason that the unit tests fail
 	Fixed ffff8218968f3e0d47e80ae89b2a0bafe8f92603
 
-BUG: The info on how to gani new talents is wrong:
+BUG: The info on how to gain new talents is wrong:
 	'Alt-T' or Ctrl-T, not S not gain talents "at any time"
 	Fixed 64e37b29094475ff217aff2b01a8d975d209d069
 
@@ -300,4 +301,4 @@ Theme
 TODO: Remove & replace melee weapons
 TODO: Remove & replace armor
 
-TODO: Reword: Inscription, dungeon, potion, spell, book, Saving Throw, magic, chests, treasure
+TODO: Reword: Inscription, dungeon, potion, spell, book, Saving Throw, magic, chests, treasure, gold

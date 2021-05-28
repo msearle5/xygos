@@ -166,7 +166,7 @@ desc:Hobbit/Elf/Dwarf
 name:hologram
 glyph:H
 pain:1
-flags:PASS_WALL | HURT_LIGHT
+flags:PASS_WALL | HURT_LIGHT | HOLOGRAM
 flags:IM_FIRE | IM_COLD | IM_ELEC | IM_POIS
 flags:NO_CONF | NO_SLEEP
 flags:NONLIVING

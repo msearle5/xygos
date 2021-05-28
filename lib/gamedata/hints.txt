@@ -37,6 +37,7 @@ H:Appearance is only the frosting, not the cake!
 H:Are you ready to vanish discreetly when those packs are after you?
 H:Are you really suffering withdrawal symptoms and want something crushable?
 H:Are you sure to surpass your predecessors, being more than a mere brawler?
+H:Astronauts must be very sure that they haven't left anything they need behind!
 H:At an early stage you will be quite happy to find trap-detection items.
 H:Bashing a creature may sometimes stun it.
 H:Be as resistant as you can, especially fire, cold, electricity, acid, poison.
@@ -115,7 +116,7 @@ H:If you can't beat it, leave it alone!
 H:If you can't find your house, you may need to ask around.
 H:If you can't see it, you might still be able to hurt it...
 H:If you don't know what a monster can do, use a rod of probing on it.
-H:If you have more than 99 items of ammo, it will take up more slots.
+H:If you have more than 99 rounds of ammo, it will take up more slots.
 H:If you hear heavy steps - watch out!
 H:If you hear something smash into splinters, you had better watch out.
 H:If you teleport away a tough monster, beware of teleporting afterwards!
@@ -244,6 +245,7 @@ H:They say that lemmings are fearless.
 H:They say that mold can be bad for your health.
 H:They say that once a truly special item is lost, it is lost for ever.
 H:They say that peppers are hot stuff.
+H:They say that picking a fight with a shopkeeper is rarely a good idea.
 H:They say that playing Worms might be helpful.
 H:They say that radiation isn't always bad for your health.
 H:They say that shopkeepers sometimes try to cheat the customer.

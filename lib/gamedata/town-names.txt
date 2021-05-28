@@ -23,9 +23,11 @@ S:Blackwater
 S:Blandford
 S:Blasted
 S:Bottlecaps
+S:Bridgeout
 S:Brilliance
 S:Brimstone
 S:Caution
+S:Cheatenham
 S:Cloudmaker
 S:Collapsed
 S:Concrete
@@ -35,6 +37,7 @@ S:Crossroads
 S:Dead Cow
 S:Decoy
 S:Derrick
+S:Dino Lake
 S:Drywall
 S:Doornail
 S:Duck Soup
@@ -180,6 +183,7 @@ F:Toadstool
 F:Turtle
 F:Whiskey
 F:Wobble
+F:Wumpus
 
 B:Canal
 B:Caves

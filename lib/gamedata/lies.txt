@@ -18,6 +18,7 @@ R:"So when I die, the first thing I will see in heaven is a score list?"
 R:"So when I die, the first thing I will see is a dessert?"
 R:'Ere, 'oo are you?
 R:'glingleglingleglingle...'
+R:*** FATAL HITPOINT WARNING! ***
 R:*** LOW HITPOINT WARNING! ***
 R:+++Out of Cheese error+++
 R:...It bit off his head like a gingerbread man!
@@ -120,6 +121,7 @@ R:Didn't your mother tell you not to eat food off the floor?
 R:Die or Deliver! Just assent with a head movement.
 R:Digdug was a chimpanzee in Malaysia.
 R:Direct a direct hit on your direct opponent, directing in the right direction.
+R:Dive! Dive!
 R:Do NOT cross the beams!
 R:Do not go in. It is a trap! Do you not see? It is a trap!
 R:Do not go! You will surely die!
@@ -181,7 +183,7 @@ R:Hell is paved with people that had good intentions.
 R:Help me! I'm being held captive in a vault at 2850m!
 R:He who fights and runs away... is a chicken. Cluck cluck cluck cluck cluck!
 R:He who fights and runs away... doesn't really live at all.
-R:Here's to life and it's many deaths!
+R:Here's to life and its many deaths!
 R:Hey what kind of chat room is this?
 R:Hey you guys wanna see a dead body?
 R:Hey young magic coder adept, you still owe some contributions.

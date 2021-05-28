@@ -1656,7 +1656,7 @@ graphics:\:U
 level:1
 weight:960g
 cost:50
-alloc:20:0 to 100
+alloc:20:0 to 60
 attack:2d4:0:0
 armor:0:0
 desc:'If that dragon's got any voonerables, that arrow'll find 'em.'
@@ -1668,7 +1668,7 @@ graphics:\:D
 level:3
 weight:5500g
 cost:105
-alloc:20:3 to 100
+alloc:20:3 to 80
 attack:3d3:0:0
 armor:0:0
 desc:A heavy hammer with a long handle.
@@ -1697,6 +1697,20 @@ attack:3d4:0:0
 armor:0:0
 desc:A hefty hooked metal bar, intended as a levering tool but it makes a useful improvised weapon if you can handle the weight.
 material:steel
+
+name:& holowhip~
+type:hafted
+graphics:\:Magenta-Pink
+level:18
+weight:270g
+cost:1500
+alloc:6:15 to 127
+attack:1d4:0:0
+armor:0:0
+brand:ELEC_2
+slay:HOLOGRAM_3
+desc:A light leather whip with embedded wires carrying hologram-disruption zapware. They can also deliver simple electric shocks, so it's not useful only against holograms.
+material:leather
 
 
 ### Axes ###
