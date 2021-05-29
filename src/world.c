@@ -839,6 +839,7 @@ bool world_init_towns(void)
 	assert(player);
 	town_gen_all(player, z_info->town_wid, z_info->town_hgt);
 
+	stores = player->town->stores;
 	return success;
 }
 

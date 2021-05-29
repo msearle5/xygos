@@ -445,11 +445,12 @@ void stores_copy(struct store *src)
 
 /* Reset the stores to the initial state.
  * The stores_init array contains one entry per store, as read from store.txt.
- * This must be duplicated per town.
+ * This is duplicated per town.
  */
 void store_reset(void) {
 	int i;
 	struct store *s;
+	struct store *old_stores = stores;
 
 	assert(t_info);
 	assert(z_info->town_max);
@@ -496,6 +497,9 @@ void store_reset(void) {
 			do_store_maint(s, true);
 		}
 	}
+
+	if (old_stores)
+		stores = old_stores;
 }
 
 struct init_module store_module = {
