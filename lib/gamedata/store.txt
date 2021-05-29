@@ -330,6 +330,12 @@ slots:8:16
 turnover:1
 normal:legs
 normal:arms
+normal:boots:force skates:500+M5000
+normal:gloves:force bangles:100+M4000
+normal:belt
 buy:arms
 buy:legs
+buy:belt
+buy:force skates
+buy:force bangles
 danger:85:95
