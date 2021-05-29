@@ -34,7 +34,7 @@
 # player-flags:player property flags
 # magic:spell_first:spell_weight:num_books
 # book:name
-# spell:name:level:fail:exp:stat:hp:cooldown
+# spell:name:level:fail:exp:stat:hp:cooldown:[fail msg]
 # seffect:seffect:subtype (if needed):radius (if needed):parameter (if needed)
 # sdice:dice string
 # sexpr:dice expression
@@ -99,9 +99,9 @@
 # not an actual object, just a way of classifying techniques.
 
 # 'spell' defines an individual spell - name, level, mana required,
-# fail-rate, experience for first casting.    'spell:' lines always refer to
-# spells in the previous 'book:' line.  The lines below are all used in
-# reference to the previous 'spell:' line.
+# fail-rate, experience for first casting, optional failure message.
+# 'spell:' lines always refer to spells in the previous 'book:' line.
+# The lines below are all used in reference to the previous 'spell:' line.
 
 # 'effect' defines the spell effect (as listed in src/list-effects.h),
 # and optionally parameters for effect subtype, effect radius and
@@ -289,7 +289,7 @@ cdesc:A master of deception, misdirection and custard pies. You can perform impr
 
 magic:1:300
 book:[Clown]
-# spell:name:level:fail:exp:stat:hp:cooldown
+# spell:name:level:fail:exp:stat:hp:cooldown:fail message
 spell:Rare Card:5:20:8:5:1:10d2
 seffect:TIMED_INC:RARE_CARD
 sdice:4d2

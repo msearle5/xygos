@@ -1,5 +1,5 @@
 master
-winquest	active, experimental	The replacement for Morgoth
+winquest	inactive, merged		The replacement for Morgoth
 borg		active, experimental	Porting the Borg
 artifacts	inactive, merged		Randarts / halfarts etc.
 mutants		inactive, merged		Mutated monsters

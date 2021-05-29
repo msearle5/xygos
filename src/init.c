@@ -3288,6 +3288,8 @@ static enum parser_error parse_class_spell(struct parser *p) {
 	book->spells[book->num_spells].sfail = parser_getint(p, "fail");
 	book->spells[book->num_spells].sexp = parser_getint(p, "exp");
 	book->spells[book->num_spells].stat = parser_getint(p, "stat");
+	if (parser_hasval(p, "failmsg"))
+		book->spells[book->num_spells].failmsg = string_make(parser_getsym(p, "failmsg"));
 	book->num_spells++;
 	return PARSE_ERROR_NONE;
 }
@@ -3473,7 +3475,7 @@ void init_parse_magic(struct parser *p)
 {
 	parser_reg(p, "magic uint first uint weight", parse_class_magic);
 	parser_reg(p, "book sym name", parse_class_book);
-	parser_reg(p, "spell sym name int level int fail int exp int stat rand hp rand turns",
+	parser_reg(p, "spell sym name int level int fail int exp int stat rand hp rand turns ?sym failmsg",
 			   parse_class_spell);
 	parser_reg(p, "seffect sym eff ?sym type ?int radius ?int other", parse_class_effect);
 	parser_reg(p, "seffect-yx int y int x", parse_class_effect_yx);

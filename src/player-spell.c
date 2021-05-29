@@ -39,13 +39,13 @@
  */
 static const int adj_mag_fail[STAT_RANGE] =
 {
-	99	/* 3 */,
-	99	/* 4 */,
-	99	/* 5 */,
-	99	/* 6 */,
-	99	/* 7 */,
-	50	/* 8 */,
-	30	/* 9 */,
+	75	/* 3 */,
+	60	/* 4 */,
+	50	/* 5 */,
+	42	/* 6 */,
+	35	/* 7 */,
+	30	/* 8 */,
+	25	/* 9 */,
 	20	/* 10 */,
 	15	/* 11 */,
 	12	/* 12 */,
@@ -454,7 +454,23 @@ bool spell_cast(int spell_index, int dir, struct command *cmd)
 	/* Fail or succeed */
 	if (randint0(100) < chance) {
 		event_signal(EVENT_INPUT_FLUSH);
-		msg("You failed to concentrate hard enough!");
+
+		/* Default per casting stat */
+		static const char *deffailmsg[STAT_MAX] = {
+			"Your strength proves insufficient!" , // STR
+			"You failed to concentrate hard enough!",	// INT
+			"You failed to concentrate hard enough!",	// WIS
+			"You fumble!", // DEX
+			"Your stamina fails you!", // CON
+			"Your confidence falters!", //CHR
+			"You fail to move quickly enough!", //SPD
+		};
+
+		/* But only use them if the spell doesn't have a message of its own */
+		const char *failmsg = deffailmsg[spell->stat];
+		if (spell->failmsg)
+			failmsg = spell->failmsg;
+		msg(failmsg);
 	} else {
 		/* Cast the spell */
 		if (!effect_do(spell->effect, source_player(), NULL, ident, true, dir,

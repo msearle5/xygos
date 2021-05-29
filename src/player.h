@@ -325,6 +325,7 @@ struct start_item {
 struct class_spell {
 	char *name;
 	char *text;
+	char *failmsg;			/**< Message on failure */
 
 	struct effect *effect;	/**< The spell's effect */
 
