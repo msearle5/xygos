@@ -371,6 +371,7 @@ static int min_fail(struct player *p, const struct class_spell *spell)
 s16b spell_chance(int spell_index)
 {
 	int chance = 100, minfail;
+	int addfail = 0;
 
 	const struct class_spell *spell;
 
@@ -397,28 +398,33 @@ s16b spell_chance(int spell_index)
 
 	/* Necromancers are punished by being on lit squares */
 	if (player_has(player, PF_UNLIGHT) && square_islit(cave, player->grid)) {
-		chance += 25;
+		addfail += 25;
 	}
 
 	/* Fear makes spells harder (before minfail) */
 	/* Note that spells that remove fear have a much lower fail rate than
 	 * surrounding spells, to make sure this doesn't cause mega fail */
-	if (player_of_has(player, OF_AFRAID)) chance += 20;
+	if (player_of_has(player, OF_AFRAID))
+		addfail += 20;
 
 	/* Minimal and maximal failure rate */
 	if (chance < minfail) chance = minfail;
-	if (chance > 50) chance = 50;
 
 	/* Stunning makes spells harder (after minfail) */
-	if (player->timed[TMD_STUN] > 50) {
-		chance += 25;
-	} else if (player->timed[TMD_STUN]) {
-		chance += 15;
+	if (player->timed[TMD_STUN]) {
+		addfail += 15 + ((MIN(player->timed[TMD_STUN], 100)) / 5);
 	}
 
 	/* Amnesia makes spells very difficult */
 	if (player->timed[TMD_AMNESIA]) {
-		chance = 50 + chance / 2;
+		addfail += 50;
+	}
+
+	/* Apply additional fail. This should be equivalent to an extra percentage at
+	 * 0% fail but scale down towards the 95% limit.
+	 */
+	if (chance < 95) {
+		chance += (addfail * (95 - chance)) / 95;
 	}
 
 	/* Always a 5 percent chance of working */

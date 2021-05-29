@@ -10,10 +10,6 @@ BUG: If Triax is killed after all airports are destroyed, the game becomes unwin
 BUG: Bombs (e.g. pineapple) give excess messages - "The X fails to harm the Y." "The X detonates!" "The Y screams!".
 	The first should be removed.
 
-BUG: "You failed to concentrate hard enough" may be inappropriate. Per spell?
-		- with a default per primary stat? With concentrate for INT.
-	- also the 'fail' field doesn't appear to influence fail rate
-
 BUG: "You knock out the MlM" -> "The MlM flees in terror!" -> "The MlM can move again" (after making a move!)
 
 BUG: Delete the savefile, make a new character, check a store's name.
@@ -86,6 +82,10 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+BUG: "You failed to concentrate hard enough" may be inappropriate. Per spell?
+		- with a default per primary stat? With concentrate for INT.
+	Fixed 43b6afaf3f89f4ed34fa534e77043fd23bb68bff
+
 BUG: Ranged attacks from gadgets and pills (at least) hit yourself. Bolts hurt, balls/breaths don't.
 	Or at other times it aims at a fixed point (0,0?) This is the same whether using a dir key or a target.
 	Fixed 6b94c16e257ea1b52c448e991354d7112cf34c52
