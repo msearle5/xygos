@@ -305,10 +305,11 @@ owner:0:0:Travelator
 owner:0:0:Kerbalair
 owner:0:0:Orbit Express
 owner:0:0:Litefast
+owner:0:0:SkyRats
 owner:0:0:Mercury Rising
 owner:0:0:Starhopper
 owner:0:0:Bounce Air
-danger:99:99
+#danger:99:99
 
 store:11:Cyber Salon
 owner:1:0:*

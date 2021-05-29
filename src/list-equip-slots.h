@@ -13,8 +13,8 @@
  */
 /* slot				acid_v	name	weight,	ac,	mention			heavy decribe	describe */
 EQUIP(NONE,			false,	false,	0,		0,	"",				"",				"")
-EQUIP(WEAPON,		false,	false,	0,		0,	"Wielding",		"just lifting",	"attacking monsters with")
-EQUIP(GUN,			false,	false,	0,		0,	"Shooting",		"just holding",	"firing with")
+EQUIP(WEAPON,		false,	false,	0,		0,	"Wielding",		"Just lifting",	"attacking monsters with")
+EQUIP(GUN,			false,	false,	0,		0,	"Firing",		"Just holding",	"firing with")
 EQUIP(LIGHT,		false,	false,	0,		0,	"Light source",	"",				"using to light your way")
 EQUIP(BODY_ARMOR,	true,	true,	6000,	40,	"On %s",		"",				"wearing on your %s")
 EQUIP(CLOAK,		true,	true,	1000,	8,	"On %s",		"",				"wearing on your %s")

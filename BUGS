@@ -1,5 +1,7 @@
 BUGS
 ====
+BUG: Stores which close lose their entrance but don't become ruins. (Only when more than one would?)
+
 BUG: If Triax is killed after all airports are destroyed, the game becomes unwinnable (as you can't go to the station)
 		- Could rebuild if "Orbitable", only offering that destination. 
 	Similarly if Triax is still alive and you are caught in a non-fortress town with its airport gone.
