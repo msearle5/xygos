@@ -5,26 +5,21 @@ BUG: If Triax is killed after all airports are destroyed, the game becomes unwin
 	Similarly if Triax is still alive and you are caught in a non-fortress town with its airport gone.
 		- Send you when you reach the surface to Fortress-town?
 		- Also don't offer flights to a town with no airport
-	- ALthough the simplest way to handle this is just to never destroy airports.
+	- Although the simplest way to handle this is just to never destroy airports.
 
 BUG: Bombs (e.g. pineapple) give excess messages - "The X fails to harm the Y." "The X detonates!" "The Y screams!".
 	The first should be removed.
 
 BUG: "You knock out the MlM" -> "The MlM flees in terror!" -> "The MlM can move again" (after making a move!)
 
-BUG: Delete the savefile, make a new character, check a store's name.
-	  Save, reload. The store name will sometimes have changed.
-	  Save, reload again and it won't.
-	  It does this with or without random names being used for that store,
-	  although it has only been tested with the random name diff in place.
-	  Doesnt happen with a newly rolled char, only a 'based on last' - and the name is then the same as the previous character.
-
 BUG: After the success/failure message from a quest, ESC is the only way to get back out.
-
-BUG: "no position"
 
 Defer
 =====
+
+BUG: "no position"
+	This is a symptom of many possible other issues and hasn't appeared recently - best guess it was just a stale savefile
+	from before an object change.
 
 BUG: Gain a talent (e.g. Cavespeeder Pilot) and you (sometimes) end up Starving (0%)
 	UTR easily (for watchpoints)
@@ -57,6 +52,8 @@ BUG: "angband: gen-cave.c:2009: town_gen: Assertion `grid.x > 0' failed." (= the
 	Flew to another town (2) and there were no complaints.
 	Flew back and it moaned again.
 	In another game though no problem with Sewers. (Or any other.)
+	
+	- possibly fixed by 904f0f5ccba3b6ff50ce44017726cda2feeb91a2 ?
 
 	** related to the following? **
 
@@ -82,6 +79,16 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+BUG: Delete the savefile, make a new character, check a store's name.
+	  Save, reload. The store name will sometimes have changed.
+	  Save, reload again and it won't.
+	  It does this with or without random names being used for that store,
+	  although it has only been tested with the random name diff in place.
+	  Doesnt happen with a newly rolled char, only a 'based on last' - and the name is then the same as the previous character.
+		world.c:world_init_towns(): shuffle(geog, sizeof(geog) / sizeof(*geog)); triggers it. (Remove this and it's OK)
+		This function is not called though except at start.
+		Fixed 904f0f5ccba3b6ff50ce44017726cda2feeb91a2
+
 BUG: "You failed to concentrate hard enough" may be inappropriate. Per spell?
 		- with a default per primary stat? With concentrate for INT.
 	Fixed 43b6afaf3f89f4ed34fa534e77043fd23bb68bff
