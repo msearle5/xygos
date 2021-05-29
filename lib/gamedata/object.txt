@@ -3666,7 +3666,7 @@ pile:100:1d2
 alloc:20:40 to 100
 pile:70:1d3
 power:8
-effect:RANDOM
+effect:SELECT
 dice:2
 effect:BREATH:FIRE:0:20
 dice:80
@@ -4065,7 +4065,7 @@ armor:0:0
 charges:1+d3
 flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 power:12
-effect:RANDOM
+effect:SELECT
 dice:5
 effect:ARC:ACID:0:30
 dice:160

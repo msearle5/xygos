@@ -33,6 +33,7 @@
 #include "ui-context.h"
 #include "ui-fault.h"
 #include "ui-display.h"
+#include "ui-effect.h"
 #include "ui-help.h"
 #include "ui-keymap.h"
 #include "ui-knowledge.h"
@@ -110,7 +111,7 @@ static ui_event inkey_aux(int scan_cutoff)
 struct keypress *inkey_next = NULL;
 
 /**
- * See if more propmts will be skipped while in a keymap.
+ * See if more prompts will be skipped while in a keymap.
  */
 static bool keymap_auto_more;
 
@@ -1370,6 +1371,7 @@ void textui_input_init(void)
 	get_rep_dir_hook = textui_get_rep_dir;
 	get_aim_dir_hook = textui_get_aim_dir;
 	get_spell_hook = textui_get_spell;
+	get_effect_from_list_hook = textui_get_effect_from_list;
 	get_item_hook = textui_get_item;
 	get_fault_hook = textui_get_fault;
 	get_panel_hook = textui_get_panel;

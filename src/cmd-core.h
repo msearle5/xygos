@@ -334,6 +334,9 @@ int cmd_get_string(struct command *cmd, const char *arg, const char **str,
 				   const char *initial, const char *title, const char *prompt);
 int cmd_get_spell(struct command *cmd, const char *arg, int *spell,
 				  const char *verb, const char *error, bool (*spell_filter)(int spell));
+int cmd_get_effect_from_list(struct command *cmd, const char *arg, int *choice,
+	const char *prompt, struct effect *effect, int count,
+	bool allow_random);
 
 void process_command(cmd_context ctx, struct command *cmd);
 #endif
