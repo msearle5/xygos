@@ -1144,7 +1144,7 @@ dice:50+7d7
 effect:NOURISH:INC_BY
 dice:5
 
-name:Fast Recovery
+name:recovery
 type:mushroom
 graphics:,:d
 level:0
@@ -1162,7 +1162,7 @@ effect:CURE:BLIND
 effect:NOURISH:INC_BY
 dice:5
 
-name:Vigor
+name:restorative
 type:mushroom
 graphics:,:d
 level:0
@@ -1261,16 +1261,16 @@ effect:NOURISH:INC_BY
 dice:5
 desc:Its poison turns your skin to stone, albeit briefly.
 
-name:Turbulence
-type:mushroom
-graphics:,:d
-level:0
-weight:1
-cost:60
+#name:Turbulence
+#type:mushroom
+#graphics:,:d
+#level:0
+#weight:1
+#cost:60
 #alloc:10:5 to 100
-pile:70:1d4
+#pile:70:1d4
 #E:SHROOM_TURB
-pval:500
+#pval:500
 
 name:Debility
 type:mushroom
@@ -1302,7 +1302,7 @@ effect:NOURISH:INC_BY
 dice:5
 desc:It hastes you for a while, but then makes you slower for a while afterward.
 
-name:Purging
+name:purging
 type:mushroom
 graphics:,:d
 level:0
@@ -1317,9 +1317,11 @@ dice:5
 effect:RESTORE_STAT:STR
 effect:RESTORE_STAT:CON
 effect:CURE:POISONED
-desc:It makes you very hungry but otherwise healthy.
+effect:TIMED_INC:PARALYZED
+dice:1+1d2
+desc:It makes you puke, leaving you very hungry but otherwise healthy.
 
-name:Shadows
+name:shadow
 type:mushroom
 graphics:,:d
 level:0
@@ -1985,6 +1987,19 @@ flags:IGNORE_ACID
 desc:A pair of boots which uses chunky plastic mesh armoring to provide a lot of protection without being too heavy.
 material:plastic
 
+name:& pair~ of force skates
+type:boots
+graphics:]:Violet
+level:33
+weight:40g
+cost:2200
+alloc:4:30 to 100
+attack:0d0:0:0
+armor:0:1+d5M18
+flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD 
+desc:A pair of slim titanium chains, fitting closely around your ankles. At first sight they just appear to be jewellery. However they contain miniaturized forcefield generators - second cousin to the more well known belt devices - and some models can provide more protection than heavily armored boots, while weighing almost nothing.
+material:titanium
+
 name:& pair~ of titanium boots
 type:boots
 graphics:]:Gray75
@@ -2010,20 +2025,6 @@ armor:12:0
 flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 desc:A real rarity - a pair of glittering, faceted boots with the unmistakable blue sheen of unobtainium. Highly effective protection, yet you would hardly know from the weight that they were armored at all.
 material:unobtainium
-
-name:& pair~ of force skates
-type:boots
-graphics:]:Violet
-level:33
-weight:40g
-cost:2200
-alloc:4:30 to 100
-attack:0d0:0:0
-armor:0:1+d5M18
-flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD 
-desc:A pair of slim titanium chains, fitting closely around your ankles. At first sight they just appear to be jewellery. However they contain miniaturized forcefield generators - second cousin to the more well known belt devices - and some models can provide more protection than heavily armored boots, while weighing almost nothing.
-material:titanium
-
 
 
 ### Headgear ###
@@ -2279,6 +2280,19 @@ attack:1d1:0:0
 armor:3:0
 desc:A set of gloves that completely covers the hand and wrist in steel plating.
 material:steel
+
+name:& pair~ of force bangles
+type:gloves
+graphics:]:Violet
+level:46
+weight:30g
+cost:5500
+alloc:3:40 to 100
+attack:0d0:0:0
+armor:0:3+d6M24
+flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD 
+desc:Two titanium rings, sized to fit on your wrists. A fashion statement and effective protection for your arms and hands, through miniaturized forcefield generators - similar to the more common belt forcefield generators. The more powerful specimens can easily provide more protection than heavy steel gauntlets could, while weighing almost nothing.
+material:titanium
 
 ### Shields ###
 
@@ -5039,7 +5053,7 @@ cost:45
 alloc:10:2 to 100
 attack:2d5:0:0
 armor:0:0
-material:wood
+material:plastic
 desc:A tub-shaped container made of thick, grey plastic with a chunky combination lock.
 
 name:& large wooden crate~
