@@ -1129,7 +1129,7 @@ desc:This is a dirty brown color; you don't trust it.
 
 ### The shrooms, an interesting collection ###
 
-name:Second Sight
+name:insight
 type:mushroom
 graphics:,:d
 level:0
@@ -1272,7 +1272,7 @@ desc:Its poison turns your skin to stone, albeit briefly.
 #E:SHROOM_TURB
 #pval:500
 
-name:Debility
+name:debility
 type:mushroom
 graphics:,:d
 level:0
@@ -1287,7 +1287,7 @@ dice:2
 effect:DRAIN_STAT:STR
 effect:DRAIN_STAT:CON
 
-name:Sprinting
+name:sprinting
 type:mushroom
 graphics:,:d
 level:0
@@ -4311,7 +4311,7 @@ effect-yx:22:40
 
 ### Healing ###
 
-name:Curing
+name:curing
 type:device
 graphics:_:d
 level:25
@@ -4328,7 +4328,7 @@ effect:CURE:POISONED
 effect:CURE:STUN
 effect:CURE:CONFUSED
 
-name:Cure Light Wounds
+name:first aid
 type:device
 graphics:_:d
 level:5
@@ -4347,7 +4347,7 @@ dice:20
 effect:TIMED_DEC:CONFUSED
 dice:20
 
-name:Healing
+name:healing
 type:device
 graphics:_:d
 level:70
@@ -4385,7 +4385,7 @@ power:9
 effect:PROJECT_LOS:DISP_EVIL:0:1
 dice:60
 
-name:Banishment
+name:exterminator
 type:device
 graphics:_:d
 level:70
@@ -4718,7 +4718,7 @@ effect:BOLT_AWARE:MON_SLOW
 dice:10+1d20
 time:40
 
-name:Hold Monster
+name:& paralator~
 type:gadget
 graphics:-:d
 level:30
@@ -4791,7 +4791,7 @@ time:1000
 
 ### Other ###
 
-name:Polymorph
+name:& auto transmogrificator~
 type:gadget
 graphics:-:d
 level:35
@@ -4806,7 +4806,7 @@ dice:$B
 expr:B:PLAYER_LEVEL:+ 0
 time:25
 
-name:Drain Life
+name:& repeating death ray~
 type:gadget
 graphics:-:d
 level:75
@@ -4820,7 +4820,7 @@ effect:BOLT_STATUS_DAM:MON_DRAIN
 dice:150
 time:23
 
-name:Teleport Other
+name:& auto transporter beam~
 type:gadget
 graphics:-:d
 level:45
@@ -4835,7 +4835,7 @@ dice:$B
 expr:B:MAX_SIGHT:* 5
 time:25
 
-name:Disable Traps
+name:& auto deboobilizer~
 type:gadget
 graphics:-:d
 level:35
@@ -4848,7 +4848,7 @@ power:7
 effect:ALTER:KILL_TRAP
 time:30
 
-name:Light
+name:& searchlight~
 type:gadget
 graphics:-:d
 level:10
@@ -4863,7 +4863,7 @@ effect:LINE:LIGHT_WEAK
 dice:6d8
 time:9
 
-name:Illumination
+name:& floodlight~
 type:gadget
 graphics:-:d
 level:20
@@ -4878,7 +4878,7 @@ effect:SPOT:LIGHT_WEAK:2
 dice:2d8
 time:30
 
-name:Recall
+name:& recall beacon~
 type:gadget
 graphics:-:d
 level:30
@@ -4892,7 +4892,7 @@ power:15
 effect:RECALL
 time:60
 
-name:Speed
+name:& whizz module~
 type:gadget
 graphics:-:d
 level:95
@@ -5130,25 +5130,6 @@ attack:2d6:0:0
 armor:0:0
 desc:A large and extremely heavy metal cabinet with an electronic lock.
 material:steel
-
-##### Dragon Scale Mail #####
-
-name:Black Dragon Scale Mail~
-type:dragon armor
-graphics:[:s
-level:50
-weight:120
-cost:40000
-alloc:8:35 to 100
-attack:2d4:-2:0
-armor:16:10
-flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
-values:RES_ACID[1]
-power:11
-effect:BREATH:ACID:0:20
-dice:120
-time:50
-desc:A suit of utterly black scales, against which no metal or wood can rest.
 
 
 ##### Gold/gems #####

@@ -103,7 +103,6 @@ buy:shield
 buy:cloak
 buy:soft armor
 buy:hard armor
-buy:dragon armor
 
 # Weaponsmith
 store:3:Weapon Smiths
