@@ -396,8 +396,8 @@ static bool get_move_bodyguard(struct chunk *c, struct monster *mon)
 static bool get_move_advance(struct chunk *c, struct monster *mon, bool *track)
 {
 	int i;
-	struct loc decoy = cave_find_decoy(c);
-	struct loc target = loc_is_zero(decoy) ? player->grid : decoy;
+	struct loc target = monster_is_decoyed(mon) ? player->grid :
+		cave_find_decoy(c);
 
 	int base_hearing = mon->race->hearing
 		- player->state.skills[SKILL_STEALTH] / 3;
@@ -839,8 +839,8 @@ static int get_move_choose_direction(struct loc offset)
  */
 static bool get_move(struct chunk *c, struct monster *mon, int *dir, bool *good)
 {
-	struct loc decoy = cave_find_decoy(c);
-	struct loc target = loc_is_zero(decoy) ? player->grid : decoy;
+	struct loc target = monster_is_decoyed(mon) ? player->grid :
+		cave_find_decoy(c);
 	bool group_ai = rf_has(mon->race->flags, RF_GROUP_AI);
 
 	/* Offset to current position to move toward */
