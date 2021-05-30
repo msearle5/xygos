@@ -1932,10 +1932,15 @@ static void describe_flavor_text(textblock *tb, const struct object *obj,
 		}
 
 		/* Display an additional ego-item description */
-		if ((ego || (obj->known->ego != NULL)) && obj->ego && obj->ego->text) {
-			if (did_desc) textblock_append(tb, "  ");
-			textblock_append(tb, "%s\n\n", obj->ego->text);
-		} else if (did_desc) {
+		bool did_ego = false;
+		for(int i=0;i<MAX_EGOS;i++) {
+			if ((ego || (obj->known->ego[i] != NULL)) && obj->ego[i] && obj->ego[i]->text) {
+				if (did_desc) textblock_append(tb, "  ");
+				textblock_append(tb, "%s\n\n", obj->ego[i]->text);
+				did_ego = true;
+			}
+		}
+		if ((!did_ego) && (did_desc)) {
 			textblock_append(tb, "\n\n");
 		}
 	}
@@ -2013,7 +2018,8 @@ static textblock *object_info_out(const struct object *obj, int mode)
 	if (describe_misc_magic(tb, flags)) something = true;
 	if (describe_light(tb, obj, mode)) something = true;
 	if (describe_player_flags(tb, obj, mode)) something = true;
-	if (ego && describe_ego(tb, obj->ego)) something = true;
+	for(int i=0;i<MAX_EGOS;i++)
+		if (ego && describe_ego(tb, obj->ego[i])) something = true;
 	if (something) textblock_append(tb, "\n");
 
 	/* Skip all the very specific information where we are giving general
@@ -2073,7 +2079,7 @@ textblock *object_info_ego(struct ego_item *ego)
 	obj.kind = kind;
 	obj.tval = kind->tval;
 	obj.sval = kind->sval;
-	obj.ego = ego;
+	obj.ego[0] = ego;
 	ego_apply_magic(&obj, 0);
 
 	object_copy(&known_obj, &obj);

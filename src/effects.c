@@ -564,7 +564,7 @@ void brand_object(struct object *obj, const char *name)
 	bool ok = false;
 
 	/* You can never modify artifacts, ego items or worthless items */
-	if (obj && obj->kind->cost && !obj->artifact && !obj->ego) {
+	if (obj && obj->kind->cost && !obj->artifact && !obj->ego[0]) {
 		char o_name[80];
 		char brand[20];
 
@@ -593,7 +593,7 @@ void brand_object(struct object *obj, const char *name)
 		assert(ok);
 
 		/* Make it an ego item */
-		obj->ego = &e_info[i];
+		obj->ego[0] = &e_info[i];
 		ego_apply_magic(obj, 0);
 		player_know_object(player, obj);
 
@@ -5667,7 +5667,7 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 	}
 
 	/* Easymod or Maximod printers are easier to use */
-	bool easymode = (printer->ego && (my_stristr(printer->ego->name, "Easy") || my_stristr(printer->ego->name, "Maxi")));
+	bool easymode = ((obj_has_ego(printer, "Easy")) || (obj_has_ego(printer, "Maxi")));
 
 	/* Scan item kinds.
 	 * Get a list of printable items.
@@ -6003,8 +6003,10 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 				 * more, depending on a high-difficulty roll.
 				 */
 				bool save = false;
-				if (printer->ego && (my_stristr(printer->ego->name, "Dura") || my_stristr(printer->ego->name, "Maxi")))
-					save = (!of_has(printer->flags, OF_FRAGILE));
+				if (!of_has(printer->flags, OF_FRAGILE)) {
+					if ((obj_has_ego(printer, "Dura")) || (obj_has_ego(printer, "Maxi")))
+						save = true;
+				}
 				if (save) {
 					msg("The printer smokes, chokes and nearly tears itself apart!");
 					if (randint0(10000) < 3000 + diff) {

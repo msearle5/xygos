@@ -506,10 +506,12 @@ static void wiz_display_item(const struct object *obj, bool all)
 	           obj->kind->kidx, obj->tval, obj->sval, obj->weight,
 			   obj->timeout), 5, j);
 
-	prt(format("number = %-3d  pval = %-5d  name1 = %-4d  egoidx = %-4d  cost = %ld",
+	assert(MAX_EGOS >= 2);
+	prt(format("number = %-3d  pval = %-5d  name1 = %-4d  egoidx = %-4d %-4d  cost = %ld",
 			   obj->number, obj->pval,
 			   obj->artifact ? obj->artifact->aidx : 0,
-			   obj->ego ? obj->ego->eidx : 0,
+			   obj->ego[0] ? obj->ego[0]->eidx : 0,
+			   obj->ego[1] ? obj->ego[1]->eidx : 0,
 			   (long)object_value(obj, 1)), 6, j);
 
 	prt("+------------FLAGS------------------+", 16, j);
@@ -655,14 +657,14 @@ static void wiz_create_item_drop_object(struct object *obj, bool id)
 /** Create one item for every ego */
 static void do_cmd_wiz_egos(void)
 {
-	struct start_item item = { 0, 0, 1, 1, NULL, NULL, NULL };
+	struct start_item item = { 0, 0, 1, 1 };
 	for (int i = 1; i < z_info->e_max; i++) {
 		if (e_info[i].poss_items) {
 			struct poss_item *poss = e_info[i].poss_items;
 			while (poss->next) poss = poss->next;
 			item.tval = k_info[poss->kidx].tval;
 			item.sval = k_info[poss->kidx].sval;
-			item.ego = e_info+i;
+			item.ego[0] = e_info+i;
 			add_start_items(player, &item, false, false, ORIGIN_CHEAT);
 		}
 	}
@@ -962,20 +964,20 @@ static void wiz_tweak_item(struct object *obj)
 	/* Get ego name */
 	p = "Enter new ego item: ";
 	strnfmt(tmp_val, sizeof(tmp_val), "0");
-	if (obj->ego) {
-		strnfmt(tmp_val, sizeof(tmp_val), "%s", obj->ego->name);
+	if (obj->ego[0]) {
+		strnfmt(tmp_val, sizeof(tmp_val), "%s", obj->ego[0]->name);
 	}
 	if (!get_string(p, tmp_val, 30)) return;
 
 	/* Accept index or name */
 	val = get_idx_from_name(tmp_val);
 	if (val) {
-		obj->ego = &e_info[val];
+		obj->ego[0] = &e_info[val];
 	} else {
-		obj->ego = lookup_ego_item(tmp_val, obj->tval, obj->sval);
+		obj->ego[0] = lookup_ego_item(tmp_val, obj->tval, obj->sval);
 	}
-	if (obj->ego) {
-		struct ego_item *e = obj->ego;
+	if (obj->ego[0]) {
+		struct ego_item *e = obj->ego[0];
 		struct object *prev = obj->prev;
 		struct object *next = obj->next;
 		struct object *known = obj->known;
@@ -984,7 +986,7 @@ static void wiz_tweak_item(struct object *obj)
 		bitflag notice = obj->notice;
 
 		object_prep(obj, obj->kind, player->depth, RANDOMISE);
-		obj->ego = e;
+		obj->ego[0] = e;
 		obj->prev = prev;
 		obj->next = next;
 		obj->known = known;
@@ -1018,7 +1020,8 @@ static void wiz_tweak_item(struct object *obj)
 		struct loc grid = obj->grid;
 		bitflag notice = obj->notice;
 
-		obj->ego = NULL;
+		for(int i=0;i<MAX_EGOS;i++)
+			obj->ego[i] = NULL;
 		object_prep(obj, obj->kind, obj->artifact->alloc_min, RANDOMISE);
 		obj->artifact = a;
 		obj->prev = prev;

@@ -588,8 +588,17 @@ bool object_is_known_artifact(const struct object *obj)
 bool object_is_known_ego(const struct object *obj)
 {
 	if (!obj->known) return false;
-	if (!obj->known->ego) return false;
-	return player_knows_ego(player, obj->ego, obj);
+	bool anyego = false;
+	for(int i=0;i<MAX_EGOS;i++)
+		if (obj->known->ego[i])
+			anyego = true;
+	if (!anyego) return false;
+
+	for(int i=0;i<MAX_EGOS;i++) {
+		if (player_knows_ego(player, obj->ego[i], obj))
+			return true;
+	}
+	return false;
 }
 
 /**
@@ -1166,9 +1175,11 @@ void player_know_object(struct player *p, struct object *obj)
 	}
 
 	/* Set ego type, jewellery type if known */
-	if (player_knows_ego(p, obj->ego, obj)) {
-		seen = obj->ego->everseen;
-		obj->known->ego = obj->ego;
+	for(int i=0;i<MAX_EGOS;i++) {
+		if (player_knows_ego(p, obj->ego[i], obj)) {
+			seen = obj->ego[i]->everseen;
+			obj->known->ego[i] = obj->ego[i];
+		}
 	}
 
 	/* Ensure effect is known as if object_set_base_known() had been called. */

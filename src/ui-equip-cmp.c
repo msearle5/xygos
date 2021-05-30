@@ -1344,8 +1344,8 @@ static char *set_short_name(const struct object *obj, size_t length)
 	if (obj->known && obj->known->artifact) {
 		nmsrc = obj->known->artifact->name;
 		tail = true;
-	} else if (obj->known && obj->known->ego) {
-		nmsrc = obj->known->ego->name;
+	} else if (obj->known && obj->known->ego[0]) {
+		nmsrc = obj->known->ego[0]->name;
 		tail = true;
 	} else {
 		object_desc(buf, N_ELEMENTS(buf), obj, ODESC_COMBAT |

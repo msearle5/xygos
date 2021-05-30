@@ -105,7 +105,7 @@ static struct object *rd_item(void)
 
 	byte tmp8u;
 	u16b tmp16u;
-	byte effect;
+	s16b effect;
 	size_t i;
 	char buf[128];
 	byte ver = 1;
@@ -145,15 +145,18 @@ static struct object *rd_item(void)
 			return NULL;
 		}
 	}
-	rd_string(buf, sizeof(buf));
-	if (buf[0]) {
-		obj->ego = lookup_ego_item(buf, obj->tval, obj->sval);
-		if (!obj->ego) {
-			note(format("Couldn't find ego item %s!", buf));
-			return NULL;
+
+	for(int i=0;i<MAX_EGOS;i++) {
+		rd_string(buf, sizeof(buf));
+		if (buf[0]) {
+			obj->ego[i] = lookup_ego_item(buf, obj->tval, obj->sval);
+			if (!obj->ego[i]) {
+				note(format("Couldn't find ego item %s!", buf));
+				return NULL;
+			}
 		}
 	}
-	rd_byte(&effect);
+	rd_s16b(&effect);
 
 	rd_s16b(&obj->timeout);
 
@@ -254,11 +257,18 @@ static struct object *rd_item(void)
 	}
 
 	/* Set effect */
-	if (effect && obj->ego)
-		obj->effect = obj->ego->effect;
-
-	if (effect && !obj->effect)
-		obj->effect = obj->kind->effect;
+	obj->effect = NULL;
+	if (effect < 0) {
+		if (effect == SHRT_MIN) {
+			obj->effect = obj->kind->effect;
+		} else if (effect < -MAX_EGOS) {
+			note(format("Bad effect %d!", effect));
+		} else if (!obj->ego) {
+			note(format("Bad effect %d, no ego!", effect));
+		} else {
+			obj->effect = obj->ego[-effect]->effect;
+		}
+	}
 
 	/* Success */
 	return obj;

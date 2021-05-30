@@ -105,16 +105,35 @@ static void wr_item(const struct object *obj)
 		wr_string("");
 	}
 
-	if (obj->ego) {
-		wr_string(obj->ego->name);
-	} else {
-		wr_string("");
+	for(int i=0;i<MAX_EGOS;i++) {
+		if (obj->ego[i]) {
+			wr_string(obj->ego[i]->name);
+		} else {
+			wr_string("");
+		}
 	}
 
-	if (obj->effect)
-		wr_byte(1);
+	/* Effects are stored as:
+	 * 0 if no effect
+	 * -N for effect matching an ego
+	 * Other -ve for effect matching kind
+	 * +ve for other effects
+	 */
+	if (obj->effect) {
+		s16b effect = 1;
+		if (obj->effect == obj->kind->effect) {
+			effect = SHRT_MIN;
+		} else {
+			for(int i=0;i<MAX_EGOS;i++) {
+				if (obj->ego[i]->effect == obj->effect) {
+					effect = -i;
+				}
+			}
+		}
+		wr_s16b(effect);
+	}
 	else
-		wr_byte(0);
+		wr_s16b(0);
 
 	wr_s16b(obj->timeout);
 

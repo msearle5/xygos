@@ -314,7 +314,7 @@ struct start_item {
 	int sval;	/**< Object sub-type  */
 	int min;	/**< Minimum starting amount */
 	int max;	/**< Maximum starting amount */
-	struct ego_item *ego;		/** Ego to apply, or NULL */
+	struct ego_item *ego[MAX_EGOS];		/** Ego(s) to apply, or NULL */
 	int *eopts;     /**< Indices (zero terminated array) for birth options which can exclude item */
 	struct start_item *next;
 };

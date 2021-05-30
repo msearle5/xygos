@@ -432,7 +432,7 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 
 
 	/* has see invis */
-	if (of_has(obj->flags, OF_SEE_INVIS)){
+	if (of_has(obj->flags, OF_SEE_INVIS)) {
 
 		add_stats(ST_SI_EQUIPMENT, vault, mon, number);
 		first_find(ST_FF_SI);
@@ -441,7 +441,7 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
  	if ((obj->el_info[ELEM_ACID].res_level == 1) ||
 		(obj->el_info[ELEM_ELEC].res_level == 1) ||
 		(obj->el_info[ELEM_COLD].res_level == 1) ||
-		(obj->el_info[ELEM_FIRE].res_level == 1)){
+		(obj->el_info[ELEM_FIRE].res_level == 1)) {
 
 			add_stats(ST_RESIST_EQUIPMENT, vault, mon, number);
 	}
@@ -454,27 +454,27 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 		add_stats(ST_RBASE_EQUIPMENT, vault, mon, number);
 
 	/* has resist poison */
-	if (obj->el_info[ELEM_POIS].res_level == 1){
+	if (obj->el_info[ELEM_POIS].res_level == 1) {
 
 		add_stats(ST_RPOIS_EQUIPMENT, vault, mon, number);
 		first_find(ST_FF_RPOIS);
 		
 	}
 	/* has resist nexus */
-	if (obj->el_info[ELEM_NEXUS].res_level == 1){
+	if (obj->el_info[ELEM_NEXUS].res_level == 1) {
 
 		add_stats(ST_RNEXUS_EQUIPMENT, vault, mon, number);
 		first_find(ST_FF_RNEXUS);
 	}
 	/* has resist blind */
-	if (of_has(obj->flags, OF_PROT_BLIND)){
+	if (of_has(obj->flags, OF_PROT_BLIND)) {
 
 		add_stats(ST_RBLIND_EQUIPMENT, vault, mon, number);
 		first_find(ST_FF_RBLIND);
 	}
 
 	/* has resist conf */
-	if (of_has(obj->flags, OF_PROT_CONF)){
+	if (of_has(obj->flags, OF_PROT_CONF)) {
 
 		add_stats(ST_RCONF_EQUIPMENT, vault, mon, number);
 		first_find(ST_FF_RCONF);
@@ -485,13 +485,13 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 		add_stats(ST_SPEED_EQUIPMENT, vault, mon, number);
 
 	/* has telepathy */
-	if (of_has(obj->flags, OF_TELEPATHY)){
+	if (of_has(obj->flags, OF_TELEPATHY)) {
 
 		add_stats(ST_TELEP_EQUIPMENT, vault, mon, number);
 		first_find(ST_FF_TELEP);
 	}
 
-	switch(obj->tval){
+	switch(obj->tval) {
 
 		/* armor */
 		case TV_BOOTS:
@@ -501,7 +501,7 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 		case TV_CLOAK:
 		case TV_BELT:
 		case TV_SOFT_ARMOR:
-		case TV_HARD_ARMOR:{
+		case TV_HARD_ARMOR: {
 
 			/* do not include artifacts */
 			if (obj->artifact) break;
@@ -545,7 +545,7 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 		case TV_DIGGING:
 		case TV_HAFTED:
 		case TV_POLEARM:
-		case TV_SWORD:{
+		case TV_SWORD: {
 
 			/* do not include artifacts */
 			if (obj->artifact) break;
@@ -562,36 +562,36 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 				add_stats(ST_GOOD_WEAPONS, vault, mon, number);
 
 			/* Egos by name - changes results a little */
-			if (obj->ego) {
+			if (obj->ego[0]) {
 				/* slay evil */
-				if (strstr(obj->ego->name, "of Slay Evil"))
+				if (obj_has_ego(obj, "of Slay Evil"))
 					add_stats(ST_SLAYEVIL_WEAPONS, vault, mon, number);
 
 				/* slay weapons */
-				else if (strstr(obj->ego->name, "of Slay"))
+				else if (obj_has_ego(obj, "of Slay"))
 					add_stats(ST_SLAY_WEAPONS, vault, mon, number);
 				/* kill flag */
-				if (strstr(obj->ego->name, "of *Slay"))
+				if (obj_has_ego(obj, "of *Slay"))
 					add_stats(ST_KILL_WEAPONS, vault, mon, number);
 
 				/* determine westernesse by flags */
-				if (strstr(obj->ego->name, "Westernesse"))
+				if (obj_has_ego(obj, "Westernesse"))
 					add_stats(ST_WESTERNESSE_WEAPONS, vault, mon, number);
 
 				/* determine defender by flags */
-				if (strstr(obj->ego->name, "Defender"))
+				if (obj_has_ego(obj, "Defender"))
 					add_stats(ST_DEFENDER_WEAPONS, vault, mon, number);
 
 				/* determine gondolin by flags */
-				if (strstr(obj->ego->name, "Gondolin"))
+				if (obj_has_ego(obj, "Gondolin"))
 					add_stats(ST_GONDOLIN_WEAPONS, vault, mon, number);
 
 				/* determine holy avenger by flags */
-				if (strstr(obj->ego->name, "Avenger"))
+				if (obj_has_ego(obj, "Avenger"))
 					add_stats(ST_HOLY_WEAPONS, vault, mon, number);
 
 				/* is morgul */
-				if (strstr(obj->ego->name, "Morgul"))
+				if (obj_has_ego(obj, "Morgul"))
 					add_stats(ST_MORGUL_WEAPONS, vault, mon, number);
 			}
 
@@ -626,7 +626,7 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 		}
 
 		/* launchers */
-		case TV_GUN:{
+		case TV_GUN: {
 
 			/* do not include artifacts */
 			if (obj->artifact) break;
@@ -667,7 +667,7 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 		}
 
 		/* pill */
-		case TV_PILL:{
+		case TV_PILL: {
 
 			/* Add total amounts */
 			add_stats(ST_PILLS, vault, mon, number);
@@ -695,7 +695,7 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 		}
 
 		/* cards */
-		case TV_CARD:{
+		case TV_CARD: {
 
 			/* add total amounts */
 			add_stats(ST_CARDS, vault, mon, number);
@@ -738,7 +738,7 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 		}
 
 		/* devices */
-		case TV_DEVICE:{
+		case TV_DEVICE: {
 
 			add_stats(ST_DEVICES, vault, mon, number);
 
@@ -758,7 +758,7 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 			break;
 		}
 
-		case TV_WAND:{
+		case TV_WAND: {
 
 			add_stats(ST_WANDS, vault, mon, number);
 
@@ -769,7 +769,7 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 
 		case TV_AMMO_6:
 		case TV_AMMO_9:
-		case TV_AMMO_12:{
+		case TV_AMMO_12: {
 
 			add_stats(ST_AMMO, vault, mon, number);
 
@@ -794,57 +794,62 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 				if (obj->ego) {
 					add_stats(ST_AWESOME_AMMO, vault, mon, number);
 
-					if (strstr(obj->ego->name, "of Slay Evil"))
+					if (obj_has_ego(obj, "of Slay Evil"))
 						add_stats(ST_SLAYEVIL_AMMO, vault, mon, number);
 
-					if (strstr(obj->ego->name, "of Holy Might"))
+					if (obj_has_ego(obj, "of Holy Might"))
 						add_stats(ST_HOLY_AMMO, vault, mon, number);
 				}
 			}
 			break;
 		}
 	}
-	/* check to see if we have an ego */
-	if (obj->ego){
 
-		/* add to ego level total */
-		ego_total[lvl] += addval;
+	/* check to see if we have an ego
+	 * TODO: treat multi-egos differently
+	 **/
+	for(int i=0;i<MAX_EGOS;i++) {
+		if (obj->ego[i]) {
 
-		/* add to the ego iteration total */
-		if (iter < TRIES_SIZE) ego_it[iter]++;
+			/* add to ego level total */
+			ego_total[lvl] += addval;
 
-		/* Obtain the ego info */
-		struct ego_item *ego = obj->ego;
+			/* add to the ego iteration total */
+			if (iter < TRIES_SIZE) ego_it[iter]++;
 
-		/* ego is shallow */
-		if (ego->alloc_min < (player->depth / 2)) ego_shal[lvl] += addval;
+			/* Obtain the ego info */
+			struct ego_item *ego = obj->ego[i];
 
-		/* artifact is close to the player depth */
-		if ((ego->alloc_min >= player->depth / 2) &&
-			(ego->alloc_min <= player->depth )) ego_ave[lvl] += addval;
+			/* ego is shallow */
+			if (ego->alloc_min < (player->depth / 2)) ego_shal[lvl] += addval;
 
-		/* artifact is out of depth */
-		if (ego->alloc_min > (player->depth)) ego_ood[lvl] += addval;
+			/* artifact is close to the player depth */
+			if ((ego->alloc_min >= player->depth / 2) &&
+				(ego->alloc_min <= player->depth )) ego_ave[lvl] += addval;
 
-		/* did it come from a monster? */
-		if (mon) ego_mon[lvl] += addval;
+			/* artifact is out of depth */
+			if (ego->alloc_min > (player->depth)) ego_ood[lvl] += addval;
 
-		/* did it come from a unique? */
-		if (uniq) ego_uniq[lvl] += addval;
+			/* did it come from a monster? */
+			if (mon) ego_mon[lvl] += addval;
 
-		/* was it in a vault? */
-		if (vault){
-			/* did a monster drop it ?*/
-			if ((mon) || (uniq)) ego_mon_vault[lvl] += addval;
-			else ego_vault[lvl] += addval;
-		} else {
-			/* was it just lyin' on the floor? */
-			if ((!uniq) && (!mon)) ego_floor[lvl] += addval;
+			/* did it come from a unique? */
+			if (uniq) ego_uniq[lvl] += addval;
+
+			/* was it in a vault? */
+			if (vault){
+				/* did a monster drop it ?*/
+				if ((mon) || (uniq)) ego_mon_vault[lvl] += addval;
+				else ego_vault[lvl] += addval;
+			} else {
+				/* was it just lyin' on the floor? */
+				if ((!uniq) && (!mon)) ego_floor[lvl] += addval;
+			}
 		}
 	}
 
 	/* check to see if we have an artifact */
-	if (obj->artifact){
+	if (obj->artifact) {
 
 		/* add to artifact level total */
 		art_total[lvl] += addval;
@@ -898,7 +903,7 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 	}
 
 	/* Get info on gold. */
-	if (obj->tval == TV_GOLD){
+	if (obj->tval == TV_GOLD) {
 
 		int temp = obj->pval;
 		gold_temp = temp;
@@ -1435,6 +1440,7 @@ static void ego_stats(void)
 	int *egos = mem_zalloc(sizeof(int) * sizeof(levels));
 	int *objects = mem_zalloc(sizeof(int) * sizeof(levels));
 	int depth = player->depth;
+
 	for(size_t i=0;i<sizeof(levels);i++) {
 		int lev = levels[i];
 		player->depth = lev;
@@ -1447,11 +1453,13 @@ static void ego_stats(void)
 			objects[i]++;
 			/* Make a (normal) object */
 			obj = make_object(cave, lev, false, false, false, &value, 0);
-			bool ok = (obj && obj->ego);
+			bool ok = (obj && obj->ego[0]);
 			if (ok) {
 				egos[i]++;
-				int e_idx = obj->ego - e_info;
-				levcount[e_idx]++;
+				for(int j=0;j<MAX_EGOS;j++) {
+					int e_idx = obj->ego[j] - e_info;
+					levcount[e_idx]++;
+				}
 			}
 			if (obj)
 				object_delete(&obj);

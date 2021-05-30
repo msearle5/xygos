@@ -326,8 +326,10 @@ static void log_all_objects(int level)
 					w->dam[MIN(MAX(obj->to_d, 0), TOP_PLUS - 1)]++;
 
 					/* Capture egos */
-					if (obj->ego)
-						w->egos[obj->ego->eidx]++;
+					for(int i=0;i<MAX_EGOS;i++) {
+						if (obj->ego[i])
+							w->egos[obj->ego[i]->eidx]++;
+					}
 					/* Capture object flags */
 					for (i = of_next(obj->flags, FLAG_START); i != FLAG_END;
 							i = of_next(obj->flags, i + 1))
