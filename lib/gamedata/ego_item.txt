@@ -588,6 +588,7 @@ alloc:20:15 to 100
 item:boots:pair of trainers
 item:boots:pair of combat boots
 item:boots:pair of kevlar boots
+item:boots:pair of titanium boots
 item:boots:pair of unobtainium boots
 item:boots:pair of force skates
 values:STEALTH[d3]
@@ -689,7 +690,7 @@ type:helm
 values:LIGHT[1]
 min-values:LIGHT[1]
 
-name:of Telepathy
+name:<sensor
 info:50000:20
 alloc:10:40 to 127
 type:helm
@@ -701,7 +702,7 @@ alloc:20:1 to 60
 type:helm
 flags:REGEN
 
-name:<mind control
+name:<mind-control
 info:4000:20
 alloc:15:20 to 127
 type:helm
@@ -817,7 +818,7 @@ type:soft armor
 type:hard armor
 flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD | RAND_RES_POWER
 values:RES_ACID[1] | RES_ELEC[1] | RES_FIRE[1] | RES_COLD[1] | STEALTH[d3] 
-min-values:STEALTH[0]
+min-values:STEALTH[1]
 
 name:(*stainless*)
 info:17500:28
