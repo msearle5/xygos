@@ -1111,16 +1111,6 @@ struct object_kind *get_obj_num(int level, bool good, int tval)
 
 static double artifact_prob(double depth)
 {
-	/* Debug: print the artifact generation probability table */
-	static bool first = false;
-	if (first) {
-		first = false;
-		for(int i=1;i<=100;i++) {
-			double d = artifact_prob(i);
-			fprintf(stderr,"l%d, prob %lf\n", i, d);
-		}
-	}
-	
 	/* The following weird math is a combination of two ease curves (S shape, 3x^2-2x^3).
 	 * 'Full' gives the overall shape.
 	 * 'Mid' gives some boost at midlevels centered at 'midpoint'.
@@ -1136,20 +1126,33 @@ static double artifact_prob(double depth)
 	return chance;
 }
 
+/* Chance that an object is a multiple ego */
 static double multiego_prob(double depth, bool good, bool great)
 {
-	return 1.0;
+	if (great)
+		/* 1% at level 0, 40% at level 30, 20% at level 95+ */
+		return (depth <= 30) ? (0.01 + ((MIN(depth, 30) / 30.0) * 4.0 * 0.09)) : ((((95 - MIN(depth, 95)) / 65.0) * 0.2) + 0.2);
+	else if (good)
+		return 0.001 + ((MIN(depth, 45) / 45.0) * 0.099);	/* 0.1% at level 0, 10% at level 45+ */
+	else
+		return ((MIN(depth, 65) / 65.0) * 0.06);			/* 0 at level 0, 6% at level 65+ */
 }
 
 static double ego_prob(double depth, bool good, bool great)
 {
-	/* Debug: print the ego generation probability table */
-	static bool first = false;
+	/* Debug: print the generation probability table */
+	static bool first = true;
 	if (first) {
 		first = false;
 		for(int i=1;i<=100;i++) {
 			double d = ego_prob(i, false, false);
-			fprintf(stderr,"l%d, prob %lf\n", i, d);
+			double e = multiego_prob(i, false, false);
+			double good_d = ego_prob(i, true, false);
+			double good_e = multiego_prob(i, true, false);
+			double great_d = ego_prob(i, true, true);
+			double great_e = multiego_prob(i, true, true);
+			double f = artifact_prob(i);
+			fprintf(stderr,"l%d, NORMAL(ego %lf multi %lf art %lf), GOOD(ego %lf multi %lf), GREAT(ego %lf multi %lf)\n", i, d, e, f, good_d, good_e, great_d, great_e);
 		}
 	}
 
@@ -1203,7 +1206,7 @@ static double ego_prob(double depth, bool good, bool great)
 	 * Both these are (probably) Good Things.
 	 */
 	if (great)
-		return 0.8 - (MIN(depth, 95.0) / (0.6 / 95.0));		/* 80% at level 0, 20% at level 95+ */
+		return ((1.0 - ((MIN(depth, 95.0)) / 95.0)) * 0.6) + 0.2; /* 80% at level 0, 20% at level 95+ */
 	else if (good)
 		return 0.15;										/* 15% */
 	else
