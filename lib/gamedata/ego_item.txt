@@ -133,9 +133,9 @@ item:light:mobilamp
 values:STEALTH[d2] | RES_LIGHT[1] | RES_DARK[1] | LIGHT[-4]
 min-values:STEALTH[0] | LIGHT[-4]
 
-name:(efficiency mod)
+name:(superbright)
 info:2000:10
-alloc:50:1 to 30
+alloc:60:1 to 40
 item:light:keyfob light
 item:light:disposable flashlight
 item:light:electric torch
@@ -143,6 +143,16 @@ item:light:tactical flashlight
 item:light:mobilamp
 values:LIGHT[1]
 min-values:LIGHT[1]
+desc:It's brighter than expected for a {basename}.
+
+name:(high efficiency)
+info:1000:10
+alloc:80:1 to 20
+item:light:electric torch
+item:light:tactical flashlight
+item:light:mobilamp
+pval:200
+flags:PVAL_SCALE
 desc:It runs for twice as long from a recharge.
 
 name:(RTG mod)

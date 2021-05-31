@@ -460,8 +460,16 @@ void ego_apply_magic(struct object *obj, int level)
 	obj->to_d += randcalc(obj->ego->to_d, level, RANDOMISE);
 	obj->to_a += randcalc(obj->ego->to_a, level, RANDOMISE);
 
-	/* Apply pval */
-	obj->pval = MAX(obj->pval, randcalc(obj->ego->pval, level, RANDOMISE));
+	/* Apply pval - maximum (with unchanged timeout) by default, otherwise
+	 * use a % scaling factor to pval and timeout
+	 **/
+	int ego_pval = randcalc(obj->ego->pval, level, RANDOMISE);
+	if (kf_has(obj->ego->kind_flags, KF_PVAL_SCALE)) {
+		obj->pval = ((obj->pval * ego_pval) / 100);
+		obj->timeout = ((obj->timeout * ego_pval) / 100);
+	} else {
+		obj->pval = MAX(obj->pval, ego_pval);
+	}
 	int weightmul = randcalc(obj->ego->weight, level, RANDOMISE);
 	if (weightmul != 0) {
 		obj->weight = ((obj->weight * weightmul) + (obj->weight / 2)) / 100;
