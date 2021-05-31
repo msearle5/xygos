@@ -1678,7 +1678,8 @@ void do_store_maint(struct store *s, bool init)
 				}
 				int level = rand_range(min_level, max_level);
 				obj = store_create_item(level, s, kind, tval);
-				mass_produce(obj);
+				if (obj)
+					mass_produce(obj);
 			}
 		}
 	}
