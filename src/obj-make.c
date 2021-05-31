@@ -71,6 +71,12 @@ struct money {
 	int type;
 };
 
+struct multiego_entry
+{
+	double prob;
+	u16b ego[MAX_EGOS];
+};
+
 static struct money *money_type;
 static int num_money_types;
 
@@ -354,6 +360,40 @@ static struct object_kind *select_ego_kind(struct ego_item *ego, int level, int 
 	int idx = select_random_table(total, prob, z_info->k_max);
 	mem_free(prob);
 	return k_info + idx;
+}
+
+/**
+ * Select a base item for a multiego.
+ * This selects one of the component egos at random, generates a random kind for that ego,
+ * then tests it against all the other egos. If all match it is returned.
+ * 
+ * It will return NULL only if select_ego_kind does.
+ */
+static struct object_kind *select_multiego_kind(struct multiego_entry *me, int level, int tval)
+{
+	struct object_kind *kind = NULL;
+	int matches = 0;
+	do {
+		int first = randint0(MAX_EGOS);
+		kind = select_ego_kind(e_info + me->ego[first], level, tval);
+		if (!kind)
+			return NULL;
+		matches = 0;
+		for(int i=0;i<MAX_EGOS;i++) {
+			if (i != first) {
+				struct poss_item *poss = e_info[me->ego[i]].poss_items;
+				while (poss) {
+					if (poss->kidx == kind->kidx) {
+						matches++;
+						break;
+					}
+					poss = poss->next;
+				}
+			}
+		}
+	} while (matches < MAX_EGOS-1);
+
+	return kind;
 }
 
 /**
@@ -1272,6 +1312,112 @@ bool special_item_can_gen(struct object_kind *kind)
 	return true;
 }
 
+/* Look up a multiego combination in the table, with given maximum value */
+struct multiego_entry *multiego_find(struct multiego_entry *table, double total)
+{
+	int i;
+	do {
+		double random = Rand_double(total);
+		i = 0;
+		do {
+			if (table[i].prob >= random) {
+				break;
+			}
+		} while (table[++i].prob != 0.0);
+	} while (table[i].prob == 0.0);
+	return table+i;
+}
+
+/* Build a table of multiego combinations, given a level and tval.
+ **/
+struct multiego_entry *multiego_table(int genlevel, int tval, double *ptotal)
+{
+	double total = 0.0;
+	bool match[z_info->e_max][z_info->k_max];
+	int entries = 0;
+
+	/* Build a 'ego can use kind' table */
+	memset(match, 0, sizeof(match));
+	for(int i=0;i<z_info->e_max;i++) {
+		struct poss_item *item = e_info[i].poss_items;
+		while (item) {
+			if ((!tval) || (tval == k_info[item->kidx].tval)) {
+				match[i][item->kidx] = true;
+			}
+			item = item->next;
+		}
+	}
+
+	/* Count size */
+	for(int i=0;i<z_info->e_max;i++) {
+		for(int j=i+1;j<z_info->e_max;j++) {
+			struct poss_item *item = e_info[j].poss_items;
+			while (item) {
+				if ((!tval) || (tval == k_info[item->kidx].tval)) {
+					if (match[i][item->kidx]) {
+						entries++;
+						break;
+					}
+				}
+				item = item->next;
+			}
+		}
+	}
+
+	/* Allocate a probability table (+1 for the terminator) */
+	struct multiego_entry *table = mem_zalloc(sizeof(struct multiego_entry) * (entries + 1));
+	struct multiego_entry *entry = table;
+
+	/* Fill the table */
+	double lev = MIN(127, genlevel);
+	for(int i=0;i<z_info->e_max;i++) {
+		for(int j=i+1;j<z_info->e_max;j++) {
+			struct poss_item *item = e_info[j].poss_items;
+			while (item) {
+				if (match[i][item->kidx]) {
+					if ((!tval) || (tval == k_info[item->kidx].tval)) {
+						/* Find the combined level */
+						int level = e_info[i].alloc_min + e_info[j].alloc_min;
+						double meprob = e_info[i].alloc_prob * e_info[j].alloc_prob;
+						double min = (level + 5.0) * 1.2;
+						if (min < 10.0)
+							min = 10.0;
+						double max = e_info[i].alloc_max + e_info[j].alloc_max;
+						if (max > 127.0)
+							max = 127.0;
+						if (max < (min + 10.0))
+							max = (min + 10.0);
+						double scale = 0.0;
+
+						if (lev > max) {
+							;
+						} else if (lev >= min) {
+							scale = 1.0 - ((lev - min) / (1 + max - min));
+						} else {
+							scale = 1.0 / (1.0 + (min - lev));
+						}
+
+						meprob *= scale;
+						if (meprob > 0.0) {
+							total += meprob;
+							entry->prob = total;
+							entry->ego[0] = i;
+							entry->ego[1] = j;
+							entry++;
+						}
+						break;
+					}
+				}
+				item = item->next;
+			}
+		}
+	}
+
+	*ptotal = total;
+	return table;
+}
+
+
 /**
  * Attempt to make an object
  *
@@ -1296,6 +1442,9 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
 	bool multiego = false;
 	double chance = 0.0;
 	double random = Rand_double(1.0);
+	double me_total = 0.0;
+	struct multiego_entry *me_table = NULL;
+	struct multiego_entry *me_entry = NULL;
 
 	/* Try to make an artifact.
 	 * There are no artifacts in the town, more are generated at depth and
@@ -1388,10 +1537,26 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
 			 * There is a limit of 20 retries though, mainly because some tvals
 			 * may not have any acceptable combinations.
 			 */
-			int reps = 0;
-			do {
-				reps++;
-				if (makeego || multiego) {
+			if (multiego) {
+				/* Get the multiego selection table */
+				me_table = multiego_table(lev, tval, &me_total);
+
+				/* Are there any possible combinations of egos available at this level/tval? */
+				if (me_total > 0.0) {
+					/* Select randomly from it */
+					me_entry = multiego_find(me_table, me_total);
+
+					/* Select a kind for that combination */
+					kind = select_multiego_kind(me_entry, lev, tval);
+				} else {
+					/* Nothing, so revert to single ego */
+					multiego = false;
+				}
+			}
+
+			if (!multiego) {
+				/* Not a multiego, may be a single ego */
+				if (makeego) {
 					/* Select an ego item. This might fail */
 					ego = find_ego_item(lev, tval);
 				}
@@ -1400,87 +1565,13 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
 					kind = select_ego_kind(ego, lev, tval);
 				} else {
 					/* Try to choose an object kind */
+					tries = 3;
 					while (tries--) {
 						kind = get_obj_num(base, good || great, tval);
 						if (kind) break;
 					}
 				}
-				/* Single egos: done here.
-				 * Multiple egos must find another that is compatible with this ego
-				 * and the chosen tval.
-				 */
-				if (!multiego)
-					break;
-
-				if (ego && multiego && kind) {
-					/* Get an array of all possible egos' probabilities */
-					double *prob = mem_zalloc(sizeof(double) * z_info->e_max);
-					double total = 0.0;
-
-					for(int i=0;i<z_info->e_max;i++) {
-						s32b kidx = -1;
-						/* Don't use the same ego */
-						if (i != (ego - e_info)) {
-							struct poss_item *item = e_info[i].poss_items;
-							/* Find a matching kind */
-							while (item) {
-								if (item->kidx == kind->kidx) {
-									kidx = item->kidx;
-									break;
-								}
-								item = item->next;
-							};
-						}
-						/* Found one - write a probability entry */
-						if (kidx >= 0) {
-							/* Find the combined level */
-							int level = e_info[i].alloc_min + ego->alloc_min;
-							double meprob = kind->alloc_prob;
-							double min = (level + 5.0) * 1.2;
-							if (min < 10.0)
-								min = 10.0;
-							double max = e_info[i].alloc_max + ego->alloc_max;
-							if (max > 127.0)
-								max = 127.0;
-							if (max < (min + 10.0))
-								max = (min + 10.0);
-							double scale = 0.0;
-							if (max > min) {
-								if (lev > max) {
-									;
-								} else if (lev >= min) {
-									scale = 1.0 - ((double)(lev - min) / (double)(max - min));
-								} else {
-									scale = 1.0 / (1.0 + (min - lev));
-								}
-							}
-							meprob *= scale;
-							prob[i] = meprob;
-							total += meprob;
-						}
-					}
-
-					/* May not be possible with this ego */
-					if (total > 0.0) {
-						/* Generate a random entry from the array */
-						do {
-							double random = Rand_double(total);
-							double sum = 0.0;
-							for(int i=0;i<z_info->e_max;i++) {
-								sum += prob[i];
-								if (random < sum) {
-									selected = i;
-									break;
-								}
-							}
-						} while (selected < 0);
-						assert(prob[selected] > 0.0);
-					}
-
-					/* Clean up */
-					mem_free(prob);
-				}
-			} while ((selected == -1) && (reps < 20));
+			}
 		}
 		if (!kind)
 			return NULL;
@@ -1495,7 +1586,11 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
 
 		/* Actually apply the ego template to the item */
 		assert(!new_obj->ego[0]);
-		if (ego) {
+		if (multiego) {
+			for(int i=0;i<MAX_EGOS;i++) {
+				new_obj->ego[i] = e_info + me_entry->ego[i];
+			}
+		} else {
 			new_obj->ego[0] = ego;
 		}
 		if (ego && multiego && (selected >= 0)) {
