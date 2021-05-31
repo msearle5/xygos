@@ -329,7 +329,7 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 
 		/* Prepend ego name, for egos using a <-name */
 		for(int i=0;i<MAX_EGOS;i++) {
-			if ((object_is_known_ego(obj)) && (obj->ego[i]->name) && (obj->ego[i]->name[0] == '<'))
+			if ((object_is_known_ego(obj)) && (obj->ego[i]) && (obj->ego[i]->name) && (obj->ego[i]->name[0] == '<'))
 				strnfcat(buf, max, &end, "%s ", obj->ego[i]->name + 1);
 		}
 
@@ -340,9 +340,23 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 		if ((object_is_known_artifact(obj)) && (obj->artifact->name) && (obj->artifact->name[0] != '<'))
 			strnfcat(buf, max, &end, " %s", obj->artifact->name);
 		else {
+			int count = 0;
 			for(int i=0;i<MAX_EGOS;i++) {
-				if (((obj->known->ego[i] && !(mode & ODESC_NOEGO)) || (obj->ego[i] && store)) && (obj->ego[i]->name[0] !='<'))
-					strnfcat(buf, max, &end, " %s", obj->ego[i]->name);
+				if ((obj->ego[i]) && ((obj->known->ego[i] && !(mode & ODESC_NOEGO)) || (obj->ego[i] && store)) && (obj->ego[i]->name[0] !='<')) {
+					if (obj->ego[i]->name[0] == '(') {
+						/* (Foo) */
+						if (!count) {
+							strnfcat(buf, max, &end, " %s", obj->ego[i]->name);
+						} else {
+							end--;
+							strnfcat(buf, max, &end, " / %s", obj->ego[i]->name + 1);
+						}
+						count++;
+					} else {
+						/* of Foo */
+						strnfcat(buf, max, &end, " %s", obj->ego[i]->name);
+					}
+				}
 			}
 		}/* else if (aware && !obj->artifact &&
 				 (obj->kind->flavor || obj->kind->tval == TV_CARD)) {
