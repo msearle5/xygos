@@ -1141,7 +1141,7 @@ static double multiego_prob(double depth, bool good, bool great)
 static double ego_prob(double depth, bool good, bool great)
 {
 	/* Debug: print the generation probability table */
-	static bool first = true;
+	static bool first = false;
 	if (first) {
 		first = false;
 		for(int i=1;i<=100;i++) {
@@ -1383,92 +1383,104 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
 				kind = lookup_kind(tval, sval);
 			}
 		} else {
-			if (makeego || multiego) {
-				/* Select an ego item. This might fail */
-				ego = find_ego_item(lev, tval);
-			}
-			if (ego) {
-				/* Choose from the ego's allowed kinds */
-				kind = select_ego_kind(ego, lev, tval);
-			} else {
-				/* Try to choose an object kind */
-				while (tries--) {
-					kind = get_obj_num(base, good || great, tval);
-					break;
-				}
-			}
-			/* Single egos: done here.
-			 * Multiple egos must find another that is compatible with this ego
-			 * and the chosen tval.
+			/* Generate an ego and kind.
+			 * If multiple egos are wanted, do so repeatedly until one is found.
+			 * There is a limit of 20 retries though, mainly because some tvals
+			 * may not have any acceptable combinations.
 			 */
-			if (ego && multiego && kind) {
-				/* Get an array of all possible egos' probabilities */
-				double *prob = mem_zalloc(sizeof(double) * z_info->e_max);
-				double total = 0.0;
-
-				for(int i=0;i<z_info->e_max;i++) {
-					s32b kidx = -1;
-					/* Don't use the same ego */
-					if (i != (ego - e_info)) {
-						struct poss_item *item = e_info[i].poss_items;
-						/* Find a matching kind */
-						while (item) {
-							if (item->kidx == kind->kidx) {
-								kidx = item->kidx;
-								break;
-							}
-							item = item->next;
-						};
-					}
-					/* Found one - write a probability entry */
-					if (kidx >= 0) {
-						/* Find the combined level */
-						int level = e_info[i].alloc_min + e_info[kidx].alloc_min;
-						double meprob = kind->alloc_prob;
-						double min = (level + 5.0) * 1.2;
-						if (min < 10.0)
-							min = 10.0;
-						double max = e_info[i].alloc_max + e_info[kidx].alloc_max;
-						if (max > 127.0)
-							max = 127.0;
-						if (max < (min + 10.0))
-							max = (min + 10.0);
-						double scale = 0.0;
-						if (max > min) {
-							if (lev > max) {
-								;
-							} else if (lev >= min) {
-								scale = 1.0 - ((double)(lev - min) / (double)(max - min));
-							} else {
-								scale = 1.0 / (1.0 + (min - lev));
-							}
-						}
-						meprob *= scale;
-						prob[i] = meprob;
-						total += meprob;
+			int reps = 0;
+			do {
+				reps++;
+				if (makeego || multiego) {
+					/* Select an ego item. This might fail */
+					ego = find_ego_item(lev, tval);
+				}
+				if (ego) {
+					/* Choose from the ego's allowed kinds */
+					kind = select_ego_kind(ego, lev, tval);
+				} else {
+					/* Try to choose an object kind */
+					while (tries--) {
+						kind = get_obj_num(base, good || great, tval);
+						if (kind) break;
 					}
 				}
+				/* Single egos: done here.
+				 * Multiple egos must find another that is compatible with this ego
+				 * and the chosen tval.
+				 */
+				if (!multiego)
+					break;
 
-				/* May not be possible with this ego */
-				if (total > 0.0) {
-					/* Generate a random entry from the array */
-					do {
-						double random = Rand_double(total);
-						double sum = 0.0;
-						for(int i=0;i<z_info->e_max;i++) {
-							sum += prob[i];
-							if (random < sum) {
-								selected = i;
-								break;
-							}
+				if (ego && multiego && kind) {
+					/* Get an array of all possible egos' probabilities */
+					double *prob = mem_zalloc(sizeof(double) * z_info->e_max);
+					double total = 0.0;
+
+					for(int i=0;i<z_info->e_max;i++) {
+						s32b kidx = -1;
+						/* Don't use the same ego */
+						if (i != (ego - e_info)) {
+							struct poss_item *item = e_info[i].poss_items;
+							/* Find a matching kind */
+							while (item) {
+								if (item->kidx == kind->kidx) {
+									kidx = item->kidx;
+									break;
+								}
+								item = item->next;
+							};
 						}
-					} while (selected < 0);
-					assert(prob[selected] > 0.0);
-				}
+						/* Found one - write a probability entry */
+						if (kidx >= 0) {
+							/* Find the combined level */
+							int level = e_info[i].alloc_min + e_info[kidx].alloc_min;
+							double meprob = kind->alloc_prob;
+							double min = (level + 5.0) * 1.2;
+							if (min < 10.0)
+								min = 10.0;
+							double max = e_info[i].alloc_max + e_info[kidx].alloc_max;
+							if (max > 127.0)
+								max = 127.0;
+							if (max < (min + 10.0))
+								max = (min + 10.0);
+							double scale = 0.0;
+							if (max > min) {
+								if (lev > max) {
+									;
+								} else if (lev >= min) {
+									scale = 1.0 - ((double)(lev - min) / (double)(max - min));
+								} else {
+									scale = 1.0 / (1.0 + (min - lev));
+								}
+							}
+							meprob *= scale;
+							prob[i] = meprob;
+							total += meprob;
+						}
+					}
 
-				/* Clean up */
-				mem_free(prob);
-			}
+					/* May not be possible with this ego */
+					if (total > 0.0) {
+						/* Generate a random entry from the array */
+						do {
+							double random = Rand_double(total);
+							double sum = 0.0;
+							for(int i=0;i<z_info->e_max;i++) {
+								sum += prob[i];
+								if (random < sum) {
+									selected = i;
+									break;
+								}
+							}
+						} while (selected < 0);
+						assert(prob[selected] > 0.0);
+					}
+
+					/* Clean up */
+					mem_free(prob);
+				}
+			} while ((selected == -1) && (reps < 20));
 		}
 		if (!kind)
 			return NULL;
