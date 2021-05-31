@@ -69,6 +69,7 @@ N:Basura
 N:Beeb
 N:Beeblebrox
 N:Beeze
+N:Bell
 N:Berihn
 N:Berman
 N:Berysnes
@@ -79,6 +80,7 @@ N:Blacksand
 N:Blake
 N:Bleetman
 N:Blyton
+N:Bofort
 N:Bonahe
 N:Bonniesells
 N:Boonier
@@ -86,13 +88,16 @@ N:Bourbon
 N:Bower
 N:Bowman
 N:Boyce
+N:Braben
 N:Brachman
 N:Braga
+N:Brewer
 N:Brianetta
 N:Bridge
 N:Briggs
 N:Britton
 N:Brooke
+N:Brome
 N:Brynison
 N:Bull
 N:Bulrush
@@ -114,6 +119,7 @@ N:Carpenter
 N:Carr
 N:Carrington
 N:Carson
+N:Carter
 N:Casrovalva
 N:Cato
 N:Catsam
@@ -155,6 +161,7 @@ N:Davcefai
 N:Davemak
 N:Davison
 N:Davros
+N:Day
 N:de Havilland
 N:Dekalb
 N:Denim
@@ -168,6 +175,7 @@ N:Dimaer
 N:Dingle
 N:Distortal
 N:Dizietsma
+N:Dogstar
 N:Dorfl
 N:Dorian
 N:Dracos
@@ -176,11 +184,13 @@ N:Drayton
 N:Drebin
 N:Drew
 N:Drile
+N:Drome
 N:Drumz
 N:Duckworth
 N:Dutch
 N:Duval
 N:Ebi
+N:Edger
 N:Eccles
 N:Edmonds
 N:Effirmbum
@@ -192,6 +202,7 @@ N:Elmex
 N:Elton
 N:Emacs
 N:Emu
+N:Ender
 N:Ensa
 N:Erai
 N:Ericsen
@@ -242,8 +253,10 @@ N:Greyman
 N:Griff
 N:Grimwade
 N:Guyver
+N:Gygax
 N:Hacht
 N:Hack
+N:Hacker
 N:Haddock
 N:Halandriel
 N:Halfrunt
@@ -262,6 +275,7 @@ N:Hiroko
 N:Hober
 N:Hocken
 N:Hoggy
+N:Hohmann
 N:Holdstock
 N:Hook
 N:Hoper
@@ -290,6 +304,7 @@ N:Jeeves
 N:Jellico
 N:Jeltz
 N:Jenner
+N:Jetson
 N:Jonaath
 N:Jonnycuba
 N:Joshua
@@ -332,6 +347,7 @@ N:Lanx
 N:Laruldan
 N:Laton
 N:Lawrence
+N:Le Petomane
 N:Lesine
 N:Lestradae
 N:Letts
@@ -347,6 +363,7 @@ N:Longstaff
 N:Lorfarius
 N:Lorico
 N:Lortron
+N:Lostellar
 N:Lovecraft
 N:Lucidor
 N:Lukosanthropos
@@ -373,6 +390,7 @@ N:Manzo
 N:Marakor
 N:Marco
 N:Marianne
+N:Markov
 N:Marlowe
 N:Marple
 N:Matheson
@@ -554,6 +572,8 @@ N:Saxton
 N:Schultz
 N:Scififan
 N:Scoresby
+N:Scoville
+N:Scrambler
 N:Screet
 N:Sebalex
 N:Selezen
@@ -567,6 +587,7 @@ N:Shulth
 N:Sics D'fore
 N:Silvain
 N:Skade
+N:Skywalker
 N:Slartibartfast
 N:Slog
 N:Smedley
@@ -577,6 +598,7 @@ N:Solas
 N:Sommersby
 N:Sorton
 N:Sparks
+N:Spamfighter
 N:Sparrow
 N:Speculoos
 N:Speer
@@ -623,6 +645,7 @@ N:Travis
 N:Trexate
 N:Trezker
 N:Troy
+N:Trubelmacher
 N:Turanga
 N:Turner
 N:Tyler
@@ -630,6 +653,7 @@ N:Tylor
 N:Ulli
 N:Ulysses
 N:Unloreosini
+N:Uptalker
 N:Uran
 N:Vajo
 N:Valentine
@@ -639,6 +663,7 @@ N:Vaxon
 N:Vaydep
 N:Venter
 N:Veruz
+N:Vespa
 N:Vetitice
 N:Vila
 N:Voysey
@@ -664,6 +689,7 @@ N:Wharton
 N:Wiggy
 N:Wigster
 N:Williams
+N:Wilson
 N:Winslow
 N:Winston
 N:Wodehouse
