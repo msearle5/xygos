@@ -140,7 +140,7 @@ static void flavor_assign_random(byte tval)
  * Mainly useful for randarts so that fixed flavors for standards aren't
  * predictable.
  */
-void flavor_reset_fixed(void)
+static void flavor_reset_fixed(void)
 {
 	struct flavor *f;
 

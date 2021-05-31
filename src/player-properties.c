@@ -21,6 +21,7 @@
 #include "player-ability.h"
 #include "player-calcs.h"
 #include "player-util.h"
+#include "player-properties.h"
 #include "ui-input.h"
 #include "ui-menu.h"
 
@@ -82,8 +83,8 @@ static char view_ability_tag(struct menu *menu, int oid)
 /**
  * Display an entry on the gain ability menu
  */
-void view_ability_display(struct menu *menu, int oid, bool cursor, int row,
-					   int col, int width)
+static void view_ability_display(struct menu *menu, int oid, bool cursor,
+	int row, int col, int width)
 {
 	char buf[80];
 	byte color;
@@ -149,7 +150,7 @@ static bool view_ability_flip;
 /**
  * Display a list of available specialties.
  */
-bool view_ability_menu(void)
+static bool view_ability_menu(void)
 {
 	struct menu menu;
 	menu_iter menu_f = { view_ability_tag, 0, view_ability_display, 0, 0 };

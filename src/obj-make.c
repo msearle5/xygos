@@ -1742,7 +1742,7 @@ struct object_kind *money_kind(const char *name, int value)
  * \param coin_type the name of the type of money object to make
  * \return a pointer to the newly minted cash (cannot fail)
  */
-struct object *make_gold(int lev, char *coin_type)
+struct object *make_gold(int lev, const char *coin_type)
 {
 	struct object *new_gold = mem_zalloc(sizeof(*new_gold));
 	int value;

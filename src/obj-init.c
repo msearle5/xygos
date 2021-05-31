@@ -366,7 +366,7 @@ static enum parser_error parse_projection_color(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-struct parser *init_parse_projection(void) {
+static struct parser *init_parse_projection(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
 	parser_reg(p, "code str code", parse_projection_code);
@@ -776,7 +776,7 @@ static enum parser_error parse_slay_range_verb(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-struct parser *init_parse_slay(void) {
+static struct parser *init_parse_slay(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
 	parser_reg(p, "code str code", parse_slay_code);
@@ -941,7 +941,7 @@ static enum parser_error parse_brand_vuln_flag(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-struct parser *init_parse_brand(void) {
+static struct parser *init_parse_brand(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
 	parser_reg(p, "code str code", parse_brand_code);
@@ -1270,7 +1270,7 @@ static enum parser_error parse_fault_conflict_flags(struct parser *p) {
 	return t ? PARSE_ERROR_INVALID_FLAG : PARSE_ERROR_NONE;
 }
 
-struct parser *init_parse_fault(void) {
+static struct parser *init_parse_fault(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
 	parser_reg(p, "name str name", parse_fault_name);
@@ -1511,7 +1511,7 @@ static enum parser_error parse_act_desc(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-struct parser *init_parse_act(void) {
+static struct parser *init_parse_act(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
 	parser_reg(p, "name str name", parse_act_name);
@@ -3356,7 +3356,7 @@ static enum parser_error parse_object_property_bindui(struct parser* p) {
 	return PARSE_ERROR_NONE;
 }
 
-struct parser *init_parse_object_property(void) {
+static struct parser *init_parse_object_property(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
 	parser_reg(p, "name str name", parse_object_property_name);

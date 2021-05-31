@@ -341,7 +341,7 @@ static void accum_frequencies( struct artifact_set_data *data);
  * Return the artifact power, by generating a "fake" object based on the
  * artifact, and calling the common object_power function
  */
-static int artifact_power(int a_idx, char *reason, bool verbose)
+static int artifact_power(int a_idx, const char *reason, bool verbose)
 {
 	struct object *obj = object_new();
 	struct object *known_obj = object_new();
@@ -522,7 +522,7 @@ static void store_base_power(struct artifact_set_data *data)
 /**
  * Handle weapon combat abilities
  */
-void count_weapon_abilities(const struct artifact *art,
+static void count_weapon_abilities(const struct artifact *art,
 							struct artifact_set_data *data)
 {
 	int bonus;
@@ -624,7 +624,7 @@ void count_weapon_abilities(const struct artifact *art,
 /**
  * Count combat abilities on guns
  */
-void count_GUN_abilities(const struct artifact *art,
+static void count_GUN_abilities(const struct artifact *art,
 						 struct artifact_set_data *data)
 {
 	int bonus;
@@ -682,12 +682,12 @@ void count_GUN_abilities(const struct artifact *art,
 
 	/* Count brands and slays */
 	if (art->slays) {
-		int bonus = slay_count(art->slays);
+		bonus = slay_count(art->slays);
 		data->art_probs[ART_IDX_GUN_SLAY] += bonus;
 		file_putf(log_file, "Adding %d for slays\n", bonus);
 	}
 	if (art->brands) {
-		int bonus = brand_count(art->brands);
+		bonus = brand_count(art->brands);
 		data->art_probs[ART_IDX_GUN_BRAND] += bonus;
 		file_putf(log_file, "Adding %d for brands\n", bonus);
 	}
@@ -696,7 +696,7 @@ void count_GUN_abilities(const struct artifact *art,
 /**
  * Handle nonweapon combat abilities
  */
-void count_nonweapon_abilities(const struct artifact *art,
+static void count_nonweapon_abilities(const struct artifact *art,
 							   struct artifact_set_data *data)
 {
 	struct object_kind *kind = lookup_kind(art->tval, art->sval);
@@ -812,7 +812,7 @@ void count_nonweapon_abilities(const struct artifact *art,
 /**
  * Count modifiers
  */
-void count_modifiers(const struct artifact *art, struct artifact_set_data *data)
+static void count_modifiers(const struct artifact *art, struct artifact_set_data *data)
 {
 	int num = 0;
 
@@ -950,7 +950,7 @@ void count_modifiers(const struct artifact *art, struct artifact_set_data *data)
 /**
  * Count low resists and immunities.
  */
-void count_low_resists(const struct artifact *art,
+static void count_low_resists(const struct artifact *art,
 					   struct artifact_set_data *data)
 {
 	int num = 0;
@@ -1002,7 +1002,7 @@ void count_low_resists(const struct artifact *art,
 /**
  * Count high resists and protections.
  */
-void count_high_resists(const struct artifact *art,
+static void count_high_resists(const struct artifact *art,
 						struct artifact_set_data *data)
 {
 	int num = 0;
@@ -1129,7 +1129,7 @@ void count_high_resists(const struct artifact *art,
  * us to have general abilities appear more commonly on a
  * certain item type.
  */
-void count_abilities(const struct artifact *art, struct artifact_set_data *data)
+static void count_abilities(const struct artifact *art, struct artifact_set_data *data)
 {
 	int num = 0;
 	struct object_kind *kind = lookup_kind(art->tval, art->sval);
@@ -1576,7 +1576,7 @@ static struct object_kind *get_base_item(struct artifact_set_data *data,
 /**
  * Add basic data to an artifact of a given object kind
  */
-void artifact_prep(struct artifact *art, const struct object_kind *kind,
+static void artifact_prep(struct artifact *art, const struct object_kind *kind,
 				   struct artifact_set_data *data)
 {
 	int i;
@@ -3132,7 +3132,7 @@ static void design_artifact(struct artifact_set_data *data, int tv, int *aidx, i
 /**
  * Create a random artifact set
  */
-void create_artifact_set(struct artifact_set_data *data, bool qa_only)
+static void create_artifact_set(struct artifact_set_data *data, bool qa_only)
 {
 	int i;
 	int base = first_randart;
@@ -3277,7 +3277,7 @@ void artifact_set_data_free(struct artifact_set_data *data)
 /**
  * Write an artifact data file
  */
-void write_randart_entry(ang_file *fff, struct artifact *art)
+static void write_randart_entry(ang_file *fff, struct artifact *art)
 {
 	char name[120] = "";
 	struct object_kind *kind = lookup_kind(art->tval, art->sval);

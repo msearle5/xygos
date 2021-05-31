@@ -927,7 +927,7 @@ int weapon_skill(struct player *p)
 /**
  * Attempt a shield bash; return true if the monster dies
  */
-bool attempt_shield_bash(struct player *p, struct monster *mon, bool *fear)
+static bool attempt_shield_bash(struct player *p, struct monster *mon, bool *fear)
 {
 	struct object *weapon = equipped_item_by_slot_name(p, "weapon");
 	struct object *shield = equipped_item_by_slot_name(p, "arm");

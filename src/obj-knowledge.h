@@ -48,8 +48,8 @@ struct icon {
 int max_icons(void);
 enum icon_variety icon_variety(size_t i);
 bool player_knows_icon(struct player *p, size_t i);
-char *icon_name(size_t i);
-char *icon_desc(size_t i);
+const char *icon_name(size_t i);
+const char *icon_desc(size_t i);
 quark_t icon_note(size_t i);
 void icon_set_note(size_t i, const char *inscription);
 

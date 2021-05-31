@@ -148,7 +148,7 @@ struct store *get_store_by_name(const char *name) {
 /**
  * Get rid of stores at cleanup. Gets rid of everything.
  */
-void cleanup_stores(void)
+static void cleanup_stores(void)
 {
 	int i;
 

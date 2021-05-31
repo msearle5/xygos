@@ -103,6 +103,7 @@ bool player_can_cast(struct player *p, bool show_msg);
 bool player_can_run(struct player *p, bool show_msg);
 bool player_can_fire(struct player *p, bool show_msg);
 bool player_can_refuel(struct player *p, bool show_msg);
+bool player_can_debug_prereq(void);
 bool player_can_cast_prereq(void);
 bool player_can_run_prereq(void);
 bool player_can_fire_prereq(void);

@@ -78,5 +78,6 @@ int get_effect_from_list(const char *prompt, struct effect *effect, int count,
 void get_panel(int *min_y, int *min_x, int *max_y, int *max_x);
 bool panel_contains(unsigned int y, unsigned int x);
 bool map_is_visible(void);
+bool confirm_debug(void);
 
 #endif /* INCLUDED_GAME_INPUT_H */

@@ -62,9 +62,10 @@
  * Object knowledge data
  * This section covers initialisation, access and cleanup of icon data
  * ------------------------------------------------------------------------ */
+
 static size_t icon_max;
 static struct icon *icon_list;
-static char *c_icon[] = {
+static const char *c_icon[] = {
 	"enchantment to armor",
 	"enchantment to hit",
 	"enchantment to damage"
@@ -347,7 +348,7 @@ bool player_knows_icon(struct player *p, size_t i)
 /**
  * The name of an icon
  */
-char *icon_name(size_t i)
+const char *icon_name(size_t i)
 {
 	struct icon *r = &icon_list[i];
 
@@ -368,7 +369,7 @@ char *icon_name(size_t i)
 /**
  * The description of an icon
  */
-char *icon_desc(size_t i)
+const char *icon_desc(size_t i)
 {
 	struct icon *r = &icon_list[i];
 
@@ -1317,11 +1318,11 @@ void player_learn_icon(struct player *p, size_t i, bool message)
 
 			/* If the brand was unknown, add it to known brands */
 			if (!player_knows_brand(p, r->index)) {
-				int i;
-				for (i = 1; i < z_info->brand_max; i++) {
+				int j;
+				for (j = 1; j < z_info->brand_max; j++) {
 					/* Check base and race flag */
-					if (streq(brands[r->index].name, brands[i].name)) {
-						p->obj_k->brands[i] = true;
+					if (streq(brands[r->index].name, brands[j].name)) {
+						p->obj_k->brands[j] = true;
 						learned = true;
 					}
 				}
@@ -1334,11 +1335,11 @@ void player_learn_icon(struct player *p, size_t i, bool message)
 
 			/* If the slay was unknown, add it to known slays */
 			if (!player_knows_slay(p, r->index)) {
-				int i;
-				for (i = 1; i < z_info->slay_max; i++) {
+				int j;
+				for (j = 1; j < z_info->slay_max; j++) {
 					/* Check base and race flag */
-					if (same_monsters_slain(r->index, i)) {
-						p->obj_k->slays[i] = true;
+					if (same_monsters_slain(r->index, j)) {
+						p->obj_k->slays[j] = true;
 						learned = true;
 					}
 				}
@@ -1358,12 +1359,14 @@ void player_learn_icon(struct player *p, size_t i, bool message)
 			}
 			break;
 		}
+
 		/* Flag icons */
 		case ICON_VAR_FLAG: {
 			if (of_on(p->obj_k->flags, r->index))
 				learned = true;
 			break;
 		}
+
 		default: {
 			learned = false;
 			break;
@@ -1450,7 +1453,7 @@ void player_learn_all_icons(struct player *p)
  * \param obj is the object 
  * \param mod is the modifier being noticed
  */
-void mod_message(struct object *obj, int mod)
+static void mod_message(struct object *obj, int mod)
 {
 	/* Special messages for individual properties */
 	switch (mod) {
@@ -1525,7 +1528,7 @@ void mod_message(struct object *obj, int mod)
 	}
 }
 
-void object_faults_find_to_a(struct player *p, struct object *obj)
+static void object_faults_find_to_a(struct player *p, struct object *obj)
 {
 	int index = icon_index(ICON_VAR_COMBAT, COMBAT_ICON_TO_A);
 	if (obj->faults) {
@@ -1548,7 +1551,7 @@ void object_faults_find_to_a(struct player *p, struct object *obj)
 	}
 }
 
-void object_faults_find_to_h(struct player *p, struct object *obj)
+static void object_faults_find_to_h(struct player *p, struct object *obj)
 {
 	int index = icon_index(ICON_VAR_COMBAT, COMBAT_ICON_TO_H);
 	if (obj->faults) {
@@ -1571,7 +1574,7 @@ void object_faults_find_to_h(struct player *p, struct object *obj)
 	}
 }
 
-void object_faults_find_to_d(struct player *p, struct object *obj)
+static void object_faults_find_to_d(struct player *p, struct object *obj)
 {
 	int index = icon_index(ICON_VAR_COMBAT, COMBAT_ICON_TO_D);
 	if (obj->faults) {
@@ -1602,7 +1605,7 @@ void object_faults_find_to_d(struct player *p, struct object *obj)
  * \param test_flags is the set of flags to check for
  * \return whether a flag was found
  */
-bool object_faults_find_flags(struct player *p, struct object *obj,
+static bool object_faults_find_flags(struct player *p, struct object *obj,
 							  bitflag *test_flags)
 {
 	char o_name[80];
@@ -1651,7 +1654,7 @@ bool object_faults_find_flags(struct player *p, struct object *obj,
  * \param p is the player
  * \param obj is the object
  */
-void object_faults_find_modifiers(struct player *p, struct object *obj)
+static void object_faults_find_modifiers(struct player *p, struct object *obj)
 {
 	int i;
 
@@ -1691,7 +1694,7 @@ void object_faults_find_modifiers(struct player *p, struct object *obj)
  * \param elem the element
  * \return whether the element appeared in a fault
  */
-bool object_faults_find_element(struct player *p, struct object *obj, int elem)
+static bool object_faults_find_element(struct player *p, struct object *obj, int elem)
 {
 	char o_name[80];
 	bool new = false;

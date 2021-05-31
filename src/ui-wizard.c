@@ -176,10 +176,12 @@ static void wiz_create_item_subdisplay(struct menu *m, int oid, bool cursor,
 
 
 static bool wiz_create_item_subaction(struct menu *m, const ui_event *e,
-	int oid)
+	int oid, bool *exit)
 {
 	int *choices = menu_priv(m);
 	int selected = choices[oid];
+
+	*exit = false;
 
 	if (e->type != EVT_SELECT) return true;
 
@@ -235,7 +237,7 @@ static void wiz_create_item_display(struct menu *m, int oid, bool cursor,
 }
 
 
-static bool wiz_create_item_action(struct menu *m, const ui_event *e, int oid)
+static bool wiz_create_item_action(struct menu *m, const ui_event *e, int oid, bool *exit)
 {
 	ui_event ret;
 	struct menu *menu;
@@ -247,6 +249,8 @@ static bool wiz_create_item_action(struct menu *m, const ui_event *e, int oid)
 	int num;
 
 	int i;
+
+	*exit = false;
 
 	if (e->type != EVT_SELECT) return true;
 

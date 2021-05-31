@@ -58,6 +58,8 @@
 #include "ui-signals.h"
 #include "ui-store.h"
 #include "ui-target.h"
+#include "ui-wizard.h"
+#include "wizard.h"
 
 
 bool arg_wizard;			/* Command arg -- Request wizard mode */
@@ -87,22 +89,22 @@ void (*reinit_hook)(void) = NULL;
  */
 struct cmd_info cmd_item[] =
 {
-	{ "Inscribe an object", { '{' }, CMD_INSCRIBE, NULL, NULL },
-	{ "Uninscribe an object", { '}' }, CMD_UNINSCRIBE, NULL, NULL },
-	{ "Wear/wield an item", { 'w' }, CMD_WIELD, NULL, NULL },
-	{ "Take off/unwield an item", { 't', 'T'}, CMD_TAKEOFF, NULL, NULL },
-	{ "Examine an item", { 'I' }, CMD_NULL, textui_obj_examine, NULL },
-	{ "Drop an item", { 'd' }, CMD_DROP, NULL, NULL },
-	{ "Fire your gun", { 'f', 't' }, CMD_FIRE, NULL, player_can_fire_prereq },
-	{ "Use a device", { 'u', 'Z' }, CMD_USE_DEVICE, NULL, NULL },
-	{ "Aim a wand", {'a', 'z'}, CMD_USE_WAND, NULL, NULL },
-	{ "Zap a gadget", {'z', 'a'}, CMD_USE_ROD, NULL, NULL },
-	{ "Activate an object", {'A' }, CMD_ACTIVATE, NULL, NULL },
-	{ "Eat some food", { 'E' }, CMD_EAT, NULL, NULL },
-	{ "Take a pill", { 'q' }, CMD_QUAFF, NULL, NULL },
-	{ "Run a card", { 'r' }, CMD_RUN_CARD, NULL, player_can_run_prereq },
-	{ "Fuel your light source", { 'F' }, CMD_REFILL, NULL, player_can_refuel_prereq },
-	{ "Use an item", { 'U', 'X' }, CMD_USE, NULL, NULL }
+	{ "Inscribe an object", { '{' }, CMD_INSCRIBE, NULL, NULL, 0, NULL, NULL, NULL, 0 },
+	{ "Uninscribe an object", { '}' }, CMD_UNINSCRIBE, NULL, NULL, 0, NULL, NULL, NULL, 0 },
+	{ "Wear/wield an item", { 'w' }, CMD_WIELD, NULL, NULL, 0, NULL, NULL, NULL, 0 },
+	{ "Take off/unwield an item", { 't', 'T'}, CMD_TAKEOFF, NULL, NULL, 0, NULL, NULL, NULL, 0 },
+	{ "Examine an item", { 'I' }, CMD_NULL, textui_obj_examine, NULL, 0, NULL, NULL, NULL, 0 },
+	{ "Drop an item", { 'd' }, CMD_DROP, NULL, NULL, 0, NULL, NULL, NULL, 0 },
+	{ "Fire your gun", { 'f', 't' }, CMD_FIRE, NULL, player_can_fire_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Use a device", { 'u', 'Z' }, CMD_USE_DEVICE, NULL, NULL, 0, NULL, NULL, NULL, 0 },
+	{ "Aim a wand", {'a', 'z'}, CMD_USE_WAND, NULL, NULL, 0, NULL, NULL, NULL, 0 },
+	{ "Zap a gadget", {'z', 'a'}, CMD_USE_ROD, NULL, NULL, 0, NULL, NULL, NULL, 0 },
+	{ "Activate an object", {'A' }, CMD_ACTIVATE, NULL, NULL, 0, NULL, NULL, NULL, 0 },
+	{ "Eat some food", { 'E' }, CMD_EAT, NULL, NULL, 0, NULL, NULL, NULL, 0 },
+	{ "Take a pill", { 'q' }, CMD_QUAFF, NULL, NULL, 0, NULL, NULL, NULL, 0 },
+	{ "Run a card", { 'r' }, CMD_RUN_CARD, NULL, player_can_run_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Recharge your lamp", { 'F' }, CMD_REFILL, NULL, player_can_refuel_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Use an item", { 'U', 'X' }, CMD_USE, NULL, NULL, 0, NULL, NULL, NULL, 0 }
 };
 
 /**
@@ -198,7 +200,103 @@ struct cmd_info cmd_hidden[] =
 };
 
 /**
- * List of command lists */
+ * Debug mode command categories; placeholders for the Enter menu system
+ */
+struct cmd_info cmd_debug[] =
+{
+	{ "Items", { '\0' }, CMD_NULL, NULL, NULL, 0, NULL, NULL, "DbgObj", -1 },
+	{ "Player", { '\0' }, CMD_NULL, NULL, NULL, 0, NULL, NULL, "DbgPlayer", -1 },
+	{ "Teleport", { '\0' }, CMD_NULL, NULL, NULL, 0, NULL, NULL, "DbgTele", -1 },
+	{ "Effects", { '\0' }, CMD_NULL, NULL, NULL, 0, NULL, NULL, "DbgEffects", -1 },
+	{ "Summon", { '\0' }, CMD_NULL, NULL, NULL, 0, NULL, NULL, "DbgSummon", -1 },
+	{ "Files", { '\0' }, CMD_NULL, NULL, NULL, 0, NULL, NULL, "DbgFiles", -1 },
+	{ "Statistics", { '\0' }, CMD_NULL, NULL, NULL, 0, NULL, NULL, "DbgStat", -1 },
+	{ "Query", { '\0' }, CMD_NULL, NULL, NULL, 0, NULL, NULL, "DbgQuery", -1 },
+	{ "Miscellaneous", { '\0' }, CMD_NULL, NULL, NULL, 0, NULL, NULL, "DbgMisc", -1 },
+};
+
+struct cmd_info cmd_debug_obj[] =
+{
+	{ "Create an object", { 'c' }, CMD_NULL, wiz_create_nonartifact, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Create an artifact", { 'C' }, CMD_NULL, wiz_create_artifact, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Create all from tval", { 'V' }, CMD_NULL, wiz_create_all_for_tval, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Acquire good", { 'g' }, CMD_NULL, wiz_acquire_good, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Acquire great", { 'v' }, CMD_NULL, wiz_acquire_great, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Play with item", { 'o' }, CMD_WIZ_PLAY_ITEM, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+};
+
+struct cmd_info cmd_debug_player[] =
+{
+	{ "Cure everything", { 'a' }, CMD_WIZ_CURE_ALL, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Make powerful", { 'A' }, CMD_WIZ_ADVANCE, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Increase experience", { 'x' }, CMD_WIZ_INCREASE_EXP, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Rerate hitpoints", { 'h' }, CMD_WIZ_RERATE, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Edit player", { 'e' }, CMD_WIZ_EDIT_PLAYER_START, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Learn object kinds", { 'l' }, CMD_NULL, wiz_learn_all_object_kinds, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Recall monster", { 'r' }, CMD_WIZ_RECALL_MONSTER, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Erase monster recall", { 'W' }, CMD_WIZ_WIPE_RECALL, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+};
+
+struct cmd_info cmd_debug_tele[] =
+{
+	{ "To location", { 'b' }, CMD_WIZ_TELEPORT_TO, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Random near", { 'p' }, CMD_NULL, wiz_phase_door, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Random far", { 't' }, CMD_NULL, wiz_teleport, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Jump to a level", { 'j' }, CMD_WIZ_JUMP_LEVEL, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+};
+
+struct cmd_info cmd_debug_effects[] =
+{
+	{ "Detect all nearby", { 'd' }, CMD_WIZ_DETECT_ALL_LOCAL, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Detect all monsters", { 'u' }, CMD_WIZ_DETECT_ALL_MONSTERS, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Map local area", { 'm' }, CMD_WIZ_MAGIC_MAP, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Hit all in LOS", { 'H' }, CMD_WIZ_HIT_ALL_LOS, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Perform an effect", { 'E' }, CMD_WIZ_PERFORM_EFFECT, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Graphics demo", { 'G' }, CMD_NULL, wiz_proj_demo, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+};
+
+struct cmd_info cmd_debug_summon[] =
+{
+	{ "Summon specific", { 'n' }, CMD_WIZ_SUMMON_NAMED, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Summon random", { 's' }, CMD_WIZ_SUMMON_RANDOM, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+};
+
+struct cmd_info cmd_debug_files[] =
+{
+	{ "Create spoilers", { '"' }, CMD_NULL, do_cmd_spoilers, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Write map", { 'M' }, CMD_WIZ_DUMP_LEVEL_MAP, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+};
+
+struct cmd_info cmd_debug_stats[] =
+{
+	{ "Objects and monsters", { 'S' }, CMD_WIZ_COLLECT_OBJ_MON_STATS, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Pits", { 'P' }, CMD_WIZ_COLLECT_PIT_STATS, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Disconnected levels", { 'D' }, CMD_WIZ_COLLECT_DISCONNECT_STATS, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Obj/mon alternate key", { 'f' }, CMD_WIZ_COLLECT_OBJ_MON_STATS, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+};
+
+struct cmd_info cmd_debug_query[] =
+{
+	{ "Feature", { 'F' }, CMD_WIZ_QUERY_FEATURE, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Square flag", { 'q' }, CMD_WIZ_QUERY_SQUARE_FLAG, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Noise and scent", { '_' }, CMD_WIZ_PEEK_NOISE_SCENT, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Keystroke log", { 'L' }, CMD_WIZ_DISPLAY_KEYLOG, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+};
+
+struct cmd_info cmd_debug_misc[] =
+{
+	{ "Wizard light level", { 'w' }, CMD_WIZ_WIZARD_LIGHT, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Create a trap", { 'T' }, CMD_WIZ_CREATE_TRAP, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Banish nearby monsters", { 'z' }, CMD_WIZ_BANISH, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Push objects from square", { '>' }, CMD_WIZ_PUSH_OBJECT, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Quit without saving", { 'X' }, CMD_NULL, wiz_confirm_quit_no_save, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+};
+
+/**
+ * List of command lists; because of the implementation in ui-context.c all
+ * entries with menu_level == 0 should appear first; hardwired geometry in
+ * ui-context.c limits the maximum nesting level to 2
+ */
 struct command_list cmds_all[] =
 {
 	{ "Items",           cmd_item,        N_ELEMENTS(cmd_item) },
@@ -371,7 +469,7 @@ void check_for_player_interrupt(game_event_type type, game_event_data *data,
 	}
 }
 
-void pre_turn_refresh(void)
+static void pre_turn_refresh(void)
 {
 	term *old = Term;
 	int j;

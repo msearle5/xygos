@@ -120,7 +120,6 @@ extern struct hint *firstnames;
 extern struct hint *secondnames;
 
 
-void store_delete(struct store *s, struct object *obj, int amt);
 struct store *get_store_by_idx(int idx);
 struct store *get_store_by_name(const char *name);
 bool you_own(struct store *store);
@@ -134,6 +133,7 @@ struct object *store_carry(struct store *store, struct object *obj, bool maintai
 void store_reset(void);
 void store_shuffle(struct store *store);
 void store_update(void);
+void store_delete(struct store *s, struct object *obj, int amt);
 int price_item(struct store *store, const struct object *obj,
 			   bool store_buying, int qty);
 void random_shk_name(char *buf, int len);

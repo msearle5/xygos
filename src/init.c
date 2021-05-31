@@ -845,7 +845,7 @@ static enum parser_error parse_player_prop_bindui(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-struct parser *init_parse_player_prop(void) {
+static struct parser *init_parse_player_prop(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
 	parser_reg(p, "type str type", parse_player_prop_type);
@@ -1839,7 +1839,7 @@ static enum parser_error parse_body_slot(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-struct parser *init_parse_body(void) {
+static struct parser *init_parse_body(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
 	parser_reg(p, "body str name", parse_body_body);
@@ -2556,7 +2556,7 @@ static struct file_parser p_race_parser = {
 	cleanup_p_race
 };
 
-/**extensions
+/**
  * ------------------------------------------------------------------------
  * Intialize player shapechange shapes
  * ------------------------------------------------------------------------ */
@@ -2874,7 +2874,7 @@ static enum parser_error parse_shape_blow(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-struct parser *init_parse_shape(void) {
+static struct parser *init_parse_shape(void) {
 	struct parser *p = parser_new();
 	z_info->shape_max = 0;
 	parser_setpriv(p, NULL);
@@ -2923,10 +2923,10 @@ static void cleanup_shape(void)
 		string_free((char *)shape->name);
 		free_effect(shape->effect);
 		while (blow) {
-			struct player_blow *next = blow->next;
+			struct player_blow *next_blow = blow->next;
 			string_free(blow->name);
 			mem_free(blow);
-			blow = next;
+			blow = next_blow;
 		}
 		cleanup_magic(&shape->magic);
 		mem_free(shape);

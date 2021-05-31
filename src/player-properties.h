@@ -21,7 +21,8 @@
 #define PLAYER_PROPS_H
 
 bool class_has_ability(const struct player_class *class,
-					   struct player_ability *ability);
+					   struct player_ability *ability,
+					   int level);
 bool race_has_ability(const struct player_race *race,
 					  struct player_ability *ability);
 void do_cmd_abilities(void);
