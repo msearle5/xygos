@@ -24,6 +24,7 @@ src/xygos-master
 *.gcda
 *.gcno
 src/tests/ran-already
+.dep
 .deps
 doc/manual/*.aux
 mk/buildsys.mk
