@@ -1328,6 +1328,17 @@ struct multiego_entry *multiego_find(struct multiego_entry *table, double total)
 	return table+i;
 }
 
+/* Returns true if the multiego combination is allowed to be generated.
+ * Forbidden combinations may be because they duplicate another ego.
+ * Define only as ego_item.txt lines?
+ * as forbid:all or forbid:<name>|<name> - and this persists to all following names?
+ * 	would then needforbid:none 
+ */
+bool multiego_allow(u16b *ego)
+{
+	return true;
+}
+
 /* Build a table of multiego combinations, given a level and tval.
  **/
 struct multiego_entry *multiego_table(int genlevel, int tval, double *ptotal)
@@ -1399,11 +1410,13 @@ struct multiego_entry *multiego_table(int genlevel, int tval, double *ptotal)
 
 						meprob *= scale;
 						if (meprob > 0.0) {
-							total += meprob;
-							entry->prob = total;
 							entry->ego[0] = i;
 							entry->ego[1] = j;
-							entry++;
+							if (multiego_allow(entry->ego)) {
+								total += meprob;
+								entry->prob = total;
+								entry++;
+							}
 						}
 						break;
 					}
