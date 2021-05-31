@@ -1434,12 +1434,12 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
 						/* Found one - write a probability entry */
 						if (kidx >= 0) {
 							/* Find the combined level */
-							int level = e_info[i].alloc_min + e_info[kidx].alloc_min;
+							int level = e_info[i].alloc_min + ego->alloc_min;
 							double meprob = kind->alloc_prob;
 							double min = (level + 5.0) * 1.2;
 							if (min < 10.0)
 								min = 10.0;
-							double max = e_info[i].alloc_max + e_info[kidx].alloc_max;
+							double max = e_info[i].alloc_max + ego->alloc_max;
 							if (max > 127.0)
 								max = 127.0;
 							if (max < (min + 10.0))

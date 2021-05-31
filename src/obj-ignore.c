@@ -500,8 +500,11 @@ void ego_ignore(struct object *obj)
 {
 	for(int i=0;i<MAX_EGOS;i++) {
 		if (obj->ego[i]) {
-			ego_ignore_types[obj->ego[i]->eidx][ignore_type_of(obj)] = true;
-			player->upkeep->notice |= PN_IGNORE;
+			int type = ignore_type_of(obj);
+			if (type < ITYPE_MAX) {
+				ego_ignore_types[obj->ego[i]->eidx][type] = true;
+				player->upkeep->notice |= PN_IGNORE;
+			}
 		}
 	}
 }
@@ -510,20 +513,28 @@ void ego_ignore_clear(struct object *obj)
 {
 	for(int i=0;i<MAX_EGOS;i++) {
 		if (obj->ego[i]) {
-			ego_ignore_types[obj->ego[i]->eidx][ignore_type_of(obj)] = false;
-			player->upkeep->notice |= PN_IGNORE;
+			int type = ignore_type_of(obj);
+			if (type < ITYPE_MAX) {
+				ego_ignore_types[obj->ego[i]->eidx][type] = false;
+				player->upkeep->notice |= PN_IGNORE;
+			}
 		}
 	}
 }
 
 void ego_ignore_toggle(int e_idx, int itype)
 {
+	assert(itype < ITYPE_MAX);
 	ego_ignore_types[e_idx][itype] = !ego_ignore_types[e_idx][itype];
 	player->upkeep->notice |= PN_IGNORE;
 }
 
 bool ego_is_ignored(int e_idx, int itype)
 {
+	assert(itype <= ITYPE_MAX);
+	assert(e_idx < z_info->e_max);
+	if (itype == ITYPE_MAX)
+		return false;
 	return ego_ignore_types[e_idx][itype];
 }
 
