@@ -1121,7 +1121,7 @@ rarity:10
 experience:6
 blow:BITE:HURT:1d4
 flags:ANIMAL | SMART | ONLY_GOLD | DROP_1 | DROP_60 | DROP_40 | DROP_20
-desc:It is a small red fast-moving spider, carrying something behind it in a silk purse.
+desc:It is a small red quickly scurrying spider, dragging something behind it in a silk purse.
 
 name:cave spider
 base:spider

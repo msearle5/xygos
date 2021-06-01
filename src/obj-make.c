@@ -25,6 +25,7 @@
 #include "obj-fault.h"
 #include "obj-gear.h"
 #include "obj-knowledge.h"
+#include "obj-init.h"
 #include "obj-make.h"
 #include "obj-pile.h"
 #include "obj-power.h"
@@ -1336,6 +1337,15 @@ struct multiego_entry *multiego_find(struct multiego_entry *table, double total)
  */
 bool multiego_allow(u16b *ego)
 {
+	for(int i=0;i<MAX_EGOS;i++) {
+		for(int j=0;j<MAX_EGOS;j++) {
+			if (i != j) {
+				if (multiego_forbid[ego[i] + (z_info->e_max * ego[j])]) {
+					return false;
+				}
+			}
+		}
+	}
 	return true;
 }
 

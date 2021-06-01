@@ -396,6 +396,8 @@ struct ego_item {
 	bool *slays;
 	int *faults;			/**< Array of fault powers */
 
+	char *forbid;			/**< Multi ego forbids */
+
 	int rating;				/**< Level rating boost */
 	int alloc_prob; 		/** Chance of being generated (i.e. rarity) */
 	int alloc_min;			/** Minimum depth (can appear earlier) */
