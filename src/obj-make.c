@@ -227,32 +227,46 @@ static int get_new_attr(bitflag flags[OF_SIZE], bitflag newf[OF_SIZE])
 }
 
 /**
+ * Get a random new resist on an item.
+ * Picked randomly from the range >= from < to
+ * Always picks from the lowest level of resistance.
+ * Will increase to any level of resistance but not to immunity (so returns false only if every resistance
+ * is already at immunity-1)
+ */
+static int random_resist(struct object *obj, int *resist, int from, int to)
+{
+	int i, count = 0;
+	int low = 0;
+
+	/* Find the lowest base resist */
+	for (i = ELEM_BASE_MIN; i < ELEM_HIGH_MIN; i++)
+		if (obj->el_info[i].res_level > low) low = obj->el_info[i].res_level;
+
+	/* Count the available base resists */
+	for (i = ELEM_BASE_MIN; i < ELEM_HIGH_MIN; i++)
+		if (obj->el_info[i].res_level == low) count++;
+
+	if (count == 0)
+		low++;
+
+	/* Pick one */
+	do {
+		*resist = rand_range(ELEM_BASE_MIN, ELEM_HIGH_MIN-1);
+	} while (obj->el_info[*resist].res_level < low);
+
+	/* Fail only if everything is immune */
+	if (obj->el_info[*resist].res_level >= IMMUNITY-1)
+		return false;
+
+	return true;
+}
+
+/**
  * Get a random new base resist on an item
  */
 static int random_base_resist(struct object *obj, int *resist)
 {
-	int i, r, count = 0;
-
-	/* Count the available base resists */
-	for (i = ELEM_BASE_MIN; i < ELEM_HIGH_MIN; i++)
-		if (obj->el_info[i].res_level == 0) count++;
-
-	if (count == 0) return false;
-
-	/* Pick one */
-	r = randint0(count);
-
-	/* Find the one we picked */
-	for (i = ELEM_BASE_MIN; i < ELEM_HIGH_MIN; i++) {
-		if (obj->el_info[i].res_level != 0) continue;
-		if (r == 0) {
-			*resist = i;
-			return true;
-		}
-		r--;
-	}
-
-	return false;
+	return random_resist(obj, resist, ELEM_BASE_MIN, ELEM_HIGH_MIN);
 }
 
 /**
@@ -260,28 +274,7 @@ static int random_base_resist(struct object *obj, int *resist)
  */
 static int random_high_resist(struct object *obj, int *resist)
 {
-	int i, r, count = 0;
-
-	/* Count the available high resists */
-	for (i = ELEM_HIGH_MIN; i < ELEM_HIGH_MAX; i++)
-		if (obj->el_info[i].res_level == 0) count++;
-
-	if (count == 0) return false;
-
-	/* Pick one */
-	r = randint0(count);
-
-	/* Find the one we picked */
-	for (i = ELEM_HIGH_MIN; i < ELEM_HIGH_MAX; i++) {
-		if (obj->el_info[i].res_level != 0) continue;
-		if (r == 0) {
-			*resist = i;
-			return true;
-		}
-		r--;
-	}
-
-	return false;
+	return random_resist(obj, resist, ELEM_HIGH_MIN, ELEM_HIGH_MAX);
 }
 
 
@@ -492,13 +485,13 @@ void ego_apply_magic(struct object *obj, int level)
 			} else if (kf_has(ego->kind_flags, KF_RAND_BASE_RES) || (pick > 1)) {
 				/* Get a base resist if available, mark it as random */
 				if (random_base_resist(obj, &resist)) {
-					obj->el_info[resist].res_level = 1;
+					obj->el_info[resist].res_level++;
 					obj->el_info[resist].flags |= EL_INFO_RANDOM | EL_INFO_IGNORE;
 				}
 			} else if (kf_has(ego->kind_flags, KF_RAND_HI_RES)) {
 				/* Get a high resist if available, mark it as random */
 				if (random_high_resist(obj, &resist)) {
-					obj->el_info[resist].res_level = 1;
+					obj->el_info[resist].res_level++;
 					obj->el_info[resist].flags |= EL_INFO_RANDOM | EL_INFO_IGNORE;
 				}
 			}
@@ -535,9 +528,8 @@ void ego_apply_magic(struct object *obj, int level)
 
 			/* Add resists */
 			for (i = 0; i < ELEM_MAX; i++) {
-				/* Take the larger of ego and base object resist levels */
-				obj->el_info[i].res_level =
-					MAX(ego->el_info[i].res_level, obj->el_info[i].res_level);
+				/* Take the sum of ego and base object resist levels (clipped at immunity) */
+				obj->el_info[i].res_level = MIN(ego->el_info[i].res_level + obj->el_info[i].res_level, IMMUNITY);
 
 				/* Union of flags so as to know when ignoring is notable */
 				obj->el_info[i].flags |= ego->el_info[i].flags;
