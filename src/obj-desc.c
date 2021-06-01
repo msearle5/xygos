@@ -419,7 +419,7 @@ static size_t obj_desc_combat(const struct object *obj, char *buf, size_t max,
 	if (player->obj_k->to_h && player->obj_k->to_d &&
 		(tval_is_weapon(obj) || obj->to_d ||
 		 (obj->to_h && !tval_is_body_armor(obj) && !(obj->tval == TV_BOOTS)) ||
-		 (!object_has_standard_to_h(obj) && !obj->artifact && !obj->ego))) {
+		 (!object_has_standard_to_h(obj) && !obj->artifact && !obj->ego[0]))) {
 		/* In general show full combat bonuses */
 		strnfcat(buf, max, &end, " (%+d,%+d)", obj->to_h, obj->to_d);
 	} else if (obj->to_h < 0 && object_has_standard_to_h(obj)) {

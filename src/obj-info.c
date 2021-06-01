@@ -174,7 +174,7 @@ static bool describe_stats(textblock *tb, const struct object *obj,
 	/* Fact of but not size of mods is known for egos and flavoured items
 	 * the player is aware of */
 	bool known_effect = false;
-	if (obj->known->ego)
+	if (obj->known->ego[0])
 		known_effect = true;
 	if (tval_can_have_flavor_k(obj->kind) && object_flavor_is_aware(obj))
 		known_effect = true;

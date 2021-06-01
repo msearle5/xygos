@@ -170,7 +170,8 @@ static bool check_similar(const struct object* obj1, const struct object *obj2) 
 				return false;
 		}
 
-		if (obj1->ego != obj2->ego) return false;
+		for(int i=0;i<MAX_EGOS;i++)
+			if (obj1->ego[i] != obj2->ego[i]) return false;
 
 		if (!faults_are_equal(obj1, obj2)) return false;
 	}

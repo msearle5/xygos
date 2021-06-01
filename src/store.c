@@ -1174,7 +1174,7 @@ static struct object *store_find_kind(struct store *s, struct object_kind *k) {
 
 	/* Check if it's already in stock */
 	for (obj = s->stock; obj; obj = obj->next) {
-		if (obj->kind == k && !obj->ego)
+		if (obj->kind == k && !obj->ego[0])
 			return obj;
 	}
 
@@ -1311,7 +1311,7 @@ static bool black_market_ok(const struct object *obj)
 	int i;
 
 	/* Ego items are always fine */
-	if (obj->ego) return true;
+	if (obj->ego[0]) return true;
 
 	/* Good items are normally fine */
 	if (obj->to_a > 2) return true;
@@ -1952,8 +1952,9 @@ int find_inven(const struct object *obj)
 					continue;
 
 				/* Require identical "ego-item" names */
-				if (obj->ego != gear_obj->ego)
-					continue;
+				for(int i=0;i<MAX_EGOS;i++)
+					if (obj->ego[i] != gear_obj->ego[i])
+						continue;
 
 				/* Lights must have same amount of fuel */
 				else if (obj->timeout != gear_obj->timeout &&

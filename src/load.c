@@ -263,7 +263,7 @@ static struct object *rd_item(void)
 			obj->effect = obj->kind->effect;
 		} else if (effect < -MAX_EGOS) {
 			note(format("Bad effect %d!", effect));
-		} else if (!obj->ego) {
+		} else if (!obj->ego[-effect]) {
 			note(format("Bad effect %d, no ego!", effect));
 		} else {
 			obj->effect = obj->ego[-effect]->effect;

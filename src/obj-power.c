@@ -269,7 +269,7 @@ static int launcher_ammo_damage_power(const struct object *obj, int p)
 	if (tval_is_ammo(obj)) {
 		if (obj->tval == TV_AMMO_9) ammo_type = 1;
 		if (obj->tval == TV_AMMO_12) ammo_type = 2;
-		if (obj->ego)
+		if (obj->ego[0])
 			p += (archery[ammo_type].launch_dam * DAMAGE_POWER / 2);
 		p = p * archery[ammo_type].launch_mult / (2 * MAX_BLOWS);
 		log_obj(format("After multiplying ammo and rescaling, power is %d\n",
@@ -885,7 +885,7 @@ int object_value_real(const struct object *obj, int qty)
 
 		/* Rescale for expendables */
 		if ((tval_is_light(obj) && of_has(obj->flags, OF_BURNS_OUT)
-			 && !obj->ego) || tval_is_ammo(obj)) {
+			 && !obj->ego[0]) || tval_is_ammo(obj)) {
 			value = value / AMMO_RESCALER;
 		}
 

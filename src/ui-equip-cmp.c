@@ -1794,7 +1794,7 @@ static void add_obj_to_summary(const struct object *obj, void *closure)
 		/* Try to get some finer distinctions. */
 		if (obj->known && obj->known->artifact) {
 			e->qual = EQUIP_QUAL_ARTIFACT;
-		} else if (obj->known && obj->known->ego) {
+		} else if (obj->known && obj->known->ego[0]) {
 			e->qual = EQUIP_QUAL_EGO;
 		} else {
 			/* Treat unknown items as average. */

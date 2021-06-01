@@ -781,7 +781,7 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 			if ((obj->to_h > 0) && (obj->to_d > 0))
 				add_stats(ST_GOOD_AMMO, vault, mon, number);
 
-			if (obj->ego)
+			if (obj->ego[0])
 				add_stats(ST_BRANDSLAY_AMMO, vault, mon, number);
 
 			if (strstr(obj->kind->name, "Seeker") ||
@@ -791,7 +791,7 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 				add_stats(ST_VERYGOOD_AMMO, vault, mon, number);
 
 				/* Ego mithril and seeker ammo */
-				if (obj->ego) {
+				if (obj->ego[0]) {
 					add_stats(ST_AWESOME_AMMO, vault, mon, number);
 
 					if (obj_has_ego(obj, "of Slay Evil"))

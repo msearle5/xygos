@@ -2632,7 +2632,7 @@ static errr finish_parse_ego(struct parser *p) {
 	for (int i=0;i<z_info->e_max;i++) {
 		struct ego_item *e = &e_info[i];
 		if (e->forbid) {
-			char *tok = strtok(e->forbid, "|");
+			char *tok = strtok(e->forbid, "| ");
 			while (tok) {
 				struct ego_item *forbid_ego = NULL;
 				for (int j = 0; j < z_info->e_max; j++) {
@@ -2643,12 +2643,12 @@ static errr finish_parse_ego(struct parser *p) {
 					}
 				}
 				if (!forbid_ego) {
-					quit_fmt("Ego %s not recognized", tok);
+					quit_fmt("Ego '%s' not recognized", tok);
 				} else {
 					multiego_forbid[(i * z_info->e_max) + (forbid_ego - e_info)] = true;
 					multiego_forbid[((forbid_ego - e_info) * z_info->e_max) + i] = true;
 				}
-				tok = strtok(NULL, "|");
+				tok = strtok(NULL, "| ");
 			};
 			string_free(e->forbid);
 			e->forbid = NULL;

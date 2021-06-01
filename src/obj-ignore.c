@@ -473,7 +473,7 @@ byte ignore_level_of(const struct object *obj)
 			value = IGNORE_AVERAGE;
 		}
 
-		if (obj->ego)
+		if (obj->ego[0])
 			value = IGNORE_ALL;
 		else if (obj->artifact)
 			value = IGNORE_MAX;
