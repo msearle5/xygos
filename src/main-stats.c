@@ -1466,7 +1466,7 @@ static void stats_cleanup_angband_run(void)
 static errr run_stats(void)
 {
 	u32b run;
-	struct artifact *a_info_save;
+	struct artifact *a_info_save = NULL;
 	unsigned int i;
 	int err;
 	bool status; 

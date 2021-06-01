@@ -2634,7 +2634,7 @@ static errr finish_parse_ego(struct parser *p) {
 		if (e->forbid) {
 			char *tok = strtok(e->forbid, "|");
 			while (tok) {
-				struct ego_item *forbid_ego;
+				struct ego_item *forbid_ego = NULL;
 				for (int j = 0; j < z_info->e_max; j++) {
 					struct ego_item *ego = &e_info[j];
 					if ((ego) && (ego->name) && (my_stristr(ego->name, tok))) {
