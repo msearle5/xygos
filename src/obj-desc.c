@@ -328,8 +328,10 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 			strnfcat(buf, max, &end, "%s ", obj->artifact->name + 1);
 
 		/* Prepend ego name, for egos using a <-name */
-		if ((object_is_known_ego(obj)) && (obj->ego->name) && (obj->ego->name[0] == '<'))
-			strnfcat(buf, max, &end, "%s ", obj->ego->name + 1);
+		for(int i=0;i<MAX_EGOS;i++) {
+			if ((object_is_known_ego(obj)) && (obj->ego[i]) && (obj->ego[i]->name) && (obj->ego[i]->name[0] == '<'))
+				strnfcat(buf, max, &end, "%s ", obj->ego[i]->name + 1);
+		}
 
 		/* Base name */
 		end = obj_desc_name_format(buf, max, end, basename, modstr, plural);
@@ -337,12 +339,29 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 		/* Append extra names of various kinds */
 		if ((object_is_known_artifact(obj)) && (obj->artifact->name) && (obj->artifact->name[0] != '<'))
 			strnfcat(buf, max, &end, " %s", obj->artifact->name);
-		else if (((obj->known->ego && !(mode & ODESC_NOEGO)) || (obj->ego && store)) && (obj->ego->name[0] !='<'))
-			strnfcat(buf, max, &end, " %s", obj->ego->name);
-		else if (aware && !obj->artifact &&
+		else {
+			int count = 0;
+			for(int i=0;i<MAX_EGOS;i++) {
+				if ((obj->ego[i]) && ((obj->known->ego[i] && !(mode & ODESC_NOEGO)) || (obj->ego[i] && store)) && (obj->ego[i]->name[0] !='<')) {
+					if (obj->ego[i]->name[0] == '(') {
+						/* (Foo) */
+						if (!count) {
+							strnfcat(buf, max, &end, " %s", obj->ego[i]->name);
+						} else {
+							end--;
+							strnfcat(buf, max, &end, " / %s", obj->ego[i]->name + 1);
+						}
+						count++;
+					} else {
+						/* of Foo */
+						strnfcat(buf, max, &end, " %s", obj->ego[i]->name);
+					}
+				}
+			}
+		}/* else if (aware && !obj->artifact &&
 				 (obj->kind->flavor || obj->kind->tval == TV_CARD)) {
 			;
-		}
+		}*/
 	}
 	return end;
 }
@@ -400,7 +419,7 @@ static size_t obj_desc_combat(const struct object *obj, char *buf, size_t max,
 	if (player->obj_k->to_h && player->obj_k->to_d &&
 		(tval_is_weapon(obj) || obj->to_d ||
 		 (obj->to_h && !tval_is_body_armor(obj) && !(obj->tval == TV_BOOTS)) ||
-		 (!object_has_standard_to_h(obj) && !obj->artifact && !obj->ego))) {
+		 (!object_has_standard_to_h(obj) && !obj->artifact && !obj->ego[0]))) {
 		/* In general show full combat bonuses */
 		strnfcat(buf, max, &end, " (%+d,%+d)", obj->to_h, obj->to_d);
 	} else if (obj->to_h < 0 && object_has_standard_to_h(obj)) {
@@ -639,8 +658,10 @@ size_t object_desc(char *buf, size_t max, const struct object *obj, int mode)
 				ignore_item_ok(obj) ? " {ignore}" : "");
 
 	/* Egos and kinds whose name we know are seen */
-	if (obj->known->ego && obj->ego && !spoil)
-		obj->ego->everseen = true;
+	for(int i=0; i<MAX_EGOS; i++) {
+		if (obj->known->ego[i] && obj->ego[i] && !spoil)
+			obj->ego[i]->everseen = true;
+	}
 
 	if (object_flavor_is_aware(obj) && !spoil)
 		obj->kind->everseen = true;

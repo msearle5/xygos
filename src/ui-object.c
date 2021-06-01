@@ -1660,21 +1660,23 @@ void textui_cmd_ignore_menu(struct object *obj)
 	}
 
 	/* Ego ignoring */
-	if (obj->known->ego) {
-		struct ego_desc choice;
-		struct ego_item *ego = obj->ego;
-		char tmp[80] = "";
+	for(int i=0;i<MAX_EGOS;i++) {
+		if (obj->known->ego[i]) {
+			struct ego_desc choice;
+			struct ego_item *ego = obj->ego[i];
+			char tmp[80] = "";
 
-		choice.e_idx = ego->eidx;
-		choice.itype = ignore_type_of(obj);
-		choice.short_name = "";
-		(void) ego_item_name(tmp, sizeof(tmp), &choice);
-		if (!ego_is_ignored(choice.e_idx, choice.itype)) {
-			strnfmt(out_val, sizeof out_val, "All %s", tmp + 4);
-			menu_dynamic_add(m, out_val, IGNORE_THIS_EGO);
-		} else {
-			strnfmt(out_val, sizeof out_val, "Unignore all %s", tmp + 4);
-			menu_dynamic_add(m, out_val, UNIGNORE_THIS_EGO);
+			choice.e_idx = ego->eidx;
+			choice.itype = ignore_type_of(obj);
+			choice.short_name = "";
+			(void) ego_item_name(tmp, sizeof(tmp), &choice);
+			if (!ego_is_ignored(choice.e_idx, choice.itype)) {
+				strnfmt(out_val, sizeof out_val, "All %s", tmp + 4);
+				menu_dynamic_add(m, out_val, IGNORE_THIS_EGO);
+			} else {
+				strnfmt(out_val, sizeof out_val, "Unignore all %s", tmp + 4);
+				menu_dynamic_add(m, out_val, UNIGNORE_THIS_EGO);
+			}
 		}
 	}
 

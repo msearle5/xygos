@@ -239,8 +239,10 @@ void combine_books(int *count, int *spells, int *maxidx, struct class_spell **sp
 		for (struct object *obj = player->gear; obj; obj = obj->next) {
 			if (object_is_equipped(player->body, obj)) {
 				combine_class_books(&obj->kind->magic, count, spells, maxidx, spellps);
-				if (obj->ego)
-					combine_class_books(&obj->ego->magic, count, spells, maxidx, spellps);
+				for(int i=0;i<MAX_EGOS;i++) {
+					if (obj->ego[i])
+						combine_class_books(&obj->ego[i]->magic, count, spells, maxidx, spellps);
+				}
 				if (obj->artifact)
 					combine_class_books(&obj->artifact->magic, count, spells, maxidx, spellps);
 			}

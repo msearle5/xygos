@@ -449,9 +449,11 @@ void object_flags_known(const struct object *obj, bitflag flags[OF_SIZE])
 		of_union(flags, obj->kind->flags);
 	}
 
-	if (obj->ego && easy_know(obj)) {
-		of_union(flags, obj->ego->flags);
-		of_diff(flags, obj->ego->flags_off);
+	for(int i=0;i<MAX_EGOS;i++) {
+		if (obj->ego[i] && easy_know(obj)) {
+			of_union(flags, obj->ego[i]->flags);
+			of_diff(flags, obj->ego[i]->flags_off);
+		}
 	}
 }
 
@@ -481,9 +483,11 @@ void object_carried_flags_known(const struct object *obj, bitflag flags[OF_SIZE]
 		of_union(flags, obj->kind->carried_flags);
 	}
 
-	if (obj->ego && easy_know(obj)) {
-		of_union(flags, obj->ego->carried_flags);
-		of_diff(flags, obj->ego->carried_flags_off);
+	for(int i=0;i<MAX_EGOS;i++) {
+		if (obj->ego[i] && easy_know(obj)) {
+			of_union(flags, obj->ego[i]->carried_flags);
+			of_diff(flags, obj->ego[i]->carried_flags_off);
+		}
 	}
 }
 
@@ -678,6 +682,23 @@ struct ego_item *lookup_ego_item(const char *name, int tval, int sval)
 	}
 
 	return NULL;
+}
+
+/**
+ * Returns true if the object has an ego with name matching (as a case insensitive substring) the given name.
+ * Multiple ego items will try to match any of them.
+ * \param obj object
+ * \param name ego type name
+ */
+bool obj_has_ego(const struct object *obj, const char *name) {
+	for (int i=0;i<MAX_EGOS;i++) {
+		struct ego_item *ego = obj->ego[i];
+		if (ego) {
+			if (my_stristr(ego->name, name))
+				return true;
+		}
+	}
+	return false;
 }
 
 /**

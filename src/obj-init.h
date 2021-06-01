@@ -44,6 +44,8 @@ extern const char *element_names[];
 extern const char *obj_mods[];
 extern const struct object_material material[];
 
+extern bool *multiego_forbid;
+
 enum parser_error parse_getweight(struct parser *p, const char *field, int *grams);
 const struct object_material *get_material_by_name(const char *name);
 

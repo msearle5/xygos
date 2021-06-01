@@ -473,7 +473,7 @@ byte ignore_level_of(const struct object *obj)
 			value = IGNORE_AVERAGE;
 		}
 
-		if (obj->ego)
+		if (obj->ego[0])
 			value = IGNORE_ALL;
 		else if (obj->artifact)
 			value = IGNORE_MAX;
@@ -498,26 +498,43 @@ void kind_ignore_clear(struct object_kind *kind)
 
 void ego_ignore(struct object *obj)
 {
-	assert(obj->ego);
-	ego_ignore_types[obj->ego->eidx][ignore_type_of(obj)] = true;
-	player->upkeep->notice |= PN_IGNORE;
+	for(int i=0;i<MAX_EGOS;i++) {
+		if (obj->ego[i]) {
+			int type = ignore_type_of(obj);
+			if (type < ITYPE_MAX) {
+				ego_ignore_types[obj->ego[i]->eidx][type] = true;
+				player->upkeep->notice |= PN_IGNORE;
+			}
+		}
+	}
 }
 
 void ego_ignore_clear(struct object *obj)
 {
-	assert(obj->ego);
-	ego_ignore_types[obj->ego->eidx][ignore_type_of(obj)] = false;
-	player->upkeep->notice |= PN_IGNORE;
+	for(int i=0;i<MAX_EGOS;i++) {
+		if (obj->ego[i]) {
+			int type = ignore_type_of(obj);
+			if (type < ITYPE_MAX) {
+				ego_ignore_types[obj->ego[i]->eidx][type] = false;
+				player->upkeep->notice |= PN_IGNORE;
+			}
+		}
+	}
 }
 
 void ego_ignore_toggle(int e_idx, int itype)
 {
+	assert(itype < ITYPE_MAX);
 	ego_ignore_types[e_idx][itype] = !ego_ignore_types[e_idx][itype];
 	player->upkeep->notice |= PN_IGNORE;
 }
 
 bool ego_is_ignored(int e_idx, int itype)
 {
+	assert(itype <= ITYPE_MAX);
+	assert(e_idx < z_info->e_max);
+	if (itype == ITYPE_MAX)
+		return false;
 	return ego_ignore_types[e_idx][itype];
 }
 
@@ -571,8 +588,10 @@ bool object_is_ignored(const struct object *obj)
 		return true;
 
 	/* Ignore ego items if known */
-	if (obj->known->ego && obj->ego && ego_is_ignored(obj->ego->eidx, ignore_type_of(obj)))
-		return true;
+	for(int i=0;i<MAX_EGOS;i++) {
+		if (obj->known->ego[i] && obj->ego[i] && ego_is_ignored(obj->ego[i]->eidx, ignore_type_of(obj)))
+			return true;
+	}
 
 	type = ignore_type_of(obj);
 	if (type == ITYPE_MAX)

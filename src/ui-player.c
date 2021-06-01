@@ -217,7 +217,7 @@ static void configure_char_sheet(bool minimum_size, bool percentmode)
 	}
 
 	/* Fit columns to the screen */
-	int offset, low, lowi;
+	int offset, low, lowi = 0;
 	do {
 		/* +1, because there is no gap after the rightmost region */
 		offset = wid+1;

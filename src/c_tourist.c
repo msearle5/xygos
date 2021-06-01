@@ -36,7 +36,7 @@ static void tourist_init(void)
 	player->au_birth = player->au;
 
 	/* Possible random item */
-	struct start_item item = { 0, 0, 1, 1, NULL };
+	struct start_item item = { 0, 0, 1, 1 };
 	bool items = false;
 	switch(randint0(10)) {
 		case 0:

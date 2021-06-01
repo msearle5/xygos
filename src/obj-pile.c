@@ -454,7 +454,8 @@ bool object_stackable(const struct object *obj1, const struct object *obj2,
 				return (false);
 
 		/* Require identical ego-item types */
-		if (obj1->ego != obj2->ego) return false;
+		for (i = 0; i < MAX_EGOS; i++)
+			if (obj1->ego[i] != obj2->ego[i]) return false;
 
 		/* Require identical faults */
 		if (!faults_are_equal(obj1, obj2)) return false;
@@ -1038,7 +1039,7 @@ bool object_destroyed(struct object *obj, struct loc loc)
 			break;
 		}
 		case TV_LIGHT: {
-			if ((obj->ego) && (streq(obj->ego->name, "(RTG mod)"))) {
+			if (obj_has_ego(obj, "(RTG mod)")) {
 				msg("The light's RTG breaks open!");
 				project(source_object(obj), 6, loc, 150 + damroll(1, 20), ELEM_RADIATION,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
 				return true;

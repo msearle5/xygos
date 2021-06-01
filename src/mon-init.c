@@ -1437,7 +1437,7 @@ static enum parser_error parse_monster_spells(struct parser *p) {
 static enum parser_error parse_monster_drop(struct parser *p) {
 	struct monster_race *r = parser_priv(p);
 	struct monster_drop *d;
-	struct object_kind *k;
+	struct object_kind *k = NULL;
 	struct artifact *a;
 	int tval = 0;
 	int sval = 0;

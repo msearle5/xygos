@@ -91,6 +91,8 @@ const struct object_material material[] = {
 };
 #undef MATERIAL
 
+bool *multiego_forbid;
+
 bool grab_element_flag(struct element_info *info, const char *flag_name)
 {
 	char prefix[20];
@@ -2498,6 +2500,15 @@ static enum parser_error parse_ego_desc(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_ego_forbid(struct parser *p) {
+	struct ego_item *e = parser_priv(p);
+
+	if (!e)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	e->forbid = string_append(e->forbid, parser_getstr(p, "text"));
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_ego_slay(struct parser *p) {
 	struct ego_item *e = parser_priv(p);
 	const char *s = parser_getstr(p, "code");
@@ -2579,6 +2590,7 @@ struct parser *init_parse_ego(void) {
 	parser_reg(p, "slay str code", parse_ego_slay);
 	parser_reg(p, "brand str code", parse_ego_brand);
 	parser_reg(p, "fault sym name int power", parse_ego_fault);
+	parser_reg(p, "forbid str text", parse_ego_forbid);
 	init_parse_magic(p);
 	return p;
 }
@@ -2615,6 +2627,34 @@ static errr finish_parse_ego(struct parser *p) {
 		mem_free(e);
 	}
 
+	/* Parse forbids */
+	multiego_forbid = mem_zalloc(z_info->e_max * z_info->e_max);
+	for (int i=0;i<z_info->e_max;i++) {
+		struct ego_item *e = &e_info[i];
+		if (e->forbid) {
+			char *tok = strtok(e->forbid, "| ");
+			while (tok) {
+				struct ego_item *forbid_ego = NULL;
+				for (int j = 0; j < z_info->e_max; j++) {
+					struct ego_item *ego = &e_info[j];
+					if ((ego) && (ego->name) && (my_stristr(ego->name, tok))) {
+						forbid_ego = ego;
+						break;
+					}
+				}
+				if (!forbid_ego) {
+					quit_fmt("Ego '%s' not recognized", tok);
+				} else {
+					multiego_forbid[(i * z_info->e_max) + (forbid_ego - e_info)] = true;
+					multiego_forbid[((forbid_ego - e_info) * z_info->e_max) + i] = true;
+				}
+				tok = strtok(NULL, "| ");
+			};
+			string_free(e->forbid);
+			e->forbid = NULL;
+		}
+	}
+
 	parser_destroy(p);
 	return 0;
 }
@@ -2628,6 +2668,7 @@ static void cleanup_ego(void)
 
 		string_free(ego->name);
 		string_free(ego->text);
+		string_free(ego->forbid);
 		mem_free(ego->brands);
 		mem_free(ego->slays);
 		mem_free(ego->faults);

@@ -11,6 +11,8 @@
 #include "z-bitflag.h"
 #include "z-dice.h"
 
+#define MAX_EGOS		2
+
 /*** Game constants ***/
 
 /**
@@ -394,6 +396,8 @@ struct ego_item {
 	bool *slays;
 	int *faults;			/**< Array of fault powers */
 
+	char *forbid;			/**< Multi ego forbids */
+
 	int rating;				/**< Level rating boost */
 	int alloc_prob; 		/** Chance of being generated (i.e. rarity) */
 	int alloc_min;			/** Minimum depth (can appear earlier) */
@@ -467,16 +471,16 @@ struct fault_data {
  * regular basis, and care must be taken when handling such objects.
  */
 struct object {
-	struct object_kind *kind;	/**< Kind of the object */
-	struct ego_item *ego;		/**< Ego item info of the object, if any */
-	struct artifact *artifact;	/**< Artifact info of the object, if any */
+	struct object_kind *kind;		/**< Kind of the object */
+	struct ego_item *ego[MAX_EGOS];	/**< Ego item info of the object, if any */
+	struct artifact *artifact;		/**< Artifact info of the object, if any */
 
 	struct object *prev;	/**< Previous object in a pile */
 	struct object *next;	/**< Next object in a pile */
 	struct object *known;	/**< Known version of this object */
 
 	struct loc grid;		/**< position on map, or (0, 0) */
-	
+
 	u16b oidx;				/**< Item list index, if any */
 	byte tval;				/**< Item type (from kind) */
 	byte sval;				/**< Item sub-type (from kind) */
@@ -527,7 +531,7 @@ struct object {
  */
 static struct object const OBJECT_NULL = {
 	.kind = NULL,
-	.ego = NULL,
+	.ego = { NULL, NULL },
 	.artifact = NULL,
 	.prev = NULL,
 	.next = NULL,

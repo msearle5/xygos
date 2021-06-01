@@ -222,10 +222,11 @@ static void wiz_display_item(const struct object *obj, bool all)
 		obj->kind->kidx, obj->tval, obj->sval, obj->weight,
 		obj->timeout), 5, j);
 
-	prt(format("number = %-3d  pval = %-5d  name1 = %-4d  egoidx = %-4d  cost = %ld",
+	prt(format("number = %-3d  pval = %-5d  name1 = %-4d  egoidx = %-4d  ego2 = %-4d  cost = %ld",
 		obj->number, obj->pval,
 		obj->artifact ? obj->artifact->aidx : 0,
-		obj->ego ? (int) obj->ego->eidx : -1,
+		obj->ego[0] ? (int) obj->ego[0]->eidx : -1,
+		obj->ego[1] ? (int) obj->ego[1]->eidx : -1,
 		(long)object_value(obj, 1)), 6, j);
 
 	nflg = MIN(OF_MAX - FLAG_START, 80);
@@ -2776,8 +2777,8 @@ void do_cmd_wiz_tweak_item(struct command *cmd)
 		cmd_set_arg_item(cmd, "item", obj);
 	}
 
-	/* Hack -- leave artifacts alone */
-	if (obj->artifact) return;
+	/* Hack -- leave artifacts, multiegos alone */
+	if ((obj->artifact) || (obj->ego[1])) return;
 
 	/*
 	 * Check for whether updating the player information or let
@@ -2788,8 +2789,8 @@ void do_cmd_wiz_tweak_item(struct command *cmd)
 	}
 
 	/* Get ego name. */
-	if (obj->ego) {
-		strnfmt(tmp_val, sizeof(tmp_val), "%s", obj->ego->name);
+	if (obj->ego[0]) {
+		strnfmt(tmp_val, sizeof(tmp_val), "%s", obj->ego[0]->name);
 	} else {
 		strnfmt(tmp_val, sizeof(tmp_val), "-1");
 	}
@@ -2798,15 +2799,15 @@ void do_cmd_wiz_tweak_item(struct command *cmd)
 	/* Accept index or name */
 	if (get_int_from_string(tmp_val, &val)) {
 		if (val >= 0 && val < z_info->e_max) {
-			obj->ego = &e_info[val];
+			obj->ego[0] = &e_info[val];
 		} else {
-			obj->ego = NULL;
+			obj->ego[0] = NULL;
 		}
 	} else {
-		obj->ego = lookup_ego_item(tmp_val, obj->tval, obj->sval);
+		obj->ego[0] = lookup_ego_item(tmp_val, obj->tval, obj->sval);
 	}
-	if (obj->ego) {
-		struct ego_item *e = obj->ego;
+	if (obj->ego[0]) {
+		struct ego_item *e = obj->ego[0];
 		struct object *prev = obj->prev;
 		struct object *next = obj->next;
 		struct object *known = obj->known;
@@ -2815,7 +2816,7 @@ void do_cmd_wiz_tweak_item(struct command *cmd)
 		bitflag notice = obj->notice;
 
 		object_prep(obj, obj->kind, player->depth, RANDOMISE);
-		obj->ego = e;
+		obj->ego[0] = e;
 		obj->prev = prev;
 		obj->next = next;
 		obj->known = known;
@@ -2860,7 +2861,8 @@ void do_cmd_wiz_tweak_item(struct command *cmd)
 		struct loc grid = obj->grid;
 		bitflag notice = obj->notice;
 
-		obj->ego = NULL;
+		for(int i=0;i<MAX_EGOS;i++)
+			obj->ego[i] = NULL;
 		object_prep(obj, obj->kind, obj->artifact->alloc_min, RANDOMISE);
 		obj->artifact = a;
 		obj->prev = prev;
