@@ -604,6 +604,9 @@ struct object_kind *lookup_kind(int tval, int sval)
 {
 	int k;
 
+	if (!z_info)
+		return NULL;
+
 	/* Look for it */
 	for (k = 0; k < z_info->k_max; k++) {
 		struct object_kind *kind = &k_info[k];

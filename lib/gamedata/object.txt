@@ -2296,13 +2296,16 @@ material:titanium
 
 ### Shields ###
 
-#N:180:& Buckler~
-#G:):U
-#I:shield
-#W:3:0:20:30
-#A:100:3 to 100
-#P:1:1d1:0:0:0
-#D:A small round shield designed to be useful in deflecting enemy swords.
+name:& Buckler~
+type:shield
+graphics:):U
+level:1
+weight:20
+cost:30
+alloc:20:3 to 100
+attack:1d1:0:0
+armor:1:0
+desc:A small round shield designed to be useful in deflecting enemy swords.
 
 name:& Wicker Shield~
 type:shield
@@ -2454,6 +2457,7 @@ effect:ENCHANT:TOHIT
 dice:1
 desc:Attempts to make weapons or ammunition a little more precise, more likely to hit its target.
 
+#desc?
 name:enhanced power
 type:card
 graphics:-:Deep Light Blue
