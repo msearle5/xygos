@@ -1,13 +1,14 @@
 master
-multiego	inactive, merged		Multiple ego items
-winquest	inactive, merged		The replacement for Morgoth
-borg		active, experimental	Porting the Borg
-artifacts	inactive, merged		Randarts / halfarts etc.
-mutants		inactive, merged		Mutated monsters
-resist		inactive, merged		Resistance by steps
-sliding		inactive, merged		Sliding (mixed) classes
-champions	active, experimental	Champions (ghosts)
-world		inactive, merged		Multi-town world
-ego			inactive, merged		New ego item allocation method
-stores		inactive, merged		New store options
-timelimit	inactive, merged		Danger level increasing with time
+personality	active, experimental		Personalities
+multiego	inactive, merged			Multiple ego items
+winquest	inactive, merged			The replacement for Morgoth
+borg		active, experimental		Porting the Borg
+artifacts	inactive, merged			Randarts / halfarts etc.
+mutants		inactive, merged			Mutated monsters
+resist		inactive, merged			Resistance by steps
+sliding		inactive, merged			Sliding (mixed) classes
+champions	just resting, experimental	Champions (ghosts)
+world		inactive, merged			Multi-town world
+ego			inactive, merged			New ego item allocation method
+stores		inactive, merged			New store options
+timelimit	inactive, merged			Danger level increasing with time
