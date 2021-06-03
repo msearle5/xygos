@@ -468,25 +468,25 @@ static int test_calc_inventory_oversubscribed_quiver(void *state) {
 			{ TV_AMMO_6, 1, 25, true, false },
 			{ TV_AMMO_12, 2, 12, true, false },
 			{ TV_AMMO_6, 3, 17, true, false },
-			{ -1, -1, -1 }
+			{ -1, -1, -1, false, false }
 		},
 		{
-			{ TV_AMMO_6, 2, 40 },
-			{ TV_AMMO_6, 3, 17 },
-			{ -1, -1, -1 }
+			{ TV_AMMO_6, 2, 40, true, false },
+			{ TV_AMMO_6, 3, 17, true, false },
+			{ -1, -1, -1, false, false }
 		},
 		{
-			{ TV_AMMO_12, 1, 40 },
-			{ TV_AMMO_12, 1, 40 },
-			{ TV_AMMO_12, 2, 12 },
-			{ TV_AMMO_12, 3, 7 },
-			{ TV_AMMO_9, 1, 40 },
-			{ TV_AMMO_9, 1, 40 },
-			{ TV_AMMO_9, 2, 10 },
-			{ TV_AMMO_9, 3, 15 },
-			{ TV_AMMO_6, 1, 25 },
-			{ TV_AMMO_6, 2, 40 },
-			{ -1, -1, -1 }
+			{ TV_AMMO_12, 1, 40, true, false },
+			{ TV_AMMO_12, 1, 40, true, false },
+			{ TV_AMMO_12, 2, 12, true, false },
+			{ TV_AMMO_12, 3, 7, true, false },
+			{ TV_AMMO_9, 1, 40, true, false },
+			{ TV_AMMO_9, 1, 40, true, false },
+			{ TV_AMMO_9, 2, 10, true, false },
+			{ TV_AMMO_9, 3, 15, true, false },
+			{ TV_AMMO_6, 1, 25, true, false },
+			{ TV_AMMO_6, 2, 40, true, false },
+			{ -1, -1, -1, false, false }
 		}
 	};
 	struct object *obj;
@@ -582,17 +582,17 @@ static int test_calc_inventory_oversubscribed_quiver_slot(void *state) {
 static int test_calc_inventory_quiver_split_pile(void *state) {
 	struct simple_test_case this_test_case = {
 		{
-			{ TV_BATTERY, 1, 10 },
-			{ -1, -1, -1 }
+			{ TV_BATTERY, 1, 10, false, false },
+			{ -1, -1, -1, false, false }
 		},
 		{
-			{ TV_BATTERY, 1, 2 },
-			{ -1, -1, -1 }
+			{ TV_BATTERY, 1, 2, false, false },
+			{ -1, -1, -1, false, false }
 		},
 		{
-			{ 0, 0, 0 },
-			{ TV_BATTERY, 1, 8 },
-			{ -1, -1, -1 }
+			{ 0, 0, 0, false, false },
+			{ TV_BATTERY, 1, 8, false, false },
+			{ -1, -1, -1, false, false }
 		}
 	};
 

@@ -15,7 +15,7 @@ int setup_tests(void **state) {
 	races = extensions = &test_race;
 	classes = &test_class;
 	player_init(p);
-	player_generate(p, &test_race, &test_race, &test_class, false);
+	player_generate(p, &test_race, &test_race, &test_race, &test_class, false);
 	*state = p;
 	return 0;
 }
@@ -35,7 +35,7 @@ int teardown_tests(void *state) {
 	return 0;
 }
 
-int test_stat_inc(void *state) {
+static int test_stat_inc(void *state) {
 	struct player *p = state;
 	int v;
 
@@ -54,7 +54,7 @@ int test_stat_inc(void *state) {
 	ok;
 }
 
-int test_stat_dec(void *state) {
+static int test_stat_dec(void *state) {
 	struct player *p = state;
 	int v;
 

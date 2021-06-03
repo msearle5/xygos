@@ -218,11 +218,11 @@ static void compute_obj_num_expected(int level, bool good, int tval,
  * below that can get more than one kind of object) but can happen even if
  * get_obj_num() performs correctly.
  */
-int test_get_obj_num_basic(void *state) {
+static int test_get_obj_num_basic(void *state) {
 	struct {
 		int level, tval;
 		bool good;
-	} tests[] = {
+	} cases[] = {
 		{ 0, 0, false },
 		{ 1, 0, false },
 		{ 2, 0, false },
@@ -249,7 +249,7 @@ int test_get_obj_num_basic(void *state) {
 	}
 	ntrials *= 30;
 
-	for (i = 0; i < (int)N_ELEMENTS(tests); ++i) {
+	for (i = 0; i < (int)N_ELEMENTS(cases); ++i) {
 		int j, nnonzero;
 
 		for (j = 0; j < z_info->k_max; ++j) {
@@ -257,8 +257,8 @@ int test_get_obj_num_basic(void *state) {
 		}
 		for (j = 0; j < ntrials; ++j) {
 			const struct object_kind *kind =
-				get_obj_num(tests[i].level, tests[i].good,
-					tests[i].tval);
+				get_obj_num(cases[i].level, cases[i].good,
+					cases[i].tval);
 			int k;
 
 			/*
@@ -277,12 +277,12 @@ int test_get_obj_num_basic(void *state) {
 					 * because of the possibility of level
 					 * boosting.
 					 */
-					require(tests[i].level >= kind->alloc_min);
-					if (tests[i].good) {
+					require(cases[i].level >= kind->alloc_min);
+					if (cases[i].good) {
 						require(kf_has(kind->kind_flags, KF_GOOD));
 					}
-					if (tests[i].tval != 0) {
-						eq(kind->tval, tests[i].tval);
+					if (cases[i].tval != 0) {
+						eq(kind->tval, cases[i].tval);
 					}
 					++st->histogram[k];
 					break;
@@ -291,8 +291,8 @@ int test_get_obj_num_basic(void *state) {
 			}
 		}
 
-		compute_obj_num_expected(tests[i].level, tests[i].good,
-			tests[i].tval, st->expected, &nnonzero);
+		compute_obj_num_expected(cases[i].level, cases[i].good,
+			cases[i].tval, st->expected, &nnonzero);
 		require(nnonzero >= 1);
 		if (nnonzero == 1) {
 			require(histogram_max(st->histogram, z_info->k_max) == ntrials);

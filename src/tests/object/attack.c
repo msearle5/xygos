@@ -34,7 +34,7 @@ int teardown_tests(void *state) {
 
 
 
-int test_breakage_chance(void *state) {
+static int test_breakage_chance(void *state) {
 	struct object obj;
 	int c;
 
