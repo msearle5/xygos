@@ -2238,6 +2238,14 @@ static enum parser_error parse_p_race_hitdie(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_p_race_score(struct parser *p) {
+	struct player_race *r = parser_priv(p);
+	if (!r)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	r->score = parser_getint(p, "score");
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_p_race_exp(struct parser *p) {
 	struct player_race *r = parser_priv(p);
 	if (!r)
@@ -2428,6 +2436,7 @@ struct parser *init_parse_p_race(void) {
 	parser_reg(p, "name str name", parse_p_race_name);
 	parser_reg(p, "ext str name", parse_p_race_ext);
 	parser_reg(p, "personality str name", parse_p_race_personality);
+	parser_reg(p, "score int score", parse_p_race_score);
 	parser_reg(p, "exts str exts", parse_p_race_exts);
 	parser_reg(p, "stats int str int int int wis int dex int con int chr int spd", parse_p_race_stats);
 	parser_reg(p, "talents int base int max", parse_p_race_talents);

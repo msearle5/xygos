@@ -21,13 +21,18 @@
 #include "init.h"
 #include "score.h"
 
+#include <math.h>
 
 /**
  * Calculates the total number of points earned (wow - NRM)
  */
 static long total_points(void)
 {
-	return (player->max_exp + (100 * player->max_depth));
+	double score = (player->max_exp + (100 * player->max_depth));
+	double scale = 100 + player->race->score + player->extension->score + player->personality->score;
+	score *= scale;
+	score /= 100;
+	return (long)(ceil(score));
 }
 
 

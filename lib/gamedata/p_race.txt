@@ -91,6 +91,8 @@ talents:0:1
 hitdie:-5
 exp:5
 
+
+
 #Sprint?
 personality:Athletic
 desc:Athletes have good physical abilities in general but are especially noted for speed. This personality is a good match for most classes, even ones where the penalties matter - as these characters are also the squishier ones, and benefit from being able to run away.
@@ -99,11 +101,25 @@ values:MOVES[1]
 hitdie:20
 exp:15
 
-#
+personality:Chicken
+desc:Your preferred reaction to danger is to run and hide. This hurts your melee ability (although you have no problem with fighting from 200 yards away), but you are stealthy and used to running. It doesn't make you popular either, but your survival instincts give you a little more HP and AC.
+stats:0:1:1:0:1:-2:0
+values:MOVES[1]
+hitdie:10
 
-#personality:Chicken
+personality:Scrub
+desc:Scrubs have no advantages, and a lot of disadvantages - poor stats, skills and hitpoints. They are a challenge personality - something to select if the usual game isn't tough enough for you. You get a 25% score bonus for accepting this challenge.
+stats:-4:-4:-4:-4:-4:-8:-2
+hitdie:-40
+score:25
 
-
+personality:Munchkin
+desc:Munchkins get it easy. Exceptional starting items, huge bonuses to everything, fast leveling, and no penalties besides a whopping 90% off their final score - as this is of course an easy mode, and if you win as a Munchkin you should not brag too much about it. The Princess is in another castle...
+stats:5:5:5:5:5:10:3
+values:MOVES[1]
+hitdie:100
+exp:-50
+score:-90
 
 ext:None
 desc:A typical member of your race with nothing added or taken away - not a mutant, cyborg or other exotic variation.

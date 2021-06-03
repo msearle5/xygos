@@ -224,6 +224,7 @@ struct player_race {
 
 	unsigned int ridx;
 
+	int score;					/**< Score scale */
 	int r_mhp;					/**< Hit-dice modifier */
 	int r_exp;					/**< Experience factor */
 	int r_high_exp;				/**< High level experience factor */
