@@ -63,6 +63,7 @@ enum birth_stage
 	BIRTH_QUICKSTART,
 	BIRTH_RACE_CHOICE,
 	BIRTH_EXT_CHOICE,
+	BIRTH_PERSONALITY_CHOICE,
 	BIRTH_CLASS_CHOICE,
 	BIRTH_ROLLER_CHOICE,
 	BIRTH_POINTBASED,
@@ -144,7 +145,7 @@ static enum birth_stage textui_birth_quickstart(void)
 /**
  * The various menus
  */
-static struct menu race_menu, ext_menu, class_menu, roller_menu;
+static struct menu race_menu, ext_menu, per_menu, class_menu, roller_menu;
 
 /**
  * Locations of the menus, etc. on the screen
@@ -183,6 +184,7 @@ static struct menu race_menu, ext_menu, class_menu, roller_menu;
  */
 static region race_region = {RACE_COL, TABLE_ROW, 17, MENU_ROWS};
 static region ext_region = {RACE_COL, TABLE_ROW, 17, MENU_ROWS};
+static region per_region = {RACE_COL, TABLE_ROW, 17, MENU_ROWS};
 static region class_region = {CLASS_COL, TABLE_ROW, 17, MENU_ROWS};
 static region roller_region = {ROLLER_COL, TABLE_ROW, 30, ROLLER_ROWS};
 
@@ -324,6 +326,11 @@ static void race_ext_help(int i, void *db, const region *l, struct player_race *
 
 	/* Reset text_out() indentation */
 	text_out_indent = 0;
+}
+
+static void per_help(int i, void *db, const region *l)
+{
+	race_ext_help(i, db, l, player_id2personality(i));
 }
 
 static void ext_help(int i, void *db, const region *l)
@@ -479,7 +486,7 @@ static void setup_menus(void)
 
 	/* Count the extensions */
 	n = 0;
-	for (r = extensions; r; r = r->next)
+	for (r = extensions; !r->personality; r = r->next)
 		if ((!player->race) || (strstr(player->race->exts, r->name)))
 			n++;
 
@@ -488,10 +495,24 @@ static void setup_menus(void)
 	                &ext_region, true, ext_help);
 	mdata = ext_menu.menu_data;
 
-	for (i = 0, r = extensions; r; r = r->next, i++)
+	for (i = 0, r = extensions; !r->personality; r = r->next, i++)
 		if ((!player->race) || (strstr(player->race->exts, r->name)))
 			mdata->items[r->ridx] = r->name;
 	mdata->hint = "Extensions modify your race's stats, skills, resistances and abilities.";
+
+	/* Count the personalities */
+	n = 0;
+	for (r = personalities; r; r = r->next)
+		n++;
+
+	/* Personality menu. */
+	init_birth_menu(&per_menu, n, player->personality ? player->personality->ridx : 0,
+	                &per_region, true, per_help);
+	mdata = per_menu.menu_data;
+
+	for (i = 0, r = personalities; r; r = r->next, i++)
+		mdata->items[r->ridx] = r->name;
+	mdata->hint = "Personality modifies your race's stats, skills, and other abilities.";
 
 	/* Count the classes */
 	n = 0;
@@ -533,6 +554,7 @@ static void free_birth_menus(void)
 	/* We don't need these any more. */
 	free_birth_menu(&race_menu);
 	free_birth_menu(&ext_menu);
+	free_birth_menu(&per_menu);
 	free_birth_menu(&class_menu);
 	free_birth_menu(&roller_menu);
 }
@@ -765,14 +787,14 @@ static void point_based_points(game_event_type type, game_event_data *data,
 
 	/* Display the costs header */
 	put_str("Cost", COSTS_ROW - 1, COSTS_COL);
-	
+
 	/* Display the costs */
 	for (i = 0; i < STAT_MAX; i++) {
 		/* Display cost */
 		put_str(format("%4d", stats[i]), COSTS_ROW + i, COSTS_COL);
 		sum += stats[i];
 	}
-	
+
 	put_str(format("Total Cost: %2d/%2d", sum,
 				   data->birthstats.remaining + sum), COSTS_ROW + STAT_MAX,
 			TOTAL_COL);
@@ -1213,6 +1235,7 @@ int textui_do_birth(void)
 			case BIRTH_CLASS_CHOICE:
 			case BIRTH_RACE_CHOICE:
 			case BIRTH_EXT_CHOICE:
+			case BIRTH_PERSONALITY_CHOICE:
 			case BIRTH_ROLLER_CHOICE:
 			{
 				struct menu *menu = &race_menu;
@@ -1231,8 +1254,14 @@ int textui_do_birth(void)
 						menu_refresh(&ext_menu, false);
 						current_stage++;
 						command = CMD_CHOOSE_CLASS;
+						menu = &per_menu;
+					} else if (per_menu.count <= 1) {
+						menu_refresh(&per_menu, false);
+						current_stage++;
+						command = CMD_CHOOSE_PERSONALITY;
 						menu = &class_menu;
 					} else {
+						menu_refresh(&race_menu, false);
 						command = CMD_CHOOSE_EXT;
 						menu = &ext_menu;
 					}
@@ -1240,6 +1269,12 @@ int textui_do_birth(void)
 
 				if (current_stage > BIRTH_EXT_CHOICE) {
 					menu_refresh(&ext_menu, false);
+					menu = &per_menu;
+					command = CMD_CHOOSE_PERSONALITY;
+				}
+
+				if (current_stage > BIRTH_PERSONALITY_CHOICE) {
+					menu_refresh(&per_menu, false);
 					menu = &class_menu;
 					command = CMD_CHOOSE_CLASS;
 				}

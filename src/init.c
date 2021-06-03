@@ -2104,6 +2104,13 @@ static enum parser_error parse_p_race_ext(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_p_race_personality(struct parser *p) {
+	parse_p_race_name(p);
+	struct player_race *h = parser_priv(p);
+	h->personality = true;
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_p_race_exts(struct parser *p) {
 	struct player_race *r = parser_priv(p);
 	if (!r)
@@ -2348,6 +2355,8 @@ static enum parser_error parse_p_race_values(struct parser *p) {
 		int value = 0;
 		int index = 0;
 		bool found = false;
+		if (!grab_int_value(r->r_adj, obj_mods, t))
+			found = true;
 		if (!grab_index_and_int(&value, &index, list_element_names, "RES_", t)) {
 			found = true;
 			r->el_info[index].res_level = value;
@@ -2418,6 +2427,7 @@ struct parser *init_parse_p_race(void) {
 	parser_setpriv(p, NULL);
 	parser_reg(p, "name str name", parse_p_race_name);
 	parser_reg(p, "ext str name", parse_p_race_ext);
+	parser_reg(p, "personality str name", parse_p_race_personality);
 	parser_reg(p, "exts str exts", parse_p_race_exts);
 	parser_reg(p, "stats int str int int int wis int dex int con int chr int spd", parse_p_race_stats);
 	parser_reg(p, "talents int base int max", parse_p_race_talents);
@@ -2479,8 +2489,14 @@ static errr finish_parse_p_race(struct parser *p) {
 		assert(num);
 		r->ridx = num - 1;
 	}
-	for (r = extensions; r; r = r->next) num++;
-	for (r = extensions; r; r = r->next, num--) {
+	for (r = extensions; !r->personality; r = r->next) num++;
+	personalities = r;
+	for (r = extensions; !r->personality; r = r->next, num--) {
+		assert(num);
+		r->ridx = num - 1;
+	}
+	for (r = personalities; r; r = r->next) num++;
+	for (r = personalities; r; r = r->next, num--) {
 		assert(num);
 		r->ridx = num - 1;
 	}
@@ -2511,7 +2527,7 @@ static struct file_parser p_race_parser = {
 	cleanup_p_race
 };
 
-/**
+/**extensions
  * ------------------------------------------------------------------------
  * Intialize player shapechange shapes
  * ------------------------------------------------------------------------ */

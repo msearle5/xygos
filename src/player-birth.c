@@ -96,6 +96,7 @@ struct birther
 {
 	struct player_race *race;
 	struct player_race *ext;
+	struct player_race *personality;
 	struct player_class *class;
 
 	s16b age;
@@ -152,6 +153,7 @@ static void save_roller_data(birther *tosave)
 	/* Save the data */
 	tosave->race = player->race;
 	tosave->ext = player->extension;
+	tosave->personality = player->personality;
 	tosave->class = player->class;
 	tosave->age = player->age;
 	tosave->wt = player->wt_birth;
@@ -196,6 +198,7 @@ static void load_roller_data(birther *saved, birther *prev_player)
 	/* Load previous data */
 	player->race     = saved->race;
 	player->extension = saved->ext;
+	player->personality = saved->personality;
 	player->class    = saved->class;
 	player->age      = saved->age;
 	player->wt       = player->wt_birth = player->wt;
@@ -264,7 +267,7 @@ static void get_stats(int stat_use[STAT_MAX])
 		player->stat_max[i] = j;
 
 		/* Obtain a "bonus" for "race" and "class" */
-		bonus = player->race->r_adj[i] + player->extension->r_adj[i] + player->class->c_adj[i];
+		bonus = player->race->r_adj[i] + player->extension->r_adj[i] + player->class->c_adj[i] + player->personality->r_adj[i];
 
 		/* Start fully healed */
 		player->stat_cur[i] = player->stat_max[i];
@@ -553,8 +556,11 @@ void player_init(struct player *p)
 	/* Default to the first race/class in the edit file */
 	p->race = races;
 	p->extension = extensions;
-	while (p->extension->next)
+	p->personality = personalities;
+	while (!p->extension->personality)
 		p->extension = p->extension->next;
+	while (p->personality->next)
+		p->personality = p->personality->next;
 	p->class = classes;
 
 	/* Player starts unshapechanged */
@@ -720,7 +726,7 @@ void add_start_items(struct player *p, const struct start_item *si, bool skip, b
 bool player_make_simple(const char *nrace, const char *next, const char *nclass,
 	const char* nplayer)
 {
-	int ir = 0, ic = 0, ie = 0;
+	int ir = 0, ic = 0, ie = 0, ip = 0;
 
 	if (nrace) {
 		const struct player_race *rc = races;
@@ -795,6 +801,8 @@ bool player_make_simple(const char *nrace, const char *next, const char *nclass,
 	cmd_set_arg_choice(cmdq_peek(), "choice", ir);
 	cmdq_push(CMD_CHOOSE_EXT);
 	cmd_set_arg_choice(cmdq_peek(), "choice", ie);
+	cmdq_push(CMD_CHOOSE_PERSONALITY);
+	cmd_set_arg_choice(cmdq_peek(), "choice", ip);
 	cmdq_push(CMD_CHOOSE_CLASS);
 	cmd_set_arg_choice(cmdq_peek(), "choice", ic);
 	cmdq_push(CMD_ROLL_STATS);
@@ -834,6 +842,7 @@ static void player_outfit(struct player *p)
 	add_start_items(p, p->class->start_items, (!OPT(p, birth_start_kit)), true, ORIGIN_BIRTH);
 	add_start_items(p, p->race->start_items, (!OPT(p, birth_start_kit)), true, ORIGIN_BIRTH);
 	add_start_items(p, p->extension->start_items, (!OPT(p, birth_start_kit)), true, ORIGIN_BIRTH);
+	add_start_items(p, p->personality->start_items, (!OPT(p, birth_start_kit)), true, ORIGIN_BIRTH);
 
 	/* Sanity check */
 	if (p->au < 0)
@@ -1156,7 +1165,7 @@ int hitdie_class(const struct player_class *c)
  * and so is called whenever things like race or class are chosen.
  */
 void player_generate(struct player *p, struct player_race *r, struct player_race *e,
-					 struct player_class *c, bool old_history)
+					 struct player_class *c, struct player_race *per, bool old_history)
 {
 	int i;
 
@@ -1166,10 +1175,13 @@ void player_generate(struct player *p, struct player_race *r, struct player_race
 		r = p->race;
 	if (!e)
 		e = p->extension;
+	if (!per)
+		per = p->personality;
 
 	p->class = c;
 	p->race = r;
 	p->extension = e;
+	p->personality = per;
 
 	/* Level 1 */
 	p->max_lev = p->lev = 1;
@@ -1182,8 +1194,8 @@ void player_generate(struct player *p, struct player_race *r, struct player_race
 	set_primary_class();
 
 	/* Experience factor */
-	p->expfact_low = p->race->r_exp + p->extension->r_exp;
-	p->expfact_high = p->race->r_high_exp + p->extension->r_high_exp;
+	p->expfact_low = p->race->r_exp + p->extension->r_exp + p->personality->r_exp;
+	p->expfact_high = p->race->r_high_exp + p->extension->r_high_exp + p->personality->r_exp;
 
 	/* HP array */
 	if (!(p->player_hp))
@@ -1236,7 +1248,7 @@ static void do_birth_reset(bool use_quickstart, birther *quickstart_prev_local)
 	if (use_quickstart && quickstart_prev_local)
 		load_roller_data(quickstart_prev_local, NULL);
 
-	player_generate(player, NULL, NULL, NULL, use_quickstart && quickstart_prev_local);
+	player_generate(player, NULL, NULL, NULL, NULL, use_quickstart && quickstart_prev_local);
 
 	player->depth = 0;
 
@@ -1273,7 +1285,7 @@ void do_cmd_birth_init(struct command *cmd)
 		save_roller_data(&quickstart_prev);
 		quickstart_allowed = true;
 	} else {
-		player_generate(player, player_id2race(0), player_id2ext(0), player_id2class(0), false);
+		player_generate(player, player_id2race(0), player_id2ext(0), player_id2class(0), player_id2personality(0), false);
 		quickstart_allowed = false;
 	}
 
@@ -1293,7 +1305,7 @@ void do_cmd_choose_race(struct command *cmd)
 {
 	int choice;
 	cmd_get_arg_choice(cmd, "choice", &choice);
-	player_generate(player, player_id2race(choice), NULL, NULL, false);
+	player_generate(player, player_id2race(choice), NULL, NULL, NULL, false);
 
 	reset_stats(stats, points_spent, &points_left, false);
 	generate_stats(stats, points_spent, &points_left);
@@ -1304,7 +1316,18 @@ void do_cmd_choose_ext(struct command *cmd)
 {
 	int choice;
 	cmd_get_arg_choice(cmd, "choice", &choice);
-	player_generate(player, NULL, player_id2ext(choice), NULL, false);
+	player_generate(player, NULL, player_id2ext(choice), NULL, NULL, false);
+
+	reset_stats(stats, points_spent, &points_left, false);
+	generate_stats(stats, points_spent, &points_left);
+	rolled_stats = false;
+}
+
+void do_cmd_choose_personality(struct command *cmd)
+{
+	int choice;
+	cmd_get_arg_choice(cmd, "choice", &choice);
+	player_generate(player, NULL, NULL, NULL, player_id2personality(choice), false);
 
 	reset_stats(stats, points_spent, &points_left, false);
 	generate_stats(stats, points_spent, &points_left);
@@ -1315,7 +1338,7 @@ void do_cmd_choose_class(struct command *cmd)
 {
 	int choice;
 	cmd_get_arg_choice(cmd, "choice", &choice);
-	player_generate(player, NULL, NULL, player_id2class(choice), false);
+	player_generate(player, NULL, NULL, player_id2class(choice), NULL, false);
 
 	reset_stats(stats, points_spent, &points_left, false);
 	generate_stats(stats, points_spent, &points_left);

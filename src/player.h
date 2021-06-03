@@ -243,14 +243,15 @@ struct player_race {
 
 	int body;					/**< Race body */
 
-	int r_adj[STAT_MAX];		/**< Stat bonuses */
+	int r_adj[OBJ_MOD_MAX];		/**< Stat and other modifiers*/
 
 	int r_skills[SKILL_MAX];	/**< Skills */
 
 	bitflag flags[OF_SIZE];		/**< Racial (object) flags */
 	bitflag pflags[PF_SIZE];	/**< Racial (player) flags */
 
-	bool extension;
+	bool extension;				/**< True if this is an extension */
+	bool personality;			/**< True if this is a personality */
 
 	struct history_chart *history;
 
@@ -571,6 +572,7 @@ struct player_upkeep {
 struct player {
 	struct player_race *race;
 	struct player_race *extension;
+	struct player_race *personality;
 	struct player_class *class;
 
 	struct loc grid;/* Player location */
@@ -635,8 +637,8 @@ struct player {
 	char *history;						/* Player history */
 	struct quest *quests;				/* Quest history */
 
-	bool flying;						/* Currently flying (using a Pilot ability) */
 	s32b active_quest;					/* Currently active quest */
+	bool flying;						/* Currently flying (using a Pilot ability) */
 	u16b total_winner;					/* Total winner */
 	bool orbitable;						/* Ready to go to the orbital station */
 	s32b bm_faction;					/* Faction with the black market */
@@ -687,6 +689,7 @@ struct player {
 extern struct player_body *bodies;
 extern struct player_race *races;
 extern struct player_race *extensions;
+extern struct player_race *personalities;
 extern struct player_shape *shapes;
 extern struct player_class *classes;
 extern struct player_ability *player_abilities;
@@ -718,6 +721,7 @@ s32b exp_to_gain(s32b level);
 /* player-race.c */
 struct player_race *player_id2race(guid id);
 struct player_race *player_id2ext(guid id);
+struct player_race *player_id2personality(guid id);
 struct player_race *get_race_by_name(const char *name);
 
 /* r_timelord.c */

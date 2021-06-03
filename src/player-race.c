@@ -1,6 +1,6 @@
 /**
  * \file player-race.c
- * \brief Player races
+ * \brief Player races, extensions, personalities
  *
  * Copyright (c) 2011 elly+angband@leptoquark.net. See COPYING.
  *
@@ -21,6 +21,8 @@
 
 struct player_race *extensions;
 
+struct player_race *personalities;
+
 struct player_race *player_id2race(guid id)
 {
 	struct player_race *r;
@@ -33,7 +35,16 @@ struct player_race *player_id2race(guid id)
 struct player_race *player_id2ext(guid id)
 {
 	struct player_race *r;
-	for (r = extensions; r; r = r->next)
+	for (r = extensions; !r->personality; r = r->next)
+		if (guid_eq(r->ridx, id))
+			break;
+	return r;
+}
+
+struct player_race *player_id2personality(guid id)
+{
+	struct player_race *r;
+	for (r = personalities; r; r = r->next)
 		if (guid_eq(r->ridx, id))
 			break;
 	return r;

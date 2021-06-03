@@ -2,6 +2,7 @@
 
 
 # This file is used to initialize the player race information for Angband.
+# This includes extensions and personalities.
 
 # Do not modify this file unless you know exactly what you are doing,
 # unless you wish to risk possible system crashes and broken savefiles.
@@ -11,6 +12,7 @@
 # Format:
 # name:race name
 #	(OR ext: extension name)
+#	(OR personality: personality name)
 # stats:str:int:wis:dex:con:chr:spd
 # talents:base:max
 # skill-disarm:base
@@ -77,6 +79,31 @@
 # 'desc' is for the description shown on the character creation screen
 
 # 'body' is for the body as defined in body.txt. By default the last entry of that file ("Humanoid") is used.
+
+
+personality:Ordinary
+desc:An average personality with no further changes made. This is the simplest and not a bad choice for any character, so if you don't want to care about personalities this is the one to go for. However it will rarely be the best choice, either - most classes benefit from enhancing their positive characteristics or (less often) shoring up their weak points. 
+
+personality:Geeky
+desc:You are intelligent, curious and have acquired much background knowledge of pre-War equipment and such esoterica - but at a cost to combat skills, physical stats and hitpoints. It's an obvious choice for an Engineer, reinforcing that class's strong points - but it can also be used with other classes that would benefit from more reliable use of devices and techniques.
+stats:-1:3:1:-1:-1:-2:0
+talents:0:1
+hitdie:-5
+exp:5
+
+#Sprint?
+personality:Athletic
+desc:Athletes have good physical abilities in general but are especially noted for speed. This personality is a good match for most classes, even ones where the penalties matter - as these characters are also the squishier ones, and benefit from being able to run away.
+stats:1:-2:-1:1:2:0:1
+values:MOVES[1]
+hitdie:20
+exp:15
+
+#
+
+#personality:Chicken
+
+
 
 ext:None
 desc:A typical member of your race with nothing added or taken away - not a mutant, cyborg or other exotic variation.

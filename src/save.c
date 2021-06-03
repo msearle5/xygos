@@ -504,9 +504,10 @@ void wr_player(void)
 
 	wr_string(player->history);
 
-	/* Race/Class/Gender/Spells */
+	/* Race/Class/Extension/Personality/Shape */
 	wr_string(player->race->name);
 	wr_string(player->extension->name);
+	wr_string(player->personality->name);
 	wr_string(player->shape->name);
 	wr_string(player->class->name);
 	wr_byte(player->opts.name_suffix);
