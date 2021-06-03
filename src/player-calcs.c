@@ -1570,16 +1570,16 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	state->num_blows = 100;
 
 	/* Extract race/class info */
-	state->see_infra = p->race->infra + p->extension->infra;
+	state->see_infra = p->race->infra + p->extension->infra + p->personality->infra;
 	for (i = 0; i < SKILL_MAX; i++) {
-		state->skills[i] = p->race->r_skills[i]	+ p->extension->r_skills[i];
+		state->skills[i] = p->race->r_skills[i]	+ p->extension->r_skills[i]	+ p->personality->r_skills[i];
 	}
 	for (i = 0; i < ELEM_MAX; i++) {
 		vuln[i] = false;
-		if (p->race->el_info[i].res_level + p->extension->el_info[i].res_level < -1) {
+		if (p->race->el_info[i].res_level + p->extension->el_info[i].res_level + p->personality->el_info[i].res_level < -1) {
 			vuln[i] = true;
 		} else {
-			state->el_info[i].res_level = MAX(p->race->el_info[i].res_level , p->extension->el_info[i].res_level);
+			state->el_info[i].res_level = p->race->el_info[i].res_level + p->extension->el_info[i].res_level + p->personality->el_info[i].res_level;
 		}
 	}
 
@@ -1607,6 +1607,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	pf_wipe(state->pflags_base);
 	pf_copy(state->pflags_base, p->race->pflags);
 	pf_union(state->pflags_base, p->extension->pflags);
+	pf_union(state->pflags_base, p->personality->pflags);
 
 	for (struct player_class *c = classes; c; c = c->next) {
 		int levels = levels_in_class(c->cidx);
@@ -1884,7 +1885,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		int add, use, ind;
 
 		add = state->stat_add[i];
-		add += (p->race->r_adj[i] + p->extension->r_adj[i] + class_to_stat(i));
+		add += (p->race->r_adj[i] + p->extension->r_adj[i] + p->personality->r_adj[i] + class_to_stat(i));
 		add += ability_to_stat(i);
 		state->stat_top[i] =  modify_stat_value(p->stat_max[i], add);
 		use = modify_stat_value(p->stat_cur[i], add);
