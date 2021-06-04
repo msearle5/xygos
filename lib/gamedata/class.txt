@@ -263,7 +263,7 @@ title:Entertainer
 title:Conjurer
 title:Magician
 title:Mentalist
-#Puppetmaster? 
+title:Puppetmaster
 exp:10
 talents:-1:0
 hitdie:50
