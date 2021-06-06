@@ -334,6 +334,8 @@ int textui_get_spell_from_book(const char *verb,
 		int spell_index = spell_menu_select(m, noun, verb);
 		spell_menu_destroy(m);
 		return spell_index;
+	} else {
+		msg(error);
 	}
 
 	return -1;

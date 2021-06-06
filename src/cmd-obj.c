@@ -1097,7 +1097,7 @@ void do_cmd_cast(struct command *cmd)
 	if (cmd_get_spell(cmd, "technique", &spell_index,
 			/* Verb */   "use",
 			/* Error */  error,
-			/* Filter */ NULL) != CMD_OK) { 
+			/* Filter */ NULL) != CMD_OK) {
 		return;
 	}
 

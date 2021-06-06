@@ -68,8 +68,8 @@ struct player_race *get_race_by_name(const char *name)
  * Level 1 always chooses randomly and is always silent.
  * Level 50 always does nothing - except inform you that you can now change at will.
  * Otherwise, there is a chance increasing with wisdom and level that you will be able to stop the
- * change, and a further chance that you will be told what the new personality would be. 
- **/ 
+ * change, and a further chance that you will be told what the new personality would be.
+ **/
 void personality_split_level(int from, int to)
 {
 	/* Pick a personality - any except Split (the first) */
@@ -98,7 +98,7 @@ void personality_split_level(int from, int to)
 
 	/* Chance of avoiding a change, /10000.
 	 * 10% minimum
-	 * 32.5% at wisdom 16 and level 19 
+	 * 32.5% at wisdom 16 and level 19
 	 * 71.5% at maxed wis and level (48 - gaining level 49 is the last one that cares)
 	 **/
 	int avoid = 940 + (player->state.stat_ind[STAT_WIS] * 90) + (from * 60);

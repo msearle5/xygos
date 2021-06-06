@@ -142,6 +142,7 @@ score:25
 # This must be second to last in the personality section of the file, and must not be renamed, because of Split Personality choice.
 personality:Munchkin
 desc:Munchkins get it easy. Exceptional starting items, huge bonuses to everything, fast leveling, and no penalties besides a whopping 90% off their final score - as this is of course an easy mode, and if you win as a Munchkin you should not brag too much about it. The Princess is in another castle...
+equip:pill:life:1:1:none
 stats:5:5:5:5:5:10:3
 values:MOVES[1]
 hitdie:100
