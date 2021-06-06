@@ -134,8 +134,26 @@ level-from:15
 obj-flags:TRAP_IMMUNE
 exp:10
 
+personality:Lazy
+skill-disarm-phys:-5
+skill-disarm-magic:-5
+skill-device:-5
+skill-save:-5
+skill-stealth:-5
+skill-search:-5
+skill-melee:-5
+skill-martial:-5
+skill-shoot:-5
+skill-throw:-5
+skill-dig:-5
+desc:You're a reluctant hero - "What, me? Run around all day in some slimy underground passages? Sounds awful." You would much rather take the load off in front of VaulTV. But the galaxy won't save itself, so here you are... You are sub-par in most respects but your lack of experience translates to an improved experience modifier and an extra talent point. You will also find that you can take as long as you like to advance.
+stats:-1:-1:-1:-1:-1:-2:-1
+player-flags:NO_TIME_LIMIT
+exp:-10
+talents:0:1
+
 # "Arrogant" would be another word.
-# It may need to be buffed to balance Aggravation
+# It may need to be buffed to balance Aggravation. Maybe bigger breaths (dice & sides) at high level?
 personality:Shouty
 skill-disarm-phys:-5
 skill-disarm-magic:-5

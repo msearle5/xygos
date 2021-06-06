@@ -1246,7 +1246,7 @@ void process_player(void)
  **/
 void increase_danger_level(void)
 {
-	if (OPT(player,birth_time_limit)) {
+	if ((OPT(player,birth_time_limit)) && (!player_has(player, PF_NO_TIME_LIMIT))) {
 		int danger = 0;
 		int pturn = turn / 10;
 		if (pturn >= z_info->town_easy_turns) {
