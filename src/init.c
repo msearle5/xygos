@@ -3229,6 +3229,7 @@ static enum parser_error parse_class_play_flags(struct parser *p) {
 	if (!parser_hasval(p, "flags"))
 		return PARSE_ERROR_NONE;
 	flags = string_make(parser_getstr(p, "flags"));
+
 	s = strtok(flags, " |");
 	while (s) {
 		bool flag;
