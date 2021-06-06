@@ -98,14 +98,37 @@ skill-dig:0
 desc:An average personality with no further changes made. This is the simplest and not a bad choice for any character, so if you don't want to care about personalities this is the one to go for. However it will rarely be the best choice, either - most classes benefit from enhancing their positive characteristics or (less often) shoring up their weak points. 
 
 personality:Geeky
+skill-disarm-phys:5
+skill-disarm-magic:10
+skill-device:25
+skill-save:-10
+skill-stealth:-5
+skill-search:-10
+skill-melee:-15
+skill-martial:-5
+skill-shoot:-5
+skill-throw:-5
+skill-dig:-5
 desc:You are intelligent, curious and have acquired much background knowledge of pre-War equipment and such esoterica - but at a cost to combat skills, physical stats and hitpoints. It's an obvious choice for an Engineer, reinforcing that class's strong points - but it can also be used with other classes that would benefit from learning more talents and more reliable use of devices.
 stats:-1:3:1:-1:-1:-2:0
 talents:0:1
 hitdie:-5
 exp:5
 
-#- CHR, + to combat esp. unarmed, + SPD, ++WIS, -INT, but this doesn't beat Aggro. Shout tech?) "Shouty/arrogant" would be another word
+# "Arrogant" would be another word.
+# It may need to be buffed to balance Aggravation
 personality:Shouty
+skill-disarm-phys:-5
+skill-disarm-magic:-5
+skill-device:0
+skill-save:5
+skill-stealth:-25
+skill-search:-5
+skill-melee:5
+skill-martial:10
+skill-shoot:0
+skill-throw:0
+skill-dig:0
 desc:Karen and Dick are never wrong, ever. Just ask them. You are used to rushing in quickly and making your presence felt - aggravating everyone else, but you don't give a rodent's posterior about that. Your real talent though is your ability to yell until everyone respects your authority.
 stats:0:-1:2:0:1:-5:1
 obj-flags:AGGRAVATE
@@ -120,6 +143,17 @@ sdesc:Shouts - a sonic blast that hurts anything in your way, in a large cone.
 
 # Sprint? It would fit, but this is about the most powerful personality as it is...
 personality:Athletic
+skill-disarm-phys:8
+skill-disarm-magic:0
+skill-device:-10
+skill-save:15
+skill-stealth:3
+skill-search:0
+skill-melee:15
+skill-martial:20
+skill-shoot:3
+skill-throw:12
+skill-dig:10
 desc:Athletes have good physical abilities in general but are especially noted for speed. This personality is a good match for most classes, even ones where the penalties matter - as these characters are also the squishier ones, and benefit from being able to run away.
 stats:1:-2:-1:1:2:0:1
 values:MOVES[1]
@@ -127,6 +161,17 @@ hitdie:20
 exp:15
 
 personality:Chicken
+skill-disarm-phys:-5
+skill-disarm-magic:-5
+skill-device:0
+skill-save:5
+skill-stealth:12
+skill-search:0
+skill-melee:-20
+skill-martial:-25
+skill-shoot:5
+skill-throw:5
+skill-dig:5
 desc:Your preferred reaction to danger is to run and hide like a chicken. This hurts your melee ability (although you have no problem with fighting from 200 yards away), but you are stealthy and used to running. It doesn't make you very popular either, but your survival instincts do give you a little more HP and AC.
 stats:0:1:1:0:1:-2:0
 values:MOVES[1]
@@ -134,6 +179,17 @@ hitdie:10
 ac:10
 
 personality:Scrub
+skill-disarm-phys:-30
+skill-disarm-magic:-30
+skill-device:-30
+skill-save:-30
+skill-stealth:-30
+skill-search:-30
+skill-melee:-30
+skill-martial:-30
+skill-shoot:-30
+skill-throw:-30
+skill-dig:-30
 desc:Scrubs have no advantages, and a lot of disadvantages - poor stats, skills and hitpoints. They are a challenge personality - something to select if the usual game isn't tough enough for you. You get a 25% score bonus for accepting this challenge.
 stats:-4:-4:-4:-4:-4:-8:-2
 hitdie:-40
@@ -141,6 +197,17 @@ score:25
 
 # This must be second to last in the personality section of the file, and must not be renamed, because of Split Personality choice.
 personality:Munchkin
+skill-disarm-phys:30
+skill-disarm-magic:30
+skill-device:30
+skill-save:30
+skill-stealth:30
+skill-search:30
+skill-melee:30
+skill-martial:30
+skill-shoot:30
+skill-throw:30
+skill-dig:30
 desc:Munchkins get it easy. Exceptional starting items, huge bonuses to everything, fast leveling, and no penalties besides a whopping 90% off their final score - as this is of course an easy mode, and if you win as a Munchkin you should not brag too much about it. The Princess is in another castle...
 equip:pill:life:1:1:none
 stats:5:5:5:5:5:10:3
