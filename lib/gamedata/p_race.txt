@@ -115,6 +115,25 @@ talents:0:1
 hitdie:-5
 exp:5
 
+#or Creepy
+personality:Sneaky
+skill-disarm-phys:25
+skill-disarm-magic:20
+skill-device:15
+skill-save:20
+skill-stealth:25
+skill-search:15
+skill-melee:8
+skill-martial:3
+skill-shoot:0
+skill-throw:10
+skill-dig:-5
+desc:You're a sneaky sneak. A creepy creep. Stealth is your strong point, and you can usually manage to bypass a lock, avoid a trap, find hidden goodies and jump out of the way in the nick of time - eventually becoming so aware of your surroundings as to be entirely immune to traps. You're not a bad fighter but are best with lightweight melee and improvised thrown weapons. You're also smart enough to be able to back that up with devices.
+stats:-1:2:2:3:-1:-2:1
+level-from:15
+obj-flags:TRAP_IMMUNE
+exp:10
+
 # "Arrogant" would be another word.
 # It may need to be buffed to balance Aggravation
 personality:Shouty
@@ -204,6 +223,24 @@ stats:0:1:1:0:1:-2:0
 values:MOVES[1]
 hitdie:10
 ac:10
+
+personality:Fearless
+skill-disarm-phys:2
+skill-disarm-magic:2
+skill-device:0
+skill-save:-10
+skill-stealth:-5
+skill-search:0
+skill-melee:10
+skill-martial:15
+skill-shoot:2
+skill-throw:2
+skill-dig:0
+desc:You are entirely fearless, making you an effective melee combatant but prone to failing to defend yourself, hence the reduced CON, hitdie and AC. Onward to the next adventure!
+stats:0:-1:-2:0:-1:1:1
+obj-flags:PROT_FEAR
+hitdie:-10
+ac:-10
 
 personality:Scrub
 skill-disarm-phys:-30

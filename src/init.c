@@ -2081,6 +2081,8 @@ static enum parser_error parse_p_race_name(struct parser *p) {
 	parsing_magic = &r->magic;
 	/* Default body is humanoid (the last in body.txt) */
 	r->body = 0;
+	grab_flags_from = 1;
+	grab_flags_to = PY_MAX_LEVEL;
 	parser_setpriv(p, r);
 	return PARSE_ERROR_NONE;
 }
