@@ -81,19 +81,44 @@
 # 'body' is for the body as defined in body.txt. By default the last entry of that file ("Humanoid") is used.
 
 
+##### Personalities #####
+
 personality:Ordinary
+skill-disarm-phys:0
+skill-disarm-magic:0
+skill-device:0
+skill-save:0
+skill-stealth:0
+skill-search:0
+skill-melee:0
+skill-martial:0
+skill-shoot:0
+skill-throw:0
+skill-dig:0
 desc:An average personality with no further changes made. This is the simplest and not a bad choice for any character, so if you don't want to care about personalities this is the one to go for. However it will rarely be the best choice, either - most classes benefit from enhancing their positive characteristics or (less often) shoring up their weak points. 
 
 personality:Geeky
-desc:You are intelligent, curious and have acquired much background knowledge of pre-War equipment and such esoterica - but at a cost to combat skills, physical stats and hitpoints. It's an obvious choice for an Engineer, reinforcing that class's strong points - but it can also be used with other classes that would benefit from more reliable use of devices and techniques.
+desc:You are intelligent, curious and have acquired much background knowledge of pre-War equipment and such esoterica - but at a cost to combat skills, physical stats and hitpoints. It's an obvious choice for an Engineer, reinforcing that class's strong points - but it can also be used with other classes that would benefit from learning more talents and more reliable use of devices.
 stats:-1:3:1:-1:-1:-2:0
 talents:0:1
 hitdie:-5
 exp:5
 
+#- CHR, + to combat esp. unarmed, + SPD, ++WIS, -INT, but this doesn't beat Aggro. Shout tech?) "Shouty/arrogant" would be another word
+personality:Shouty
+desc:Karen and Dick are never wrong, ever. Just ask them. You are used to rushing in quickly and making your presence felt - aggravating everyone else, but you don't give a rodent's posterior about that. Your real talent though is your ability to yell until everyone respects your authority.
+stats:0:-1:2:0:1:-5:1
+obj-flags:AGGRAVATE
+hitdie:15
+book:[Shouty]
+# spell:name:level:fail:exp:stat:hp:cooldown
+spell:Shout!:1:22:4:4:1:4d5
+seffect:BREATH:SOUND:0:-10
+sdice:$Dd3
+sexpr:D:PLAYER_LEVEL:- 1 / 6 + 2
+sdesc:Shouts - a sonic blast that hurts anything in your way, in a large cone.
 
-
-#Sprint?
+# Sprint? It would fit, but this is about the most powerful personality as it is...
 personality:Athletic
 desc:Athletes have good physical abilities in general but are especially noted for speed. This personality is a good match for most classes, even ones where the penalties matter - as these characters are also the squishier ones, and benefit from being able to run away.
 stats:1:-2:-1:1:2:0:1
@@ -102,10 +127,11 @@ hitdie:20
 exp:15
 
 personality:Chicken
-desc:Your preferred reaction to danger is to run and hide. This hurts your melee ability (although you have no problem with fighting from 200 yards away), but you are stealthy and used to running. It doesn't make you popular either, but your survival instincts give you a little more HP and AC.
+desc:Your preferred reaction to danger is to run and hide like a chicken. This hurts your melee ability (although you have no problem with fighting from 200 yards away), but you are stealthy and used to running. It doesn't make you very popular either, but your survival instincts do give you a little more HP and AC.
 stats:0:1:1:0:1:-2:0
 values:MOVES[1]
 hitdie:10
+ac:10
 
 personality:Scrub
 desc:Scrubs have no advantages, and a lot of disadvantages - poor stats, skills and hitpoints. They are a challenge personality - something to select if the usual game isn't tough enough for you. You get a 25% score bonus for accepting this challenge.
@@ -113,6 +139,7 @@ stats:-4:-4:-4:-4:-4:-8:-2
 hitdie:-40
 score:25
 
+# This must be second to last in the personality section of the file, and must not be renamed, because of Split Personality choice.
 personality:Munchkin
 desc:Munchkins get it easy. Exceptional starting items, huge bonuses to everything, fast leveling, and no penalties besides a whopping 90% off their final score - as this is of course an easy mode, and if you win as a Munchkin you should not brag too much about it. The Princess is in another castle...
 stats:5:5:5:5:5:10:3
@@ -120,6 +147,18 @@ values:MOVES[1]
 hitdie:100
 exp:-50
 score:-90
+
+# This must be last in the personality section of the file, and must not be renamed, because of Split Personality choice.
+personality:Split
+desc:Your personality changes unpredictably. Every level up a new personality develops at random. It is sometimes possible to avert this by an effort of will - but this isn't guaranteed and you often won't know what the alternative is. However, you will get better at this as you gain levels and wisdom, extreme personalities don't usually stick and you will be given free choice of personality if you reach maximum level.
+book:[Split]
+# spell:name:level:fail:exp:stat:hp:cooldown
+spell:Personality:50:50:0:2:1d4:4d50
+seffect:PERSONALITY:0:0:0
+sdesc:Change your personality. All are available except Split itself, and Munchkin.
+
+
+##### Extensions #####
 
 ext:None
 desc:A typical member of your race with nothing added or taken away - not a mutant, cyborg or other exotic variation.
@@ -135,6 +174,11 @@ ext:Cyborg
 talents:-3:0
 exp:60:0
 desc:You will begin with one or more cybernetic implants. These are varied and generally powerful, but having become used to your new abilities you have had less time for learning other things. So you have less talents available, and more experience is needed to advance - especially early on.
+
+
+
+
+##### Races #####
 
 name:Human
 exts:Mutant,Cyborg,None

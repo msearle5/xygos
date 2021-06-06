@@ -6308,12 +6308,22 @@ bool effect_handler_HORNS(effect_handler_context_t *context)
 		static const char *honk[] =		{ "honk", "blare", "blast", "hoot", "call", "sing", "trumpet", "bray" };
 		static const char *music[] =	{ "musically", "tunefully", "mournfully", "a fanfare",
 										"a loud trill", "two notes", "a long note", "three notes",
-										"a challenge", "loudly", "unexpectedly", " a flourish", "shrilly", "reveille" };
+										"a challenge", "loudly", "unexpectedly", " a flourish", "shrilly", "reveille", "piercingly" };
 		msg("Your horns %s out %s!", honk[randint0(sizeof(honk)/sizeof(*honk))], music[randint0(sizeof(music)/sizeof(*music))]);
 
 		/* Aggro */
 		effect_handler_WAKE(context);
 	}
+	/* Done */
+	return (true);
+}
+
+/**
+ * Change personality
+ */
+bool effect_handler_PERSONALITY(effect_handler_context_t *context)
+{
+	
 	/* Done */
 	return (true);
 }

@@ -1716,7 +1716,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	pf_union(state->pflags, state->pflags_temp);
 
 	/* Extract from abilities */
-	state->ac = 0;
+	state->ac = player->race->ac + player->extension->ac + player->personality->ac;
 	for (i = 0; i < PF_MAX; i++) {
 		if (ability[i]) {
 			if (player_has(p, i)) {

@@ -1156,7 +1156,7 @@ static void generate_stats(int stats[STAT_MAX], int points_spent[STAT_MAX],
 
 int hitdie_class(const struct player_class *c)
 {
-	return player->race->r_mhp + player->extension->r_mhp + c->c_mhp;
+	return player->race->r_mhp + player->extension->r_mhp + player->personality->r_mhp + c->c_mhp;
 }
 
 
@@ -1461,6 +1461,11 @@ void do_cmd_accept_character(struct command *cmd)
 	/* Reseed the RNG - this avoids world_init_towns() using the same distances */
 	Rand_init();
 
+	if (streq(player->personality->name, "Split")) {
+		player->split_p = true;
+		personality_split_level(0, 1);
+		player->chp = player->mhp;	/* as the change in personality may have changed your max HP */
+	}
 	roll_hp();
 
 	/* Prompt for birth talents and roll out per-level talent points */
@@ -1547,7 +1552,7 @@ void do_cmd_accept_character(struct command *cmd)
 		player->cooldown = mem_alloc(sizeof(*player->cooldown) * total_spells);
 	memset(player->cooldown, 0, sizeof(*player->cooldown) * total_spells);
 
-	/* Class specific initialization */
+	/* Race, class etc. specific initialization */
 	player_hookz(init);
 
 	/* Stop the player being quite so dead */

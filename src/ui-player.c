@@ -813,6 +813,11 @@ static const char *show_title(void)
 		return player_title();
 }
 
+static const char *show_personality(void)
+{
+	return player->personality->name;
+}
+
 static const char *show_adv_exp(void)
 {
 	if (player->lev < PY_MAX_LEVEL) {
@@ -889,6 +894,7 @@ static struct panel *get_panel_topleft(void) {
 		}
 	}
 	panel_line(p, COLOUR_L_BLUE, "Title", "%s", show_title());
+	panel_line(p, COLOUR_L_BLUE, "Perso", "%s", show_personality());
 	panel_line(p, COLOUR_L_BLUE, "HP", "%d/%d", player->chp, player->mhp);
 
 	return p;

@@ -343,6 +343,8 @@ static void adjust_level(struct player *p, bool verbose)
 	if (p->max_lev > max_from) {
 		ability_levelup(p, max_from, p->max_lev);
 		player_hook(levelup, max_from, p->max_lev);
+		if (player->split_p)
+			personality_split_level(max_from, p->max_lev);
 	}
 
 	/* You may have new intrinsics.

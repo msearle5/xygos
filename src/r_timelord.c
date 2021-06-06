@@ -68,7 +68,7 @@ static void timelord_regen_status(void)
 }
 
 /* Regenerate (on death or forced).
- * Cheat death? Return true to avoid death.
+ * Cheat death? Return true in *success to avoid death.
  * First, calculate the number of regenerations allowed at your (max) level and determine
  * whether you have one left.
  * If so, use the max level to get a chance of survival. If you pass, re-roll the character

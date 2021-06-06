@@ -224,6 +224,7 @@ struct player_race {
 
 	unsigned int ridx;
 
+	int ac;						/**< Bonus to AC */
 	int score;					/**< Score scale */
 	int r_mhp;					/**< Hit-dice modifier */
 	int r_exp;					/**< Experience factor */
@@ -639,6 +640,7 @@ struct player {
 	struct quest *quests;				/* Quest history */
 
 	s32b active_quest;					/* Currently active quest */
+	bool split_p;						/* Split personality */
 	bool flying;						/* Currently flying (using a Pilot ability) */
 	u16b total_winner;					/* Total winner */
 	bool orbitable;						/* Ready to go to the orbital station */
@@ -724,6 +726,7 @@ struct player_race *player_id2race(guid id);
 struct player_race *player_id2ext(guid id);
 struct player_race *player_id2personality(guid id);
 struct player_race *get_race_by_name(const char *name);
+void personality_split_level(int from, int to);
 
 /* r_timelord.c */
 void timelord_force_regen(void);

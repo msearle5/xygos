@@ -29,7 +29,12 @@
 static long total_points(void)
 {
 	double score = (player->max_exp + (100 * player->max_depth));
-	double scale = 100 + player->race->score + player->extension->score + player->personality->score;
+	double scale = 100 + player->race->score + player->extension->score;
+	/* Split personality => the current personality can change, and the score
+	 * shouldn't be affected by temporarily being a Scrub or Munchkin.
+	 */
+	if (!player->split_p)
+		scale += player->personality->score;
 	score *= scale;
 	score /= 100;
 	return (long)(ceil(score));

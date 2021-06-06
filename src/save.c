@@ -485,6 +485,9 @@ void rdwr_player(void)
 	/* Flying? */
 	rdwr_bool(&player->flying);
 
+	/* Split personality? */
+	rdwr_bool(&player->split_p);
+
 	/* Ready for the endgame? */
 	rdwr_bool(&player->orbitable);
 

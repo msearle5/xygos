@@ -2142,6 +2142,14 @@ static enum parser_error parse_p_race_talents(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_p_race_ac(struct parser *p) {
+	struct player_race *r = parser_priv(p);
+	if (!r)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	r->ac = parser_getint(p, "ac");
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_p_race_skill_disarm_phys(struct parser *p) {
 	struct player_race *r = parser_priv(p);
 	if (!r)
@@ -2454,6 +2462,7 @@ struct parser *init_parse_p_race(void) {
 	parser_reg(p, "equip sym tval sym sval uint min uint max", parse_p_race_equip);
 	parser_reg(p, "hitdie int mhp", parse_p_race_hitdie);
 	parser_reg(p, "exp int exp ?int high_exp", parse_p_race_exp);
+	parser_reg(p, "ac int ac", parse_p_race_ac);
 	parser_reg(p, "infravision int infra", parse_p_race_infravision);
 	parser_reg(p, "history uint hist", parse_p_race_history);
 	parser_reg(p, "age int base_age int mod_age", parse_p_race_age);
