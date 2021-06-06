@@ -991,12 +991,18 @@ static void generate_stats(int stats[STAT_MAX], int points_spent[STAT_MAX],
 	int step = 0;
 	bool maxed[STAT_MAX] = { 0 };
 	/* The assumption here is that techniques are distributed across all stats so there is no
-	 * reason to prefer one, but devices do require INT and they are more important that any
+	 * reason to prefer one, but devices do require INT and they are more important than any
 	 * users of WIS. And more important to a weaker "caster" type than to a melee type.
 	 **/
 	int spell_stat = STAT_INT;
 	bool caster = player->class->max_attacks < 5 ? true : false;
 	bool warrior = player->class->max_attacks > 5 ? true : false;
+
+	/* Wrestlers are warrior-types, but only have 4 max attacks */
+	if (streq(player->class->name, "Wrestler")) {
+		caster = false;
+		warrior = true;
+	}
 
 	while (*points_left && step >= 0) {
 	
@@ -1136,7 +1142,11 @@ static void generate_stats(int stats[STAT_MAX], int points_spent[STAT_MAX],
 				break;
 			}
 		}
+
+		/* Recalculate everything that's changed because the stat has changed (because stat_top is referred to). */
+		recalculate_stats(stats, *points_left);
 	}
+
 	/* Tell the UI the new points situation. */
 	event_signal_birthpoints(points_spent, *points_left);
 
