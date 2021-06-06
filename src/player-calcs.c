@@ -1605,9 +1605,9 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 
 	/* Base pflags = from player only, ignoring equipment and timed effects */
 	pf_wipe(state->pflags_base);
-	pf_copy(state->pflags_base, p->race->pflags);
-	pf_union(state->pflags_base, p->extension->pflags);
-	pf_union(state->pflags_base, p->personality->pflags);
+	pf_copy(state->pflags_base, p->race->pflags[player->lev]);
+	pf_union(state->pflags_base, p->extension->pflags[player->lev]);
+	pf_union(state->pflags_base, p->personality->pflags[player->lev]);
 
 	for (struct player_class *c = classes; c; c = c->next) {
 		int levels = levels_in_class(c->cidx);

@@ -293,13 +293,13 @@ static void race_ext_help(int i, void *db, const region *l, struct player_race *
 	for (ability = player_abilities; ability; ability = ability->next) {
 		if (n_flags >= flag_space) break;
 		if (streq(ability->type, "object") &&
-			!of_has(r->flags, ability->index)) {
+					!of_has(r->flags[player->lev], ability->index)) {
 			continue;
 		} else if (streq(ability->type, "player") &&
-				   !pf_has(r->pflags, ability->index)) {
+					!pf_has(r->pflags[player->lev], ability->index)) {
 			continue;
 		} else if (streq(ability->type, "element") &&
-				   (r->el_info[ability->index].res_level != ability->value)) {
+					(r->el_info[ability->index].res_level != ability->value)) {
 			continue;
 		}
 		text_out_e("\n%s", ability->name);

@@ -249,8 +249,8 @@ struct player_race {
 
 	int r_skills[SKILL_MAX];	/**< Skills */
 
-	bitflag flags[OF_SIZE];		/**< Racial (object) flags */
-	bitflag pflags[PF_SIZE];	/**< Racial (player) flags */
+	bitflag flags[PY_MAX_LEVEL+1][OF_SIZE];		/**< Racial (object) flags */
+	bitflag pflags[PY_MAX_LEVEL+1][PF_SIZE];	/**< Racial (player) flags */
 
 	bool extension;				/**< True if this is an extension */
 	bool personality;			/**< True if this is a personality */

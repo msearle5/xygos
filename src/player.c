@@ -445,8 +445,9 @@ void player_exp_lose(struct player *p, s32b amount, bool permanent)
 void player_flags(struct player *p, bitflag f[OF_SIZE])
 {
 	/* Add racial flags */
-	memcpy(f, p->race->flags, sizeof(p->race->flags));
-	memcpy(f, p->extension->flags, sizeof(p->race->flags));
+	memcpy(f, p->race->flags[p->lev], sizeof(p->race->flags[0]));
+	of_union(f, p->extension->flags[p->lev]);
+	of_union(f, p->personality->flags[p->lev]);
 
 	/* Add object-flags from class */
 	for (struct player_class *c = classes; c; c = c->next) {

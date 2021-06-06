@@ -40,10 +40,10 @@ bool class_has_ability(const struct player_class *class,
 					   int level)
 {
 	if (streq(ability->type, "player") &&
-		pf_has(class->pflags[level], ability->index)) {
+				pf_has(class->pflags[level], ability->index)) {
 		return true;
 	} else if (streq(ability->type, "object") &&
-			   of_has(class->flags[level], ability->index)) {
+				of_has(class->flags[level], ability->index)) {
 		return true;
 	}
 	return false;
@@ -53,13 +53,13 @@ bool race_has_ability(const struct player_race *race,
 					  struct player_ability *ability)
 {
 	if (streq(ability->type, "player") &&
-		pf_has(race->pflags, ability->index)) {
+				pf_has(race->pflags[player->lev], ability->index)) {
 		return true;
 	} else if (streq(ability->type, "object") &&
-			   of_has(race->flags, ability->index)) {
+				of_has(race->flags[player->lev], ability->index)) {
 		return true;
 	} else if (streq(ability->type, "element") &&
-			   (race->el_info[ability->index].res_level == ability->value)) {
+				(race->el_info[ability->index].res_level == ability->value)) {
 		return true;
 	}
 

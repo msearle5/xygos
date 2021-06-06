@@ -160,6 +160,33 @@ values:MOVES[1]
 hitdie:20
 exp:15
 
+personality:Greedy
+skill-disarm-phys:-5
+skill-disarm-magic:-10
+skill-device:-10
+skill-save:-15
+skill-stealth:-8
+skill-search:25
+skill-melee:-3
+skill-martial:-8
+skill-shoot:-5
+skill-throw:-3
+skill-dig:12
+desc:You may save the galaxy while you are there - why not? - but your main motivation is cold, hard cash. There's loot down there and you want it! Your attentiveness to shiny things means you'll notice more of it - eventually being able to sense metal at a distance. But it also makes it harder for you to focus on anything else - skills other than searching and digging suffer.
+stats:0:0:-2:0:0:-1:0
+player-flags:GREEDY
+level-from:25
+obj-flags:SENSE_METAL
+hitdie:-5
+book:[Greedy]
+# spell:name:level:fail:exp:stat:hp:cooldown
+spell:Find Loot:8:15:4:1:0:2d3
+seffect:DETECT_GOLD
+seffect-yx:22:40
+seffect:SENSE_OBJECTS
+seffect-yx:22:40
+sdesc:Detects nearby loot. Grab it and run!
+
 personality:Chicken
 skill-disarm-phys:-5
 skill-disarm-magic:-5
@@ -172,7 +199,7 @@ skill-martial:-25
 skill-shoot:5
 skill-throw:5
 skill-dig:5
-desc:Your preferred reaction to danger is to run and hide like a chicken. This hurts your melee ability (although you have no problem with fighting from 200 yards away), but you are stealthy and used to running. It doesn't make you very popular either, but your survival instincts do give you a little more HP and AC.
+desc:Your preferred reaction to danger is to run and hide like a chicken. This hurts your melee ability and doesn't make you very popular either. However, you like the idea of fighting from 200 yards away, you are stealthy and you are used to running. Your survival instincts do give you a little more HP and AC.
 stats:0:1:1:0:1:-2:0
 values:MOVES[1]
 hitdie:10

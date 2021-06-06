@@ -80,6 +80,34 @@
 #include "z-queue.h"
 #include "z-type.h"
 
+
+/** Average number of items in rooms */
+static int room_item_av(void)
+{
+	int z = z_info->room_item_av;
+	if (player_has(player, PF_GREEDY))
+		z = (z * 5) / 4;
+	return z;
+}
+
+/** Average number of items in random places */
+static int both_item_av(void)
+{
+	int z = z_info->both_item_av;
+	if (player_has(player, PF_GREEDY))
+		z = z * 2;
+	return z;
+}
+
+/** Average number of money items */
+static int both_gold_av(void)
+{
+	int z = z_info->both_gold_av;
+	if (player_has(player, PF_GREEDY))
+		z = z * 2;
+	return z;
+}
+ 
 /**
  * Check whether a square has one of the tunnelling helper flags
  * \param c is the current chunk
@@ -1088,13 +1116,13 @@ struct chunk *classic_gen(struct player *p, int min_height, int min_width) {
 
 	/* Put some objects in rooms */
 	alloc_objects(c, SET_ROOM, TYP_OBJECT,
-		Rand_normal(z_info->room_item_av, 3), c->depth, ORIGIN_FLOOR);
+		Rand_normal(room_item_av(), 3), c->depth, ORIGIN_FLOOR);
 
 	/* Put some objects/gold in the dungeon */
 	alloc_objects(c, SET_BOTH, TYP_OBJECT,
-		Rand_normal(z_info->both_item_av, 3), c->depth, ORIGIN_FLOOR);
+		Rand_normal(both_item_av(), 3), c->depth, ORIGIN_FLOOR);
 	alloc_objects(c, SET_BOTH, TYP_GOLD,
-		Rand_normal(z_info->both_gold_av, 3), c->depth, ORIGIN_FLOOR);
+		Rand_normal(both_gold_av(), 3), c->depth, ORIGIN_FLOOR);
 
 	return c;
 }
@@ -2778,13 +2806,13 @@ struct chunk *modified_gen(struct player *p, int min_height, int min_width) {
 
 	/* Put some objects in rooms */
 	alloc_objects(c, SET_ROOM, TYP_OBJECT,
-		Rand_normal(z_info->room_item_av, 3), c->depth, ORIGIN_FLOOR);
+		Rand_normal(room_item_av(), 3), c->depth, ORIGIN_FLOOR);
 
 	/* Put some objects/gold in the dungeon */
 	alloc_objects(c, SET_BOTH, TYP_OBJECT,
-		Rand_normal(z_info->both_item_av, 3), c->depth, ORIGIN_FLOOR);
+		Rand_normal(both_item_av(), 3), c->depth, ORIGIN_FLOOR);
 	alloc_objects(c, SET_BOTH, TYP_GOLD,
-		Rand_normal(z_info->both_gold_av, 3), c->depth, ORIGIN_FLOOR);
+		Rand_normal(both_gold_av(), 3), c->depth, ORIGIN_FLOOR);
 
 	return c;
 }
@@ -2973,13 +3001,13 @@ struct chunk *moria_gen(struct player *p, int min_height, int min_width) {
 
 	/* Put some objects in rooms */
 	alloc_objects(c, SET_ROOM, TYP_OBJECT,
-		Rand_normal(z_info->room_item_av, 3), c->depth, ORIGIN_FLOOR);
+		Rand_normal(room_item_av(), 3), c->depth, ORIGIN_FLOOR);
 
 	/* Put some objects/gold in the dungeon */
 	alloc_objects(c, SET_BOTH, TYP_OBJECT,
-		Rand_normal(z_info->both_item_av, 3), c->depth, ORIGIN_FLOOR);
+		Rand_normal(both_item_av(), 3), c->depth, ORIGIN_FLOOR);
 	alloc_objects(c, SET_BOTH, TYP_GOLD,
-		Rand_normal(z_info->both_gold_av, 3), c->depth, ORIGIN_FLOOR);
+		Rand_normal(both_gold_av(), 3), c->depth, ORIGIN_FLOOR);
 
 	return c;
 }
@@ -3462,13 +3490,13 @@ struct chunk *lair_gen(struct player *p, int min_height, int min_width) {
 
 	/* Put some objects in rooms */
 	alloc_objects(c, SET_ROOM, TYP_OBJECT,
-		Rand_normal(z_info->room_item_av, 3), c->depth, ORIGIN_FLOOR);
+		Rand_normal(room_item_av(), 3), c->depth, ORIGIN_FLOOR);
 
 	/* Put some objects/gold in the dungeon */
 	alloc_objects(c, SET_BOTH, TYP_OBJECT,
-		Rand_normal(z_info->both_item_av, 3), c->depth, ORIGIN_FLOOR);
+		Rand_normal(both_item_av(), 3), c->depth, ORIGIN_FLOOR);
 	alloc_objects(c, SET_BOTH, TYP_GOLD,
-		Rand_normal(z_info->both_gold_av, 3), c->depth, ORIGIN_FLOOR);
+		Rand_normal(both_gold_av(), 3), c->depth, ORIGIN_FLOOR);
 
 	return c;
 }
@@ -3658,13 +3686,13 @@ struct chunk *gauntlet_gen(struct player *p, int min_height, int min_width) {
 
 	/* Put some objects in rooms */
 	alloc_objects(c, SET_ROOM, TYP_OBJECT,
-		Rand_normal(z_info->room_item_av, 3), c->depth, ORIGIN_FLOOR);
+		Rand_normal(room_item_av(), 3), c->depth, ORIGIN_FLOOR);
 
 	/* Put some objects/gold in the dungeon */
 	alloc_objects(c, SET_BOTH, TYP_OBJECT,
-		Rand_normal(z_info->both_item_av, 3), c->depth, ORIGIN_FLOOR);
+		Rand_normal(both_item_av(), 3), c->depth, ORIGIN_FLOOR);
 	alloc_objects(c, SET_BOTH, TYP_GOLD,
-		Rand_normal(z_info->both_gold_av, 3), c->depth, ORIGIN_FLOOR);
+		Rand_normal(both_gold_av(), 3), c->depth, ORIGIN_FLOOR);
 
 	return c;
 }

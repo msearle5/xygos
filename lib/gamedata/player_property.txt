@@ -152,6 +152,10 @@ code:EAT_BATTERIES
 name:Eat Batteries
 desc:You can eat batteries.
 
+type:player
+code:GREEDY
+name:Greedy
+desc:You notice more loot.
 
 # Object flags
 

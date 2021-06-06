@@ -1419,8 +1419,8 @@ void player_learn_innate(struct player *p)
 	}
 
 	/* Flags */
-	for (flag = of_next(p->race->flags, FLAG_START); flag != FLAG_END;
-		 flag = of_next(p->race->flags, flag + 1)) {
+	for (flag = of_next(p->race->flags[p->lev], FLAG_START); flag != FLAG_END;
+		 flag = of_next(p->race->flags[p->lev], flag + 1)) {
 		player_learn_icon(p, icon_index(ICON_VAR_FLAG, flag), false);
 	}
 

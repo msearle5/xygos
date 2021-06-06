@@ -94,6 +94,8 @@ struct angband_constants *z_info;
  */
 const char *ANGBAND_SYS = "xxx";
 
+static enum parser_error parse_class_level_from(struct parser *p);
+
 /**
  * Various directories. These are no longer necessarily all subdirs of "lib"
  */
@@ -2329,7 +2331,10 @@ static enum parser_error parse_p_race_obj_flags(struct parser *p) {
 	flags = string_make(parser_getstr(p, "flags"));
 	s = strtok(flags, " |");
 	while (s) {
-		if (grab_flag(r->flags, OF_SIZE, list_obj_flag_names, s))
+		bool flag;
+		for (int i=grab_flags_from; i<=grab_flags_to; i++)
+			flag = grab_flag(r->flags[i], OF_SIZE, list_obj_flag_names, s);
+		if (flag)
 			break;
 		s = strtok(NULL, " |");
 	}
@@ -2349,7 +2354,10 @@ static enum parser_error parse_p_race_play_flags(struct parser *p) {
 	flags = string_make(parser_getstr(p, "flags"));
 	s = strtok(flags, " |");
 	while (s) {
-		if (grab_flag(r->pflags, PF_SIZE, player_info_flags, s))
+		bool flag;
+		for (int i=grab_flags_from; i<=grab_flags_to; i++)
+			flag = grab_flag(r->pflags[i], PF_SIZE, player_info_flags, s);
+		if (flag)
 			break;
 		s = strtok(NULL, " |");
 	}
@@ -2474,6 +2482,7 @@ struct parser *init_parse_p_race(void) {
 	parser_reg(p, "values str values", parse_p_race_values);
 	parser_reg(p, "desc str desc", parse_p_race_desc);
 	parser_reg(p, "body str body", parse_p_race_body);
+	parser_reg(p, "level-from int from", parse_class_level_from);
 	init_parse_magic(p);
 	return p;
 }
@@ -3484,7 +3493,7 @@ static enum parser_error parse_class_desc(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-/* Class description to display on the character creation screeen */
+/* Class description to display on the character creation screen */
 static enum parser_error parse_class_cdesc(struct parser *p) {
 	struct player_class *c = parser_priv(p);
 	if (!c)
@@ -3493,9 +3502,9 @@ static enum parser_error parse_class_cdesc(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-/* Class description to display on the character creation screeen */
+/* Level to use flags from - class, race etc */
 static enum parser_error parse_class_level_from(struct parser *p) {
-	struct player_class *c = parser_priv(p);
+	void *c = parser_priv(p);
 	if (!c)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 	int from = parser_getint(p, "from");
