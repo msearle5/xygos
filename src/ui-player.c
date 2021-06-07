@@ -617,10 +617,12 @@ void display_player_stat_info(bool generating)
 	Term_get_size(&width, &height);
 
 	/* Print out the labels for the columns */
-	const char *title = "  Self Race Ext Per Abi Cla Equip Best";
+	const char *title = "  Self Race Ext Per Abi Cla Equ  Best ";
 	c_put_str(COLOUR_WHITE, title, row-1, col);
-	if ((generating) || (width >= 87)) {
-		c_put_str(COLOUR_WHITE, "Curr", row-1, col+strlen(title)+1);
+	if (width >= 87) {
+		c_put_str(COLOUR_WHITE, "Curr", row-1, col+strlen(title));
+	} else if (generating) {
+		c_put_str(COLOUR_RED, "Pts", row-1, col+strlen(title));
 	}
 
 	/* Display the stats */
@@ -853,9 +855,9 @@ static const char *show_speed(void)
 	int int_mul = multiplier / 10;
 	int dec_mul = multiplier % 10;
 	if (OPT(player, effective_speed))
-		strnfmt(buffer, sizeof(buffer), "%d.%dx (%d)", int_mul, dec_mul, tmp - 110);
+		strnfmt(buffer, sizeof(buffer), "%d.%dx (%+d)", int_mul, dec_mul, tmp - 110);
 	else
-		strnfmt(buffer, sizeof(buffer), "%d (%d.%dx)", tmp - 110, int_mul, dec_mul);
+		strnfmt(buffer, sizeof(buffer), "%+d (%d.%dx)", tmp - 110, int_mul, dec_mul);
 	return buffer;
 }
 

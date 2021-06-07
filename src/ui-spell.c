@@ -236,7 +236,7 @@ static struct menu *spell_menu_new(bool (*is_valid)(int spell_index))
 	menu_setpriv(m, d->n_spells, d);
 
 	/* Set flags */
-	m->header = "Name                         Stat Lv    Cost Fail Info";
+	m->header = "Name                        Stat Lv     Cost Fail Info";
 	m->flags = MN_CASELESS_TAGS;
 	m->selections = lower_case;
 	m->browse_hook = spell_menu_browser;
