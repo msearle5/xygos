@@ -127,4 +127,5 @@ EFFECT(PRISMATIC,					false, NULL,		0, 		EFINFO_NONE,	"switches into an alternat
 EFFECT(LAND,						false, NULL,		0,		EFINFO_NONE,	"lands")
 EFFECT(TAKEOFF,						false, NULL,		0,		EFINFO_NONE,	"takes off")
 EFFECT(BANANA,						false, NULL,		0, 		EFINFO_NONE,	"")
+EFFECT(PERSONALITY,					false, NULL,		0,		EFINFO_NONE,	"changes your personality")
 EFFECT(NEXT,						false, NULL,		0, 		EFINFO_NONE,	"")

@@ -722,7 +722,6 @@ int rd_player(void)
 	byte num;
 	byte stat_max = 0;
 	char buf[80];
-	struct player_race *r;
 	struct player_shape *s;
 	struct player_class *c;
 
@@ -733,12 +732,7 @@ int rd_player(void)
 
 	/* Player race */
 	rd_string(buf, sizeof(buf));
-	for (r = races; r; r = r->next) {
-		if (streq(r->name, buf)) {
-			player->race = r;
-			break;
-		}
-	}
+	player->race = get_race_by_name(buf);
 
 	/* Verify player race */
 	if (!player->race) {
@@ -748,16 +742,21 @@ int rd_player(void)
 
 	/* Player ext */
 	rd_string(buf, sizeof(buf));
-	for (r = extensions; r; r = r->next) {
-		if (streq(r->name, buf)) {
-			player->extension = r;
-			break;
-		}
-	}
+	player->extension = get_race_by_name(buf);
 
-	/* Verify player race */
+	/* Verify player extension */
 	if (!player->extension) {
 		note(format("Invalid player extension (%s).", buf));
+		return -1;
+	}
+
+	/* Player personality */
+	rd_string(buf, sizeof(buf));
+	player->personality = get_race_by_name(buf);
+
+	/* Verify player personality */
+	if (!player->personality) {
+		note(format("Invalid player personality (%s).", buf));
 		return -1;
 	}
 

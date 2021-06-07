@@ -210,7 +210,7 @@ static void configure_char_sheet(bool minimum_size, bool percentmode)
 		cached_config->label_width[i] = 0;
 	int wid, hgt;
 	if (minimum_size) {
-		wid = 80;
+		wid = 90;
 		hgt = 24;
 	} else {
 		Term_get_size(&wid, &hgt);
@@ -612,14 +612,18 @@ void display_player_stat_info(bool generating)
 		col += 4;
 	}
 
+	/* Get the terminal size */
+	int width, height;
+	Term_get_size(&width, &height);
+
 	/* Print out the labels for the columns */
-	c_put_str(COLOUR_WHITE, "  Self", row-1, col+1);
-	c_put_str(COLOUR_WHITE, " RB", row-1, col+7);
-	c_put_str(COLOUR_WHITE, " XB", row-1, col+11);
-	c_put_str(COLOUR_WHITE, " AB", row-1, col+15);
-	c_put_str(COLOUR_WHITE, " CB", row-1, col+19);
-	c_put_str(COLOUR_WHITE, " EB", row-1, col+23);
-	c_put_str(COLOUR_WHITE, "  Best", row-1, col+27);
+	const char *title = "  Self Race Ext Per Abi Cla Equ  Best ";
+	c_put_str(COLOUR_WHITE, title, row-1, col);
+	if (width >= 87) {
+		c_put_str(COLOUR_WHITE, "Curr", row-1, col+strlen(title));
+	} else if (generating) {
+		c_put_str(COLOUR_RED, "Pts", row-1, col+strlen(title));
+	}
 
 	/* Display the stats */
 	for (i = 0; i < STAT_MAX; i++) {
@@ -653,26 +657,32 @@ void display_player_stat_info(bool generating)
 		strnfmt(buf, sizeof(buf), "%+3d", player->extension->r_adj[i]);
 		c_put_str(COLOUR_L_BLUE, buf, row+i, col+11);
 
+		/* Personality Bonus */
+		strnfmt(buf, sizeof(buf), "%+3d", player->personality->r_adj[i]);
+		c_put_str(COLOUR_L_BLUE, buf, row+i, col+15);
+
 		/* Ability Bonus */
 		strnfmt(buf, sizeof(buf), "%+3d", ability_to_stat(i));
-		c_put_str(COLOUR_L_BLUE, buf, row+i, col+15);
+		c_put_str(COLOUR_L_BLUE, buf, row+i, col+19);
 
 		/* Class Bonus */
 		strnfmt(buf, sizeof(buf), "%+3d", class_to_stat(i));
-		c_put_str(COLOUR_L_BLUE, buf, row+i, col+19);
+		c_put_str(COLOUR_L_BLUE, buf, row+i, col+23);
 
 		/* Equipment Bonus */
 		strnfmt(buf, sizeof(buf), "%+3d", player->state.stat_add[i]);
-		c_put_str(COLOUR_L_BLUE, buf, row+i, col+23);
+		c_put_str(COLOUR_L_BLUE, buf, row+i, col+27);
 
 		/* Resulting "modified" maximum value */
 		cnv_stat(player->state.stat_top[i], buf, sizeof(buf));
-		c_put_str(COLOUR_L_GREEN, buf, row+i, col+27);
+		c_put_str(COLOUR_L_GREEN, buf, row+i, col+31);
 
-		/* Only display stat_use if there has been draining */
-		if (player->stat_cur[i] < player->stat_max[i]) {
-			cnv_stat(player->state.stat_use[i], buf, sizeof(buf));
-			c_put_str(COLOUR_YELLOW, buf, row+i, col+35);
+		/* Only display stat_use if there has been draining. Ignore for small terminals (as it's a dup of the left panel) */
+		if ((generating) || (width >= 87)) {
+			if (player->stat_cur[i] < player->stat_max[i]) {
+				cnv_stat(player->state.stat_use[i], buf, sizeof(buf));
+				c_put_str(COLOUR_YELLOW, buf, row+i, col+38);
+			}
 		}
 	}
 }
@@ -805,6 +815,11 @@ static const char *show_title(void)
 		return player_title();
 }
 
+static const char *show_personality(void)
+{
+	return player->personality->name;
+}
+
 static const char *show_adv_exp(void)
 {
 	if (player->lev < PY_MAX_LEVEL) {
@@ -840,9 +855,9 @@ static const char *show_speed(void)
 	int int_mul = multiplier / 10;
 	int dec_mul = multiplier % 10;
 	if (OPT(player, effective_speed))
-		strnfmt(buffer, sizeof(buffer), "%d.%dx (%d)", int_mul, dec_mul, tmp - 110);
+		strnfmt(buffer, sizeof(buffer), "%d.%dx (%+d)", int_mul, dec_mul, tmp - 110);
 	else
-		strnfmt(buffer, sizeof(buffer), "%d (%d.%dx)", tmp - 110, int_mul, dec_mul);
+		strnfmt(buffer, sizeof(buffer), "%+d (%d.%dx)", tmp - 110, int_mul, dec_mul);
 	return buffer;
 }
 
@@ -881,6 +896,7 @@ static struct panel *get_panel_topleft(void) {
 		}
 	}
 	panel_line(p, COLOUR_L_BLUE, "Title", "%s", show_title());
+	panel_line(p, COLOUR_L_BLUE, "Perso", "%s", show_personality());
 	panel_line(p, COLOUR_L_BLUE, "HP", "%d/%d", player->chp, player->mhp);
 
 	return p;
@@ -1154,7 +1170,7 @@ void write_character_dump(ang_file *fff)
 
 	configure_char_sheet(true, false);
 
-	n = 80;
+	n = 90;
 	if (n < 2 * cached_config->res_cols[0] + 1) {
 		n = 2 * cached_config->res_cols[0] + 1;
 	}
@@ -1170,7 +1186,7 @@ void write_character_dump(ang_file *fff)
 	for (y = 1; y < 23; y++) {
 		p = buf;
 		/* Dump each row */
-		for (x = 0; x < 79; x++) {
+		for (x = 0; x < 89; x++) {
 			/* Get the attr/char */
 			(void)(Term_what(x, y, &a, &c));
 

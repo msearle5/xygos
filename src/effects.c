@@ -6308,12 +6308,84 @@ bool effect_handler_HORNS(effect_handler_context_t *context)
 		static const char *honk[] =		{ "honk", "blare", "blast", "hoot", "call", "sing", "trumpet", "bray" };
 		static const char *music[] =	{ "musically", "tunefully", "mournfully", "a fanfare",
 										"a loud trill", "two notes", "a long note", "three notes",
-										"a challenge", "loudly", "unexpectedly", " a flourish", "shrilly", "reveille" };
+										"a challenge", "loudly", "unexpectedly", " a flourish", "shrilly", "reveille", "piercingly" };
 		msg("Your horns %s out %s!", honk[randint0(sizeof(honk)/sizeof(*honk))], music[randint0(sizeof(music)/sizeof(*music))]);
 
 		/* Aggro */
 		effect_handler_WAKE(context);
 	}
+	/* Done */
+	return (true);
+}
+
+static void personality_display(struct menu *m, int oid, bool cursor,
+		int row, int col, int width)
+{
+	struct player_race *p = personalities->next->next;
+	for(int i=0; i<oid; i++)
+		p = p->next;
+	c_prt(curs_attrs[CURS_KNOWN][0 != cursor], p->name, row, col);
+}
+
+static bool personality_action(struct menu *m, const ui_event *e, int oid, bool *exit)
+{
+	if (e->type != EVT_SELECT)
+		return true;
+
+	struct player_race *p = personalities->next->next;
+	for(int i=0; i<oid; i++)
+		p = p->next;
+	player->personality = p;
+
+	return false;
+}
+
+static const region personality_area = { 0, 0, 0, 0 };
+
+static menu_iter personality_menu =
+{
+	NULL,
+	NULL,
+	personality_display,
+	personality_action,
+	NULL
+};
+
+/**
+ * Change personality
+ */
+bool effect_handler_PERSONALITY(effect_handler_context_t *context)
+{
+	int per[z_info->r_max];
+	int nper = 0;
+	struct menu *menu = menu_new(MN_SKIN_COLUMNS, &personality_menu);
+
+	/* List personalities */
+	struct player_race *p = personalities->next->next;
+	for(; p; p = p->next) {
+		per[nper] = nper;
+		nper++;
+	}
+
+	/* Save the screen */
+	screen_save();
+	clear_from(0);
+
+	/* Lay out the menu */
+	menu_setpriv(menu, nper, kb_info);
+	menu_set_filter(menu, per, nper);
+	menu_layout(menu, &personality_area);
+	menu_select(menu, 0, false);
+
+	/* Clean up */
+	screen_load();
+	mem_free(menu);
+	
+	/* Update and redraw map */
+	player->upkeep->update |= (PU_BONUS | PU_HP | PU_PANEL);
+	player->upkeep->redraw |= (PR_MAP | PR_ITEMLIST | PR_HP | PR_STATS);
+	handle_stuff(player);
+
 	/* Done */
 	return (true);
 }

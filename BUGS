@@ -1,5 +1,7 @@
 BUGS
 ====
+BUG: INT is over-valued in automatic stat assignment (e.g. a Wrestler got 50 points in INT, only 3 in DEX)
+
 BUG: Stores which close lose their entrance but don't become ruins. (Only when more than one would?)
 
 BUG: Bombs (e.g. pineapple) give excess messages - "The X fails to harm the Y." "The X detonates!" "The Y screams!".

@@ -77,13 +77,16 @@ static void c_player_birth(char *rest) {
 	char *race = strtok(rest, " ");
 	char *class = strtok(NULL, " ");
 	char *ext = strtok(NULL, " ");
+	char *per = strtok(NULL, " ");
 	struct player_class *c;
 	struct player_race *r;
 	struct player_race *e;
+	struct player_race *p;
 
 	if (!race) race = "Human";
-	if (!class) class = "Warrior";
+	if (!class) class = "Marine";
 	if (!ext) ext = "Mutant";
+	if (!per) per = "Ordinary";
 
 	for (r = races; !r->extension; r = r->next)
 		if (!strcmp(race, r->name))
@@ -93,11 +96,19 @@ static void c_player_birth(char *rest) {
 		return;
 	}
 
-	for (e = extensions; e; e = e->next)
+	for (e = extensions; !e->personality; e = e->next)
 		if (!strcmp(ext, e->name))
 			break;
 	if (!e) {
 		printf("player-birth: bad ext '%s'\n", ext);
+		return;
+	}
+
+	for (p = personalities; p; p = p->next)
+		if (!strcmp(per, p->name))
+			break;
+	if (!p) {
+		printf("player-birth: bad personality '%s'\n", ext);
 		return;
 	}
 
@@ -110,7 +121,7 @@ static void c_player_birth(char *rest) {
 		return;
 	}
 
-	player_generate(player, r, e, c, false);
+	player_generate(player, r, e, c, p, false);
 }
 
 static void c_player_class(char *rest) {

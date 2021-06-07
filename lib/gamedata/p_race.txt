@@ -2,6 +2,7 @@
 
 
 # This file is used to initialize the player race information for Angband.
+# This includes extensions and personalities.
 
 # Do not modify this file unless you know exactly what you are doing,
 # unless you wish to risk possible system crashes and broken savefiles.
@@ -11,6 +12,7 @@
 # Format:
 # name:race name
 #	(OR ext: extension name)
+#	(OR personality: personality name)
 # stats:str:int:wis:dex:con:chr:spd
 # talents:base:max
 # skill-disarm:base
@@ -78,6 +80,263 @@
 
 # 'body' is for the body as defined in body.txt. By default the last entry of that file ("Humanoid") is used.
 
+
+##### Personalities #####
+
+personality:Ordinary
+skill-disarm-phys:0
+skill-disarm-magic:0
+skill-device:0
+skill-save:0
+skill-stealth:0
+skill-search:0
+skill-melee:0
+skill-martial:0
+skill-shoot:0
+skill-throw:0
+skill-dig:0
+desc:An average personality with no further changes made. This is the simplest and not a bad choice for any character, so if you don't want to care about personalities this is the one to go for. However it will rarely be the best choice, either - most classes benefit from enhancing their positive characteristics or (less often) shoring up their weak points. 
+
+personality:Geeky
+skill-disarm-phys:5
+skill-disarm-magic:10
+skill-device:25
+skill-save:-10
+skill-stealth:-5
+skill-search:-10
+skill-melee:-15
+skill-martial:-5
+skill-shoot:-5
+skill-throw:-5
+skill-dig:-5
+desc:You are intelligent, curious and have acquired much background knowledge of pre-War equipment and such esoterica - but at a cost to combat skills, physical stats and hitpoints. It's an obvious choice for an Engineer, reinforcing that class's strong points - but it can also be used with other classes that would benefit from learning more talents and more reliable use of devices.
+stats:-1:3:1:-1:-1:-2:0
+talents:0:1
+hitdie:-5
+exp:5
+
+#or Creepy
+personality:Sneaky
+skill-disarm-phys:25
+skill-disarm-magic:20
+skill-device:15
+skill-save:20
+skill-stealth:25
+skill-search:15
+skill-melee:8
+skill-martial:3
+skill-shoot:0
+skill-throw:10
+skill-dig:-5
+desc:You're a sneaky sneak. A creepy creep. Stealth is your strong point, and you can usually manage to bypass a lock, avoid a trap, find hidden goodies and jump out of the way in the nick of time - eventually becoming so aware of your surroundings as to be entirely immune to traps. You're not a bad fighter but are best with lightweight melee and improvised thrown weapons. You're also smart enough to be able to back that up with devices.
+stats:-1:2:2:3:-1:-2:1
+level-from:15
+obj-flags:TRAP_IMMUNE
+exp:10
+
+personality:Lazy
+skill-disarm-phys:-5
+skill-disarm-magic:-5
+skill-device:-5
+skill-save:-5
+skill-stealth:-5
+skill-search:-5
+skill-melee:-5
+skill-martial:-5
+skill-shoot:-5
+skill-throw:-5
+skill-dig:-5
+desc:You're a reluctant hero - "What, me? Run around all day in some slimy underground passages? Sounds awful." You would much rather take the load off in front of VaulTV. But the galaxy won't save itself, so here you are... You are sub-par in most respects but your lack of experience translates to an improved experience modifier and an extra talent point. You will also find that you can take as long as you like to advance.
+stats:-1:-1:-1:-1:-1:-2:-1
+player-flags:NO_TIME_LIMIT
+exp:-10
+talents:0:1
+
+personality:Boring
+skill-disarm-phys:0
+skill-disarm-magic:0
+skill-device:0
+skill-save:5
+skill-stealth:-15
+skill-search:0
+skill-melee:0
+skill-martial:4
+skill-shoot:0
+skill-throw:4
+skill-dig:25
+desc:Everyone says you're a bore but you must disagree and can indeed spend hours enumerating all the ways in which you must logically be a truly sparkling conversationalist, if only anyone would appreciate it... You aren't stealthy (you can't stop talking for long) but are used to evading thrown eggs and digging of course is a specialty.
+equip:digger:Pick:1:1:none
+hitdie:10
+exp:10
+stats:1:0:-1:0:1:-5:0
+book:[Boring]
+# spell:name:level:fail:exp:stat:hp:cooldown
+spell:Monologue:8:10:2:4:1d2:3d4
+seffect:PROJECT_LOS_AWARE:SLEEP_ALL
+sdice:$B
+sexpr:B:PLAYER_LEVEL:* 15 + 300
+sdesc:You bore your way through the floor or ceiling.
+spell:Bore:32:25:100:4:2d6:4d10
+seffect:CREATE_STAIRS
+
+# "Arrogant" would be another word.
+# It may need to be buffed to balance Aggravation. Maybe bigger breaths (dice & sides) at high level?
+personality:Shouty
+skill-disarm-phys:-5
+skill-disarm-magic:-5
+skill-device:0
+skill-save:5
+skill-stealth:-25
+skill-search:-5
+skill-melee:5
+skill-martial:10
+skill-shoot:0
+skill-throw:0
+skill-dig:0
+desc:Karen and Dick are never wrong, ever. Just ask them. You are used to rushing in quickly and making your presence felt - aggravating everyone else, but you don't give a rodent's posterior about that. Your real talent though is your ability to yell until everyone respects your authority.
+stats:0:-1:2:0:1:-5:1
+obj-flags:AGGRAVATE
+hitdie:15
+book:[Shouty]
+# spell:name:level:fail:exp:stat:hp:cooldown
+spell:Shout!:1:22:4:4:1:4d5
+seffect:BREATH:SOUND:0:-10
+sdice:$Dd3
+sexpr:D:PLAYER_LEVEL:- 1 / 6 + 2
+sdesc:Shouts - a sonic blast that hurts anything in your way, in a large cone.
+
+# Sprint? It would fit, but this is about the most powerful personality as it is...
+personality:Athletic
+skill-disarm-phys:8
+skill-disarm-magic:0
+skill-device:-10
+skill-save:15
+skill-stealth:3
+skill-search:0
+skill-melee:15
+skill-martial:20
+skill-shoot:3
+skill-throw:12
+skill-dig:10
+desc:Athletes have good physical abilities in general but are especially noted for speed. This personality is a good match for most classes, even ones where the penalties matter - as these characters are also the squishier ones, and benefit from being able to run away.
+stats:1:-2:-1:1:2:0:1
+values:MOVES[1]
+hitdie:20
+exp:15
+
+personality:Greedy
+skill-disarm-phys:-5
+skill-disarm-magic:-10
+skill-device:-10
+skill-save:-15
+skill-stealth:-8
+skill-search:25
+skill-melee:-3
+skill-martial:-8
+skill-shoot:-5
+skill-throw:-3
+skill-dig:12
+desc:You may save the galaxy while you are there - why not? - but your main motivation is cold, hard cash. There's loot down there and you want it! Your attentiveness to shiny things means you'll notice more of it - eventually being able to sense metal at a distance. But it also makes it harder for you to focus on anything else - skills other than searching and digging suffer.
+stats:0:0:-2:0:0:-1:0
+player-flags:GREEDY
+level-from:25
+obj-flags:SENSE_METAL
+hitdie:-5
+book:[Greedy]
+# spell:name:level:fail:exp:stat:hp:cooldown
+spell:Find Loot:8:15:4:1:0:2d3
+seffect:DETECT_GOLD
+seffect-yx:22:40
+seffect:SENSE_OBJECTS
+seffect-yx:22:40
+sdesc:Detects nearby loot. Grab it and run!
+
+personality:Chicken
+skill-disarm-phys:-5
+skill-disarm-magic:-5
+skill-device:0
+skill-save:5
+skill-stealth:12
+skill-search:0
+skill-melee:-20
+skill-martial:-25
+skill-shoot:5
+skill-throw:5
+skill-dig:5
+desc:Your preferred reaction to danger is to run and hide like a chicken. This hurts your melee ability and doesn't make you very popular either. However, you like the idea of fighting from 200 yards away, you are stealthy and you are used to running. Your survival instincts do give you a little more HP and AC.
+stats:0:1:1:0:1:-2:0
+values:MOVES[1]
+hitdie:10
+ac:10
+
+personality:Fearless
+skill-disarm-phys:2
+skill-disarm-magic:2
+skill-device:0
+skill-save:-10
+skill-stealth:-5
+skill-search:0
+skill-melee:10
+skill-martial:15
+skill-shoot:2
+skill-throw:2
+skill-dig:0
+desc:You are entirely fearless, making you an effective melee combatant but prone to failing to defend yourself, hence the reduced CON, hitdie and AC. Onward to the next adventure!
+stats:0:-1:-2:0:-1:1:1
+obj-flags:PROT_FEAR
+hitdie:-10
+ac:-10
+
+personality:Scrub
+skill-disarm-phys:-30
+skill-disarm-magic:-30
+skill-device:-30
+skill-save:-30
+skill-stealth:-30
+skill-search:-30
+skill-melee:-30
+skill-martial:-30
+skill-shoot:-30
+skill-throw:-30
+skill-dig:-30
+desc:Scrubs have no advantages, and a lot of disadvantages - poor stats, skills and hitpoints. They are a challenge personality - something to select if the usual game isn't tough enough for you. You get a 25% score bonus for accepting this challenge.
+stats:-4:-4:-4:-4:-4:-8:-2
+hitdie:-40
+score:25
+
+# This must be second to last in the personality section of the file, and must not be renamed, because of Split Personality choice.
+personality:Munchkin
+skill-disarm-phys:30
+skill-disarm-magic:30
+skill-device:30
+skill-save:30
+skill-stealth:30
+skill-search:30
+skill-melee:30
+skill-martial:30
+skill-shoot:30
+skill-throw:30
+skill-dig:30
+desc:Munchkins get it easy. Exceptional starting items, huge bonuses to everything, fast leveling, and no penalties besides a whopping 90% off their final score - as this is of course an easy mode, and if you win as a Munchkin you should not brag too much about it. The Princess is in another castle...
+equip:pill:life:1:1:none
+stats:5:5:5:5:5:10:3
+values:MOVES[1]
+hitdie:100
+exp:-50
+score:-90
+
+# This must be last in the personality section of the file, and must not be renamed, because of Split Personality choice.
+personality:Split
+desc:Your personality changes unpredictably. Every level up a new personality develops at random. It is sometimes possible to avert this by an effort of will - but this isn't guaranteed and you often won't know what the alternative is. However, you will get better at this as you gain levels and wisdom, extreme personalities don't usually stick and you will be given free choice of personality if you reach maximum level.
+book:[Split]
+# spell:name:level:fail:exp:stat:hp:cooldown
+spell:Personality:50:50:0:2:1d4:4d50
+seffect:PERSONALITY:0:0:0
+sdesc:Change your personality. All are available except Split itself, and Munchkin.
+
+
+##### Extensions #####
+
 ext:None
 desc:A typical member of your race with nothing added or taken away - not a mutant, cyborg or other exotic variation.
  
@@ -92,6 +351,11 @@ ext:Cyborg
 talents:-3:0
 exp:60:0
 desc:You will begin with one or more cybernetic implants. These are varied and generally powerful, but having become used to your new abilities you have had less time for learning other things. So you have less talents available, and more experience is needed to advance - especially early on.
+
+
+
+
+##### Races #####
 
 name:Human
 exts:Mutant,Cyborg,None

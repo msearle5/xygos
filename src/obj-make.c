@@ -1160,12 +1160,16 @@ static double artifact_prob(double depth)
 	double mid = ((midlin*midlin)*3)-((midlin*midlin*midlin)*2);
 	double chance = (full + (mid * 0.5)) / 140;
 	chance += 0.0002;
+	if (player_has(player, PF_GREEDY))
+		chance *= 1.5;
 	return chance;
 }
 
 /* Chance that an object is a multiple ego */
 static double multiego_prob(double depth, bool good, bool great)
 {
+	if (player_has(player, PF_GREEDY))
+		depth += 10.0;
 	if (great)
 		/* 1% at level 0, 40% at level 30, 20% at level 95+ */
 		return (depth <= 30) ? (0.01 + ((MIN(depth, 30) / 30.0) * 4.0 * 0.09)) : ((((95 - MIN(depth, 95)) / 65.0) * 0.2) + 0.2);
@@ -1193,6 +1197,8 @@ static double ego_prob(double depth, bool good, bool great)
 		}
 	}
 
+	if (player_has(player, PF_GREEDY))
+		depth += 10.0;
 	/* Chance of being `good` and `great` */
 	/* This has changed over the years:
 	 * 3.0.0:   good = MIN(75, lev + 10);      great = MIN(20, lev / 2);
@@ -1744,6 +1750,8 @@ struct object *make_gold(int lev, char *coin_type)
 	/* Repeat until a value below SHRT_MAX is found (as the roll is open ended, and pvals are 16 bit) */
 	do {
 		int avg = 3 + lev + ((lev * lev) / 25);
+		if (player_has(player, PF_GREEDY))
+			avg *= 2;
 		int spread = avg;
 		do {
 			value = rand_spread(avg, spread);

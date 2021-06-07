@@ -94,6 +94,8 @@ struct angband_constants *z_info;
  */
 const char *ANGBAND_SYS = "xxx";
 
+static enum parser_error parse_class_level_from(struct parser *p);
+
 /**
  * Various directories. These are no longer necessarily all subdirs of "lib"
  */
@@ -2079,6 +2081,8 @@ static enum parser_error parse_p_race_name(struct parser *p) {
 	parsing_magic = &r->magic;
 	/* Default body is humanoid (the last in body.txt) */
 	r->body = 0;
+	grab_flags_from = 1;
+	grab_flags_to = PY_MAX_LEVEL;
 	parser_setpriv(p, r);
 	return PARSE_ERROR_NONE;
 }
@@ -2101,6 +2105,13 @@ static enum parser_error parse_p_race_ext(struct parser *p) {
 	parse_p_race_name(p);
 	struct player_race *h = parser_priv(p);
 	h->extension = true;
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_p_race_personality(struct parser *p) {
+	parse_p_race_name(p);
+	struct player_race *h = parser_priv(p);
+	h->personality = true;
 	return PARSE_ERROR_NONE;
 }
 
@@ -2132,6 +2143,14 @@ static enum parser_error parse_p_race_talents(struct parser *p) {
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 	r->tp_base = parser_getint(p, "base");
 	r->tp_max = parser_getint(p, "max");
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_p_race_ac(struct parser *p) {
+	struct player_race *r = parser_priv(p);
+	if (!r)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	r->ac = parser_getint(p, "ac");
 	return PARSE_ERROR_NONE;
 }
 
@@ -2231,6 +2250,14 @@ static enum parser_error parse_p_race_hitdie(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_p_race_score(struct parser *p) {
+	struct player_race *r = parser_priv(p);
+	if (!r)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	r->score = parser_getint(p, "score");
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_p_race_exp(struct parser *p) {
 	struct player_race *r = parser_priv(p);
 	if (!r)
@@ -2306,7 +2333,10 @@ static enum parser_error parse_p_race_obj_flags(struct parser *p) {
 	flags = string_make(parser_getstr(p, "flags"));
 	s = strtok(flags, " |");
 	while (s) {
-		if (grab_flag(r->flags, OF_SIZE, list_obj_flag_names, s))
+		bool flag;
+		for (int i=grab_flags_from; i<=grab_flags_to; i++)
+			flag = grab_flag(r->flags[i], OF_SIZE, list_obj_flag_names, s);
+		if (flag)
 			break;
 		s = strtok(NULL, " |");
 	}
@@ -2326,7 +2356,10 @@ static enum parser_error parse_p_race_play_flags(struct parser *p) {
 	flags = string_make(parser_getstr(p, "flags"));
 	s = strtok(flags, " |");
 	while (s) {
-		if (grab_flag(r->pflags, PF_SIZE, player_info_flags, s))
+		bool flag;
+		for (int i=grab_flags_from; i<=grab_flags_to; i++)
+			flag = grab_flag(r->pflags[i], PF_SIZE, player_info_flags, s);
+		if (flag)
 			break;
 		s = strtok(NULL, " |");
 	}
@@ -2348,6 +2381,8 @@ static enum parser_error parse_p_race_values(struct parser *p) {
 		int value = 0;
 		int index = 0;
 		bool found = false;
+		if (!grab_int_value(r->r_adj, obj_mods, t))
+			found = true;
 		if (!grab_index_and_int(&value, &index, list_element_names, "RES_", t)) {
 			found = true;
 			r->el_info[index].res_level = value;
@@ -2418,6 +2453,8 @@ struct parser *init_parse_p_race(void) {
 	parser_setpriv(p, NULL);
 	parser_reg(p, "name str name", parse_p_race_name);
 	parser_reg(p, "ext str name", parse_p_race_ext);
+	parser_reg(p, "personality str name", parse_p_race_personality);
+	parser_reg(p, "score int score", parse_p_race_score);
 	parser_reg(p, "exts str exts", parse_p_race_exts);
 	parser_reg(p, "stats int str int int int wis int dex int con int chr int spd", parse_p_race_stats);
 	parser_reg(p, "talents int base int max", parse_p_race_talents);
@@ -2435,6 +2472,7 @@ struct parser *init_parse_p_race(void) {
 	parser_reg(p, "equip sym tval sym sval uint min uint max", parse_p_race_equip);
 	parser_reg(p, "hitdie int mhp", parse_p_race_hitdie);
 	parser_reg(p, "exp int exp ?int high_exp", parse_p_race_exp);
+	parser_reg(p, "ac int ac", parse_p_race_ac);
 	parser_reg(p, "infravision int infra", parse_p_race_infravision);
 	parser_reg(p, "history uint hist", parse_p_race_history);
 	parser_reg(p, "age int base_age int mod_age", parse_p_race_age);
@@ -2446,6 +2484,7 @@ struct parser *init_parse_p_race(void) {
 	parser_reg(p, "values str values", parse_p_race_values);
 	parser_reg(p, "desc str desc", parse_p_race_desc);
 	parser_reg(p, "body str body", parse_p_race_body);
+	parser_reg(p, "level-from int from", parse_class_level_from);
 	init_parse_magic(p);
 	return p;
 }
@@ -2479,8 +2518,14 @@ static errr finish_parse_p_race(struct parser *p) {
 		assert(num);
 		r->ridx = num - 1;
 	}
-	for (r = extensions; r; r = r->next) num++;
-	for (r = extensions; r; r = r->next, num--) {
+	for (r = extensions; !r->personality; r = r->next) num++;
+	personalities = r;
+	for (r = extensions; !r->personality; r = r->next, num--) {
+		assert(num);
+		r->ridx = num - 1;
+	}
+	for (r = personalities; r; r = r->next) num++;
+	for (r = personalities; r; r = r->next, num--) {
 		assert(num);
 		r->ridx = num - 1;
 	}
@@ -2511,7 +2556,7 @@ static struct file_parser p_race_parser = {
 	cleanup_p_race
 };
 
-/**
+/**extensions
  * ------------------------------------------------------------------------
  * Intialize player shapechange shapes
  * ------------------------------------------------------------------------ */
@@ -3451,7 +3496,7 @@ static enum parser_error parse_class_desc(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-/* Class description to display on the character creation screeen */
+/* Class description to display on the character creation screen */
 static enum parser_error parse_class_cdesc(struct parser *p) {
 	struct player_class *c = parser_priv(p);
 	if (!c)
@@ -3460,9 +3505,9 @@ static enum parser_error parse_class_cdesc(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-/* Class description to display on the character creation screeen */
+/* Level to use flags from - class, race etc */
 static enum parser_error parse_class_level_from(struct parser *p) {
-	struct player_class *c = parser_priv(p);
+	void *c = parser_priv(p);
 	if (!c)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 	int from = parser_getint(p, "from");

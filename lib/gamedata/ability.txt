@@ -328,7 +328,7 @@ forbid:Precocity
 forbid:Unknown_Talents
 cost:-1
 
-# Hoarding [as in TP] might be a better name (or at least gain/lose message: "You feel the need to hoard TP.")
+# Hoarding [as in TP] might be a better name
 name:Precocity
 gain:You feel the need to hoard TP.
 lose:You no longer feel the need to hoard TP.

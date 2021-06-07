@@ -485,6 +485,9 @@ void rdwr_player(void)
 	/* Flying? */
 	rdwr_bool(&player->flying);
 
+	/* Split personality? */
+	rdwr_bool(&player->split_p);
+
 	/* Ready for the endgame? */
 	rdwr_bool(&player->orbitable);
 
@@ -504,9 +507,10 @@ void wr_player(void)
 
 	wr_string(player->history);
 
-	/* Race/Class/Gender/Spells */
+	/* Race/Class/Extension/Personality/Shape */
 	wr_string(player->race->name);
 	wr_string(player->extension->name);
+	wr_string(player->personality->name);
 	wr_string(player->shape->name);
 	wr_string(player->class->name);
 	wr_byte(player->opts.name_suffix);

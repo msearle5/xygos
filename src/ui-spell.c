@@ -236,7 +236,7 @@ static struct menu *spell_menu_new(bool (*is_valid)(int spell_index))
 	menu_setpriv(m, d->n_spells, d);
 
 	/* Set flags */
-	m->header = "Name                         Stat Lv    Cost Fail Info";
+	m->header = "Name                        Stat Lv     Cost Fail Info";
 	m->flags = MN_CASELESS_TAGS;
 	m->selections = lower_case;
 	m->browse_hook = spell_menu_browser;
@@ -334,6 +334,8 @@ int textui_get_spell_from_book(const char *verb,
 		int spell_index = spell_menu_select(m, noun, verb);
 		spell_menu_destroy(m);
 		return spell_index;
+	} else {
+		msg(error);
 	}
 
 	return -1;

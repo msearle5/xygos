@@ -88,5 +88,6 @@ void textui_input_init(void);
 ui_event textui_get_command(int *count);
 bool key_confirm_command(unsigned char c);
 bool textui_process_key(struct keypress kp, unsigned char *c, int count);
+bool textui_get_check(const char *prompt);
 
 #endif /* INCLUDED_UI_INPUT_H */

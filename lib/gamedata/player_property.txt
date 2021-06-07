@@ -152,6 +152,15 @@ code:EAT_BATTERIES
 name:Eat Batteries
 desc:You can eat batteries.
 
+type:player
+code:GREEDY
+name:Greedy
+desc:You notice more loot.
+
+type:player
+code:NO_TIME_LIMIT
+name:No Time Limit
+desc:The danger level will never increase.
 
 # Object flags
 

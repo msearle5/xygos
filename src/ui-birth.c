@@ -63,6 +63,7 @@ enum birth_stage
 	BIRTH_QUICKSTART,
 	BIRTH_RACE_CHOICE,
 	BIRTH_EXT_CHOICE,
+	BIRTH_PERSONALITY_CHOICE,
 	BIRTH_CLASS_CHOICE,
 	BIRTH_ROLLER_CHOICE,
 	BIRTH_POINTBASED,
@@ -144,7 +145,7 @@ static enum birth_stage textui_birth_quickstart(void)
 /**
  * The various menus
  */
-static struct menu race_menu, ext_menu, class_menu, roller_menu;
+static struct menu race_menu, ext_menu, per_menu, class_menu, roller_menu;
 
 /**
  * Locations of the menus, etc. on the screen
@@ -183,6 +184,7 @@ static struct menu race_menu, ext_menu, class_menu, roller_menu;
  */
 static region race_region = {RACE_COL, TABLE_ROW, 17, MENU_ROWS};
 static region ext_region = {RACE_COL, TABLE_ROW, 17, MENU_ROWS};
+static region per_region = {RACE_COL, TABLE_ROW, 17, MENU_ROWS};
 static region class_region = {CLASS_COL, TABLE_ROW, 17, MENU_ROWS};
 static region roller_region = {ROLLER_COL, TABLE_ROW, 30, ROLLER_ROWS};
 
@@ -227,7 +229,7 @@ static void birthmenu_display(struct menu *menu, int oid, bool cursor,
  */
 static const menu_iter birth_iter = { NULL, NULL, birthmenu_display, NULL, NULL };
 
-static void skill_help(const int r_skills[], const int c_skills[], int mhp, int exp, int exphigh, int infra)
+static void skill_help(const int r_skills[], const int c_skills[], int mhp, int exp, int exphigh, int infra, bool first)
 {
 	s16b skills[SKILL_MAX];
 	unsigned i;
@@ -239,10 +241,17 @@ static void skill_help(const int r_skills[], const int c_skills[], int mhp, int 
 			   skills[SKILL_TO_HIT_MARTIAL]);
 	text_out_e("Shooting / Throwing: %+d/%+d   \n",
 			   skills[SKILL_TO_HIT_GUN], skills[SKILL_TO_HIT_THROW]);
-	if (exp == exphigh)
-		text_out_e("Hit die: %2d   XP mod: %d%%\n", mhp, exp);
-	else
-		text_out_e("Hit die: %2d   XP mod: %d%%=>%d%%\n", mhp, exp, exphigh);
+	if (first) {
+		if (exp == exphigh)
+			text_out_e("Hit die: %2d   XP mod: %d%%\n", mhp, exp);
+		else
+			text_out_e("Hit die: %2d   XP mod: %d%%=>%d%%\n", mhp, exp, exphigh);
+	} else {
+		if (exp == exphigh)
+			text_out_e("Hit die: %+2d   XP mod: %d%%\n", mhp, exp);
+		else
+			text_out_e("Hit die: %+2d   XP mod: %d%%=>%d%%\n", mhp, exp, exphigh);
+	}
 	text_out_e("Disarm: %+3d/%+3d   Devices: %+3d\n", skills[SKILL_DISARM_PHYS],
 			   skills[SKILL_DISARM_MAGIC], skills[SKILL_DEVICE]);
 	text_out_e("Save:   %+3d   Stealth: %+3d\n", skills[SKILL_SAVE],
@@ -255,7 +264,7 @@ static void skill_help(const int r_skills[], const int c_skills[], int mhp, int 
 		text_out_e("\n");
 }
 
-static void race_ext_help(int i, void *db, const region *l, struct player_race *r)
+static void race_ext_help(int i, void *db, const region *l, struct player_race *r, bool first)
 {
 	int j;
 	int len = (STAT_MAX + 1) / 2;
@@ -291,13 +300,13 @@ static void race_ext_help(int i, void *db, const region *l, struct player_race *
 	for (ability = player_abilities; ability; ability = ability->next) {
 		if (n_flags >= flag_space) break;
 		if (streq(ability->type, "object") &&
-			!of_has(r->flags, ability->index)) {
+					!of_has(r->flags[player->lev], ability->index)) {
 			continue;
 		} else if (streq(ability->type, "player") &&
-				   !pf_has(r->pflags, ability->index)) {
+					!pf_has(r->pflags[player->lev], ability->index)) {
 			continue;
 		} else if (streq(ability->type, "element") &&
-				   (r->el_info[ability->index].res_level != ability->value)) {
+					(r->el_info[ability->index].res_level != ability->value)) {
 			continue;
 		}
 		text_out_e("\n%s", ability->name);
@@ -312,7 +321,7 @@ static void race_ext_help(int i, void *db, const region *l, struct player_race *
 	/* Display skill information */
 	text_out_indent = SKILL_COL;
 	Term_gotoxy(SKILL_COL, TABLE_ROW);
-	skill_help(r->r_skills, NULL, r->r_mhp, r->r_exp, r->r_high_exp, r->infra);
+	skill_help(r->r_skills, NULL, r->r_mhp, r->r_exp, r->r_high_exp, r->infra, first);
 
 	/* Display race description */
 	for(int y=DESC_ROW; y<=DESC_END; y++)
@@ -326,14 +335,19 @@ static void race_ext_help(int i, void *db, const region *l, struct player_race *
 	text_out_indent = 0;
 }
 
+static void per_help(int i, void *db, const region *l)
+{
+	race_ext_help(i, db, l, player_id2personality(i), false);
+}
+
 static void ext_help(int i, void *db, const region *l)
 {
-	race_ext_help(i, db, l, player_id2ext(i));
+	race_ext_help(i, db, l, player_id2ext(i), false);
 }
 
 static void race_help(int i, void *db, const region *l)
 {
-	race_ext_help(i, db, l, player_id2race(i));
+	race_ext_help(i, db, l, player_id2race(i), true);
 }
 
 static void class_help(int i, void *db, const region *l)
@@ -396,7 +410,7 @@ static void class_help(int i, void *db, const region *l)
 	text_out_indent = SKILL_COL;
 	Term_gotoxy(SKILL_COL, TABLE_ROW);
 	skill_help(r->r_skills, c->c_skills, r->r_mhp + c->c_mhp,
-			   r->r_exp + c->c_exp, r->r_high_exp + c->c_exp, -1);
+			   r->r_exp + c->c_exp, r->r_high_exp + c->c_exp, -1, true);
 
 	/* Display class description */
 	for(int y=DESC_ROW; y<=DESC_END; y++)
@@ -479,7 +493,7 @@ static void setup_menus(void)
 
 	/* Count the extensions */
 	n = 0;
-	for (r = extensions; r; r = r->next)
+	for (r = extensions; !r->personality; r = r->next)
 		if ((!player->race) || (strstr(player->race->exts, r->name)))
 			n++;
 
@@ -488,10 +502,24 @@ static void setup_menus(void)
 	                &ext_region, true, ext_help);
 	mdata = ext_menu.menu_data;
 
-	for (i = 0, r = extensions; r; r = r->next, i++)
+	for (i = 0, r = extensions; !r->personality; r = r->next, i++)
 		if ((!player->race) || (strstr(player->race->exts, r->name)))
 			mdata->items[r->ridx] = r->name;
 	mdata->hint = "Extensions modify your race's stats, skills, resistances and abilities.";
+
+	/* Count the personalities */
+	n = 0;
+	for (r = personalities; r; r = r->next)
+		n++;
+
+	/* Personality menu. */
+	init_birth_menu(&per_menu, n, player->personality ? player->personality->ridx : 0,
+	                &per_region, true, per_help);
+	mdata = per_menu.menu_data;
+
+	for (i = 0, r = personalities; r; r = r->next, i++)
+		mdata->items[r->ridx] = r->name;
+	mdata->hint = "Personality modifies your race's stats, skills, and other abilities.";
 
 	/* Count the classes */
 	n = 0;
@@ -533,6 +561,7 @@ static void free_birth_menus(void)
 	/* We don't need these any more. */
 	free_birth_menu(&race_menu);
 	free_birth_menu(&ext_menu);
+	free_birth_menu(&per_menu);
 	free_birth_menu(&class_menu);
 	free_birth_menu(&roller_menu);
 }
@@ -726,8 +755,8 @@ static enum birth_stage roller_command(bool first_call)
 
 /* The locations of the "costs" area on the birth screen. */
 #define COSTS_ROW 2
-#define COSTS_COL (42 + 32)
-#define TOTAL_COL (42 + 19)
+#define COSTS_COL (44 + 32)
+#define TOTAL_COL (44 + 29)
 
 /**
  * This is called whenever a stat changes.  We take the easy road, and just
@@ -761,21 +790,26 @@ static void point_based_points(game_event_type type, game_event_data *data,
 {
 	int i;
 	int sum = 0;
-	int *stats = data->birthstats.stats;
 
-	/* Display the costs header */
-	put_str("Cost", COSTS_ROW - 1, COSTS_COL);
-	
+	static int stats[STAT_MAX] = { 0 };
+	static int remaining = 0;
+	if (data) {
+		remaining = data->birthstats.remaining;
+		for (i = 0; i < STAT_MAX; i++)
+			stats[i] = data->birthstats.stats[i];
+	}
+	int choice = 0;
+
+	cmd_get_arg_choice(cmdq_peek(), "choice", &choice);
+
 	/* Display the costs */
 	for (i = 0; i < STAT_MAX; i++) {
 		/* Display cost */
-		put_str(format("%4d", stats[i]), COSTS_ROW + i, COSTS_COL);
+		c_put_str((choice == i) ? COLOUR_L_BLUE : COLOUR_WHITE, format("%4d", stats[i]), COSTS_ROW + i, COSTS_COL);
 		sum += stats[i];
 	}
-	
-	put_str(format("Total Cost: %2d/%2d", sum,
-				   data->birthstats.remaining + sum), COSTS_ROW + STAT_MAX,
-			TOTAL_COL);
+
+	put_str(format("%3d/%3d", sum, remaining + sum), COSTS_ROW + STAT_MAX, TOTAL_COL);
 }
 
 static void point_based_start(void)
@@ -795,7 +829,7 @@ static void point_based_start(void)
 	   the lot at once rather than each bit at a time. */
 	event_add_handler(EVENT_BIRTHPOINTS, point_based_points, NULL);	
 	event_add_handler(EVENT_STATS, point_based_stats, NULL);	
-	event_add_handler(EVENT_GOLD, point_based_misc, NULL);	
+	event_add_handler(EVENT_GOLD, point_based_misc, NULL);
 }
 
 static void point_based_stop(void)
@@ -814,9 +848,12 @@ static enum birth_stage point_based_command(void)
 	/* Place cursor just after cost of current stat */
 	Term_gotoxy(COSTS_COL + 4, COSTS_ROW + stat);
 
+	cmd_set_arg_choice(cmdq_peek(), "choice", stat);
+	event_signal(EVENT_BIRTHPOINTS);
+
 	/* Get key */
 	ch = inkey();
-	
+
 	if (ch.code == KTRL('X')) {
 		quit(NULL);
 	} else if (ch.code == ESCAPE) {
@@ -832,19 +869,25 @@ static enum birth_stage point_based_command(void)
 		int dir = target_dir(ch);
 
 		/* Prev stat, looping round to the bottom when going off the top */
-		if (dir == 8)
+		if (dir == 8) {
 			stat = (stat + STAT_MAX - 1) % STAT_MAX;
-		
+			cmd_set_arg_choice(cmdq_peek(), "choice", stat);
+			event_signal(EVENT_BIRTHPOINTS);
+		}
+
 		/* Next stat, looping round to the top when going off the bottom */
-		if (dir == 2)
+		if (dir == 2) {
 			stat = (stat + 1) % STAT_MAX;
-		
+			cmd_set_arg_choice(cmdq_peek(), "choice", stat);
+			event_signal(EVENT_BIRTHPOINTS);
+		}
+
 		/* Decrease stat (if possible) */
 		if (dir == 4) {
 			cmdq_push(CMD_SELL_STAT);
 			cmd_set_arg_choice(cmdq_peek(), "choice", stat);
 		}
-		
+
 		/* Increase stat (if possible) */
 		if (dir == 6) {
 			cmdq_push(CMD_BUY_STAT);
@@ -1213,6 +1256,7 @@ int textui_do_birth(void)
 			case BIRTH_CLASS_CHOICE:
 			case BIRTH_RACE_CHOICE:
 			case BIRTH_EXT_CHOICE:
+			case BIRTH_PERSONALITY_CHOICE:
 			case BIRTH_ROLLER_CHOICE:
 			{
 				struct menu *menu = &race_menu;
@@ -1231,8 +1275,14 @@ int textui_do_birth(void)
 						menu_refresh(&ext_menu, false);
 						current_stage++;
 						command = CMD_CHOOSE_CLASS;
+						menu = &per_menu;
+					} else if (per_menu.count <= 1) {
+						menu_refresh(&per_menu, false);
+						current_stage++;
+						command = CMD_CHOOSE_PERSONALITY;
 						menu = &class_menu;
 					} else {
+						menu_refresh(&race_menu, false);
 						command = CMD_CHOOSE_EXT;
 						menu = &ext_menu;
 					}
@@ -1240,6 +1290,12 @@ int textui_do_birth(void)
 
 				if (current_stage > BIRTH_EXT_CHOICE) {
 					menu_refresh(&ext_menu, false);
+					menu = &per_menu;
+					command = CMD_CHOOSE_PERSONALITY;
+				}
+
+				if (current_stage > BIRTH_PERSONALITY_CHOICE) {
+					menu_refresh(&per_menu, false);
 					menu = &class_menu;
 					command = CMD_CHOOSE_CLASS;
 				}

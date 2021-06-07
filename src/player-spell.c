@@ -216,7 +216,11 @@ void combine_books(int *count, int *spells, int *maxidx, struct class_spell **sp
 	} else {
 		combine_class_books(&player->class->magic, count, spells, maxidx, spellps);
 		combine_class_books(&player->race->magic, count, spells, maxidx, spellps);
-		
+		combine_class_books(&player->extension->magic, count, spells, maxidx, spellps);
+		combine_class_books(&player->personality->magic, count, spells, maxidx, spellps);
+		if (player->split_p)
+			combine_class_books(&personalities->magic, count, spells, maxidx, spellps);
+
 		for(int i=0;i<PF_MAX;i++) {
 			if (ability[i] && player_has(player, i)) {
 				/* If this ability has the flying flag, the first book is for use when
