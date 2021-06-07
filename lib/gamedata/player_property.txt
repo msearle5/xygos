@@ -157,6 +157,11 @@ code:GREEDY
 name:Greedy
 desc:You notice more loot.
 
+type:player
+code:NO_TIME_LIMIT
+name:No Time Limit
+desc:The danger level will never increase.
+
 # Object flags
 
 type:object

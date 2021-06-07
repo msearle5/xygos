@@ -152,6 +152,33 @@ player-flags:NO_TIME_LIMIT
 exp:-10
 talents:0:1
 
+personality:Boring
+skill-disarm-phys:0
+skill-disarm-magic:0
+skill-device:0
+skill-save:5
+skill-stealth:-15
+skill-search:0
+skill-melee:0
+skill-martial:4
+skill-shoot:0
+skill-throw:4
+skill-dig:25
+desc:Everyone says you're a bore but you must disagree and can indeed spend hours enumerating all the ways in which you must logically be a truly sparkling conversationalist, if only anyone would appreciate it... You aren't stealthy (you can't stop talking for long) but are used to evading thrown eggs and digging of course is a specialty.
+equip:digger:Pick:1:1:none
+hitdie:10
+exp:10
+stats:1:0:-1:0:1:-5:0
+book:[Boring]
+# spell:name:level:fail:exp:stat:hp:cooldown
+spell:Monologue:8:10:2:4:1d2:3d4
+seffect:PROJECT_LOS_AWARE:SLEEP_ALL
+sdice:$B
+sexpr:B:PLAYER_LEVEL:* 15 + 300
+sdesc:You bore your way through the floor or ceiling.
+spell:Bore:32:25:100:4:2d6:4d10
+seffect:CREATE_STAIRS
+
 # "Arrogant" would be another word.
 # It may need to be buffed to balance Aggravation. Maybe bigger breaths (dice & sides) at high level?
 personality:Shouty
