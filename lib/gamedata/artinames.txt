@@ -2347,7 +2347,7 @@ T:DIGGING
 T:GUN
 T:LIGHT
 
-N:of the Unblinking Eye
+N:Rebel
 T:SWORD
 T:HAFTED
 T:POLEARM
@@ -2607,6 +2607,9 @@ T:HAFTED
 T:POLEARM
 T:DIGGING
 T:GUN
+
+N:Leaden
+T:SWORD
 
 N:of Brave Sir Robin
 T:SHIELD

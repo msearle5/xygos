@@ -71,6 +71,7 @@ N:Benjamin
 N:Bernard
 N:Bert
 N:Betty
+N:Boba
 N:Bill
 N:Billy
 N:Boris
@@ -214,6 +215,7 @@ N:Kimmy
 N:Kyle
 N:Kylie
 N:Lalla
+N:Lan
 N:Larry
 N:Laura
 N:Lawrence
@@ -269,11 +271,13 @@ N:Nikki
 N:Nimi
 N:Nobby
 N:Noel
+N:Nonaya
 N:Norman
 N:Ogden
 N:Olive
 N:Oliver
 N:Oren
+N:Orlando
 N:Oscar
 N:Otis
 N:Otto
