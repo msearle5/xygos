@@ -781,8 +781,6 @@ static double make_artifact_probs(double *prob, int lev, int tval, bool max)
  */
 struct object *make_artifact(int lev, int tval)
 {
-	static int prev_lev = -1;
-	static int prev_tval = -1;
 	static double *prob;
 	static double total;
 
@@ -800,12 +798,10 @@ struct object *make_artifact(int lev, int tval)
 	if (!player->depth) return NULL;
 
 	/* Check the artifact list */
-	if ((lev != prev_lev) || (tval != prev_tval)) {
-		total = make_artifact_probs(prob, lev, tval, true);
-		if (total == 0.0) {
-			/* No matches. Try with loose maximum depth */
-			total = make_artifact_probs(prob, lev, tval, false);
-		}
+	total = make_artifact_probs(prob, lev, tval, true);
+	if (total == 0.0) {
+		/* No matches. Try with loose maximum depth */
+		total = make_artifact_probs(prob, lev, tval, false);
 	}
 
 	/* Still nothing - give up */
@@ -825,10 +821,14 @@ struct object *make_artifact(int lev, int tval)
 			break;
 		}
 	}
+
 	assert(a_idx < z_info->a_max);
 
 	/* Generate the base item */
 	struct artifact *art = &a_info[a_idx];
+	/* The table should not contain any already existing artifacts */ 
+	assert(!(art->created));
+
 	struct object_kind *kind = lookup_kind(art->tval, art->sval);
 	obj = object_new();
 	object_prep(obj, kind, art->alloc_min, RANDOMISE);
