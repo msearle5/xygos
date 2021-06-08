@@ -487,7 +487,7 @@ struct object {
 
 	s32b weight;			/**< Item weight, grams */
 
-	s16b pval;				/**< Item extra-parameter */
+	s32b pval;				/**< Item extra-parameter */
 	byte dd;				/**< Number of damage dice */
 	byte ds;				/**< Number of sides on each damage die */
 	

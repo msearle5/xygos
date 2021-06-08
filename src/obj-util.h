@@ -24,8 +24,10 @@
 /* Perfect resistance, given by this res_level */
 #define IMMUNITY	127
 
-/* An item's pval (for charges, amount of cash, etc) is limited to s16b */
-#define MAX_PVAL  32767
+/* An item's pval (for charges, amount of cash, etc) is limited to s32b,
+ * and is half that range to make it easier to avoid overflow.
+ **/
+#define MAX_PVAL  1073741823
 
 void flavor_init(void);
 void flavor_set_all_aware(void);

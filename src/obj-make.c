@@ -1816,7 +1816,9 @@ struct object *make_gold(int lev, const char *coin_type)
 	struct object *new_gold = mem_zalloc(sizeof(*new_gold));
 	int value;
 
-	/* Repeat until a value below SHRT_MAX is found (as the roll is open ended, and pvals are 16 bit) */
+	/* Repeat until a value below z_info->cash_max is found (as the roll is open ended, and while pvals are 32 bit now
+	 * we still don't want any instant billionaires)
+	 **/
 	do {
 		int avg = 3 + lev + ((lev * lev) / 25);
 		if (player_has(player, PF_GREEDY))
@@ -1842,7 +1844,7 @@ struct object *make_gold(int lev, const char *coin_type)
 			while ((randint0(exploder) < 100) && value <= (INT_MAX / 10))
 				value *= 10;
 		}
-	} while (value >= SHRT_MAX);
+	} while (value >= z_info->cash_max);
 	/* Prepare a gold object */
 	object_prep(new_gold, money_kind(coin_type, value), lev, RANDOMISE);
 

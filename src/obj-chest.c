@@ -37,7 +37,7 @@
 /**
  * Chest traps are specified in the file chest_trap.txt.
  *
- * Chests are described by their 16-bit pval as follows:
+ * Chests are described by their 32-bit pval as follows:
  * - pval of 0 is an empty chest
  * - pval of 1 is a locked chest with no traps
  * - pval > 1  is a trapped chest, with each bit of the pval aside from the
@@ -296,7 +296,7 @@ struct file_parser chest_trap_parser = {
  */
 const char *chest_trap_name(const struct object *obj)
 {
-	s16b trap_value = obj->pval;
+	s32b trap_value = obj->pval;
 
 	/* Non-zero value means there either were or are still traps */
 	if (trap_value < 0) {
@@ -813,7 +813,7 @@ bool do_cmd_disarm_chest(struct object *obj)
 		/* Success (get a lot of experience) */
 		msgt(MSG_DISARM, "You have disarmed the chest.");
 		player_exp_gain(player, obj->pval);
-		obj->pval = (0 - obj->pval);
+		obj->pval = -obj->pval;
 	} else if (randint0(100) < diff) {
 		/* Failure -- Keep trying */
 		more = true;

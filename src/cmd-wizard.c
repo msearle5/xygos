@@ -509,8 +509,10 @@ void do_cmd_wiz_change_item_quantity(struct command *cmd)
 	/* Find limit on stack size. */
 	nmax = obj->kind->base->max_stack;
 	if (tval_can_have_charges(obj) && obj->pval > 0 && obj->number > 0) {
-		/* Items with charges have a limit imposed by MAX_PVAL. */
-		nmax = MIN((MAX_PVAL * obj->number) / obj->pval, nmax);
+		/* Items with charges have a limit imposed by MAX_PVAL,
+		 * although in practice other limits would also prevent this.
+		 **/
+		nmax = MIN(MAX_PVAL, nmax);
 	}
 	if (object_is_in_quiver(player, obj)) {
 		/* The quiver may have stricter limits. */

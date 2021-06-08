@@ -120,20 +120,21 @@ struct angband_constants
 	u16b store_magic_level;	/**< Level for apply_magic() in normal stores */
 
 	/* Object creation constants, read from constants.txt */
-	u16b max_obj_depth;	/* Maximum depth used in object allocation */
-	u16b great_obj;		/* 1/chance of inflating the requested object level */
-	u16b great_ego;		/* 1/chance of inflating the requested ego item level */
-	u16b fuel_torch;	/* Maximum amount of fuel in a torch */
-	u16b fuel_lamp;		/* Maximum amount of fuel in a lantern */
-	u16b default_lamp;	/* Default amount of fuel in a lantern  */
-	u16b rand_art;		/* Number of random artifacts */
+	u16b max_obj_depth;	/**< Maximum depth used in object allocation */
+	u16b great_obj;		/**< 1/chance of inflating the requested object level */
+	u16b great_ego;		/**< 1/chance of inflating the requested ego item level */
+	u16b fuel_torch;	/**< Maximum amount of fuel in a torch */
+	u16b fuel_lamp;		/**< Maximum amount of fuel in a lantern */
+	u16b default_lamp;	/**< Default amount of fuel in a lantern  */
+	u16b rand_art;		/**< Number of random artifacts */
+	u16b cash_max;		/**< Largest pile of cash generated */
 
 	/* Player constants, read from constants.txt */
-	u16b max_sight;		/* Maximum visual range */
-	u16b max_range;		/* Maximum missile and spell range */
-	u16b start_gold;	/* Amount of gold the player starts with */
-	u16b start_gold_spread;	/* Variation in the amount of gold the player starts with */
-	u16b food_value;	/* Number of turns 1% of food lasts */
+	u16b max_sight;				/**< Maximum visual range */
+	u16b max_range;				/**< Maximum missile and spell range */
+	u16b start_gold;			/**< Amount of gold the player starts with */
+	u16b start_gold_spread;		/**< Variation in the amount of gold the player starts with */
+	u16b food_value;			/**< Number of turns 1% of food lasts */
 };
 
 struct init_module {

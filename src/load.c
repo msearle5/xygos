@@ -132,7 +132,7 @@ static struct object *rd_item(void)
 	if (buf[0]) {
 		obj->sval = lookup_sval(obj->tval, buf);
 	}
-	rd_s16b(&obj->pval);
+	rd_s32b(&obj->pval);
 
 	rd_byte(&obj->number);
 	rd_s32b(&obj->weight);

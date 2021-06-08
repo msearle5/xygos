@@ -210,6 +210,10 @@ obj-make:default-lamp:7500
 # Number of random artifacts to generate
 obj-make:rand-art:110
 
+# Largest pile of cash to generate.
+# Larger piles may exist, up to MAX_PVAL, e.g. from theft.
+obj-make:cash-max:100000
+
 #---------------------------------------------------------------------
 # Player constants
 #---------------------------------------------------------------------

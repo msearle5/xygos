@@ -94,7 +94,7 @@ static void wr_item(const struct object *obj)
 		wr_string("");
 	}
 
-	wr_s16b(obj->pval);
+	wr_s32b(obj->pval);
 
 	wr_byte(obj->number);
 	wr_s32b(obj->weight);
