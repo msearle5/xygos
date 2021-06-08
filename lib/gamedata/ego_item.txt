@@ -392,7 +392,7 @@ forbid:opinion
 name:<precision
 info:1000:10
 alloc:100:5 to 70
-combat:d15:d5:0
+combat:10+d6M12:d5:0
 min-combat:15:255:0
 type:gun
 desc:It is unusually precisely made, easier to hit your target with.
@@ -400,7 +400,7 @@ desc:It is unusually precisely made, easier to hit your target with.
 name:<high-power
 info:1000:10
 alloc:100:5 to 70
-combat:d5:d15:0
+combat:d5:7+d4M8:0
 min-combat:255:15:0
 type:gun
 desc:It is unusually powerful, delivering harder hitting shots.
@@ -408,7 +408,7 @@ desc:It is unusually powerful, delivering harder hitting shots.
 name:<augmented
 info:20000:30
 alloc:5:20 to 127
-combat:d10:d10:0
+combat:9+d5M10:6+d4M7:0
 type:gun
 flags:FREE_ACT | IGNORE_ACID | IGNORE_FIRE | RAND_POWER
 values:DEX[1+d2M2] | MIGHT[d2]
@@ -441,6 +441,7 @@ combat:-10+d5:d5:0
 type:gun
 values:SHOTS[2d3]
 min-values:SHOTS[2]
+desc:An old-fashioned dumb automatic weapon. It can put a lot of lead in the air, but it tends to go everywhere but where you aimed it.
 
 #name:of Buckland
 #info:20000:25

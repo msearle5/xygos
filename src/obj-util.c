@@ -672,7 +672,7 @@ struct ego_item *lookup_ego_item(const char *name, int tval, int sval)
 
 		/* Reject nameless and wrong names */
 		if (!ego->name) continue;
-		if (!streq(name, ego->name)) continue;
+		if (!my_stristr(name, ego->name)) continue;
 
 		/* Check tval and sval */
 		while (poss_item) {

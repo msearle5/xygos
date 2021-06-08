@@ -81,6 +81,7 @@ struct multiego_entry
 static struct money *money_type;
 static int num_money_types;
 
+bool multiego_allow(u16b *ego);
 static bool kind_is_good(const struct object_kind *kind, int level);
 
 /*
@@ -327,6 +328,65 @@ static int binary_search_probtable(const double *tbl, int n, double p)
 }
 
 /**
+ * Select an ego for an existing object
+ * Used by branding
+ */
+struct ego_item *select_ego_base(int level, struct object *obj)
+{
+	struct poss_item *poss;
+	double *prob = mem_zalloc(sizeof(*prob) * z_info->e_max);
+	double total = 0.0;
+	struct object_kind *kind = obj->kind;
+	u16b egoi[MAX_EGOS+1];
+	int negos = 0;
+	for(int i=0;i<MAX_EGOS;i++) {
+		if (obj->ego[i]) {
+			negos++;
+			egoi[i] = obj->ego[i]->eidx;
+		} else {
+			egoi[i] = 0;
+		}
+	}
+
+	/* Fill a table of usable base items */
+	for(int i=0;i<z_info->e_max;i++) {
+		bool ok = false;
+		for (poss = e_info[i].poss_items; poss; poss = poss->next) {
+			if (poss->kidx == kind->kidx) {
+				egoi[negos] = i;
+				if (multiego_allow(egoi)) {
+					ok = true;
+					for(int j=0;j<negos;j++)
+						if (egoi[j] == i)
+							ok = false;
+					if (ok)
+						break;
+				}
+			}
+		}
+		if (ok) {
+			prob[i] = e_info[i].alloc_prob;
+			if (level < e_info[i].alloc_min)
+				prob[i] /= (e_info[i].alloc_min - level) + 0.5;
+			if (level > e_info[i].alloc_max)
+				prob[i] /= (level - e_info[i].alloc_min) + 0.5;
+			total += prob[i];
+		}
+	}
+
+	/* No possibilities */
+	if (total == 0.0) {
+		mem_free(prob);
+		return NULL;
+	}
+
+	/* Select at random */
+	int idx = select_random_table(total, prob, z_info->e_max);
+	mem_free(prob);
+	return e_info + idx;
+}
+
+/**
  * Select a base item for an ego.
  */
 static struct object_kind *select_ego_kind(struct ego_item *ego, int level, int tval)
@@ -457,96 +517,105 @@ static struct ego_item *ego_find_random(int level, int tval)
 
 
 /**
- * Apply generation magic to an ego-item.
- * This should do nothing if called an a non-ego item, and handle single and
- * multiple ego items.
+ * Apply generation magic to an ego-item from a given ego index 'j'.
+ * Used because brand_object needs to add magic to an item that is already an ego item.
  */
-void ego_apply_magic(struct object *obj, int level)
+void ego_apply_magic_from(struct object *obj, int level, int j)
 {
 	struct ego_item *ego;
 	int i, x, resist = 0, pick = 0;
 	bitflag newf[OF_SIZE];
 
-	for(int j=0;j<MAX_EGOS;j++) {
-		ego = obj->ego[j];
-		if (ego) {
+	ego = obj->ego[j];
+	if (ego) {
 
-			/* Resist or power? */
-			if (kf_has(ego->kind_flags, KF_RAND_RES_POWER))
-				pick = randint1(3);
+		/* Resist or power? */
+		if (kf_has(ego->kind_flags, KF_RAND_RES_POWER))
+			pick = randint1(3);
 
-			/* Extra powers */
-			if (kf_has(ego->kind_flags, KF_RAND_SUSTAIN)) {
-				create_obj_flag_mask(newf, false, OFT_SUST, OFT_MAX);
-				of_on(obj->flags, get_new_attr(obj->flags, newf));
-			} else if (kf_has(ego->kind_flags, KF_RAND_POWER) || (pick == 1)) {
-				create_obj_flag_mask(newf, false, OFT_PROT, OFT_MISC, OFT_MAX);
-				of_on(obj->flags, get_new_attr(obj->flags, newf));
-			} else if (kf_has(ego->kind_flags, KF_RAND_BASE_RES) || (pick > 1)) {
-				/* Get a base resist if available, mark it as random */
-				if (random_base_resist(obj, &resist)) {
-					obj->el_info[resist].res_level++;
-					obj->el_info[resist].flags |= EL_INFO_RANDOM | EL_INFO_IGNORE;
-				}
-			} else if (kf_has(ego->kind_flags, KF_RAND_HI_RES)) {
-				/* Get a high resist if available, mark it as random */
-				if (random_high_resist(obj, &resist)) {
-					obj->el_info[resist].res_level++;
-					obj->el_info[resist].flags |= EL_INFO_RANDOM | EL_INFO_IGNORE;
-				}
+		/* Extra powers */
+		if (kf_has(ego->kind_flags, KF_RAND_SUSTAIN)) {
+			create_obj_flag_mask(newf, false, OFT_SUST, OFT_MAX);
+			of_on(obj->flags, get_new_attr(obj->flags, newf));
+		} else if (kf_has(ego->kind_flags, KF_RAND_POWER) || (pick == 1)) {
+			create_obj_flag_mask(newf, false, OFT_PROT, OFT_MISC, OFT_MAX);
+			of_on(obj->flags, get_new_attr(obj->flags, newf));
+		} else if (kf_has(ego->kind_flags, KF_RAND_BASE_RES) || (pick > 1)) {
+			/* Get a base resist if available, mark it as random */
+			if (random_base_resist(obj, &resist)) {
+				obj->el_info[resist].res_level++;
+				obj->el_info[resist].flags |= EL_INFO_RANDOM | EL_INFO_IGNORE;
 			}
-
-			/* Apply extra ego bonuses */
-			obj->to_h += randcalc(ego->to_h, level, RANDOMISE);
-			obj->to_d += randcalc(ego->to_d, level, RANDOMISE);
-			obj->to_a += randcalc(ego->to_a, level, RANDOMISE);
-
-			/* Apply pval - maximum (with unchanged timeout) by default, otherwise
-			 * use a % scaling factor to pval and timeout
-			 **/
-			int ego_pval = randcalc(obj->ego[j]->pval, level, RANDOMISE);
-			if (kf_has(obj->ego[j]->kind_flags, KF_PVAL_SCALE)) {
-				obj->pval = ((obj->pval * ego_pval) / 100);
-				obj->timeout = ((obj->timeout * ego_pval) / 100);
-			} else {
-				obj->pval = MAX(obj->pval, ego_pval);
-			}
-
-			/* Apply modifiers */
-			for (i = 0; i < OBJ_MOD_MAX; i++) {
-				x = randcalc(ego->modifiers[i], level, RANDOMISE);
-				obj->modifiers[i] += x;
-			}
-
-			/* Apply flags */
-			of_union(obj->flags, ego->flags);
-			of_diff(obj->flags, ego->flags_off);
-			of_union(obj->carried_flags, ego->flags);
-			of_diff(obj->carried_flags, ego->flags_off);
-			pf_union(obj->pflags, ego->pflags);
-
-			/* Add slays, brands and faults */
-			copy_slays(&obj->slays, ego->slays);
-			copy_brands(&obj->brands, ego->brands);
-			copy_faults(obj, ego->faults);
-
-			/* Add resists */
-			for (i = 0; i < ELEM_MAX; i++) {
-				/* Take the sum of ego and base object resist levels (clipped at immunity) */
-				obj->el_info[i].res_level = MIN(ego->el_info[i].res_level + obj->el_info[i].res_level, IMMUNITY);
-
-				/* Union of flags so as to know when ignoring is notable */
-				obj->el_info[i].flags |= ego->el_info[i].flags;
-			}
-
-			/* Add effect (ego effect will trump object effect, when there are any) */
-			if (ego->effect) {
-				obj->effect = ego->effect;
-				obj->time = ego->time;
+		} else if (kf_has(ego->kind_flags, KF_RAND_HI_RES)) {
+			/* Get a high resist if available, mark it as random */
+			if (random_high_resist(obj, &resist)) {
+				obj->el_info[resist].res_level++;
+				obj->el_info[resist].flags |= EL_INFO_RANDOM | EL_INFO_IGNORE;
 			}
 		}
+
+		/* Apply extra ego bonuses */
+		obj->to_h += randcalc(ego->to_h, level, RANDOMISE);
+		obj->to_d += randcalc(ego->to_d, level, RANDOMISE);
+		obj->to_a += randcalc(ego->to_a, level, RANDOMISE);
+
+		/* Apply pval - maximum (with unchanged timeout) by default, otherwise
+		 * use a % scaling factor to pval and timeout
+		 **/
+		int ego_pval = randcalc(obj->ego[j]->pval, level, RANDOMISE);
+		if (kf_has(obj->ego[j]->kind_flags, KF_PVAL_SCALE)) {
+			obj->pval = ((obj->pval * ego_pval) / 100);
+			obj->timeout = ((obj->timeout * ego_pval) / 100);
+		} else {
+			obj->pval = MAX(obj->pval, ego_pval);
+		}
+
+		/* Apply modifiers */
+		for (i = 0; i < OBJ_MOD_MAX; i++) {
+			x = randcalc(ego->modifiers[i], level, RANDOMISE);
+			obj->modifiers[i] += x;
+		}
+
+		/* Apply flags */
+		of_union(obj->flags, ego->flags);
+		of_diff(obj->flags, ego->flags_off);
+		of_union(obj->carried_flags, ego->flags);
+		of_diff(obj->carried_flags, ego->flags_off);
+		pf_union(obj->pflags, ego->pflags);
+
+		/* Add slays, brands and faults */
+		copy_slays(&obj->slays, ego->slays);
+		copy_brands(&obj->brands, ego->brands);
+		copy_faults(obj, ego->faults);
+
+		/* Add resists */
+		for (i = 0; i < ELEM_MAX; i++) {
+			/* Take the sum of ego and base object resist levels (clipped at immunity) */
+			obj->el_info[i].res_level = MIN(ego->el_info[i].res_level + obj->el_info[i].res_level, IMMUNITY);
+
+			/* Union of flags so as to know when ignoring is notable */
+			obj->el_info[i].flags |= ego->el_info[i].flags;
+		}
+
+		/* Add effect (ego effect will trump object effect, when there are any) */
+		if (ego->effect) {
+			obj->effect = ego->effect;
+			obj->time = ego->time;
+		}
 	}
-	return;
+}
+
+/**
+ * Apply generation magic to an ego-item.
+ * This should do nothing if called on a non-ego item, and handle single and
+ * multiple ego items.
+ * It should however only be called once - branding must use only ego_apply_magic_from()
+ * on the newly added ego.
+ */
+void ego_apply_magic(struct object *obj, int level)
+{
+	for(int j=0;j<MAX_EGOS;j++)
+		ego_apply_magic_from(obj, level, j);
 }
 
 /**

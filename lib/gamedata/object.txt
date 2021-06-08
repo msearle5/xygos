@@ -2510,6 +2510,33 @@ effect:ENCHANT:TOAC
 dice:2+1d3
 desc:Attempts to make armour or other worn equipment considerably more protective.
 
+#egotastic[ity al] / branding, transform
+name:transformation
+type:card
+graphics:-:Deep Light Blue
+level:20
+weight:5g
+cost:1500
+alloc:6:20 to 100
+pile:25:2
+power:25
+effect:BRAND_ITEM
+dice:4+1d5
+desc:Attempts to make a non-ego into an ego item. On a non-ego base item it will almost always succeed, although the results can't be predicted. Rarely, it will add multiple egos. It can be run against an ego item in order to create a multiple ego, but this doesn't often work and risks destroying it.
+
+#mundanity
+name:formatting
+type:card
+graphics:-:Deep Light Blue
+level:30
+weight:5g
+cost:1200
+alloc:2:30 to 100
+pile:25:2
+power:20
+effect:UNBRAND_ITEM
+desc:Attempts to remove all additions, positive and negative, from a piece of equipment - to-hit and -dam, egos, activations, faults and so on. Even artifacts will lose everything which makes them special, with no volcano needed.
+
 name:repair
 type:card
 graphics:-:Deep Light Blue

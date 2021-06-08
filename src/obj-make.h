@@ -28,6 +28,7 @@
 #define NO_MINIMUM 	255
 
 void ego_apply_magic(struct object *obj, int level);
+void ego_apply_magic_from(struct object *obj, int level, int j);
 void copy_artifact_data(struct object *obj, const struct artifact *art);
 bool make_fake_artifact(struct object *obj, const struct artifact *artifact);
 void object_prep(struct object *obj, struct object_kind *kind, int lev,
@@ -45,5 +46,6 @@ struct object_kind *money_kind(const char *name, int value);
 struct object *make_gold(int lev, const char *coin_type);
 struct object *make_artifact(int lev, int tval);
 bool special_item_can_gen(struct object_kind *kind);
+struct ego_item *select_ego_base(int level, struct object *obj);
 
 #endif /* OBJECT_MAKE_H */

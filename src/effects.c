@@ -66,6 +66,9 @@
 
 static void shapechange(const char *shapename, bool verbose);
 
+static bool brand_object(struct object *obj, const char *name);
+static bool mundane_object(struct object *obj);
+
 /**
  * ------------------------------------------------------------------------
  * Structures and helper functions for effects
@@ -392,6 +395,48 @@ static bool item_tester_hook_armour(const struct object *obj)
 	return tval_is_armor(obj);
 }
 
+
+/**
+ * Hook to specify "can be branded" - check that at least one ego slot is available,
+ * is not an artifact and that an ego exists for that item kind.
+ */
+static bool item_tester_hook_brandable(const struct object *obj)
+{
+	if (obj->artifact)
+		return false;
+	if (obj->ego[MAX_EGOS-1])
+		return false;
+	for(int i=0;i<z_info->e_max;i++) {
+		struct poss_item *poss = e_info[i].poss_items; 
+		for (; poss; poss = poss->next)
+			if (poss->kidx == obj->kind->kidx)
+				return true;
+	}
+	return false;
+}
+
+/**
+ * Hook to specify "can be made mundane" - that is, it is an artifact, ego, faulty or at least has +
+ */
+static bool item_tester_hook_mundane(const struct object *obj)
+{
+	if (obj->artifact)
+		return true;
+	if (obj->ego[0])
+		return true;
+	if (obj->faults)
+		return true;
+	if (obj->ac > obj->kind->ac)
+		return true;
+	if (obj->to_a > 0)
+		return true;
+	if (obj->to_h > 0)
+		return true;
+	if (obj->to_d > 0)
+		return true;
+	return false;
+}
+
 /**
  * Tries to increase an items bonus score, if possible.
  *
@@ -502,7 +547,7 @@ static bool enchant(struct object *obj, int n, int eflag)
  * both to_hit and to_dam with the same flag.  This
  * may not be the most desirable behavior (ACB).
  */
-static bool enchant_spell(int num_hit, int num_dam, int num_ac, struct command *cmd)
+static bool enchant_spell(int num_hit, int num_dam, int num_ac, int num_brand, int num_mundane, struct command *cmd)
 {
 	bool okay = false;
 
@@ -514,10 +559,14 @@ static bool enchant_spell(int num_hit, int num_dam, int num_ac, struct command *
 	int itemmode = (USE_EQUIP | USE_INVEN | USE_QUIVER | USE_FLOOR);
 	item_tester filter = num_ac ?
 		item_tester_hook_armour : item_tester_hook_weapon;
+	if (num_brand)
+		filter = item_tester_hook_brandable;
+	if (num_mundane)
+		filter = item_tester_hook_mundane;
 
 	/* Get an item */
-	q = "Enchant which item? ";
-	s = "You have nothing to enchant.";
+	q = "Enhance which item? ";
+	s = "You have nothing to enhance.";
 	if (cmd) {
 		if (cmd_get_item(cmd, "tgtitem", &obj, q, s, filter,
 				itemmode)) {
@@ -530,22 +579,29 @@ static bool enchant_spell(int num_hit, int num_dam, int num_ac, struct command *
 	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
 
 	/* Describe */
-	msg("%s %s glow%s brightly!",
-		(object_is_carried(player, obj) ? "Your" : "The"), o_name,
-			   ((obj->number > 1) ? "" : "s"));
+	if ((!num_brand) && (!num_mundane)) {
+		msg("%s %s glow%s %sly!",
+			(object_is_carried(player, obj) ? "Your" : "The"), o_name,
+				   ((obj->number > 1) ? "" : "s"));
+	}
 
 	/* Enchant */
 	if (num_dam && enchant(obj, num_hit, ENCH_TOBOTH)) okay = true;
-	else if (enchant(obj, num_hit, ENCH_TOHIT)) okay = true;
-	else if (enchant(obj, num_dam, ENCH_TODAM)) okay = true;
-	if (enchant(obj, num_ac, ENCH_TOAC)) okay = true;
+	else if (num_hit && enchant(obj, num_hit, ENCH_TOHIT)) okay = true;
+	else if (num_dam && enchant(obj, num_dam, ENCH_TODAM)) okay = true;
+	if (num_ac && enchant(obj, num_ac, ENCH_TOAC)) okay = true;
+	if (num_brand)
+		okay = brand_object(obj, NULL);
+	if (num_mundane)
+		okay = mundane_object(obj);
 
 	/* Failure */
 	if (!okay) {
 		event_signal(EVENT_INPUT_FLUSH);
 
 		/* Message */
-		msg("The enchantment failed.");
+		if ((!num_brand) && (!num_mundane))
+			msg("The enhancement failed.");
 	}
 
 	/* Something happened */
@@ -556,62 +612,175 @@ static bool enchant_spell(int num_hit, int num_dam, int num_ac, struct command *
  * Brand weapons (or ammo)
  *
  * Turns the (non-magical) object into an ego-item of 'brand_type'.
+ * 
+ * Returns true if successful
  */
-static void brand_object(struct object *obj, const char *name)
+static bool brand_object(struct object *obj, const char *name)
 {
-	int i;
-	struct ego_item *ego;
-	bool ok = false;
+	struct ego_item *ego = NULL;
+	struct ego_item *ego2 = NULL;
+	int negos = 0;
 
-	/* You can never modify artifacts, ego items or worthless items */
-	if (obj && obj->kind->cost && !obj->artifact && !obj->ego[0]) {
-		char o_name[80];
-		char brand[20];
+	if (obj) {
 
-		object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
-		strnfmt(brand, sizeof(brand), "of %s", name);
+		/* Count egos */
+		while ((obj->ego[negos]) && (negos < MAX_EGOS))
+			negos++;
 
-		/* Describe */
-		msg("The %s %s surrounded with an aura of %s.", o_name,
-			(obj->number > 1) ? "are" : "is", name);
-
-		/* Get the right ego type for the object */
-		for (i = 0; i < z_info->e_max; i++) {
-			ego = &e_info[i];
-
-			/* Match the name */
-			if (!ego->name) continue;
-			if (streq(ego->name, brand)) {
-				struct poss_item *poss;
-				for (poss = ego->poss_items; poss; poss = poss->next)
-					if (poss->kidx == obj->kind->kidx)
-						ok = true;
-			}
-			if (ok) break;
+		/* Find a matching ego */
+		if (name) {
+			ego = lookup_ego_item(name, obj->kind->tval, obj->kind->sval);
+		} else {
+			ego = select_ego_base(player->max_depth, obj);
 		}
 
-		assert(ok);
+		/* You can never modify artifacts, maxed ego items or worthless items */
+		if (ego && obj->kind->cost && !obj->artifact && !(negos >= MAX_EGOS)) {
+			char o_name[80];
 
-		/* Make it an ego item */
-		obj->ego[0] = &e_info[i];
-		ego_apply_magic(obj, 0);
-		player_know_object(player, obj);
+			/* If there are MAX_EGOS already, stop always.
+			 * If there are >0, <MAX_EGOS, often stop.
+			 */ 
+			if ((negos == 0) || (one_in_(1<<(negos * 2)))) {
 
-		/* Update the gear */
-		player->upkeep->update |= (PU_INVEN);
+				object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
 
-		/* Combine the pack (later) */
-		player->upkeep->notice |= (PN_COMBINE);
+				/* Sometimes things go wrong! */
+				if (one_in_(25)) {
+					msg("The %s flashes briefly, but something's not right...", o_name, (obj->number > 1) ? "glow" : "glows");
+					return mundane_object(obj);
+				}
 
-		/* Window stuff */
-		player->upkeep->redraw |= (PR_INVEN | PR_EQUIP);
+				/* Make it an ego item */
+				obj->ego[negos] = ego;
+				ego_apply_magic_from(obj, 0, negos);
 
-		/* Enchant */
-		enchant(obj, randint0(3) + 4, ENCH_TOHIT | ENCH_TODAM);
-	} else {
-		event_signal(EVENT_INPUT_FLUSH);
-		msg("The branding failed.");
+				/* Sometimes they go very right!
+				 * Take care to only show the message if a second ego
+				 * can be found.
+				 **/
+				if ((!negos) && (one_in_(25))) {
+					ego2 = select_ego_base(player->max_depth, obj);
+					if (ego2) {
+						msg("The %s %s into dazzling brilliance!", o_name,
+						(obj->number > 1) ? "erupt" : "erupts");
+					}
+				}
+
+				if (!ego2) {
+					/* Describe */
+					msg("The %s %s brilliantly!", o_name,
+						(obj->number > 1) ? "glow" : "glows");
+				}
+
+				if (ego2) {
+					negos++;
+					obj->ego[negos] = ego2;
+					ego_apply_magic_from(obj, 0, negos);
+				}
+
+				/* Identify the object */
+				object_know_all(obj);
+				update_player_object_knowledge(player);
+
+				/* Update the gear */
+				player->upkeep->update |= (PU_INVEN);
+
+				/* Combine the pack (later) */
+				player->upkeep->notice |= (PN_COMBINE);
+
+				/* Window stuff */
+				player->upkeep->redraw |= (PR_INVEN | PR_EQUIP);
+
+				/* Enchant */
+				if (kind_tval_is_weapon(obj->kind))
+					enchant(obj, randint0(3) + 4, ENCH_TOHIT | ENCH_TODAM);
+				else if (kind_tval_is_armor(obj->kind))
+					enchant(obj, randint0(3) + 4, ENCH_TOAC);
+				return true;
+			}
+		}
 	}
+
+	event_signal(EVENT_INPUT_FLUSH);
+	msg("It glows feebly for a moment, then winks out. The branding failed.");
+
+	return false;
+}
+
+/**
+ * Make mundane.
+ *
+ * Turns the object into a plain default + version without faults, egos, artifact.
+ * This does have a chance of increasing random hit/dam/ac.
+ *
+ * Returns true if successful
+ */
+static bool mundane_object(struct object *obj)
+{
+	bool success = false;
+
+	/* Identify the object */
+	if (item_tester_hook_mundane(obj)) {
+		success = true;
+		object_know_all(obj);
+	}
+
+	/* Moan */
+	const char *moan = "drawn-out";
+	if (obj->faults)
+		moan = "resonant";
+	if (obj->ego)
+		moan = "awful";
+	if (obj->artifact)
+		moan = "terrible";
+
+	/* Flatten */
+	struct object_kind *kind = obj->kind;
+	struct object *prev = obj->prev;
+	struct object *next = obj->next;
+	struct loc grid = obj->grid;
+	struct object *known = obj->known;
+	mem_free(obj->slays);
+	mem_free(obj->brands);
+	mem_free(obj->faults);
+	object_prep(obj, kind, player->depth, RANDOMISE);
+	obj->prev = prev;
+	obj->next = next;
+	obj->grid = grid;
+	if (known) {
+		struct object *prev = known->prev;
+		struct object *next = known->next;
+		struct loc grid = known->grid;
+		mem_free(known->slays);
+		mem_free(known->brands);
+		mem_free(known->faults);
+		object_prep(known, kind, player->depth, RANDOMISE);
+		known->prev = prev;
+		known->next = next;
+		known->grid = grid;
+	}
+	obj->known = known;
+
+	/* Update the gear */
+	player->upkeep->update |= (PU_INVEN | PU_BONUS);
+
+	/* Combine the pack (later) */
+	player->upkeep->notice |= (PN_COMBINE);
+
+	/* Window stuff */
+	player->upkeep->redraw |= (PR_INVEN | PR_EQUIP);
+
+	event_signal(EVENT_INPUT_FLUSH);
+	if (success) {
+		char o_name[80];
+		object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+		msg("There is a %s moan, and the %s shudders...", moan, o_name);
+	} else {
+		msg("There is a distant moan, but nothing more appears to happen.");
+	}
+
+	return success;
 }
 
 /**
@@ -2389,19 +2558,19 @@ static bool effect_handler_ENCHANT(effect_handler_context_t *context)
 	context->ident = true;
 
 	if ((context->subtype & ENCH_TOBOTH) == ENCH_TOBOTH) {
-		if (enchant_spell(value, value, 0, context->cmd))
+		if (enchant_spell(value, value, 0, 0, 0, context->cmd))
 			used = true;
 	}
 	else if (context->subtype & ENCH_TOHIT) {
-		if (enchant_spell(value, 0, 0, context->cmd))
+		if (enchant_spell(value, 0, 0, 0, 0, context->cmd))
 			used = true;
 	}
 	else if (context->subtype & ENCH_TODAM) {
-		if (enchant_spell(0, value, 0, context->cmd))
+		if (enchant_spell(0, value, 0, 0, 0, context->cmd))
 			used = true;
 	}
 	if (context->subtype & ENCH_TOAC) {
-		if (enchant_spell(0, 0, value, context->cmd))
+		if (enchant_spell(0, 0, value, 0, 0, context->cmd))
 			used = true;
 	}
 
@@ -4935,17 +5104,35 @@ static bool effect_handler_BLAST_WEAPON(effect_handler_context_t *context)
 
 
 /**
- * Brand the current weapon
+ * Mundanify any item which can take an ego
+ */
+static bool effect_handler_UNBRAND_ITEM(effect_handler_context_t *context)
+{
+	enchant_spell(0, 0, 0, 0, 1, context->cmd);
+	context->ident = true;
+	return true;
+}
+
+/**
+ * Brand any item which can take an ego
+ */
+static bool effect_handler_BRAND_ITEM(effect_handler_context_t *context)
+{
+	enchant_spell(0, 0, 0, 1, 0, context->cmd);
+	context->ident = true;
+	return true;
+}
+
+
+/**
+ * Brand the current melee weapon
  */
 static bool effect_handler_BRAND_WEAPON(effect_handler_context_t *context)
 {
 	struct object *obj = equipped_item_by_slot_name(player, "weapon");
 
-	/* Select the brand */
-	const char *brand = one_in_(2) ? "Flame" : "Frost";
-
 	/* Brand the weapon */
-	brand_object(obj, brand);
+	brand_object(obj, NULL);
 
 	context->ident = true;
 	return true;
@@ -4953,7 +5140,7 @@ static bool effect_handler_BRAND_WEAPON(effect_handler_context_t *context)
 
 
 /**
- * Brand some (non-magical) ammo
+ * Brand some (non-ego/artifact) ammo
  */
 static bool effect_handler_BRAND_AMMO(effect_handler_context_t *context)
 {
@@ -4961,9 +5148,6 @@ static bool effect_handler_BRAND_AMMO(effect_handler_context_t *context)
 	const char *q, *s;
 	int itemmode = (USE_INVEN | USE_QUIVER | USE_FLOOR);
 	bool used = false;
-
-	/* Select the brand */
-	const char *brand = one_in_(3) ? "Flame" : (one_in_(2) ? "Frost" : "Venom");
 
 	context->ident = true;
 
@@ -4979,14 +5163,14 @@ static bool effect_handler_BRAND_AMMO(effect_handler_context_t *context)
 		return used;
 
 	/* Brand the ammo */
-	brand_object(obj, brand);
+	brand_object(obj, NULL);
 
 	/* Done */
 	return (true);
 }
 
 /**
- * Enchant some (non-magical) bolts
+ * Enchant some (non-ego/artifact) ammo
  */
 static bool effect_handler_BRAND_BOLTS(effect_handler_context_t *context)
 {
@@ -5009,7 +5193,7 @@ static bool effect_handler_BRAND_BOLTS(effect_handler_context_t *context)
 		return used;
 
 	/* Brand the bolts */
-	brand_object(obj, "Flame");
+	brand_object(obj, NULL);
 
 	/* Done */
 	return (true);
@@ -5017,7 +5201,7 @@ static bool effect_handler_BRAND_BOLTS(effect_handler_context_t *context)
 
 
 /**
- * Turn a device into arrows
+ * Turn a device into ammo
  */
 static bool effect_handler_CREATE_ARROWS(effect_handler_context_t *context)
 {
@@ -6604,6 +6788,7 @@ static bool effect_handler_SELECT(effect_handler_context_t *context)
  * ------------------------------------------------------------------------
  * Properties of effects
  * ------------------------------------------------------------------------ */
+ 
 /**
  * Useful things about effects.
  */

@@ -125,7 +125,7 @@ static void wr_item(const struct object *obj)
 			effect = SHRT_MIN;
 		} else {
 			for(int i=0;i<MAX_EGOS;i++) {
-				if (obj->ego[i]->effect == obj->effect) {
+				if ((obj->ego[i]) && (obj->ego[i]->effect == obj->effect)) {
 					effect = -i;
 				}
 			}
