@@ -71,7 +71,9 @@
 # 'type' is for the base type of item, from object_base.txt.
 
 # 'level' defines how "advanced" the object is, when determining how easy it
-# is to use a device, gun or gadget.
+# is to use a device, gun or gadget. In a similar vein, it affects how likely
+# a device or gun can be recharged without backfiring. For a container, the
+# level affects the types of traps it may have.
 
 # 'weight' is in tenth-pounds, grams or kg (if a g or kg suffix is used).
 
