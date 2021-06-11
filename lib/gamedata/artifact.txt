@@ -190,3 +190,6 @@ values:LIGHT[1]
 values:RES_ACID[1] | RES_ELEC[1] | RES_FIRE[1] | RES_COLD[1] | RES_POIS[1]
 values:RES_LIGHT[1] | RES_DARK[1] | RES_NEXUS[1] | RES_RADIATION[1]
 desc:A slender golden band which you recognize and fear as both a device allowing control of machines through your thoughts - and one forcing your thoughts to be controlled. It's the path for the wearer's domination of the galaxy, or if you would prefer not to be a Dark Lord then simply your ticket home.
+act:RECALL
+time:5+d2
+
