@@ -1,7 +1,5 @@
 BUGS
 ====
-BUG: INT is over-valued in automatic stat assignment (e.g. a Wrestler got 50 points in INT, only 3 in DEX)
-
 BUG: Stores which close lose their entrance but don't become ruins. (Only when more than one would?)
 
 BUG: Bombs (e.g. pineapple) give excess messages - "The X fails to harm the Y." "The X detonates!" "The Y screams!".
@@ -84,6 +82,14 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+BUG: Random arts can be Coronets - though prob in .txt is 0
+
+BUG: C-screen displays melee tohit when no weapon of 0, not martial.
+	(missing skills from class etc)
+
+BUG: INT is over-valued in automatic stat assignment (e.g. a Wrestler got 50 points in INT, only 3 in DEX)
+	Fixed
+
 BUG: Delete the savefile, make a new character, check a store's name.
 	  Save, reload. The store name will sometimes have changed.
 	  Save, reload again and it won't.

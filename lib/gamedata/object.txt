@@ -2099,7 +2099,7 @@ cost:100000
 alloc:0:100 to 100
 attack:1d1:0:0
 armor:0:0
-flags:IGNORE_ACID
+flags:IGNORE_ACID | QUEST_ART
 desc:An elegant golden circlet, with slender spines thrusting upward.
 desc:  It looks like it should be resting over the brow of a king.
 material:gold

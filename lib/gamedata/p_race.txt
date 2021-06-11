@@ -368,6 +368,7 @@ skill-save:0
 skill-stealth:0
 skill-search:0
 skill-melee:0
+skill-martial:0
 skill-shoot:0
 skill-throw:0
 skill-dig:0
@@ -393,6 +394,7 @@ skill-save:-8
 skill-stealth:-10
 skill-search:5
 skill-melee:20
+skill-martial:10
 skill-shoot:10
 skill-throw:10
 skill-dig:0
@@ -422,6 +424,7 @@ skill-save:15
 skill-stealth:0
 skill-search:0
 skill-melee:0
+skill-martial:0
 skill-shoot:4
 skill-throw:10
 skill-dig:0
