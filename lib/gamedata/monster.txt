@@ -2484,7 +2484,6 @@ blow:TOUCH:EAT_LIGHT:1d3
 flags:NEVER_MOVE
 flags:IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
 spell-freq:15
-spells:DRAIN_MANA
 desc:It is a large pile of silver flesh that sucks all light from its
 desc: surroundings.
 
@@ -2504,7 +2503,6 @@ blow:TOUCH:POISON:1d3
 flags:NEVER_MOVE
 flags:HURT_LIGHT | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
 spell-freq:15
-spells:DRAIN_MANA
 desc:It's a large pile of yellow flesh.
 
 name:scruffy looking hobbit
@@ -2608,7 +2606,6 @@ blow:GAZE:LOSE_STR:1d6
 flags:NEVER_MOVE
 flags:HURT_LIGHT | NO_FEAR
 spell-freq:11
-spells:DRAIN_MANA
 desc:A disembodied eye, crackling with energy.
 
 name:kobold shaman
@@ -3006,7 +3003,6 @@ flags:NEVER_MOVE
 flags:HURT_LIGHT | IM_DISEN | NO_FEAR
 flags:ATTR_MULTI
 spell-freq:9
-spells:DRAIN_MANA
 desc:A disembodied eye, crackling with magic.
 
 name:red worm mass
@@ -3242,7 +3238,6 @@ blow:GAZE:BLIND:2d6
 flags:NEVER_MOVE
 flags:HURT_LIGHT | NO_FEAR
 spell-freq:7
-spells:DRAIN_MANA
 desc:A disembodied eye, bloodshot and nasty.
 
 name:red naga
@@ -3346,7 +3341,7 @@ blow:TOUCH:LOSE_WIS
 flags:DROP_40 | DROP_60
 flags:RAND_50 | TAKE_ITEM
 spell-freq:15
-spells:DRAIN_MANA | TPORT
+spells:TPORT
 desc:It is almost insubstantial.
 
 name:eastern dwarf
@@ -3535,7 +3530,6 @@ blow:TOUCH:HURT:1d4
 blow:CRAWL:ACID:2d4
 flags:EMPTY_MIND
 spell-freq:11
-spells:DRAIN_MANA
 desc:It is a strange, slimy, icky creature.
 
 name:giant grey rat
@@ -3772,7 +3766,6 @@ flags:EMPTY_MIND | STUPID
 flags:IM_DISEN
 flags:ATTR_MULTI
 spell-freq:11
-spells:DRAIN_MANA
 desc:It is a strange glowing growth on the dungeon floor.
 
 name:creeping gold coins
@@ -3946,7 +3939,6 @@ blow:TOUCH:EXP_10
 flags:NEVER_MOVE
 flags:HURT_LIGHT | HURT_COLD | IM_POIS | NO_CONF | NO_SLEEP
 spell-freq:11
-spells:DRAIN_MANA
 desc:Yum!  It looks quite tasty.  It is a pulsing mound of glowing flesh.
 
 name:radiation worm mass
@@ -5633,7 +5625,6 @@ flags:DROP_40
 flags:RAND_50 | OPEN_DOOR | BASH_DOOR | KILL_BODY | TAKE_ITEM
 flags:IM_POIS | HURT_COLD
 spell-freq:11
-spells:DRAIN_MANA
 desc:It is a strangely moving puddle.
 
 name:Easterling champion
@@ -6848,7 +6839,7 @@ flags:DROP_40 | DROP_1
 flags:RAND_25 | TAKE_ITEM
 flags:FORCE_SLEEP
 spell-freq:15
-spells:BLIND | DRAIN_MANA | HOLD
+spells:BLIND | HOLD
 desc:You don't believe in it.  But it believes in you...
 
 name:death watch beetle
@@ -7158,7 +7149,7 @@ flags:DROP_2 | ONLY_ITEM
 flags:RAND_25 | TAKE_ITEM
 flags:FORCE_SLEEP
 spell-freq:15
-spells:BLIND | DRAIN_MANA | HOLD
+spells:BLIND | HOLD
 desc:A shadowy form clutches at you from the darkness.  A powerful undead
 desc: creature with a deadly touch.
 
@@ -7499,7 +7490,7 @@ flags:NEVER_MOVE
 flags:HURT_ROCK | HURT_LIGHT | IM_COLD | IM_FIRE | IM_POIS
 innate-freq:10
 spell-freq:6
-spells:CONF | DRAIN_MANA | HOLD | MIND_BLAST | SHRIEK
+spells:CONF | HOLD | MIND_BLAST | SHRIEK
 spells:S_MONSTER | S_MONSTERS
 desc:A figure carved from stone, with three vulture faces whose eyes glow with a
 desc: malevolent light.
@@ -7783,7 +7774,7 @@ flags:EVIL | SPIRIT
 flags:BASH_DOOR
 flags:FORCE_SLEEP
 spell-freq:5
-spells:WOUND | DRAIN_MANA | HOLD | TELE_AWAY
+spells:WOUND | HOLD | TELE_AWAY
 spells:BA_COLD
 spells:BO_ELEC
 desc:Another lesser relative of the beholder, this six-eyed creature feeds on
@@ -8192,7 +8183,7 @@ flags:BASH_DOOR
 flags:NO_CONF | NO_SLEEP
 flags:FORCE_SLEEP
 spell-freq:2
-spells:BLIND | CONF | DARKNESS | DRAIN_MANA | FORGET | MIND_BLAST
+spells:BLIND | CONF | DARKNESS | FORGET | MIND_BLAST
 spells:SCARE | SLOW
 spells:BO_ACID | BO_COLD | BO_ELEC | BO_FIRE
 desc:A vile creature with one huge central eye, twelve smaller eyes on stalks,
@@ -8483,7 +8474,7 @@ blow:TOUCH:LOSE_DEX:2d12
 flags:DROP_4 | ONLY_ITEM
 spell-freq:3
 spells:BLIND | BLINK | WOUND | CONF | BRAIN_SMASH
-spells:DRAIN_MANA | HOLD | SCARE | TELE_TO
+spells:HOLD | SCARE | TELE_TO
 spells:S_UNDEAD
 friends-base:80:1d3:zombie:servant
 friends-base:80:1d3:skeleton:servant
@@ -8883,7 +8874,7 @@ flags:DROP_2 | ONLY_ITEM
 flags:RAND_25 | TAKE_ITEM
 flags:FORCE_SLEEP
 spell-freq:15
-spells:BLIND | CONF | DRAIN_MANA | HOLD
+spells:BLIND | CONF | HOLD
 spells:BO_RADI
 friends:100:2d5:Same
 desc:It is a form that screams its presence against the eye.  Death incarnate,
@@ -8949,7 +8940,7 @@ flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS | NO_CONF
 flags:NO_SLEEP | NO_STUN
 flags:FORCE_SLEEP
 spell-freq:2
-spells:BRAIN_SMASH | WOUND | CONF | DRAIN_MANA | FORGET | MIND_BLAST
+spells:BRAIN_SMASH | WOUND | CONF | FORGET | MIND_BLAST
 spells:SLOW
 spells:BA_COLD | BA_FIRE
 spells:BO_ACID | BO_MANA | BO_RADI
@@ -9081,7 +9072,7 @@ blow:BITE:EXP_80:4d6
 blow:BITE:EXP_80:4d6
 flags:DROP_4
 spell-freq:7
-spells:BLIND | BRAIN_SMASH | WOUND | DARKNESS | DRAIN_MANA
+spells:BLIND | BRAIN_SMASH | WOUND | DARKNESS
 spells:BO_RADI
 spells:HOLD | SCARE
 friends:40:1d4:Vampire:servant
@@ -9158,7 +9149,7 @@ flags:HURT_LIGHT | IM_POIS
 flags:FORCE_SLEEP
 innate-freq:20
 spell-freq:6
-spells:WOUND | DRAIN_MANA | HEAL | HOLD | SLOW
+spells:WOUND | HEAL | HOLD | SLOW
 spells:BR_DARK
 spells:S_KIN | S_SPIDER
 friends:100:4d4:spider
@@ -9625,7 +9616,7 @@ blow:TOUCH:LOSE_DEX:4d12
 flags:DROP_3 | ONLY_ITEM
 spell-freq:3
 spells:BLIND | BLINK | WOUND | CONF | BRAIN_SMASH
-spells:DRAIN_MANA | FORGET | HEAL | HOLD | SCARE | TELE_TO
+spells:FORGET | HEAL | HOLD | SCARE | TELE_TO
 spells:TPORT
 spells:S_DEMON | S_UNDEAD
 desc:A lich who is partially immaterial, on its way to a new, ethereal form.
@@ -9650,7 +9641,7 @@ flags:DROP_4 | ONLY_ITEM
 flags:RAND_25 | TAKE_ITEM
 flags:FORCE_SLEEP
 spell-freq:9
-spells:BLIND | WOUND | CONF | DRAIN_MANA | HOLD | TELE_LEVEL
+spells:BLIND | WOUND | CONF | HOLD | TELE_LEVEL
 spells:BO_RADI
 spells:S_UNDEAD
 desc:It is an unlife of power almost unequaled.  An affront to existence, its
@@ -9883,7 +9874,7 @@ flags:INVISIBLE
 flags:DROP_4
 flags:PASS_WALL
 spell-freq:5
-spells:BRAIN_SMASH | WOUND | DARKNESS | DRAIN_MANA
+spells:BRAIN_SMASH | WOUND | DARKNESS
 spells:BO_RADI
 spells:S_UNDEAD
 spells:HOLD | SCARE
@@ -10112,7 +10103,7 @@ flags:DROP_4 | ONLY_ITEM
 flags:TAKE_ITEM
 flags:FORCE_SLEEP
 spell-freq:4
-spells:BLIND | BLINK | BRAIN_SMASH | CONF | DRAIN_MANA | HOLD
+spells:BLIND | BLINK | BRAIN_SMASH | CONF | HOLD
 spells:TELE_TO | TPORT
 spells:BA_RADI
 spells:S_UNDEAD
@@ -10232,7 +10223,7 @@ blow:TOUCH:LOSE_DEX:8d12
 flags:DROP_4 | ONLY_ITEM
 flags:PASS_WALL
 spell-freq:3
-spells:BLINK | WOUND | DRAIN_MANA | FORGET | HEAL | BRAIN_SMASH
+spells:BLINK | WOUND | FORGET | HEAL | BRAIN_SMASH
 spells:HOLD | SCARE | TELE_TO | TPORT
 spells:BA_RADI
 spells:S_DEMON | S_HI_UNDEAD
@@ -10482,7 +10473,7 @@ flags:UNIQUE | FEMALE | SMART
 flags:DROP_4 | DROP_GOOD | ONLY_ITEM
 flags-off:HURT_FIRE
 spell-freq:3
-spells:BLIND | BRAIN_SMASH | WOUND | DRAIN_MANA
+spells:BLIND | BRAIN_SMASH | WOUND
 spells:BA_RADI
 spells:S_HI_UNDEAD | S_KIN
 spells:HOLD | SCARE
@@ -10510,7 +10501,7 @@ flags:BASH_DOOR
 flags:NO_CONF | NO_SLEEP | NO_HOLD
 flags:FORCE_SLEEP
 spell-freq:2
-spells:BLIND | BRAIN_SMASH | CONF | DRAIN_MANA | FORGET | SCARE
+spells:BLIND | BRAIN_SMASH | CONF | FORGET | SCARE
 spells:BA_ACID | BA_COLD | BA_DARK | BA_FIRE
 spells:BO_MANA | BO_RADI
 spells:S_KIN
@@ -10595,7 +10586,7 @@ flags:OPEN_DOOR | BASH_DOOR
 flags:IM_COLD | IM_FIRE | IM_POIS | NO_STUN
 flags:FORCE_SLEEP
 spell-freq:8
-spells:BRAIN_SMASH | WOUND | DRAIN_MANA | TELE_TO
+spells:BRAIN_SMASH | WOUND | TELE_TO
 spells:BA_RADI
 spells:S_UNDEAD
 desc:A skeletal form, black as night, constructed from the bones of its previous
@@ -10912,7 +10903,7 @@ flags:BASH_DOOR
 flags:IM_ACID | IM_COLD | IM_FIRE | IM_POIS | NO_CONF | NO_SLEEP | NO_HOLD
 flags:FORCE_SLEEP
 spell-freq:2
-spells:BLIND | BRAIN_SMASH | CONF | DRAIN_MANA | FORGET | SCARE
+spells:BLIND | BRAIN_SMASH | CONF | FORGET | SCARE
 spells:BA_ACID | BA_COLD | BA_DARK | BA_FIRE | BA_RADI
 spells:BO_MANA
 spells:S_KIN
@@ -10964,7 +10955,7 @@ flags:ATTR_FLICKER
 flags:DROP_2 | ONLY_ITEM
 flags:KILL_WALL
 spell-freq:3
-spells:BLIND | WOUND | CONF | DRAIN_MANA | BRAIN_SMASH
+spells:BLIND | WOUND | CONF | BRAIN_SMASH
 spells:HOLD | TELE_TO
 spells:BA_MANA | BA_RADI
 spells:S_UNDEAD
