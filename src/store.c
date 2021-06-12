@@ -268,7 +268,7 @@ static enum parser_error parse_item_table(struct parser *p, size_t *num, size_t 
 		*table = mem_realloc(*table, *size * sizeof **table);
 	}
 
-	/* Read rarity is present */
+	/* Read rarity if present */
 	if (parser_hasval(p, "rarity")) {
 		rarity = parser_getrand(p, "rarity");
 		/* Negative base in this case doesn't mean that the number is negative, only that the base is.
@@ -1091,7 +1091,7 @@ struct object *store_carry(struct store *store, struct object *obj, bool maintai
 		} else if (randcalc(obj->time, 0, AVERAGE) > 0) {
 			return NULL; // discard
 		} else {
-			obj->timeout = obj->pval; // charge
+			obj->timeout = randcalc(obj->kind->pval, 0, AVERAGE); // charge
 		}
 	} else if (tval_can_have_timeout(obj)) {
 		obj->timeout = 0;

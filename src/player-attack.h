@@ -64,5 +64,6 @@ extern void py_attack(struct player *p, struct loc grid);
 extern bool py_attack_real(struct player *p, struct loc grid, bool *fear);
 void thrown_explodes(struct command *cmd, struct object *obj, struct loc grid);
 int weapon_skill(struct player *p);
+double py_unarmed_damage(struct player *p);
 
 #endif /* !PLAYER_ATTACK_H */

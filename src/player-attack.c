@@ -700,6 +700,89 @@ static bool py_attack_hit(struct player *p, struct loc grid, struct monster *mon
 	return stop;
 }
 
+static double py_unarmed_crit_power(struct player *p, struct monster_race *monrace, int wlev, int random)
+{
+	/* Determine clumsy armor factor
+	 * This is related to effective_ac_of(), though different enough to not want to use it directly.
+	 * In particular it is independent of level.
+	 **/
+	int eff_ac = 0;
+	int max_ac = 0;
+	for (int i = 0; i < p->body.count; i++) {
+		struct object *armor = slot_object(p, i);
+		int eff = 0;
+		int armweight = armor ? armor->weight : 0;
+		int weight = slot_table[i].weight;
+		weight -= armweight;
+		if (weight > 0) {
+			eff = (weight * slot_table[i].ac) / slot_table[i].weight;
+		}
+		if (armor && armor->to_h < 0)
+			eff >>= -armor->to_h;
+		eff_ac += eff;
+		max_ac += slot_table[i].ac;
+	}
+	/* Max_ac is now the most AC bonus that it is possible to get, while eff_ac is the amount that you
+	 * would have at level 50.
+	 * With eff_ac at 0 you will get few criticals (effectively dividing your level by 5), at max_ac the most.
+	 * Eff_lev is scaled from 1 to 10000.
+	 */
+	int eff_lev = MAX((wlev * 40), (wlev * 200 * eff_ac) / (MAX (1, max_ac)));
+	/* How many, and how powerful the crits are depends on eff_lev and monster AC / level.
+	 * You can get your maximum crit against any monster, though - just not so often.
+	 */
+	int mon_ac, mon_lev;
+	if (monrace) {
+		mon_ac = monrace->ac;
+		mon_lev = monrace->level;
+	} else {
+		/* If no monster is gives, estimate a 'typical' monster of your max depth */
+		mon_lev = p->max_depth;
+		mon_ac = mon_lev;
+	}
+	int mon_def = MAX (eff_lev + (mon_ac * 100) + (mon_lev * 40) + 2500, eff_lev * 2);
+	int power = 0;
+	/* Calculate at random, or find the average */
+	if (random == RANDOMISE) {
+		while (randint0(mon_def) < eff_lev)
+			power++;
+		return power;
+	} else {
+		double power = 0.0;
+		double prop = (double)eff_lev / (double)mon_def;
+		double add = prop;
+		do {
+			power += add;
+			add *= prop;
+		} while (add > 1e-6);
+		return power;
+	}
+}
+
+/**
+ * Convert power to damage
+ */
+
+double py_power_damage(double power)
+{
+	double dmg = 1.0 + player->known_state.to_d;
+	dmg = ((2.0 + power) * dmg) / 2.0;
+	return dmg;
+}
+
+/**
+ * Determine average damage done unarmed (on a successful hit)
+ */
+double py_unarmed_damage(struct player *p)
+{
+	double dmg = 1.0;
+	const int wlev = levels_in_class(get_class_by_name("Wrestler")->cidx);
+	if (wlev) {
+		dmg = py_power_damage(py_unarmed_crit_power(p, NULL, wlev, AVERAGE));
+	}
+	return dmg;
+}
+
 /**
  * Attack the monster at the given location with a single blow.
  */
@@ -805,39 +888,7 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear)
 		 **/
 		const int wlev = levels_in_class(get_class_by_name("Wrestler")->cidx);
 		if (wlev) {
-			/* Determine clumsy armor factor
-			 * This is related to effective_ac_of(), though different enough to not want to use it directly.
-			 * In particular it is independent of level.
-			 **/
-			int eff_ac = 0;
-			int max_ac = 0;
-			for (int i = 0; i < p->body.count; i++) {
-				struct object *armor = slot_object(p, i);
-				int eff = 0;
-				int armweight = armor ? armor->weight : 0;
-				int weight = slot_table[i].weight;
-				weight -= armweight;
-				if (weight > 0) {
-					eff = (weight * slot_table[i].ac) / slot_table[i].weight;
-				}
-				if (obj && obj->to_h < 0)
-					eff >>= -obj->to_h;
-				eff_ac += eff;
-				max_ac += slot_table[i].ac;
-			}
-			/* Max_ac is now the most AC bonus that it is possible to get, while eff_ac is the amount that you
-			 * would have at level 50.
-			 * With eff_ac at 0 you will get few criticals (effectively dividing your level by 5), at max_ac the most.
-			 * Eff_lev is scaled from 1 to 10000.
-			 */
-			int eff_lev = MAX((wlev * 40), (wlev * 200 * eff_ac) / max_ac);
-			/* How many, and how powerful the crits are depends on eff_lev and monster AC / level.
-			 * You can get your maximum crit against any monster, though - just not so often.
-			 */
-			int mon_def = MAX (eff_lev + (mon->race->ac * 100) + (mon->race->level * 40) + 2500, eff_lev * 2);
-			int power = 0;
-			while (randint0(mon_def) < eff_lev)
-				power++;
+			int power = py_unarmed_crit_power(p, mon->race, wlev, RANDOMISE);
 
 			/* Power is now the type of critical - 0 is not a crit and will stop here, higher levels
 			 * are increasingly rare and powerful crits.
@@ -888,7 +939,8 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear)
 					else if (randint0(power + 3) < power) {
 						if (mon_inc_timed(mon, MON_TMD_SLOW, 2 + randint0(power + 3), MON_TMD_FLG_NOMESSAGE)) {
 							strcpy(after, ". ");
-							monster_desc(after + 2, sizeof(after) - 2, mon, MDESC_CAPITAL | MDESC_HIDE | MDESC_PRO_HID);
+							bool visible = monster_is_visible(mon);
+							monster_desc(after + 2, sizeof(after) - 2, mon, MDESC_CAPITAL | MDESC_HIDE | (visible ? MDESC_PRO_VIS : MDESC_PRO_HID));
 							strcat(after, " is slowed!");
 						}
 					}

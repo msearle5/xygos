@@ -933,19 +933,23 @@ static struct panel *get_panel_combat(void) {
 			player->known_state.ac, player->known_state.to_a);
 
 	/* Melee */
-	obj = equipped_item_by_slot_name(player, "weapon");
-	bth = (weapon_skill(player) * 10) / BTH_PLUS_ADJ;
-	dam = player->known_state.to_d + (obj ? obj->known->to_d : 0);
-	hit = player->known_state.to_h + (obj ? obj->known->to_h : 0);
-
 	panel_space(p);
 
+	obj = equipped_item_by_slot_name(player, "weapon");
 	if (obj) {
+		dam = player->known_state.to_d + (obj ? obj->known->to_d : 0);
+		hit = player->known_state.to_h + (obj ? obj->known->to_h : 0);
+
 		melee_dice = obj->dd;
 		melee_sides = obj->ds;
+
+		panel_line(p, COLOUR_L_BLUE, "Melee", "%dd%d,%+d", melee_dice, melee_sides, dam);
+	} else {
+		double avg = py_unarmed_damage(player);
+		panel_line(p, COLOUR_L_BLUE, "Unarmed", "%.2lf", avg);
 	}
 
-	panel_line(p, COLOUR_L_BLUE, "Melee", "%dd%d,%+d", melee_dice, melee_sides, dam);
+	bth = (weapon_skill(player) * 10) / BTH_PLUS_ADJ;
 	panel_line(p, COLOUR_L_BLUE, "To-hit", "%d,%+d", bth / 10, hit);
 	panel_line(p, COLOUR_L_BLUE, "Blows", "%d.%d/turn",
 			player->state.num_blows / 100, (player->state.num_blows / 10 % 10));
