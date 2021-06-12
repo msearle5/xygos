@@ -964,7 +964,7 @@ struct chunk *classic_gen(struct player *p, int min_height, int min_width) {
 
     /* This code currently does nothing - see comments below */
     i = randint1(10) + danger_depth(player) / 24;
-    if (is_quest(p->depth)) size_percent = 100;
+    if (is_blocking_quest(p->depth)) size_percent = 100;
     else if (i < 2) size_percent = 75;
     else if (i < 3) size_percent = 80;
     else if (i < 4) size_percent = 85;
@@ -2738,7 +2738,7 @@ struct chunk *modified_gen(struct player *p, int min_height, int min_width) {
 
 	/* Scale the level */
 	i = randint1(10) + p->depth / 24;
-	if (is_quest(p->depth)) size_percent = 100;
+	if (is_blocking_quest(p->depth)) size_percent = 100;
 	else if (i < 2) size_percent = 75;
 	else if (i < 3) size_percent = 80;
 	else if (i < 4) size_percent = 85;
@@ -2934,7 +2934,7 @@ struct chunk *moria_gen(struct player *p, int min_height, int min_width) {
 
 	/* Scale the level */
 	i = randint1(10) + p->depth / 24;
-	if (is_quest(p->depth)) size_percent = 100;
+	if (is_blocking_quest(p->depth)) size_percent = 100;
 	else if (i < 2) size_percent = 75;
 	else if (i < 3) size_percent = 80;
 	else if (i < 4) size_percent = 85;
@@ -3380,7 +3380,7 @@ struct chunk *lair_gen(struct player *p, int min_height, int min_width) {
 
 	/* Scale the level */
 	i = randint1(10) + p->depth / 24;
-	if (is_quest(p->depth)) size_percent = 100;
+	if (is_blocking_quest(p->depth)) size_percent = 100;
 	else if (i < 2) size_percent = 75;
 	else if (i < 3) size_percent = 80;
 	else if (i < 4) size_percent = 85;

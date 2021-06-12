@@ -143,7 +143,7 @@ void do_cmd_go_down(struct command *cmd)
 	/* Warn a force_descend player if they're going to a quest level */
 	if (OPT(player, birth_force_descend)) {
 		descend_to = dungeon_get_next_level(player->max_depth, 1);
-		if (is_quest(descend_to) &&
+		if (is_blocking_quest(descend_to) &&
 			!get_check("Are you sure you want to descend? "))
 			return;
 	}
@@ -1576,7 +1576,7 @@ void display_feeling(bool obj_only)
 
 	/* No useful feeling in town */
 	if (!player->depth) {
-		msg("Looks like a typical town.");
+		msg(one_in_(10) ? "You feel the urge to shop til you drop!" : "Looks like a typical town.");
 		return;
 	}
 
@@ -1587,7 +1587,7 @@ void display_feeling(bool obj_only)
 	}
 
 	/* Or on a quest-monster level */
-	if (is_active_quest(player->depth)) {
+	if (is_blocking_quest(player->depth)) {
 		msg("You feel a terrible presence here!");
 		return;
 	}

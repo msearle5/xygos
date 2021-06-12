@@ -10,7 +10,7 @@
 # level:0:Town:None:Fortress 1
 
 dungeon:1:115:Fortress
-level:0:Town:None:Fortress 1
+#level:0:Town:None:Fortress 1
 
 dungeon:1:1+2d2:Stores
 dungeon:1:2+3d2:Sewers

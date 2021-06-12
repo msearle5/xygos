@@ -86,7 +86,7 @@ void world_cleanup_towns(void)
  */
 void world_change_town(struct town *t)
 {
-	player->upkeep->last_level = player->town ? player->town->name : NULL;
+	player->upkeep->last_level = (player->town && (player->town != t)) ? player->town->name : NULL;
 	player->town = t;
 	if (t)
 		stores = player->town->stores;
@@ -174,7 +174,7 @@ int world_connections(struct town *t)
 	return t->connections;
 }
 
-/** Return any town matching the name, or NULL if none do.
+/** Return any town matching the town name, or NULL if none do.
  */
 struct town *get_town_by_name(const char *name)
 {
@@ -188,7 +188,7 @@ struct town *get_town_by_name(const char *name)
 	return NULL;
 }
 
-/** Return any town matching the name, or NULL if none do.
+/** Return any town matching the dungeon name, or NULL if none do.
  */
 static struct town *get_town_by_dungeon(const char *name)
 {

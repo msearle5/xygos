@@ -341,6 +341,24 @@ static void quest_fail(void) {
 }
 
 /**
+ * Check if the given level is an essential (or at least blocking), incomplete quest level.
+ */
+bool is_blocking_quest(int level)
+{
+	size_t i;
+
+	/* Town is never a quest */
+	if (!level) return false;
+
+	for (i = 0; i < z_info->quest_max; i++)
+		if ((player->quests[i].level == level) && (player->quests[i].flags & QF_ESSENTIAL) &&
+			(!(player->quests[i].flags & QF_SUCCEEDED)))
+			return true;
+
+	return false;
+}
+
+/**
  * Check if the given level is a quest level.
  */
 bool is_quest(int level)
@@ -360,7 +378,7 @@ bool is_quest(int level)
 /**
  * Check if the given level is an active quest level.
  * For quests involving a monster, that means at least one of the targeted
- * monstrer is present. For other quests, they are always active if you
+ * monster is present. For other quests, they are always active if you
  * are on their level.
  */
 bool is_active_quest(int level)

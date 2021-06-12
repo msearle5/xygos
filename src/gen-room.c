@@ -1498,7 +1498,7 @@ bool build_vault(struct chunk *c, struct loc centre, struct vault *v)
 			case '>': {
 				if (OPT(player, birth_levels_persist)) break;
 				/* No down stairs at bottom or on quests */
-				if (is_quest(c->depth) || c->depth >= z_info->max_depth - 1)
+				if (is_blocking_quest(c->depth) || c->depth >= z_info->max_depth - 1)
 					square_set_feat(c, grid, FEAT_LESS);
 				else
 					square_set_feat(c, grid, FEAT_MORE);

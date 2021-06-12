@@ -299,7 +299,7 @@ static int pick_trap(struct chunk *c, int feat, int trap_level)
 		/* Check legality of trapdoors. */
 		if (trf_has(kind->flags, TRF_DOWN)) {
 			/* No trap doors on quest levels */
-			if (is_quest(player->depth)) continue;
+			if (is_active_quest(player->depth)) continue;
 
 			/* No trap doors on the deepest level */
 			if (player->depth >= z_info->max_depth - 1)

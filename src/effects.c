@@ -1605,7 +1605,7 @@ static bool effect_handler_RECALL(effect_handler_context_t *context)
 	/* No recall in the endgame */
 	if (!player->town) {
 		if (!player->total_winner) {
-			if (is_quest(player->depth))
+			if (is_blocking_quest(player->depth))
 				msg("Nothing happens - something nearby is blocking it.");
 			else
 				msg("Nothing happens - something below you is blocking it.");
@@ -1617,7 +1617,7 @@ static bool effect_handler_RECALL(effect_handler_context_t *context)
 	}
 
 	/* No recall from quest levels with force_descend */
-	if (OPT(player, birth_force_descend) && (is_quest(player->depth))) {
+	if (OPT(player, birth_force_descend) && (is_blocking_quest(player->depth))) {
 		msg("Nothing happens - something nearby is blocking it.");
 		return true;
 	}
@@ -1631,7 +1631,7 @@ static bool effect_handler_RECALL(effect_handler_context_t *context)
 	/* Warn the player if they're descending to an unrecallable level */
 	target_depth = dungeon_get_next_level(player->max_depth, 1);
 	if (OPT(player, birth_force_descend) && !(player->depth) &&
-			(is_quest(target_depth))) {
+			(is_blocking_quest(target_depth))) {
 		if (!get_check("Are you sure you want to descend? ")) {
 			return false;
 		}
@@ -1681,7 +1681,7 @@ static bool effect_handler_DEEP_DESCENT(effect_handler_context_t *context)
 
 	/* Calculate target depth */
 	int target_increment = (4 / z_info->stair_skip) + 1;
-	int target_depth = dungeon_get_next_level(player->max_depth,
+	int target_depth = dungeon_get_next_level(player->depth,
 											  target_increment);
 	int levels = 5;
 
@@ -1690,7 +1690,7 @@ static bool effect_handler_DEEP_DESCENT(effect_handler_context_t *context)
 		levels = 1;
 
 	for (i = levels; i > 0; i--) {
-		if (is_quest(target_depth)) break;
+		if (is_blocking_quest(target_depth)) break;
 		if (target_depth >= z_info->max_depth - 1) break;
 
 		target_depth++;
@@ -3643,11 +3643,11 @@ static bool effect_change_level(effect_handler_context_t *context, const char *r
 		up = false;
 
 	/* No forcing player down to quest levels if they can't leave */
-	if (!up && is_quest(target_depth))
+	if (!up && is_blocking_quest(target_depth))
 		down = false;
 
 	/* Can't leave quest levels or go down deeper than the dungeon */
-	if (is_quest(player->depth) || (player->depth >= z_info->max_depth - 1))
+	if (is_blocking_quest(player->depth) || (player->depth >= z_info->max_depth - 1))
 		down = false;
 
 	/* Determine up/down if not already done */

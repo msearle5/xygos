@@ -22,11 +22,13 @@ S:Bit Me
 S:Blackwater
 S:Blandford
 S:Blasted
+S:Blown Out
 S:Bottlecaps
 S:Bridgeout
 S:Brilliance
 S:Brimstone
 S:Caution
+S:Circulatory
 S:Cheatenham
 S:Cloudmaker
 S:Collapsed
@@ -37,6 +39,7 @@ S:Crossroads
 S:Dead Cow
 S:Decoy
 S:Derrick
+S:Diggings
 S:Dino Lake
 S:Drywall
 S:Doornail
@@ -185,6 +188,7 @@ F:Whiskey
 F:Wobble
 F:Wumpus
 
+B:Beach
 B:Canal
 B:Caves
 B:Cliff
@@ -210,6 +214,7 @@ B:Pump
 B:Rapids
 B:River
 B:Rock
+B:Sand
 B:Spray
 B:Springs
 B:Stream
