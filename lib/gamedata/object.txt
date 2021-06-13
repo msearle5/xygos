@@ -3031,6 +3031,7 @@ alloc:20:38 to 100
 power:20000
 effect:RESTORE_STAT:SPD
 effect:GAIN_STAT:SPD
+desc:A colony of highly advanced nanites, compressed into a pill which rebuilds your body with one aim only: spee-eed!
 
 name:augmenta nano-
 type:pill
@@ -3074,6 +3075,7 @@ power:2000
 effect:RESTORE_STAT:INT
 effect:RESTORE_STAT:WIS
 effect:RESTORE_STAT:CHR
+desc:A restorative nanite-colony pill. It concentrates on your brain and pulls it back into shape, ensuring that you are as intelligent, wise and even as self-confident as you have ever been.
 
 name:experia nano-
 type:pill
@@ -3085,6 +3087,7 @@ alloc:50:65 to 100
 power:20000
 effect:GAIN_EXP
 dice:200000
+desc:An extraordinary wonder of nanotechnology - not just content to rebuild existing neural pathways, this treatment floods your mind with new memories and skills as if had you experienced it yourself - a year in a second! At least, that's what Big Nano say - all those rumors that these experiences were taken from executed serial killers and will bend you that way are just our jealous competitors spreading fake news.
 
 ### Healings ###
 
@@ -3243,6 +3246,7 @@ alloc:40:30 to 100
 pile:25:2
 power:8
 effect:RESTORE_EXP
+desc:A familiar nano-pill: the first to become widely available and still common. Infamous for the celebrities who use it to power through the effects of booze or worse the next day, it still remains an effective remedy for the rest of us dealing with more serious draining.
 
 
 ### Gain one/lose one pills ###
@@ -4216,7 +4220,7 @@ armor:0:0
 charges:8+d8
 power:0
 effect:DARKEN_AREA
-effect:BALL:DARK_WEAK:3
+effect:SPOT:DARK_WEAK:4
 dice:10
 
 ### Destruction ###
@@ -4416,7 +4420,7 @@ power:9
 effect:PROJECT_LOS:DISP_EVIL:0:1
 dice:60
 
-name:exterminator
+name:& exterminator~
 type:device
 graphics:_:d
 level:70
@@ -4429,7 +4433,7 @@ charges:1+d2
 power:20
 effect:BANISH
 
-name:Power
+name:& phaser~
 type:device
 graphics:_:d
 level:70
@@ -4518,7 +4522,7 @@ power:6
 effect:TELEPORT
 dice:M60
 
-name:Speed
+name:& whizzethizer~
 type:device
 graphics:_:d
 level:40
