@@ -679,6 +679,10 @@ void add_start_items(struct player *p, const struct start_item *si, bool skip, b
 			/* Discard special cases */
 			if ((kf_has(kind->kind_flags, KF_SPECIAL_GEN)) && (!special_item_can_gen(kind)))
 				ok = false;
+
+			/* Discard worthless items */
+			if (kind->cost == 0)
+				ok = false;
 		} while (!ok);
 
 		if (ignore)
