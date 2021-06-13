@@ -80,6 +80,7 @@ static int test_hp0(void *state) {
 }
 
 static int test_hearing0(void *state) {
+	z_info->max_sight = 1;
 	enum parser_error r = parser_parse(state, "hearing:80");
 	struct monster_race *mr;
 
