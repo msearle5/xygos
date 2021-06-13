@@ -613,43 +613,108 @@ static struct object_kind TEST_DATA test_gold = {
 	.flavor = NULL,
 };
 
-static struct player_race TEST_DATA test_race = {
-	.name = "TestRace",
-	.r_adj = {
-		[STAT_STR] = +2,
-		[STAT_DEX] = +1,
-		[STAT_CON] = +3,
-		[STAT_INT] = -1,
-		[STAT_WIS] = -2,
+static struct player_race TEST_DATA test_race[3] =
+{
+	{
+		.name = "TestRace",
+		.r_adj = {
+			[STAT_STR] = +2,
+			[STAT_DEX] = +1,
+			[STAT_CON] = +3,
+			[STAT_INT] = -1,
+			[STAT_WIS] = -2,
+		},
+		.r_skills = {
+			[SKILL_DISARM_PHYS] = 0,
+			[SKILL_DISARM_MAGIC] = 0,
+			[SKILL_DEVICE] = 5,
+			[SKILL_SAVE] = 10,
+			[SKILL_STEALTH] = -5,
+			[SKILL_SEARCH] = -10,
+			[SKILL_TO_HIT_MELEE] = 0,
+			[SKILL_TO_HIT_GUN] = 0,
+			[SKILL_TO_HIT_THROW] = 0,
+			[SKILL_DIGGING] = 0,
+		},
+
+		.r_exp = 110,
+		.r_mhp = 200,
+
+		.b_age = 14,
+		.m_age = 6,
+
+		.base_hgt = 72,
+		.mod_hgt = 6,
+		.base_wgt = 150,
+		.mod_wgt = 20,
+
+		.infra = 40,
+
+		.history = NULL,
+		.next = &test_race[1],
 	},
-	.r_skills = {
-		[SKILL_DISARM_PHYS] = 0,
-		[SKILL_DISARM_MAGIC] = 0,
-		[SKILL_DEVICE] = 5,
-		[SKILL_SAVE] = 10,
-		[SKILL_STEALTH] = -5,
-		[SKILL_SEARCH] = -10,
-		[SKILL_TO_HIT_MELEE] = 0,
-		[SKILL_TO_HIT_GUN] = 0,
-		[SKILL_TO_HIT_THROW] = 0,
-		[SKILL_DIGGING] = 0,
+	{
+		.name = "TestExt",
+		.r_adj = {
+			[STAT_STR] = +2,
+			[STAT_DEX] = +1,
+			[STAT_CON] = +3,
+			[STAT_INT] = -1,
+			[STAT_WIS] = -2,
+		},
+		.r_skills = {
+			[SKILL_DISARM_PHYS] = 0,
+			[SKILL_DISARM_MAGIC] = 0,
+			[SKILL_DEVICE] = 5,
+			[SKILL_SAVE] = 10,
+			[SKILL_STEALTH] = -5,
+			[SKILL_SEARCH] = -10,
+			[SKILL_TO_HIT_MELEE] = 0,
+			[SKILL_TO_HIT_GUN] = 0,
+			[SKILL_TO_HIT_THROW] = 0,
+			[SKILL_DIGGING] = 0,
+		},
+
+		.r_exp = 100,
+		.r_mhp = 0,
+
+		.history = NULL,
+		.next = &test_race[2],
+		.extension = true,
 	},
+	{
+		.name = "TestPer",
+		.r_adj = {
+			[STAT_STR] = +2,
+			[STAT_DEX] = +1,
+			[STAT_CON] = +3,
+			[STAT_INT] = -1,
+			[STAT_WIS] = -2,
+		},
+		.r_skills = {
+			[SKILL_DISARM_PHYS] = 0,
+			[SKILL_DISARM_MAGIC] = 0,
+			[SKILL_DEVICE] = 5,
+			[SKILL_SAVE] = 10,
+			[SKILL_STEALTH] = -5,
+			[SKILL_SEARCH] = -10,
+			[SKILL_TO_HIT_MELEE] = 0,
+			[SKILL_TO_HIT_GUN] = 0,
+			[SKILL_TO_HIT_THROW] = 0,
+			[SKILL_DIGGING] = 0,
+		},
 
-	.r_exp = 110,
-	.r_mhp = 200,
+		.r_exp = 100,
+		.r_mhp = 0,
 
-	.b_age = 14,
-	.m_age = 6,
-
-	.base_hgt = 72,
-	.mod_hgt = 6,
-	.base_wgt = 150,
-	.mod_wgt = 20,
-
-	.infra = 40,
-
-	.history = NULL,
+		.history = NULL,
+		.personality = true,
+	},
 };
+
+#define TEST_RACE test_race[0]
+#define TEST_EXT test_race[1]
+#define TEST_PER test_race[2]
 
 static struct start_item TEST_DATA start_torch = {
 	.tval = TV_LIGHT,
@@ -1080,9 +1145,10 @@ static struct player_shape TEST_DATA test_player_shape = {
 
 static struct player TEST_DATA test_player = {
 	.grid = { 1, 1 },
-	.race = &test_race,
+	.race = &TEST_RACE,
+	.extension = &TEST_EXT,
+	.personality = &TEST_PER,
 	.class = &test_class,
-	//.hitdie = 10,
 	.expfact_low = 100,
 	.expfact_high = 100,
 	.age = 12,
@@ -1114,13 +1180,6 @@ static struct player TEST_DATA test_player = {
 	.timed = test_timed,
 	.word_recall = 0,
 	.energy = 100,
-	/*.player_hp = {
-		  5,  10,  15,  20,  25,  30,  35,  40,  45,  50,
-		 55,  60,  65,  70,  75,  80,  85,  90,  95, 100,
-		105, 110, 115, 120, 125, 130, 135, 140, 145, 150,
-		155, 160, 165, 170, 175, 180, 185, 190, 195, 200,
-		205, 210, 215, 220, 225, 230, 235, 240, 245, 250
-	},*/
 	.history = "no history",
 	.is_dead = 0,
 	.wizard = 0,

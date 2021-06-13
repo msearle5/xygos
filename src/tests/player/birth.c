@@ -12,7 +12,9 @@ int setup_tests(void **state) {
 	z_info->quest_max = 1;
 	z_info->quiver_size = 10;
 	quests = &test_quest;
-	races = extensions = &test_race;
+	races = &TEST_RACE;
+	extensions = &TEST_EXT;
+	personalities = &TEST_PER;
 	classes = &test_class;
 	player_init(p);
 	*state = p;
@@ -38,10 +40,11 @@ int teardown_tests(void *state) {
 static int test_generate0(void *state) {
 	struct player *p = state;
 	player = p;
-	player_generate(p, &test_race, &test_race, &test_race, &test_class, false);
+	player_generate(p, &TEST_RACE, &TEST_EXT, &test_class, &TEST_PER, false);
 	eq(p->lev, 1);
-	ptreq(p->race, &test_race);
-	ptreq(p->extension, &test_race);
+	ptreq(p->race, &TEST_RACE);
+	ptreq(p->extension, &TEST_EXT);
+	ptreq(p->personality, &TEST_PER);
 	ptreq(p->class, &test_class);
 	ok;
 }
