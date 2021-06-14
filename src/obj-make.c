@@ -559,6 +559,14 @@ void ego_apply_magic_from(struct object *obj, int level, int j)
 		obj->to_d += randcalc(ego->to_d, level, RANDOMISE);
 		obj->to_a += randcalc(ego->to_a, level, RANDOMISE);
 
+		/* Change weight */
+		int weight = randcalc(ego->weight, level, RANDOMISE);
+		if (weight) {
+			if (weight < 0)
+				weight = 0;
+			obj->weight = (obj->weight * weight) / 100;
+		}
+
 		/* Apply pval - maximum (with unchanged timeout) by default, otherwise
 		 * use a % scaling factor to pval and timeout
 		 **/
