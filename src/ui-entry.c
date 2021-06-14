@@ -1177,7 +1177,7 @@ void compute_ui_entry_values_for_player(const struct ui_entry *entry,
 			}
 		} else if ((i == 0) && (streq(entry->p_abilities[i].ability->type,
 			"element"))) {
-			int v = MAX( p->race->el_info[ind].res_level, p->extension->el_info[ind].res_level);
+			int v = p->race->el_info[ind].res_level + p->extension->el_info[ind].res_level + p->personality->el_info[ind].res_level;
 			int a;
 
 			if (entry->flags & ENTRY_FLAG_TIMED_AUX) {
@@ -1262,7 +1262,7 @@ void compute_ui_entry_values_for_player(const struct ui_entry *entry,
 			modifier_to_skill(ind, &skill_ind, &skill_cnv_num,
 				&skill_cnv_den);
 			if (skill_ind >= 0) {
-				v = (p->race->r_skills[skill_ind] *
+				v = ((p->race->r_skills[skill_ind] + p->extension->r_skills[skill_ind] + p->personality->r_skills[skill_ind]) *
 					skill_cnv_num) / skill_cnv_den;
 				a = 0;
 				if (entry->obj_props[i].isaux) {
@@ -1278,7 +1278,7 @@ void compute_ui_entry_values_for_player(const struct ui_entry *entry,
 			 * separately.
 			 */
 			if (ind == OBJ_MOD_INFRA) {
-				v = p->race->infra + p->extension->infra;
+				v = p->race->infra + p->extension->infra + p->personality->infra;
 				a = 0;
 				if (entry->obj_props[i].isaux) {
 					int t = v;

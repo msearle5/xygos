@@ -9,3 +9,4 @@ PR(TIMELORD)
 /* extensions */
 PR(MUTANT) 
 PR(CYBORG)
+PR(SUPER)

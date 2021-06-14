@@ -1503,6 +1503,8 @@ int burden_weight(struct player *p)
 	/* Add ballast if you are dragging a plane
 	 * (= you have flying talents, but are not flying)
 	 * Weight is guessed from the number of talents (this could be moved out to the ability.txt)
+	 * Only do this for Pilot-only talents (there are other ways to fly such as the Super ability "Flight".
+	 * "Superman doesn't need no seatbelt" => "Superman doesn't need no airplane!")
 	 **/
 	if (!player->flying) {
 		int flying_talents = 0;
@@ -1510,7 +1512,8 @@ int burden_weight(struct player *p)
 			if (ability[i]) {
 				if (player_has(p, i)) {
 					if (ability[i]->flags & AF_FLYING) {
-						flying_talents++;
+						if (ability[i]->class && (streq(ability[i]->class, "Pilot")))
+							flying_talents++;
 					}
 				}
 			}
@@ -1576,7 +1579,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	}
 	for (i = 0; i < ELEM_MAX; i++) {
 		vuln[i] = false;
-		if (p->race->el_info[i].res_level + p->extension->el_info[i].res_level + p->personality->el_info[i].res_level < -1) {
+		if (p->race->el_info[i].res_level + p->extension->el_info[i].res_level + p->personality->el_info[i].res_level <= -1) {
 			vuln[i] = true;
 		} else {
 			state->el_info[i].res_level = p->race->el_info[i].res_level + p->extension->el_info[i].res_level + p->personality->el_info[i].res_level;
