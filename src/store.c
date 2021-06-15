@@ -250,10 +250,18 @@ static enum parser_error parse_item_table(struct parser *p, size_t *num, size_t 
 	int sval = -1;
 
 	if (parser_hasval(p, "sval")) {
-		sval = lookup_sval(tval, parser_getsym(p, "sval"));
-		kind = lookup_kind(tval, sval);
-		if (!kind)
-			return PARSE_ERROR_UNRECOGNISED_SVAL;
+		const char *sym = parser_getsym(p, "sval");
+		char *end = NULL;
+		long l = strtol(sym, &end, 10);
+		if ((*sym) && (end) && (!*end)) {
+			/* Numeric ok - don't lookup kind */
+			sval = l;
+		} else {
+			sval = lookup_sval(tval, sym);
+			kind = lookup_kind(tval, sval);
+			if (!kind)
+				return PARSE_ERROR_UNRECOGNISED_SVAL;
+		}
 	}
 
 	random_value rarity = { 10000, 0, 0, 0 };
@@ -881,7 +889,9 @@ static void mass_produce(struct object *obj)
 		case TV_LIGHT:
 		{
 			if (cost <= 5L) size += mass_roll(3, 5);
-			if (cost <= 20L) size += mass_roll(3, 5);
+			if (cost <= 20L) size += mass_roll(2, 5);
+			if (cost <= 50L) size += mass_roll(2, 3);
+			if (cost <= 125L) size += mass_roll(1, 2);
 			break;
 		}
 

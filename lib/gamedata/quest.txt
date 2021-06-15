@@ -32,7 +32,7 @@ name:Rats
 level:6
 race:giant grey rat
 number:12
-store:Volcano:General Store
+store:Volcano:Convenience Store
 entrymin:2
 entrymax:5
 entryfeature:permanent wall
@@ -74,8 +74,8 @@ failure:Oh well - I realise that I didn't give you much to go on.
 name:Soldier, Sailor, Chef, Pie
 level:11
 object:card
-store:Mine:General Store
-store:Caverns:General Store
+store:Mine:Convenience Store
+store:Caverns:Convenience Store
 min-found:1
 max-remaining:0
 intro:My baking is famous across dozens of vaults, and it's all down to my secret recipe. Nobody's managed to reproduce it, and believe me they have tried! But those snakes at the Black Market don't want to even attempt that - instead their agent deceived my young assistant, switching our one master copy of the recipe with junk. The agent slipped away underground, and is probably some way down by now. If you could get the recipe back for me before she breaks cover and takes it to the Black Market, I would be very grateful!
