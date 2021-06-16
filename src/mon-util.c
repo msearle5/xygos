@@ -1091,10 +1091,6 @@ void monster_death(struct monster *mon, bool stats)
 	/* Update monster list window */
 	player->upkeep->redraw |= PR_MONLIST;
 
-	/* Affect light? */
-	if (mon->race->light != 0)
-		player->upkeep->update |= PU_UPDATE_VIEW;
-
 	/* Remove it from the level */
 	square_set_mon(cave, mon->grid, 0);
 
