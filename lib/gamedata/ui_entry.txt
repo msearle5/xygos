@@ -159,6 +159,16 @@ label:Chaos
 category:CHAR_SCREEN1
 category:EQUIPCMP_SCREEN
 
+name:resist_ui_compact_0<GRAVITY>
+label:Gravity
+category:CHAR_SCREEN1
+category:EQUIPCMP_SCREEN
+
+name:resist_ui_compact_0<INERTIA>
+label:Inertia
+category:CHAR_SCREEN1
+category:EQUIPCMP_SCREEN
+
 name:resist_ui_compact_0<DISEN>
 label:Disenchant
 category:CHAR_SCREEN1

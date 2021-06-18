@@ -903,6 +903,18 @@ code:CHAOS
 power:20
 bindui:resist_ui_compact_0<CHAOS>:0
 
+name:gravity resistance
+type:resistance
+code:GRAVITY
+power:16
+bindui:resist_ui_compact_0<GRAVITY>:0
+
+name:inertia resistance
+type:resistance
+code:INERTIA
+power:16
+bindui:resist_ui_compact_0<INERTIA>:0
+
 name:disenchantment resistance
 type:resistance
 code:DISEN

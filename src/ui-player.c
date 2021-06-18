@@ -722,7 +722,7 @@ static void display_player_sust_info(struct char_sheet_config *config)
 	display_player_sust_stats(col + config->label_width[config->sustain_region] - 4);
 
 	/* Header */
-	display_player_equippy(row - 2, col + config->label_width[config->sustain_region] + 1);
+	display_player_equippy(row - 2, col + config->label_width[config->sustain_region]);
 	display_player_header(config, config->sustain_region, row - 1, col);
 
 	render_details.label_position.x = col + player->body.count;

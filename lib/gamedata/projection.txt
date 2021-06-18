@@ -249,6 +249,36 @@ obvious:1
 wake:1
 color:Violet
 
+code:GRAVITY
+name:gravity
+type:element
+desc:gravity
+player-desc:gravity
+blind-desc:something strange
+lash-desc:gravity
+numerator:3
+divisor:3
+damage-cap:200
+msgt:BR_GRAVITY
+obvious:1
+wake:1
+color:Light Slate
+
+code:INERTIA
+name:inertia
+type:element
+desc:inertia
+player-desc:inertia
+blind-desc:something strange
+lash-desc:lassitude
+numerator:6
+divisor:6
+damage-cap:200
+msgt:BR_INERTIA
+obvious:1
+wake:1
+color:Light Slate
+
 code:DISEN
 name:disenchantment
 type:element
@@ -294,34 +324,6 @@ msgt:GENERIC
 obvious:1
 wake:1
 color:White
-
-code:GRAVITY
-name:gravity
-type:element
-desc:gravity
-player-desc:gravity
-blind-desc:something strange
-lash-desc:gravity
-divisor:3
-damage-cap:200
-msgt:BR_GRAVITY
-obvious:1
-wake:1
-color:Light Slate
-
-code:INERTIA
-name:inertia
-type:element
-desc:inertia
-player-desc:inertia
-blind-desc:something strange
-lash-desc:lassitude
-divisor:6
-damage-cap:200
-msgt:BR_INERTIA
-obvious:1
-wake:1
-color:Light Slate
 
 code:FORCE
 name:force
