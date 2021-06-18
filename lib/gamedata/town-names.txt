@@ -61,6 +61,7 @@ S:Itch Scratch
 S:Landfill
 S:Last Stop
 S:Leadmine
+S:Lousy Point
 S:Marshlight
 S:Millstones
 S:Milton Mill
@@ -70,6 +71,7 @@ S:New Sun
 S:No Name
 S:Old Geyser
 S:Ominous
+S:Paris Green
 S:Pothole
 S:Poundcake
 S:Power Cable

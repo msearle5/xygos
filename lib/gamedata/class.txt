@@ -258,6 +258,7 @@ name:Clown
 stats:0:-1:-2:2:0:3:0
 title:Mascot
 title:Sidekick
+title:Joker
 title:Clown
 title:Entertainer
 title:Conjurer

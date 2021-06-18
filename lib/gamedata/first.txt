@@ -35,6 +35,7 @@ N:Abdul
 N:Abida
 N:Abraham
 N:Adam
+N:Adele
 N:Adrian
 N:Adrienne
 N:Aileen
@@ -42,6 +43,7 @@ N:Ajanta
 N:Al
 N:Alan
 N:Alberta
+N:Alexa
 N:Alexandre
 N:Alf
 N:Alfred
@@ -61,6 +63,7 @@ N:Antonia
 N:Archibald
 N:Arnold
 N:Arthur
+N:Ash
 N:Austin
 N:Avala
 N:Barry
@@ -71,10 +74,11 @@ N:Benjamin
 N:Bernard
 N:Bert
 N:Betty
-N:Boba
 N:Bill
 N:Billy
+N:Boba
 N:Boris
+N:Buzz
 N:Cameron
 N:Carl
 N:Carlos
@@ -106,6 +110,7 @@ N:Dave
 N:David
 N:Davina
 N:Dawn
+N:Deepak
 N:Del
 N:Delphine
 N:Derik
@@ -117,6 +122,7 @@ N:Donna
 N:Doron
 N:Dorothy
 N:Duncan
+N:Durian
 N:Dylan
 N:Earl
 N:Eddie
@@ -125,6 +131,7 @@ N:Edmund
 N:Edward
 N:Elaine
 N:Eleanor
+N:Eliza
 N:Elly
 N:Emily
 N:Emma
@@ -139,6 +146,7 @@ N:Farris
 N:Finley
 N:Frances
 N:Francesca
+N:Frank
 N:Fred
 N:Friedrich
 N:Gareth
@@ -201,6 +209,7 @@ N:Josey
 N:Josiah
 N:Joy
 N:Judus
+N:Julia
 N:Julius
 N:Justine
 N:Karel
@@ -219,8 +228,11 @@ N:Lan
 N:Larry
 N:Laura
 N:Lawrence
+N:Lax
 N:Lee
+N:Leeroy
 N:Leigh
+N:Lem
 N:Leo
 N:Leon
 N:Linsay
@@ -248,6 +260,7 @@ N:Mary
 N:Mat
 N:Mavis
 N:Max
+N:Maxine
 N:Meena
 N:Melanie
 N:Merlin
@@ -262,6 +275,7 @@ N:Nancy
 N:Napoleon
 N:Narita
 N:Natalie
+N:Neo
 N:Navaz
 N:Nev
 N:Neville
@@ -315,8 +329,10 @@ N:Ringo
 N:Rita
 N:Robert
 N:Robin
+N:Rocky
 N:Roh'i
 N:Rohan
+N:Roland
 N:Ronald
 N:Ronnie
 N:Rory
@@ -348,6 +364,8 @@ N:Sigourney
 N:Simon
 N:Sinbad
 N:Sinclair
+N:Sioni
+N:Siri
 N:Stan
 N:Steve
 N:Steven
@@ -372,11 +390,13 @@ N:Toni
 N:Tony
 N:Toshiko
 N:Tracey
+N:Tricky
 N:Tristan
 N:Udian
 N:Usha
 N:Valentine
 N:Victoria
+N:Vim
 N:Vincent
 N:Virginia
 N:Viva

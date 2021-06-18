@@ -2106,25 +2106,176 @@ material:gold
 
 #combat helmet?
 
-### Body armours ###
+### Body armours (Soft) ###
 
 name:& loud shirt~
 type:soft armor
 graphics:(:HotPink
 level:0
-alloc:20:0 to 100
+alloc:40:0 to 100
 weight:150g
-cost:4
+cost:10
 attack:0d0:0:0
 armor:1:0
 desc:A loose, short-sleeved cotton shirt printed in colourful patterns.
 material:cloth
 
+name:& denim jacket~
+type:soft armor
+graphics:(:CadetBlue
+level:1
+alloc:30:0 to 100
+weight:550g
+cost:50
+attack:0d0:0:0
+armor:2:0
+desc:A tightly fitting, long sleeved jacket of heavy, faded blue cloth.
+material:cloth
+
+name:& leather jacket~
+type:soft armor
+graphics:(:DarkTan
+level:2
+alloc:25:0 to 100
+weight:1200g
+cost:220
+attack:0d0:0:0
+armor:3:0
+desc:A long sleeved jacket of flexible, dark brown leather.
+material:leather
+
+name:& leather suit~
+type:soft armor
+graphics:(:Tan
+level:4
+alloc:18:0 to 100
+weight:5500g
+cost:650
+attack:0d0:-2:0
+armor:6:0
+desc:Motorbike leathers. A heavy one-piece leather outfit intended as protection against road rash but better than nothing against knifitis as well.
+material:leather
+
+name:& flak jacket~
+type:soft armor
+graphics:(:Khaki
+level:5
+alloc:8:3 to 100
+weight:4400g
+cost:450
+attack:0d0:-1:0
+armor:7:0
+values:RES_SHARD[1]
+desc:Light armor built from many layers of tough cloth. It's at its best against flying shrapnel, but remains useful against small arms fire.
+material:cloth
+
+name:& lab coat~
+type:soft armor
+graphics:(:White
+level:11
+alloc:3:10 to 100
+weight:700g
+cost:2400
+attack:0d0:0:0
+armor:2:0
+desc:A long white (well - it was originally intended to be white...) coat. It doesn't look like cotton, so hopefully it's made of something chemical proof.
+values:RES_ACID[1]
+flags:IGNORE_ACID
+material:cloth
+
+name:& enviropack~
+type:soft armor
+graphics:(:OrangeYellow
+level:14
+alloc:2:14 to 100
+weight:850g
+cost:3300
+attack:0d0:-1:0
+armor:5:0
+values:RES_COLD[1] | RES_FIRE[1]
+flags:IGNORE_COLD | IGNORE_FIRE
+desc:A close fitting garment packed with microrejectors to protect you from extremes of temperature. The tough plastic outer layer also provides some limited physical protection.
+material:plastic
+
+name:& G-suit~
+type:soft armor
+graphics:[:Red
+level:35
+alloc:2:30 to 127
+weight:2850g
+cost:7500
+attack:0d0:-1:0
+armor:6:0
+values:RES_GRAVITY[1] | RES_INERTIA[1]
+desc:A flight suit built to protect you from the extremes of acceleration produced by caveracers and other high-performance aircraft.
+material:plastic
+
+### Body armours (Hard) ###
+
+name:& kevlar vest~
+type:hard armor
+graphics:[:Straw
+level:6
+alloc:10:5 to 100
+weight:2800g
+cost:1200
+attack:0d0:0:0
+armor:8:0
+desc:An intertwined mesh of tough plastic which locks together to catch an incoming bullet, so long as it's fired by an opponent sporting enough to aim for the obvious armor - though that limited area of protection also allows it to be lightweight and unencumbering.
+material:plastic
+
+name:& econo armor~
+type:hard armor
+graphics:[:MediumBlue
+level:9
+alloc:9:9 to 70
+weight:8600g
+cost:1400
+attack:0d0:-8:0
+armor:14:0
+desc:This is "civilianised" (i.e. a cheap knock off of) riot armor. It looks similar but, well, not all plastic can stop a bullet and it is considerably less effective. It's just as awkward to use as the real thing that got the Imperial Stormtroopers their reputation though.
+material:plastic
+
+name:& riot armor~
+type:hard armor
+graphics:[:Navy
+level:15
+alloc:6:15 to 100
+weight:7500g
+cost:3500
+attack:0d0:-8:0
+armor:20:0
+desc:Essentially this is chunky plastic plate armor - think Imperial Stormtrooper. It's reasonably effective protection. But it's also very clumsy and difficult to see out of, reducing your ability to fight accordingly - their reputation as the Keystone Kops in space is deserved.
+material:plastic
+
+name:& flight suit~
+type:hard armor
+graphics:[:Grey50
+level:21
+alloc:2:16 to 60
+weight:21400g
+cost:1800
+attack:0d0:-9:0
+armor:38:0
+desc:This is a primitive looking suit of plate armor - clearly something lased together at home, not the good pre-War or even printed stuff... and so probably originally made by or for the Resistance. The materials at least are high quality: "duralium", the titanium alloy sheet famous for spacecraft construction. However you are aware as you lift it that you don't have the thrust of a starship engine available. Ouch!
+material:titanium
+
+name:& micromesh armor~
+type:hard armor
+graphics:[:Grey90
+level:26
+alloc:5:20 to 110
+weight:8800g
+cost:5500
+attack:0d0:-2:0
+armor:25:0
+desc:A semi-flexible mesh of titanium chunks with gleaming, polished outer facets that really stands out, whether you want it to or not. It's a similar idea to plastic bulletproof vests, but will stop more serious projectiles that would go straight through kevlar - if you don't mind the weight.
+
 name:& force harness~
 type:hard armor
 graphics:[:Grey75
 level:52
-alloc:1:40 to 100
+alloc:1:40 to 127
 weight:1100g
 cost:3000
 attack:1d1:0:0
@@ -2132,6 +2283,28 @@ armor:4:10+2d5M50
 flags:IGNORE_ACID
 desc:Close fitting, telescoping titanium chains, which cross over your chest and back between a collar and belt. They don't look as if they could offer much protection, but are in fact the equivalent of the more common belt forcefield generators and can be very effective.
 material:titanium
+
+name:& unimesh vest~
+type:hard armor
+graphics:[:AliceBlue
+level:64
+alloc:1:64 to 127
+weight:3150g
+cost:27500
+attack:0d0:-1:0
+armor:55:0
+desc:A mostly flexible mesh of what can only be the real McCoy - unobtainium - that silvery-blue cast can't be anything else. While nearly as lightweight and easy to wear as kevlar, it is hugely more effective.
+
+name:& uniplate suit~
+type:hard armor
+graphics:[:LightSkyBlue
+level:72
+alloc:1:72 to 127
+weight:6100g
+cost:39500
+attack:0d0:-2:0
+armor:70:0
+desc:A combination of plates and flexible mesh, entirely made from what you can tell from the silvery-blue appearance can only be genuine unobtainium. Extremely effective and still reasonably lightweight and easy to move in.
 
 
 ################ forcefield generators (belt armor)
@@ -2217,7 +2390,7 @@ flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 desc:A small device that clips to your belt and radiates a very powerful protective force field. This is the latest generation of military spec equipment - just about as good as it gets.
 material:aluminium
 
-#scarcity 5? 5 arts?
+#scarcity 5? 5 arts? a disad?
 name:prototype forcefield generator~
 type:belt
 graphics:(:Violet

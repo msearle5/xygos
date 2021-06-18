@@ -359,6 +359,7 @@ N:Lilaxian
 N:Lister
 N:Logicus
 N:Loki
+N:Lol
 N:Lolwhites
 N:Lomoco
 N:Longstaff
