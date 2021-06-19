@@ -469,8 +469,12 @@ static void add_level(int depth, const char *name, const char *up, const char *d
 /**
  * Generate dungeons
  */
-static void world_init_dungeons(void)
+void world_init_dungeons(void)
 {
+	Rand_quick = true;
+	u32b randval = Rand_value;
+	Rand_value = world_town_seed;
+
 	/* Start with a clear world */
 	cleanup_levels(&world);
 
@@ -531,6 +535,7 @@ static void world_init_dungeons(void)
 			}
 		}
 	}
+	Rand_value = randval;
 }
 
 /** Connect a town to a level. NULL (to disconnect) is allowed.
@@ -542,6 +547,22 @@ static void world_town_level(struct town *town, const char *dungeon)
 	town->downto = NULL;
 	if (dungeon)
 		town->downto = string_make(dungeon);
+}
+
+/**
+ * Returns true if the level exists in the dungeon
+ */
+bool world_level_exists(const char *dungeon, int level)
+{
+	char buf[64];
+	strnfmt(buf, sizeof(buf), "%s %d", dungeon, level);
+	struct level *lev = world;
+	do {
+		if (!strcmp(buf, lev->name))
+			return true;
+		lev = lev->next;
+	} while (lev);
+	return false;
 }
 
 /**

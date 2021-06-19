@@ -669,7 +669,9 @@ int rd_world(void)
 	rd_u16b(&z_info->town_max);
 	t_info = mem_zalloc(sizeof(*t_info) * z_info->town_max);
 	rdwr_world();
+	world_init_dungeons();
 	world_build_distances();
+	Rand_quick = false;
 	return 0;
 }
 

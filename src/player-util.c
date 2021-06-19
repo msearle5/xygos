@@ -44,6 +44,7 @@
 #include "target.h"
 #include "trap.h"
 #include "ui-input.h"
+#include "world.h"
 
 /* List of death messages */
 struct death_msg *death;
@@ -159,10 +160,13 @@ static const char *random_death_msg(void)
 }
 
 /**
- * Increment to the next or decrement to the preceding level
-   accounting for the stair skip value in constants
+ * Increment to the next or decrement to the preceding level,
+   accounting for the stair skip value in constants.
    Keep in mind to check all intermediate level for unskippable
-   quests
+   quests.
+   Ensure that the target level exists (moving in the same
+   direction until it does) - so that town dungeons can start
+   at >1.
 */
 int dungeon_get_next_level(int dlev, int added)
 {
@@ -175,12 +179,33 @@ int dungeon_get_next_level(int dlev, int added)
 	/* Get target level */
 	target_level = dlev + added * z_info->stair_skip;
 
-	/* Don't allow levels below max */
-	if (target_level > z_info->max_depth - 1)
-		target_level = z_info->max_depth - 1;
+	/* Dungeon basename */
+	char dungeon[64];
+	strncpy(dungeon, player->town->downto, sizeof(dungeon));
+	dungeon[sizeof(dungeon)-1] = 0;
+	char *space = strchr(dungeon, ' ');
+	if (space) *space = 0;
 
-	/* Don't allow levels above the town */
-	if (target_level < 0) target_level = 0;
+	/* Step 1 level at a time (not the skip) until a valid
+	 * level is found, or the limit is hit.
+	 */
+	target_level -= added;
+	do {
+		target_level += added;
+
+		/* Don't allow levels below max */
+		if (target_level > z_info->max_depth - 1) {
+			target_level = z_info->max_depth - 1;
+			break;
+		}
+
+		/* Don't allow levels above the town */
+		if (target_level < 0) {
+			target_level = 0;
+			break;
+		}
+
+	} while  (!world_level_exists(dungeon, target_level));
 
 	/* Check intermediate levels for quests */
 	for (i = dlev; i <= target_level; i++) {

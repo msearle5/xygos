@@ -1053,7 +1053,7 @@ static size_t prt_level_feeling(int row, int col)
 	if ((!player->depth) || (player->active_quest >= 0)) return 0;
 
 	/* Quest levels are special - the feeling is ignored */
-	bool quest = is_active_quest(player->depth);
+	bool quest = is_blocking_quest(player->depth);
 
 	/* Otherwise, get feelings. */
 	c_put_str(COLOUR_WHITE, "LF:", row, col);

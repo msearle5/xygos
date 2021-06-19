@@ -40,6 +40,8 @@ extern u32b world_town_seed;
 extern struct file_parser world_parser;
 extern struct file_parser town_names_parser;
 
+extern void world_init_dungeons(void);
+extern bool world_level_exists(const char *dungeon, int level);
 extern int world_connections(struct town *t);
 extern bool world_init_towns(void);
 extern void world_cleanup_towns(void);
