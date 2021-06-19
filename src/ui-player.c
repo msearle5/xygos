@@ -925,7 +925,9 @@ static struct panel *get_panel_midleft(void) {
 static struct panel *get_panel_combat(void) {
 	struct panel *p = panel_allocate(9);
 	struct object *obj;
-	int bth, dam, hit;
+	int bth = 0;
+	int dam = 0;
+	int hit = 0;
 	int melee_dice = 1, melee_sides = 1;
 
 	/* AC */

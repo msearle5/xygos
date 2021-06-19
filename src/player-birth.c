@@ -266,7 +266,7 @@ static void get_stats(int stat_use[STAT_MAX])
 		/* Save that value */
 		player->stat_max[i] = j;
 
-		/* Obtain a "bonus" for "race" and "class" */
+		/* Obtain a "bonus" for "race", "extension", "personality" and "class" */
 		bonus = player->race->r_adj[i] + player->extension->r_adj[i] + player->class->c_adj[i] + player->personality->r_adj[i];
 
 		/* Start fully healed */
@@ -774,8 +774,8 @@ bool player_make_simple(const char *nrace, const char *next, const char *nclass,
 		}
 		ie = ne - ie  - 1;
 	} else {
-		const struct player_race *rc = races;
-		while (rc != extensions) {
+		const struct player_race *rc = extensions;
+		while (rc != personalities) {
 			rc = rc->next;
 			++ie;
 		}
