@@ -30,6 +30,7 @@
 #include "player-birth.h"
 #include "player-calcs.h"
 #include "player-quest.h"
+#include "player-util.h"
 #include "store.h"
 #include "trap.h"
 #include "ui-knowledge.h"
@@ -338,6 +339,27 @@ static void quest_fail(void) {
 	assert(player->active_quest >= 0);
 	struct quest *q = &player->quests[player->active_quest];
 	fail_quest(q);
+}
+
+struct quest *quest_guardian(void)
+{
+	int level = 0;
+	int oldlevel = -1;
+	struct quest *quest = NULL;
+	do {
+		for(int i=0;i<z_info->quest_max;i++) {
+			if ((player->quests[i].town == player->town - t_info) && (player->quests[i].store == -1) &&
+				(!(player->quests[i].flags & QF_ACTIVE)) && (!(player->quests[i].flags & QF_SUCCEEDED))) {
+				quest = &player->quests[i];
+				break;
+			}
+		}
+		if (quest)
+			break;
+		oldlevel = level;
+		level = dungeon_get_next_level(level, 1);
+	} while (level != oldlevel);
+	return quest;
 }
 
 /**

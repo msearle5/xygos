@@ -48,6 +48,7 @@
 #include "project.h"
 #include "store.h"
 #include "trap.h"
+#include "world.h"
 
 /**
  * Go up one level
@@ -127,6 +128,7 @@ void do_cmd_go_down(struct command *cmd)
 	bool entry = (square(cave, player->grid)->feat == FEAT_ENTRY);
 	struct quest *quest = NULL;
 	const char *maze = "You enter a maze of down staircases.";
+	char mazebuf[128] = { 0 };
 
 	/* Verify stairs */
 	if (!square_isdownstairs(cave, player->grid)) {
@@ -174,6 +176,29 @@ void do_cmd_go_down(struct command *cmd)
 		maze = "You descend into the darkness.";
 		descend_to = quest->level;
 		player->active_quest = quest - player->quests;
+	} else if ((!player->depth) && (player->town->recall_depth <= 0)) {
+		/* or to enter a new dungeon */
+		char buf[128];
+		char dname[64];
+		strnfmt(dname, sizeof(dname), "%s", player->town->downto);
+		if (strchr(dname, ' '))
+			*strchr(dname, ' ') = 0;
+		snprintf(buf, sizeof(buf), "Are you sure you want to enter the %s (level %d)? ",
+			dname, dungeon_get_next_level(0, 1));
+		buf[sizeof(buf)-1] = 0;
+		if (!get_check(buf))
+			return;
+		/* Find the quest and unlock it */
+		quest = quest_guardian();
+		if (quest) {
+			quest->flags |= QF_ACTIVE;
+
+			strnfmt(mazebuf, sizeof(mazebuf), "You enter the %s. Beware that %s lurks below!",
+				dname, quest->name);
+		} else {
+			strnfmt(mazebuf, sizeof(mazebuf), "You enter the %s.", dname);
+		}
+		maze = mazebuf;
 	}
 
 	/* Hack -- take a turn */

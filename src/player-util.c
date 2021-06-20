@@ -221,8 +221,12 @@ void player_set_recall_depth(struct player *p)
 		}
 	}
 
-	/* Players who haven't left town before go to level 1 */
+	/* Players who haven't left town before go to the shallowest level */
 	p->town->recall_depth = MAX(p->town->recall_depth, dungeon_get_next_level(0, 1));
+	struct quest *quest = quest_guardian();
+	if (quest) {
+		quest->flags |= QF_ACTIVE;
+	}
 }
 
 /**

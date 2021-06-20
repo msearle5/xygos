@@ -105,7 +105,6 @@ desc:Slick is a small-time gangster who considers himself to be boss of the Stor
 store:Stores
 intro:Foo
 number:1
-flags:active
 
 
 ####################################
@@ -121,7 +120,7 @@ desc:Triax's hologram stands in the way of your descent.
 store:Fortress
 intro:Foo
 number:1
-flags:active | essential
+flags:essential
 
 name:Impy
 level:50
