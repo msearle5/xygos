@@ -47,7 +47,7 @@
 #include "trap.h"
 #include "z-queue.h"
 
-//#define LIST_DEBUG
+/* #define LIST_DEBUG */
 
 static struct object *fail_pile;
 static struct object *fail_object;

@@ -853,8 +853,8 @@ bool world_init_towns(void)
 		t->underground = string_make(t->underground);
 	}
 
-	/* Find and enter the player's town (any, except Fortress) */
-	world_change_town(t_info + randint1(z_info->town_max - 1));
+	/* Find and enter the player's town (4 = Stores, see world_town_dungeon() calls above) */
+	world_change_town(t_info + 4);
 
 	/* Make connections */
 	world_connect_complete();
