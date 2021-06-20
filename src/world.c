@@ -558,7 +558,10 @@ bool world_level_exists(const char *dungeon, int level)
 	char base[64];
 	/* Dungeon basename */
 	if (!dungeon) {
-		strncpy(base, player->town->downto, sizeof(base));
+		if (player->town)
+			strncpy(base, player->town->downto, sizeof(base));
+		else
+			strcpy(base, "Spacestation");
 		base[sizeof(base)-1] = 0;
 		char *space = strchr(base, ' ');
 		if (space) *space = 0;
@@ -645,9 +648,8 @@ bool world_locate_quests(void)
 			struct store *store = get_store_by_name(q->loc[l].storename);
 			if (town) {
 				if (!store) {
-					quit(format("Unable to find quest: town %s has no store %s",
-						q->loc[l].location, q->loc[l].storename));
-					return false;
+					q->loc[l].town = town - t_info;
+					q->town = q->loc[select[i]].town;
 				} else {
 					q->loc[l].town = town - t_info;
 					q->loc[l].store = store->sidx;

@@ -1292,9 +1292,13 @@ void on_new_level(void)
 		player->max_lev = player->lev;
 
 	/* Track maximum dungeon level */
-	if (player->active_quest < 0)
-		if (player->max_depth < player->depth)
-			player->max_depth = player->town->recall_depth = player->depth;
+	if (player->active_quest < 0) {
+		if (player->max_depth < player->depth) {
+			player->max_depth = player->depth;
+			if (player->town)
+				player->town->recall_depth = player->depth;
+		}
+	}
 
 	/* Flush messages */
 	event_signal(EVENT_MESSAGE_FLUSH);

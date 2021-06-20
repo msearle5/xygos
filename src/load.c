@@ -857,7 +857,8 @@ int rd_player(void)
 
 	/* Hack -- Repair maximum dungeon level */
 	if (player->max_depth < 0) player->max_depth = 1;
-	if (player->town->recall_depth <= 0) player->town->recall_depth = player->max_depth;
+	if ((player->town) && (player->town->recall_depth <= 0))
+		player->town->recall_depth = player->max_depth;
 
 	/* Hack -- Reset cause of death */
 	if (player->chp >= 0)

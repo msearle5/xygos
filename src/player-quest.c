@@ -351,7 +351,8 @@ bool is_blocking_quest(int level)
 	if (!level) return false;
 
 	for (i = 0; i < z_info->quest_max; i++)
-		if ((player->quests[i].level == level) && (player->quests[i].flags & QF_ESSENTIAL) &&
+		if (((player->quests[i].town == (player->town - t_info)) || (player->quests[i].town < 0)) &&
+			(player->quests[i].level == level) && (player->quests[i].flags & QF_ESSENTIAL) &&
 			(!(player->quests[i].flags & QF_SUCCEEDED)))
 			return true;
 

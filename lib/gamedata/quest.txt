@@ -102,6 +102,7 @@ name:Slick
 level:5
 race:Slick
 desc:Slick is a small-time gangster who considers himself to be boss of the Stores. Getting rid of him would make the town a safer place.
+store:Stores
 intro:Foo
 number:1
 flags:active
@@ -117,6 +118,7 @@ name:Holo-Triax
 level:25
 race:Holo-Triax
 desc:Triax's hologram stands in the way of your descent.
+store:Fortress
 intro:Foo
 number:1
 flags:active | essential
@@ -125,6 +127,7 @@ name:Impy
 level:50
 race:Impy
 desc:Triax has a pet T-Rex. With cybernetically enhanced ferocity, natch. Unfortunately, it's in your way...
+store:Fortress
 intro:Foo
 number:1
 flags:essential
@@ -133,6 +136,7 @@ name:Mecha-Triax
 level:75
 race:Mecha-Triax
 desc:Triax has a formidable robot bodyguard which must be destroyed to progress.
+store:Fortress
 intro:Foo
 number:1
 flags:essential
@@ -141,6 +145,7 @@ name:Triax
 level:100
 race:Triax, the Emperor
 desc:You must kill Triax the tyrant Emperor to free Xygos!
+store:Fortress
 number:1
 flags:essential
 
