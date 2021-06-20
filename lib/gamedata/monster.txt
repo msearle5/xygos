@@ -161,13 +161,15 @@
 # monster on creation.  The format is:
 # friends:Chance of friend appearing:number in xdy format:name of friend
 #
-# Note that number is throttled depending on the dungeon level with only half
-# appearing at depth and the full complement 5 levels deeper.  All town friends
-# will be divided by two.
+# Note that unless the monster is unique, this number is throttled depending on
+# the dungeon level with only half appearing at depth and the full complement 5
+# levels deeper.  All town friends will be divided by two.
+#
 # The code places monsters from bottom up and will not place it if it can't find
 # room.  For best results, places the most important friends at the bottom.
 # Using 'Same' as the name does what you would expect.
 # Some friends can have special roles; these are appended to the line end.
+# (roles include: servant, bodyguard)
 
 # 'friends-base' lines work as for friends, but the name should be of a monster
 # base, and any monster with that base can be chosen.
@@ -375,6 +377,55 @@ desc:It is about two feet long and has sharp pincers.
 
 
 ##### HUMANS #####
+
+# fix desc
+name:mugger
+base:person
+color:b
+speed:110
+hit-points:20
+hearing:20
+armor-class:18
+sleepiness:10
+depth:2
+rarity:1
+experience:6
+blow:HIT:HURT:1d6
+blow:TOUCH:EAT_GOLD
+flags:MALE | EVIL
+flags:DROP_40
+flags:OPEN_DOOR | TAKE_ITEM
+drop:card:blinking:35:1:3
+friends-base:20:1d3:person
+friends-base:40:1d3:person
+friends-base:80:1d3:person
+friends:50:1d2:Same
+desc:A rather shifty individual.
+
+name:Slick
+base:person
+color:b
+speed:120
+hit-points:35
+hearing:20
+armor-class:20
+sleepiness:5
+depth:5
+rarity:0
+experience:90
+blow:HIT:HURT:1d4
+blow:TOUCH:EAT_GOLD
+blow:TOUCH:EAT_ITEM
+flags:MALE | EVIL | UNIQUE | QUESTOR | SPECIAL_GEN
+flags:DROP_2
+flags:OPEN_DOOR | TAKE_ITEM
+innate-freq:6
+spell-freq:6
+spells:SHOT | BLINK
+drop:card:blinking:75:1:4
+drop:0:Slick's:100:1:1
+friends:100:3d2:mugger:bodyguard
+desc:A thief who likes to think of himself as being in charge of the Stores. You've come in stealing everything that isn't nailed down without his permission, so he's going to try to get it back.
 
 name:Nijel, the Rat
 base:person
@@ -2113,29 +2164,6 @@ friends-base:40:1d3:person
 friends-base:80:1d3:person
 friends:50:1d2:Same
 desc:An inexperienced but tough warrior.
-
-name:cutpurse
-base:person
-color:b
-speed:110
-hit-points:20
-hearing:20
-armor-class:18
-sleepiness:10
-depth:2
-rarity:1
-experience:6
-blow:HIT:HURT:1d6
-blow:TOUCH:EAT_GOLD
-flags:MALE | EVIL
-flags:DROP_40
-flags:OPEN_DOOR | TAKE_ITEM
-drop:card:blinking:35:1:3
-friends-base:20:1d3:person
-friends-base:40:1d3:person
-friends-base:80:1d3:person
-friends:50:1d2:Same
-desc:A rather shifty individual.
 
 name:acolyte
 base:person

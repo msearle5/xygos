@@ -550,10 +550,21 @@ static void world_town_level(struct town *town, const char *dungeon)
 }
 
 /**
- * Returns true if the level exists in the dungeon
+ * Returns true if the level exists in the dungeon.
+ * If dungeon is NULL, then use the dungeon of the current town.
  */
 bool world_level_exists(const char *dungeon, int level)
 {
+	char base[64];
+	/* Dungeon basename */
+	if (!dungeon) {
+		strncpy(base, player->town->downto, sizeof(base));
+		base[sizeof(base)-1] = 0;
+		char *space = strchr(base, ' ');
+		if (space) *space = 0;
+		dungeon = base;
+	}
+
 	char buf[64];
 	strnfmt(buf, sizeof(buf), "%s %d", dungeon, level);
 	struct level *lev = world;

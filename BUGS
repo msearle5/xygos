@@ -1,5 +1,7 @@
 BUGS
 ====
+BUG: Random artifacts (e.g. Slick's 6mm rifle) can be generated with no flags.
+
 BUG: Stores which close lose their entrance but don't become ruins. (Only when more than one would?)
 
 BUG: Bombs (e.g. pineapple) give excess messages - "The X fails to harm the Y." "The X detonates!" "The Y screams!".

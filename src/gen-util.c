@@ -36,6 +36,7 @@
 #include "player-quest.h"
 #include "player-util.h"
 #include "trap.h"
+#include "world.h"
 #include "z-queue.h"
 #include "z-type.h"
 
@@ -414,7 +415,7 @@ static void place_stairs(struct chunk *c, struct loc grid, int feat)
 {
 	if (!c->depth)
 		square_set_feat(c, grid, FEAT_MORE);
-	else if (is_blocking_quest(c->depth) || c->depth >= z_info->max_depth - 1)
+	else if ((is_blocking_quest(c->depth)) || (c->depth >= z_info->max_depth - 1) || (!world_level_exists(NULL, c->depth + 1)))
 		square_set_feat(c, grid, FEAT_LESS);
 	else
 		square_set_feat(c, grid, feat);

@@ -47,7 +47,7 @@
 #include "trap.h"
 #include "z-queue.h"
 
-/* #define LIST_DEBUG */
+//#define LIST_DEBUG
 
 static struct object *fail_pile;
 static struct object *fail_object;
@@ -130,34 +130,49 @@ static void pile_check_integrity(const char *op, struct object *pile,
 
 #ifdef LIST_DEBUG
 	int i = 0;
-	fprintf(stderr, "\n%s  pile %08x\n", op, (int)pile);
+	int j = 0;
+	fprintf(stderr, "\n%s  pile %p\n", op, (void *)pile);
 #endif
+
+	/* Check for circularity */
+	for (obj = pile; obj; obj = obj->next) {
+		struct object *check;
+#ifdef LIST_DEBUG
+		fprintf(stderr, "<%2d> this = %p  prev = %p  next = %p  %s\n",
+			j, (void *)obj, (void *)obj->prev, (void *)obj->next,
+			(obj == hilight) ? "*" : "");
+		j++;
+#endif
+		for (check = obj->next; check; check = check->next) {
+			if (check->next == obj) {
+#ifdef LIST_DEBUG
+				fprintf(stderr, "FAIL: circular\n");
+#endif
+				pile_integrity_fail(pile, check, __FILE__, __LINE__);
+				return;
+			}
+		}
+	}
 
 	/* Check prev<->next chain */
 	while (obj) {
 #ifdef LIST_DEBUG
-		fprintf(stderr, "[%2d] this = %08x  prev = %08x  next = %08x  %s\n",
-			i, (int)obj, (int)obj->prev, (int)obj->next,
+		fprintf(stderr, "[%2d] this = %p  prev = %p  next = %p  %s\n",
+			i, (void *)obj, (void *)obj->prev, (void *)obj->next,
 			(obj == hilight) ? "*" : "");
 		i++;
 #endif
 
 		if (obj->prev != prev) {
+#ifdef LIST_DEBUG
+			fprintf(stderr, "FAIL: next prev\n");
+#endif
 			pile_integrity_fail(pile, obj, __FILE__, __LINE__);
+			return;
 		}
 		prev = obj;
 		obj = obj->next;
 	};
-
-	/* Check for circularity */
-	for (obj = pile; obj; obj = obj->next) {
-		struct object *check;
-		for (check = obj->next; check; check = check->next) {
-			if (check->next == obj) {
-				pile_integrity_fail(pile, check, __FILE__, __LINE__);
-			}
-		}
-	}
 }
 
 /**

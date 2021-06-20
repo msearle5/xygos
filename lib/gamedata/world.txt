@@ -12,7 +12,7 @@
 dungeon:20:115:Fortress
 #level:0:Town:None:Fortress 1
 
-dungeon:1:1+2d2:Stores
+dungeon:1:2+2d2:Stores
 dungeon:8:10+3d2:Sewers
 dungeon:15:21+3d3:Mine
 dungeon:25:34+4d3:Caverns

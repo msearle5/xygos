@@ -179,13 +179,6 @@ int dungeon_get_next_level(int dlev, int added)
 	/* Get target level */
 	target_level = dlev + added * z_info->stair_skip;
 
-	/* Dungeon basename */
-	char dungeon[64];
-	strncpy(dungeon, player->town->downto, sizeof(dungeon));
-	dungeon[sizeof(dungeon)-1] = 0;
-	char *space = strchr(dungeon, ' ');
-	if (space) *space = 0;
-
 	/* Step 1 level at a time (not the skip) until a valid
 	 * level is found, or the limit is hit.
 	 */
@@ -205,7 +198,7 @@ int dungeon_get_next_level(int dlev, int added)
 			break;
 		}
 
-	} while  (!world_level_exists(dungeon, target_level));
+	} while  (!world_level_exists(NULL, target_level));
 
 	/* Check intermediate levels for quests */
 	for (i = dlev; i <= target_level; i++) {

@@ -95,9 +95,23 @@ succeed:The traditional wumpus hunter's prize isn't worth much, but I think you'
 failure:Well, I saw you walking boldly into the wumpus's den - so I will admit that although you didn't manage to defeat it, you aren't just a poseur. So I'll reluctantly allow you in to see more stuff, but you can't expect a real reward. You do still get the traditional wumpus hunter's prize, though, for what that's worth.
 
 ####################################
+# The end-level guardian quests
+#
+
+name:Slick
+level:5
+race:Slick
+desc:Slick is a small-time gangster who considers himself to be boss of the Stores. Getting rid of him would make the town a safer place.
+intro:Foo
+number:1
+flags:active
+
+
+####################################
 # The win-quest sequence.
 #
 # These MUST be in order of depth and at the end of the file for the hactivation-of-next-quest code to work.
+#
 
 name:Holo-Triax
 level:25

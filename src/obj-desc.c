@@ -319,6 +319,8 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 			strnfcat(buf, max, &end, "%s%s%s", buf2, obj->kind->name, space);
 		} else {
 			/* Quantity prefix */
+			if ((object_is_known_artifact(obj)) && (obj->artifact->name) && (obj->artifact->name[0] == '<') && (isupper(obj->artifact->name[1])))
+				prefix = false;
 			if (prefix)
 				end = obj_desc_name_prefix(buf, max, end, obj, basename, modstr, terse);
 		}

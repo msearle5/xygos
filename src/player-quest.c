@@ -850,6 +850,19 @@ void quest_changing_level(void)
  */
 void quest_changed_level(void)
 {
+	/* A free position for a monster, if one is generated */
+	struct loc xy = loc(0, 0);
+	struct monster_group_info info = { 0, 0 };
+	/* Find a space */
+	for(int i=0;i<10000;i++) {
+		struct loc try_xy = loc(randint1(cave->width - 1), randint1(cave->height - 1));
+		if (square_isempty(cave, try_xy)) {
+			xy = try_xy;
+			break;
+		}
+	}
+	bool guardian = ((player->depth) && (!world_level_exists(NULL, player->depth + 1)));
+
 	/* Quest specific checks */
 	for(int i=0;i<z_info->quest_max;i++) {
 		struct quest *q = player->quests + i;
@@ -862,6 +875,11 @@ void quest_changed_level(void)
 					if (!count) {
 						fail_quest(q);
 					}
+				}
+			} else if (streq(q->name, "Slick")) {
+				if (guardian) {
+					if (xy.x)
+						place_new_monster(cave, xy, lookup_monster("Slick"), false, true, info, ORIGIN_DROP);
 				}
 			}
 		}
@@ -1133,9 +1151,15 @@ bool quest_check(const struct monster *m) {
 		if (streq(m->race->name, "Ky, the Pie Spy")) {
 			succeed_quest(get_quest_by_name("Soldier, Sailor, Chef, Pie"));
 			return true;
+		} else if (streq(m->race->name, "Slick")) {
+			reward_quest(get_quest_by_name("Slick"));
+			/* Reward = some items dropped, townee faction (and an approprite message) */
+			player->town_faction++;
+			msg("The town's a safer place with Slick's mob out of action.");
+			return true;
 		} else {
 			struct quest *q = get_quest_by_name(m->race->name);
-			/* Currently these are all level-guardian quests, so there is no separate reward.
+			/* Currently these are all Fortress level-guardian quests, so there is no separate reward.
 			 * This also implies that they are contiguous.
 			 */
 			if (q) {

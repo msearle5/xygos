@@ -813,11 +813,13 @@ static bool mon_create_drop(struct chunk *c, struct monster *mon, byte origin)
 
 	/* Specified drops */
 	for (drop = mon->race->drops; drop; drop = drop->next) {
+		obj = NULL;
+
 		if ((unsigned int)randint0(100) >= drop->percent_chance)
 			continue;
 
 		/* Specified by artifact, by tval or by kind */
-		if (drop->art) {
+		if ((drop->art) && (!drop->kind)) {
 			struct artifact *art = lookup_artifact_name(drop->art);
 			if (art) {
 				struct object_kind *kind = lookup_kind(art->tval, art->sval);

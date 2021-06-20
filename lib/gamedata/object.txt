@@ -328,7 +328,7 @@ flags:SUST_SPD
 desc:A cybernetic implant, allowing fast running combined with overall speed.
 material:titanium
 
-# Capstone?
+# Capstone? Lightweight uno?
 # (But consider FBCs)
 
 ##### Thrown Weapons #####
@@ -358,7 +358,7 @@ flags:EXPLODE
 msg:The {flavor} explodes!
 effect:SPOT:FIRE:3
 dice:2d10
-desc:A 'Molotov Cocktail' - a beer bottle filled with highly flammable fuel. It's not a sophisticated weapon, but it can still be effective.
+desc:A 'Molotov Cocktail' - a glass beer bottle filled with highly flammable fuel. It's not a sophisticated weapon, but it can still be effective.
 material:glass
 
 ##### Lights #####

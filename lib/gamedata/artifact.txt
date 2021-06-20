@@ -133,6 +133,13 @@ flags:QUEST_ART | RANDOM_ART
 power:25
 desc:Favored above all others by Nijel, which means... well, it doesn't really mean a whole lot actually.
 
+name:<Slick's
+base-object:helm:X5
+level:6
+flags:QUEST_ART | RANDOM_ART
+power:50
+desc:Liberated from Slick, the gangster who hid out in the Stores.
+
 name:of Holo-Triax
 base-object:helm:X1
 level:25
