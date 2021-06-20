@@ -450,6 +450,7 @@ void rdwr_world(void)
 		rdwr_string(&t_info[i].geography);
 		rdwr_string(&t_info[i].underground);
 		rdwr_string(&t_info[i].downto);
+		rdwr_s16b(&t_info[i].recall_depth);
 		rdwr_bool(&t_info[i].lake);
 		rdwr_byte(&t_info[i].lava_num);
 		if ((!(t_info[i].connect)) && (t_info[i].connections))

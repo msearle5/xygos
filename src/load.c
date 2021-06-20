@@ -711,7 +711,6 @@ void rdwr_player_levels(void)
 	/* Max Player and Dungeon Levels */
 	rdwr_s16b(&player->max_lev);
 	rdwr_s16b(&player->max_depth);
-	rdwr_s16b(&player->recall_depth);
 	rdwr_s16b(&player->danger);
 }
 
@@ -858,7 +857,7 @@ int rd_player(void)
 
 	/* Hack -- Repair maximum dungeon level */
 	if (player->max_depth < 0) player->max_depth = 1;
-	if (player->recall_depth <= 0) player->recall_depth = player->max_depth;
+	if (player->town->recall_depth <= 0) player->town->recall_depth = player->max_depth;
 
 	/* Hack -- Reset cause of death */
 	if (player->chp >= 0)

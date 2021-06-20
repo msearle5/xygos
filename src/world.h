@@ -22,12 +22,13 @@
 
 struct town {
 	struct town **connect;		/* Array of connected towns */
-	u32b connections;			/* Total number of connected towns */
 	char *name;					/* Name of town */
 	struct store *stores;		/* Stores */
 	char *downto;				/* Go down to this level */
 	char *underground;			/* "over ancient caverns" */
 	char *geography;			/* "an active volcano" */
+	u32b connections;			/* Total number of connected towns */
+	s16b recall_depth;			/* Recall depth into this town's dungeon */
 	bool lake;					/* generate a lake */
 	byte lava_num;				/* and this many streamers of lava */
 };

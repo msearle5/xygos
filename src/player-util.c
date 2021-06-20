@@ -217,12 +217,12 @@ void player_set_recall_depth(struct player *p)
 	if (OPT(p, birth_force_descend)) {
 		/* Force descent to a lower level if allowed */
 		if ((p->max_depth < z_info->max_depth - 1) && !is_blocking_quest(p->max_depth)) {
-			p->recall_depth = dungeon_get_next_level(p->max_depth, 1);
+			p->town->recall_depth = dungeon_get_next_level(p->max_depth, 1);
 		}
 	}
 
 	/* Players who haven't left town before go to level 1 */
-	p->recall_depth = MAX(p->recall_depth, 1);
+	p->town->recall_depth = MAX(p->town->recall_depth, dungeon_get_next_level(0, 1));
 }
 
 /**
@@ -257,7 +257,7 @@ bool player_get_recall_depth(struct player *p)
 			msg("You must choose a level you have previously visited.");
 		}
 	}
-	p->recall_depth = new;
+	p->town->recall_depth = new;
 	return true;
 }
 

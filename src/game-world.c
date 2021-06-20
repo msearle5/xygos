@@ -1025,7 +1025,7 @@ void process_world(struct chunk *c)
 			} else {
 				msgt(MSG_TPLEVEL, "You feel yourself yanked downwards!");
 				player_set_recall_depth(player);
-				dungeon_change_level(player, player->recall_depth);
+				dungeon_change_level(player, player->town->recall_depth);
 			}
 		}
 	}
@@ -1294,7 +1294,7 @@ void on_new_level(void)
 	/* Track maximum dungeon level */
 	if (player->active_quest < 0)
 		if (player->max_depth < player->depth)
-			player->max_depth = player->recall_depth = player->depth;
+			player->max_depth = player->town->recall_depth = player->depth;
 
 	/* Flush messages */
 	event_signal(EVENT_MESSAGE_FLUSH);
