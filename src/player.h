@@ -185,7 +185,8 @@ enum {
 	QF_FAILED = 		0x04,
 	QF_UNREWARDED = 	0x08,
 	QF_ESSENTIAL =		0x10,
-	QF_LOCKED =			0x20
+	QF_LOCKED =			0x20,
+	QF_GUARDIAN =		0x40
 };
 
 /**

@@ -1104,6 +1104,37 @@ desc:The primeval Beast itself. Many hunt the Wumpus, few return...
 
 ##### R - ROBOTS #####
 
+name:Miniac, the Crusher
+base:robot
+color:Yellow
+speed:110
+hit-points:800
+hearing:10
+armor-class:60
+sleepiness:5
+depth:30
+rarity:0
+experience:2000
+blow:HIT:SHATTER:5d12
+blow:HIT:CONFUSE:5d12
+spell-freq:4
+spells:BA_SHAR | BA_WATE | BA_PLAS
+spells:S_ROBOT
+deathspells:EXPLODE
+drop:0:Miniac's:100:1:1
+drop:block:plastic:50:1:2
+drop:block:aluminum:50:1:2
+drop:block:steel:80:1:2
+drop:block:steel:40:1:1
+drop:block:titanium:100:1:2
+drop:block:titanium:50:1:1
+drop:block:gold:25:1:1
+drop:block:unobtainium:20:1:1
+flags:UNIQUE | QUESTOR | SPECIAL_GEN | SMART | METAL
+flags:DROP_4 | DROP_3 | DROP_2 | DROP_1 | ONLY_GOLD
+flags:KILL_WALL | KILL_BODY
+desc:Miniac, the Mining Intelligent Autonomous Control. A heavy robot platform for blasting through rock walls, shifting equipment and controlling other robots. And entirely insane, seeing you as just a walking bag of fuel. There's no big red switch in sight - you are going to have to shut it down the old-fashioned way.
+
 name:Mecha-Triax
 base:robot
 color:Violet
@@ -1123,7 +1154,7 @@ spell-freq:1
 spell-power:97
 spells:BE_ELEC
 drop:0:of Mecha-Triax:100:1:1
-flags:UNIQUE | QUESTOR | FORCE_DEPTH | REGENERATE | SMART | PREFER_MELEE
+flags:UNIQUE | QUESTOR | FORCE_DEPTH | REGENERATE | SMART | PREFER_MELEE | METAL
 flags:DROP_4 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
 flags:KILL_WALL | KILL_BODY
 flags:IM_ACID
@@ -1151,7 +1182,7 @@ spells:BA_RADI | BA_POIS | BA_LIGHT | BA_SHAR | BA_WATE | BA_DARK | BA_GRAV | BA
 spells:S_UNIQUE
 drop:0:of the Core:100:1:1
 flags:UNIQUE | QUESTOR | FORCE_DEPTH | REGENERATE | SMART | SPIRIT | EVIL
-flags:KILL_BODY | ATTR_FLICKER | REGENERATE
+flags:KILL_BODY | ATTR_FLICKER | REGENERATE | METAL
 flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS
 flags:NO_CONF | NO_SLEEP | NO_HOLD | NO_FEAR
 flags:FORCE_DEPTH | FORCE_SLEEP

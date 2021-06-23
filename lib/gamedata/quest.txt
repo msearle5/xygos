@@ -105,7 +105,16 @@ desc:Slick is a small-time gangster who considers himself to be boss of the Stor
 store:Stores
 intro:Foo
 number:1
+flags:guardian
 
+name:Miniac
+level:30
+race:Miniac, the Crusher
+desc:Miniac, the Mining Intelligent Autonomous Control has turned out to be a maniac and guess who has to stop it.
+store:Mine
+intro:Foo
+number:1
+flags:guardian
 
 ####################################
 # The win-quest sequence.

@@ -354,6 +354,9 @@ message:BR_PLASMA:w
 message:BR_FORCE:w
 
 # MSG_SUM_MONSTER
+message:SUM_ROBOT:w
+
+# MSG_SUM_MONSTER
 message:SUM_MONSTER:w
 
 # MSG_SUM_ANGEL

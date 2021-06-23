@@ -170,6 +170,8 @@ static enum parser_error parse_quest_flags(struct parser *p) {
 		q->flags |= QF_ESSENTIAL;
 	if (strstr(in, "locked"))
 		q->flags |= QF_LOCKED;
+	if (strstr(in, "guardian"))
+		q->flags |= QF_GUARDIAN;
 	return PARSE_ERROR_NONE;
 }
 
@@ -372,9 +374,13 @@ bool is_blocking_quest(int level)
 	/* Town is never a quest */
 	if (!level) return false;
 
+	/* Is this the last level of a dungeon? */
+	bool end = !world_level_exists(NULL, level+1);
+
 	for (i = 0; i < z_info->quest_max; i++)
 		if (((player->quests[i].town == (player->town - t_info)) || (player->quests[i].town < 0)) &&
-			(player->quests[i].level == level) && (player->quests[i].flags & QF_ESSENTIAL) &&
+			(((player->quests[i].level == level) && (player->quests[i].flags & QF_ESSENTIAL)) ||
+			(end && (player->quests[i].flags & QF_GUARDIAN))) &&
 			(!(player->quests[i].flags & QF_SUCCEEDED)))
 			return true;
 
@@ -904,6 +910,11 @@ void quest_changed_level(void)
 					if (xy.x)
 						place_new_monster(cave, xy, lookup_monster("Slick"), false, true, info, ORIGIN_DROP);
 				}
+			} else if (streq(q->name, "Miniac")) {
+				if (guardian) {
+					if (xy.x)
+						place_new_monster(cave, xy, lookup_monster("Miniac, the Crusher"), false, false, info, ORIGIN_DROP);
+				}
 			}
 		}
 	}
@@ -1176,9 +1187,14 @@ bool quest_check(const struct monster *m) {
 			return true;
 		} else if (streq(m->race->name, "Slick")) {
 			reward_quest(get_quest_by_name("Slick"));
-			/* Reward = some items dropped, townee faction (and an approprite message) */
+			/* Reward = some items dropped, townee faction (and an appropriate message) */
 			player->town_faction++;
 			msg("The town's a safer place with Slick's mob out of action.");
+			return true;
+		} else if (streq(m->race->name, "Miniac, the Crusher")) {
+			reward_quest(get_quest_by_name("Miniac"));
+			/* Reward = some items dropped, and a message */
+			msg("The mine's no longer such a death trap now that the rogue robot has been scrapped.");
 			return true;
 		} else {
 			struct quest *q = get_quest_by_name(m->race->name);

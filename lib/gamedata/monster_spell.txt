@@ -1025,6 +1025,16 @@ lore-color-base:Orange
 message-vis:{name} summons {pronoun} kin.
 message-invis:You hear some things appear nearby!
 
+name:S_ROBOT
+msgt:SUM_ROBOT
+hit:100
+effect:SUMMON:ROBOT
+dice:1
+lore:teleport in a robot
+lore-color-base:Orange
+message-vis:{name} teleports in a robot.
+message-invis:You hear something clank nearby!
+
 name:S_MONSTER
 msgt:SUM_MONSTER
 hit:100

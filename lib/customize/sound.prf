@@ -395,6 +395,9 @@ sound:MULTIPLY:mco_frog_trill
 # Summons
 #
 
+# Summon a robot.
+sound:SUM_ROBOT:sum_chime_jangle
+
 # Summon one or more monsters.
 sound:SUM_MONSTER:sum_chime_jangle
 

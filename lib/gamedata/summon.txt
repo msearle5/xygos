@@ -54,6 +54,14 @@ msgt:SUM_MONSTER
 uniques:0
 desc:similar monsters
 
+name:ROBOT
+msgt:SUM_ROBOT
+uniques:0
+# NOT base:robot
+# as there are various robotic things (e.g. a mechanical bat) with other bases
+race-flag:METAL
+desc:a robot
+
 name:MONSTER
 msgt:SUM_MONSTER
 uniques:0
