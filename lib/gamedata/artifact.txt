@@ -171,6 +171,19 @@ desc:Triax, big-headed as ever, maintained a giant golden face of himself - a le
 
 ### Quest artifacts ###
 
+name:!Dark Helmet
+base-object:helm:dark helmet
+level:50
+attack:1d2:-3:0
+cost:25000
+weight:4.8kg
+alloc:0:50 to 50
+armor:9:25
+flags:PROT_BLIND | PROT_FEAR | PROT_STUN | TELEPATHY
+flags:RAND_HI_RES | RAND_SUSTAIN | RAND_POWER | RAND_BASE_RES | RAND_RES_POWER
+values:IMM_DARK
+desc:A heavy black ribbed steel helmet, covering your head and neck on all sides. There's just a thin slit to see through, itself covered with a smoked visor.
+
 name:'Dominion'
 base-object:sword:dual darksaber
 level:100

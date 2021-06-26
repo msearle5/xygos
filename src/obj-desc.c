@@ -325,45 +325,50 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 				end = obj_desc_name_prefix(buf, max, end, obj, basename, modstr, terse);
 		}
 
-		/* Prepend artifact name, for artifacts using a <-name */
-		if ((object_is_known_artifact(obj)) && (obj->artifact->name) && (obj->artifact->name[0] == '<'))
-			strnfcat(buf, max, &end, "%s ", obj->artifact->name + 1);
+		/* Use the artifact name only */
+		if ((object_is_known_artifact(obj)) && (obj->artifact->name) && (obj->artifact->name[0] == '!')) {
+			strnfcat(buf, max, &end, "%s", obj->artifact->name + 1);
+		} else {
+			/* Prepend artifact name, for artifacts using a <-name */
+			if ((object_is_known_artifact(obj)) && (obj->artifact->name) && (obj->artifact->name[0] == '<'))
+				strnfcat(buf, max, &end, "%s ", obj->artifact->name + 1);
 
-		/* Prepend ego name, for egos using a <-name */
-		for(int i=0;i<MAX_EGOS;i++) {
-			if ((object_is_known_ego(obj)) && (obj->ego[i]) && (obj->ego[i]->name) && (obj->ego[i]->name[0] == '<'))
-				strnfcat(buf, max, &end, "%s ", obj->ego[i]->name + 1);
-		}
-
-		/* Base name */
-		end = obj_desc_name_format(buf, max, end, basename, modstr, plural);
-
-		/* Append extra names of various kinds */
-		if ((object_is_known_artifact(obj)) && (obj->artifact->name) && (obj->artifact->name[0] != '<'))
-			strnfcat(buf, max, &end, " %s", obj->artifact->name);
-		else {
-			int count = 0;
+			/* Prepend ego name, for egos using a <-name */
 			for(int i=0;i<MAX_EGOS;i++) {
-				if ((obj->ego[i]) && ((obj->known->ego[i] && !(mode & ODESC_NOEGO)) || (obj->ego[i] && store)) && (obj->ego[i]->name[0] !='<')) {
-					if (obj->ego[i]->name[0] == '(') {
-						/* (Foo) */
-						if (!count) {
-							strnfcat(buf, max, &end, " %s", obj->ego[i]->name);
+				if ((object_is_known_ego(obj)) && (obj->ego[i]) && (obj->ego[i]->name) && (obj->ego[i]->name[0] == '<'))
+					strnfcat(buf, max, &end, "%s ", obj->ego[i]->name + 1);
+			}
+
+			/* Base name */
+			end = obj_desc_name_format(buf, max, end, basename, modstr, plural);
+
+			/* Append extra names of various kinds */
+			if ((object_is_known_artifact(obj)) && (obj->artifact->name) && (obj->artifact->name[0] != '<'))
+				strnfcat(buf, max, &end, " %s", obj->artifact->name);
+			else {
+				int count = 0;
+				for(int i=0;i<MAX_EGOS;i++) {
+					if ((obj->ego[i]) && ((obj->known->ego[i] && !(mode & ODESC_NOEGO)) || (obj->ego[i] && store)) && (obj->ego[i]->name[0] !='<')) {
+						if (obj->ego[i]->name[0] == '(') {
+							/* (Foo) */
+							if (!count) {
+								strnfcat(buf, max, &end, " %s", obj->ego[i]->name);
+							} else {
+								end--;
+								strnfcat(buf, max, &end, " / %s", obj->ego[i]->name + 1);
+							}
+							count++;
 						} else {
-							end--;
-							strnfcat(buf, max, &end, " / %s", obj->ego[i]->name + 1);
+							/* of Foo */
+							strnfcat(buf, max, &end, " %s", obj->ego[i]->name);
 						}
-						count++;
-					} else {
-						/* of Foo */
-						strnfcat(buf, max, &end, " %s", obj->ego[i]->name);
 					}
 				}
-			}
-		}/* else if (aware && !obj->artifact &&
-				 (obj->kind->flavor || obj->kind->tval == TV_CARD)) {
-			;
-		}*/
+			}/* else if (aware && !obj->artifact &&
+					 (obj->kind->flavor || obj->kind->tval == TV_CARD)) {
+				;
+			}*/
+		}
 	}
 	return end;
 }

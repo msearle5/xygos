@@ -31,6 +31,7 @@ struct summon {
 	char *name;
 	int message_type;
 	bool unique_allowed;
+	bool friends;
 	struct monster_base_list *bases;
 	int race_flag;
 	char *fallback_name;
@@ -47,7 +48,7 @@ int summon_name_to_idx(const char *name);
 int summon_fallback_type(int summon_type);
 int summon_message_type(int summon_type);
 const char *summon_desc(int type);
-int summon_specific(struct loc grid, int lev, int type, bool delay, bool call);
+int summon_specific(struct loc grid, struct monster_race *summoner, int lev, int type, bool delay, bool call);
 struct monster_race *select_shape(struct monster *mon, int type);
 int summon_named_near(struct loc grid, const char *name);
 

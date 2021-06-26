@@ -163,7 +163,10 @@ static void get_target(struct source origin, int dir, struct loc *grid,
 			*flags |= (PROJECT_PLAY);
 
 			if (randint1(100) > accuracy) {
-				dir = randint1(9);
+				*flags |= (PROJECT_KILL | PROJECT_GRID | PROJECT_ITEM);
+				do {
+					dir = randint1(9);
+				} while (dir == 5);
 				*grid = loc_sum(monster->grid, ddgrid[dir]);
 			} else if (monster->target.midx > 0) {
 				struct monster *mon = cave_monster(cave, monster->target.midx);
@@ -2853,7 +2856,7 @@ static bool effect_handler_SUMMON(effect_handler_context_t *context)
 				int temp;
 
 				/* Get a monster */
-				temp = summon_specific(mon->grid, rlev + level_boost, summon_type,
+				temp = summon_specific(mon->grid, mon->race, rlev + level_boost, summon_type,
 									   false, false);
 
 				val += temp * temp;
@@ -2873,7 +2876,7 @@ static bool effect_handler_SUMMON(effect_handler_context_t *context)
 					int temp;
 
 					/* Get a monster */
-					temp = summon_specific(mon->grid, rlev + level_boost,
+					temp = summon_specific(mon->grid, mon->race, rlev + level_boost,
 										   fallback_type, false, false);
 
 					val += temp * temp;
@@ -2898,7 +2901,7 @@ static bool effect_handler_SUMMON(effect_handler_context_t *context)
 	} else {
 		/* If not a monster summon, it's simple */
 		while (summon_max) {
-			count += summon_specific(player->grid, player->depth + level_boost,
+			count += summon_specific(player->grid, NULL, player->depth + level_boost,
 									 summon_type, true, one_in_(4));
 			summon_max--;
 		}

@@ -10,6 +10,7 @@
 # race-flag - allowed racial flag if any
 # fallback  - summon type to substitute on failure
 # desc      - description
+# friends   - summon friends (and not other monsters)
 
 # 'name' is the code used to refer to the summon type, and should begin every
 # entry
@@ -48,6 +49,12 @@ name:ANY
 msgt:SUM_MONSTER
 uniques:1
 desc:a monster
+
+name:FRIENDS
+msgt:SUM_MONSTER
+uniques:1
+desc:minions
+friends
 
 name:KIN
 msgt:SUM_MONSTER

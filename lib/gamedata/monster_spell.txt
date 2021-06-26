@@ -1015,6 +1015,16 @@ lore-color-base:Orange
 message-vis:{name} intones strange words.
 message-invis:Something mutters.
 
+name:S_FRIENDS
+msgt:SUM_MONSTER
+hit:100
+effect:SUMMON:FRIENDS
+dice:1
+lore:summon more minions
+lore-color-base:Orange
+message-vis:{name} teleports in {pronoun} minions.
+message-invis:You hear some things appear nearby!
+
 name:S_KIN
 msgt:SUM_MONSTER
 hit:100

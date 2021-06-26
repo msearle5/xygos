@@ -211,6 +211,9 @@
 # find them unless they are invisible and you cannot see invisible, and if you
 # use the * command for targetting mode you can pick them as a target.)
 
+# CONFUSED monsters behave as if they have at least 2 levels of confusion at
+# all times, so they often miss and move randomly.
+
 # TODO: Explain the other monster and spell flags. But maybe in another file.
 
 
@@ -471,6 +474,53 @@ flags:UNIQUE | EVIL
 flags:DROP_60 | DROP_40 | DROP_20
 flags:OPEN_DOOR | SMART | SPIRIT | TAKE_ITEM
 flags:FEMALE | SPECIAL_GEN | QUESTOR
+
+name:stormtrooper
+base:person
+color:W
+speed:110
+hit-points:250
+hearing:20
+armor-class:70
+sleepiness:100
+depth:36
+rarity:2
+experience:600
+blow:HIT:HURT:3d6
+blow:HIT:HURT:3d6
+flags:MALE | FEMALE | EVIL | SPIRIT
+flags:DROP_40 | CONFUSED
+flags:OPEN_DOOR
+spell-freq:2
+spells:BO_PLAS
+desc:A masked enforcer in awkward-looking white full body armor, and an agent of evil - at least in theory. Between 9 and 5, anyway. Not one that really signed up to it, and in particular not one that paid any attention to target shooting drill.
+
+name:The Dark Helmet
+base:person
+color:D
+speed:125
+hit-points:4000
+hearing:100
+armor-class:80
+sleepiness:0
+depth:50
+rarity:0
+experience:8000
+blow:HIT:HURT:4d10
+blow:HIT:HURT:4d10
+blow:CRUSH:ELEC:6d10
+drop:helm:Dark Helmet:100:1:1
+flags:UNIQUE | QUESTOR | SPECIAL_GEN
+flags:MALE | EVIL | SMART | SPIRIT
+flags:DROP_3 | DROP_2 | DROP_1 | DROP_60 | DROP_40 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
+flags:MOVE_BODY | OPEN_DOOR | ATTR_FLICKER | REGENERATE
+flags:IM_FIRE
+flags:FORCE_SLEEP
+friends:100:2d3:stormtrooper:bodyguard
+spell-freq:3
+spells:BO_PLAS
+spells:BLINK | S_FRIENDS
+desc:What kind of volcano would it be, without an evil overlord in residence? The Dark Helmet's no Triax, though - much as he would like to think he is. He does go through all the motions - his stupid goons are really stupid, his white cat is really fluffy, and of course his helmet is really big and shiny - but somehow it never comes together into the world domination he dreams of. Still, he is dangerous enough to harass the town above him, and needs to be taken down a hat size or two.
 
 name:Triax, the Emperor
 base:person

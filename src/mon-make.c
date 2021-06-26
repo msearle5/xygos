@@ -1369,42 +1369,17 @@ static bool place_friends(struct chunk *c, struct loc grid, struct monster_race 
 }
 
 /**
- * Attempts to place a monster of the given race at the given location.
- *
- * Note that certain monsters are placed with a large group of
- * identical or similar monsters. However, if `group_okay` is false,
- * then such monsters are placed by themselves.
- *
- * If `sleep` is true, the monster is placed with its default sleep value,
- * which is given in monster.txt.
- *
- * `origin` is the item origin to use for any monster drops (e.g. ORIGIN_DROP,
- * ORIGIN_DROP_PIT, etc.)
+ * Attempts to place any friends of a monster around its location
+ * Returns true if at least one was placed
  */
-bool place_new_monster(struct chunk *c, struct loc grid,
-					   struct monster_race *race, bool sleep, bool group_ok,
+bool place_race_friends(struct chunk *c, struct loc grid,
+					   struct monster_race *race, bool sleep,
 					   struct monster_group_info group_info, byte origin)
 {
+	bool placed = false;
+	int total;
 	struct monster_friends *friends;
 	struct monster_friends_base *friends_base;
-	int total;
-
-	assert(c);
-	assert(race);
-
-	/* If we don't have a group index already, make one; our first monster
-	 * will be the leader */
-	if (!group_info.index) {
-		group_info.index = monster_group_index_new(c);
-	}
-
-	/* Place one monster, or fail */
-	if (!place_new_monster_one(c, grid, race, sleep, group_info, origin)) {
-		return (false);
-	}
-
-	/* We're done unless the group flag is set */
-	if (!group_ok) return (true);
 
 	/* Go through friends flags */
 	for (friends = race->friends; friends; friends = friends->next) {
@@ -1418,7 +1393,7 @@ bool place_new_monster(struct chunk *c, struct loc grid,
 		group_info.role = friends->role;
 
 		/* Place them */
-		place_friends(c, grid, race, friends->race, total, sleep, group_info,
+		placed |= place_friends(c, grid, race, friends->race, total, sleep, group_info,
 					  origin);
 
 	}
@@ -1453,9 +1428,51 @@ bool place_new_monster(struct chunk *c, struct loc grid,
 		group_info.role = friends_base->role;
 
 		/* Place them */
-		place_friends(c, grid, race, friends_race, total, sleep, group_info,
+		placed |= place_friends(c, grid, race, friends_race, total, sleep, group_info,
 					  origin);
 	}
+
+	return placed;
+}
+
+
+/**
+ * Attempts to place a monster of the given race at the given location.
+ *
+ * Note that certain monsters are placed with a large group of
+ * identical or similar monsters. However, if `group_okay` is false,
+ * then such monsters are placed by themselves.
+ *
+ * If `sleep` is true, the monster is placed with its default sleep value,
+ * which is given in monster.txt.
+ *
+ * `origin` is the item origin to use for any monster drops (e.g. ORIGIN_DROP,
+ * ORIGIN_DROP_PIT, etc.)
+ */
+bool place_new_monster(struct chunk *c, struct loc grid,
+					   struct monster_race *race, bool sleep, bool group_ok,
+					   struct monster_group_info group_info, byte origin)
+{
+	assert(c);
+	assert(race);
+
+	/* If we don't have a group index already, make one; our first monster
+	 * will be the leader */
+	if (!group_info.index) {
+		group_info.index = monster_group_index_new(c);
+	}
+
+	/* Place one monster, or fail */
+	if (!place_new_monster_one(c, grid, race, sleep, group_info, origin)) {
+		return (false);
+	}
+
+	/* We're done unless the group flag is set */
+	if (!group_ok) return (true);
+
+
+	/* Place friends */
+	place_race_friends(c, grid, race, sleep, group_info, origin);
 
 	/* Success */
 	return (true);

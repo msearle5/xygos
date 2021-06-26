@@ -43,5 +43,8 @@ bool pick_and_place_monster(struct chunk *c, struct loc grid, int depth,
 							bool sleep,	bool group_okay, byte origin);
 bool pick_and_place_distant_monster(struct chunk *c, struct player *p, int dis,
 									bool sleep, int depth);
+bool place_race_friends(struct chunk *c, struct loc grid,
+					   struct monster_race *race, bool sleep,
+					   struct monster_group_info group_info, byte origin);
 
 #endif /* MONSTER_MAKE_H */

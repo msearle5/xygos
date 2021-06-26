@@ -1396,7 +1396,7 @@ T:HAFTED
 T:POLEARM
 T:DIGGING
 
-N:of the Dark Helmet
+N:of Doctor Evil
 T:HELM
 T:LIGHT
 

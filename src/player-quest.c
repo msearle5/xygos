@@ -380,7 +380,7 @@ bool is_blocking_quest(int level)
 	if (!level) return false;
 
 	/* Is this the last level of a dungeon? */
-	bool end = ((world_level_exists(NULL, level+1)) && (!world_level_exists(NULL, level+1)));
+	bool end = ((world_level_exists(NULL, level)) && (!world_level_exists(NULL, level+1)));
 
 	for (i = 0; i < z_info->quest_max; i++)
 		if (((player->quests[i].town == (player->town - t_info)) || (player->quests[i].town < 0)) &&
@@ -912,8 +912,11 @@ void quest_changed_level(void)
 					}
 				}
 			} else {
+				/* Create quest monsters, if possible.
+				 * It must be the right level, and the right dungeon.
+				 */
 				if (xy.x) {
-					if (streq(q->name, "Slick")) {
+					if (streq(q->name, "Slick") || streq(q->name, "The Dark Helmet")) {
 						if (guardian && ((player->town - t_info) == q->town)) {
 							place_new_monster(cave, xy, lookup_monster(q->name), false, true, info, ORIGIN_DROP);
 						}
@@ -1219,6 +1222,12 @@ bool quest_check(const struct monster *m) {
 			reward_quest(get_quest_by_name("Miniac"));
 			/* Reward = some items dropped, and a message */
 			msg("The mine's no longer such a death trap now that the rogue robot has been scrapped.");
+			return true;
+		} else if (streq(m->race->name, "The Dark Helmet")) {
+			reward_quest(get_quest_by_name("The Dark Helmet"));
+			/* Reward = some items dropped, townee faction, and a message */
+			player->town_faction++;
+			msg("Without the Dark Helmet, his goon squads aren't much threat.");
 			return true;
 		} else {
 			struct quest *q = get_quest_by_name(m->race->name);

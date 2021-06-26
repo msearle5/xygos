@@ -2091,6 +2091,16 @@ armor:6:0
 desc:A smoothly curved full-face helmet that covers your entire head with tough plastic - including a clear plastic flip-up visor in front.
 material:plastic
 
+# Base item for the Dark Helmet artifact
+name:& dark helmet~
+type:helm
+graphics:]:Slate
+level:50
+alloc:0:10 to 100
+desc:x
+flags:QUEST_ART | INSTA_ART
+material:steel
+
 # This only exists for the artifact (of the Core)
 name:& Coronet~
 type:helm

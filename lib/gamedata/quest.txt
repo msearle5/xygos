@@ -116,6 +116,15 @@ intro:Foo
 number:1
 flags:guardian
 
+name:The Dark Helmet
+level:50
+race:The Dark Helmet
+desc:The Dark Helmet's goons harass the town, and he has ambitions of extending his grasp further. Are you up to putting him down?
+store:Volcano
+intro:Foo
+number:1
+flags:guardian
+
 ####################################
 # The win-quest sequence.
 #

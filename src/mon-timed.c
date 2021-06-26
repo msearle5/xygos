@@ -320,5 +320,8 @@ int monster_effect_level(struct monster *mon, int effect_type)
 {
 	struct mon_timed_effect *effect = &effects[effect_type];
 	int divisor = MAX(effect->max_timer / 5, 1);
-	return MIN((mon->m_timed[effect_type] + divisor - 1) / divisor, 5);
+	int level = (mon->m_timed[effect_type] + divisor - 1) / divisor;
+	if ((effect_type == MON_TMD_CONF) && (rf_has(mon->race->flags, RF_CONFUSED)))
+		level += 2;
+	return MIN(level, 5);
 }

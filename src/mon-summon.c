@@ -140,6 +140,13 @@ static enum parser_error parse_summon_desc(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_summon_friends(struct parser *p) {
+	struct summon *s = parser_priv(p);
+	assert(s);
+	s->friends = true;
+	return PARSE_ERROR_NONE;
+}
+
 
 
 static struct parser *init_parse_summon(void) {
@@ -153,6 +160,7 @@ static struct parser *init_parse_summon(void) {
 	parser_reg(p, "race-flag sym flag", parse_summon_race_flag);
 	parser_reg(p, "fallback str fallback", parse_summon_fallback);
 	parser_reg(p, "desc str desc", parse_summon_desc);
+	parser_reg(p, "friends", parse_summon_friends);
 	return p;
 }
 
@@ -494,7 +502,7 @@ int summon_named_near(struct loc grid, const char *name)
  *
  * Note that this function may not succeed, though this is very rare.
  */
-int summon_specific(struct loc grid, int lev, int type, bool delay, bool call)
+int summon_specific(struct loc grid, struct monster_race *summoner, int lev, int type, bool delay, bool call)
 {
 	struct loc near;
 	struct monster *mon;
@@ -507,6 +515,10 @@ int summon_specific(struct loc grid, int lev, int type, bool delay, bool call)
 
 	/* Save the "summon" type */
 	summon_specific_type = type;
+
+	/* Friends are handled separately */
+	if (summoner && summons[type].friends)
+		return (place_race_friends(cave, grid, summoner, false, info, ORIGIN_DROP_SUMMON));
 
 	/* Use the new calling scheme if requested */
 	if (call && (type != summon_name_to_idx("UNIQUE")) &&
