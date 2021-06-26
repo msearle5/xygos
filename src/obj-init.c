@@ -2211,6 +2211,11 @@ static enum parser_error parse_ego_name(struct parser *p) {
 	parser_setpriv(p, e);
 	e->name = string_make(name);
 	parsing_magic = &(e->magic);
+
+	/* Set all min-combat values to no minimum */
+	e->min_to_h = NO_MINIMUM;
+	e->min_to_d = NO_MINIMUM;
+	e->min_to_a = NO_MINIMUM;
 	return PARSE_ERROR_NONE;
 }
 
