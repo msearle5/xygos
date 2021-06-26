@@ -1942,6 +1942,57 @@ static void store_examine(struct store_context *ctx, int item)
 		if (item < world_connections(player->town)) {
 			sprintf(header, "Fly to %s!", player->town->connect[item]->name);
 			textblock_append(tb, world_describe_town(player->town->connect[item]));
+			const char *name = NULL;
+			{
+				rng_state state;
+				Rand_extract_state(&state);
+				Rand_state_init(world_town_seed ^ (player->town - t_info));
+				name = random_line(firstnames);
+				Rand_restore_state(&state);
+			}
+			/* How difficult is it? The Fortress might be a special case, and might also want to look at
+			 * recall depth / quest monster being dead.
+			 **/
+			struct quest *quest = quest_guardian_any(player->town->connect[item]);
+			if (quest) {
+				const char *desc = NULL;
+				textblock_append_c(tb, COLOUR_YELLOW, "  %s adds: ", name);
+				if (player->orbitable) {
+					desc = "Feel free, but wouldn't you like to be a real traveller? Orbit awaits!";
+				} else {
+					if (player->town->connect[item]->recall_depth) {
+						if (player->town->connect[item] == t_info) {
+							/* Fortress */
+							desc = "Yep, that's where you've got to be in the end, after all!";
+						} else {
+							/* Minor dungeon */
+							desc = "Sure, why not make another attempt? Never give up!";
+							if (quest->flags & QF_SUCCEEDED) {
+								if (streq(quest->name, "Stores")) {
+									/* Your starting town */
+									desc = "Going home again for a while? No problem.";
+								} else {
+									desc = "Great, I'm sure they'll be glad to see you again there!";
+								}
+							}
+						}
+					} else {
+						int difficulty = quest->level;
+						difficulty -= MAX(player->max_depth, player->max_lev / 2);
+						if (difficulty < 0)
+							desc = "You should have no trouble at all there - really, a relaxing stroll!";
+						else if (difficulty < 5)
+							desc = "A recommended next destination. Just right for you - go for it!";
+						else if (difficulty < 10)
+							desc = "Definitely a bit of a challenge, but then - hey, why not?";
+						else if (difficulty < 20)
+							desc = "That's a stretch - seriously chancy. But maybe you could still pull it off?";
+						else
+							desc = "I admire your courage, but I'd really not recommend going there just yet!";
+					}
+				}
+				textblock_append_c(tb, COLOUR_GREEN, desc);
+			}
 		} else {
 			sprintf(header, "The Orbital Station!");
 			textblock_append(tb, "Yes, you too can be an astronaut! See the world roll away below you from 300km up from the Xygos Orbital Station. Flights are available every morning for a very reasonable price!");

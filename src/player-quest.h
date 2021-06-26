@@ -43,5 +43,7 @@ const char *quest_get_intro(const struct quest *q);
 bool is_active_quest(int level);
 bool is_blocking_quest(int level);
 struct quest *quest_guardian(void);
+struct quest *quest_guardian_of(struct town *town);
+struct quest *quest_guardian_any(struct town *town);
 
 #endif /* QUEST_H */

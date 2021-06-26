@@ -1,5 +1,7 @@
 BUGS
 ====
+BUG: "hologram nonliving creature" in monster info should just be "hologram".
+
 BUG: Random artifacts (e.g. Slick's 6mm rifle) can be generated with no flags.
 
 BUG: Stores which close lose their entrance but don't become ruins. (Only when more than one would?)
