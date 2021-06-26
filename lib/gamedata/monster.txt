@@ -335,14 +335,14 @@ hearing:20
 armor-class:90
 sleepiness:120
 depth:25
-rarity:1
+rarity:0
 experience:2500
 drop:0:Holo-Triax:100:1:1
 blow:GAZE:TERRIFY
 blow:GAZE:CONFUSE:2d8
 blow:TOUCH:FIRE:3d8
 blow:TOUCH:COLD:3d8
-flags:MALE | QUESTOR | UNIQUE | SMART | REGENERATE | WEIRD_MIND
+flags:MALE | QUESTOR | UNIQUE | SMART | REGENERATE | WEIRD_MIND | SPECIAL_GEN
 flags:INVISIBLE
 flags:DROP_2 | DROP_20 | DROP_40 | DROP_GOOD | ONLY_ITEM
 flags:OPEN_DOOR
@@ -481,14 +481,14 @@ hearing:100
 armor-class:180
 sleepiness:0
 depth:100
-rarity:1
+rarity:0
 experience:500000
 drop:hafted:Dominion:100:1:1
 blow:HIT:SHATTER:20d10
 blow:HIT:SHATTER:20d10
 blow:HIT:LOSE_ALL:10d12
 blow:TOUCH:DRAIN_CHARGES
-flags:UNIQUE | QUESTOR | DEATH_SPECIAL
+flags:UNIQUE | QUESTOR | DEATH_SPECIAL | SPECIAL_GEN
 flags:MALE | EVIL | SMART | SPIRIT
 flags:DROP_4 | DROP_3 | DROP_2 | DROP_1 | DROP_60 | DROP_40 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
 flags:SMASH_WALL | MOVE_BODY | ATTR_FLICKER | REGENERATE
@@ -1070,14 +1070,14 @@ hearing:20
 armor-class:140
 sleepiness:50
 depth:50
-rarity:1
+rarity:0
 experience:75000
 drop:0:Deep Time:100:1:1
 blow:BITE:HURT:2d70
 blow:CLAW:HURT:1d8
 blow:CLAW:HURT:1d8
 blow:CRUSH:HURT:4d6
-flags:UNIQUE | QUESTOR | SMART | FORCE_DEPTH
+flags:UNIQUE | QUESTOR | SMART | FORCE_DEPTH | SPECIAL_GEN
 flags:POWERFUL
 flags:BASH_DOOR
 friends:100:3d2:tyrannosaur:servant
@@ -1133,7 +1133,7 @@ drop:block:unobtainium:20:1:1
 flags:UNIQUE | QUESTOR | SPECIAL_GEN | SMART | METAL
 flags:DROP_4 | DROP_3 | DROP_2 | DROP_1 | ONLY_GOLD
 flags:KILL_WALL | KILL_BODY
-desc:Miniac, the Mining Intelligent Autonomous Control. A heavy robot platform for blasting through rock walls, shifting equipment and controlling other robots. And entirely insane, seeing you as just a walking bag of fuel. There's no big red switch in sight - you are going to have to shut it down the old-fashioned way.
+desc:Miniac, the Mining Intelligent Autonomous Control. A heavy robotic platform for blasting through rock walls, shifting equipment and controlling other robots. And entirely insane, seeing you as just a walking bag of fuel. There's no big red switch in sight - you are going to have to shut it down the old-fashioned way.
 
 name:Mecha-Triax
 base:robot
@@ -1144,7 +1144,7 @@ hearing:30
 armor-class:192
 sleepiness:15
 depth:75
-rarity:1
+rarity:0
 experience:250000
 blow:HIT:SHATTER:13d13
 blow:HIT:CONFUSE:13d13
@@ -1155,7 +1155,7 @@ spell-power:97
 spells:BE_ELEC
 drop:0:of Mecha-Triax:100:1:1
 flags:UNIQUE | QUESTOR | FORCE_DEPTH | REGENERATE | SMART | PREFER_MELEE | METAL
-flags:DROP_4 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
+flags:DROP_4 | DROP_GOOD | DROP_GREAT | ONLY_ITEM | SPECIAL_GEN
 flags:KILL_WALL | KILL_BODY
 flags:IM_ACID
 desc:A robot which ego-tastic Triax has had built in the shape of his head. Gold plated and 10 meters tall... so life size, even if not literally. But this is no statue - it's approaching at an alarming rate and if it's capable of smashing its way through solid rock, imagine what it could do to you!
@@ -1169,7 +1169,7 @@ hearing:10
 armor-class:250
 sleepiness:0
 depth:120
-rarity:1
+rarity:0
 experience:1000000
 blow:HIT:SHATTER:15d15
 blow:HIT:SHATTER:15d15
@@ -1182,7 +1182,7 @@ spells:BA_RADI | BA_POIS | BA_LIGHT | BA_SHAR | BA_WATE | BA_DARK | BA_GRAV | BA
 spells:S_UNIQUE
 drop:0:of the Core:100:1:1
 flags:UNIQUE | QUESTOR | FORCE_DEPTH | REGENERATE | SMART | SPIRIT | EVIL
-flags:KILL_BODY | ATTR_FLICKER | REGENERATE | METAL
+flags:KILL_BODY | ATTR_FLICKER | REGENERATE | METAL | SPECIAL_GEN
 flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS
 flags:NO_CONF | NO_SLEEP | NO_HOLD | NO_FEAR
 flags:FORCE_DEPTH | FORCE_SLEEP

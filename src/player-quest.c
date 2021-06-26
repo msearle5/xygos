@@ -375,7 +375,7 @@ bool is_blocking_quest(int level)
 	if (!level) return false;
 
 	/* Is this the last level of a dungeon? */
-	bool end = !world_level_exists(NULL, level+1);
+	bool end = ((world_level_exists(NULL, level+1)) && (!world_level_exists(NULL, level+1)));
 
 	for (i = 0; i < z_info->quest_max; i++)
 		if (((player->quests[i].town == (player->town - t_info)) || (player->quests[i].town < 0)) &&
@@ -891,6 +891,7 @@ void quest_changed_level(void)
 		}
 	}
 	bool guardian = ((player->depth) && (!world_level_exists(NULL, player->depth + 1)));
+	bool fortress = (player->town == t_info);
 
 	/* Quest specific checks */
 	for(int i=0;i<z_info->quest_max;i++) {
@@ -905,15 +906,33 @@ void quest_changed_level(void)
 						fail_quest(q);
 					}
 				}
-			} else if (streq(q->name, "Slick")) {
-				if (guardian) {
-					if (xy.x)
-						place_new_monster(cave, xy, lookup_monster("Slick"), false, true, info, ORIGIN_DROP);
-				}
-			} else if (streq(q->name, "Miniac")) {
-				if (guardian) {
-					if (xy.x)
-						place_new_monster(cave, xy, lookup_monster("Miniac, the Crusher"), false, false, info, ORIGIN_DROP);
+			} else {
+				if (xy.x) {
+					if (streq(q->name, "Slick")) {
+						if (guardian && ((player->town - t_info) == q->town)) {
+							place_new_monster(cave, xy, lookup_monster(q->name), false, true, info, ORIGIN_DROP);
+						}
+					} else if (streq(q->name, "Impy")) {
+						if (fortress && (player->depth == q->level)) {
+							place_new_monster(cave, xy, lookup_monster(q->name), false, true, info, ORIGIN_DROP);
+						}
+					} else if (streq(q->name, "Holo-Triax") || streq(q->name, "Mecha-Triax")) {
+						if (fortress && (player->depth == q->level)) {
+							place_new_monster(cave, xy, lookup_monster(q->name), false, false, info, ORIGIN_DROP);
+						}
+					} else if (streq(q->name, "The Core")) {
+						if (player->depth == q->level) {
+							place_new_monster(cave, xy, lookup_monster(q->name), false, false, info, ORIGIN_DROP);
+						}
+					} else if (streq(q->name, "Miniac")) {
+						if (guardian && ((player->town - t_info) == q->town)) {
+							place_new_monster(cave, xy, lookup_monster("Miniac, the Crusher"), false, false, info, ORIGIN_DROP);
+						}
+					} else if (streq(q->name, "Triax")) {
+						if (fortress && (player->depth == q->level)) {
+							place_new_monster(cave, xy, lookup_monster("Triax, the Emperor"), false, false, info, ORIGIN_DROP);
+						}
+					}
 				}
 			}
 		}
@@ -1044,7 +1063,7 @@ void quest_reward(struct quest *q, bool success)
 			}
 		} else if (streq(n, "Hunter, in Darkness")) {
 			/* The boom-stick!
-			 * This is a bit wimpy. Maybe it should be a randart? Or add some ammo.
+			 * This is a bit wimpy. Maybe it should be a randart?  adding some ammo.
 			 **/
 			add_item(si, TV_GUN, "12mm rifle (automatic)", 1, 1);
 			add_item(si, TV_AMMO_12, "12mm bullet (guided)", 32, 39);
