@@ -43,6 +43,8 @@
 #include "ui-output.h"
 #include "ui-player.h"
 
+//Use a three rather than four column layout for the first page, missing the leftmost panel (faction, etc.)
+//#define THREE_COLUMN
 
 /**
  * ------------------------------------------------------------------------
@@ -902,6 +904,69 @@ static struct panel *get_panel_topleft(void) {
 	return p;
 }
 
+
+static struct panel *get_panel_farleft(void) {
+	struct panel *p = panel_allocate(9);
+
+	/* Town, mob and salon factions */
+	int town = MIN(MAX(player->town_faction + 2, 0), 8);
+	int mob = MIN(MAX(player->bm_faction + 2, 0), 8);
+	int cyber = MIN(MAX((player->cyber_faction / 100) + 2, 0), 8);
+
+	/* Descriptions of how much they like you or not. The first entry is for -2 (or less) up to +6 (or more) */
+	static const char *town_name[9] = {
+		"Public Enemy",
+		"Suspect",
+		"Customer",
+		"Associate",
+		"Partner",
+		"Partner",
+		"Partner",
+		"Partner",
+		"Partner"
+	};
+	static const char *mob_name[9] = {
+		"Deadly Enemy",
+		"Disliked",
+		"Outsider",
+		"Initiate",
+		"Mobster",
+		"Mob Boss",
+		"Mob Boss",
+		"Mob Boss",
+		"Mob Boss",
+	};
+	static const char *cyber_name[9] = {
+		"Oppressor",
+		"Hater",
+		"Wannabe",
+		"Member",
+		"Chrome Hand",
+		"Silver Hand",
+		"Golden Hand",
+		"Platinum Hand",
+		"Diamond Hand"
+	};
+	static const int colour_name[9] = {
+		COLOUR_RED,
+		COLOUR_ORANGE,
+		COLOUR_YELLOW,
+		COLOUR_GREEN,
+		COLOUR_BLUE,
+		COLOUR_BLUE,
+		COLOUR_BLUE,
+		COLOUR_BLUE,
+		COLOUR_BLUE
+	};
+
+	panel_line(p, COLOUR_WHITE, "Faction", "", "");
+	panel_line(p, colour_name[town], "Town", "%s", town_name[town]);
+	panel_line(p, colour_name[mob], "Mob", "%s", mob_name[mob]);
+	panel_line(p, colour_name[cyber], "Cyber", "%s", cyber_name[cyber]);
+
+	return p;
+}
+
 static struct panel *get_panel_midleft(void) {
 	struct panel *p = panel_allocate(9);
 	int diff = weight_remaining(player);
@@ -1046,9 +1111,16 @@ static const struct {
 	/*   x  y wid rows */
 	{ {  1, 1, 40, 7 }, true,  get_panel_topleft },	/* Name, Class, ... */
 	{ { 21, 1, 16, 3 }, false, get_panel_misc },	/* Age, ht, wt, ... */
+#ifdef THREE_COLUMN_PANEL
 	{ {  1, 9, 24, 9 }, false, get_panel_midleft },	/* Cur Exp, Max Exp, ... */
 	{ { 29, 9, 19, 9 }, false, get_panel_combat },
 	{ { 52, 9, 20, 8 }, false, get_panel_skills },
+#else
+	{ {  1, 9, 19, 9 }, false, get_panel_farleft },	/* Cur Exp, Max Exp, ... */
+	{ { 21, 9, 22, 9 }, false, get_panel_midleft },	/* Cur Exp, Max Exp, ... */
+	{ { 44, 9, 17, 9 }, false, get_panel_combat },
+	{ { 62, 9, 18, 8 }, false, get_panel_skills },
+#endif
 };
 
 void display_player_xtra_info(void)
