@@ -964,6 +964,45 @@ static struct panel *get_panel_farleft(void) {
 	panel_line(p, colour_name[mob], "Mob", "%s", mob_name[mob]);
 	panel_line(p, colour_name[cyber], "Cyber", "%s", cyber_name[cyber]);
 
+	/* Show the danger level */
+	if (OPT(player, birth_time_limit)) {
+		panel_space(p);
+		static const char *danger_name[] = {
+			"None",
+			"Slight",
+			"Modest",
+			"Modest",
+			"Elevated",
+			"Elevated",
+			"Elevated",
+			"Severe",
+			"Severe",
+			"Severe",
+			"Severe",
+			"Severe",
+			"Extreme",
+		};
+		static const int danger_colour[(sizeof(danger_name) / sizeof(danger_name[0]))] = {
+			COLOUR_GREEN,
+			COLOUR_L_GREEN,
+			COLOUR_YELLOW,
+			COLOUR_YELLOW,
+			COLOUR_ORANGE,
+			COLOUR_ORANGE,
+			COLOUR_ORANGE,
+			COLOUR_RED,
+			COLOUR_RED,
+			COLOUR_RED,
+			COLOUR_RED,
+			COLOUR_RED,
+			COLOUR_MAGENTA
+		};
+		int danger = MIN((player->danger + 4) / 5, (sizeof(danger_name) / sizeof(danger_name[0])) - 1);
+		const char *descr = danger_name[danger];
+		int col = danger_colour[danger];
+		panel_line(p, col, "Danger", "%s (%d)", descr, danger);
+		panel_line(p, COLOUR_GREEN, "Postponed", "%d", player->danger_reduction);
+	}
 	return p;
 }
 

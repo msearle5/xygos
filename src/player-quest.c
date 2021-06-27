@@ -1214,8 +1214,11 @@ bool quest_check(const struct monster *m) {
 			return true;
 		} else if (streq(m->race->name, "Slick")) {
 			reward_quest(get_quest_by_name("Slick"));
-			/* Reward = some items dropped, townee faction (and an appropriate message) */
-			player->town_faction++;
+			/* Reward = some items dropped, townee faction, reduce danger (and an appropriate message) */
+			if (player->town_faction < 3)
+				player->town_faction++;
+			if (player->danger < 15)
+				player->danger_reduction += (19 - player->danger) / 5;
 			msg("The town's a safer place with Slick's mob out of action.");
 			return true;
 		} else if (streq(m->race->name, "Miniac, the Crusher")) {
@@ -1225,8 +1228,10 @@ bool quest_check(const struct monster *m) {
 			return true;
 		} else if (streq(m->race->name, "The Dark Helmet")) {
 			reward_quest(get_quest_by_name("The Dark Helmet"));
-			/* Reward = some items dropped, townee faction, and a message */
+			/* Reward = some items dropped, townee faction, reduce danger, and a message */
 			player->town_faction++;
+			if (player->danger < 30)
+				player->danger_reduction += (29 - player->danger) / 5;
 			msg("Without the Dark Helmet, his goon squads aren't much of a threat.");
 			return true;
 		} else if (streq(m->race->name, "Primordial Grue")) {

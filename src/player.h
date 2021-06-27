@@ -595,6 +595,7 @@ struct player {
 	s16b max_depth;	/* Max depth */
 	s16b depth;		/* Cur depth */
 	s16b danger;	/* Additional danger level */
+	s16b danger_reduction;	/* Reduction of danger level */
 
 	s16b max_lev;	/* Max level */
 	s16b lev;		/* Cur level */

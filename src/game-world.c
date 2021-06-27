@@ -1253,11 +1253,15 @@ void increase_danger_level(void)
 		if (danger != player->danger) {
 			assert(player->danger < danger);
 			while (player->danger < danger) {
-				player->danger++;
-				/* Effects of timed danger - destroy a store? */
-				for(int i=0;i<MAX_STORES;i++) {
-					if (player->danger == stores[i].max_danger)
-						stores[i].destroy = true;
+				if (player->danger_reduction) {
+					player->danger_reduction--;
+				} else {
+					player->danger++;
+					/* Effects of timed danger - destroy a store? */
+					for(int i=0;i<MAX_STORES;i++) {
+						if (player->danger == stores[i].max_danger)
+							stores[i].destroy = true;
+					}
 				}
 			}
 		}

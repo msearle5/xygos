@@ -712,6 +712,7 @@ void rdwr_player_levels(void)
 	rdwr_s16b(&player->max_lev);
 	rdwr_s16b(&player->max_depth);
 	rdwr_s16b(&player->danger);
+	rdwr_s16b(&player->danger_reduction);
 }
 
 /**
