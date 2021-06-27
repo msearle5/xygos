@@ -1,5 +1,14 @@
 BUGS
 ====
+BUG? Stuff isn't transported when you fly - should it be? Should there just be 1 house?
+BUG: Starting characters can get a scrap of flesh - requier cost > 0, for random?
+BUG: May be no lights/food in the gs
+BUG:"You set off the strange rune" and monster spell SHOT need retheming
+
+BUG: Store faction doesn't do anything
+
+BUG: "But not by buying stuff and selling it back again" checks origin. This stops buy-selling something that originated in the store, but not something that you found. (So add a 'once sold' flag?)
+
 BUG: "hologram nonliving creature" in monster info should just be "hologram".
 
 BUG: Random artifacts (e.g. Slick's 6mm rifle) can be generated with no flags.
