@@ -997,7 +997,7 @@ static struct panel *get_panel_farleft(void) {
 			COLOUR_RED,
 			COLOUR_MAGENTA
 		};
-		int danger = MIN((player->danger + 4) / 5, (sizeof(danger_name) / sizeof(danger_name[0])) - 1);
+		int danger = MIN((player->danger + 4) / 5, (int)(sizeof(danger_name) / sizeof(danger_name[0])) - 1);
 		const char *descr = danger_name[danger];
 		int col = danger_colour[danger];
 		panel_line(p, col, "Danger", "%s (%d)", descr, danger);
