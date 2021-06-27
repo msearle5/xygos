@@ -125,6 +125,15 @@ intro:Foo
 number:1
 flags:guardian
 
+name:Primordial Grue
+level:40
+race:Primordial Grue
+desc:In the darkest corner of the deepest cave, the Primordial Grue waits.
+store:Caverns
+intro:Foo
+number:1
+flags:guardian
+
 ####################################
 # The win-quest sequence.
 #

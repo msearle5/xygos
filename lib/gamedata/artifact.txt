@@ -140,6 +140,13 @@ flags:QUEST_ART | RANDOM_ART
 power:50
 desc:Liberated from Slick, the gangster who hid out in the Stores.
 
+name:<the gruesome
+base-object:helm:X7
+level:40
+flags:QUEST_ART | RANDOM_ART
+power:220
+desc:The Primordial Grue's treasure.
+
 name:<Miniac's
 base-object:helm:X6
 level:30

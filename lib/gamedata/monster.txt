@@ -510,6 +510,7 @@ blow:HIT:HURT:4d10
 blow:HIT:HURT:4d10
 blow:CRUSH:ELEC:6d10
 drop:helm:Dark Helmet:100:1:1
+drop:food:habanero:100:1:3
 flags:UNIQUE | QUESTOR | SPECIAL_GEN
 flags:MALE | EVIL | SMART | SPIRIT
 flags:DROP_3 | DROP_2 | DROP_1 | DROP_60 | DROP_40 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
@@ -749,6 +750,34 @@ flags:COLD_BLOOD | REGENERATE | TAKE_ITEM | BASH_DOOR
 flags:RAND_50
 flags:IM_COLD | NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
 desc:Green bats of immense size with vicious claws, said to have picked up unfortunate explorers and carried them away.
+
+
+##### GRUES #####
+
+name:Primordial Grue
+base:grue
+color:Violet
+speed:140
+hit-points:600
+hearing:2
+smell:2
+armor-class:90
+sleepiness:0
+depth:40
+rarity:0
+experience:5500
+blow:TOUCH:BLIND:3d10
+blow:CLAW:HURT:1d24
+blow:CLAW:HURT:1d24
+blow:TOUCH:EAT_LIGHT:2d10
+drop:helm:the gruesome:100:1:1
+flags:COLD_BLOOD | BASH_DOOR | SMART
+flags:IM_COLD | NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
+flags:UNIQUE | SPECIAL_GEN | QUESTOR
+innate-freq:2
+spell-freq:2
+spells:DARKNESS | SCARE | BR_DARK | BLIND | MIND_BLAST | BRAIN_SMASH | S_KIN | HOLD | TELE_TO
+desc:In absolute darkness, an ill-defined patch manages to be darker. Fear of the dark? This thing's why. Can you kill it? It's had a million years of practice. You might want to run away - but you can't, it's faster than light: wherever light reaches *the dark got there first*.
 
 
 ##### LEMMINGS #####
