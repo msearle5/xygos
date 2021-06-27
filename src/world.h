@@ -27,6 +27,8 @@ struct town {
 	char *downto;				/* Go down to this level */
 	char *underground;			/* "over ancient caverns" */
 	char *geography;			/* "an active volcano" */
+	char *descend;				/* "You enter a maze of down stairs" */
+	char *climb;				/* "You enter a maze of up stairs" */
 	u32b connections;			/* Total number of connected towns */
 	s16b recall_depth;			/* Recall depth into this town's dungeon */
 	bool lake;					/* generate a lake */

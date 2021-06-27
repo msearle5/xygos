@@ -808,18 +808,28 @@ bool world_init_towns(void)
 
 	world_town_dungeon(t = world_new_town(), "Fortress");
 	t->underground = "a historic underground fortress, said to extend hundreds of levels down.";
+	t->climb = "You climb through a maze of rusted metal stairways.";
+	t->descend = "You enter a maze of rusted metal stairways.";
 
 	world_town_dungeon(t = world_new_town(), "Sewers");
 	t->underground = "mysterious catacombs of unknown purpose and extent.";
+	t->climb = "You carefully climb a slimy ladder.";
+	t->descend = "You slither down a slimy access shaft.";
 
 	world_town_dungeon(t = world_new_town(), "Caverns");
 	t->underground = "lofty caverns and wonderful waterfalls of twisted rock.";
+	t->climb = "You make your way up a bare rock slope.";
+	t->descend = "You pick your way down a bare rock slope.";
 
 	world_town_dungeon(t = world_new_town(), "Mine");
 	t->underground = "the famous gold mines - maybe you'll get lucky?";
+	t->climb = "You climb up roughly hewn stone steps.";
+	t->descend = "You descend roughly hewn stone steps.";
 
 	world_town_dungeon(t = world_new_town(), "Stores");
 	t->underground = "an abandoned bunker, once a deadly secret.";
+	t->climb = "You climb through a maze of shaky old staircases.";
+	t->descend = "You enter a maze of shaky old staircases.";
 
 	/* Space Station doesn't have an associated town */
 	world_town_dungeon(NULL, "Spacestation");
@@ -848,6 +858,8 @@ bool world_init_towns(void)
 	world_town_dungeon(t = world_new_town(), "Volcano");
 	t->geography = "an awesome active volcano";
 	t->underground = "enticing volcanic caves!";
+	t->climb = "You climb twisted black rock into cooler air.";
+	t->descend = "You descend into a noticeably warmer level.";
 	t->lava_num = 3 + randint0(3);
 
 	for(int i=0; i<z_info->town_max; i++) {

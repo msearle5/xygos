@@ -75,9 +75,16 @@ void do_cmd_go_up(struct command *cmd)
 	}
 
 	/* Endgame */
-	if ((!player->town) && (!player->total_winner)) {
-		msg("The airlock is sealed - you cannot go back up.");
-		return;
+	if (!player->town) {
+		if (!player->total_winner) {
+			msg("The airlock is sealed - you cannot go back up.");
+			return;
+		} else {
+			maze = "You pass through an airlock, which seals again but remains unlocked.";
+		}
+	} else {
+		if (player->town->climb)
+			maze = player->town->climb;
 	}
 
 	ascend_to = dungeon_get_next_level(player->depth, -1);
@@ -138,7 +145,7 @@ void do_cmd_go_down(struct command *cmd)
 
 	/* Paranoia, no descent from z_info->max_depth - 1 */
 	if (player->depth == z_info->max_depth - 1) {
-		msg("The fortress does not appear to extend deeper.");
+		msg("The space station does not appear to extend any further.");
 		return;
 	}
 
@@ -151,8 +158,15 @@ void do_cmd_go_down(struct command *cmd)
 	}
 
 	/* Endgame */
-	if ((!player->town) && (!player->total_winner)) {
-		msg("You pass through an airlock, which seals behind you.");
+	if (!player->town) {
+		if (!player->total_winner) {
+			maze = "You pass through an airlock, which seals behind you.";
+		} else {
+			maze = "You pass through an airlock, which seals again but remains unlocked.";
+		}
+	} else {
+		if (player->town->descend)
+			maze = player->town->descend;
 	}
 
 	/* Enter The Quest! */
