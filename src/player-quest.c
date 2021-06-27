@@ -916,7 +916,7 @@ void quest_changed_level(void)
 				 * It must be the right level, and the right dungeon.
 				 */
 				if (xy.x) {
-					if (streq(q->name, "Slick") || streq(q->name, "The Dark Helmet") || streq(q->name, "Primordial Grue")) {
+					if (streq(q->name, "Slick") || streq(q->name, "The Dark Helmet") || streq(q->name, "Primordial Grue") || streq(q->name, "Icky Sticky Dinosaur")) {
 						if (guardian && ((player->town - t_info) == q->town)) {
 							place_new_monster(cave, xy, lookup_monster(q->name), false, true, info, ORIGIN_DROP);
 						}
@@ -1233,6 +1233,11 @@ bool quest_check(const struct monster *m) {
 			reward_quest(get_quest_by_name("Primordial Grue"));
 			/* Reward = some items dropped, and a message */
 			msg("The unnatural darkness seems to be just an absence of light now.");
+			return true;
+		} else if (streq(m->race->name, "Icky Sticky Dinosaur")) {
+			reward_quest(get_quest_by_name("Icky Sticky Dinosaur"));
+			/* Reward = some items dropped, and a message */
+			msg("The gel liquefies and drains away. That thing's not coming back!");
 			return true;
 		} else {
 			struct quest *q = get_quest_by_name(m->race->name);

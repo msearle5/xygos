@@ -107,11 +107,29 @@ intro:Foo
 number:1
 flags:guardian
 
+name:Icky Sticky Dinosaur
+level:15
+race:Icky Sticky Dinosaur
+desc:There's something nasty in the sewer. Besides poop, that is. It's icky, it's sticky and it's got to be stopped!
+store:Sewers
+intro:Foo
+number:1
+flags:guardian
+
 name:Miniac
 level:30
 race:Miniac, the Crusher
 desc:Miniac, the Mining Intelligent Autonomous Control has turned out to be a maniac and guess who has to stop it.
 store:Mine
+intro:Foo
+number:1
+flags:guardian
+
+name:Primordial Grue
+level:40
+race:Primordial Grue
+desc:In the darkest corner of the deepest cave, the Primordial Grue waits. Are you scared yet?
+store:Caverns
 intro:Foo
 number:1
 flags:guardian
@@ -125,14 +143,6 @@ intro:Foo
 number:1
 flags:guardian
 
-name:Primordial Grue
-level:40
-race:Primordial Grue
-desc:In the darkest corner of the deepest cave, the Primordial Grue waits.
-store:Caverns
-intro:Foo
-number:1
-flags:guardian
 
 ####################################
 # The win-quest sequence.

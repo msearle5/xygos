@@ -110,7 +110,7 @@ flags:PROT_CONF | PROT_BLIND
 values:INT[-3] | WIS[-3] | RES_SOUND[1]
 # RES_EDGED
 # | PROT_HALLU
-desc:A helmet with a high pointed plume above each ear. Shielding you from unpleasant truths, this leader's helm also prevents you from getting the point...
+desc:A helmet with a high pointed plume above each ear. Shielding you from unpleasant truths, this leader's helm also prevents you from getting the point...wd
 
 
 ### Light Armor ###
@@ -140,12 +140,19 @@ flags:QUEST_ART | RANDOM_ART
 power:50
 desc:Liberated from Slick, the gangster who hid out in the Stores.
 
-name:<the gruesome
+name:<gruesome
 base-object:helm:X7
 level:40
 flags:QUEST_ART | RANDOM_ART
 power:220
 desc:The Primordial Grue's treasure.
+
+name:<icky
+base-object:helm:X8
+level:15
+flags:QUEST_ART | RANDOM_ART
+power:90
+desc:It's covered in blue goop, and it stinks. It's not obviously desirable, but does have some less obvious redeeming qualities.
 
 name:<Miniac's
 base-object:helm:X6

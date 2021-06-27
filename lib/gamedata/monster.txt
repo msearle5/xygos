@@ -770,7 +770,7 @@ blow:TOUCH:BLIND:3d10
 blow:CLAW:HURT:1d24
 blow:CLAW:HURT:1d24
 blow:TOUCH:EAT_LIGHT:2d10
-drop:helm:the gruesome:100:1:1
+drop:helm:gruesome:100:1:1
 flags:COLD_BLOOD | BASH_DOOR | SMART
 flags:IM_COLD | NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
 flags:UNIQUE | SPECIAL_GEN | QUESTOR
@@ -1120,6 +1120,32 @@ blow:BITE:PARALYZE:1d1
 flags:RAND_25
 flags:NO_SLEEP
 desc:A small blue lizard, creeping half-heartedly around with eyes half-shut.
+
+name:Icky Sticky Dinosaur
+base:reptile
+color:Z
+speed:110
+hit-points:220
+hearing:2
+smell:2
+armor-class:0
+sleepiness:200
+depth:15
+rarity:0
+experience:400
+blow:CRUSH:ACID:2d9
+blow:CRUSH:POISON:1d9
+blow:ENGULF:PARALYZE:1d9
+drop:0:icky:100:1:1
+flags:UNIQUE | STUPID | WEIRD_MIND | COLD_BLOOD | QUESTOR | SPECIAL_GEN
+flags:DROP_4 | DROP_3 | DROP_2 | DROP_1 | DROP_60 | DROP_40 | DROP_20 | ONLY_ITEM
+flags:NO_CONF | NO_STUN | NO_FEAR | NO_SLEEP | NO_HOLD
+flags:FORCE_SLEEP
+flags-off:ANIMAL | HURT_COLD
+innate-freq:5
+spell-freq:12
+spells:HEAL | SPIT
+desc:It has the rough shape of a long-necked dinosaur - perhaps being modelled on a diplodocus. But it's clearly no living beast - it's an animatronic creation, all smooth curves without visible eyes or other protuberances, just a mass of sticky, wobbling bright blue gel.
 
 name:tyrannosaur
 base:reptile
