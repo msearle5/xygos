@@ -1,0 +1,60 @@
+# File: death.txt
+
+# This file is used to initialize the mine explosion messages for the game.
+
+# Do not modify this file unless you know exactly what you are doing
+# unless you wish to risk possible system crashes and broken savefiles.
+
+# That said, it isn't difficult. Just keep each message on one line,
+# less than 80 characters, and start each line with D:
+
+# Format: 
+# D:Mine explosion message.
+#
+# 	(e.g.)	The proximity mine wakes up.
+#			The proximity mine exclaims: "I think, therefore I think I will explode."
+#			The proximity mine explodes!
+
+D:Do you know what a Disinto Device is?
+D:Don't worry. Legs are over-rated, you know.
+D:Fun time!
+D:Goodness gracious, great balls of fire!
+D:Guess what I can do?
+D:Heh-heh, heh-heh, heh-heh. I said BANG.
+D:Hi, I'm Betty!
+D:Hold my beer, and watch this!
+D:I feel good!
+D:I have been putting a lot of thought towards detonating, you know.
+D:I hope this doesn't inconvenience anyone too much?
+D:I hope you enjoy participating in this explosion as much as I do!
+D:I said, do not disturb!
+D:I think, therefore I think I will explode.
+D:I'd like you to take this personality test.
+D:I'm dynamite, baby!
+D:I'm not owned by anyone. I'm mine!
+D:I'm very proud to be a genuine MineX product!
+D:I've got a lovely surprise for you, you'll never guess what it is!
+D:I've got a special offer on shrapnel, today only!
+D:It's time to roll out a destroyment package.
+D:Knock knock?
+D:MineX: anyone can make a bomb, only we can give it personality!
+D:OK, Boomer.
+D:One Nuka-Cola, one large fries, one king-size KABOOM.
+D:Rocket jump!
+D:Self-destruct sounds so negative. I prefer to call it self-empowerment.
+D:Short sharp shower of shrapnel - here we go!
+D:Someone set us up the bomb!
+D:Surpriiiise!
+D:This is going to blow you away!
+D:Time to celebrate with a firework display!
+D:To be, or not to be? ... Not to be.
+D:Today's a great day to explode!
+D:Wanna go and get blasted?
+D:Want to hear my salsa recipe?
+D:Want to see my demo, man?
+D:Well done, you've discovered my secret!
+D:Would you like to play a game?
+D:Would you like to see my magic trick? I can make us both vanish!
+D:Would you like to see something neat?
+D:Yay!
+D:You have 60 seconds to reach safe distance... Nah.
