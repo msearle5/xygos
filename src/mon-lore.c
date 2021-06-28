@@ -705,6 +705,31 @@ static monster_sex_t lore_monster_sex(const struct monster_race *race)
 }
 
 /**
+ * Return "does" or "do" for a monster.
+ *
+ * Descriptions are in a table within the function. Table must match
+ * monster_sex_t values.
+ *
+ * \param sex is the gender value (as provided by `lore_monster_sex()`.
+ */
+static const char *lore_does(monster_sex_t sex)
+{
+	static const char *lore_does[MON_SEX_MAX] = {
+		"does",
+		"does",
+		"does",
+		"do"
+	};
+
+	int index = MON_SEX_NEUTER;
+
+	if (sex < MON_SEX_MAX)
+		index = sex;
+
+	return lore_does[index];
+}
+
+/**
  * Return a pronoun for a monster; used as the subject of a sentence.
  *
  * Descriptions are in a table within the function. Table must match
@@ -968,22 +993,28 @@ void lore_append_movement(textblock *tb, const struct monster_race *race,
 {
 	int f;
 	bitflag flags[RF_SIZE];
+	bitflag nflags[RF_SIZE];
 
 	assert(tb && race && lore);
 
 	textblock_append(tb, "This");
 
+	/* Test if this (the noun) is a hologram */
+	create_mon_flag_mask(nflags, RFT_RACE_N, RFT_MAX);
+	rf_inter(nflags, race->flags);
+	bool hologram = (rf_next(nflags, FLAG_START) == RF_HOLOGRAM);
+
 	/* Get adjectives */
 	create_mon_flag_mask(flags, RFT_RACE_A, RFT_MAX);
 	rf_inter(flags, race->flags);
 	for (f = rf_next(flags, FLAG_START); f; f = rf_next(flags, f + 1)) {
-		textblock_append_c(tb, COLOUR_L_BLUE, " %s", describe_race_flag(f));
+		/* This is a special case: it blocks some adjectives */
+		if ((f != RF_NONLIVING) || (!hologram))
+			textblock_append_c(tb, COLOUR_L_BLUE, " %s", describe_race_flag(f));
 	}
 
 	/* Get noun */
-	create_mon_flag_mask(flags, RFT_RACE_N, RFT_MAX);
-	rf_inter(flags, race->flags);
-	f = rf_next(flags, FLAG_START);
+	f = rf_next(nflags, FLAG_START);
 	if (f) {
 		textblock_append_c(tb, COLOUR_L_BLUE, " %s", describe_race_flag(f));
 	} else {
@@ -1012,9 +1043,11 @@ void lore_append_movement(textblock *tb, const struct monster_race *race,
 	textblock_append(tb, ", and moves");
 
 	/* Random-ness */
-	if (flags_test(known_flags, RF_SIZE, RF_RAND_50, RF_RAND_25, FLAG_END)) {
+	if (flags_test(known_flags, RF_SIZE, RF_RAND_50, RF_RAND_25, RF_CONFUSED, FLAG_END)) {
 		/* Adverb */
-		if (rf_has(known_flags, RF_RAND_50) && rf_has(known_flags, RF_RAND_25))
+		if (rf_has(known_flags, RF_CONFUSED))
+			textblock_append(tb, " and shoots");
+		else if (rf_has(known_flags, RF_RAND_50) && rf_has(known_flags, RF_RAND_25))
 			textblock_append(tb, " extremely");
 		else if (rf_has(known_flags, RF_RAND_50))
 			textblock_append(tb, " somewhat");
@@ -1302,6 +1335,7 @@ void lore_append_abilities(textblock *tb, const struct monster_race *race,
 	 * sentences */
 	msex = lore_monster_sex(race);
 	initial_pronoun = lore_pronoun_nominative(msex, true);
+	const char *does = lore_does(msex);
 
 	/* Describe environment-shaping abilities. */
 	create_mon_flag_mask(current_flags, RFT_ALTER, RFT_MAX);
@@ -1391,15 +1425,10 @@ void lore_append_abilities(textblock *tb, const struct monster_race *race,
 		}
 	}
 	if (prev)
-		my_strcpy(start, ", and does not resist ", sizeof(start));
+		my_strcpy(start, format(", and %s not resist ", does), sizeof(start));
 	else
-		my_strcpy(start, format("%s does not resist ", initial_pronoun),
+		my_strcpy(start, format("%s %s not resist ", initial_pronoun, does),
 				  sizeof(start));
-
-	/* Special case for undead */
-	if (rf_has(known_flags, RF_UNDEAD)) {
-		rf_off(current_flags, RF_IM_RADIATION);
-	}
 
 	lore_append_clause(tb, current_flags, COLOUR_L_UMBER, start, "or", "");
 	if (!rf_is_empty(current_flags)) {
