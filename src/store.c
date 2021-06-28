@@ -2452,7 +2452,7 @@ void do_cmd_sell(struct command *cmd)
 	handle_stuff(player);
 
 	/* The store gets that (known) object */
-	if (! store_carry(store, sold_item, false)) {
+	if ((cyber) || (!store_carry(store, sold_item, false))) {
 		/* The store rejected it; delete. */
 		if (sold_item->known) {
 			object_delete(&sold_item->known);
