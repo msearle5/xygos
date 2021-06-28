@@ -1482,6 +1482,18 @@ void do_cmd_accept_character(struct command *cmd)
 	}
 	roll_hp();
 
+	/* Embody */
+	player_embody(player);
+
+	/* Give the player some money */
+	get_money();
+
+	/* Make a world: towns */
+	world_init_towns();
+
+	/* Race, class etc. specific initialization */
+	player_hookz(init);
+
 	/* Prompt for birth talents and roll out per-level talent points */
 	int level_tp = setup_talents();
 	int orig_tp = player->talent_points;
@@ -1490,12 +1502,6 @@ void do_cmd_accept_character(struct command *cmd)
 
 	/* No quest in progress */
 	player->active_quest = -1;
-
-	/* Embody */
-	player_embody(player);
-
-	/* Make a world: towns */
-	world_init_towns();
 
 	ignore_birth_init();
 
@@ -1509,9 +1515,6 @@ void do_cmd_accept_character(struct command *cmd)
 	message_add("====================", MSG_GENERIC);
 	message_add("  ", MSG_GENERIC);
 	message_add(" ", MSG_GENERIC);
-
-	/* Give the player some money */
-	get_money();
 
 	/* Initialise the spells */
 	player_spells_init(player);
@@ -1565,9 +1568,6 @@ void do_cmd_accept_character(struct command *cmd)
 	if (!player->cooldown)
 		player->cooldown = mem_alloc(sizeof(*player->cooldown) * total_spells);
 	memset(player->cooldown, 0, sizeof(*player->cooldown) * total_spells);
-
-	/* Race, class etc. specific initialization */
-	player_hookz(init);
 
 	/* Stop the player being quite so dead */
 	player->is_dead = false;

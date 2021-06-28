@@ -1,17 +1,11 @@
 BUGS
 ====
+BUG: A Collective Skate that a cyborg started with was {??}
+
 BUG? Stuff isn't transported when you fly - should it be? Should there just be 1 house?
-BUG: Starting characters can get a scrap of flesh - requier cost > 0, for random?
-BUG: May be no lights/food in the gs
 BUG:"You set off the strange rune" and monster spell SHOT need retheming
 
 BUG: Store faction doesn't do anything
-
-BUG: "But not by buying stuff and selling it back again" checks origin. This stops buy-selling something that originated in the store, but not something that you found. (So add a 'once sold' flag?)
-
-BUG: "hologram nonliving creature" in monster info should just be "hologram".
-
-BUG: Random artifacts (e.g. Slick's 6mm rifle) can be generated with no flags.
 
 BUG: Stores which close lose their entrance but don't become ruins. (Only when more than one would?)
 
@@ -95,6 +89,16 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+BUG: "hologram nonliving creature" in monster info should just be "hologram".
+	Fixed 1bd14dc1050161d11f17841d03f3271da27f5afc
+BUG: "But not by buying stuff and selling it back again" checks origin. This stops buy-selling something that originated in the store, but not something that you found. (So add a 'once sold' flag? Or just vanish the item)
+
+BUG: Starting characters can get a scrap of flesh - require cost > 0, for random?
+BUG: May be no lights/food in the gs
+
+BUG: Random artifacts (e.g. Slick's 6mm rifle) can be generated with no flags.
+	Fixed 20080606a2d0f713a57b5025135527bba8f3a1f
+
 BUG: Random arts can be Coronets - though prob in .txt is 0
 
 BUG: C-screen displays melee tohit when no weapon of 0, not martial.
