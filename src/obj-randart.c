@@ -1135,7 +1135,7 @@ static void count_abilities(const struct artifact *art, struct artifact_set_data
 	struct object_kind *kind = lookup_kind(art->tval, art->sval);
 
 	if (flags_test(art->flags, OF_SIZE, OF_SUST_STR, OF_SUST_INT, OF_SUST_WIS,
-				   OF_SUST_DEX, OF_SUST_CON, FLAG_END)) {
+				   OF_SUST_DEX, OF_SUST_CON, OF_SUST_CHR, OF_SUST_SPD, FLAG_END)) {
 		/* Now do sustains, in a similar manner */
 		num = 0;
 		if (of_has(art->flags, OF_SUST_STR)) num++;
@@ -1143,6 +1143,8 @@ static void count_abilities(const struct artifact *art, struct artifact_set_data
 		if (of_has(art->flags, OF_SUST_WIS)) num++;
 		if (of_has(art->flags, OF_SUST_DEX)) num++;
 		if (of_has(art->flags, OF_SUST_CON)) num++;
+		if (of_has(art->flags, OF_SUST_CHR)) num++;
+		if (of_has(art->flags, OF_SUST_SPD)) num++;
 		file_putf(log_file, "Adding %d for stat sustains.\n", num);
 		(data->art_probs[ART_IDX_GEN_SUST]) += num;
 	}
@@ -1997,7 +1999,7 @@ static void add_sustain(struct artifact *art)
 
 	/* Break out if all stats are sustained to avoid an infinite loop */
 	if (flags_test_all(art->flags, OF_SIZE, OF_SUST_STR, OF_SUST_INT,
-	    OF_SUST_WIS, OF_SUST_DEX, OF_SUST_CON, FLAG_END))
+	    OF_SUST_WIS, OF_SUST_DEX, OF_SUST_CON, OF_SUST_CHR, OF_SUST_SPD, FLAG_END))
 			return;
 
 	while (!success) {
