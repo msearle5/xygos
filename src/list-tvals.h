@@ -37,4 +37,5 @@ TV(BLOCK,		"block",		0)
 TV(PRINTER,		"printer",		0)
 TV(LEGS,		"legs",			0)
 TV(ARMS,		"arms",			0)
+TV(CHIP,		"chip",			0)
 

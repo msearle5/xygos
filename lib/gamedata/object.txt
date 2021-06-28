@@ -169,6 +169,97 @@ name:<fault object>
 type:none
 graphics:*:v
 
+##### Chips (brain implants) #####
+
+# Cybasics Coordinator, Dominator, Mediator Accelerator, Detonator = first tier
+# Stats only. C = int/dex, D = int/chr/wis, A = ?
+#
+# Sirius Prominent, Brilliant,  = mid tier
+# Sustains, mid-level powers such as FA. + to hit?
+#
+# Neuroweb Deepfake, Doublet etc. = top tier
+# High level powers such as telepathy, speed
+#
+# Capstone?
+
+name:& Cybasics Augmentor~
+type:chip
+graphics:!:White
+weight:75g
+cost:11550
+level:22
+alloc:3:16 to 65
+flags:SENSE_METAL | SEE_INVIS
+values:INFRA[1+M5]
+desc:Cybasics claim that it's equivalent to the Neuroweb Third Eye at half the price. It isn't. But it's still a useful piece of kit, considering that it's the cheapest chip around (no brain implant is all that cheap).
+material:titanium
+
+name:& Cybasics Coordinator~
+type:chip
+graphics:!:White
+weight:75g
+cost:12250
+level:24
+alloc:4:18 to 65
+values:INT[0+M1]
+values:DEX[1+M2]
+desc:An inexpensive but dependable chip and the most common gateway chip for new cyborgs. Focused on improving coordination and precision of movement, some models may also improve intelligence.
+material:titanium
+
+name:& Cybasics Mediator~
+type:chip
+graphics:!:White
+weight:85g
+cost:14650
+level:28
+alloc:3:22 to 70
+flags:RAND_SUSTAIN
+values:INT[0+M1]
+values:WIS[0+M1]
+values:DEX[0+M1]
+values:CHR[2+M5]
+desc:Famous (or perhaps notorious would be a better word) for its reputation as a chip for the professional B.S. merchant - shady used spacecraft salesmen and worse. But it also has a deserved reputation for flexibility and commonly provides more abilities than the gift of the gab.
+material:titanium
+
+name:& Cybasics Accelerator~
+type:chip
+graphics:!:White
+weight:70g
+cost:15250
+level:30
+alloc:3:26 to 72
+flags:SUST_INT
+values:INT[2+M2]
+desc:An implant that accelerates thought, effectively improving intelligence and providing some protection against injury. It's the cheapest implant which (in unmodified form, at least) provides more than a minimal improvement to intelligence.
+material:titanium
+
+name:& Sirius Brilliant~
+type:chip
+graphics:!:Magenta
+weight:66g
+cost:24500
+level:38
+alloc:2:35 to 90
+flags:SUST_INT | SUST_WIS
+values:INT[3+M3]
+values:WIS[3+M3]
+desc:A powerful implant that improves brainpower more deeply than the cheap, acceleration-only designs and so boosts and sustains both intelligence and wisdom.
+material:unobtainium
+
+name:& Neuroweb Third Eye~
+type:chip
+graphics:!:Green
+weight:80g
+cost:26600
+level:45
+alloc:1:45 to 127
+flags:TELEPATHY | SEE_INVIS | PROT_BLIND
+values:INFRA[6+M6]
+desc:An unusual, specialized implant which augments your senses with a synthesis of detection technologies. It normally works together with your eyes but can replace then altogether if need be, so providing protection against blindness.
+material:unobtainium
+
+
+
 ##### Implants (Arms) #####
 
 # Dex - FA? (But that's more a whole-body thing)

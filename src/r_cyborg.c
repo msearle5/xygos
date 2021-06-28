@@ -34,12 +34,13 @@ static void cyborg_init(void)
 	int max_price = 30000;
 	int reps = 0;
 	const int implant_tval[] = {
-		TV_LEGS, TV_ARMS
+		TV_LEGS, TV_ARMS, TV_CHIP
 	};
-	const int n_tvals = 2;
-	struct object *obj[2] = { 0 };
+	const int n_tvals = sizeof(implant_tval) / sizeof(implant_tval[0]);
+	struct object *obj[n_tvals];
 	int value = 0;
 	int level = 1;
+	memset(obj, 0, sizeof(struct object *) * n_tvals);
 	do {
 		/* Generate a random implant tval */
 		int i_obj = randint0(n_tvals);

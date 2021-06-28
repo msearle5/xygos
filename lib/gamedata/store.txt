@@ -337,6 +337,7 @@ slots:8:16
 turnover:1
 normal:legs
 normal:arms
+normal:chip
 normal:boots:force skates:500+M5000
 normal:gloves:force bangles:100+M4000
 normal:hard armor:force harness:50+M3000
@@ -344,6 +345,7 @@ normal:belt
 buy:arms
 buy:legs
 buy:belt
+buy:chip
 buy:force skates
 buy:force bangles
 buy:force harness

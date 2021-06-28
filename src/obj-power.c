@@ -180,6 +180,9 @@ static int tval_power(const struct object *obj)
 		case TV_ARMS:
 			p = 40;
 			break;
+		case TV_CHIP:
+			p = 35;
+			break;
 		case TV_BELT:
 			p = 15;
 			break;

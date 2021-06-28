@@ -170,7 +170,7 @@ break:50
 flags:HATES_FIRE
 randart:40:80:120:3:3
 
-name:device:Device~
+name:device:device~
 graphics:light umber
 # max-stack:5
 flags:HATES_ACID | HATES_FIRE | EASY_KNOW
@@ -194,7 +194,7 @@ graphics:deep light blue
 flags:HATES_ACID | HATES_FIRE | HATES_ELEC | EASY_KNOW
 material:plastic
 
-name:pill:Pill~
+name:pill:pill~
 graphics:magenta-pink
 break:10
 # max-stack:20
@@ -216,7 +216,7 @@ break:100
 flags:EASY_KNOW
 material:organic
 
-name:mushroom:Mushroom~
+name:mushroom:mushroom~
 graphics:light umber
 break:100
 # max-stack:10
@@ -241,3 +241,11 @@ flags:HATES_FIRE | HATES_ELEC
 flags:EASY_KNOW | NO_EQUIP
 material:titanium
 randart:120:220:330:1:1
+
+name:chip:brain implant~
+graphics:white
+break:0
+flags:HATES_FIRE | HATES_ELEC
+flags:EASY_KNOW | NO_EQUIP
+material:titanium
+randart:100:220:400:1:1

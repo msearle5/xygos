@@ -31,14 +31,20 @@ bool tval_is_arms(const struct object *obj)
 	return obj->tval == TV_ARMS;
 }
 
+bool tval_is_chip(const struct object *obj)
+{
+	return obj->tval == TV_CHIP;
+}
+
 bool tval_is_implant(const struct object *obj)
 {
-	return ((tval_is_arms(obj)) || (tval_is_legs(obj)));
+	return ((tval_is_arms(obj)) || (tval_is_legs(obj)) || (tval_is_chip(obj)));
 }
 
 int tval_random_implant(void)
 {
-	return (one_in_(2) ? TV_LEGS : TV_ARMS);
+	const int tv[3] = { TV_LEGS, TV_ARMS, TV_CHIP };
+	return tv[randint0(3)];
 }
 
 bool tval_is_device(const struct object *obj)

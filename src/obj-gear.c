@@ -263,6 +263,7 @@ int wield_slot(const struct object *obj)
 		case TV_BELT: return slot_by_type(player, EQUIP_BELT, false);
 		case TV_LEGS: return slot_by_type(player, EQUIP_LEGS, false);
 		case TV_ARMS: return slot_by_type(player, EQUIP_ARMS, false);
+		case TV_CHIP: return slot_by_type(player, EQUIP_CHIP, false);
 	}
 
 	if (tval_is_melee_weapon(obj))

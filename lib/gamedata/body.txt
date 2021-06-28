@@ -30,3 +30,4 @@ slot:GLOVES:hands
 slot:BOOTS:feet
 slot:LEGS:legs
 slot:ARMS:arms
+slot:CHIP:brain
