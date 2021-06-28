@@ -1062,7 +1062,9 @@ bool object_destroyed(struct object *obj, struct loc loc)
 			}
 			else if (object_effect(obj) && (of_has(obj->flags, OF_NO_ACTIVATION))) {
 				// you may not know what it is, and it should ID as if you were holding it in view?
-				light_timeout(obj);
+				obj->grid = loc;
+				light_timeout(obj, false);
+				return true;
 			}
 		}
 	}

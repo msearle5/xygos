@@ -649,7 +649,7 @@ void light_special_activation(struct object *obj)
 	effect_do(&effect, source_object(obj), NULL, &ident, was_aware, dir, 0, 0, NULL, 0);
 }
 
-void light_timeout(struct object *obj)
+void light_timeout(struct object *obj, bool delete)
 {
 	/* The light is now out */
 	disturb(player);
@@ -673,12 +673,16 @@ void light_timeout(struct object *obj)
 		} else {
 			if (object_is_carried(player, obj))
 				burnt = gear_object_for_use(obj, 1, true, &dummy);
-			else
+			else if (pile_contains(square_object(cave, obj->grid), obj))
 				burnt = floor_object_for_use(obj, 1, true, &dummy);
+			else
+				burnt = obj;
 		}
-		if (burnt->known)
-			object_delete(&burnt->known);
-		object_delete(&burnt);
+		if (delete) {
+			if (burnt->known)
+				object_delete(&burnt->known);
+			object_delete(&burnt);
+		}
 	} else if (obj_has_flag(obj, OF_STICKY) && object_is_carried(player, obj)) {
 		/* Remind you that you can take it off now */
 		msg("It shifts about, and you realise that it is no longer attached to you.");
@@ -725,7 +729,7 @@ void player_update_light(struct player *p)
 				/* Hack -- save some light for later */
 				if (obj->timeout == 0) obj->timeout = prev;
 			} else if (obj->timeout == 0) {
-				light_timeout(obj);
+				light_timeout(obj, true);
 			} else if ((obj->timeout < 50 * burnstep) && (!(obj->timeout % (20 * burnstep)))) {
 				/* The light is getting dim */
 				disturb(p);

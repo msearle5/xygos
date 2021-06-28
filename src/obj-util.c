@@ -1244,7 +1244,7 @@ bool recharge_timeout(struct object *obj)
 			if (obj->timeout <= 0) {
 				obj->timeout = 0;
 				if (tval_is_light(obj))
-					light_timeout(obj);
+					light_timeout(obj, true);
 				/* The object may no longer exist */
 			}
 		}
