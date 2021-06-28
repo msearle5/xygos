@@ -2930,6 +2930,30 @@ void select_artifact_max(void)
 }
 
 /**
+ * Return true if an artifact is "boring" - that is, it has no more activations, slays, brands, flags, resists, or sustains
+ * than the base item. (It may have + to AC, hit and damage, elemental damage invulnerabilities and reduced weight and still
+ * be considered boring.)
+ */
+static bool artifact_is_boring(struct artifact *a, struct object_kind *k)
+{
+	if ((a->brands && !(k->brands)) || (a->slays && !(k->slays)))
+		return false;
+	if (a->activation && !(k->activation))
+		return false;
+	for(int i=0;i<OBJ_MOD_MAX;i++)
+		if (a->modifiers[i] > randcalc(k->modifiers[i], 0, AVERAGE))
+			return false;
+	for(int i=0;i<ELEM_MAX;i++)
+		if (a->el_info[i].res_level > k->el_info[i].res_level)
+			return false;
+	if ((flag_count(a->carried_flags, OF_SIZE) > flag_count(k->carried_flags, OF_SIZE)) ||
+		(flag_count(a->flags, OF_SIZE) > flag_count(k->flags, OF_SIZE)) ||
+		(flag_count(a->pflags, PF_SIZE) > flag_count(k->pflags, PF_SIZE)))
+		return false;
+	return true;
+}
+
+/**
  * Design a random artifact given a tval
  *
  * The artifact is assigned a power based on the range of powers for that tval
@@ -2947,23 +2971,12 @@ static void design_artifact(struct artifact_set_data *data, int tv, int *aidx, i
 	int tries;
 	int alloc_new;
 	int ap = 0;
-	bool hurt_me = false;
 	bool preserve = true;
-
-	/* Set tval if necessary */
-	int tval = (tv == TV_NULL) ? get_base_item_tval(data) : tv;
+	bool is_bad = false;
+	bool reroll_power = (power <= 0);
 
 	/* Structure to hold the old artifact */
 	struct artifact *a_old = mem_zalloc(sizeof *a_old);
-
-	/* Choose a power for the artifact */
-	if (power <= 0) {
-		power = Rand_sample(data->avg_tv_power[tval],
-							data->max_tv_power[tval],
-							data->min_tv_power[tval],
-							20, 20);
-		preserve = false;
-	}
 
 	/* Skip fixed artifacts */
 	while ((kind = lookup_kind(art->tval, art->sval)) && kf_has(kind->kind_flags, KF_QUEST_ART) && !kf_has(kind->kind_flags, KF_RANDOM_ART)) {
@@ -2977,106 +2990,130 @@ static void design_artifact(struct artifact_set_data *data, int tv, int *aidx, i
 	}
 
 	file_putf(log_file, ">>>>>>>>>>>>>>>>>>>>>>>>>> CREATING NEW ARTIFACT\n");
-	file_putf(log_file, "Artifact %d: power = %d\n", *aidx, power);
 
-	/* Flip the sign on power if it's negative (unlikely) and damage */
-	if (power < 0) {
-		hurt_me = true;
-		power = -power;
-	}
+	int reps = 0;
+	do {
+		bool hurt_me = false;
 
-	/* Choose a base item type not too powerful, so we'll have to add to it. */
-	for (tries = 0; tries < MAX_TRIES; tries++) {
-		int base_power = 0;
+		/* Set tval if necessary */
+		int tval = (tv == TV_NULL) ? get_base_item_tval(data) : tv;
 
-		/* Get the new item kind and do basic prep on it */
-		if (tval == TV_NULL) {
-			tval = get_base_item_tval(data);
-		}
-		kind = get_base_item(data, tval);
-		artifact_prep(art, kind, data);
-
-		/* Get the kind again in case it's changed */
-		kind = lookup_kind(art->tval, art->sval);
-
-		base_power = artifact_power(*aidx, "for base item power", true);
-		file_putf(log_file, "Base item power %d\n", base_power);
-
-		/* New base item power too close to target artifact power */
-		if ((base_power > (power * 6) / 10 + 1) && (power - base_power < 20)) {
-			file_putf(log_file, "Power too high!\n");
-			continue;
+		/* Choose a power for the artifact */
+		if (reroll_power) {
+			power = Rand_sample(data->avg_tv_power[tval],
+								data->max_tv_power[tval],
+								data->min_tv_power[tval],
+								20, 20);
+			preserve = false;
 		}
 
-		/* Acceptable */
-		break;
-	};
+		/* Flip the sign on power if it's negative (unlikely) and damage */
+		if (power < 0) {
+			hurt_me = true;
+			power = -power;
+		}
 
-	/* Failed to get a good base item */
-	if (tries >= MAX_TRIES)
-		file_putf(log_file, "Warning! Couldn't get appropriate power level on base item.\n");
+		/* If desperate start increasing power */
+		reps++;
+		power += reps/10;
 
-	/* Generate the cumulative frequency table for this base item type */
-	build_freq_table(art, art_freq, data);
+		file_putf(log_file, "Artifact %d (try %d): power = %d\n", *aidx, reps, power);
 
-	/* Copy artifact info temporarily. */
-	copy_artifact(art, a_old);
+		/* Choose a base item type not too powerful, so we'll have to add to it. */
+		for (tries = 0; tries < MAX_TRIES; tries++) {
+			int base_power = 0;
 
-	/* Give this artifact a shot at being supercharged */
-	try_supercharge(art, power, data);
-	ap = artifact_power(*aidx, "result of supercharge", true);
-	if (ap > (power * 23) / 20 + 1)	{
-		/* Too powerful -- put it back */
-		copy_artifact(a_old, art);
-		file_putf(log_file, "--- Supercharge is too powerful! Rolling back.\n");
-	}
+			/* Get the new item kind and do basic prep on it */
+			if (tval == TV_NULL) {
+				tval = get_base_item_tval(data);
+			}
+			kind = get_base_item(data, tval);
+			artifact_prep(art, kind, data);
 
-	/* Give this artifact a chance to be faulty - note it retains its power */
-	if (one_in_(n_randarts / MAX(2, data->neg_power_total))) {
-		hurt_me = true;
-	}
+			/* Get the kind again in case it's changed */
+			kind = lookup_kind(art->tval, art->sval);
 
-	/* Do the actual artifact design */
-	bool is_bad = false;
-	for (tries = 0; tries < MAX_TRIES; tries++) {
+			base_power = artifact_power(*aidx, "for base item power", true);
+			file_putf(log_file, "Base item power %d\n", base_power);
+
+			/* New base item power too close to target artifact power */
+			if ((base_power > (power * 6) / 10 + 1) && (power - base_power < 20)) {
+				file_putf(log_file, "Power too high!\n");
+				continue;
+			}
+
+			/* Acceptable */
+			break;
+		};
+
+		/* Failed to get a good base item */
+		if (tries >= MAX_TRIES)
+			file_putf(log_file, "Warning! Couldn't get appropriate power level on base item.\n");
+
+		/* Generate the cumulative frequency table for this base item type */
+		build_freq_table(art, art_freq, data);
+
 		/* Copy artifact info temporarily. */
 		copy_artifact(art, a_old);
 
-		/* Add an ability */
-		add_ability(art, power, art_freq, data);
-		remove_contradictory(art);
-
-		/* Check the power, handle negative power */
-		ap = artifact_power(*aidx, "artifact attempt", true);
-		if (ap < 0) {
-			ap = -ap;
-			break;
-		}
-
-		/* Damage the designated artifacts */
-		if (hurt_me) {
-			is_bad = true;
-			make_bad(art, art_level);
-			if (one_in_(3)) {
-				hurt_me = false;
-			}
-		}
-
-		/* Check power */
-		if (ap > (power * 23) / 20 + 1) {
+		/* Give this artifact a shot at being supercharged */
+		try_supercharge(art, power, data);
+		ap = artifact_power(*aidx, "result of supercharge", true);
+		if (ap > (power * 23) / 20 + 1)	{
 			/* Too powerful -- put it back */
 			copy_artifact(a_old, art);
-			file_putf(log_file, "--- Too powerful!  Rolling back.\n");
-			continue;
-		} else if (ap >= (power * 19) / 20) {
-			/* Just right */
-			break;
+			file_putf(log_file, "--- Supercharge is too powerful! Rolling back.\n");
 		}
-	}
 
-	/* Couldn't generate an artifact with the number of permitted iterations */
-	if (tries >= MAX_TRIES)
-		file_putf(log_file, "Warning!  Couldn't get appropriate power level on artifact.\n");
+		/* Give this artifact a chance to be faulty - note it retains its power */
+		if (one_in_(n_randarts / MAX(2, data->neg_power_total))) {
+			hurt_me = true;
+		}
+
+		/* Do the actual artifact design */
+		is_bad = false;
+		for (tries = 0; tries < MAX_TRIES; tries++) {
+			/* Copy artifact info temporarily. */
+			copy_artifact(art, a_old);
+
+			/* Add an ability */
+			add_ability(art, power, art_freq, data);
+			remove_contradictory(art);
+
+			/* Check the power, handle negative power */
+			ap = artifact_power(*aidx, "artifact attempt", true);
+			if (ap < 0) {
+				ap = -ap;
+				break;
+			}
+
+			/* Damage the designated artifacts */
+			if (hurt_me) {
+				is_bad = true;
+				make_bad(art, art_level);
+				if (one_in_(3)) {
+					hurt_me = false;
+				}
+			}
+
+			/* Check power */
+			if (ap > (power * 23) / 20 + 1) {
+				/* Too powerful -- put it back */
+				copy_artifact(a_old, art);
+				file_putf(log_file, "--- Too powerful!  Rolling back.\n");
+				continue;
+			} else if (ap >= (power * 19) / 20) {
+				/* Just right */
+				break;
+			}
+		}
+		/* Couldn't generate an artifact with the number of permitted iterations */
+		if (tries >= MAX_TRIES)
+			file_putf(log_file, "Warning!  Couldn't get appropriate power level on artifact.\n");
+	} while (artifact_is_boring(art, kind));
+	if (reps > 1)
+		file_putf(log_file, "Artifact %d (%s), power %d was boring, took %d reps\n", *aidx, kind->name, power, reps);
+
 
 	/* Cleanup a_old */
 	mem_free(a_old->slays);
