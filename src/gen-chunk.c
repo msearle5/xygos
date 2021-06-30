@@ -91,7 +91,7 @@ bool chunk_list_remove(const char *name)
 
 	/* Find the match */
 	for (i = 0; i < chunk_list_max; i++) {
-		if (!strcmp(name, chunk_list[i]->name)) {
+		if (streq(name, chunk_list[i]->name)) {
 			/* Copy all the succeeding chunks back one */
 			int j;
 			for (j = i + 1; j < chunk_list_max; j++) {
@@ -120,7 +120,7 @@ struct chunk *chunk_find_name(const char *name)
 	assert(name);
 
 	for (i = 0; i < chunk_list_max; i++)
-		if (!strcmp(name, chunk_list[i]->name))
+		if (streq(name, chunk_list[i]->name))
 			return chunk_list[i];
 
 	return NULL;

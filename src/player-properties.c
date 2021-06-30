@@ -93,25 +93,28 @@ static void view_ability_display(struct menu *menu, int oid, bool cursor,
 	switch (choices[oid].group) {
 	case PLAYER_FLAG_SPECIAL:
 		{
-			sprintf(buf, "Specialty Ability: %s", choices[oid].name);
+			strnfmt(buf, sizeof(buf), "Specialty Ability: %s",
+				choices[oid].name);
 			color = COLOUR_GREEN;
 			break;
 		}
 	case PLAYER_FLAG_CLASS:
 		{
-			sprintf(buf, "Class: %s", choices[oid].name);
+			strnfmt(buf, sizeof(buf), "Class: %s",
+				choices[oid].name);
 			color = COLOUR_UMBER;
 			break;
 		}
 	case PLAYER_FLAG_RACE:
 		{
-			sprintf(buf, "Racial: %s", choices[oid].name);
+			strnfmt(buf, sizeof(buf), "Racial: %s",
+				choices[oid].name);
 			color = COLOUR_ORANGE;
 			break;
 		}
 	default:
 		{
-			sprintf(buf, "Mysterious");
+			my_strcpy(buf, "Mysterious", sizeof(buf));
 			color = COLOUR_PURPLE;
 		}
 	}
@@ -159,7 +162,7 @@ static bool view_ability_menu(void)
 	view_ability_flip = false;
 
 	/* Prompt choices */
-	sprintf(buf,
+	strnfmt(buf, sizeof(buf),
 			"Race and class abilities (%c-%c, T-show talents/mutations, ESC=exit): ",
 			I2A(0), I2A(num_abilities - 1));
 

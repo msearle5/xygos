@@ -354,7 +354,7 @@ static void set_obj_names(bool terse)
 
 		/* Null objects are used to skip lines, or display only a label */		
 		if (!obj) {
-			if ((i < num_head) || !strcmp(items[i].label, "Ammo"))
+			if ((i < num_head) || streq(items[i].label, "Ammo"))
 				strnfmt(items[i].o_name, sizeof(items[i].o_name), "");
 			else
 				strnfmt(items[i].o_name, sizeof(items[i].o_name), "(nothing)");
