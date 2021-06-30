@@ -136,3 +136,4 @@ EFFECT(PERSONALITY,					false, NULL,		0,		EFINFO_NONE,	"changes your personality
 EFFECT(NEXT,						false, NULL,		0, 		EFINFO_NONE,	"", "")
 EFFECT(SET_VALUE,					false,	NULL,		0,		EFINFO_NONE,	"",					"")
 EFFECT(CLEAR_VALUE,					false,	NULL,		0,		EFINFO_NONE,	"",					"")
+EFFECT(MESSAGE,						false, NULL,		0,		EFINFO_NONE,	"", 				"")

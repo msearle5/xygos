@@ -63,6 +63,11 @@ struct store *stores;
 struct store *stores_init;
 
 /**
+ * The mine texts array
+ */
+struct hint *minetext;
+
+/**
  * The hints array
  */
 struct hint *hints;

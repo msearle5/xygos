@@ -188,6 +188,13 @@ static void remove_bad_spells(struct monster *mon, bitflag f[RSF_SIZE])
 	if (tdist > 3) {
 		rsf_off(f2, RSF_SPIT);
 	}
+	if (tdist > 2) {
+		rsf_off(f2, RSF_EXPLODE);
+	}
+	if (tdist > 3) {
+		rsf_off(f2, RSF_MINE_EXPLODE);
+		rsf_off(f2, RSF_SELF_DESTRUCT);
+	}
 
 	/* Update acquired knowledge */
 	if (OPT(player, birth_ai_learn)) {

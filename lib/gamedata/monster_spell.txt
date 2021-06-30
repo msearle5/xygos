@@ -50,6 +50,22 @@ dice:3d6
 message-vis:{name} explodes!
 message-invis:You hear a loud blast.
 
+name:MINE_EXPLODE
+msgt:BR_FIRE
+hit:100
+effect:SPOT:SHARD:3
+dice:4d8
+message-vis:{name} exclaims: {mine} {name} explodes!
+message-invis:You hear a loud blast.
+
+name:SELF_DESTRUCT
+msgt:BR_FIRE
+hit:100
+effect:SPOT:SHARD:0
+dice:30000d1
+message-vis:You hear a click.
+message-invis:You hear a click.
+
 name:WHIP
 hit:100
 effect:LASH:MISSILE:2
@@ -386,14 +402,33 @@ lore:produce fire balls
 lore-color-base:Orange
 lore-color-resist:Yellow
 lore-color-immune:Light Green
-message-vis:{name} casts a ball of fire.
+message-vis:{name} blasts fire.
 message-invis:Something mumbles.
 power-cutoff:80
 lore:produce firestorms
 lore-color-base:Orange
 lore-color-resist:Yellow
 lore-color-immune:Light Green
-message-vis:{name} conjures up a firestorm.
+message-vis:{name} blasts a storm of fire.
+message-invis:Something murmurs deeply.
+
+name:BA3_FIRE
+hit:100
+effect:BALL:FIRE:3
+dice:10+1d$S
+expr:S:SPELL_POWER:* 7 / 2
+lore:produce fire balls
+lore-color-base:Orange
+lore-color-resist:Yellow
+lore-color-immune:Light Green
+message-vis:{name} blasts fire.
+message-invis:Something mumbles.
+power-cutoff:80
+lore:produce firestorms
+lore-color-base:Orange
+lore-color-resist:Yellow
+lore-color-immune:Light Green
+message-vis:{name} blasts a storm of fire.
 message-invis:Something murmurs deeply.
 
 name:BA_COLD
@@ -424,13 +459,31 @@ lore:produce poison balls
 lore-color-base:Orange
 lore-color-resist:Yellow
 lore-color-immune:Light Green
-message-vis:{name} casts a venomous cloud.
+message-vis:{name} emits a cloud of choking fumes.
 message-invis:Something mumbles.
 power-cutoff:60
 lore:produce storms of poison
 lore-color-base:Orange
 lore-color-resist:Light Green
-message-vis:{name} unleashes a storm of corrosive toxins.
+message-vis:{name} emits a cloud of deadly poison gas.
+message-invis:Something murmurs viciously.
+
+name:BA8_POIS
+hit:100
+effect:BALL:POIS:8
+dice:$Dd4
+expr:D:SPELL_POWER:/ 2 + 3
+lore:produce huge poison clouds
+lore-color-base:Orange
+lore-color-resist:Yellow
+lore-color-immune:Light Green
+message-vis:{name} emits a huge cloud of choking fumes.
+message-invis:Something mumbles.
+power-cutoff:60
+lore:produce huge storms of poison
+lore-color-base:Orange
+lore-color-resist:Light Green
+message-vis:{name} emits a huge storm of deadly poison gas.
 message-invis:Something murmurs viciously.
 
 name:BA_SHAR

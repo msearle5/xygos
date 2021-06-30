@@ -42,7 +42,7 @@ enum
 };
 
 struct store_context {
-	struct menu menu;			/* Menu instance */
+	struct menu menu;		/* Menu instance */
 	struct store *store;	/* Pointer to store */
 	struct object **list;	/* List of objects (unused) */
 	int flags;				/* Display flags */
@@ -64,5 +64,6 @@ int store_roundup(int);
 bool store_get_long_check(struct store_context *ctx, const char *prompt);
 void store_long_text(struct store_context *ctx, const char *text);
 void random_shk_name(char *buf, int len);
+const char *random_line(struct hint *hints);
 
 #endif /* INCLUDED_UI_STORE_H */

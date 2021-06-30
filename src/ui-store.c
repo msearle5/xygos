@@ -100,7 +100,7 @@ static const char *comment_hint[] =
 #define STORE_INIT_CHANGE		(STORE_FRAME_CHANGE | STORE_GOLD_CHANGE)
 
 /* Return a random hint from the given hints list */
-static const char *random_line(struct hint *hints)
+const char *random_line(struct hint *hints)
 {
 	struct hint *v, *r = NULL;
 	int n;

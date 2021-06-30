@@ -3917,6 +3917,59 @@ static struct file_parser second_parser = {
 
 /**
  * ------------------------------------------------------------------------
+ * Initialize mine text
+ * ------------------------------------------------------------------------ */
+
+static enum parser_error parse_mine(struct parser *p) {
+	struct hint *h = parser_priv(p);
+	struct hint *new = mem_zalloc(sizeof *new);
+
+	new->hint = string_make(parser_getstr(p, "text"));
+	new->next = h;
+
+	parser_setpriv(p, new);
+	return PARSE_ERROR_NONE;
+}
+
+struct parser *init_parse_mine(void) {
+	struct parser *p = parser_new();
+	parser_reg(p, "D str text", parse_mine);
+	return p;
+}
+
+static errr run_parse_mine(struct parser *p) {
+	return parse_file_quit_not_found(p, "mine");
+}
+
+static errr finish_parse_mine(struct parser *p) {
+	minetext = parser_priv(p);
+	parser_destroy(p);
+	return 0;
+}
+
+static void cleanup_mine(void)
+{
+	struct hint *h, *next;
+
+	h = minetext;
+	while(h) {
+		next = h->next;
+		string_free(h->hint);
+		mem_free(h);
+		h = next;
+	}
+}
+
+static struct file_parser mine_parser = {
+	"mine",
+	init_parse_mine,
+	run_parse_mine,
+	finish_parse_mine,
+	cleanup_mine
+};
+
+/**
+ * ------------------------------------------------------------------------
  * Initialize lies
  * ------------------------------------------------------------------------ */
 
@@ -4073,6 +4126,7 @@ static struct {
 	{ "flavours", &flavor_parser },
 	{ "hints", &hints_parser },
 	{ "lies", &lies_parser },
+	{ "mine", &mine_parser },
 	{ "first", &first_parser },
 	{ "second", &second_parser },
 	{ "death", &death_parser },

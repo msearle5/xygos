@@ -1076,8 +1076,9 @@ static bool project_m_monster_attack(project_monster_handler_context_t *context,
 		/* Give detailed messages if destroyed */
 		if (!seen) die_msg = MON_MSG_MORIA_DEATH;
 
-		/* Death message */
-		add_monster_message(mon, die_msg, false);
+		/* Death message if not self-inflicted */
+		if (m_idx != context->origin.which.monster)
+			add_monster_message(mon, die_msg, false);
 
 		/* Generate treasure, etc */
 		monster_death(mon, false);
@@ -1286,8 +1287,7 @@ static void project_m_apply_side_effects(project_monster_handler_context_t *cont
  * We assume that "Plasma" monsters, and "Plasma" breathers, are immune
  * to plasma.
  *
- * We assume "Radiation" is an evil, necromantic force, so it doesn't hurt undead,
- * and hurts evil less.  If can breath radiation, then it resists it as well.
+ * If can breath radiation, then it resists it as well.
  * This should actually be coded into monster records rather than aasumed - NRM
  *
  * Damage reductions use the following formulas:
@@ -1367,8 +1367,8 @@ void project_m(struct source origin, int r, struct loc grid, int dam, int typ,
 	/* No monster here */
 	if (!(m_idx > 0)) return;
 
-	/* Never affect projector */
-	if (origin.what == SRC_MONSTER && origin.which.monster == m_idx) return;
+	/* Only affect projector if the SELF flag is set */
+	if (origin.what == SRC_MONSTER && origin.which.monster == m_idx && (!(flg & PROJECT_SELF))) return;
 
 	/* Obtain monster info */
 	mon = cave_monster(cave, m_idx);

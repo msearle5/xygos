@@ -9,6 +9,8 @@ struct hint {
 	struct hint *next;
 };
 
+extern struct hint *minetext; /* store.c */
+
 extern struct hint *hints; /* store.c */
 
 extern struct hint *lies; /* store.c */

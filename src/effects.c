@@ -1148,7 +1148,7 @@ bool effect_handler_HABANERO(effect_handler_context_t *context)
 				struct loc target = player->grid;
 					target_set_interactive(TARGET_KILL, -1, -1);
 					target_get(&target);
-				project(context->origin, 20, target, 5 + damroll(1, 10) + player->lev, ELEM_FIRE,  PROJECT_ARC | PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL, 40, 10, context->obj);
+				project(context->origin, 20, target, 5 + damroll(1, 10) + player->lev, ELEM_FIRE,  PROJECT_ARC | PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_LOL, 40, 10, context->obj);
 			}
 		}
 	} else  {
@@ -6519,6 +6519,12 @@ bool effect_handler_HORNS(effect_handler_context_t *context)
 		effect_handler_WAKE(context);
 	}
 	/* Done */
+	return (true);
+}
+
+bool effect_handler_MESSAGE(effect_handler_context_t *context)
+{
+	msg("honk");
 	return (true);
 }
 

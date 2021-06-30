@@ -989,6 +989,10 @@ bool project(struct source origin, int rad, struct loc finish,
 		int power = dam;
 		if (origin.what == SRC_MONSTER) {
 			struct monster *mon = cave_monster(cave, origin.which.monster);
+			if ((!mon) || (!mon->race)) {
+				free(dam_at_dist);
+				return notice;
+			}
 			power = mon->race->spell_power;
 
 			/* Breaths from powerful monsters get power effects as well */

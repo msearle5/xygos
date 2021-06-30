@@ -1,4 +1,4 @@
-# File: death.txt
+# File: mine.txt
 
 # This file is used to initialize the mine explosion messages for the game.
 
@@ -20,6 +20,7 @@ D:Don't worry. Legs are over-rated, you know.
 D:Fun time!
 D:Goodness gracious, great balls of fire!
 D:Guess what I can do?
+D:Have a nice day!
 D:Heh-heh, heh-heh, heh-heh. I said BANG.
 D:Hi, I'm Betty!
 D:Hold my beer, and watch this!
@@ -33,10 +34,12 @@ D:I'd like you to take this personality test.
 D:I'm dynamite, baby!
 D:I'm not owned by anyone. I'm mine!
 D:I'm very proud to be a genuine MineX product!
+D:I've actually always wanted to be a ploughshare.
 D:I've got a lovely surprise for you, you'll never guess what it is!
 D:I've got a special offer on shrapnel, today only!
 D:It's time to roll out a destroyment package.
 D:Knock knock?
+D:Let there be light!
 D:MineX: anyone can make a bomb, only we can give it personality!
 D:OK, Boomer.
 D:One Nuka-Cola, one large fries, one king-size KABOOM.
@@ -45,6 +48,7 @@ D:Self-destruct sounds so negative. I prefer to call it self-empowerment.
 D:Short sharp shower of shrapnel - here we go!
 D:Someone set us up the bomb!
 D:Surpriiiise!
+D:Thank you for volunteering for our explosion experience!
 D:This is going to blow you away!
 D:Time to celebrate with a firework display!
 D:To be, or not to be? ... Not to be.
@@ -52,6 +56,7 @@ D:Today's a great day to explode!
 D:Wanna go and get blasted?
 D:Want to hear my salsa recipe?
 D:Want to see my demo, man?
+D:WASSSSS UP?
 D:Well done, you've discovered my secret!
 D:Would you like to play a game?
 D:Would you like to see my magic trick? I can make us both vanish!

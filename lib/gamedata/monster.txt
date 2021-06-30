@@ -249,6 +249,146 @@ desc:it against burglars such as yourself.
 
 ##### Monster races proper #####
 
+##### HIDDEN (.) #####
+
+# fire, poison etc?
+# clusters?
+
+# Visible (as it moves), self destruct when close
+name:crawler mine
+base:mine
+color:Yellow
+speed:100
+hit-points:1
+hearing:0
+smell:0
+armor-class:5
+sleepiness:0
+depth:12
+rarity:5
+experience:20
+spell-freq:1
+flags:SMART | NEVER_BLOW
+deathspells:MINE_EXPLODE
+spells:SELF_DESTRUCT
+desc:A small tracked vehicle, clearly a rolling bomb.
+
+# Invisible, immobile, doesn't do anything unless hit.
+name:smart mine
+base:mine
+color:Red
+speed:110
+hit-points:1
+hearing:0
+smell:0
+armor-class:5
+sleepiness:0
+depth:15
+rarity:4
+experience:25
+flags:INVISIBLE | SMART | NEVER_MOVE | NEVER_BLOW
+deathspells:MINE_EXPLODE
+desc:A nasty, well-hidden trap. Step on it and it's the big BOOM.
+
+# Invisible, immobile, relies on spell range
+name:proximity mine
+base:mine
+color:Violet
+speed:110
+hit-points:1
+hearing:0
+smell:0
+armor-class:5
+sleepiness:0
+depth:18
+rarity:5
+experience:30
+spell-freq:1
+flags:INVISIBLE | SMART | NEVER_MOVE | NEVER_BLOW
+deathspells:MINE_EXPLODE
+spells:SELF_DESTRUCT
+desc:A nasty, well-hidden trap. Get too close and it's the big BOOM.
+
+# Visible (as it moves), same idea as the crawler but MUCH faster
+name:jet mine
+base:mine
+color:CadetBlue
+speed:130
+hit-points:1
+hearing:0
+smell:0
+armor-class:5
+sleepiness:0
+depth:20
+rarity:6
+experience:45
+spell-freq:1
+flags:SMART | NEVER_BLOW
+deathspells:MINE_EXPLODE
+spells:SELF_DESTRUCT
+desc:A missile/mine - on detection of a threat it can fly a short distance towards its target before detonating.
+
+# Visible (as it moves), teleports/holds you, self destructs when close
+name:magnetic mine
+base:mine
+color:Magenta-Pink
+speed:110
+hit-points:1
+hearing:0
+smell:0
+armor-class:5
+sleepiness:0
+depth:25
+rarity:6
+experience:70
+spell-freq:1
+blow:TOUCH:PARALYZE:1d1
+flags:SMART | NEVER_MOVE
+deathspells:MINE_EXPLODE
+spells:TELE_TO | TELE_SELF_TO | HOLD | SELF_DESTRUCT
+desc:A dangerous trap, capable of pulling you in from a distance and holding you in place.
+
+# Invisible, shoots fire
+name:flamer mine
+base:mine
+color:Orange
+speed:110
+hit-points:1
+hearing:0
+smell:0
+armor-class:5
+sleepiness:0
+depth:30
+rarity:6
+experience:85
+spell-power:70
+spell-freq:1
+flags:SMART | NEVER_BLOW
+deathspells:BA3_FIRE
+spells:SELF_DESTRUCT
+desc:A mine which blasts its target with a gout of fire.
+
+# Invisible, produces gas
+name:gas mine
+base:mine
+color:Green
+speed:110
+hit-points:1
+hearing:0
+smell:0
+armor-class:5
+sleepiness:0
+depth:35
+rarity:6
+experience:95
+spell-power:90
+spell-freq:1
+flags:SMART | NEVER_BLOW | NEVER_MOVE | INVISIBLE
+deathspells:BA8_POIS
+spells:SELF_DESTRUCT
+desc:A mine which bursts into a cloud of poisonous fumes.
+
+
 ##### HOLOGRAMS #####
 
 name:Inky

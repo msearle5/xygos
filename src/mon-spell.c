@@ -17,6 +17,7 @@
  */
 #include "angband.h"
 #include "effects.h"
+#include "hint.h"
 #include "init.h"
 #include "mon-attack.h"
 #include "mon-desc.h"
@@ -30,6 +31,7 @@
 #include "player-timed.h"
 #include "player-util.h"
 #include "project.h"
+#include "ui-store.h"
 
 /**
  * ------------------------------------------------------------------------
@@ -41,7 +43,8 @@ typedef enum {
 	SPELL_TAG_PRONOUN,
 	SPELL_TAG_TARGET,
 	SPELL_TAG_TYPE,
-	SPELL_TAG_OF_TYPE
+	SPELL_TAG_OF_TYPE,
+	SPELL_TAG_MINE
 } spell_tag_t;
 
 static spell_tag_t spell_tag_lookup(const char *tag)
@@ -56,6 +59,8 @@ static spell_tag_t spell_tag_lookup(const char *tag)
 		return SPELL_TAG_TYPE;
 	else if (strncmp(tag, "oftype", 6) == 0)
 		return SPELL_TAG_OF_TYPE;
+	else if (strncmp(tag, "mine", 4) == 0)
+		return SPELL_TAG_MINE;
 	else
 		return SPELL_TAG_NONE;
 }
@@ -164,6 +169,11 @@ static void spell_message(struct monster *mon,
 						strnfcat(buf, sizeof(buf), &end, " of ");
 						strnfcat(buf, sizeof(buf), &end, type_name);
 					}
+					break;
+				}
+
+				case SPELL_TAG_MINE: {
+					strnfcat(buf, sizeof(buf), &end, random_line(minetext));
 					break;
 				}
 
