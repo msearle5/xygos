@@ -198,21 +198,67 @@ obj-make:great-obj:20
 # 1/chance of inflating the requested ego item level
 obj-make:great-ego:20
 
-# Maximum amount of fuel in a torch
-obj-make:fuel-torch:5000
-
-# Maximum amount of fuel in a lantern
-obj-make:fuel-lamp:15000
-
-# Default amount of fuel in a lantern
-obj-make:default-lamp:7500
-
 # Number of random artifacts to generate
 obj-make:rand-art:110
 
 # Largest pile of cash to generate.
 # Larger piles may exist, up to MAX_PVAL, e.g. from theft.
 obj-make:cash-max:100000
+
+# Power rating below which only faulty randarts can aggravate
+# (so that aggravate is found only on endgame-quality items or
+# faulty items)
+obj-make:aggr-power:300
+
+# Inhibiting factors (percentages allowed) for large bonus values
+# "HIGH" values use inhibit-weak
+# "VERYHIGH" values use inhibit-strong
+obj-make:inhibit-strong:16
+obj-make:inhibit-weak:50
+
+# Maximum + blows
+obj-make:max-blows:5
+
+# Limit + blows above this
+obj-make:inhibit-blows:3
+
+# Maximum + to AC
+obj-make:inhibit-ac:56
+
+# Strongly avoid AC above this
+obj-make:veryhigh-ac:36
+
+# Avoid AC above this
+obj-make:high-ac:26
+
+# Strongly avoid to-hit above this
+obj-make:veryhigh-hit:26
+
+# Avoid to-hit above this
+obj-make:high-ac:16
+
+# Strongly avoid to-dam above this
+obj-make:veryhigh-hit:26
+
+# Avoid to-dam above this
+obj-make:high-ac:16
+
+# Inhibit might above this
+obj-make:inhibit-might:4
+
+# Inhibit shots above this
+obj-make:inhibit-shots:21
+
+# Power rating: extra blows from a nonweapon
+obj-make:nonweap-damage:15
+
+# Power rating: power from damage (multiplied with any source of increased damage)
+obj-make:damage-power:5
+
+# Power rating: power from to-hit (only)
+obj-make:to-hit-power:3
+
+# Power rating: 
 
 #---------------------------------------------------------------------
 # Player constants

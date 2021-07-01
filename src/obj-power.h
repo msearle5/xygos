@@ -24,7 +24,6 @@
  * Constants for the power algorithm:
  * - fudge factor for extra damage from rings etc. (used if extra blows)
  * - assumed damage for off-weapon brands
- * - base power for 
  * - base power for armour items (for halving acid damage)
  * - power per point of damage
  * - power per point of +to_hit
@@ -34,15 +33,10 @@
  * - assumed max blows
  * - inhibiting values for +blows/might/shots/immunities (max is one less)
  */
-#define NONWEAP_DAMAGE   		15 /* fudge to boost extra blows */
 #define WEAP_DAMAGE				12 /* and for off-weapon combat flags */
-#define BASE__POWER		 4
 #define BASE_ARMOUR_POWER		 1
-#define DAMAGE_POWER             5 /* i.e. 2.5 */
-#define TO_HIT_POWER             3 /* i.e. 1.5 */
 #define BASE_AC_POWER            2 /* i.e. 1 */
 #define TO_AC_POWER              2 /* i.e. 1 */
-#define MAX_BLOWS                5
 
 /**
  * Some constants used in randart generation and power calculation
@@ -51,16 +45,6 @@
  * (a stack of this many equals a weapon of the same damage output)
  */
 #define INHIBIT_POWER		20000
-#define INHIBIT_BLOWS		3
-#define INHIBIT_MIGHT		4
-#define INHIBIT_SHOTS		21
-#define HIGH_TO_AC			26
-#define VERYHIGH_TO_AC		36
-#define INHIBIT_AC			56
-#define HIGH_TO_HIT			16
-#define VERYHIGH_TO_HIT		26
-#define HIGH_TO_DAM			16
-#define VERYHIGH_TO_DAM		26
 #define AMMO_RESCALER		20 /* this value is also used for torches */
 
 

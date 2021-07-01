@@ -1803,9 +1803,9 @@ static void try_supercharge(struct artifact *art, s32b target_power,
 		} else if (randint0(n_randarts) <
 				   data->art_probs[ART_IDX_MELEE_BLOWS_SUPER]) {
 			/* Blows */
-			art->modifiers[OBJ_MOD_BLOWS] = INHIBIT_BLOWS - 1;
+			art->modifiers[OBJ_MOD_BLOWS] = z_info->inhibit_blows - 1;
 			file_putf(log_file, "Supercharging melee blows! (%+d blows)\n",
-				INHIBIT_BLOWS - 1);
+				z_info->inhibit_blows - 1);
 		}
 	}
 
@@ -1813,14 +1813,14 @@ static void try_supercharge(struct artifact *art, s32b target_power,
 	if (art->tval == TV_GUN) {
 		if (randint0(n_randarts)
 			< data->art_probs[ART_IDX_GUN_SHOTS_SUPER]) {
-			art->modifiers[OBJ_MOD_SHOTS] = INHIBIT_SHOTS - 1;
+			art->modifiers[OBJ_MOD_SHOTS] = z_info->inhibit_shots - 1;
 			file_putf(log_file, "Supercharging shots! (%+d extra shots)\n",
-				INHIBIT_SHOTS - 1);
+				z_info->inhibit_shots - 1);
 		} else if (randint0(n_randarts) <
 				   data->art_probs[ART_IDX_GUN_MIGHT_SUPER]) {
-			art->modifiers[OBJ_MOD_MIGHT] = INHIBIT_MIGHT - 1;
+			art->modifiers[OBJ_MOD_MIGHT] = z_info->inhibit_might - 1;
 			file_putf(log_file, "Supercharging might! (%+d extra might)\n",
-					  INHIBIT_MIGHT - 1);
+					  z_info->inhibit_might - 1);
 		}
 	}
 
@@ -1865,14 +1865,14 @@ static void try_supercharge(struct artifact *art, s32b target_power,
 		art->tval == TV_HAFTED || art->tval == TV_POLEARM ||
 		art->tval == TV_SWORD) {
 		if ((randint0(n_randarts) < data->art_probs[ART_IDX_WEAPON_AGGR]) &&
-		    (target_power > AGGR_POWER)) {
+		    (target_power > z_info->aggr_power)) {
 			of_on(art->flags, OF_AGGRAVATE);
 			file_putf(log_file, "Adding aggravation\n");
 		}
 	} else {
 		if ((randint0(n_randarts)
 			 < data->art_probs[ART_IDX_NONWEAPON_AGGR]) &&
-			(target_power > AGGR_POWER)) {
+			(target_power > z_info->aggr_power)) {
 			of_on(art->flags, OF_AGGRAVATE);
 			file_putf(log_file, "Adding aggravation\n");
 		}
@@ -2151,13 +2151,13 @@ static void add_damage_dice(struct artifact *art)
 static void add_to_hit(struct artifact *art, int fixed, int random)
 {
 	/* Inhibit above certain threshholds */
-	if (art->to_h > VERYHIGH_TO_HIT) {
+	if (art->to_h > z_info->veryhigh_hit) {
 		if (!INHIBIT_STRONG) {
 			file_putf(log_file, "Failed to add to-hit, value %d is too high\n",
 					  art->to_h);
 			return;
 		}
-	} else if (art->to_h > HIGH_TO_HIT) {
+	} else if (art->to_h > z_info->high_hit) {
 		if (!INHIBIT_WEAK) {
 			file_putf(log_file, "Failed to add to-hit, value %d is too high\n",
 					  art->to_h);
@@ -2174,13 +2174,13 @@ static void add_to_hit(struct artifact *art, int fixed, int random)
 static void add_to_dam(struct artifact *art, int fixed, int random)
 {
 	/* Inhibit above certain threshholds */
-	if (art->to_d > VERYHIGH_TO_DAM) {
+	if (art->to_d > z_info->veryhigh_dam) {
 		if (!INHIBIT_STRONG) {
 			file_putf(log_file, "Failed to add to-dam, value %d is too high\n",
 					  art->to_d);
 			return;
 		}
-	} else if (art->to_h > HIGH_TO_DAM) {
+	} else if (art->to_h > z_info->high_dam) {
 		if (!INHIBIT_WEAK) {
 			file_putf(log_file, "Failed to add to-dam, value %d is too high\n",
 					  art->to_d);
@@ -2198,13 +2198,13 @@ static void add_to_dam(struct artifact *art, int fixed, int random)
 static void add_to_AC(struct artifact *art, int fixed, int random)
 {
 	/* Inhibit above certain threshholds */
-	if (art->to_a > VERYHIGH_TO_AC) {
+	if (art->to_a > z_info->veryhigh_ac) {
 		if (!INHIBIT_STRONG) {
 			file_putf(log_file, "Failed to add to-AC, value %d is too high\n",
 					  art->to_a);
 			return;
 		}
-	} else if (art->to_h > HIGH_TO_AC) {
+	} else if (art->to_h > z_info->high_ac) {
 		if (!INHIBIT_WEAK) {
 			file_putf(log_file, "Failed to add to-AC, value %d is too high\n",
 					  art->to_a);
@@ -2334,10 +2334,8 @@ static void add_ability_aux(struct artifact *art, int r, s32b target_power,
 
 		case ART_IDX_WEAPON_AGGR:
 		case ART_IDX_NONWEAPON_AGGR:
-			if (target_power > AGGR_POWER)
-			{
+			if (target_power > z_info->aggr_power)
 				add_flag(art, OF_AGGRAVATE);
-			}
 			break;
 
 		case ART_IDX_MELEE_BLESS:

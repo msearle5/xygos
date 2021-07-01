@@ -36,15 +36,8 @@
  * "HIGH" values use INHIBIT_WEAK
  * "VERYHIGH" values use INHIBIT_STRONG
  */
-#define INHIBIT_STRONG  (one_in_(6))
-#define INHIBIT_WEAK    (one_in_(2))
-
-/**
- * Power rating below which only faulty randarts can aggravate
- * (so that aggravate is found only on endgame-quality items or
- * faulty items)
- */
-#define AGGR_POWER 300
+#define INHIBIT_STRONG  (randint0(100) < z_info->inhibit_strong)
+#define INHIBIT_WEAK    (randint0(100) < z_info->inhibit_weak)
 
 /**
  * Numerical index values for the different learned probabilities

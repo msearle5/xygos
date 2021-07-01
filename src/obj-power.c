@@ -197,14 +197,14 @@ static int to_damage_power(const struct object *obj)
 {
 	int p;
 
-	p = (obj->to_d * DAMAGE_POWER / 2);
+	p = (obj->to_d * z_info->damage_power / 2);
 	if (p) log_obj(format("%d power from to_dam\n", p));
 
 	/* Add second lot of damage power for non-weapons */
 	if ((wield_slot(obj) != slot_by_name(player, "shooting")) &&
 		!tval_is_melee_weapon(obj) &&
 		!tval_is_ammo(obj)) {
-		int q = (obj->to_d * DAMAGE_POWER);
+		int q = (obj->to_d * z_info->damage_power);
 		p += q;
 		if (q)
 			log_obj(format("Add %d from non-weapon to_dam, total %d\n", q, p));
@@ -221,7 +221,7 @@ static int damage_dice_power(const struct object *obj)
 
 	/* Add damage from dice for any wieldable weapon or ammo */
 	if (tval_is_melee_weapon(obj) || tval_is_ammo(obj)) {
-		dice = ((obj->dd * (obj->ds + 1) * DAMAGE_POWER) / 4);
+		dice = ((obj->dd * (obj->ds + 1) * z_info->damage_power) / 4);
 		log_obj(format("Add %d power for damage dice, ", dice));
 	} else if (wield_slot(obj) != slot_by_name(player, "shooting")) {
 		/* Add power boost for nonweapons with combat flags */
@@ -229,7 +229,7 @@ static int damage_dice_power(const struct object *obj)
 			(obj->modifiers[OBJ_MOD_BLOWS] > 0) ||
 			(obj->modifiers[OBJ_MOD_SHOTS] > 0) ||
 			(obj->modifiers[OBJ_MOD_MIGHT] > 0)) {
-			dice = (WEAP_DAMAGE * DAMAGE_POWER);
+			dice = (WEAP_DAMAGE * z_info->damage_power);
 			log_obj(format("Add %d power for non-weapon combat bonuses, ",
 						   dice));
 		}
@@ -254,7 +254,7 @@ static int ammo_damage_power(const struct object *obj, int p)
 			launcher = 2;
 
 		if (launcher != -1) {
-			q = (archery[launcher].ammo_dam * DAMAGE_POWER / 2);
+			q = (archery[launcher].ammo_dam * z_info->damage_power / 2);
 			log_obj(format("Adding %d power from ammo, total is %d\n", q,
 						   p + q));
 		}
@@ -273,8 +273,8 @@ static int launcher_ammo_damage_power(const struct object *obj, int p)
 		if (obj->tval == TV_AMMO_9) ammo_type = 1;
 		if (obj->tval == TV_AMMO_12) ammo_type = 2;
 		if (obj->ego[0])
-			p += (archery[ammo_type].launch_dam * DAMAGE_POWER / 2);
-		p = p * archery[ammo_type].launch_mult / (2 * MAX_BLOWS);
+			p += (archery[ammo_type].launch_dam * z_info->damage_power / 2);
+		p = p * archery[ammo_type].launch_mult / (2 * z_info->max_blows);
 		log_obj(format("After multiplying ammo and rescaling, power is %d\n",
 					   p));
 	}
@@ -291,15 +291,15 @@ static int extra_blows_power(const struct object *obj, int p)
 	if (obj->modifiers[OBJ_MOD_BLOWS] == 0)
 		return p;
 
-	if (obj->modifiers[OBJ_MOD_BLOWS] >= INHIBIT_BLOWS) {
+	if (obj->modifiers[OBJ_MOD_BLOWS] >= z_info->inhibit_blows) {
 		p += INHIBIT_POWER;
 		log_obj("INHIBITING - too many extra blows - quitting\n");
 		return p;
 	} else {
-		p = p * (MAX_BLOWS + obj->modifiers[OBJ_MOD_BLOWS]) / MAX_BLOWS;
+		p = p * (z_info->max_blows + obj->modifiers[OBJ_MOD_BLOWS]) / z_info->max_blows;
 		/* Add boost for assumed off-weapon damage */
-		p += (NONWEAP_DAMAGE * obj->modifiers[OBJ_MOD_BLOWS]
-			  * DAMAGE_POWER / 2);
+		p += (z_info->nonweap_damage * obj->modifiers[OBJ_MOD_BLOWS]
+			  * z_info->damage_power / 2);
 		log_obj(format("Add %d power for extra blows, total is %d\n",
 					   p - q, p));
 	}
@@ -314,7 +314,7 @@ static int extra_shots_power(const struct object *obj, int p)
 	if (obj->modifiers[OBJ_MOD_SHOTS] == 0)
 		return p;
 
-	if (obj->modifiers[OBJ_MOD_SHOTS] >= INHIBIT_SHOTS) {
+	if (obj->modifiers[OBJ_MOD_SHOTS] >= z_info->inhibit_shots) {
 		p += INHIBIT_POWER;
 		log_obj("INHIBITING - too many extra shots - quitting\n");
 		return p;
@@ -335,7 +335,7 @@ static int extra_shots_power(const struct object *obj, int p)
  */
 static int extra_might_power(const struct object *obj, int p, int mult)
 {
-	if (obj->modifiers[OBJ_MOD_MIGHT] >= INHIBIT_MIGHT) {
+	if (obj->modifiers[OBJ_MOD_MIGHT] >= z_info->inhibit_might) {
 		p += INHIBIT_POWER;
 		log_obj("INHIBITING - too much extra might - quitting\n");
 		return p;
@@ -415,22 +415,22 @@ static s32b slay_power(const struct object *obj, int p, int verbose,
 
 	/* Bonuses for multiple brands and slays */
 	if (num_slays > 1) {
-		q = (num_slays * num_slays * dice_pwr) / (DAMAGE_POWER * 5);
+		q = (num_slays * num_slays * dice_pwr) / (z_info->damage_power * 5);
 		p += q;
 		log_obj(format("Add %d power for multiple slays, total is %d\n", q, p));
 	}
 	if (num_brands > 1) {
-		q = (2 * num_brands * num_brands * dice_pwr) / (DAMAGE_POWER * 5);
+		q = (2 * num_brands * num_brands * dice_pwr) / (z_info->damage_power * 5);
 		p += q;
 		log_obj(format("Add %d power for multiple brands, total is %d\n",q, p));
 	}
 	if (num_slays && num_brands) {
-		q = (num_slays * num_brands * dice_pwr) / (DAMAGE_POWER * 5);
+		q = (num_slays * num_brands * dice_pwr) / (z_info->damage_power * 5);
 		p += q;
 		log_obj(format("Add %d power for slay and brand, total is %d\n", q, p));
 	}
 	if (num_kills > 1) {
-		q = (3 * num_kills * num_kills * dice_pwr) / (DAMAGE_POWER * 5);
+		q = (3 * num_kills * num_kills * dice_pwr) / (z_info->damage_power * 5);
 		p += q;
 		log_obj(format("Add %d power for multiple kills, total is %d\n", q, p));
 	}
@@ -451,13 +451,13 @@ static s32b slay_power(const struct object *obj, int p, int verbose,
 }
 
 /**
- * Melee weapons assume MAX_BLOWS per turn, so we must divide by MAX_BLOWS
+ * Melee weapons assume z_info->max_blows per turn, so we must divide by z_info->max_blows
  * to get equal ratings for launchers.
  */
 static int rescale_gun_power(const struct object *obj, int p)
 {
 	if (wield_slot(obj) == slot_by_name(player, "shooting")) {
-		p /= MAX_BLOWS;
+		p /= z_info->max_blows;
 		log_obj(format("Rescaling gun power, total is %d\n", p));
 	}
 	return p;
@@ -468,7 +468,7 @@ static int rescale_gun_power(const struct object *obj, int p)
  */
 static int to_hit_power(const struct object *obj, int p)
 {
-	int q = (obj->to_h * TO_HIT_POWER / 2);
+	int q = (obj->to_h * z_info->to_hit_power / 2);
 	p += q;
 	if (p) 
 		log_obj(format("Add %d power for to hit, total is %d\n", q, p));
@@ -518,18 +518,18 @@ static int to_ac_power(const struct object *obj, int p)
 	p += q;
 	log_obj(format("Add %d power for to_ac of %d, total is %d\n", 
 				   q, obj->to_a, p));
-	if (obj->to_a > HIGH_TO_AC) {
-		q = ((obj->to_a - (HIGH_TO_AC - 1)) * TO_AC_POWER);
+	if (obj->to_a > z_info->high_ac) {
+		q = ((obj->to_a - (z_info->high_ac - 1)) * TO_AC_POWER);
 		p += q;
 		log_obj(format("Add %d power for high to_ac, total is %d\n",
 							q, p));
 	}
-	if (obj->to_a > VERYHIGH_TO_AC) {
-		q = ((obj->to_a - (VERYHIGH_TO_AC -1)) * TO_AC_POWER * 2);
+	if (obj->to_a > z_info->veryhigh_ac) {
+		q = ((obj->to_a - (z_info->veryhigh_ac -1)) * TO_AC_POWER * 2);
 		p += q;
 		log_obj(format("Add %d power for very high to_ac, total is %d\n",q, p));
 	}
-	if (obj->to_a >= INHIBIT_AC) {
+	if (obj->to_a >= z_info->inhibit_ac) {
 		p += INHIBIT_POWER;
 		log_obj("INHIBITING: AC bonus too high\n");
 	}

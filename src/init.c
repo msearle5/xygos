@@ -617,16 +617,44 @@ static enum parser_error parse_constants_obj_make(struct parser *p) {
 		z->great_obj = value;
 	else if (streq(label, "great-ego"))
 		z->great_ego = value;
-	else if (streq(label, "fuel-torch"))
-		z->fuel_torch = value;
-	else if (streq(label, "fuel-lamp"))
-		z->fuel_lamp = value;
-	else if (streq(label, "default-lamp"))
-		z->default_lamp = value;
 	else if (streq(label, "rand-art"))
 		z->rand_art = value;
 	else if (streq(label, "cash-max"))
 		z->cash_max = value;
+	else if (streq(label, "aggr-power"))
+		z->aggr_power = value;
+	else if (streq(label, "inhibit-strong"))
+		z->inhibit_strong = value;
+	else if (streq(label, "inhibit-weak"))
+		z->inhibit_weak = value;
+	else if (streq(label, "max-blows"))
+		z->max_blows = value;
+	else if (streq(label, "inhibit-blows"))
+		z->inhibit_blows = value;
+	else if (streq(label, "inhibit-ac"))
+		z->inhibit_ac = value;
+	else if (streq(label, "veryhigh-ac"))
+		z->veryhigh_ac = value;
+	else if (streq(label, "high-ac"))
+		z->high_ac = value;
+	else if (streq(label, "veryhigh-hit"))
+		z->veryhigh_hit = value;
+	else if (streq(label, "high-hit"))
+		z->high_hit = value;
+	else if (streq(label, "veryhigh-dam"))
+		z->veryhigh_dam = value;
+	else if (streq(label, "high-dam"))
+		z->high_dam = value;
+	else if (streq(label, "inhibit-might"))
+		z->inhibit_might = value;
+	else if (streq(label, "inhibit-shots"))
+		z->inhibit_shots = value;
+	else if (streq(label, "damage-power"))
+		z->damage_power = value;
+	else if (streq(label, "to-hit-power"))
+		z->to_hit_power = value;
+	else if (streq(label, "nonweap-damage"))
+		z->nonweap_damage = value;
 	else
 		return PARSE_ERROR_UNDEFINED_DIRECTIVE;
 

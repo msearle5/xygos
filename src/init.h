@@ -123,11 +123,25 @@ struct angband_constants
 	u16b max_obj_depth;	/**< Maximum depth used in object allocation */
 	u16b great_obj;		/**< 1/chance of inflating the requested object level */
 	u16b great_ego;		/**< 1/chance of inflating the requested ego item level */
-	u16b fuel_torch;	/**< Maximum amount of fuel in a torch */
-	u16b fuel_lamp;		/**< Maximum amount of fuel in a lantern */
-	u16b default_lamp;	/**< Default amount of fuel in a lantern  */
 	u16b rand_art;		/**< Number of random artifacts */
 	u16b cash_max;		/**< Largest pile of cash generated */
+	u16b aggr_power;	/**< Power rating below which only faulty randarts can aggravate */
+	u16b inhibit_strong; /**< Percentage of items allowed for strong inhibition */
+	u16b inhibit_weak;	/**< Percentage of items allowed for weak inhibition */
+	u16b max_blows;		/**< Maximum blows */
+	u16b inhibit_blows;	/**< Limit blows above this */
+	u16b inhibit_ac;	/**< No AC above this */
+	u16b veryhigh_ac;	/**< AC above this is rare */
+	u16b high_ac;		/**< AC above this is unusual */
+	u16b veryhigh_hit;	/**< To-hit above this is rare */
+	u16b high_hit;		/**< To-hit above this is unusual */
+	u16b veryhigh_dam;	/**< To-dam above this is rare */
+	u16b high_dam;		/**< To-dam above this is unusual */
+	u16b inhibit_might;	/**< Inhibit extra might above this */
+	u16b inhibit_shots;	/**< Inhibit extra shots above this */
+	u16b damage_power;	/**< Power rating: power from damage */
+	u16b to_hit_power;	/**< Power rating: power from to-hit */
+	u16b nonweap_damage; /**< Power rating: power from damage on nonweapons */
 
 	/* Player constants, read from constants.txt */
 	u16b max_sight;				/**< Maximum visual range */
