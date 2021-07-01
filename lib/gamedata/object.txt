@@ -1087,6 +1087,21 @@ dice:5+1d4
 desc:A grey-looking piece of dried flesh of you dare not guess what creature.
 desc:  You would have to be desperate to eat this.
 
+name:& grubsteak~
+type:food
+graphics:,:Y
+level:5
+weight:3
+cost:10
+alloc:20:12 to 127
+pile:10:1d3
+power:4
+msg:That tastes bland.
+effect:NOURISH:INC_TO
+dice:90
+effect:HEAL_HP
+dice:4d6
+desc:And you thought you knew what worm farming was... yuck! But these slabs of maggoprotein are nutritious, if you don't think too hard about it. They are also rumored to be dosed with drugs or nanites - although there seem to be a thousand different views on what kind and for what reason. The only real consensus is that they provide a limited amount of healing.
 
 name:& slice~ of meat
 type:food
