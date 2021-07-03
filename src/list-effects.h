@@ -146,4 +146,4 @@ EFFECT(CLEAR_VALUE,					false,	NULL,		0,		EFINFO_NONE,	"",					"")
 EFFECT(MESSAGE,						false, NULL,		0,		EFINFO_NONE,	"", 				"")
 EFFECT(IF_SUCCESSFUL,				false, NULL,		0,		EFINFO_NONE,	"", 				"")
 EFFECT(TIME_LOOP,					false, NULL,		0,		EFINFO_NONE,	"", 				"")
-
+EFFECT(RUN_CARD,					false, NULL,		0, 		EFINFO_NONE,	"runs a card", "run card")
