@@ -593,6 +593,12 @@ static enum parser_error parse_constants_store(struct parser *p) {
 		z->store_shuffle = value;
 	else if (streq(label, "magic-level"))
 		z->store_magic_level = value;
+	else if (streq(label, "theft-dex"))
+		z->theft_dex = value;
+	else if (streq(label, "theft-chr"))
+		z->theft_chr = value;
+	else if (streq(label, "turns-faction"))
+		z->faction_turns = value;
 	else
 		return PARSE_ERROR_UNDEFINED_DIRECTIVE;
 

@@ -1242,7 +1242,7 @@ void increase_danger_level(void)
 {
 	if ((OPT(player,birth_time_limit)) && (!player_has(player, PF_NO_TIME_LIMIT))) {
 		int danger = 0;
-		int pturn = turn / 10;
+		unsigned int pturn = turn / 10;
 		if (pturn >= z_info->town_easy_turns) {
 			danger = 1 + ((pturn - z_info->town_easy_turns) / z_info->town_levelup_turns);
 		}
@@ -1266,6 +1266,20 @@ void increase_danger_level(void)
 			}
 		}
 	}
+
+	/** Negative faction eventually goes away - if you don't do anything to make it worse.
+	 * This only applies to the town and BM factions (you have the option of increasing the cyber faction by selling to them)
+	 **/
+	if ((player->bm_faction < 0) || (player->town_faction < 0)) {
+		unsigned int goodturns = (turn - player->last_faction_loss) / 10;
+		if (goodturns > z_info->faction_turns) {
+			player->last_faction_loss = turn;
+			if (player->bm_faction < 0)
+				player->bm_faction++;
+			if (player->town_faction < 0)
+				player->town_faction++;
+		}
+	}
 }
 
 /**
@@ -1275,6 +1289,7 @@ void on_new_level(void)
 {
 	/* Handle timed danger */
 	increase_danger_level();
+
 
 	/* Arena levels are not really a level change */
 	if (!player->upkeep->arena_level) {

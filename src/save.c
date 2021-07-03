@@ -493,10 +493,12 @@ void rdwr_player(void)
 	/* Ready for the endgame? */
 	rdwr_bool(&player->orbitable);
 
-	/* Factions */
+	/* Factions, etc. */
+	rdwr_s16b(&player->stores_owned);
 	rdwr_s32b(&player->bm_faction);
 	rdwr_s32b(&player->town_faction);
 	rdwr_s32b(&player->cyber_faction);
+	rdwr_s32b(&player->last_faction_loss);
 }
 
 void wr_player(void)

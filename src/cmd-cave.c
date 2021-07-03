@@ -208,7 +208,7 @@ void do_cmd_go_down(struct command *cmd)
 			quest->flags |= QF_ACTIVE;
 
 			strnfmt(mazebuf, sizeof(mazebuf), "You enter the %s. Beware that %s lurks below!",
-				dname, quest->name);
+				dname, quest->name); 
 		} else {
 			strnfmt(mazebuf, sizeof(mazebuf), "You enter the %s.", dname);
 		}

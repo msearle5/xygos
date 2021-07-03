@@ -1,11 +1,18 @@
 BUGS
 ====
+BUG: "level X of the fortress" in hiscores: not the actual dungeon (which was the Caverns)
+
+BUG: Shop owners (store_do_fight()) are always male
+
+BUG: TODOs in hq_ok()
+
 BUG: A Collective Skate that a cyborg started with was {??}
 
 BUG? Stuff isn't transported when you fly - should it be? Should there just be 1 house?
 BUG:"You set off the strange rune" and monster spell SHOT need retheming
 
 BUG: Store faction doesn't do anything
+	- Well, it affects the message printed, but that's not actually useful
 
 BUG: Stores which close lose their entrance but don't become ruins. (Only when more than one would?)
 

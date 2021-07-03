@@ -184,6 +184,14 @@ store:shuffle:25
 # Dungeon level to apply magic to objects for normal stores
 store:magic-level:5
 
+# Divisor (higher values make it easier) for difficulty of stealing, vs. dexterity
+store:theft-dex:7
+
+# Divisor (higher values make it easier) for difficulty of stealing, vs. charisma
+store:theft-chr:3
+
+# Time after last theft before one level of -ve faction is forgiven
+store:turns-faction:50000
 
 #---------------------------------------------------------------------
 # Object generation

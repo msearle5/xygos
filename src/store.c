@@ -642,7 +642,7 @@ static const char *comment_great[] =
 
 
 /**
- * Let a shop-keeper React to a purchase
+ * Let a shop-keeper react to a purchase
  *
  * We paid "price", it was worth "value", and we thought it was worth "guess"
  */
@@ -778,8 +778,24 @@ int price_item(struct store *store, const struct object *obj,
 		 * level (that is, at level 25 less than half of the advantage
 		 * of high level has occurred).
 		 */
-		adjust += ((3000 - (player->lev * player->lev)) /
-			((3 + player->state.stat_ind[STAT_CHR]) * 10)) + store->owner->greed;
+		static const int faction_adjust[10] = {
+				180, 170, 150, 125,
+				100,
+				60, 40, 30, 20, 10
+		};
+		int faction = player->town_faction + 4;
+		if (faction < 0)
+			faction = 0;
+		if (faction >= 9)
+			faction = 9;
+		int fadjust = faction_adjust[faction];
+		int greed = MAX(store->owner->greed, fadjust - 100);
+
+		adjust += ((((3000 - (player->lev * player->lev)) /
+			((3 + player->state.stat_ind[STAT_CHR]) * 10)) + greed) * fadjust) / 100;
+
+		if (adjust < 101)
+			adjust = 101;
 
 		/* The black market is always a worse deal (for the rest of them) */
 		switch (store->sidx) {
@@ -1214,7 +1230,7 @@ static struct object *store_find_kind(struct store *s, struct object_kind *k,
  * Delete an object from store 'store', or, if it is a stack, perhaps only
  * partially delete it.
  *
- * This function is used when store maintainance occurs, and is designed to
+ * This function is used when store maintenance occurs, and is designed to
  * imitate non-PC purchasers making purchases from the store.
  *
  * The reason this doesn't check for "staple" items and refuse to
@@ -1322,6 +1338,8 @@ static bool hq_ok(const struct object *obj)
 			if (my_stristr(obj->kind->name, "ation"))
 				return true;
 			if (my_stristr(obj->kind->name, "cheese"))
+				return true;
+			if (my_stristr(obj->kind->name, "grub"))
 				return true;
 			return false;
 	}
@@ -1452,10 +1470,23 @@ static void store_level_limits(struct store *store, int *min_level, int *max_lev
 				*max_level = MIN(95, 18 + (rank * 13));
 			}
 		} else {
+			/* Change the maximum level (only relevant at high depth) and
+			 * the depth modifier (relevant at low level) depending on faction.
+			 * Don't want to make too much difference from -ve faction (essentials
+			 * should be around, just a little less quickly) and similarly it
+			 * shouldn't be possible to get the very best (>l80) stuff from stores.
+			 */
 			*min_level = 1;
-			*max_level = z_info->store_magic_level + MAX(player->max_depth - 20, 0);
-			if (*min_level > 55) *min_level = 55;
-			if (*max_level > 70) *max_level = 70;
+			int limit = 70;
+			int depth = 20;
+			if (faction < 0)
+				depth = 25;
+			else if (faction > 0) {
+				limit = MIN(80, 3+(2*faction));
+				depth = MAX(0, 20 - (5*faction));
+			}
+			*max_level = z_info->store_magic_level +  MAX(player->max_depth - depth, 0);
+			if (*max_level > depth) *max_level = limit;
 		}
 	}
 }
@@ -1628,6 +1659,14 @@ void do_store_maint(struct store *s, bool init)
 			rank = 0;
 		max *= (1<<rank) - 1;
 		max >>= rank;
+	} else {
+		if ((max > 1) && (faction < 0)) {
+			max += faction;
+			if (max < 1)
+				max = 1;
+		} else {
+			max = MAX(max+1, (max * (faction + 4) / 4));
+		}
 	}
 
 	if (!init) {
@@ -2023,11 +2062,12 @@ int find_inven(const struct object *obj)
 
 
 /**
- * Buy the item with the given index from the current store's inventory.
+ * Buy (or steal) the item with the given index from the current store's inventory.
  */
 void do_cmd_buy(struct command *cmd)
 {
 	int amt;
+	int steal;
 
 	struct object *obj, *bought, *known_obj;
 
@@ -2054,6 +2094,9 @@ void do_cmd_buy(struct command *cmd)
 	if (cmd_get_arg_number(cmd, "quantity", &amt) != CMD_OK)
 		return;
 
+	if (cmd_get_arg_number(cmd, "steal", &steal) != CMD_OK)
+		steal = 0;
+
 	/* Get desired object */
 	bought = object_new();
 	object_copy_amt(bought, obj, amt);
@@ -2068,17 +2111,19 @@ void do_cmd_buy(struct command *cmd)
 	/* Describe the object (fully) */
 	object_desc(o_name, sizeof(o_name), bought, ODESC_PREFIX | ODESC_FULL);
 
-	/* Extract the price for the entire stack */
-	price = price_item(store, bought, false, bought->number);
+	if (!steal) {
+		/* Extract the price for the entire stack */
+		price = price_item(store, bought, false, bought->number);
 
-	if (price > player->au) {
-		msg("You cannot afford that purchase.");
-		object_delete(&bought);
-		return;
+		if (price > player->au) {
+			msg("You cannot afford that purchase.");
+			object_delete(&bought);
+			return;
+		}
+
+		/* Spend the money */
+		player->au -= price;
 	}
-
-	/* Spend the money */
-	player->au -= price;
 
 	/* Update the gear */
 	player->upkeep->update |= (PU_INVEN);
@@ -2103,11 +2148,13 @@ void do_cmd_buy(struct command *cmd)
 	else
 		install = ((inven_carry_num(bought, true) <= 0) && (wield_slot(bought) != player->body.count));
 
-	if (cyber && install) {
-		msg("You have %s installed for $%d.", o_name, price);
-	} else {
-		if (one_in_(3)) msgt(MSG_STORE5, "%s", ONE_OF(comment_accept));
-		msg("You bought %s for $%d.", o_name, price);
+	if (!steal) {
+		if (cyber && install) {
+			msg("You have %s installed for $%d.", o_name, price);
+		} else {
+			if (one_in_(3)) msgt(MSG_STORE5, "%s", ONE_OF(comment_accept));
+			msg("You bought %s for $%d.", o_name, price);
+		}
 	}
 
 	/* Erase the inscription */
@@ -2146,22 +2193,24 @@ void do_cmd_buy(struct command *cmd)
 		/* Reduce or remove the item */
 		store_delete(store, obj, amt);
 
+		if (!steal) {
 		/* Store is empty */
-		if (store->stock_num == 0) {
-			int i;
+			if (store->stock_num == 0) {
+				int i;
 
-			/* Sometimes shuffle the shopkeeper */
-			if (one_in_(z_info->store_shuffle)) {
-				/* Shuffle */
-				msg("The shopkeeper retires.");
-				store_shuffle(store);
-			} else
-				/* Maintain */
-				msg("The shopkeeper brings out some new stock.");
+				/* Sometimes shuffle the shopkeeper */
+				if (one_in_(z_info->store_shuffle)) {
+					/* Shuffle */
+					msg("The shopkeeper retires.");
+					store_shuffle(store);
+				} else
+					/* Maintain */
+					msg("The shopkeeper brings out some new stock.");
 
-			/* New inventory */
-			for (i = 0; i < 10; ++i)
-				store_maint(store);
+				/* New inventory */
+				for (i = 0; i < 10; ++i)
+					store_maint(store);
+			}
 		}
 	}
 
@@ -2339,6 +2388,19 @@ void do_cmd_sell(struct command *cmd)
 	if (!store_will_buy(store, obj)) {
 		msg("I do not wish to purchase this item.");
 		return;
+	}
+
+	/* Check for stolen items */
+	if (of_has(obj->flags, OF_STOLEN)) {
+		if (store->sidx == STORE_B_MARKET) {
+			if (player->bm_faction <= 0) {
+				msg("I know where you got that from, and you aren't one of us. Nope.");
+				return;
+			}
+		} else {
+			msg("That's nicked, get out of here!");
+			return;
+		}
 	}
 
 	/* Get a copy of the object representing the number being sold */

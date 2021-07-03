@@ -69,8 +69,8 @@ struct angband_constants
 	u16b monster_group_max;		/**< Maximum size of a group */
 	u16b mutant_chance;			/**< Chance to try for a mutation */
 	u16b monster_group_dist;	/**< Max dist of a group from a related group */
-	u16b town_easy_turns;		/**< Number of turns before difficulty increases */
-	u16b town_levelup_turns;	/**< Number of turns between difficulty increases */
+	u32b town_easy_turns;		/**< Number of turns before difficulty increases */
+	u32b town_levelup_turns;	/**< Number of turns between difficulty increases */
 	u16b town_allmons_level;	/**< Level when level-1 non-p/h can show in the town */
 	u16b town_equalmons_level;	/**< Level when all in-level mons can show in the town */
 	u16b town_delfirst_level;	/**< Level when the first shop disappears */
@@ -99,7 +99,7 @@ struct angband_constants
 	u16b dungeon_hgt;	/**< Maximum number of vertical grids on a level */
 	u16b dungeon_wid;	/**< Maximum number of horizontical grids on a level */
 	u16b town_hgt;		/**< Maximum number of vertical grids in the town */
-	u16b town_wid;		/**< Maximum number of horizontical grids in the town */
+	u16b town_wid;		/**< Maximu number of horizontical grids in the town */
 	u16b feeling_total;	/**< Total number of feeling squares per level */
 	u16b feeling_need;	/**< Squares needed to see to get first feeling */
     u16b stair_skip;    /**< Number of levels to skip for each down stair */
@@ -118,6 +118,9 @@ struct angband_constants
 	u16b store_turns;		/**< Number of turns between turnovers */
 	u16b store_shuffle;		/**< 1/per-day-chance of owner changing */
 	u16b store_magic_level;	/**< Level for apply_magic() in normal stores */
+	u16b theft_dex;		/**< Scale for difficulty of stealing, vs. dexterity */
+	u16b theft_chr;		/**< Scale for difficulty of stealing, vs. charisma */
+	u32b faction_turns;		/**< Number of turns before -ve faction starts to increase */
 
 	/* Object creation constants, read from constants.txt */
 	u16b max_obj_depth;	/**< Maximum depth used in object allocation */

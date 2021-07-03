@@ -59,9 +59,14 @@
 #include "z-debug.h"
 #include "z-rand.h"
 
+#include <math.h>
+
 #define ORBIT_DAYTIME 900
 #define ORBIT_DURATION 1350
 #define ORBIT_FARE 90000
+
+
+static int store_get_stock(struct menu *m, int oid, bool sel);
 
 /**
  * Shopkeeper welcome messages.
@@ -95,9 +100,36 @@ static const char *comment_hint[] =
 #define STORE_GOLD_CHANGE      0x01
 #define STORE_FRAME_CHANGE     0x02
 #define STORE_SHOW_HELP        0x04
+#define STORE_SHOW_STEAL       0x08
 
 /* Compound flag for the initial display of a store */
 #define STORE_INIT_CHANGE		(STORE_FRAME_CHANGE | STORE_GOLD_CHANGE)
+
+/* Change faction in a way that treats all stores consistently.
+ * So town or BM changes are applied directly.
+ * As it's easier to gain faction with the Cyber Salon, it's not simply multiplied by 100 but rounded
+ * down when going up and all positive faction is lost when going down.
+ */
+static void change_faction(struct store *store, int change)
+{
+	if (store->sidx == STORE_CYBER) {
+		if (change > 0) {
+			player->cyber_faction += 100 * change;
+			player->cyber_faction -= (player->cyber_faction % 100);
+		} else if (change < 0) {
+			if (player->cyber_faction > 0)
+				player->cyber_faction = 0;
+			player->cyber_faction -= 100 * change;
+		}
+	} else {
+		if (change < 0)
+			player->last_faction_loss = turn;
+		if (store->sidx == STORE_B_MARKET)
+			player->bm_faction += change;
+		else
+			player->town_faction += change;
+	}
+}
 
 /* Return a random hint from the given hints list */
 const char *random_line(struct hint *hints)
@@ -253,7 +285,7 @@ static void prt_welcome(struct store *store)
 
 		if (faction < 0) {
 			const char *insult[] = {
-				"scum", "loser", "waster", "rat",
+				"scum", "loser", "waster", "rat", "dirtball", "scumbag", "smeghead", "goober"
 			};
 			player_name = insult[randint0(sizeof(insult) / sizeof(*insult))];
 		}
@@ -311,7 +343,7 @@ static void store_display_recalc(struct store_context *ctx)
 
 	/* X co-ords first */
 	ctx->scr_places_x[LOC_PRICE] = wid - 14;
-	ctx->scr_places_x[LOC_AU] = wid - 26;
+	ctx->scr_places_x[LOC_AU] = wid - 27;
 	ctx->scr_places_x[LOC_OWNER] = wid - 2;
 	ctx->scr_places_x[LOC_WEIGHT] = wid - 14;
 
@@ -324,7 +356,7 @@ static void store_display_recalc(struct store_context *ctx)
 	ctx->scr_places_y[LOC_HEADER] = 3;
 
 	/* If we are displaying help, make the height smaller */
-	if (ctx->flags & (STORE_SHOW_HELP))
+	if (ctx->flags & (STORE_SHOW_HELP | STORE_SHOW_STEAL))
 		hgt -= 3;
 
 	ctx->scr_places_y[LOC_MORE] = hgt - 3;
@@ -333,7 +365,7 @@ static void store_display_recalc(struct store_context *ctx)
 	loc = m->boundary;
 
 	/* If we're displaying the help, then put it with a line of padding */
-	if (ctx->flags & (STORE_SHOW_HELP)) {
+	if (ctx->flags & (STORE_SHOW_HELP | STORE_SHOW_STEAL)) {
 		ctx->scr_places_y[LOC_HELP_CLEAR] = hgt - 11;
 		ctx->scr_places_y[LOC_HELP_PROMPT] = hgt - 7;
 		loc.page_rows = -11;
@@ -517,6 +549,36 @@ static void store_display_frame(struct store_context *ctx)
 	}
 }
 
+/**
+ * Display steal item help.
+ */
+static void store_display_steal_help(struct store_context *ctx)
+{
+	int help_loc = ctx->scr_places_y[LOC_HELP_PROMPT];
+
+	/* Clear */
+	clear_from(ctx->scr_places_y[LOC_HELP_CLEAR]);
+
+	/* Prepare help hooks */
+	text_out_hook = text_out_to_screen;
+	text_out_indent = 1;
+	Term_gotoxy(1, help_loc);
+
+	/* Describe fields */
+	text_out_c(COLOUR_L_GREEN, "Fail");
+	text_out(" is the chance that you will fail to make a clean getaway with the item, without the shop owner noticing. ");
+
+	text_out_c(COLOUR_L_GREEN, "Item");
+	text_out(" is the chance that you will steal the item (possibly being seen and banned in the process). ");
+
+	text_out_c(COLOUR_L_GREEN, "Ban");
+	text_out(" is the chance that you will be banned from the store. This also implies loss of faction, which will make further attempts riskier. ");
+
+	text_out_c(COLOUR_L_GREEN, "Fight");
+	text_out(" is the chance that you will have to fight the store owner. This also means losing the item, being banned and losing faction.");
+
+	text_out_indent = 0;
+}
 
 /**
  * Display help.
@@ -611,6 +673,8 @@ static void store_redraw(struct store_context *ctx)
 
 		if (ctx->flags & STORE_SHOW_HELP)
 			store_display_help(ctx);
+		else if (ctx->flags & STORE_SHOW_STEAL)
+			store_display_steal_help(ctx);
 		else
 			prt("Press '?' for help.", ctx->scr_places_y[LOC_HELP_PROMPT], 1);
 
@@ -618,8 +682,8 @@ static void store_redraw(struct store_context *ctx)
 	}
 
 	if (ctx->flags & (STORE_GOLD_CHANGE)) {
-		if (!(ctx->flags & STORE_SHOW_HELP))
-			prt(format("Cash Remaining: %9d", player->au),
+		if (!(ctx->flags & (STORE_SHOW_HELP | STORE_SHOW_STEAL)))
+			prt(format("Cash Remaining: $%9d", player->au),
 				ctx->scr_places_y[LOC_AU], ctx->scr_places_x[LOC_AU]);
 		ctx->flags &= ~(STORE_GOLD_CHANGE);
 	}
@@ -1198,7 +1262,7 @@ static bool store_do_fight(struct store_context *ctx)
 					};
 					u32b f = flag[randint0(sizeof(flag)/sizeof(flag[0]))];
 					if (!rf_has(race->flags, f)) {
-						rf_on(race->flags, RF_IM_ACID);
+						rf_on(race->flags, f);
 						i--;
 					}
 					break;
@@ -1259,6 +1323,9 @@ static bool store_do_fight(struct store_context *ctx)
 	}
 	target_set_monster(cave_monster(cave, 1));
 
+	/* This won't make you popular */
+	change_faction(ctx->store, -1);
+
 	/* Head to the arena */
 	player->upkeep->health_who = square_monster(cave, grid);
 	player->upkeep->arena_level = true;
@@ -1268,10 +1335,14 @@ static bool store_do_fight(struct store_context *ctx)
 }
 
 /* attempt to steal an item */
-static void store_steal(struct store_context *ctx, bool *exit)
+static void store_steal(struct store_context *ctx, int item, struct menu *m, bool *exit)
 {
 	struct store *store = ctx->store;
 	assert(store);
+
+	/* Clear all current messages */
+	msg_flag = false;
+	prt("", 0, 0);
 
 	if (ctx->store->sidx == STORE_HOME) {
 		msg("You daringly steal from your own home!");
@@ -1288,38 +1359,36 @@ static void store_steal(struct store_context *ctx, bool *exit)
 		return;
 	}
 
-	/* Confirm as it is risky */
-	screen_save();
-	int response = store_get_check(format("Sure you want to try to steal something? [ESC, any other key to accept]"));
-	screen_load();
+	/* Confirmation is needed as it is risky, but you get at least one later prompt so it is OK
+	 * to not confirm immediately
+	 **/
+	msg("Steal which item? (ESC to cancel, Enter to select)");
+
+	msg_flag = false;
+	item = store_get_stock(m, item, false);
 
 	/* Negative response, so give up */
-	if (!response) return;
+	if (item < 0) {
+		return;
+	}
 
-	/* DEX check for success, biased by amount of suspicious activity so far.
-	 * Item weight and cost should figure in, and rogueish classes should have a better chance.
-	 * If you fail, CHR check (also biased) to not be noticed.
-	 * If this fails, another CHR check to be kickbanned rather than fought.
-	 */
-	
 	int price = 0;
-	int difficulty = 7;
+	double difficulty = 0.0;
 	int num = 0;
 	int amt = 0;
 
-	struct object *obj = NULL; // FIXME
+	struct object *obj = ctx->list[item];
 	struct object *dummy = NULL;
 
 	char o_name[80];
 
 	/* Get an amount if we weren't given one */
-	
 	{
 		/* Price of one */
 		price = price_item(ctx->store, obj, false, 1);
 
 		/* Limit to the number that can be carried */
-		int amt = MIN(obj->number, inven_carry_num(obj, false));
+		amt = MIN(obj->number, inven_carry_num(obj, false));
 
 		/* Fail if there is no room */
 		if ((amt <= 0) || (!object_flavor_is_aware(obj) && pack_is_full())) {
@@ -1360,24 +1429,149 @@ static void store_steal(struct store_context *ctx, bool *exit)
 
 	screen_save();
 
-	/* Show price */
-	prt(format("Price: %d, Diff %d", price, difficulty), 1, 0);
+	/* Difficulty.
+	 * DEX based, but biased by amount of suspicious activity so far and/or faction (with
+	 * town and BM. BM faction implies skill, so improves your chances)
+	 * Item weight and cost should figure in, and rogueish classes (TODO) should have a
+	 * better chance - at least, at higher level.
+	 */
+	difficulty = 12;
+	difficulty += sqrt(dummy->number * obj->weight);
+	difficulty += sqrt(dummy->number * price);
+
+	/* Negative town faction = suspect = higher difficulty, unlimited.
+	 * Positive = trusted = lower, but to a limit.
+	 * This is intentionally applying a combination of town and BM faction for all stores, including BM and Salon.
+	 * Salon and BM factions only apply when they are negative (i.e. you have stolen from them).
+	 */
+	int town_faction = player->town_faction + MIN(0, player->bm_faction) + (MIN(0, player->cyber_faction) / 100);
+	if (town_faction < 0)
+		difficulty *= 1 - town_faction;
+	else if (town_faction > 0)
+		difficulty *= 0.5 + (0.5 / ((double)town_faction + 1));
+
+	/* Negative bm faction doesn't hurt, as this is representing skill.
+	 * Positive improves difficulty, halving it with the first step and making smaller imporovements later.
+	 */
+	int bm_faction = player->bm_faction;
+	if (bm_faction > 0)
+		difficulty *= (1.5 / ((double)bm_faction + 2));
+
+	/* Dexterity is always the most important point, though */
+	double dex_difficulty = difficulty / (player->state.stat_ind[STAT_DEX] + 3);
+	double chr_difficulty = difficulty / (player->state.stat_ind[STAT_CHR] + 3);
+
+	/* Chance of dex failure (0..1) */
+	double dex_chance = dex_difficulty / ((double)(z_info->theft_dex) + dex_difficulty);
+
+	/* Chance of chr failure (0..1) */
+	double chr_chance = chr_difficulty / ((double)(z_info->theft_chr) + chr_difficulty);
+
+	/* Show price and difficulty (not (entirely) numerically - and not at all unless roguelike, experienced, wizard?)
+	 * A percentage (or more than one, as there are more than one result) would be more
+	 * transparent.
+	 **/
 
 	/* Confirm stealing */
-	response = store_get_check(format("Steal %s? [ESC, any other key to accept]", o_name));
+	ctx->flags |= STORE_SHOW_STEAL | STORE_INIT_CHANGE | STORE_FRAME_CHANGE;
+	store_display_recalc(ctx);
+	store_redraw(ctx);
+
+	prt(format("Price: $%d, Fail %.1lf%%, Item %.1f%%, Ban %.1f%%, Fight %.1f%%",
+		price,
+		dex_chance * 100.0,	/* Fail: one dex check fails */
+		(1.0 - (dex_chance * dex_chance)) * 100.0, /* Item: either of two dex checks succeed */
+		/* Ban: Fail first dex check, minus
+		 * 		(Failed first, failed second dex, passed chr check).
+		 **/
+		(dex_chance - (dex_chance * dex_chance * (1.0 - chr_chance))) * 100.0,
+		/* Fight: Fail 3 dex checks and 2 chr checks. Round up as it's the only one likely to be that low,
+		 * and don't want to imply that the chance is ever actually zero.
+		 **/
+		MAX(0.1, (dex_chance * dex_chance * chr_chance * dex_chance * chr_chance * 100.0))),
+		1, 0);
+
+	int response = store_get_check(format("Steal %s? [ESC, any other key accepts]", o_name));
 	screen_load();
 
 	/* Negative response, so give up */
 	if (!response) return;
 
-	// make item '100% off'
-	of_on(obj->flags, OF_STOLEN);
-	obj->origin = ORIGIN_STOLEN;
+	/*
+	 * Make a dex check. If successful, you got away with the item, without being noticed.
+	 * Otherwise, make a second dex check - if successful, you still got away but were noticed.
+	 * If not, then you were caught and don't get the item, but may be able to talk your way
+	 * out of it.
+	 * So make a chr check to not be "noticed" (that is, no bad effects).
+	 * If this fails, you lose faction etc. and are kickbanned.
+	 * If either a chr or dex check passes, that's all.
+	 * If both fail though - FIGHT!
+	 */
+	bool get_item = true;
+	bool get_ban = false;
+	bool get_faction = false;
+	bool get_fight = false;
+	const char *tmsg = "You successfully pull off the theft.";
 
-	// and buy it for 0
-	cmdq_push(CMD_BUY);
-	cmd_set_arg_item(cmdq_peek(), "item", obj);
-	cmd_set_arg_number(cmdq_peek(), "quantity", amt);
+	if (Rand_double(1.0) < dex_chance) {
+		/* Failed to avoid notice */
+		get_ban = get_faction = true;
+		tmsg = "You are caught but manage to flee, with the item.";
+		if (Rand_double(1.0) < dex_chance) {
+			/* Also failed to get away */
+			get_item = false;
+			if (Rand_double(1.0) < chr_chance) {
+				/* And failed to convince */
+				if (Rand_double(1.0) < dex_chance) {
+					if (Rand_double(1.0) < chr_chance) {
+						get_faction = false;	// because fighting does that
+						get_fight = true;
+						tmsg = "You are caught, and %s grabs you. Uh-oh...";
+					} else {
+						tmsg = "You are caught, but talk your way into being let go.";
+					}
+				} else {
+					tmsg = "You are caught, but leg it before %s can grab you.";
+				}
+			} else {
+				/* Nah not a thief, really */
+				get_item = get_ban = get_faction = false;
+				tmsg = "You are caught, but manage to convince %s that it was unintentional.";
+			}
+		}
+	}
+
+	/* Clear all current messages */
+	msg_flag = false;
+	prt("", 0, 0);
+	msgt(MSG_FLEE, tmsg, store_shortname(ctx));
+
+	if (get_item) {
+		// make item '100% off'
+		of_on(obj->flags, OF_STOLEN);
+		obj->origin = ORIGIN_STOLEN;
+
+		// and buy it for 0
+		cmdq_push(CMD_BUY);
+		cmd_set_arg_item(cmdq_peek(), "item", obj);
+		cmd_set_arg_number(cmdq_peek(), "quantity", amt);
+		cmd_set_arg_number(cmdq_peek(), "steal", 1);
+	}
+
+	if (get_faction)
+		change_faction(store, -1);
+
+	if (get_ban) {
+		store->bandays = randint1(7 * -(MIN(player->town_faction, -1)));
+		store->banreason = strdup("Get out, thief!");
+		*exit = true;
+	}
+
+	if (get_fight) {
+		/* Fight! */
+		*exit = true;
+		store_do_fight(ctx);
+	}
 
 	object_delete(&dummy);
 }
@@ -1636,7 +1830,13 @@ static void store_buy(struct store_context *ctx, bool *exit)
 		/* Negative response, so give up */
 		if (!response) return;
 
+		/* Get price, deal with faction */
 		player->au += price;
+		if ((store->sidx != STORE_CYBER) && (store->sidx != STORE_B_MARKET)) {
+			player->stores_owned--;
+			if (player->stores_owned == 0)
+				player->town_faction--;
+		}
 
 		/* Buy it */
 		store_shuffle(store);
@@ -1665,8 +1865,13 @@ static void store_buy(struct store_context *ctx, bool *exit)
 		return;
 	}
 
-	/* Pay */
+	/* Pay, deal with faction */
 	player->au -= price;
+	if ((store->sidx != STORE_CYBER) && (store->sidx != STORE_B_MARKET)) {
+		if (player->stores_owned == 0)
+			player->town_faction++;
+		player->stores_owned++;
+	}
 
 	/* Buy it */
 	msg("%s agrees to sell the store to you.", store_shortname(ctx));
@@ -2109,7 +2314,7 @@ static bool store_process_command_key(struct keypress kp)
 /**
  * Select an item from the store's stock, and return the stock index
  */
-static int store_get_stock(struct menu *m, int oid)
+static int store_get_stock(struct menu *m, int oid, bool sel)
 {
 	ui_event e;
 	int no_act = m->flags & MN_NO_ACTION;
@@ -2117,7 +2322,7 @@ static int store_get_stock(struct menu *m, int oid)
 	/* Set a flag to make sure that we get the selection or escape
 	 * without running the menu handler */
 	m->flags |= MN_NO_ACTION;
-	e = menu_select(m, 0, true);
+	e = menu_select(m, 0, sel);
 	if (!no_act) {
 		m->flags &= ~MN_NO_ACTION;
 	}
@@ -2296,7 +2501,9 @@ static bool store_menu_handle(struct menu *m, const ui_event *event, int oid, bo
 			case 's':
 			case 'd': store_sell(ctx); break;
 
-			case 'S': store_steal(ctx, exit); break;
+			case 'S':
+				store_steal(ctx, oid, m, exit);
+				break;
 
 			case 'F': store_fight(ctx, exit); break;
 
@@ -2323,7 +2530,7 @@ static bool store_menu_handle(struct menu *m, const ui_event *event, int oid, bo
 					prt("Get which item? (Esc to cancel, Enter to select)",
 						0, 0);
 				}
-				oid = store_get_stock(m, oid);
+				oid = store_get_stock(m, oid, true);
 				prt("", 0, 0);
 				if (oid >= 0) {
 					store_purchase(ctx, oid, false, exit);
@@ -2335,7 +2542,7 @@ static bool store_menu_handle(struct menu *m, const ui_event *event, int oid, bo
 				msg_flag = false;
 				prt(format("Examine which %s? (ESC to cancel, Enter to select)", (store->sidx == STORE_AIR) ? "ticket" : "item"),
 					0, 0);
-				oid = store_get_stock(m, oid);
+				oid = store_get_stock(m, oid, true);
 				prt("", 0, 0);
 				if (oid >= 0) {
 					store_examine(ctx, oid);
