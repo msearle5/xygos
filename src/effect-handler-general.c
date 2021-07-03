@@ -4910,6 +4910,15 @@ bool effect_handler_PERSONALITY(effect_handler_context_t *context)
 	return (true);
 }
 
+/**
+ * Run a card
+ */
+bool effect_handler_RUN_CARD(effect_handler_context_t *context)
+{
+	do_cmd_run_card(context->cmd);
+	return (true);
+}
+
 bool effect_handler_BANANA(effect_handler_context_t *context)
 {
 	/* May have a spider in it */

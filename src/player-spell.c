@@ -368,9 +368,12 @@ static int beam_chance(void)
 }
 
 /**
- * Cast the specified spell
+ * Cast the specified spell.
+ * Move energy is passed in through the (optional, can be NULL) *energy, and returned
+ * unmodified for most spells.
+ * Those which do change it call an expression and scale it by the result / 100.
  */
-bool spell_cast(int spell_index, int dir, struct command *cmd)
+bool spell_cast(int spell_index, int dir, struct command *cmd, int *energy)
 {
 	int chance;
 	bool *ident = mem_zalloc(sizeof(*ident));
@@ -420,6 +423,12 @@ bool spell_cast(int spell_index, int dir, struct command *cmd)
 
 		/* A spell was cast */
 		sound(MSG_SPELL);
+
+		/* Change energy use */
+		if ((spell->time) && (energy)) {
+			int result = expression_evaluate(spell->time);
+			*energy = (*energy * result) / 100;
+		}
 
 		/* for the first time */
 		if (!(player->spell_flags[spell_index] & PY_SPELL_WORKED)) {
