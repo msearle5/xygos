@@ -92,6 +92,8 @@ ANGFILES = \
 	cmd-misc.o \
 	cmd-obj.o \
 	cmd-pickup.o \
+	cmd-spoil.o \
+	cmd-wizard.o \
 	datafile.o \
 	debug.o \
 	effects.o \

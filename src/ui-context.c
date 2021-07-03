@@ -1103,15 +1103,16 @@ static void cmd_sub_entry(struct menu *menu, int oid, bool cursor, int row,
 	/* Write the description */
 	Term_putstr(col, row, -1, attr, commands[oid].desc);
 
-	/* Include keypress */
-	Term_addch(attr, L' ');
-	Term_addch(attr, L'(');
+	if (kp.code) {
+		Term_addch(attr, L' ');
+		Term_addch(attr, L'(');
 
-	/* Get readable version */
-	keypress_to_readable(buf, sizeof buf, kp);
-	Term_addstr(-1, attr, buf);
+		/* Get readable version */
+		keypress_to_readable(buf, sizeof buf, kp);
+		Term_addstr(-1, attr, buf);
 
-	Term_addch(attr, L')');
+		Term_addch(attr, L')');
+	}
 }
 
 /**
@@ -1129,25 +1130,45 @@ static bool cmd_menu(struct command_list *list, void *selection_p)
 	/* Set up the menu */
 	menu_init(&menu, MN_SKIN_SCROLL, &commands_menu);
 	menu_setpriv(&menu, list->len, list->list);
+	area.col += 2 * list->menu_level;
+	area.row -= list->menu_level;
+	assert(area.row > 1);
 	menu_layout(&menu, &area);
 
 	/* Set up the screen */
 	screen_save();
-	window_make(21, 3, 62, 17);
+	window_make(area.col - 2, area.row - 1, area.col + 39, area.row + 13);
 
 	/* Select an entry */
 	evt = menu_select(&menu, 0, true);
 
-	/* Load de screen */
+	/* Load the screen */
 	screen_load();
 
-	if (evt.type == EVT_SELECT)
-		*selection = &list->list[menu.cursor];
+	if (evt.type == EVT_SELECT) {
+		if (list->list[menu.cursor].cmd ||
+				list->list[menu.cursor].hook) {
+			/* It's a proper command. */
+			*selection = &list->list[menu.cursor];
+		} else {
+			/*
+			 * It's a placeholder that's a parent for a
+			 * nested menu.
+			 */
+			/* Look up the list of commands for the nested menu. */
+			if (list->list[menu.cursor].nested_cached_idx == -1) {
+				list->list[menu.cursor].nested_cached_idx =
+					cmd_list_lookup_by_name(list->list[menu.cursor].nested_name);
+			}
+			if (list->list[menu.cursor].nested_cached_idx >= 0) {
+				/* Display a menu for it. */
+				return cmd_menu(&cmds_all[list->list[menu.cursor].nested_cached_idx], selection_p);
+			}
+		}
+	}
 
 	return false;
 }
-
-
 
 static bool cmd_list_action(struct menu *m, const ui_event *event, int oid, bool *exit)
 {
@@ -1187,9 +1208,8 @@ struct cmd_info *textui_action_menu_choose(void)
 	if (!command_menu)
 		command_menu = menu_new(MN_SKIN_SCROLL, &command_menu_iter);
 
-	while (cmds_all[len].len) {
-		if (cmds_all[len].len)
-			len++;
+	while (cmds_all[len].len && cmds_all[len].menu_level == 0) {
+		len++;
 	};
 
 	menu_setpriv(command_menu, len, &chosen_command);

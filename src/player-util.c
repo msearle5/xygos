@@ -301,10 +301,10 @@ static bool death_check(struct player *p, const char *kb_str)
 	 * x is a function of CON and max HP
 	 */
 	int x = ((player->state.stat_ind[STAT_CON] + 5) * (player->mhp)) / 100;
-	
+
 	// Generate a random value
 	int check = Rand_normal(x, x / 2);
-	
+
 	/* Note cause of death */
 	if (kb_str)
 		my_strcpy(p->died_from, kb_str, sizeof(p->died_from));

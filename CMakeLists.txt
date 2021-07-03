@@ -49,6 +49,8 @@ ADD_LIBRARY(OurCoreLib OBJECT
         src/cmd-misc.c
         src/cmd-obj.c
         src/cmd-pickup.c
+        src/cmd-spoil.c
+        src/cmd-wizard.c
         src/datafile.c
         src/debug.c
         src/effects.c

@@ -195,7 +195,7 @@ struct cmd_info cmd_hidden[] =
 	{ "Toggle wizard mode", { KTRL('W') }, CMD_NULL, do_cmd_wizard, NULL },
 	{ "Repeat previous command", { 'n', KTRL('V') }, CMD_REPEAT, NULL, NULL },
 	{ "Do autopickup", { KTRL('G') }, CMD_AUTOPICKUP, NULL, NULL },
-	{ "Debug mode commands", { KTRL('A') }, CMD_NULL, textui_cmd_debug, NULL },
+	{ "Debug mode commands", { KTRL('A') }, CMD_NULL, NULL, NULL, 1, "Debug Command: ", "That is not a valid debug command.", "Debug", -1 },
 };
 
 /**
@@ -304,7 +304,22 @@ struct command_list cmds_all[] =
 	{ "Information",     cmd_info,        N_ELEMENTS(cmd_info) },
 	{ "Utility",         cmd_util,        N_ELEMENTS(cmd_util) },
 	{ "Hidden",          cmd_hidden,      N_ELEMENTS(cmd_hidden) },
-	{ NULL,              NULL,            0 }
+	/*
+	 * This is nested below "Hidden"->"Debug mode commands" and only
+	 * contains categories.
+	 */
+	{ "Debug", cmd_debug, N_ELEMENTS(cmd_debug), 1, -1 },
+	/* These are nested in "Debug"; names have to match with cmd_debug. */
+	{ "DbgObj", cmd_debug_obj, N_ELEMENTS(cmd_debug_obj), 2, 1 },
+	{ "DbgPlayer", cmd_debug_player, N_ELEMENTS(cmd_debug_player), 2, 1 },
+	{ "DbgTele", cmd_debug_tele, N_ELEMENTS(cmd_debug_tele), 2, 1 },
+	{ "DbgEffects", cmd_debug_effects, N_ELEMENTS(cmd_debug_effects), 2, 1 },
+	{ "DbgSummon", cmd_debug_summon, N_ELEMENTS(cmd_debug_summon), 2, 1 },
+	{ "DbgFiles", cmd_debug_files, N_ELEMENTS(cmd_debug_files), 2, 1 },
+	{ "DbgStat", cmd_debug_stats, N_ELEMENTS(cmd_debug_stats), 2, 1 },
+	{ "DbgQuery", cmd_debug_query, N_ELEMENTS(cmd_debug_query), 2, 1 },
+	{ "DbgMisc", cmd_debug_misc, N_ELEMENTS(cmd_debug_misc), 2, 1 },
+	{ NULL,              NULL,            0, 0, false }
 };
 
 
@@ -313,8 +328,15 @@ struct command_list cmds_all[] =
 
 #define KEYMAP_MAX 2
 
-/* List indexed by char */
+/* List of directly accessible commands indexed by char */
 static struct cmd_info *converted_list[KEYMAP_MAX][UCHAR_MAX+1];
+
+/*
+ * Lists of nested commands; each list is also indexed by char but there's no
+ * distinction between original/roguelike keys
+ */
+static int n_nested = 0;
+static struct cmd_info ***nested_lists = NULL;
 
 
 /**
@@ -326,19 +348,67 @@ void cmd_init(void)
 
 	memset(converted_list, 0, sizeof(converted_list));
 
+	/* Set up storage for the nested command lists */
+	if (nested_lists != NULL) {
+		assert(n_nested >= 0);
+		for (j = 0; j < (size_t)n_nested; j++) {
+			mem_free(nested_lists[j]);
+		}
+		nested_lists = NULL;
+	}
+	n_nested = 0;
+	for (j = 0; j < N_ELEMENTS(cmds_all) - 1; j++) {
+		n_nested = MAX(n_nested, cmds_all[j].keymap);
+	}
+	if (n_nested > 0) {
+		nested_lists = mem_zalloc(n_nested * sizeof(*nested_lists));
+		for (j = 0; j < (size_t)n_nested; j++) {
+			nested_lists[j] = mem_zalloc((UCHAR_MAX + 1) *
+				sizeof(*(nested_lists[j])));
+		}
+	}
+
 	/* Go through all generic commands (-1 for NULL end entry) */
 	for (j = 0; j < N_ELEMENTS(cmds_all) - 1; j++)
 	{
 		struct cmd_info *commands = cmds_all[j].list;
 
 		/* Fill everything in */
-		for (i = 0; i < cmds_all[j].len; i++) {
-			/* If a roguelike key isn't set, use default */
-			if (!commands[i].key[1])
+		if (cmds_all[j].keymap == 0) {
+			for (i = 0; i < cmds_all[j].len; i++) {
+				/* If a roguelike key isn't set, use default */
+				if (!commands[i].key[1])
+					commands[i].key[1] = commands[i].key[0];
+
+				/* Skip entries that don't have a valid key. */
+				if (!commands[i].key[0] || !commands[i].key[1])
+					continue;
+
+				converted_list[0][commands[i].key[0]] =
+					&commands[i];
+				converted_list[1][commands[i].key[1]] =
+					&commands[i];
+			}
+		} else if (cmds_all[j].keymap > 0) {
+			int kidx = cmds_all[j].keymap - 1;
+
+			assert(kidx < n_nested);
+			for (i = 0; i < cmds_all[j].len; i++) {
+				/*
+				 * Nested commands don't go through a keymap;
+				 * use the default for the roguelike key.
+				 */
 				commands[i].key[1] = commands[i].key[0];
 
-			converted_list[0][commands[i].key[0]] = &commands[i];
-			converted_list[1][commands[i].key[1]] = &commands[i];
+				/*
+				 * Check for duplicated keys in the same
+				 * command set.
+				 */
+				assert(!nested_lists[kidx][commands[i].key[0]]);
+
+				nested_lists[kidx][commands[i].key[0]] =
+					&commands[i];
+			}
 		}
 	}
 }
@@ -379,6 +449,29 @@ cmd_code cmd_lookup(unsigned char key, int mode)
 	return converted_list[mode][key]->cmd;
 }
 
+/**
+ * Return the index into cmds_all for the given name or -2 if not found.
+ */
+size_t cmd_list_lookup_by_name(const char *name)
+{
+	size_t i = 0;
+
+	while (1) {
+		if (i >= (int) N_ELEMENTS(cmds_all)) {
+			/*
+			 * Return a negative value other than -1 to prevent
+			 * future lookups for the same name by ui-context.c.
+			 * Those lookups are guaranteed to fail since the
+			 * names in cmds_all don't change.
+			 */
+			return -2;
+		}
+		if (streq(cmds_all[i].name, name)) {
+			return i;
+		}
+		++i;
+	}
+}
 
 /**
  * Parse and execute the current command
@@ -414,9 +507,40 @@ void textui_process_command(void)
 	}
 
 	if (cmd && done) {
-		/* Confirm for worn equipment inscriptions, check command prereqs */
-		if (!key_confirm_command(key) || (cmd->prereq && !cmd->prereq()))
-			cmd = NULL;
+		if (cmd->cmd || cmd->hook) {
+			/* Confirm for worn equipment inscriptions. */
+			if (!key_confirm_command(key)) cmd = NULL;
+		} else {
+			/*
+			 * It refers to nested commands.  Get the nested
+			 * command.  Those aren't subject to keymaps and
+			 * inherit the count.
+			 */
+			while (cmd && !cmd->cmd && !cmd->hook) {
+				char nestkey;
+
+				if (cmd->nested_keymap > 0 &&
+						cmd->nested_keymap <= n_nested &&
+						cmd->nested_prompt) {
+					if (get_com(cmd->nested_prompt, &nestkey)) {
+						const char* em =
+							cmd->nested_error;
+
+						cmd = nested_lists[cmd->nested_keymap - 1][(unsigned char) nestkey];
+						if (!cmd) {
+							msg(em ? em : "That is not a valid nested command.");
+						}
+					} else {
+						cmd = NULL;
+					}
+				} else {
+					cmd = NULL;
+				}
+			}
+		}
+
+		/* Check prereqs. */
+		if (cmd && cmd->prereq && !cmd->prereq()) cmd = NULL;
 
 		/* Split on type of command */
 		if (cmd && cmd->hook)

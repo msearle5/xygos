@@ -26,7 +26,7 @@
 #include "mon-lore.h"
 #include "mon-make.h"
 #include "mon-util.h"
-#include "obj-curse.h"
+#include "obj-fault.h"
 #include "obj-desc.h"
 #include "obj-gear.h"
 #include "obj-knowledge.h"
@@ -35,6 +35,7 @@
 #include "obj-power.h"
 #include "obj-tval.h"
 #include "obj-util.h"
+#include "player-birth.h"
 #include "player-calcs.h"
 #include "player-timed.h"
 #include "player-util.h"
@@ -431,15 +432,11 @@ void do_cmd_wiz_advance(struct command *cmd)
 	player->chp = player->mhp;
 	player->chp_frac = 0;
 
-	/* Restore mana */
-	player->csp = player->msp;
-	player->csp_frac = 0;
-
 	/* Get some awesome equipment */
 	/* Artifacts: 3, 5, 12, ... */
 
 	/* Flag update and redraw for things not handled in player_exp_gain() */
-	player->upkeep->redraw |= PR_GOLD | PR_HP | PR_MANA;
+	player->upkeep->redraw |= PR_GOLD | PR_HP;
 }
 
 
@@ -645,18 +642,18 @@ void do_cmd_wiz_collect_obj_mon_stats(struct command *cmd)
 		/* Set default. */
 		strnfmt(s, sizeof(s), "%d", default_simtype);
 
-		if (!get_string("Type of Sim: Diving (1) or Clearing (2) ",
+		if (!get_string("Type of Sim: Diving (1), Clearing (2), Artifacts (3), Egos (4) ",
 			s, sizeof(s))) return;
 		if (!get_int_from_string(s, &simtype) || simtype < 1 ||
-			simtype > 2) return;
+			simtype > 4) return;
 		if (simtype == 2) {
 			if (get_check("Regen randarts (warning SLOW)? ")) {
-				simtype = 3;
+				simtype = 5;
 			}
 		}
 		cmd_set_arg_choice(cmd, "choice", simtype);
 	}
-	default_simtype = (simtype == 1) ? 1 : 2;
+	default_simtype = (simtype == 5) ? 2 : simtype;
 
 	stats_collect(nsim, simtype);
 }
@@ -927,12 +924,12 @@ void do_cmd_wiz_cure_all(struct command *cmd)
 {
 	int i;
 
-	/* Remove curses */
+	/* Remove faults */
 	for (i = 0; i < player->body.count; i++) {
 		if (player->body.slots[i].obj &&
-				player->body.slots[i].obj->curses) {
-			mem_free(player->body.slots[i].obj->curses);
-			player->body.slots[i].obj->curses = NULL;
+				player->body.slots[i].obj->faults) {
+			mem_free(player->body.slots[i].obj->faults);
+			player->body.slots[i].obj->faults = NULL;
 		}
 	}
 
@@ -949,10 +946,6 @@ void do_cmd_wiz_cure_all(struct command *cmd)
 	player->chp = player->mhp;
 	player->chp_frac = 0;
 
-	/* Restore mana */
-	player->csp = player->msp;
-	player->csp_frac = 0;
-
 	/* Cure stuff */
 	(void) player_clear_timed(player, TMD_BLIND, true);
 	(void) player_clear_timed(player, TMD_CONFUSED, true);
@@ -963,6 +956,7 @@ void do_cmd_wiz_cure_all(struct command *cmd)
 	(void) player_clear_timed(player, TMD_STUN, true);
 	(void) player_clear_timed(player, TMD_CUT, true);
 	(void) player_clear_timed(player, TMD_SLOW, true);
+	(void) player_clear_timed(player, TMD_RAD, true);
 	(void) player_clear_timed(player, TMD_AMNESIA, true);
 
 	/* No longer hungry */
@@ -978,23 +972,23 @@ void do_cmd_wiz_cure_all(struct command *cmd)
 
 
 /**
- * Change a curse on an item (CMD_WIZ_CURSE_ITEM).  Can take the item to use
- * from the argument, "item", of type item.  Can take the index of the curse
+ * Change a fault on an item (CMD_WIZ_CURSE_ITEM).  Can take the item to use
+ * from the argument, "item", of type item.  Can take the index of the fault
  * to use from the argument, "index", of type number.  Can take the power of
- * the curse from the argument, "power", of type number.  Using a power of
- * zero will remove a curse.  Takes whether to update player information
+ * the fault from the argument, "power", of type number.  Using a power of
+ * zero will remove a fault.  Takes whether to update player information
  * from the argument, "update", of type choice; when update is zero, something
  * else, presumably do_cmd_wiz_play_item(), handles the update.
  */
 void do_cmd_wiz_curse_item(struct command *cmd)
 {
 	struct object *obj;
-	int curse_index, power;
+	int fault_index, power;
 	char s[80];
 	bool changed;
 
 	if (cmd_get_arg_item(cmd, "item", &obj) != CMD_OK) {
-		if (!get_item(&obj, "Change curse on which item? ",
+		if (!get_item(&obj, "Change fault on which item? ",
 				"You have nothing to change.", cmd->code,
 				NULL, (USE_EQUIP | USE_INVEN | USE_QUIVER |
 				USE_FLOOR))) {
@@ -1003,24 +997,24 @@ void do_cmd_wiz_curse_item(struct command *cmd)
 		cmd_set_arg_item(cmd, "item", obj);
 	}
 
-	/* Get curse. */
-	if (cmd_get_arg_number(cmd, "index", &curse_index) != CMD_OK) {
+	/* Get fault. */
+	if (cmd_get_arg_number(cmd, "index", &fault_index) != CMD_OK) {
 		strnfmt(s, sizeof(s), "0");
-		if (!get_string("Enter curse name or index: ",
+		if (!get_string("Enter fault name or index: ",
 				s, sizeof(s))) return;
-		if (!get_int_from_string(s, &curse_index)) {
-			curse_index = lookup_curse(s);
+		if (!get_int_from_string(s, &fault_index)) {
+			fault_index = lookup_fault(s);
 		}
-		cmd_set_arg_number(cmd, "index", curse_index);
+		cmd_set_arg_number(cmd, "index", fault_index);
 	}
-	if (curse_index <= 0 || curse_index >= z_info->curse_max) {
+	if (fault_index <= 0 || fault_index >= z_info->fault_max) {
 		return;
 	}
 
-	/* Get power for curse. */
+	/* Get power for fault. */
 	if (cmd_get_arg_number(cmd, "power", &power) != CMD_OK) {
 		strnfmt(s, sizeof(s), "0");
-		if (!get_string("Enter curse power (0 removes): ", s,
+		if (!get_string("Enter fault power (0 removes): ", s,
 				sizeof(s)) || !get_int_from_string(s, &power)) {
 			return;
 		}
@@ -1032,23 +1026,23 @@ void do_cmd_wiz_curse_item(struct command *cmd)
 
 	/* Apply. */
 	if (power) {
-		append_object_curse(obj, curse_index, power);
+		append_object_fault(obj, fault_index, power);
 		changed = true;
-	} else if (obj->curses) {
+	} else if (obj->faults) {
 		int i = 0;
 
-		changed = (obj->curses[curse_index].power > 0);
-		obj->curses[curse_index].power = 0;
+		changed = (obj->faults[fault_index].power > 0);
+		obj->faults[fault_index].power = 0;
 
-		/* Duplicates logic from non-public check_object_curses(). */
+		/* Duplicates logic from non-public check_object_faults(). */
 		while (1) {
-			if (i >= z_info->curse_max) {
+			if (i >= z_info->fault_max) {
 				changed = true;
-				mem_free(obj->curses);
-				obj->curses = NULL;
+				mem_free(obj->faults);
+				obj->faults = NULL;
 				break;
 			}
-			if (obj->curses[i].power) {
+			if (obj->faults[i].power) {
 				break;
 			}
 			++i;
@@ -1648,7 +1642,7 @@ void do_cmd_wiz_perform_effect(struct command *cmd)
  * - output statistics via CMD_WIZ_STAT_ITEM
  * - reroll item via CMD_WIZ_REROLL_ITEM
  * - change properties via CMD_WIZ_TWEAK_ITEM
- * - change a curse via CMD_WIZ_CURSE_ITEM
+ * - change a fault via CMD_WIZ_CURSE_ITEM
  * - change the number of items via CMD_WIZ_CHANGE_ITEM_QUANTITY
  */
 void do_cmd_wiz_play_item(struct command *cmd)
@@ -1769,7 +1763,7 @@ void do_cmd_wiz_play_item(struct command *cmd)
 
 			case 'C':
 			case 'c':
-				/* Change a curse on the item. */
+				/* Change a fault on the item. */
 				if (cmdq_push(CMD_WIZ_CURSE_ITEM) == 0) {
 					cmd_set_arg_item(cmdq_peek(), "item",
 						obj);
@@ -1879,13 +1873,13 @@ void do_cmd_wiz_play_item(struct command *cmd)
 			struct object *prev = obj->prev;
 			struct object *next = obj->next;
 
-			/* Free slays, brands, and curses by hand. */
+			/* Free slays, brands, and faults by hand. */
 			mem_free(obj->slays);
 			obj->slays = NULL;
 			mem_free(obj->brands);
 			obj->brands = NULL;
-			mem_free(obj->curses);
-			obj->curses = NULL;
+			mem_free(obj->faults);
+			obj->faults = NULL;
 
 			object_copy(obj, orig_obj);
 			obj->prev = prev;
@@ -2260,39 +2254,11 @@ void do_cmd_wiz_recall_monster(struct command *cmd)
  */
 void do_cmd_wiz_rerate(struct command *cmd)
 {
-	int min_value, max_value, percent;
-
-	min_value = (PY_MAX_LEVEL * 3 * (player->hitdie - 1)) / 8;
-	min_value += PY_MAX_LEVEL;
-
-	max_value = (PY_MAX_LEVEL * 5 * (player->hitdie - 1)) / 8;
-	max_value += PY_MAX_LEVEL;
-
-	player->player_hp[0] = player->hitdie;
-
-	/* Rerate */
-	while (1) {
-		int i;
-
-		/* Collect values */
-		for (i = 1; i < PY_MAX_LEVEL; i++) {
-			player->player_hp[i] = randint1(player->hitdie);
-			player->player_hp[i] += player->player_hp[i - 1];
-		}
-
-		/* Legal values */
-		if (player->player_hp[PY_MAX_LEVEL - 1] >= min_value &&
-			player->player_hp[PY_MAX_LEVEL - 1] <= max_value) break;
-	}
-
-	percent = (int)(((long)player->player_hp[PY_MAX_LEVEL - 1] * 200L) /
-		(player->hitdie + ((PY_MAX_LEVEL - 1) * player->hitdie)));
+	roll_hp();
 
 	/* Update and redraw hitpoints */
 	player->upkeep->update |= PU_HP;
 	player->upkeep->redraw |= PR_HP;
-
-	msg("Current Life Rating is %d/100.", percent);
 }
 
 
@@ -2376,13 +2342,13 @@ void do_cmd_wiz_reroll_item(struct command *cmd)
 		struct loc grid = obj->grid;
 		bitflag notice = obj->notice;
 
-		/* Free slays, brands, and curses on the old object by hand. */
+		/* Free slays, brands, and faults on the old object by hand. */
 		mem_free(obj->slays);
 		obj->slays = NULL;
 		mem_free(obj->brands);
 		obj->brands = NULL;
-		mem_free(obj->curses);
-		obj->curses = NULL;
+		mem_free(obj->faults);
+		obj->faults = NULL;
 
 		/* Copy over; pile information needs to be restored. */
 		object_copy(obj, new);
@@ -2652,7 +2618,7 @@ void do_cmd_wiz_summon_named(struct command *cmd)
 
 	/* Try 10 times */
 	while (1) {
-		struct loc grid;
+		struct loc grid = player->grid;
 
 		if (i >= 10) {
 			msg("Could not place monster.");
