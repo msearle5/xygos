@@ -697,7 +697,7 @@ void do_cmd_run_card(struct command *cmd)
 	 * OK = don't eat the card and signal this.
 	 */
 	if (retain) {
-		msg("...but here is is!");
+		msg("...but here it is!");
 	}
 }
 
@@ -1120,11 +1120,12 @@ void do_cmd_cast(struct command *cmd)
 
 	/* Cast a spell */
 	target_fix();
-	if (spell_cast(spell_index, dir, cmd)) {
+	int energy = z_info->move_energy;
+	if (spell_cast(spell_index, dir, cmd, &energy)) {
 		if (player->timed[TMD_FASTCAST]) {
-			player->upkeep->energy_use = (z_info->move_energy * 3) / 4;
+			player->upkeep->energy_use = (energy * 3) / 4;
 		} else {
-			player->upkeep->energy_use = z_info->move_energy;
+			player->upkeep->energy_use = energy;
 		}
 	}
 	target_release();

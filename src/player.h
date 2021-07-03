@@ -341,6 +341,7 @@ struct class_spell {
 	int sfail;				/**< Base chance of failure */
 	int sexp;				/**< Encoded experience bonus */
 	int stat;				/**< Controlling stat */
+	expression_t *time;		/**< Time to run */
 };
 
 /**

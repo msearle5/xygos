@@ -3456,6 +3456,36 @@ static enum parser_error parse_class_dice(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static int exprf_player_level(void) {
+	return (int)(player->lev);
+}
+
+static enum parser_error parse_class_spelltime(struct parser *p) {
+	struct class_magic *m = parsing_magic;
+	struct class_book *book = &m->books[m->num_books - 1];
+	struct class_spell *spell = &book->spells[book->num_spells - 1];
+	expression_t *expression = NULL;
+	const char *expr;
+
+	if (!m)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
+	expr = parser_getstr(p, "expr");
+	expression = expression_new();
+
+	if (expression == NULL)
+		return PARSE_ERROR_INVALID_EXPRESSION;
+
+	if (expression_add_operations_string(expression, expr) < 0)
+		return PARSE_ERROR_BAD_EXPRESSION_STRING;
+
+	expression_set_base_value(expression, exprf_player_level);
+
+	spell->time = expression;
+
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_class_expr(struct parser *p) {
 	struct class_magic *m = parsing_magic;
 	struct class_book *book = &m->books[m->num_books - 1];
@@ -3561,6 +3591,7 @@ void init_parse_magic(struct parser *p)
 	parser_reg(p, "book sym name", parse_class_book);
 	parser_reg(p, "spell sym name int level int fail int exp int stat rand hp rand turns ?sym failmsg",
 			   parse_class_spell);
+	parser_reg(p, "spell-time str expr", parse_class_spelltime);
 	parser_reg(p, "seffect sym eff ?sym type ?int radius ?int other", parse_class_effect);
 	parser_reg(p, "seffect-yx int y int x", parse_class_effect_yx);
 	parser_reg(p, "sdice str dice", parse_class_dice);

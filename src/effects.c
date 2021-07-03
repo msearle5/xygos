@@ -6697,6 +6697,15 @@ bool effect_handler_NEXT(effect_handler_context_t *context)
 }
 
 /**
+ * Run a card
+ */
+bool effect_handler_RUN_CARD(effect_handler_context_t *context)
+{
+	do_cmd_run_card(context->cmd);
+	return (true);
+}
+
+/**
  * Prismatic Lightsaber
  */
 bool effect_handler_PRISMATIC(effect_handler_context_t *context)

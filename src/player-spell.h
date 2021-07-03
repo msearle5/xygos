@@ -25,7 +25,7 @@ bool spell_okay_list(bool (*spell_test)(int spell_index), const int spells[],
 bool spell_okay_to_cast(int spell_index);
 bool spell_okay_to_browse(int spell_index);
 s16b spell_chance(int spell_index);
-bool spell_cast(int spell_index, int dir, struct command *cmd);
+bool spell_cast(int spell_index, int dir, struct command *cmd, int *energy);
 void combine_books(int *count, int *spells, int *maxidx, struct class_spell **spellps);
 
 extern void get_spell_info(int index, char *buf, size_t len);
