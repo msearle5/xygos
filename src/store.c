@@ -1727,13 +1727,20 @@ void do_store_maint(struct store *s, bool init)
 	/* Ensure staples are created */
 	if (s->always_num) {
 		size_t i;
+		int min_level, max_level;
+		store_level_limits(s, &min_level, &max_level);
+
 		for (i = 0; i < s->always_num; i++) {
 			struct store_entry *item = s->always_table + i;
 			struct object_kind *kind = item->kind;
 			int tval = item->tval;
+			int level = rand_range(min_level, max_level);
+
+			/* Only a tval is given? Generate a random item from the tval. */
+			if (!kind)
+				kind = get_obj_num(level, false, item->tval);
+
 			struct object *obj = store_find_kind(s, kind, store_sale_should_reduce_stock);
-			int min_level, max_level;
-			store_level_limits(s, &min_level, &max_level);
 
 			/* Create the item if it doesn't exist */
 			if (!obj) {
@@ -1743,7 +1750,6 @@ void do_store_maint(struct store *s, bool init)
 					if (randint0(10000) >= rarity)
 						continue;
 				}
-				int level = rand_range(min_level, max_level);
 				obj = store_create_item(level, s, kind, tval);
 				if (obj)
 					mass_produce(obj);

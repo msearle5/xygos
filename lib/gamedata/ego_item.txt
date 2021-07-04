@@ -64,6 +64,9 @@
 # 'item' is for possible tval-sval pairs, which correspond to object kinds.
 # One or more 'item' lines are used when we don't want all object kinds of
 # this tval to be possible for this ego-item.
+# The sval may be preceded by a '!', in which case the object kind is removed.
+# This is used when all kinds of a type except that one are wanted. In this
+# case, the 'type' line must precede the 'item' line.
 
 # 'effect' is for the effect when an item is activated.  Fields are the
 # name of the effect (as found in src/list-effects.h) and possibly one or
@@ -958,36 +961,37 @@ type:cloak
 flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 values:RES_SHARD[1]
 weight:140
-desc:A thin layer of lightweight armor has been added as a first line of defence against flying shrapnel.
+desc:A thin layer of flexible, lightweight armor has been added as a first line of defence against flying shrapnel.
 
 name:(stealth mod)
 info:500:10
 alloc:60:1 to 70
 type:cloak
+item:cloak:!flasher mac
 values:STEALTH[d3]
 min-values:STEALTH[1]
-desc:Urban camo. Dappled grey with all typically shiny fasteners dull black, and it moves with a minimum of rustling.
+desc:Urban camo. Dappled grey with all the typically shiny fasteners dull black, and it moves with a minimum of rustling.
 
-name:of Aman
-info:4000:20
-alloc:10:20 to 127
-combat:0:0:d20
-type:cloak
-flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
-flags:RAND_HI_RES
-values:STEALTH[d3]
-min-values:STEALTH[1]
-forbid:stealth
+#name:of Aman
+#info:4000:20
+#alloc:10:20 to 127
+#combat:0:0:d20
+#type:cloak
+#flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
+#flags:RAND_HI_RES
+#values:STEALTH[d3]
+#min-values:STEALTH[1]
+#forbid:stealth
 
-name:of the Magi
-info:2000:15
-alloc:10:30 to 127
-combat:0:0:d4
-type:cloak
-flags:SUST_INT | IGNORE_ACID | RAND_POWER
-values:INT[d2] | STEALTH[d3]
-min-values:INT[1] | STEALTH[1]
-forbid:stealth
+#name:of the Magi
+#info:2000:15
+#alloc:10:30 to 127
+#combat:0:0:d4
+#type:cloak
+#flags:SUST_INT | IGNORE_ACID | RAND_POWER
+#values:INT[d2] | STEALTH[d3]
+#min-values:INT[1] | STEALTH[1]
+#forbid:stealth
 
 
 ### Gloves ###

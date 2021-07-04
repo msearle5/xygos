@@ -38,7 +38,7 @@ owner:0:0:-
 slots:0:4
 turnover:2
 danger:65:80
-always:cloak:Cloak:8000
+always:cloak:0:8000
 always:food:survival ration
 always:light:keyfob light
 normal:digger:Shovel

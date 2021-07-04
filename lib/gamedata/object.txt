@@ -2509,7 +2509,7 @@ desc:A small device that clips to your belt and radiates a very powerful protect
 material:aluminium
 
 #scarcity 5? 5 arts? a disad?
-name:prototype forcefield generator~
+name:& prototype forcefield generator~
 type:belt
 graphics:(:Violet
 level:90
@@ -2523,54 +2523,107 @@ material:steel
 
 ### Cloaks ###
 
-name:& Cloak~
+name:& hoodie~
 type:cloak
-graphics:(:g
+graphics:(:b
 level:1
-weight:10
+weight:350g
 cost:3
-alloc:20:1 to 100
+alloc:25:1 to 127
 attack:0d0:0:0
 armor:1:0
-desc:A traveller's sturdy outer garment.
+desc:A basic outer garment.
+material:cloth
 
-name:& Fur Cloak~
+name:& trenchcoat~
+type:cloak
+graphics:(:D
+level:3
+weight:800g
+cost:8
+alloc:15:1 to 127
+attack:0d0:0:0
+armor:2:0
+desc:A long dark outer garment.
+material:cloth
+
+name:& Sirius wrap~
 type:cloak
 graphics:(:o
 level:1
-weight:25
+weight:1100g
 cost:600
-alloc:20:20 to 100
+alloc:10:20 to 127
 attack:0d0:0:0
 armor:3:0
-desc:A heavy cloak made from fur and lined with leather; a luxury.
+flags:IGNORE_ACID
+desc:"A transparent waterproof garment providing effective protection against semi-hostile environments" - so says Sirius Spacewear, anyway. It's really not much more than a raincoat but it is at least a durable one.
+material:plastic
 
+name:& flasher mac~
+type:cloak
+graphics:(:BlueViolet
+level:5
+weight:1050g
+cost:40
+alloc:8:1 to 127
+attack:0d0:0:0
+armor:2:0
+values:STEALTH[-3] | LIGHT[2]
+desc:A long, dark, vaguely creepy-looking zip fronted trenchcoat enhanced by RGB lit trim. Well, enhanced if you like looking like a Christmas tree anyway.
+material:cloth
 
 ### Gloves ###
 
-name:& Set~ of Leather Gloves
+name:& pair~ of padded gloves
 type:gloves
 graphics:]:U
 level:0
-weight:10
+weight:220g
 cost:5
 alloc:20:1 to 100
-attack:0d0:0:0
+attack:0d0:-1:0
 armor:1:0
-desc:Leather hand protection, with an open palm for gripping weapons.
+desc:Simple padded cloth hand protection. Only intended for warmth, so they are a bit clumsy.
+material:cloth
+
+name:& pair~ of lifting gloves
+type:gloves
+graphics:]:U
+level:0
+weight:180g
+cost:22
+alloc:5:1 to 100
+attack:0d0:1:0
+armor:1:0
+desc:Leather hand protection, with a padded palm for grip.
 material:leather
 
-name:& Set~ of Gauntlets
+name:& pair~ of surgical gloves
 type:gloves
-graphics:]:s
-level:0
-weight:25
-cost:45
-alloc:20:10 to 100
-attack:1d1:0:0
-armor:3:0
-desc:A set of gloves that completely covers the hand and wrist in steel plating.
-material:steel
+graphics:]:U
+level:10
+weight:20g
+cost:800
+alloc:3:10 to 100
+attack:0d0:0:0
+armor:0:0
+flags:IGNORE_ACID
+values:RES_ACID[1]
+desc:Thin rubbery stuff for keeping nasty chemicals off.
+material:plastic
+
+name:& set~ of armored gauntlets
+type:gloves
+graphics:]:W
+level:5
+weight:1600g
+cost:450
+alloc:6:5 to 100
+attack:1d1:-3:0
+armor:8:0
+desc:A set of gloves that completely covers the hand and wrist in chunky plastic. Effective protection, but it does restrict your fighting.
+material:plastic
 
 name:& pair~ of force bangles
 type:gloves
@@ -2587,27 +2640,89 @@ material:titanium
 
 ### Shields ###
 
-name:& Buckler~
+name:& bubble shield~
 type:shield
-graphics:):U
+graphics:):b
 level:1
-weight:20
-cost:30
-alloc:20:3 to 100
-attack:1d1:0:0
-armor:1:0
-desc:A small round shield designed to be useful in deflecting enemy swords.
+weight:120g
+cost:32
+alloc:15:1 to 100
+attack:0d0:-1:0
+armor:3:0
+desc:A small, flimsy plastic shield - "bubble shield" isn't the name that Sirius gave it, but it's the name that stuck. It does have the advantages of being very light and unencumbering though, and the protection it provides is still better than nothing.
+material:plastic
 
-name:& Wicker Shield~
+name:& riot shield~
 type:shield
-graphics:):U
-level:1
-weight:30
-cost:20
-alloc:20:1 to 100
-attack:1d1:0:0
-armor:2:0
-desc:A light circular frame of wood surrounding fine-grained wickerwork.
+graphics:):b
+level:5
+weight:1400g
+cost:50
+alloc:12:5 to 100
+attack:1d1:-2:0
+armor:5:0
+desc:A curved shield, held in your off-hand, mostly constructed from transparent laminated plastic.
+material:plastic
+
+name:& Imperial shield~
+type:shield
+graphics:):w
+level:8
+weight:2600g
+cost:130
+alloc:6:8 to 100
+attack:1d1:-4:0
+armor:11:0
+desc:A heavier, opaque, extensively ridged equivalent to the more commonplace riot shield. Imperial stormtroopers often carry them and they do provide considerably more protection, but it comes at the cost of weight and restricted movement.
+material:plastic
+
+name:& bin-lid shield~
+type:shield
+graphics:):s
+level:12
+weight:5500g
+cost:150
+alloc:4:12 to 100
+attack:1d1:-3:0
+armor:13:0
+desc:Another cut-price special from Sirius. Like the 'bubble shield', the inflated name that Sirius came up with for it is long forgotten in favor of a more descriptive nickname. It looks similar to the standard ballistic shields, but corners have been cut. True, it is nearly as protective. But being made from steel rather than titanium it is way too heavy and clumsy. 
+material:steel
+
+name:& ballistic shield~
+type:shield
+graphics:):W
+level:15
+weight:3400g
+cost:350
+alloc:5:15 to 100
+attack:1d1:-2:0
+armor:15:0
+desc:A smoothly swept curve of titanium and exotic plastics, capable of stopping most small arms fire. It is heavy, but it's carefully balanced and so doesn't limit your movement as much as you might have thought at first. 
+material:titanium
+
+name:& unishield~
+type:shield
+graphics:):AliceBlue
+level:55
+weight:1200g
+cost:11000
+alloc:1:55 to 127
+attack:1d1:-1:0
+armor:40:0
+desc:A smoothly swept curve of ultra-rare silver-blue unobtainium. It's capable of stopping almost anything, without weighing you down enough to worry about.
+material:titanium
+
+name:& force wheel~
+type:shield
+graphics:):Violet
+level:75
+weight:1200g
+cost:14000
+alloc:1:75 to 127
+attack:1d1:-1:0
+armor:2:10+d6M50
+desc:A toroid of smooth, featureless titanium connected by numerous wire spokes to a central hub and handguard. It does in fact look as if you were trying to protect yourself with a bicycle wheel, but inside is a powerful forcefield generator. While not as convenient as the more common belt forcefield generators, the fixed geometry of a shield amps up the power level.
+material:titanium
 
 
 ##### Cards #####
@@ -5016,7 +5131,7 @@ effect:BALL:ELEC:2
 dice:64
 time:23
 
-name:auto super soaker~
+name:& auto super soaker~
 type:gadget
 graphics:-:d
 level:70

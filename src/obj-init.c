@@ -2278,7 +2278,13 @@ static enum parser_error parse_ego_type(struct parser *p) {
 static enum parser_error parse_ego_item(struct parser *p) {
 	struct poss_item *poss;
 	int tval = tval_find_idx(parser_getsym(p, "tval"));
-	int sval = lookup_sval(tval, parser_getsym(p, "sval"));
+	const char *sval_text = parser_getsym(p, "sval");
+	bool negate = false;
+	if (*sval_text == '!') {
+		negate = true;
+		sval_text++;
+	}
+	int sval = lookup_sval(tval, sval_text);
 
 	struct ego_item *e = parser_priv(p);
 	if (!e)
@@ -2288,10 +2294,29 @@ static enum parser_error parse_ego_item(struct parser *p) {
 	if (sval < 0)
 		return PARSE_ERROR_UNRECOGNISED_SVAL;
 
-	poss = mem_zalloc(sizeof(struct poss_item));
-	poss->kidx = lookup_kind(tval, sval)->kidx;
-	poss->next = e->poss_items;
-	e->poss_items = poss;
+	if (negate) {
+		/* Remove it */
+		struct poss_item *pi = e->poss_items;
+		int kidx = lookup_kind(tval, sval)->kidx;
+		struct poss_item *last = NULL;
+		while (pi) {
+			if (pi->kidx == kidx) {
+				if (last)
+					last->next = pi->next;
+				else
+					e->poss_items = pi->next;
+				mem_free(pi);
+				break;
+			}
+			last = pi;
+			pi = pi->next;
+		}
+	} else {
+		poss = mem_zalloc(sizeof(struct poss_item));
+		poss->kidx = lookup_kind(tval, sval)->kidx;
+		poss->next = e->poss_items;
+		e->poss_items = poss;
+	}
 
 	if (poss->kidx <= 0)
 		return PARSE_ERROR_INVALID_ITEM_NUMBER;
