@@ -445,6 +445,10 @@ spell:Force Regeneration:25:22:40:2:2d4:1
 seffect:FORCE_REGEN
 sdesc:Forces your body into regeneration by an effort of will. This is just as chancy as regeneration at death is, though and failure means losing a regeneration as well as some brief but nasty side-effects.
 
+spell:Time Loop:30:40:400:2:3d4:3d40
+seffect:TIME_LOOP
+sdesc:Put history into a strange loop, protected from external influences. This prevents the danger level from increasing for 12 days. This enormous effort comes at the cost of a regeneration, although should you fail to bind the loop you will not lose the regeneration.
+
 # Blink ('warp'), a tp+speed, tp level, gain energy, movement speed, alter-reality?
 
 

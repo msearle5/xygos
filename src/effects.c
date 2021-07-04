@@ -6439,6 +6439,33 @@ static bool effect_handler_WONDER(effect_handler_context_t *context)
 }
 
 /**
+ * Time Loop
+ * Hold off danger level increases, needs a regen
+ */
+bool effect_handler_TIME_LOOP(effect_handler_context_t *context)
+{
+	s32b allowed;
+	s32b used;
+	bool timelord = get_regens(&allowed, &used);
+
+	/* Not possible */
+	if ((!timelord) || (used >= allowed)) {
+		msg("You don't have the ability to regenerate, so can't commit one to a time loop.");
+		return(true);
+	}
+
+	/* Make sure you know what you are geting into */
+	if (get_check("Sure you want to create a time loop? (losing a regeneration!) ")) {
+		/* Use a regen */
+		timelord_change_regenerations(1);
+		/* Return a fortnight */
+		player->danger_reduction += 56; // 14 days
+	}
+	/* Done */
+	return (true);
+}
+
+/**
  * Mutate
  */
 bool effect_handler_MUTATE(effect_handler_context_t *context)
