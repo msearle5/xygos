@@ -70,7 +70,7 @@ static void timelord_regen_status(void)
 
 bool get_regens(s32b *allowed, s32b *used)
 {
-	if (player && player->race && player->race->name && player->race->state && streq(player->race->name, "Time-Lord")) {
+	if (player && player->race && player->race->name && streq(player->race->name, "Time-Lord")) {
 		*allowed = regens[player->max_lev];
 		*used = ((struct timelord_state *)player->race->state)->regenerations;
 		return true;
