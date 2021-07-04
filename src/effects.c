@@ -6604,14 +6604,20 @@ bool effect_handler_BANANA(effect_handler_context_t *context)
 bool effect_handler_LAND(effect_handler_context_t *context)
 {
 	/* Thes messages will needs to be modified if jetpacks are used */
-	msg("You settle to the ground and climb out.");
+	if (levels_in_class(get_class_by_name("Pilot")->cidx))
+		msg("You settle to the ground and climb out.");
+	else
+		msg("You are back on your feet again.");
 	player->flying = false;
 	return (true);
 }
 
 bool effect_handler_TAKEOFF(effect_handler_context_t *context)
 {
-	msg("You get in and take off.");
+	if (levels_in_class(get_class_by_name("Pilot")->cidx))
+		msg("You get in and take off.");
+	else
+		msg("You jump into the air.");
 	player->flying = true;
 	return (true);
 }
