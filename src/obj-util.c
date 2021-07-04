@@ -1299,23 +1299,23 @@ static msg_tag_t msg_tag_lookup(const char *tag)
 }
 
 /**
- * Print a message from a string, customised to include details about an object
+ * Format a message from a string, customised to include details about an object
  */
-void print_custom_message(struct object *obj, const char *string, int msg_type)
+char *format_custom_message(const struct object *obj, const char *string, char *buf, int len)
 {
-	char buf[1024] = "\0";
 	const char *next;
 	const char *s;
 	const char *tag;
 	size_t end = 0;
+	*buf = 0;
 
 	/* Not always a string */
-	if (!string) return;
+	if (!string) return buf;
 
 	next = strchr(string, '{');
 	while (next) {
 		/* Copy the text leading up to this { */
-		strnfcat(buf, 1024, &end, "%.*s", next - string, string); 
+		strnfcat(buf, len, &end, "%.*s", next - string, string); 
 
 		s = next + 1;
 		while (*s && isalpha((unsigned char) *s)) s++;
@@ -1329,10 +1329,10 @@ void print_custom_message(struct object *obj, const char *string, int msg_type)
 			switch(msg_tag_lookup(tag)) {
 			case MSG_TAG_NAME:
 				if (obj) {
-					end += object_desc(buf, 1024, obj,
+					end += object_desc(buf, len, obj,
 									   ODESC_PREFIX | ODESC_BASE);
 				} else {
-					strnfcat(buf, 1024, &end, "hands");
+					strnfcat(buf, len, &end, "hands");
 				}
 				break;
 			case MSG_TAG_FLAVOR:
@@ -1344,22 +1344,22 @@ void print_custom_message(struct object *obj, const char *string, int msg_type)
 				/* FALL THROUGH */
 			case MSG_TAG_KIND:
 				if (obj) {
-					object_kind_name(&buf[end], 1024 - end, obj->kind, true);
+					object_kind_name(&buf[end], len - end, obj->kind, true);
 					end += strlen(&buf[end]);
 				} else {
-					strnfcat(buf, 1024, &end, "hands");
+					strnfcat(buf, len, &end, "hands");
 				}
 				break;
 			case MSG_TAG_VERB:
 				if (obj && obj->number == 1) {
-					strnfcat(buf, 1024, &end, "s");
+					strnfcat(buf, len, &end, "s");
 				}
 				break;
 			case MSG_TAG_VERB_IS:
 				if ((!obj) || (obj->number > 1)) {
-					strnfcat(buf, 1024, &end, "are");
+					strnfcat(buf, len, &end, "are");
 				} else {
-					strnfcat(buf, 1024, &end, "is");
+					strnfcat(buf, len, &end, "is");
 				}
 			default:
 				break;
@@ -1370,7 +1370,16 @@ void print_custom_message(struct object *obj, const char *string, int msg_type)
 
 		next = strchr(string, '{');
 	}
-	strnfcat(buf, 1024, &end, string);
+	strnfcat(buf, len, &end, string);
+	return buf;
+}
 
+/**
+ * Print a message from a string, customised to include details about an object
+ */
+void print_custom_message(struct object *obj, const char *string, int msg_type)
+{
+	char buf[1024];
+	format_custom_message(obj, string, buf, sizeof(buf));
 	msgt(msg_type, "%s", buf);
 }

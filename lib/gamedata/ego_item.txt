@@ -143,7 +143,7 @@ item:light:tactical flashlight
 item:light:mobilamp
 values:LIGHT[1]
 min-values:LIGHT[1]
-desc:It's brighter than expected for a {basename}.
+desc:It's brighter than expected for a {kind}.
 
 name:(high efficiency)
 info:1000:10
@@ -332,7 +332,7 @@ type:hafted
 flags:SENSE_ANIMAL
 values:STEALTH[-1+d4] | INFRA[-1+d4] | INT[-1+d2]
 slay:ANIMAL_2
-desc:This bloodthirsty {basename} is death to all animals, and will guide its wielder to them.
+desc:This bloodthirsty {kind} is death to all animals, and will guide its wielder to them.
 
 name:(opinionated)
 info:3000:18
@@ -357,7 +357,7 @@ flags:SENSE_ANIMAL | RAND_RES_POWER
 values:STEALTH[d4] | INFRA[d4] | INT[d2]
 min-values:INT[0] | INFRA[0] | STEALTH[0]
 slay:ANIMAL_2
-desc:This bloodthirsty {basename} is death to all animals, and will guide its wielder to them.
+desc:This bloodthirsty {kind} is death to all animals, and will guide its wielder to them.
 forbid:mighty
 
 name:(*opinionated*)

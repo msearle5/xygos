@@ -1916,6 +1916,8 @@ struct object_kind *obj_mimic_kind(const struct object *obj)
 static void describe_flavor_text(textblock *tb, const struct object *obj,
 								 bool ego)
 {
+	char buf[4096];
+
 	/* Display the known artifact or object description */
 	if ((obj->artifact && obj->known->artifact && obj->artifact->text) &&
 		((player->wizard) || (strncmp(obj->artifact->text, "Random", 6)))) {
@@ -1927,7 +1929,7 @@ static void describe_flavor_text(textblock *tb, const struct object *obj,
 			if (kf_has(obj->kind->kind_flags, KF_MIMIC_KNOW) && (!object_flavor_is_aware(obj))) {
 				text = obj_mimic_kind(obj)->text;
 			}
-			textblock_append(tb, "%s", text);
+			textblock_append(tb, "%s", format_custom_message(obj, text, buf, sizeof(buf)));
 			did_desc = true;
 		}
 
@@ -1936,7 +1938,7 @@ static void describe_flavor_text(textblock *tb, const struct object *obj,
 		for(int i=0;i<MAX_EGOS;i++) {
 			if ((ego || (obj->known->ego[i] != NULL)) && obj->ego[i] && obj->ego[i]->text) {
 				if (did_desc) textblock_append(tb, "  ");
-				textblock_append(tb, "%s\n\n", obj->ego[i]->text);
+				textblock_append(tb, "%s\n\n", format_custom_message(obj, obj->ego[i]->text, buf, sizeof(buf)));
 				did_ego = true;
 			}
 		}
@@ -1955,10 +1957,12 @@ static bool describe_ego(textblock *tb, const struct ego_item *ego)
 		textblock_append(tb, "It provides one random higher resistance.  ");
 	else if (kf_has(ego->kind_flags, KF_RAND_SUSTAIN))
 		textblock_append(tb, "It provides one random sustain.  ");
+	else if (kf_has(ego->kind_flags, KF_RAND_BASE_RES))
+		textblock_append(tb, "It provides one random lower resistance.  ");
 	else if (kf_has(ego->kind_flags, KF_RAND_POWER))
 		textblock_append(tb, "It provides one random ability.  ");
 	else if (kf_has(ego->kind_flags, KF_RAND_RES_POWER))
-		textblock_append(tb, "It provides one random ability or base resistance.  ");
+		textblock_append(tb, "It provides one random ability or resistance.  ");
 	else
 		return false;
 

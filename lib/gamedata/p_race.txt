@@ -263,7 +263,7 @@ skill-martial:-25
 skill-shoot:5
 skill-throw:5
 skill-dig:5
-desc:Your preferred reaction to danger is to run and hide like a chicken. This hurts your melee ability and doesn't make you very popular either. However, you like the idea of fighting from 200 yards away, you are stealthy and you are used to running. Your survival instincts do give you a little more HP and AC.
+desc:Your preferred reaction to danger is to run and hide like a chicken. This hurts your melee ability and doesn't make you very popular either. However, you do like the idea of fighting from 200 yards away, you are stealthy and you are used to running. Your survival instincts also give you a little more HP and AC.
 stats:0:1:1:0:1:-2:0
 values:MOVES[1]
 hitdie:10
@@ -281,7 +281,7 @@ skill-martial:15
 skill-shoot:2
 skill-throw:2
 skill-dig:0
-desc:You are entirely fearless, making you an effective melee combatant but prone to failing to defend yourself, hence the reduced CON, hitdie and AC. Onward to the next adventure!
+desc:You are entirely fearless - making you an effective melee combatant but prone to failing to defend yourself, hence the reduced CON, hitdie and AC. Onward to the next adventure!
 stats:0:-1:-2:0:-1:1:1
 obj-flags:PROT_FEAR
 hitdie:-10
