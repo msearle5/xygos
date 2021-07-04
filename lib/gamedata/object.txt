@@ -4637,7 +4637,7 @@ effect-yx:22:40
 
 ### Healing ###
 
-name:curing
+name:& medikit~
 type:device
 graphics:_:d
 level:25
@@ -4653,8 +4653,9 @@ effect:CURE:CUT
 effect:CURE:POISONED
 effect:CURE:STUN
 effect:CURE:CONFUSED
+desc:A reasonably sophisticated medical device, capable of immediately relieving several conditions.
 
-name:first aid
+name:& first-aid kit~
 type:device
 graphics:_:d
 level:5
@@ -4672,8 +4673,9 @@ effect:TIMED_DEC:CUT
 dice:20
 effect:TIMED_DEC:CONFUSED
 dice:20
+desc:A simple but still often useful medical device: apply the business end to your wrist for rapid relief of blindness, confusion and minor wounds.
 
-name:healing
+name:& medical nanokit~
 type:device
 graphics:_:d
 level:70
@@ -4692,24 +4694,25 @@ effect:CURE:POISONED
 effect:CURE:STUN
 effect:CURE:AMNESIA
 effect:CURE:CONFUSED
+desc:A rare and extremely effective medical device. Its dose of nanobots relieves several conditions - including amnesia, unlike most remedies. But the combination of this with high-powered healing is the real advantage.
 
 
 ### Killing devices ###
 
 #remove or replace?
-name:Dispel Evil
-type:device
-graphics:_:d
-level:50
-weight:50
-cost:1200
-alloc:50:50 to 100
-attack:1d2:0:0
+#name:Dispel Evil
+#type:device
+#graphics:_:d
+#level:50
+#weight:50
+#cost:1200
+#alloc:50:50 to 100
+#attack:1d2:0:0
 armor:0:0
-charges:4+d3
-power:9
-effect:PROJECT_LOS:DISP_EVIL:0:1
-dice:60
+#charges:4+d3
+#power:9
+#effect:PROJECT_LOS:DISP_EVIL:0:1
+#dice:60
 
 name:& exterminator~
 type:device
@@ -4738,34 +4741,34 @@ power:11
 effect:PROJECT_LOS:DISP_ALL:0:1
 dice:120
 
-name:Holiness
-type:device
-graphics:_:d
-level:70
-weight:50
-cost:3500
-alloc:20:70 to 100
-attack:1d2:0:0
-armor:0:0
-charges:2d2
-power:12
-effect:PROJECT_LOS:DISP_EVIL:0:1
-dice:120
-effect:HEAL_HP
-dice:50
-effect:TIMED_INC:PROTEVIL
-dice:$B+1d25
-expr:B:PLAYER_LEVEL:* 3
-effect:CURE:POISONED
-effect:CURE:TERROR
-effect:CURE:AFRAID
-effect:CURE:STUN
-effect:CURE:CUT
-effect:CURE:SLOW
-effect:CURE:BLIND
-effect:CURE:CONFUSED
-effect:CURE:IMAGE
-effect:CURE:AMNESIA
+#name:Holiness
+#type:device
+#graphics:_:d
+#level:70
+#weight:50
+#cost:3500
+#alloc:20:70 to 100
+#attack:1d2:0:0
+#armor:0:0
+#charges:2d2
+#power:12
+#effect:PROJECT_LOS:DISP_EVIL:0:1
+#dice:120
+#effect:HEAL_HP
+#dice:50
+#effect:TIMED_INC:PROTEVIL
+#dice:$B+1d25
+#expr:B:PLAYER_LEVEL:* 3
+#effect:CURE:POISONED
+#effect:CURE:TERROR
+#effect:CURE:AFRAID
+#effect:CURE:STUN
+#effect:CURE:CUT
+#effect:CURE:SLOW
+#effect:CURE:BLIND
+#effect:CURE:CONFUSED
+#effect:CURE:IMAGE
+#effect:CURE:AMNESIA
 
 
 ### Utility ###
