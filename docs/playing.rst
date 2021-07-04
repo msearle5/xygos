@@ -163,13 +163,8 @@ Roguelike Keyset Command Summary
   m    Cast a spell                    M    Full dungeon map
   n    (walk - south east)             N    (run - south east)
   o    Open a door or chest            O    Toggle ignore
-<<<<<<< HEAD
-  p    Cast a spell                    P    Browse a book
-  q    Take a pill                     Q    End character & quit
-=======
   p    (unused)                        P    Browse a book
-  q    Quaff a potion                  Q    End character & quit
->>>>>>> 41f3b5768 (Remove 'p' as a casting command in the documentation to follow up https://github.com/angband/angband/commit/6e7f4e891aee60259187f5446e824f5642901eb8 .)
+  q    Take a pill                     Q    End character & quit
   r    Read a scroll                   R    Rest for a period
   s    Steal (rogues only)             S    (unused)
   t    Fire an item                    T    Take off equipment
