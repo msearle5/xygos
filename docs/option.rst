@@ -129,11 +129,17 @@ Angband maintainer's defaults for the birth options.
 
 Generate a new, random artifact set ``birth_randarts``
   A different set of artifacts will be created, in place of the standard
-  ones. This is intended primarily for people who have played enough to
-  know what most of the standard artifacts do and want some variety. The
-  number, findability and power of random artifacts will all match the
-  standard set - approximately.
+  ones. The number, findability and power of random artifacts will all match
+  the original Angband set - approximately. If you don't set this option you
+  will get the new Xygos fixed artifacts only - there are a lot less of
+  these than were in the original set, making that a challenge option.
+  (There are however a few artifacts - rewards for defeating special
+  opponents - which are randomized even with this option turned off.)
 
+Use both random and non-random artifacts ``birth_botharts``
+  The standard and randomized artifacts will both be available. This is
+  the easiest option and the recommended way to go for a new player.
+  
 Generate connected stairs ``birth_connect_stairs``
   With this option turned on, if you go down stairs, you start the new level
   on an up staircase, and vice versa (if you go up stairs, you start the
@@ -151,12 +157,12 @@ Force player descent (never make up stairs) ``birth_force_descend``
   levels until the quest is complete, however you will be warned before
   descending into a quest level.  Any status effects that sometimes 
   teleports the character up and sometimes teleports them down will always
-  choose down.  When combined with the option for word of recall scrolls
+  choose down.  When combined with the option for recall cards
   to have no effect, this recreates the previous "ironman" option.  
 
 Word of Recall has no effect ``birth_no_recall``
-  Word of Recall scrolls have no effect.  When combined with the option
-  to force player descent, this recreates the previous "ironman" option.
+  Recall cards have no effect.  When combined with the option to force
+  player descent, this recreates the previous "ironman" option.
 
 Restrict creation of artifacts ``birth_no_artifacts``
   No artifacts will be created. Ever. Just *how* masochistic are you?
@@ -182,16 +188,16 @@ Show level feelings ``birth_feelings``
 
   With this option off, these hints will not be shown.
 
-Increase gold drops but disable selling ``birth_no_selling``
+Increase cash drops but disable selling ``birth_no_selling``
   Shopkeepers will never pay you for items you sell, though they will still
   identify unknown items for you, and will still sell you their wares. To
-  balance out income in the game, gold found in the dungeon will be
+  balance out income in the game, cash found in the dungeon will be
   increased if this option is on.
 
 Start with a kit of useful gear ``birth_start_kit``
   Start with items, a useful option for new players, or ones that wish
   to descend immediately into the dungeon.  If turned off, the character
-  will start with additional gold with which to purchase starting gear.
+  will start with additional cash with which to purchase starting gear.
 
 Monsters learn from their mistakes ``birth_ai_learn``
   Allow monsters to learn what spell attacks you are resistant to, and to
@@ -216,6 +222,33 @@ To-damage is a percentage of dice (experimental) ``birth_percent_damage``
   Instead of bonuses to damage being just added on to damage dealt, each +1
   adds 5% to the value of the damage dice. This option is currently not
   very balanced.
+
+Difficulty increases over time ``birth_time_limit``
+  There is a ``danger level``, which starts at zero and remains that way for
+  a grace period of a couple of days. It then increases by four levels per
+  day. This adds its level to all dungeon levels' difficulty - so that, for
+  example, if the danger was 4 and you were on level 1 you would get the
+  equivalent of level 5. It applies to town as well, though in a more
+  complex way (you don't get random monsters at first, just thieves.) It is
+  possible to hold this off by having the right personality, by completing
+  certain quests, or by a Time-Lord technique. Eventually (when the danger
+  level exceeds level 60) stores start to disappear...
+  This is recommended, although it does make the game more difficult: it
+  isn't intended to hamper any normal playstyle, only extreme scumming
+  (as multiple towns with their own black markets would otherwise allow you
+  to do).
+
+Allow switching classes at level up ``birth_multi_class``
+  This allows you to choose at any time to switch class. It will take effect
+  the next time you level up, making you a multi-classed character, a mix of
+  different classes. Your abilities (skills, hit points, etc.) are taken
+  from a weighted average of the classes' skills (e.g. if you have 1 level
+  in Soldier an 5 in Engineer then you will get 1/6 of the Soldier's values,
+  plus 5/6 of the Engineer's.) Level-dependent techniques and abilities
+  only appear when you have gained the necessary number of levels *in that
+  class*.
+  If you never choose to change class, then the result will be identical to
+  not having this flag enabled - which is why it's still recommended.
 
 Cheating options
 ================

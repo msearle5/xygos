@@ -87,23 +87,23 @@ Original Keyset Command Summary
 
 ======= ============================= ====== ============================
  ``a``  Aim a wand                    ``A``  Activate an object 
- ``b``  Browse a book                 ``B``  (unused)
+ ``b``  Browse techniques             ``B``  (unused)
  ``c``  Close a door                  ``C``  Character description
  ``d``  Drop an item                  ``D``  Disarm a trap or lock a door
  ``e``  Equipment list                ``E``  Eat some food (or a pill)
- ``f``  Fire an item                  ``F``  Fuel your lantern/torch
+ ``f``  Fire an item                  ``F``  Charge your light source
  ``g``  Get objects on floor          ``G``  Gain new spells/prayers
  ``h``  Fire default ammo at target   ``H``  (unused)
  ``i``  Inventory list                ``I``  Observe an item
  ``j``  (unused)                      ``J``  (unused)
  ``k``  Ignore an item                ``K``  Toggle ignore
  ``l``  Look around                   ``L``  Locate player on map
- ``m``  Cast a spell                  ``M``  Full dungeon map
+ ``m``  Perform a technique           ``M``  Full dungeon map
  ``n``  Repeat previous command       ``N``  (unused)
  ``o``  Open a door or chest          ``O``  (unused)
  ``p``  (unused)                      ``P``  (unused)
  ``q``  Take a pill                   ``Q``  End character & quit
- ``r``  Read a scroll                 ``R``  Rest for a period
+ ``r``  Run a card                    ``R``  Rest for a period
  ``s``  Steal (rogues only)           ``S``  (unused)
  ``t``  Take off equipment            ``T``  Dig a tunnel
  ``u``  Use a device                   ``U``  Use an item
@@ -141,7 +141,7 @@ Original Keyset Command Summary
  ``\``  (special - bypass keymap)     ``~``  Check knowledge
 `` ` `` (special - escape)            ``?``  Help
  ``/``  Identify symbol
- ``|``  Quiver list
+ ``|``  Ammo list
 ======= ============================= ====== ============================
 
 Roguelike Keyset Command Summary
@@ -153,8 +153,8 @@ Roguelike Keyset Command Summary
   c    Close a door                    C    Character description
   d    Drop an item                    D    Disarm a trap or lock a door
   e    Equipment list                  E    Eat some food (or a pill)
-  f    (unused)                        F    Fuel your lantern/torch
-  g    Get objects on floor            G    Gain new spells/prayers
+  f    (unused)                        F    Charge your light source
+  g    Get objects on floor            G    Gain new techniques
   h    (walk - west)                   H    (run - west)
   i    Inventory list                  I    Observe an item
   j    (walk - south)                  J    (run - south)
@@ -165,7 +165,7 @@ Roguelike Keyset Command Summary
   o    Open a door or chest            O    Toggle ignore
   p    (unused)                        P    Browse a book
   q    Take a pill                     Q    End character & quit
-  r    Read a scroll                   R    Rest for a period
+  r    Run a card                      R    Rest for a period
   s    Steal (rogues only)             S    (unused)
   t    Fire an item                    T    Take off equipment
   u    (walk - north east)             U    (run - north east)
@@ -271,7 +271,7 @@ character. This character is ignored, but it is safest to use a 'SPACE'
 or 'ESCAPE' which are always ignored as commands in case you type the
 command just after the count expires.
 
-You can tell Angband to automatically use a repeat count of 99 with
+You can tell Xygos to automatically use a repeat count of 99 with
 commands you normally want to repeat (open, disarm, tunnel, bash, alter,
 etc) by setting the 'always_repeat' option.
   
@@ -279,14 +279,14 @@ Selection of Objects
 ====================
  
 Many commands will also prompt for a particular object to be used.
-For example, the command to read a scroll will ask you which of the
-scrolls that you are carrying that you wish to read.  In such cases, the
+For example, the command to run a card will ask you which of the
+cards that you are carrying that you wish to read.  In such cases, the
 selection is made by typing a letter of the alphabet (or a number if choosing
-from the quiver).  The prompt will indicate the possible letters/numbers,
+from ammunition).  The prompt will indicate the possible letters/numbers,
 and you will also be shown a list of the appropriate items.  Often you will
 be able to press ``/`` to switch between inventory and equipment, or ``|`` to
 select the quiver, or ``-`` to select the floor.  Using the right arrow also
-rotates selection between equipment, inventory, quiver, floor and back to
+rotates selection between equipment, inventory, ammo, floor and back to
 equipment; the left arrow rotates in the opposite direction.
  
 The particular object may be selected by an upper case or a lower case

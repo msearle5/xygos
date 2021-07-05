@@ -2,7 +2,7 @@
 Customising the game
 ====================
 
-Angband allows you to change various aspects of the game to suit your tastes.  These include:
+Xygos allows you to change various aspects of the game to suit your tastes.  These include:
 
 * Options - which let you change interface or gameplay behaviour
 * `Ignoring items`_ and `inscribing items`_ to change how the game treats them
@@ -22,7 +22,7 @@ while playing.
 User Pref Files
 ===============
 
-User pref files are Angband's way of saving and loading certain settings.  They can store:
+User pref files are Xygos's way of saving and loading certain settings.  They can store:
 
 * Altered visual appearances for game entities
 * Inscriptions to automatically apply to items
@@ -41,7 +41,7 @@ Where to find them
 
 On macOS, you can find them in your user directory, in ``Documents/Angband/``.
 
-On Linux, they will be stored in ``~/.angband/Angband``.
+On Linux, they will be stored in ``~/.angband/Xygos``.
 
 On Windows you can find them in ``lib/user/``.
 
@@ -56,7 +56,7 @@ After these are complete, the game will try to load (in order):
 * ``Class.prf`` - where class if your character's class
 * ``Name.prf`` - where name is your character's name
 
-So, you can save some settings - for example, keymaps - to the ``Mage.prf`` file if you only want them to be loaded for mages.
+So, you can save some settings - for example, keymaps - to the ``Engineer.prf`` file if you only want them to be loaded for engineers.
 
 You may also enter single user pref commands directly, using the special "Enter a user pref command" command, activated by pressing ``"``.
 
@@ -78,11 +78,11 @@ bad
   The weapon/armor has negative AC, to-hit or to-dam.
 
 average
-  The weapon/armor has no pluses no minuses.  It is non-magical.
+  The weapon/armor has no pluses and no minuses.
 
 good
   The weapon/armor has positive AC, to-hit or to-dam. However it does not
-  have any special abilities, brands, slays, stat-boosts, resistances
+  have any special abilities, brands, slays, stat-boosts, resistances.
 
 non-artifact
   This setting only leaves artifacts unignored.
@@ -113,14 +113,14 @@ Inscribing an item with ``!`` followed by a command letter or ``*``:
 	inscribe an item with '!*' then the game will confirm any use of an
 	item.
 
-	Say you inscribed your potion of Speed with '!q'.  This would prompt
-	you when you try to drink it to see if you really mean to.  Multiple
+	Say you inscribed your whizz pill with '!q'.  This would prompt
+	you when you try to take it to see if you really mean to.  Multiple
 	'!q' inscriptions will prompt multiple times.
 
 	Similarly, using !v!k!d makes it very hard for you to accidentally
 	throw, ignore or put down the item it is inscribed on.
 
-	Some adventurers use this for Scrolls of Word of Recall so they don't
+	Some adventurers use this for recall cards so they don't
 	accidentally return to the dungeon too soon.
 
 Inscribing an item with ``@``, followed by a command letter, followed by 0-9:
@@ -132,7 +132,7 @@ Inscribing an item with ``@``, followed by a command letter, followed by 0-9:
 	If you have multiple items inscribed with the same thing, the game will
 	use the first one.
 
-	For example, if you inscribe a device of Cure Light Wounds with '@u1',
+	For example, if you inscribe a curing device with '@u1',
 	you can refer to it by pressing 1 when ``u``\sing it.  You could also
 	inscribe a wand of Wonder with '@a1', and when using ``a``\, 1 would select
 	that wand.

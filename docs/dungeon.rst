@@ -34,15 +34,17 @@ Features that do not block line of sight
 ----------------------------------------
 
 ===== =========================    =====  ================================== 
-``.``   A floor space              ``1``    Entrance to General Store
+``.``   A floor space              ``1``    Entrance to Convenience Store
 ``.``   A trap (hidden)            ``2``    Entrance to Armoury
-``^``   A trap (known)             ``3``    Entrance to Weapon Smith
-``;``   A glyph of warding         ``4``    Entrance to Electronics
-``'``   An open door               ``5``    Entrance to Alchemy Shop
+``^``   A trap (known)             ``3``    Entrance to Weapon Dealer
+``;``   A decoy                    ``4``    Entrance to Electronics
+``'``   An open door               ``5``    Entrance to Pharmacy
 ``'``   A broken door              ``6``    Entrance to Magic Shop
 ``<``   A staircase up             ``7``    Entrance to the Black Market
 ``>``   A staircase down           ``8``    Entrance to your Home
-``#``   A pool of lava
+``#``   A pool of lava             ``9``    Entrance to Field HQ
+``#``   A patch of fallout         ``*``    Entrance to the Airport
+                                   ``!``    Entrance to the Cyber Salon
 ===== =========================    =====  ================================== 
 
 Features that block line of sight
@@ -59,16 +61,16 @@ Objects
 -------
  
 =====  =============================    =====  =============================
-``!``    A potion (or flask)            ``/``    A pole-arm
-``?``    A scroll (or book)             ``|``    An edged weapon
+``'``    A pill                         ``/``    A pole-arm
+``?``    A scroll                       ``|``    An edged weapon
 ``,``    A mushroom (or food)           ``\``    A hafted weapon
-``-``    A wand or rod                  ``}``    A sling, bow, or x-bow
-``_``    A device                        ``{``    A shot, arrow, or bolt
-``=``    A ring                         ``(``    Soft armour
-``"``    An amulet                      ``[``    Hard armour
-``$``    Gold or gems                   ``]``    Misc. armour
-``~``    Lights, Tools, Chests, etc     ``)``    A shield
-``&``    Multiple items
+``-``    A card or gadget               ``}``    A gun
+``_``    A device                       ``{``    Ammunition
+``!``    A battery                      ``(``    Soft armour
+``"``    Cyberware                      ``[``    Hard armour
+``$``    Cash                           ``]``    Misc. armour
+``~``    Lights, Tools, Boxes, etc      ``)``    A shield
+``&``    Multiple items                 ``%``    A block of material
 =====  =============================    =====  =============================
  
 Monsters
@@ -87,13 +89,13 @@ Monsters
 ``i``     Icky-Thing          ``I``    Insect
 ``j``     Jelly               ``J``    Snake
 ``k``     Kobold              ``K``    Killer Beetle
-``l``     Tree/Ent            ``L``    Lich
+``l``     Lemming             ``L``    Reptile/Amphibian
 ``m``     Mold                ``M``    Multi-Headed Hydra
 ``n``     Naga                ``N``    (unused)
 ``o``     Orc                 ``O``    Ogre
 ``p``     Human "person"      ``P``    Giant "person"
 ``q``     Quadruped           ``Q``    Quylthulg (Pulsing Flesh Mound)
-``r``     Rodent              ``R``    Reptile/Amphibian
+``r``     Rodent              ``R``    Robot
 ``s``     Skeleton            ``S``    Spider/Scorpion/Tick
 ``t``     Townsperson         ``T``    Troll
 ``u``     Minor Demon         ``U``    Major Demon
@@ -108,10 +110,10 @@ The Town Level
 ==============
 
 The town level is where you will begin your adventure. The town consists of
-eight buildings (each with an entrance), some townspeople, and a wall which
-surrounds the town and may contain streams of lava. The first time you are
-in town it will be daytime, but note that the sun rises and falls (rather
-instantly) as time passes.
+several buildings (each with an entrance), some townspeople, and a wall
+which surrounds the town and may contain streams of lava. The first time you
+are in town it will be daytime, but note that the sun rises and falls
+(rather instantly) as time passes.
 
 Townspeople
 ===========
@@ -137,7 +139,7 @@ Town Buildings
 ==============
 
 Your character will begin their adventure with some basic supplies, and some
-extra gold with which to purchase more supplies at the town stores.
+extra cash with which to purchase more supplies at the town stores.
 
 You may enter any open store to buy items of the appropriate type.
 The price the shopkeeper requests is dependent on the price of the item.
@@ -159,7 +161,7 @@ game turns have passed, but the inventory will never change while you are
 in town, even if you save the game and return. You must be in the dungeon
 for the store to restock. Also, if you sell them an item, it may get sold
 to a customer while you are adventuring, so don't always expect to be able
-to get back everything you have sold. If you have a lot of spare gold, you
+to get back everything you have sold. If you have a lot of spare cash, you
 can purchase every item in a store, which will induce the store owner to
 bring out new stock, and perhaps even retire.
 
@@ -170,11 +172,11 @@ If it is a good object, they will add it to their inventory. If it was a bad
 bargain, they simply throw the item away. You can use this feature to learn
 item flavors.
 
-The General Store (``1``)
-  The General Store sells foods, some clothing, torches, oil, shovels and
-  picks. All of these items and some others can be sold back to the general
-  store for money. The general store restocks like every store, but the
-  inventory types never change.
+The Convenience Store (``1``)
+  The Convenience Store sells foods, some shoes and clothing, digging tools,
+  ammunition, lights and batteries. All of these items and some others can
+  be sold back to the convenience store for money. The convenience store
+  restocks like every store, but the inventory types don't change very much.
 
 The Armoury (``2``)
   The Armoury is where the town's armour is fashioned. All sorts of
@@ -183,23 +185,22 @@ The Armoury (``2``)
   armoury. However, some armour types will never appear here unless you
   sell them.
 
-The Weaponsmith's Shop (``3``)
-  The Weaponsmith's Shop is where the town's weapons are fashioned. Hand
-  and missile weapons may be purchased and sold here, along with arrows,
-  bolts, and shots. As with the armoury, not all weapon types will be
-  stocked here, unless they are sold to the shop by the player first.
+The Weapon Dealer's Shop (``3``)
+  The Weaponsmith's Shop is where the town's weapons are sold. Hand and
+  missile weapons may be purchased and sold here, along with aummunition.
+  As with the armoury, not all weapon types will be stocked here, unless
+  they are sold to the shop by the player first.
 
 The Electronics Outlet (``4``)
   The Electronics Outlet holds supplies of software cards, and sometimes
   more bulky items. They will buy most cards and also 3D printers and
-  the blocks for them.
+  the blocks of raw materials for them.
 
 The Pharmacy (``5``)
-  The Pharmacy deals in all types of pills, and a few related devices.
+  The Pharmacy deals in all types of pills, and a few medical devices.
 
 The Magic User's Shop (``6``)
-  The Magic User's Shop deals in all sorts of rings, wands, amulets, and
-  devices.
+  The Magic User's Shop deals in all sorts of gadgets and devices.
 
 The Black Market (``7``)
   The Black Market will sell and buy anything at extortionate prices.
@@ -211,6 +212,31 @@ Your Home (``8``)
   This is your house where you can store objects that you cannot carry on
   your travels, or will need at a later date.
 
+Field HQ (``9``)
+  The Space Marines' HQ is only open to Marines. It's a shop with armor,
+  weapons and other equipment - generally at somewhat better prices than
+  other stores - and it also hands out prizes when you are promoted and
+  return. (Promotion means gaining a level and getting a new title.)
+
+Airport (``*``)
+  There are several towns, each with their own dungeon below it. Venturing
+  into the radioactive wasteland outside the town isn't feasible - the only
+  way to get to another town is by air. There's one flight per day to each
+  destination (so you might want to come back later, rather than waste time
+  waiting in the Airport for your flight). You can buy tickets like items
+  in other stores, or browse the tourist information (which gives you some
+  clues as to which dungeon is present, and how difficult it is).
+
+Cyber Salon (``!``)
+  The Cyber Salon deals in cyberware - leg, arm and brain implants - as
+  well as some cyber-adjacent items such as forcefield belts. They will
+  fit and remove cyberware for you at no cost. They are however a private
+  club - you won't be able to see anything on sale from them without first
+  buying your way in by selling cyberware you found to them, at prices that
+  will (for a non-member) be worse even than the Black Market. But persist
+  and you will rise through the ranks, perhaps even eventually becoming a
+  Diamond Hand Member with access to some seriously powerful kit.
+
 Within The Dungeon
 ==================
 
@@ -220,8 +246,8 @@ and use the "Down" command (``>``).
 
 Your character will enter a maze of interconnecting staircases and finally
 arrive somewhere on the first level of the dungeon. Each level of the
-dungeon is fifty feet high (thus dungeon level "Lev 1" is often called "50
-ft"), and is divided into (large) rectangular regions (several times larger
+dungeon is fifty meters high (thus dungeon level "Lev 1" is often called "50
+m"), and is divided into (large) rectangular regions (several times larger
 than the screen) by permanent rock. Once you leave a level by a staircase,
 you will never again find your way back to that region of that level, but
 there are an infinite number of other regions at that same "depth" that you
@@ -234,24 +260,23 @@ survive many horrible and challenging encounters to find the treasure lying
 about and take it safely back to the town to sell.
 
 There are two sources for light once inside the dungeon. Permanent light
-which has been magically placed within rooms, and a light source carried by
-the player. If neither is present, the character will be unable to see.
-This will affect searching, picking locks, disarming traps, reading
-scrolls, casting spells, browsing books, etc. So be very careful not to run
-out of light!
+which has been placed within rooms, and a light source carried by the
+player. If neither is present, the character will be unable to see.
+This will affect searching, picking locks, disarming traps, performing
+techniques, etc. So be very careful not to run out of light!
 
-A character must wield a torch or lamp in order to supply his own light. A
-torch or lamp burns fuel as it is used, and once it is out of fuel, it
-stops supplying light. You will be warned as the light approaches this
-point. You may use the "Fuel" command (``F``) to refuel your lantern (with
-flasks of oil), and it is a good idea to carry extra torches or flasks of 
-oil, as appropriate. There are rumours of objects of exceptional power 
-which glow with their own never-ending light.
+A character must wield a light source in order to supply his own light.
+Most lamps have a limited amount of power available - some can be recharged
+with batteries, while others are disposable. Some are also brighter than
+others. A few are also not really lights at all - make sure to wield any
+unidentified candle you come across and you will identify it soon enough.
 
-These last two paragraphs apply to most classes, but not to necromancers.
-Necromancers dislike light, and shroud themselves in darkness.  They are
-usually better off not carrying a light, but also do not gain any of the
-bonuses that may come from magical light sources.
+When it runs out of charge, it stops supplying light. You will be warned as
+the light approaches this point. You may use the "Fuel" command (``F``) to
+recharge your light (with batteries), and it is a good idea to carry extra
+disposable lamps or batteries, as appropriate. There are some rare items
+which never need to be recharged, but you are unlikely to find one
+immediately.
 
 Objects Found In The Dungeon
 ============================
@@ -281,12 +306,12 @@ full.
 
 You are, however, limited in the total amount of weight that you can carry.
 If you exceed this value, you become slower, making it easier for monsters
-to chase you. Note that there is no upper bound on how much you can carry,
-if you do not mind being slow. Your weight "limit" is determined by your
-strength.
+to chase you. Even if you do not mind being slow, there is also an upper
+bound on how much you can carry. Your weight "limit" is determined by your
+strength. Being slow is dangerous! Try to avoid it as much as possible.
 
 Many objects found within the dungeon have special commands for their use.
-Wands must be aimed, devices must be used, scrolls must be read, and pills
+Wands must be aimed, devices must be used, cards must be run, and pills
 must be taken (or eaten). You may, in general, not only use items in your
 pack, but also items on the ground, if you are standing on top of them. At
 the beginning of the game all items are assigned a random 'flavor'. For
@@ -297,22 +322,22 @@ You can learn what type of item it is by selling it to a store, or using it
 items in stores that you have not yet identified the flavor of will be labeled
 '{unseen}'.
 
-Containerss are complex objects, containing traps, locks, and possibly cash
+Containers are complex objects, containing traps, locks, and possibly cash
 or other objects inside them once they are opened. Many of the commands
-that apply to traps or doors also apply to chests and, like traps and
-doors, these commands do not work if you are carrying the chest.
+that apply to traps or doors also apply to containers and, like traps and
+doors, these commands do not work if you are carrying the container.
 
-One item in particular will be discussed here. The scroll of "Word of
-Recall" can be found within the dungeon, or bought at the alchemist in town.
-All classes start with one of these scrolls in their inventory. It acts in
-two manners, depending upon your current location. If read within the
+One item in particular will be discussed here. The "recall" card can be
+found within the dungeon, or bought at the electronics outlet in town.
+All characters start with one of these scrolls in their inventory. It acts
+in two manners, depending upon your current location. If read within the
 dungeon, it will teleport you back to town. If read in town, it will
 teleport you back down to the deepest level of the dungeon which your
-character has previously been on. This makes the scroll very useful for
-getting back to the deeper levels of Angband. Once the scroll has been read
-it takes a while for the spell to act, so don't expect it to save you in a
+character has previously been on. This makes the card very useful for
+getting back to the deeper levels of Xygos. Once the card has been run
+it takes a while for the effect to act, so don't expect it to save you in a
 crisis. During this time the word 'recall' will appear on the bottom of the
-screen below the dungeon. Reading a second scroll before the first takes
+screen below the dungeon. Running a second card before the first takes
 effect will cancel the action.
 
 You may "inscribe" any object with a textual inscription of your choice.
@@ -322,31 +347,31 @@ inscriptions containing any text of the form '@#' or '@x#' or '!x' or
 '!*', see 'customize.txt'.
 
 The game provides some "fake" inscriptions to help you keep track of your 
-possessions. Weapons, armor and jewellery which have properties you don't
-know about yet will get a '{??}' label.  Wands, devices and rods can get a 
-'{tried}' label after use, particularly if they have an effect on a monster
-and were tested in the absence of monsters.
+possessions. Weapons, armor and equipment which have properties you don't
+know about yet will get a '{??}' label.  Wands, devices and gadgets can get
+a  '{tried}' label after use, particularly if they have an effect on a
+monster and were tested in the absence of monsters.
 
-It is rumored that rings of power and extra rare spell books may be found
-deeper in the dungeon...
+It is rumored that many strange and powerful items not described here may
+be found deeper in the dungeon...
 
 And lastly, a final warning: not all objects are what they seem. The line
 between tasty food and a poisonous mushroom is a fine one, and sometimes a
-chest full of treasure will grow teeth in its lid and bite your hand off...
+safe full of treasure will grow teeth in its lid and bite your hand off...
 
-Cursed Objects
+Faulty Objects
 ==============
 
-Some objects, often objects of great power, have been cursed. There are many
-curses in the game, and they can appear on any wearable object. Curses may
-have a negative (or sometimes positive) effect on an object's properties, or
-cause bad things to happen to the player at random.
+Some objects, often objects of great power, have developed faults. There
+are many faults in the game, and they can appear on any wearable object.
+Faults may have a negative (or sometimes positive) effect on an object's
+properties, or cause bad things to happen to the player at random.
 
-You can choose to wear the object in spite of its curses, or attempt to
-uncurse it using magic.  A warning: failed uncursing leads to the object
-becoming fragile, and a fragile object may be destroyed on future curse removal
-attempts.  It is up to you to balance the risks and rewards in your use
-of cursed items.
+You can choose to wear the object in spite of its faults, or attempt to
+repair it using a card or technique.  A warning: failed repairing leads
+to the object becoming fragile, and a fragile object may be destroyed on
+future repair attempts.  It is up to you to balance the risks and rewards
+in your use of faulty items.
 
 Mining
 ======
@@ -357,10 +382,9 @@ mined. Quartz veins are the richest, yielding the most metals and gems, but
 magma veins will have some hoards hidden within.
 
 Mining is rather difficult without a pick or shovel. Picks and shovels have
-an additional magical ability expressed as '(+#)'. The higher the number,
-the better the magical digging ability of the tool. A pick or shovel also
-has plusses to hit and damage, and can be used as a weapon, because, in
-fact, it is one.
+an additional ability expressed as '(+#)'. The higher the number, the better
+the digging ability of the tool. A pick or shovel also has plusses to hit
+and damage, and can be used as a weapon, because, in fact, it is one.
 
 When a vein of quartz or magma is located, the character may wield his pick
 or shovel and begin digging out a section. When that section is removed, he
@@ -373,14 +397,16 @@ wonderful source of easy treasure.
 
 If the character has a card, device, or other means of treasure location,
 they can immediately locate all strikes of treasure within a vein shown
-on the screen. This makes mining much easier and more profitable.
+on the screen. This makes mining much easier and more profitable. (These
+items also locate objects on the floor, and so are still useful once you
+have advanced to the point where you don't care about mining.)
 
 Note that a character with high strength and/or a heavy weapon does not
 need a shovel/pick to dig, but even the strongest character will benefit
 from a pick if trying to dig through a granite wall.
 
 It is sometimes possible to get a character trapped within the dungeon by
-using various magical spells and items. So it can be a good idea to always
+using various techniques and items. So it can be a good idea to always
 carry some kind of digging tool, even when you are not planning on
 tunneling for treasure.
 
@@ -397,14 +423,14 @@ There are many traps located in the dungeon of varying danger. These traps
 are hidden from sight and are triggered only when your character walks over
 them. If you have found a trap you can attempt to |``D``isarm| it, but
 failure may mean activating it.  Traps can be physical dangers such as pits,
-or magical runes or inscriptions which will cause an effect when triggered.
+or machinery which will cause an effect when triggered.
 Your character may be better at disarming one of these types of traps than
 the other.
 
 .. |``D``isarm| replace:: ``D``\isarm
 
 All characters have a chance to notice traps when they first come into view
-(dependent on searching skill). Some players will also get access to magical
+(dependent on searching skill). Some players will also get access to other
 means of detecting all traps within a certain radius. If you cast one of these
 spells, there will be a 'Dtrap' green label on the bottom of the screen, below
 the dungeon map.
@@ -496,38 +522,89 @@ You may also consult it by checking the LF: indicator at the bottom
 left of the screen. The first number after it is the level feeling
 and the second one is the object feeling. The second one will be ?
 if you need to explore more before getting a feeling about the value
-of the treasures present in the dungeon.
+of the treasures present in the dungeon. Note that if you don't get any
+feelings, then you have probably turned feelings off (it's a birth option).
+You can also get feelings ten times faster with the talent "Emotional
+Intelligence."
+
 
 Winning The Game
 ================
 
-If your character has killed Sauron (a difficult task), who lives on level
-99 (4950') in the dungeon, a magical staircase will appear that will allow
-you to finally reach level 100. Morgoth lurks on this level of his dungeon,
-and you will not be able to go below his level until you have killed him.
-Try to avoid wandering around on level 100 unless you are ready for him,
-since he has a habit of coming at you across the dungeon, the Mighty Hammer
-'Grond' in hand, to slay you for your impudence.
+If your character has killed Holo-Triax (on level 25 of the Fortress), a
+way down will become available. Continue to level 50, and you will need to
+deal with Impy. Descend to level 75, and Robo-Triax blocks your path.
+Continue to level 100, and Triax himself will show up. Kill him and you'll
+be allowed to fly to the space station (from any airport). This is too far
+out to recall back to town from, and it's a one-way trip from then on: the
+stairs up are locked, while the airlocks on each stair down seal behind
+you. So don't get on that rocket until you are ready for it!
 
-If you should actually survive the attempt of killing Morgoth, you will
+These five are all (for their level) challenging opponents. If you aren't
+ready for them, don't enter their level - they won't wait around but will
+chase you down, smashing walls out of the way to reach you and slay you for
+your impudence.
+
+If you should actually survive the attempt of destroying the Core, you will
 receive the status of WINNER. You may continue to explore, and may even save
 the game and play more later, but since you have defeated the toughest
-creature alive, there is really not much point. Unless you wish to listen
-to the rumors of a powerful ring buried somewhere in the dungeon, or a suit
-of dragon scale mail that resists everything...
+creature alive, there is really not much point.
 
 When you are ready to retire, simply kill your character (using the ``Q`` key)
 to have your character entered into the high score list as a winner. Note
 that until you retire, you can still be killed, so you may want to retire
-before wandering into yet another horde of greater demons.
+before wandering into yet another horde of cyberpsychos.
+
+
+Other Goals
+===========
+
+The five essential opponents described above all drop a special item of
+some description - some are always the same, some are randomized. They also
+get you unusually large emounts of experience.
+
+There are various other special opponents with interesting drops and extra
+experience as a reward for defeating them. You don't actually have to, but
+it's usually recommended to do at least some of these side tasks. Of the
+six underground areas, one is the Fortress (where the essential opponents
+lurk). Each of the others has an opponent waiting on the lowest level, and
+they all have loot. Two of them - because they were terrorizing the town -
+also improve your standing with the store owners. If killed early enough
+they will also hold off the increasing danger level for a while.
+
+There are also a number of town quests. These are accessed by ``Q`` at any
+store. (Not every store has a task, so you'll need to look around - and
+visit new towns.) Their goals vary, but typically accepting the quest will
+create a stair down from the town somewhere (it may not be obvious until
+you have hunted around a bit). You can wait as long as you want before
+entering it, and you can get an idea of how difficult it will be from the
+"active tasks" knowledge menu: ``~``. When you do enter, you will end up in
+a special level with some task (collect items, kill monsters...) to
+complete, before returning to the town. If you then return to the store
+and press ``Q`` again, you'll be rewarded. (There is one quest with an
+alternate way to complete it...)
+Generally there is nothing stopping you from running away from a quest
+without completing it, but this will fail it - you only get one shot. You
+probably won't get a reward, and you may be blocked from later quests.
+Despite this, if the situation gets too hot you should remember that town
+quests aren't essential and bravely run away.
+
 
 Upon Death and Dying
 ====================
  
-If your character falls below 0 hit points, they have died and cannot be
-restored. A tombstone showing information about your character will be
-displayed. You are also permitted to get a record of your character, and
-all your equipment (identified) either on the screen or in a file.
+If your character falls below 0 hit points, they may die. (You may or may
+not survive for a few turns with negative hit points. You won't heal
+naturally, and will suffer nasty effects such as drained stats and levels.
+Your only hope is to heal immediately!)
+A dying Time-Lord will try to regenerate into a new form. This is always
+chancy, especially so at lower levels and works only a limited number of
+times (it's displayed on your character sheet).
+But assuming that you don't manage to save yourself from the brink of death
+in some way, a dead character cannot be restored. A tombstone showing
+information about your character will be displayed. You are also permitted
+to get a record of your character, and all your equipment (identified)
+either on the screen or in a file.
 
 Your character will leave behind a reduced save file, which contains only
 your option choices. It may be restored, in which case a new character is

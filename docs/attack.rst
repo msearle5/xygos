@@ -5,36 +5,37 @@ Attacking monsters
 Attacking and Being Attacked
 ============================
 
-Attacking is simple in Angband. If you move into a creature, you attack it.
-You can attack from a distance by firing a missile or by magical means
-(such as aiming a wand). Creatures attack in the same way. If they move
-into you, they attack you. Some creatures can also cast spells from a
+Attacking is simple in Xygos. If you move into a creature, you attack it.
+You can attack from a distance by firing a missile or by other means
+(such as aiming a gadget). Creatures attack in the same way. If they move
+into you, they attack you. Some creatures can also shoot at you from a
 distance, and others can use various breath weapons (such as fire) on you
 from a distance.
 
-Creatures in walls can not be attacked by wands or other magic attacks
-normally stopped by walls, nor can they be shot at with bows and arrows.
+Creatures in walls can not be attacked by devices or attack techniques
+normally stopped by walls, nor can they be shot at with guns.
 Tunnelling into the wall (using the "tunnel" or "alter" command) will allow
 you to attack any creature in the wall with your main weapon. This applies
 to creatures which "pass through" walls: if they "bore through" walls, the
 wall is no longer there, and the creature can be targeted normally.
 
 If you are wielding a weapon, the damage for the weapon is used when you
-hit a creature. Otherwise you get a single punch which does minimal damage.
+hit a creature. Otherwise you get a single punch which typically does
+minimal damage. (Wrestlers do learn to become effective in unarmed combat.
+They need to avoid heavy armor to get much of an advantage, though.)
 
 You may ``w``\ield one weapon for melee combat, and also one missile
-launcher (bow, crossbow or sling). You may also wear one amulet (around the
-one and only neck of the character), two rings (on the two "ring" fingers,
-i.e. the third finger of each hand: a magic ring does not function when
-worn on any other finger, nor may two be worn on the same finger), one
-light source, and a full set of armor - body armor, shield, helmet, gloves,
-boots and a cloak. Any or all of these items may provide powers to the
-character in terms of bonuses to-hit, to-damage, to-armor class, or to
-other stats.
+launcher (handgun or rifle). You may also wear one light source, and a full
+set of armor - body armor, shield, helmet, gloves, boots and a cloak. Most
+characters can also wear arm, leg and brain ("chip") cyberware - though
+they must visit the Cyber Salon in town to add or remove it. (Androids,
+being 100% electronic already are the exception.)
+Any or all of these items may provide powers to the character in terms of
+bonuses to-hit, to-damage, to-armor class, or to other stats.
 
 Firing a missile (while wielding the appropriate launcher) is the only way
 to get the "full" power out of the missile. You may of course throw an
-arrow at a monster without shooting it, but you will find the effects will
+bullet at a monster without firing it, but you will find the effects will
 not be what you had hoped.
 
 Hits and misses are determined by ability to hit versus armor class. A hit
@@ -52,7 +53,7 @@ other types of monsters differently.
 Monster Memories
 ================
 
-There are hundreds of different creatures in the pits of Angband, many of
+There are hundreds of different creatures in the fortress of Xygos, many of
 which have the same letter symbol and color on the screen. The exact
 species of a creature can be discovered by |``l``ooking| at it. It is also
 very difficult to keep track of the capabilities of various creatures.
@@ -75,11 +76,11 @@ currently resist a specific attack. Red or orange means you do not resist
 it, yellow means you partially resist it, and green means you resist it or
 are immune. If you attack a monster with specific elemental attacks you will
 learn if the monster resists that element or if they are immune. There are
-other magical means to learn about monster's abilities that don't require
-you to actually experience the attacks.
+other means ("probing") to learn about monster's abilities that don't
+require you to actually experience the attacks.
 
 This memory can be used by all your characters; it is stored in a file
-called 'lore.txt' in your user directory (~/.angband/Angband in Linux,
+called 'lore.txt' in your user directory (~/.angband/Xygos in Linux,
 lib/user in Windows, Documents/Angband in macOS).
 
 Your Weapon
@@ -366,7 +367,7 @@ A note on speed
 
 Monsters which do not move at normal speed generally move "slowly" (-10 to
 speed), "fairly quickly" (+5), "quickly" (+10), "very quickly" (+20) or
-"incredibly quickly" (+30). (It will surprise nobody that Morgoth is one of
+"incredibly quickly" (+30). (It will surprise nobody that Triax is one of
 the few monsters in the last category.) This is further adjusted by the fact
 that any non-unique monster may have a random adjustment from (-2) to (+2)
 to its own speed.
@@ -406,8 +407,8 @@ to continue. Ego weapons are denoted by the following "names":
 
 Ego Melee Weapons:
 ------------------
-(Defender)
-  A magical weapon that actually helps the wielder defend himself, thus
+Defensive Weapons
+  A weapon that actually helps the wielder defend himself, thus
   increasing his/her armor class, and protecting him/her against damage
   from fire, cold, acid, lightning, and falls. This weapon also will
   increase your stealth, let you see invisible creatures, protect you from
@@ -417,251 +418,225 @@ Ego Melee Weapons:
   powerful weapons also will sustain one stat, though this stat will vary
   from weapon to weapon.
 
-(Holy Avenger)
-  A Holy Avenger is often one of the most powerful weapons. A Holy Avenger
-  will increase your wisdom and your armour class. This weapon will do
-  extra damage when used against evil, demonic and undead creatures, and
-  will also give you the ability to see invisible creatures. These weapons
-  are basically extremely powerful versions of Blessed Blades and can be
-  wielded by priests with no penalty. These weapons, like (Defender)
-  weapons, also will sustain one random stat.
-
-(Blessed)
-  A blessed blade will increase your wisdom. If you are a priest, wielding
-  a non-blessed sword or polearm causes a small penalty while attacking and
-  may infuriate your god, decreasing the chances that she will accept your
-  prayers: a blessed blade may be wielded without this penalty. Blessed
-  blades also have one extra, random, power.
-
-Weapon of Westernesse
-  A Weapon of Westernesse is one of the more powerful weapons. It does
-  extra damage against orcs, trolls, and giants, while increasing your
-  strength, dexterity, and constitution. It also lets you see invisible
-  creatures and protects from paralyzation and some slowing attacks. These
-  blades were made by the Dunedain.
-
-Weapon of Extra Attacks
-  A weapon of extra attacks will allow the wielder to deliver extra attacks
+Swinger Weapons
+  A swinger weapon will allow the wielder to deliver extra attacks
   during each round.
+
+Furious Weapons
+  A furious weapon is a super-swinger: it also grants extra blows, but makes
+  each blow more powerful and boosts your strength. It's not an unmixed
+  blessing, though, as it aggravates everything around you.
 
 Elemental Branded Weapons
   Each of the five elemental attacks has a corresponding weapon which will
   do treble its base damage to creatures not resistant to that element. (It
-  should be noted that the magical damage bonus is not affected by this: a
-  weapon of Flame '(2d6) (+5,+6)' does 6d6+6 damage per hit, not 6d6+18,
-  against creatures which are not fire-resistant.) There are weapons of
-  Flame, Frost, Lightning, Acid and Poison brands.
+  should be noted that the force-enhancement damage bonus is not affected by
+  this: a 'flaming weapon (2d6) (+5,+6)' does 6d6+6 damage per hit, not
+  6d6+18, against creatures which are not fire-resistant.) There are acidic,
+  shocking, flaming, freezing and venomous branded weapons. All but poison
+  also grant resistance to their element.
 
 Weapons of Slaying enemies
   These weapons do extra damage against creatures of a vulnerable type.
-  Weapons of Slay Evil and Slay Animal do double the base damage, while
-  weapons of Slay Orc, Troll, Giant, Dragon, Demon and Undead do triple the
-  base damage. As with elemental branded weapons, the magical damage bonus
-  is not affected.
+  The widely applicable "opinionated" (versus evil) and "mighty hunter"
+  (versus animals) do double the base damage, while the more specialized
+  weapons - with fewer possible targets - do triple the base damage. As
+  with elemental branded weapons, the force-enhancement damage bonus is
+  not affected. They typically have some relevant additional powers: for
+  example, "mighty hunter" weapons will have some combination of stealth,
+  IR vision, intelligence and animal sensing.
 
 Weapons of |*Slay*ing| enemies
-  These weapons, in addition to doing extra damage to your enemies, have
-  extra powers as well. In each case, one stat is increased. Weapons of
-  |*Slay*| Dragon, Demon or Undead are also more powerful against their
-  opponents, doing five times their base damage rather than the normal
-  three.
+  These weapons are similar but more powerful - with more extra powers
+  (albeit often randomized ones), increased stats and more damage done
+  against their preferred opponents.
 
-Shovels and Picks of Digging
+Powered and High Impact digging tools
   These powerful diggers will dig through granite as if it were mere wood,
   and mineral veins as if they were butter. Permanent rock is still an
   impassable obstacle.
 
 Ego Missile Launchers and Ammo:
 -------------------------------
-Launchers of Accuracy
-  These launchers have an unnaturally high to-hit number, making them
-  extremely accurate.
+Precision Guns
+  These have an unusually high to-hit number, making them extremely
+  accurate.
 
-Launchers of Power
-  These launchers do an unnaturally high amount of damage due to their high
-  to-dam number.
+High-Power Guns
+  These do an unusually high amount of damage due to their high to-dam
+  number.
 
-Launchers of Extra Shots
-  These launchers allow the wielder to shoot more times per round than
-  normal.
+Automatic Guns
+  These allow the wielder to shoot more times per round than normal.
 
-Launchers of Extra Might
-  These launchers have a higher base damage than normally made launchers of
-  their type. For instance, a 'Long Bow of Extra Might (x3)(+X,+Y)(+1)'
-  is really a Long Bow '(x4)(+X,+Y)' where '(+X,+Y)' is the standard
+Cyberaugmented Guns
+  These guns have a higher base damage than conventional guns of their
+  type. For instance, a 'augmented 6mm rifle (x3)(+X,+Y)(+1)'
+  is really a '6mm rifle (x4)(+X,+Y)' where '(+X,+Y)' is the standard
   to-hit and to-dam. As the damage multiplier with the bow affects
-  **everything** the base arrow damage, the magical damage bonus on both
-  the bow and the arrow, and any bonuses for slaying or elemental-branded
-  arrows - this makes it a powerful weapon.
+  **everything** - the base ammo damage, the damage bonus on both
+  the gun and the ammo, and any bonuses from fancy ammunition - this makes
+  it a powerful weapon. These weapons also have various additional powers.
+  Boosted dexterity, rapid fire and free action (immunity to paralysis)
+  are the most common.
 
-Ammo of Wounding
-  This ammunition - whether it be pebbles, iron shots, arrows, bolts,
-  seeker arrows or seeker bolts - has big bonuses to-hit and to-damage.
+Guided Ammo
+  This ammunition has big bonuses to-damage and (especially) to-hit - you
+  can "spray and pray" with a high chance of still hitting the mark.
 
 Ammo of Elemental Brands, and Ammo of Slaying enemies
   This works in the same way as melee weapons of the same type: double
-  damage for slay evil and slay animal, triple damage for all other slays
+  damage for "lawgiver" and "hunting", triple damage for all other slays
   and for all elemental brands. Unlike melee weapons, the slays and
-  elemental brands **do** affect the magical damage bonus for ammo.
+  elemental brands **do** affect the force-enhancement damage bonus for
+  ammo.
 
-These are the most common types of ego-weapon: note that they are not the 
-ONLY ego-items available in the dungeon, there may be more.
+These are some of the most common types of ego-weapon: note that they are
+not the ONLY ego-items available in the dungeon, there are many more.
 
 Apart from these there are some very rare and well made weapons in the
-dungeon with not necessarily any special abilities. These include Blades
-of Chaos, Maces of Disruption, and Scythes of Slicing.  They can also be
-ego weapons like the ones above.  For example, a Blade of Chaos (Holy
-Avenger) is much more powerful than many artifact weapons!
+dungeon with not necessarily any special abilities. These include holowhips,
+various kinds of lightsabers and crystal knives. They can also be ego
+weapons like the ones above.  For example, a furious dual prismatic
+lightsaber is much more powerful than many artifact weapons!
 
 Some pieces of armor will possess special abilities denoted by the following
 names:
 
 Ego Armors and Shields:
 -----------------------
-of Resist Acid, Lightning, Fire or Cold
+Fireproof, Polarized, Stainless and Shockproof Armor
   A character wearing armor or a shield with one such resistance will take
-  only 1/3 of normal damage from attacks involving the relevant element of
+  only 1/2 of normal damage from attacks involving the relevant element of
   acid, lightning, fire or cold. Note that multiple permanent sources of
-  resistance are NOT cumulative: wearing two is no better than wearing one.
-  However, armor which provides resistance to acid cannot itself be damaged
-  by acid, and this is a good reason to wear more than one such piece of
+  resistance are cumulative: wearing two is better than wearing one.
+  Additionally, armor which provides resistance to acid cannot itself be
+  damaged by acid - one more good reason to wear more than one such piece of
   armor.
  
-of Resistance
+Resistant Armor
   A character wearing armor with this ability will have resistance to Acid,
   Cold, Fire, and Lightning as explained in each part above.
 
-Armor of Elvenkind
-  This is the same as Resistance armor, only generally better enchanted. It
-  will make you more stealthy. This armor also possesses an extra
-  resistance, at random from the following list: poison, light, dark,
-  nexus, nether, chaos, disenchantment, sound, and shards.
+**Fireproof**, **Polarized**, **Stainless** and **Shockproof** Armor
+  These are similar to Resistant armors, but also have double resistance to
+  one element - equivalent to wearing two armors of that element, and so
+  you would take only 1/3 normal damage.
 
-Robes of Permanence
-  These robes are designed especially for wizards. Just like Elvenkind
-  armor, they provide resistance to fire, cold, acid, and electricity and
-  cannot be damaged by acid. They sustain all of your stats and protect you
-  from a good deal of all experience draining. Also like Elvenkind armor,
-  they have one random resistance.
+Creeper Armor
+  This is the same as Resistance armor, only generally better made. It
+  will make you more stealthy. This armor also possesses an extra resistance
+  or other power, selected at random.
 
-Dragon Scale Mails
-  These extremely rare pieces of armour come in many different colors, each
-  protecting you against the relevant dragons. Naturally they are all
-  resistant to acid damage. They also occasionally allow you to breathe as
-  a dragon would.  Dragon Scale Mails can also have egos as well.
+Permanent Armor
+  Only appearing on soft, light armor. Just like Creeper armor, they
+  provide resistance to fire, cold, acid, and electricity and cannot be
+  damaged by acid. They sustain all of your stats and protect you
+  from a good deal of all experience draining. Also like Creeper armor,
+  they have one random resistance (a ``high`` resistance, that is not
+  an elemental one).
 
 Ego Helms:
 ----------
 Stat Boosting Helms
-  There are magical helms found in the dungeon that have the ability to
-  boost the wearer's intelligence or wisdom. In addition to boosting the
-  relevant stat these helms will also prevent that stat from being drained.
+  There is headgear found in the dungeon that has the ability to boost the
+  wearer's intelligence or wisdom. In addition to boosting the relevant stat
+  these helms will also prevent that stat from being drained.
 
-Crown of the Magi
-  This is the great crown of the wizards. The wearer will have an increased
-  (and sustained) intelligence, and will also be given resistance against
-  fire, frost, acid, and lightning. These valuable helms also have an
-  additional random power.
+Body Power
+  The wearer will have an increased and sustained strength, dexterity, and
+  constitution, and will also be immune to any foe's attempt to slow or
+  paralyze him or her.
 
-Crown of Might
-  This is the crown of the warriors. The wearer will have an increased and
-  sustained strength, dexterity, and constitution, and will also be immune
-  to any foe's attempt to slow or paralyze him or her.
+Laser Op
+  Well suited to rogues - the wearer will be able to see invisible
+  creatures, and will have an increased ability to locate traps. It is also
+  rumored that the wearer of such a helm will not be able to be blinded.
 
-Crown of Lordliness
-  This is the great crown of the priests. The wearer will have an increased
-  and sustained wisdom.
-
-Helm/Crown of Seeing
-  This is the great helmet or crown of the rogues. The wearer will be able
-  to see invisible creatures, and will have an increased ability to locate
-  traps. It is also rumored that the wearer of such a helm will not be able
-  to be blinded.
-
-Helm of Infravision
+Infravisor
   This helmet allows the character to see monsters even in total darkness,
-  with the ability to see heat. Note that spellbooks are the same
-  temperature as the surroundings, and so cannot be read unless some real
-  light is present. (Some monsters which are invisible to normal vision can
-  be seen under infravision.)
+  with the ability to see heat. Note that your equipment is the same
+  temperature as the surroundings, and so this doesn't allow you to use
+  any equipment that requires light. (Some monsters which are invisible to
+  normal vision can be seen under infravision.)
 
 Helm of Light
   In addition to providing a permanent light source for the wearer, this
   helm also provides resistance against light-based attacks.
 
-Helm/Crown of Telepathy
-  This helm or crown grants the wearer the power of telepathy.
+Sensor Helm
+  This hat grants the wearer the power of telepathy.
 
-Helm of Regeneration
-  This helm will help you regenerate hit points and mana more quickly than
-  normal, allowing you to fight longer before needing to rest. You will use
-  food faster than normal while wearing this helm because of the
-  regenerative effects.
+Regenerator
+  This helm will help you regenerate hit points more quickly than normal,
+  allowing you to fight longer before needing to rest. You will use food
+  faster than normal while wearing this helm because of the regenerative
+  effects.
 
- 
 Ego Cloaks:
 -----------
-Cloak of Protection
-  This finely made cloak will come with an unnaturally high enchantment and
-  is not affected by elemental based attacks.
+Armored
+  A thin layer of flexible, lightweight armor has been added as a first
+  line of defence against flying shrapnel.
 
-Cloak of Stealth
-  This cloak will increase the wearer's stealth, making the wearer less
-  likely to wake up sleeping monsters.
-
-Cloak of Aman
-  These exceptionally rare cloaks provide great stealth, have a very high
-  enchantment, and one random resistance.
+Stealth Mod
+  Urban camo. Dappled grey with all the typically shiny fasteners dull
+  black, and moving with a minimum of rustling. These garments will
+  increase the wearer's stealth, making the wearer less likely to wake up
+  sleeping monsters.
 
 Ego Gloves:
 -----------
-Gloves of Free Action
+Freemover
   The wearer of these gloves will find himself resistant to paralyzing
-  attacks as well as some slowing attacks. Because of the special nature of
-  these gloves, magic users may wear these gloves without incurring a mana
-  penalty.
+  attacks as well as some slowing attacks.
 
-Gloves of Slaying
+Combat
   These gloves will increase the wearer's fighting ability by boosting the
   wearer's to-hit and to-dam values.
 
-Gloves of Agility
-  These gloves will increase the wearer's dexterity. Because of the special
-  nature of these gloves, magic users may wear these gloves without
-  incurring a mana penalty.
+Augmented
+  These gloves will increase the wearer's dexterity.
 
-Gauntlets of Power
+Iron Grip
   These spiked gauntlets will boost the wearer's strength as well as the
   wearer's to-hit and to-dam numbers.
 
 Ego Boots:
 ----------
-Boots of Slow Descent
+Retro Rocket Boots
   These boots protect the wearer from the effects of small falls.
 
-Boots of Stealth
-  These boots increase the wearer's stealth, like a Cloak of Stealth.
+Stealth Mod
+  These boots increase the wearer's stealth, like a Stealth Mod Cloak.
 
-Boots of Free Action
+Freemover
   The wearer of these boots will find himself resistant to paralyzing
   attacks as well as some slowing attacks.
 
-Boots of Speed
+Powered Boots
   The wearer of these boots will become unnaturally fast.
 
 Once again, these are not necessarily the ONLY ego-items in the dungeon, 
 only the most common.
 
 Apart from these there are some very rare and well-made armours in the
-dungeon with not necessarily any special abilities. These include Shields
-of Deflection, Adamantite Plate Mail, Mithril Plate Mail, Mithril Chain
-Mail, and Elven Cloaks. The first four cannot be damaged by acid because of
-the quality metals they contain.
+dungeon with not necessarily any special abilities. These include forcefield
+generator belts, shields, body armors and skates (all very light but
+protective), G-suits (good against gravity and inertia), and assorted
+pieces of unobtainium armor (lightweight and very protective). Titanium
+armor is much more common (and heavier, and less protective) - but both
+types cannot be damaged by acid because of the quality metals they contain.
 
 There are rumors of unique "artifact" items in the dungeon - weapons and
 armor of all types. Many of these are more powerful than even the greatest
 ego-items: some are weak and have little more than a name to recommend
 them.
+
+Finally, you will occasionally see an item with two egos. These combinations
+can be very powerful, although the best artifacts will still win out in the
+end.
+
 
 .. |*Slay*| unicode:: *Slay*
 .. |*Slay*ing| unicode:: *Slay*ing

@@ -1,5 +1,12 @@
 BUGS
 ====
+BUG: Armoury and Magic Shop need renaming. And possibly BM.
+BUG: activate coronet: "You activate it. the Coronet of the Core pulses a soft white" (the should be The)
+
+BUG: Pilot with Caveracer still displays Cavespeeder as an available to take talent
+
+BUG: Badly named: "an universal detector" - there is no way to infer a/an reliably from spelling alone, so would have to add a flag (such as a leading character).
+
 BUG: "level X of the fortress" in hiscores: not the actual dungeon (which was the Caverns)
 
 BUG: Shop owners (store_do_fight()) are always male
@@ -10,9 +17,6 @@ BUG: A Collective Skate that a cyborg started with was {??}
 
 BUG? Stuff isn't transported when you fly - should it be? Should there just be 1 house?
 BUG:"You set off the strange rune" and monster spell SHOT need retheming
-
-BUG: Store faction doesn't do anything
-	- Well, it affects the message printed, but that's not actually useful
 
 BUG: Stores which close lose their entrance but don't become ruins. (Only when more than one would?)
 

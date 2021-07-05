@@ -1,47 +1,53 @@
 ===============================
- A Players' Guide to Angband 
+ A Players' Guide to Xygos 
 ===============================
 
 This guide assumes familiarity with the basic mechanics of the game. If you're
-completely new to Angband, check out the user's manual and just start playing,
+completely new to Xygos, check out the user's manual and just start playing,
 get into the dungeon and try, well, whatever seems to be prudent. You'll
 probably die rather quickly, but the following will make much more sense to you
 if you have just a little actual gameplay experience.
 
 This guide was written for Angband 3.5.0, and is now a little out of date
-(although the worst of the obsolete stuff has been cleaned out).  It is still
-a handy source of hints and advice; just don't take it as an authority.
+(although the worst of the obsolete stuff has been cleaned out, and it has been
+reworked again for Xygos).  It is still a handy source of hints and advice; just
+don't take it as an authority.
 
 The basics
 ----------
 
-As borrowed from a classic rgra post, there's not much that you actually have
-to do. Your one and only mission is to slay Morgoth on dungeon level 100. In
-order to get there, you need to go down a lot of stairs and kill Sauron on
-dungeon level 99. That's about it - everything else is optional. Of course,
-before you can kill Sauron you'll need lots of experience and good equipment,
-but by the time you get that deep you'll have both. Just see to it that you
-don't die along the way.
+As borrowed from a classic rgra post (updated for Xygos, but the principle is
+similar), there's not much that you actually have to do. Your one and only
+mission is to destroy the Core on level 120 of the Space Station. In order to
+get there, you need to go down a lot of stairs and kill Triax on level 100 of
+the Fortress. There are a few guards along the way - Holo-Triax at level 25,
+Impy at level 50 and Robo-Triax at level 75. But that's about it - everything
+else is optional. Of course, before you can kill even Holo-Triax you'll need
+lots of experience and good equipment, but by the time you get that deep you'll
+have both. Just see to it that you don't die along the way.
 
 The one and most important thing you need to get in your head is that you can't
 possibly kill every monster on every level. Think of the game as forays into
 the dungeon from which you want to return with cool stuff; think of the
 shallower levels as obstacles you need to overcome on your way deeper into the
 dungeon; or whatever you like. Just never-ever think of it as a killing spree.
-Until you find Sauron, your task is to survive and eventually get to level 99.
+Your task is to survive and eventually get to level 100 of the Fortress.
 
 The next point is that you don't need to fight any particular monster (other
-than the big two). Yes, there might be a rather impressive hoard in that
+than the big five). Yes, there might be a rather impressive hoard in that
 vault – but if the monsters guarding it are too many or too fierce, well, just
-give it a pass. Angband offers an endless supply of monsters and treasure and
+give it a pass. Xygos offers an endless supply of monsters and treasure and
 everything. There will always be another day – provided you live to see another
 day. Sometimes you just have to bug out and run for your life.
 
-So, let me recap, the vital points of Angband are:
+So, let me recap, the vital points of Xygos are:
 
 * go down a lot of stairs
-* kill Sauron (dl 99)
-* kill Morgoth (dl 100)
+* destroy Holo-Triax (dl 25, Fortress)
+* kill Impy (dl 50, Fortress)
+* destroy Robo-Triax (dl 75, Fortress)
+* kill Triax (dl 100, Fortress)
+* destroy the Core (dl 120, Fortress)
 * Quick start
 
 From this point, the guide assumes that you are playing a fighting class
@@ -200,7 +206,7 @@ What to ignore
 * Uniques with escorts you can't dominate
 * Monsters at shallow depth. Drops for any given monster get better the deeper
   you go. Killing a novice mage at dl 1 generally gives nothing; at dl 20 he's
-  likely to drop something worth hundreds of gold. Wormtongue has, on average, a
+  likely to drop something worth hundreds of cash.  Wormtongue has, on average, a
   noticeably better drop at dl 20 than dl 10.
 * Things that waste effort. (Run-away breeders, low-EXP monsters with no drop.
   Just close the door and move on.)
@@ -239,13 +245,15 @@ Additional advice would be greatly appreciated!
 Start simple
 ````````````
 
-Begin your Angband career as a warrior. Warriors are relatively simple to
-begin with, and are less likely to be eaten by a pack of jackals.
+Begin your Xygos career as a soldier. Soldiers are relatively simple to
+begin with, and are less likely to be eaten by a pack of jackals. The
+Athletic personality is also recommended for the ``hit them until they stop
+moving, then hit them again to be sure`` type.
 
 Focus!
 ``````
 
-Angband is a very harsh game, in that the character you've been playing for
+Xygos is a very harsh game, in that the character you've been playing for
 months could be killed by a single careless action. Playing when tired or
 drunk is probably a good way to leave yourself with nothing but a sad tale to
 share on the forums. If you have the ability to sense monsters or traps then
@@ -263,39 +271,37 @@ magic devices, rods wands and devices can be very useful when your mana is
 running low, and allow you access to spells that may not normally be available
 to your class. They are also very useful for dealing with monsters that
 
-Rangers have a bow
+Marksmen have a gun
 ```````````````````
 
-Really a subset of the previous point, but it happens so often... Don't try to
-play a ranger like a warrior -- rely on the bow! Similarly for mages, don't do
-a Gandalf. He may be able to draw a sword and rush headlong in to a pack or
-orcs, but mages in Angband are considerably more fragile. Priests are better
-equipped to engage in melee combat - with their healing abilities compensating
-for their somewhat fragile nature.
+Really a subset of the previous point, but it happens so often... Don't try
+to play a markman like a warrior -- rely on the gun! Similarly for
+engineers, you are considerably more fragile than melee types and should
+make use of devices and your techniques.
 
 Stockpile!
 ``````````
 
 Players may not be inclined to carry multiples of an item, or do so in a
 limited quantity, perhaps due to weight encumbrance concerns. Don't be afraid
-to carry a LOT of an item, particularly the basics -- food, light,
-projectiles, cure potions, "run away" scrolls, etc. Don't be afraid to MAX OUT
-important items! Some monsters will steal or destroy your items, so it's worth
-carrying additional quantities of key items - such as Scrolls of Recall or
-important spell/prayer books. This becomes very important when you reach
-dungeon levels in which monsters develop fire and acid-based attacks. Mages
-and priests tend to start out with low strength, and so are very limited in
-how much stuff they can carry, so consider carrying additional copies of the
-spellbooks that you know you can't afford to lose during a fight.
+to carry a LOT of an item, particularly the basics -- food, light, ammunition,
+curing pills, "run away" cards, etc. Pills and cards in particular weigh
+essentially nothing, so the slot is the only concern. Don't be afraid to MAX
+OUT important items! Some monsters will steal or destroy your items, so it's
+worth carrying additional quantities of key items - such as recall cards.
+This becomes very important when you reach levels in which monsters develop
+fire and acid-based attacks. Characters starting with low strength though
+are very limited in how much stuff they can carry, so you must which items
+are ones that you know you can't afford to lose during a fight.
 
 An item you don't use is useless
 ````````````````````````````````
 
-Common fallacy: you find an incredibly powerful Device of Mighty BOOM! (3
-charges), or a single Potion of become Chuck Norris, and then you keep
+Common fallacy: you find an incredibly powerful device of Mighty BOOM! (3
+charges), or a single pill of become Chuck Norris, and then you keep
 carrying it around and never actually use it. It could be a life insurance,
 but you might still reconsider your strategy: maybe you've become too careful
-lately (Angband rewards deliberate risk-taking, after all).
+lately (Xygos rewards deliberate risk-taking, after all).
 
 Identifying your items
 ``````````````````````
@@ -315,14 +321,15 @@ or fired at a monster, and typically the worst thing that can happen is that
 the attack does little damage to the monster. As with devices, wands and rods,
 do this when facing a monster than can be easily defeated.
 
-Scrolls can normally be identified by being read, but some scrolls have
-negative effects. Your character may have a very short life if they read a
-scroll that summons a horde of undead monsters. If using this approach, it's a
+Cards can normally be identified by being read, but some cards have negative
+effects. Your character may have a very short life if they run a card that
+teleports in a horde of defence drones. If using this approach, it's a
 good idea to position your character on top of some stairs so you can quickly
-escape if a mysterious scroll leaves your character surrounded by monsters.
+escape if a mysterious card leaves your character surrounded by monsters.
 
-With weapons and armour, your character will in time learn their inscribed
-runes.
+With weapons and armour, your character will in time learn their icons, but
+the identity card is a very useful shortcut. You'll also learn them when you
+sell them to a store.
 
 The dungeon is dark
 ```````````````````
@@ -371,11 +378,11 @@ Black Market Deals
 
 Don't be afraid to buy from the "blackmarket". Sure the prices are more
 expensive than the other stores, but it tends to offer a good selection of
-items and it can be worth the gold versus not having it in the dungeon. You
-can always get more gold, but the RNG is random. It's just another store --
+items and it can be worth the cash versus not having it in the dungeon. You
+can always get more cash, but the RNG is random. It's just another store --
 don't worry about the name. The blackmarket is often a good source of potions
 to increase your stats, so it's worth checking it each time you visit the town
-- and try to have enough gold to purchase potions for the most important stats
+- and try to have enough cash to purchase potions for the most important stats
 for your character.
 
 Try a Different Strategy

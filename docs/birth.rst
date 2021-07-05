@@ -2,25 +2,29 @@
 Creating a Character
 ====================
 
-Angband is a roleplaying game, in which you, the player, control a
-character in the world of Angband. Perhaps the most important thing you
+Xygos is a roleplaying game, in which you, the player, control a
+character in the world of Xygos. Perhaps the most important thing you
 control is the birth of your character, in which you choose or allow to be
 chosen various attributes that will affect the future life of your
 character.
 
 At the character creation screen you will be prompted to select the
-race and class of your character. You also have the option to change the
-'birth options' at this time. These need to be set at the character
-creation menu and cannot be altered later in the game. They are discussed
-with the rest of the options in the "options" help file.
+race, extension, personality and class of your character. You also have
+the option to change the 'birth options' at this time. These need to be
+set at the character creation menu and cannot be altered later in the game.
+They are discussed with the rest of the options in the "options" help file.
+You will also be asked to select talents. Most can be gained at any time
+in the game (press ``S``), but there are a few which can only take effect
+at birth. 
 
 Character Characteristics
 =========================
 
-Each character has two primary attributes: race and class. These
-are chosen at the beginning and which will stay fixed for the entire life
-of that character. The race and class have many effects which are discussed
-in detail below.
+Each character has four primary attributes: race, extension, personality
+and class. These are chosen at the beginning and - with some exceptions
+described below - will stay fixed for the entire life of that character.
+The race, extension and class have many effects which are discussed in
+detail below.
 
 Each character has a few secondary attributes: height, weight, and
 background history. These are randomly determined according to the race of
@@ -28,16 +32,16 @@ the character, and are only used to provide flavour to the character to
 assist in role playing.  There is an opportunity to edit background history
 during character birth.
 
-Each character also has five primary "stats": strength, intelligence,
-wisdom, dexterity, and constitution; they modify the abilities
-of the character in a variety of ways. Every stat has a numerical value,
-ranging from a minimum of 3, up to a normal maximum of 18, and even higher,
-into the "percentile" range, represented as '18/01' through '18/100':
-this is the maximum that can be achieved intrinsically, for any given stat.
-These stats can be modified further by equipment, race and class bonuses up
-to a maximum of '18/220'.
+Each character also has seven primary "stats": strength, intelligence,
+wisdom, dexterity, constitution, charism and speed; they modify the
+abilities of the character in a variety of ways. Every stat has a numerical
+value, ranging from a minimum of 3, up to a normal maximum of 18, and even
+higher, into the "percentile" range, represented as '18/01' through '18/220'.
+There is a maximum that can be achieved intrinsically, for any given stat,
+which is in the region of 18/100. The stats can be modified further by
+equipment, race and class bonuses up to the maximum of '18/220'.
 
-Each character also has several primary "skills": disarming, magic devices,
+Each character also has several primary "skills": disarming, devices,
 saving throws, stealth, searching ability, fighting skill, shooting skill, 
 and digging skill, which are derived from the character's race,
 class, level, stats, and current equipment. These skills have rather 
@@ -56,25 +60,25 @@ experience to gain levels. As the experience rises, so does the level, and
 as the level rises, certain other abilities and characteristics rise as
 well. All characters start at 0 experience and at the first level.
 
-Each character has some gold, which can be used to buy items from the shops
+Each character has some cash, which can be used to buy items from the shops
 in the town, and which can be obtained not only from selling items to the
 shops, but also by taking it from dead monsters and by finding it in the
-dungeon. Each character starts out with some gold, the amount of which is
-based on the character's social class (higher is better) and stats (less
-powerful characters start with more gold). Each character also starts out
-with a few useful items, which may be kept, or sold to a shop-keeper for
-more gold.  However, especially valuable items will never sell for the full
-price, as each shopkeeper has a maximum that they are prepared to pay for any
-item. The more generous shopkeepers may buy your items for up to 30,000
-gold pieces: but some are really stingy, and will pay no more than 5,000.
+dungeon. Each character starts out with some cash, the amount of which is
+based on the character's stats (less powerful characters start with more
+gold). Each character also starts out with a few useful items, which may be
+kept, or sold to a shop-keeper for more cash.   However, especially valuable
+items will never sell for the full price, as each shopkeeper has a maximum
+that they are prepared to pay for any item. The more generous shopkeepers
+may buy your items for up to $50,000: but some are really stingy, and will
+pay no more than $5,000.
 
 Each character has an "armour class", abbreviated to AC, representing how
 well the character can avoid damage. The armour class is affected by
 dexterity and equipment, so the concept includes both avoiding blows and
 being able to take blows without being hurt. Armour class on equipment is
 always denoted in square brackets, usually as a figure of '[X,+Y]' where
-X is the intrinsic AC of the armour in question, and Y is the magical bonus
-to armour class provided by that item.
+X is the intrinsic AC of the armour in question, and Y is the enhancement
+bonus to armour class provided by that item.
 
 Each character has "hit points", or hp, representing how much damage the
 character can sustain before they die. How many hit points a character has
@@ -93,28 +97,23 @@ get a flat bonus of a certain number of hit points per level (recalculated
 right back to level 1: if you gain an extra hit point per level, and you
 are 42nd level, you will suddenly be 42 hit points better off.)
 
-Each character has spell points, or mana, which limits how many spells (or
-prayers) a character can cast (or pray). The maximum number of spell points
-is derived from your class, level, and intelligence (for spells) or wisdom
-(for prayers), and you can never have more spell points than the maximum.
-Spell points may be regained by resting, or by magical means. Warriors
-never have any spell points. If a character gains enough wisdom or
-intelligence to get more spell points, the result is calculated right back
-to first level, just as with constitution and hit points.
-
-Lastly, each character has a base speed. Speed determines the amount of
-"energy" your character acquires in the game, and therefore how often you
-can take actions which use up energy (like moving or attacking). All
-beginning characters move at normal speed and the only way to increase
-speed is by magical means and equipment bonuses. Characters who are
-carrying too much weight will move more slowly. Extra speed is one of the
-most important boons in the game and therefore one of the rarest and most
-sought after.
+Lastly, each character has a base speed. (Speed is a stat, but behaves
+differently enough from the others to be descibed separately.)
+Speed determines the amount of "energy" your character acquires in the
+game, and therefore how often you can take actions which use up energy
+(like moving or attacking). Beginning characters move at close to normal
+speed (you may be slightly faster through putting points into the speed
+stat). The most accessible way to speed up are whizz pills, which are
+often found early on. Characters who are carrying too much weight will
+move more slowly. Extra speed is one of the most important boons in the
+game and therefore one of the rarest and most sought after. Speed should
+be distinguished from moves. Moves ("move speed") only takes effect when
+you are walking - fighting and other actions aren't affected. It's still
+useful, but nowhere near as powerful as speed.
 
 Races
 =====
-
-There are eleven different races that you can choose to play in Angband.  
+ 
 Each race has its own adjustments to a character's stats and abilities. 
 Most races also have intrinsic abilities.  The bonuses to statistics and 
 the experience penalty will be displayed next to the races as you move 
@@ -127,251 +126,311 @@ Human
   Humans are average at everything and tend to go up levels faster than any
   other race due to their shorter life spans.  No racial adjustments or 
   intrinsics occur to human characters.  Humans do not have any infravision.
+  Humans can choose to be a Mutant, Super or Cyborg.
 
-.. _Half-Elf:
+.. _Android:
 
-Half-Elf
-  Half-elves tend to be smarter and faster than a human, but not as wise or
-  strong. Half-elves are slightly better at magic, disarming, saving
-  throws, stealth, archery and searching, but they are not as good at
-  hand-to-hand combat. Half-elves are immune to dexterity draining, and
-  have weak infravision.
+Android
+  Androids are strong, agile, tough and fast - but lack intelligence,
+  wisdom and charisma. They gain few if any talents, and can be a Super but
+  not a Cyborg (they are 100% electronic already!) or a Mutant (as they are
+  innately immune to mutation). They can't eat food and must live on
+  batteries. They regenerate quickly (like Terminator) but can't swim and
+  are susceptible to electricity (they need one level of resistance to be
+  back to normal). They have native IR vision.
 
-.. _Elf:
+.. _Time-Lord:
 
-Elf
-  Elves are better magicians than humans, but not as good at fighting. They
-  tend to be smarter and faster than humans, though not as wise or strong.
-  Elves are better at searching, disarming, perception, stealth, archery
-  and magic, but they are not as good at hand-to-hand combat. They are
-  resistant to attacks involving bright light, are immune to dexterity
-  draining, and have fair infravision.
+Time-Lord
+  Time Lords take a human form, which changes when they regenerate. They can
+  regenerate as many as 12 times, but it is always chancy - especially for
+  the less experienced, and experience is not so easily gained (they have
+  seen it all before). They have a number of space/time related techniques
+  available, and are smarter, wiser, tougher and more charismatic than the
+  average human. They also have a few good skills (devices and throwing
+  especially), and regenerate quickly. They can be Mutants, Cyborgs or
+  Supers.
 
-.. _Hobbit:
+Extensions
+==========
 
-Hobbit
-  Hobbits, or Halflings, are very good at shooting, throwing, and have good
-  saving throws. They also are very good at searching, disarming,
-  perception, and stealth; so they make excellent rogues, but prefer to
-  be called burglars. They will be much weaker than humans, and not good at
-  melee fighting. Halflings have fair infravision. They have a strong hold
-  on their life force, and are thus resistant to life draining. Hobbits are
-  very partial to mushrooms and can identify them when found.
+You can optionally "extend" the race - these extensions add their own
+abilities, bonuses to statistics and skills, and experience penalty.
 
-.. _Gnome:
+.. _None:
 
-Gnome
-  Gnomes are smaller than dwarves but larger than halflings. They, like the
-  halflings, live in the earth in burrow-like homes. Gnomes make excellent
-  mages, and have very good saving throws. They are good at searching,
-  disarming, perception, and stealth. They have lower strength than humans
-  so they are not very good at fighting with hand weapons. Gnomes have good
-  infravision.  Gnomes are intrinsically protected against paralysis and 
-  some slowing effects. Gnomes are excellent at using wands and devices
-  and can identify them when found.
+	Extensions are optional. You can always select the unmodified race
+	alone.
 
-.. _Dwarf:
+.. _Mutant:
 
-Dwarf
-  Dwarves are the headstrong miners and fighters of legend. Since dungeons
-  are the natural home of a dwarf, they are excellent choices for a warrior
-  or priest - or indeed, that combination of the two, the paladin. Dwarves
-  tend to be stronger and tougher but slower and less intelligent than
-  humans. Because they are so headstrong and are somewhat wise, they resist
-  spells which are cast on them. Dwarves also have excellent infravision.
-  They can never be blinded. Dwarves are excellent at digging, and can
-  sense nearby buried treasure. They have one big drawback, though. Dwarves
-  are loudmouthed and proud, singing in loud voices, arguing with
-  themselves for no good reason, screaming out challenges at imagined foes.
-  In other words, dwarves have a miserable stealth.
+	Mutants begin with one or more mutations - which although they may
+	have disadvantages are not purely negative. They will gain at least one
+	more mutation as they advance, and will gain the ability to exchange
+	unwanted mutations for ones that may be preferable - and eventually,
+	to withstand radiation innately.
+	They have a small experience penalty, reduced hit points and reduced
+	stats - strength, intelligence, dexterity, constitution and (especially)
+	charisma.
 
-.. _Half-Orc:
+,, _Cyborg:
 
-Half-Orc
-  Half-Orcs make excellent warriors and decent priests, but are terrible at
-  magic. They are as bad as dwarves at stealth, and horrible at searching,
-  disarming, and perception. Half-Orcs are, let's face it, ugly. They tend
-  to pay more for goods in town. Half-Orcs do make good warriors and
-  rogues, for the simple reason that Half-Orcs tend to have great
-  constitution and lots of hit points. Because of their preference to
-  living underground to on the surface, half-orcs resist darkness attacks.
-  They have fair infravision.
+	Cyborgs begin with one or more cybernetic implants. These are varied
+	and generally powerful, but becoming used to these new abilities means
+	less time for learning other things. So they have less talents
+	available, and more experience is needed to advance - especially early on.
+	They also start as members of the Cyber Salon.
 
-.. _Half-Troll:
+Personalities
+=============
 
-Half-Troll
-  Half-Trolls are incredibly strong, and have more hit points than any
-  other character race. They are also very stupid and slow. They will make
-  great warriors and iffy priests. They are bad at searching, disarming,
-  perception, and stealth. They are so ugly that a Half-Orc grimaces in
-  their presence. Half-trolls always have their strength sustained, and
-  they regenerate quickly like other trolls. Unfortunately, this
-  regeneration also requires them to eat more food than other races. They
-  have fair infravision.
+All characters have a personality, which affects stats, skills, and
+sometimes talents, hit points and experience.
 
-.. _Dunadan:
+.. _Ordinary:
+	An average personality with no further changes made. This is the
+	simplest and not a bad choice for any character, so if you don't want to
+	care about personalities this is the one to go for. However it will
+	rarely be the best choice, either - most classes benefit from enhancing
+	their positive characteristics or (less often) shoring up their weak
+	points. 
 
-Dunadan
-  Dunedain are a race of hardy men from the West. This elder race surpasses
-  human abilities in every field, especially constitution. Their hardiness
-  ensures that their constitution cannot be reduced. They have no infravision.
+.. _Geeky:
+	Intelligent, curious and having acquired much background knowledge of
+	pre-War equipment and such esoterica - but at a cost to combat skills,
+	physical stats and hitpoints. It's an obvious choice for an Engineer,
+	reinforcing that class's strong points - but it can also be used with
+	other classes that would benefit from learning more talents and more
+	reliable use of devices.
+	Geeky characters gain intelligence and wisdom, a talent point and
+	device and disarming skills, at the cost of other stats, other skills
+	and hit points.
 
-.. _High-Elf:
+.. _Sneaky:
+	A sneaky sneak. A creepy creep. Stealth is a Sneaky character's strong
+	point, and they can usually manage to bypass a lock, avoid a trap, find
+	hidden goodies and jump out of the way in the nick of time - eventually
+	becoming so aware of their surroundings as to be entirely immune to traps.
+	They are not bad fighters but are best with lightweight melee and
+	improvised thrown weapons. They're also smart enough to be able to back
+	that up with devices.
+	Sneaky characters gain bonuses to most skills, intelligence, wisdom,
+	speed and especially dexterity. They lose out on strength, constitution
+	and charisma.
 
-High-Elf
-  High-Elves are descended from those among the Elves who heard and
-  answered the call from the Valar at the very beginning of time, before
-  the sun and moon were made, and lived in the Blessed Realm for many
-  thousands of years before returning to mortal lands. Because of this,
-  they are far superior in terms of abilities when compared to their lesser
-  Elven kindred. They can also see into the invisible world of ghosts and
-  wraiths. However, they find new experience harder to come by than other
-  races. Like normal Elves, they resist attacks involving bright light.
-  They have good infravision and can even see cold-blooded invisible
-  creatures.
+.. _Lazy:
+	A reluctant hero - "What, me? Run around all day in some slimy
+	underground passages? Sounds awful." A lazy character would much rather
+	take the load off in front of VaulTV. But the galaxy won't save itself,
+	so here they are... They are sub-par in most respects but the lack of
+	experience translates to an improved experience modifier and an extra
+	talent point. They also have no danger-level time limit.
+	Lazy characters are worse at all stats and all skills.
 
-.. _Kobold:
+.. _Boring:
+	Boring characters aren't stealthy (as they can't stop talking for long)
+	but are used to evading thrown eggs and digging of course is a
+	specialty. They gain strength and constitution, lose wisdom and a lot
+	of charisma and have two powers: "Monologue" puts everyone to sleep,
+	while "Bore" literally bores your way through the floor or ceiling.
 
-Kobold
-  Kobolds are a race of small dog-headed humanoids that dwell underground.
-  They have excellent infravision, and are intrinsically resistant to
-  poisons of all kinds. They have a good dexterity and constitution.
-  However, they are weaker than humans, and also not noted for great
-  intelligence. Furthermore, they are ugly, and not trusted in town. And
-  while their constitution makes them tough, it still cannot prevent the
-  fact that they are not the biggest of creatures, and have few hit points.
+.. _Shouty:
+	Shouty characters like Karen and Dick are never wrong, ever. Just ask
+	them. They are used to rushing in quickly and making their presence
+	felt - aggravating everyone else, but they don't give a rodent's
+	posterior about that. Their real talent though is an ability to yell
+	until everyone respects their authority. (That translates to a sonic
+	blast: a cone of sound that becomes more powerful as they advance.)
+	Their ability to attract facepunches has given them a decent ability
+	in melee, especially when unarmed combat plus a hitpoint boost. On
+	the down side, they are about as stealthy as a howler monkey and
+	don't have the patience to search or disarm. They aggravate monsters
+	and have a large penalty to charisma, a small penalty to intelligence
+	but a bonus to wisdom and speed.
+
+.. _Athletic:
+	Athletes have good physical abilities in general but are especially
+	noted for speed. This personality is a good match for most classes,
+	even ones where the penalties matter - as these characters are also
+	the squishier ones, and benefit from being able to run away.
+	Athletes get extra movespeed. Also hit points, strength, dexterity,
+	constitution and speed. They do lose intelligence and wisdom, and have
+	a significant experience penalty. Their fighting skills are good, but
+	they are bad with devices.
+
+.. _Greedy:
+	A greedy character may save the galaxy while they are there - why not?
+	- but their main motivation is cold, hard cash. There's loot down there
+	and they want it! Their attentiveness to shiny things means they notice
+	more of it - eventually being able to sense metal at a distance. But it
+	also makes it harder for them to focus on anything else - skills other
+	than searching and digging suffer, and they lose wisdom and charisma.
+	They gain the Find Loot technique which detects nearby cash and items.
+	They have a small hitpoint penalty.
+
+.. _Chicken:
+	This is a character whose preferred reaction to danger is to run and
+	hide like a chicken. This hurts melee ability and doesn't make them very
+	popular either. However, they are OK with fighting from 200 yards away,
+	they are stealthy and they are used to running. Their survival instincts
+	also give you a little more HP and AC.
+	Chickens have extra move speed, intelligence, wisdom and constitution
+	but reduced charisma.
+
+.. _Fearless:
+	Fearless characters are effective melee combatants but prone to failing
+	to defend themselves. So they have reduced constitution, hit points and
+	AC, though their charisma and speed is boosted. Onward to the next
+	adventure!
+
+.. _Scrub:
+	Scrubs have no advantages, and a lot of disadvantages - very poor stats,
+	skills and hitpoints. They are a challenge personality - something to
+	select if the usual game isn't tough enough for you. You get a 25% score
+	bonus for accepting this challenge.
+
+.. _Munchkin:
+	Munchkins get it easy. Exceptional starting items, huge bonuses to
+	everything, fast leveling, and no penalties besides a whopping 90% off
+	their final score - as this is of course an easy mode, and if you win
+	as a Munchkin you should not brag too much about it. The Princess is in
+	another castle...
+
+.. _Split:
+	These characters' personality changes unpredictably. Every level up a
+	new personality develops at random. It is sometimes possible to avert
+	this by an effort of will - but this isn't guaranteed and you often
+	won't know what the alternative is. However, they do get better at it
+	as they gain levels and wisdom, extreme personalities don't usually
+	stick and they will be given free choice of personality if they reach
+	maximum level.
 
 Classes
 =======
 
-Once a race has been chosen, you will need to pick a class.  The class 
-is the character's occupation and determines stat bonuses, abilities, 
-hit dice, and what spells (if any) the character can learn.
+Once a race, extension and personality have been chosen, you will need to
+pick a class.  The class is the character's occupation and determines stat
+bonuses, abilities, hit dice, and what techniques (if any) the character
+can learn.
 
-.. _Warrior:
+.. _Soldier:
 
-Warrior
-  A Warrior is a hack-and-slash character, who solves most problems
+Soldier
+  A Soldier is a hack-and-slash character, who solves most problems
   by cutting them to pieces, but will occasionally fall back on the help of
-  a magical device. Their prime stats are strength, constitution, and
-  dexterity, and they will strike more blows with melee weapons than any
-  other class. A Warrior will be excellent at fighting, shooting and
-  throwing, but bad at most other skills. A warrior has bad stealth and
-  cannot learn any spells.
+  a device. Their prime stats are strength, constitution, and dexterity,
+  and they will strike more blows with melee weapons than any other class.
+  A Soldier will be excellent at fighting, shooting and throwing, but bad
+  at most other skills, with bad stealth and no class techniques. A Soldier
+  has great hit points, few talents and has access to the Field HQ building
+  for buying equipment and collecting rewards for promotions.
 
-.. _Mage:
+.. _Marksman:
 
-Mage
-  A Mage must live by their wits. They cannot hope to simply hack their way
-  through the dungeon, and so must therefore use his magic to defeat,
-  deceive, confuse, and escape. A mage is not really complete without an
-  assortment of magical devices to use in addition to his spells. They can
-  master the higher level magical devices far easier than anyone else, and
-  has the excellent saving throws to resist effects of spells cast at him.
-  However, they are incredibly weak, getting few hit dice and suffering strong
-  penalties to strength and constitution. Intelligence is their primary stat
-  and at high levels they can cast many spells without a chance of failure.
-  There is no rule that says a mage cannot become a good fighter, but spells
-  are their true realm and they will get fewer blows with melee weapons than
-  other classes.
+Marksman
+  A Marksman is a civilian weapon expert, reasonably skilled with all ranged
+  weapons and the best of any role with their chosen specialty. Being used
+  to firing at paper targets which rarely fire back though, their melee
+  combat and stealth abilities are not so hot. They start being able to
+  recognize all weapon mods. They have middling hit points and most skills,
+  escept for shooting and throwng which they are excellent at. They have
+  a small bonus to strength and a large one to dexterity.
 
-.. _Druid:
+.. _Wrestler:
 
-Druid
-  A Druid is a lover of nature, and at one with the natural world.  Druids
-  have control of their environment and direct power over creatures, leading
-  even to the ability to take their forms. Druid skills are moderate, and
-  they have some fighting ability, especially when transformed.  A druid will
-  usually seek to shape the flow of events to their purpose rather than
-  using devices or missiles, but at high levels they do gain access to
-  potent nature-based magic.  Druids rely on their wisdom, and have good
-  saving throws.
+Wrestler
+  A Wrestler has great martial arts skill, mediocre other skills and more
+  hit points than any other class. They have large bonuses to strength,
+  constitution and dexterity and gain numerous powers as they level up:
+  regeneration, immunity to fear, free action, immunity to stunning,
+  protection from confusion, sustained strength, constitution, dexterity
+  and speed, and ultimately hold life. They are only effective fighters
+  with minimal armor and no weapon, though - the intrinsic powers are to
+  make up for the ones that would have been gained from armor.
 
-.. _Priest:
+.. Clown_:
 
-Priest
-  A Priest is a character of holy devotion. They explore the dungeon only
-  to destroy the evil that lurks within, and if treasure just happens to
-  fall into their packs, well, so much more to the glory of their temple!
-  Priests receive their spells from a deity, and therefore do not choose
-  which spells they will learn. They are familiar with magical devices,
-  preferring to call them "instruments of God", but are not as good as a
-  mage in their use. Priests have great saving throws, and make passable
-  fighters, better if they can find a blessed weapon.  Wisdom is the priest's
-  primary stat and at high enough levels they can cast many prayers without
-  a chance of failure. Priests have poor stealth.
+Clown
+  A clown is a master of deception, misdirection and custard pies. They
+  can perform impressive card tricks and are a great shot with a thrown
+  knife or more exotic weapons (it's always best to kill your enemies in
+  a humorous way, after all). And when it turns out that they shouldn't
+  have brought a pie to a gun fight, some useful athletic techniques may
+  speed their escape.
+  Clown have lowish hit points and few talents. They are average fighters,
+  being especially good with thrown weapons.
 
-.. _Necromancer:
+.. _Pilot:
 
-Necromancer
-  A Necromancer seeks to master the spirits of sentient creatures, creating
-  servants of their own will. They have chosen a dark and wicked path, and
-  run a continual risk of harm to their own body and mind. Necromancers love
-  shadows and hate light, automatically shrouding themselves in darkness.
-  Their spells require high intelligence, and frequently harm the caster or
-  place them in danger.  In return they achieve awesome power at high levels.
-  The ultimate aim of the necromancer is to supplant the Dark Enemy and set
-  up a tyranny in his place.
+Pilot
+  A pilot flies a cavespeeder, giving increased speed (in straight lines)
+  which improves with skill. They can also avoid pits, lava and similar
+  ground hazards but must be aware that a jet engine wakes the heaviest
+  sleepers. Later they can upgrade to a fighter, equipped with a plasma
+  cannon - or a racer, for extra speed.
+  Pilots have middling hit points and fighting ability and rely on their
+  speed for superiority.
 
-.. _Paladin:
+.. _Tourist:
 
-Paladin
-  A Paladin is a warrior/priest. Paladins are very good fighters, second
-  only to the warrior class, but not very good at missile weapons. They
-  receive prayers at a slower pace than the priest, but can use all but the
-  most powerful prayers. A paladin lacks much in the way of abilities.
-  Paladins have poor stealth, perception, searching, and magical device use.
-  They have a decent saving throw due to their divine alliance. Their
-  primary stats are strength and wisdom.
+Tourist
+  A fun class but not an easy one. Tourists are well equipped, for the
+  beach. They are in fact rather out of your depth - definitely a
+  challenge class. But they do have some advantages - a universal map,
+  a winning smile, some spending money and (due to being the least
+  experienced role) the best experience and talent gain rates.
+  Tourists have poor hit points and average fighting ability, with
+  throwing being better than other fighting skills. They get few skills
+  early but many later. They have a penalty to strength, a large penalty
+  to wisdom and a bonus to charisma.
 
-.. _Rogue:
+.. _Spelunker:
 
-Rogue
-  A Rogue is a character that prefers to live by their cunning, but is
-  capable of fighting their way out of a tight spot. The master of traps and
-  locks, to the experienced rogue no device is impossible to overcome. A rogue
-  has a high stealth enabling sneaking around many creatures without
-  having to fight, or sneaking up and get the first blow. They can steal items
-  from monsters, but need to be wary of being caught in the act. Rogues'
-  perception is higher than any other class, and many times they will notice
-  a trap or secret door before having to search. A rogue is better than
-  the more fighting oriented classes with magical devices, but still cannot
-  rely on their performance. Rogues can also learn a few spells, but not the
-  powerful offensive spells mages can use, and there will always be a chance
-  of failure even with the simplest spells. A rogue's primary stats are
-  dexterity and intelligence.
+Spelunker
+  A spelunker is trained and equipped for underground exploration, can
+  avoid falls and will gain powerful abilities to dig, climb, map, detect
+  and find hidden passages. Their combat ability is middling - fitness
+  helps but only so much without having practiced much. However they can
+  become effective tactical fighters through their positioning abilities.
+  Spelunkers have above average hit points, are reasonably good at most
+  skills, and have bonuses to physical stats. 
 
-.. _Ranger:
+.. _Jedi:
 
-Ranger
-  A Ranger is at home in nature, and good at turning the environment to
-  good use. Rangers are good fighters, and the best of all the classes with
-  missile weapons, especially bows. The ranger learns chiefly spells of
-  survival and forest craft. A ranger has good stealth, good perception,
-  good searching, a good saving throw, and is good with magical devices.
-  Their primary stats are strength, wisdom and dexterity.
+Jedi
+  Jedi are famous for skill with a lightsaber - they excel with melee
+  energy weapons and do well with other melee weapons. Eventually they'll
+  even be able to construct your own. Ranged weapons are not something they
+  like dealing with, but they will be supported by a number of subtle
+  powers as they advance. There are also Dark Jedi... who are powerful,
+  yes, but at a cost!
+  Jedi have modest bonuses to all stats but large ones to wisdom and
+  dexterity. They gain a talent later on and have a moderate experience
+  penalty.
 
-.. _Blackguard:
+.. _Engineer:
 
-Blackguard
-  A Blackguard is a brawler of no principle, who lives for the joy of maiming
-  and killing. Blackguards prefer heavy weapons and shields, and learn a few
-  spells for the purpose of wreaking more destruction. Their lust for blood
-  is legendary, with a blackguard in full cry nigh on impossible to kill.
-  Blackguards scorn skills apart from slaughter, and require strength and
-  intelligence (or rat-cunning) to thrive in the dungeon.
+Engineer
+  Devices are their strength - they'll know most on sight, and know how to
+  get the best out of them too. While they aren't much of a fighter in
+  general, they do know energy weapons (melee and ranged) and can see any
+  machine or cyborg's weak points. They also excel with printers and item
+  related cards, and will gain a few skills to use items in unexpected ways.
+  Engineers have the lowest of any class's hit points, lots of talents and
+  great device and disarm skills. They have a large bonus to intelligence,
+  a small one to wisdom, and penalties to dexterity and charisma.
 
 Stats
 =====
 
-After race and class are selected, you will be able to decide what stat
-levels your character will have, by allocating a finite number of
-"points" between the five statistics.  These points can be allocated 
-by selection or with a random roller (as described below in the "Stat 
-Rollers" section).  Each race/class combination also has a recommended 
+After race, extension, personality and class are selected, you will be able
+to decide what stat levels your character will have, by allocating a finite
+number of "points" between the seven statistics.  These points can be
+allocated  by selection or with a random roller (as described below in the
+"Stat Rollers" section).  Each race/class combination also has a recommended 
 default setting for these statistics.  Statistics can be permanently 
-raised by various potions in the dungeon up to 18/100.  They can also be 
-temporarily drained by some monster attacks.
+raised by various pills in the dungeon.  They can also be temporarily
+drained by some monster attacks.
 
 Strength
   Strength is important in fighting with weapons and in melee combat. A
@@ -416,7 +475,22 @@ Constitution
   constitution will receive more hit points and also recover them faster
   while resting. Constitution is less important in the beginning of the
   game, but will be the most important stat at the end.
- 
+
+Charisma
+  Charisma affects your ability to persuade shopkeepers to give you a good
+  price. There are also some techniques that use it as their controlling
+  stat, but despite that it's considerably less important than the main five
+  stats. To reflect this it is much cheaper to buy when selecting stats than
+  the main five stats.
+
+Speed
+  Speed affects how quickly you move, act, fight - almost everything in fact
+  is proportional to this stat. Having 10 is average - each additional point
+  of stat gives you another point of speed, and about another 10% actions in
+  the same time. Because speed affects how effectively you do everything,
+  it is considerably more valuable that the other stats and costs much more
+  to buy.
+
 Skills
 ======
 
@@ -432,10 +506,10 @@ Infravision
   creatures up to a certain distance. This ability works equally well with
   or without a light source. However, some of Angband's creatures are
   cold-blooded, and will not be detected unless lit up by a light source.
-  All non-human races have innate infravision. Humans (including Dunedain)
-  cannot gain infravision unless it is magically enhanced. Infravision does
-  not increase with character level, and is purely dependent on race and on
-  magical equipment.
+  Some characters may have innate infravision, while others must rely on
+  their equipment to provide it. Infravision does not increase with
+  character level, and is purely dependent on the character's innate
+  abilities and on their equipment.
  
 Fighting
   Fighting is the ability to hit and do damage with weapons or fists.

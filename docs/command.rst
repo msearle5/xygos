@@ -41,19 +41,21 @@ Inventory list (``i``)
  
 Equipment list (``e``)
   Use this command to display a list of the objects currently being used by
-  your character. The standard body (which all races currently have) has
-  12 slots for equipment. Every equipment slot corresponds to a different
-  location on the body, and each of which may contain only one object at
-  a time, and each of which may only contain objects of the proper "type".
-  For the standard body these are WEAPON (weapon), BOW (missile launcher),
-  RING (ring) (two of these), AMULET (amulet), LIGHT (light source),
-  BODY_ARMOR (armor), CLOAK (cloak), SHIELD (shield), HAT (helmet),
-  GLOVES (gloves), BOOTS (boots). You must be wielding/wearing certain
-  objects to take advantage of their special powers.
+  your character. The standard body has 9 slots for equipment, with most
+  (it isn't available to all races) having an additional 3 slots for
+  cyberware. Every equipment slot corresponds to a different location on
+  the body, and each of which may contain only one object at a time, and
+  each of which may only contain objects of the proper "type".
+  For the standard body these are WEAPON (weapon), GUN (missile launcher),
+  LIGHT (light source), BODY_ARMOR (armor), CLOAK (cloak), SHIELD (shield),
+  HAT (helmet), GLOVES (gloves), BOOTS (boots). If cyberware is available
+  you will also have LEGS, ARMS and CHIP (brain implant). You must be
+  wielding/wearing certain objects to take advantage of their special
+  powers.
 
-Quiver list (``|``)
-  Missiles that you carry will automatically be put in your quiver.  The
-  quiver has 10 slots; it also takes up inventory space, so every 40 
+Ammo list (``|``)
+  Missiles that you carry will automatically be put in your ammo.  The
+  ammo has 10 slots; it also takes up inventory space, so every 99 
   missiles will reduce your number of inventory slots by 1.
 
 Drop an item (``d``)
@@ -79,16 +81,19 @@ Wear/Wield equipment (``w``)
   taken off, and may in fact be dropped if there is no room for it in your
   inventory. Wielding ammunition will add it to an empty slot in your
   quiver and prompt you to replace a type of ammunition if your quiver is
-  already full. This command takes some energy.
+  already full. Cyberware cannot usually be worn - you must go to the Cyber
+  Salon to fit it. This command takes some energy.
 
 Take off equipment (``t``) or Take off equipment (``T``)
   Use this command to take off a piece of equipment and return it to your
-  inventory. Occasionally, you will run into a cursed item which cannot be
-  removed. These items normally penalize you in some way and cannot be
-  taken off until the curse is removed. If there is no room in your
+  inventory. Occasionally, you will run into a magnetized item which cannot
+  be removed. These items normally penalize you in some way and cannot be
+  taken off until the fault is removed, though in the case of lamps you can
+  wait until it runs out of power instead. If there is no room in your
   inventory for the item, your pack will overflow and you will drop the
   item after taking it off. You may also remove ammunition from your quiver
-  with this command. This command takes some energy.
+  with this command. Cyberware cannot usually be removed - you must go to
+  the Cyber Salon to remove it. This command takes some energy.
 
 Movement Commands
 =================
@@ -120,20 +125,23 @@ Go up staircase (``<``)
   Climbs up an up staircase you are standing on. There is always at least
   one staircase going up on every level except for the town level (this
   doesn't mean it's easy to find). Going up a staircase will take you to a
-  new dungeon level unless you are at 50 feet (dungeon level 1), in which
-  case you will return to the town level. Note that whenever you leave a
-  level (not the town), you will never find it again. This means that for
-  all intents and purposes, any objects on that level are destroyed. This
-  includes artifacts unless the "Create characters in preserve mode" option
-  was set when your character was created, in which case the artifacts may
-  show up again later. This command takes some energy.
+  new dungeon level unless you are at the highest level of the dungeon
+  (which is 50m or dungeon level 1 for the dungeon in the town you start
+  in), in which case you will return to the town level. Note that whenever
+  you leave a level (not the town), you will never find it again. This
+  means that for all intents and purposes, any objects on that level are
+  destroyed. This includes artifacts unless the "Create characters in
+  preserve mode" option was set when your character was created, in which
+  case the artifacts may show up again later. This command takes some
+  energy.
 
 Go down staircase (``>``)
   Descends a down staircase you are standing on. There are always at least
   one staircase going down on each level, except for the town which has
-  only one, and "quest" levels, which have none until the quest monster is
-  killed. Going down a staircase will take you to a new dungeon level. See
-  "Go Up Staircase" for more info. This command takes some energy.
+  only one, the bottom of the dungeon, and "quest" levels, which have none
+  until the quest monster is killed. Going down a staircase will take you
+  to a new dungeon level. See "Go Up Staircase" for more info. This
+  command takes some energy.
 
 Resting Commands
 ================
@@ -145,7 +153,7 @@ Stay still (with pickup) (``,``) or Stay still (with pickup) (``.``)
   takes some energy.
 
 Get objects (``g``)
-  Pick up objects and gold on the floor beneath you. Picking up gold takes
+  Pick up objects and cash on the floor beneath you. Picking up cash takes
   no time, and objects take 1/10th of a normal turn each (maximum time cost
   is a full turn). You may pick up objects until the floor is empty or your
   backpack is full.
