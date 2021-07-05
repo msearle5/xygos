@@ -57,7 +57,6 @@ static void super_init(void)
 	 * than others.
 	 **/
 	bool ok;
-	for(int l=0;l<20;l++) {
 	int reps = 0;
 	do {
 		reps++;
@@ -118,9 +117,6 @@ static void super_init(void)
 			state->power[i] = power;
 		}
 	} while (!ok);
-	fprintf(stderr,"Succeeded after %d reps\n", reps);
-	fprintf(stderr,"Found %d %d %d %d %d\n", state->power[0], state->power[1], state->power[2], state->power[3], state->power[4]);
-	}
 }
 
 /* Resistances and weaknesses */
@@ -143,13 +139,13 @@ static void super_levelup(int from, int to)
 {
 	struct player *p = player;
 	struct super_state *state = (struct super_state *)p->extension->state;
-fprintf(stderr,"super_levelup(%d %d)\n", from, to);
+
 	/* Gain an ability every SUPER_EVERY levels */
 	int lev = player->lev;
 	for(int level=from; level<=to; level++) {
 		if ((level > 0) && ((level % SUPER_EVERY) == 0)) {
 			s32b power = state->power[(level / SUPER_EVERY)-1];
-			fprintf(stderr,"super_levelup: gain power %d (%d)\n", (level / SUPER_EVERY)-1, power);
+
 			player->lev = level;
 			if (!gain_ability(power, false)) {
 				fprintf(stderr,"failed!\n");

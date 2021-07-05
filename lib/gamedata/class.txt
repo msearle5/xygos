@@ -365,7 +365,6 @@ equip:food:random:1:1:none
 equip:gadget:galactic map:1:1:none
 equip:boots:flip flops:1:1:none
 equip:helm:sun hat:1:1:none
-equip:soft armor:loud shirt:1:1:none
 
 ############### SPELUNKER ###############
 name:Spelunker

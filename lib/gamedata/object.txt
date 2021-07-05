@@ -2089,6 +2089,30 @@ armor:6:0
 desc:A smoothly curved full-face helmet that covers your entire head with tough plastic - including a clear plastic flip-up visor in front.
 material:plastic
 
+name:& iron mask~
+type:helm
+graphics:]:s
+level:12
+weight:1.2kg
+cost:45
+alloc:2:12 to 127
+attack:1d1:-1:0
+armor:4:0
+desc:A full face covering in smooth dark metal - presumably tool steel, as it definitely makes you look like a tool.
+material:steel
+
+name:& tiara~
+type:helm
+graphics:]:Gold
+level:35
+weight:0.55kg
+cost:3500
+alloc:1:30 to 127
+attack:1d1:0:0
+armor:1:0
+desc:A gold band, curving up from slim points each side of your head to a broad central setting for a large round jewel.
+material:gold
+
 # This only exists for the artifact (of the Core)
 name:& Coronet~
 type:helm
@@ -2107,6 +2131,18 @@ material:gold
 #combat helmet?
 
 ### Body armours ###
+
+name:& swimsuit~
+type:soft armor
+graphics:(:VioletBlue
+level:0
+alloc:1:0 to 127
+weight:60g
+cost:25
+attack:0d0:0:0
+armor:0:0
+desc:A bright blue one-piece swimming costume.
+material:cloth
 
 name:& loud shirt~
 type:soft armor
@@ -2231,6 +2267,19 @@ desc:A chunky, awkward device that clips to your belt and radiates an extremely 
 material:steel
 
 ### Cloaks ###
+
+name:& red cape~
+type:cloak
+graphics:(:OrangeRed
+level:15
+weight:600g
+cost:1800
+alloc:3:15 to 127
+attack:0d0:0:0
+armor:2:0
+flags:IGNORE_FIRE
+values:RES_FIRE[1]
+desc:A short cape in brilliant flame red. It snaps and flaps as you move in a suitably dramatic fashion.
 
 name:& Cloak~
 type:cloak
