@@ -184,7 +184,7 @@ graphics:*:v
 
 name:& Cybasics Augmentor~
 type:chip
-graphics:!:White
+graphics:":White
 weight:75g
 cost:11550
 level:22
@@ -196,7 +196,7 @@ material:titanium
 
 name:& Cybasics Coordinator~
 type:chip
-graphics:!:White
+graphics:":White
 weight:75g
 cost:12250
 level:24
@@ -208,7 +208,7 @@ material:titanium
 
 name:& Cybasics Mediator~
 type:chip
-graphics:!:White
+graphics:":White
 weight:85g
 cost:14650
 level:28
@@ -223,7 +223,7 @@ material:titanium
 
 name:& Cybasics Accelerator~
 type:chip
-graphics:!:White
+graphics:":White
 weight:70g
 cost:15250
 level:30
@@ -235,7 +235,7 @@ material:titanium
 
 name:& Sirius Brilliant~
 type:chip
-graphics:!:Magenta
+graphics:":Magenta
 weight:66g
 cost:24500
 level:38
@@ -248,7 +248,7 @@ material:unobtainium
 
 name:& Neuroweb Third Eye~
 type:chip
-graphics:!:Green
+graphics:":Green
 weight:80g
 cost:26600
 level:45
@@ -272,7 +272,7 @@ material:unobtainium
 # Str only
 name:& Cybasics Cydearm~
 type:arms
-graphics:!:White
+graphics:":White
 weight:4740g
 cost:5450
 level:28
@@ -284,7 +284,7 @@ material:steel
 # Str sustained
 name:& Collective Powerlift~
 type:arms
-graphics:!:Red
+graphics:":Red
 weight:3800g
 cost:11500
 level:38
@@ -297,7 +297,7 @@ material:titanium
 # Dex (and a little str) - to hit?
 name:& Collective Powerflex~
 type:arms
-graphics:!:Red
+graphics:":Red
 weight:3500g
 cost:15500
 level:43
@@ -320,7 +320,7 @@ material:titanium
 # Basics only
 name:& Cybasics Legend~
 type:legs
-graphics:!:White
+graphics:":White
 weight:9150g
 cost:7700
 level:33
@@ -332,7 +332,7 @@ material:steel
 # Sprinting
 name:& Netrunner Sprint~
 type:legs
-graphics:!:Blue
+graphics:":Blue
 weight:6550g
 cost:11000
 level:40
@@ -355,7 +355,7 @@ weight:5400g
 cost:12400
 level:42
 alloc:4:30 to 127
-graphics:!:Red
+graphics:":Red
 flags:FEATHER
 values:MOVES[1+M2]
 values:STEALTH[1+M2]
@@ -364,7 +364,7 @@ desc:A cybernetic implant - the main intent being fast running, but force-skate 
 # Mixed bag
 name:& Netrunner Leg-Up~
 type:legs
-graphics:!:Blue
+graphics:":Blue
 weight:7600g
 cost:14000
 level:45
@@ -380,7 +380,7 @@ material:titanium
 # Dex
 name:& Netrunner Flex~
 type:legs
-graphics:!:Blue
+graphics:":Blue
 weight:5890g
 cost:18000
 level:49
@@ -394,7 +394,7 @@ material:titanium
 # Str/con
 name:& Collective Powertrain~
 type:legs
-graphics:!:Red
+graphics:":Red
 weight:7950g
 cost:21000
 level:52
@@ -408,7 +408,7 @@ material:titanium
 # Speed
 name:& Collective Lightning~
 type:legs
-graphics:!:Red
+graphics:":Red
 weight:8300g
 cost:25000
 level:55
@@ -2637,6 +2637,7 @@ armor:0:3+d6M24
 flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD 
 desc:Two titanium rings, sized to fit on your wrists. A fashion statement and effective protection for your arms and hands, through miniaturized forcefield generators - similar to the more common belt forcefield generators. The more powerful specimens can easily provide more protection than heavy steel gauntlets could, while weighing almost nothing.
 material:titanium
+
 
 ### Shields ###
 

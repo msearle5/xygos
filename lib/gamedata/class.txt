@@ -396,6 +396,7 @@ equip:helm:hard hat (lamp):1:1:none
 equip:light:glowstick:2:4:none
 equip:light:electric torch:1:1:none
 equip:battery:alkaline battery:4:6:none
+equip:digger:shovel:1:1:none
 # FF clothes?
 # spikes have disappeared
 

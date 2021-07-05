@@ -348,6 +348,7 @@ slay:EVIL_2
 desc:This weapon is capable of helping your aim, but thinks it knows better than you which targets are worth going for.
 
 # The *Slay* weapons (8)
+# make _3?
 
 name:(*mighty hunter*)
 info:6000:20
@@ -904,7 +905,7 @@ info:30000:30
 alloc:10:30 to 127
 combat:0:0:d20
 type:soft armor
-flags:SUST_STR | SUST_DEX | SUST_CON | SUST_INT | SUST_WIS
+flags:SUST_STR | SUST_DEX | SUST_CON | SUST_INT | SUST_WIS | SUST_CHR | SUST_SPD
 flags:HOLD_LIFE
 flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 flags:RAND_HI_RES

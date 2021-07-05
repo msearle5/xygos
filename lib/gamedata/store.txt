@@ -212,10 +212,18 @@ normal:pill:nutria:1500
 normal:pill:mega-healing:-500+M1000
 normal:pill:life:-900+M1000
 normal:wand:healing ray
+normal:device:first-aid kit:6000
+normal:device:medikit:M5000
+normal:device:medical nanokit:-2500+M4000
 buy:pill
+buy:wand:healing ray
+buy:device:medikit
+buy:device:first-aid kit
+buy:device:medical nanokit
 
 # Rename
-# Specialist, Alien, Antique, Tech, #GEar, #Supply, Scientific, Engineering/[Hi]Tech[nical] Suply...
+# Specialist, Alien, Antique, Tech, #GEar
+normal:wand:healing ray, #Supply, Scientific, Engineering/[Hi]Tech[nical] Suply...
 store:6:Magic Shop
 owner:8:15000:*
 owner:9:15000:*
@@ -341,6 +349,7 @@ normal:chip
 normal:boots:force skates:500+M5000
 normal:gloves:force bangles:100+M4000
 normal:hard armor:force harness:50+M3000
+normal:shield:force wheel:25+M2000
 normal:belt
 buy:arms
 buy:legs
@@ -349,4 +358,5 @@ buy:chip
 buy:force skates
 buy:force bangles
 buy:force harness
+buy:force shield
 danger:85:95
