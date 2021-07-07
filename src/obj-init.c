@@ -54,14 +54,6 @@ static const char *mon_race_flags[] =
 	NULL
 };
 
-const char *obj_flags[] = {
-	"NONE",
-	#define OF(a, b) #a,
-	#include "list-object-flags.h"
-	#undef OF
-	NULL
-};
-
 static const char *kind_flags[] = {
 	#define KF(a, b) #a,
 	#include "list-kind-flags.h"
