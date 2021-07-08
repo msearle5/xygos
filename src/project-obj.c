@@ -455,6 +455,10 @@ static void project_object_handler_MON_SLOW(project_object_handler_context_t *co
 {
 }
 
+static void project_object_handler_MON_LAG(project_object_handler_context_t *context)
+{
+}
+
 static void project_object_handler_MON_CONF(project_object_handler_context_t *context)
 {
 }

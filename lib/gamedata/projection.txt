@@ -625,6 +625,14 @@ obvious:1
 wake:1
 color:White
 
+code:MON_LAG
+type:monster
+desc:attempts to hurt and slow monsters
+blind-desc:something
+obvious:1
+wake:1
+color:White
+
 code:MON_CONF
 type:monster
 desc:attempts to confuse monsters

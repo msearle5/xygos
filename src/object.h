@@ -196,7 +196,7 @@ struct object_base {
 };
 
 extern struct object_base *kb_info;
-#define MATERIAL(T, N, D, C, M) MAT_##T,
+#define MATERIAL(T, N, D, C, M, P) MAT_##T,
 enum {
 #include "list-materials.h"
 };
@@ -207,6 +207,7 @@ struct object_material {
 	int density;
 	int cost;
 	bool metal;
+	bool printable;
 };
 
 /**

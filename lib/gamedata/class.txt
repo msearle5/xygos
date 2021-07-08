@@ -402,7 +402,6 @@ equip:digger:shovel:1:1:none
 
 magic:1:300
 book:[Spelunker]
-# spell:name:level:fail:exp:stat:hp:cooldown
 spell:Climb:5:80:4:0:1:10
 seffect:CLIMBING
 sdesc:When next to a rock face, climb up it to the level above. 
@@ -455,3 +454,65 @@ strength-multiplier:2
 equip:sword:pocket knife:1:1:none
 cdesc:Devices are your strength - you'll know most on sight, and know how to get the best out of them too. While you aren't much of a fighter in general, you do know energy weapons (melee and ranged) and can see any machine or cyborg's weak points. You also excel with printers and item related cards, and will gain a few skills to use items in unexpected ways.
 
+magic:1:300
+book:[Engineer]
+# spell:name:level:fail:exp:stat:hp:cooldown
+spell:Diagnose:5:80:10:1:0:0
+seffect:ID_FAULT
+sdesc:Identify one fault on an item.
+
+spell:Troubleshoot:8:30:20:1:0:4
+seffect:REMOVE_FAULT
+sdice:35+d$C
+sexpr:C:PLAYER_LEVEL:* 5 / 4
+seffect:IF_SUCCESSFUL
+seffect:MESSAGE
+seffect-msg:You fling it as a lag bolt!
+seffect:BOLT_AWARE:MON_LAG
+sdice:10+1d$B
+sexpr:B:PLAYER_LEVEL:* 3 / 2
+sdesc:Attempt to remove a fault from an item. If you are successful, you get to fling it at enemies as a lag bolt.
+
+spell:Tweak:10:20:25:1:0:2d30
+seffect:ENCHANT:TOBOTH
+sdice:2d3
+sdesc:Improves equipment, improving the to-hit and to-dam bonuses of weapons and the to-AC of armour.
+
+spell:Reverse Engineer:18:80:60:1:0:1d20
+seffect:IDENTIFY
+sdesc:Identify one unknown icon of any kind on an item.
+
+spell:Upgrade:22:20:80:1:0:2d80
+seffect:BRAND_ITEM
+sdice:3+1d4
+sdesc:Attempts to make a non-ego into an ego item. On a non-ego base item it will almost always succeed, although the results can't be predicted. Rarely, it will add multiple egos. It can be run against an ego item in order to create a multiple ego, but this doesn't often work and risks destroying it.
+
+spell:Inject Fault:24:45:90:1:0:2d20
+seffect:ADD_FAULT
+sdesc:Attempt to add a fault to an item. (A few faults can be useful in their own right, but the real reason to use this is Troubleshoot's lag bolts.)
+
+spell:Service:28:50:150:1:0:2d100
+seffect:REMOVE_FAULTS
+sdice:60+d40
+sdesc:Attempt to remove all faults from an item, with greater chance of success than Troubleshoot (like the difference between major-repair and repair cards)
+
+spell:Recycle:32:20:180:1:0:2d80
+seffect:RECYCLE
+sdesc:Converts a suitable item (made of a printable material and not too small or large) back into blocks of raw material suitable for printing.
+
+spell:Rebuild:35:80:300:1:0:2d200
+seffect:REMOVE_FRAGILE
+sdice:60+d40
+sdesc:Attempt to make a fragile item as robust as new again.
+
+spell:Format:38:40:320:1:0:2d120
+seffect:UNBRAND_ITEM
+sdesc:Attempts to remove all additions, positive and negative, from a piece of equipment - to-hit and -dam, egos, activations, faults and so on. Even artifacts will lose everything which makes them special, with no volcano needed.
+
+#spell:Artifice:50:90:10000:1:0:5d10000
+#seffect:ARTIFACT_CREATION
+#sdesc:Transforms an item into a powerful artifact. Be aware that artifacts are unique; only one artifact made by your own hands may exist, whether or not it was built using this technique. The item may be any equippable item type, so long as it is not already an artifact or ego-item. Also watch out for the explosive side effects!
+
+#combine (weld), somehow?
+#artifact creation - once? (Or destroy the previous)?
+#disass for exp? Gain exp every time an icon is identified?

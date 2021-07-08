@@ -770,6 +770,11 @@ static int project_player_handler_MON_SLOW(project_player_handler_context_t *con
 	return 0;
 }
 
+static int project_player_handler_MON_LAG(project_player_handler_context_t *context)
+{
+	return 0;
+}
+
 static int project_player_handler_MON_CONF(project_player_handler_context_t *context)
 {
 	return 0;

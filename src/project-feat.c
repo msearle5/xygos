@@ -641,6 +641,10 @@ static void project_feature_handler_MON_SLOW(project_feature_handler_context_t *
 {
 }
 
+static void project_feature_handler_MON_LAG(project_feature_handler_context_t *context)
+{
+}
+
 static void project_feature_handler_MON_CONF(project_feature_handler_context_t *context)
 {
 }

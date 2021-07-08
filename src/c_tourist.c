@@ -28,11 +28,11 @@ static void tourist_loadsave(bool complete) {
 /* Start a new character as a Tourist */
 static void tourist_init(void)
 {
-	/* Some extra spending money (generously, because the expensive ($2000)
-	 * mapping device means that au would otherwise probably be reduced to 0
-	 * later.
+	/* Some extra spending money (generously, because the expensive mapping
+	 * device means that au will probably be 0 at this point. The MAX is in
+	 * case of an ability giving cash or the no-start-kit option)
 	 **/
-	player->au += 2000 + damroll(10, 200);
+	player->au = MAX(damroll(10, 200), player->au + damroll(10, 80));
 	player->au_birth = player->au;
 
 	/* Possible random item */
@@ -54,9 +54,16 @@ static void tourist_init(void)
 		default:
 			player->au += 30;
 	}
-	player->au_birth = player->au;
 	if (items)
 		add_start_items(player, &item, (!OPT(player, birth_start_kit)), false, ORIGIN_BIRTH);
+	item.tval = TV_SOFT_ARMOR;
+	if (one_in_(3))
+		item.sval = lookup_sval(TV_SOFT_ARMOR, "swimsuit");
+	else
+		item.sval = lookup_sval(TV_SOFT_ARMOR, "loud shirt");
+	add_start_items(player, &item, (!OPT(player, birth_start_kit)), false, ORIGIN_BIRTH);
+
+	player->au_birth = player->au;
 }
 
 /* Gain a new level (or levels) for the first time */

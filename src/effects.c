@@ -37,6 +37,7 @@
 #include "obj-desc.h"
 #include "obj-gear.h"
 #include "obj-ignore.h"
+#include "obj-init.h"
 #include "obj-knowledge.h"
 #include "obj-make.h"
 #include "obj-pile.h"
@@ -45,6 +46,7 @@
 #include "obj-tval.h"
 #include "obj-util.h"
 #include "player-ability.h"
+#include "player-birth.h"
 #include "player-calcs.h"
 #include "player-history.h"
 #include "player-quest.h"
@@ -67,6 +69,7 @@
 
 static void shapechange(const char *shapename, bool verbose);
 
+static int recyclable_blocks(const struct object *obj);
 static bool brand_object(struct object *obj, const char *name);
 static bool mundane_object(struct object *obj);
 
@@ -88,6 +91,8 @@ typedef struct effect_handler_context_s {
 	const int alternate;
 	bool ident;
 	struct command *cmd;
+	bool completed;
+	bool next;
 } effect_handler_context_t;
 
 #define EFFECT(x, a, b, c, d, e, f)	static bool effect_handler_##x(effect_handler_context_t *context);
@@ -273,6 +278,36 @@ static bool item_tester_uncursable(const struct object *obj)
 }
 
 /**
+ * Selects items that can accept a fault.
+ */
+static bool item_tester_breakable(const struct object *obj)
+{
+	/* Can't break artifacts, or nonequippables */
+	if (obj->artifact)
+		return false;
+
+	/* Check it can be worn */
+	if (!obj_can_wear(obj))
+		return false;
+
+	/* Caught 'em all? */
+	struct fault_data *c = obj->known->faults;
+	bool ok = false;
+	if (c) {
+		size_t i;
+		for (int i = 1; i < z_info->fault_max; i++) {
+			if (c[i].power == 0) {
+				ok = true;
+				break;
+			}
+		}
+	} else {
+		ok = true;
+	}
+    return ok;
+}
+
+/**
  * Removes an individual fault from an object.
  */
 static void remove_object_fault(struct object *obj, int index, bool message)
@@ -299,68 +334,158 @@ static void remove_object_fault(struct object *obj, int index, bool message)
 	obj->faults = NULL;
 }
 
-/**
- * Attempts to remove a fault from an object.
- */
-static bool repair_object(struct object *obj, int strength, random_value value)
+static bool do_repair_object(struct object *obj, int strength, random_value value, int index)
 {
-	int index = 0;
+	struct fault_data fault = obj->faults[index];
+	char o_name[80];
 	bool remove = false;
 	bool success = false;
 
-	if (get_fault(&index, obj, value)) {
-		struct fault_data fault = obj->faults[index];
-		char o_name[80];
-
-		if (fault.power >= 100) {
-			/* Fault is permanent */
-			return false;
-		} else if (strength >= fault.power) {
-			/* Successfully removed this fault */
-			remove_object_fault(obj->known, index, false);
-			remove_object_fault(obj, index, true);
-			success = true;
-		} else if (kf_has(obj->kind->kind_flags, KF_ACT_FAILED)) {
-			light_special_activation(obj);
-			remove = true;
-		} else if (!of_has(obj->flags, OF_FRAGILE)) {
-			/* Failure to remove, object is now fragile */
-			object_desc(o_name, sizeof(o_name), obj, ODESC_FULL);
-			msgt(MSG_FAULTY, "The attempt fails; your %s is now fragile.", o_name);
-			of_on(obj->flags, OF_FRAGILE);
-			player_learn_flag(player, OF_FRAGILE);
-		} else if (one_in_(4)) {
-			/* Failure - unlucky fragile object is destroyed */
-			remove = true;
-			msg("There is a bang and a flash!");
-			take_hit(player, damroll(5, 5), "Failed repairing");
-		}
-		if (remove) {
-			bool none_left = false;
-			struct object *destroyed;
-			if (object_is_carried(player, obj)) {
-				destroyed = gear_object_for_use(obj, 1, false, &none_left);
-				if (destroyed->artifact) {
-					/* Artifacts are marked as lost */
-					history_lose_artifact(player, destroyed->artifact);
-				}
-				object_delete(&destroyed->known);
-				object_delete(&destroyed);
-			} else {
-				square_delete_object(cave, obj->grid, obj, true, true);
+	if (fault.power >= 100) {
+		/* Fault is permanent */
+		return false;
+	} else if (strength >= fault.power) {
+		/* Successfully removed this fault */
+		remove_object_fault(obj->known, index, false);
+		remove_object_fault(obj, index, true);
+		success = true;
+	} else if (kf_has(obj->kind->kind_flags, KF_ACT_FAILED)) {
+		light_special_activation(obj);
+		remove = true;
+	} else if (!of_has(obj->flags, OF_FRAGILE)) {
+		/* Failure to remove, object is now fragile */
+		object_desc(o_name, sizeof(o_name), obj, ODESC_FULL);
+		msgt(MSG_FAULTY, "The attempt fails; your %s is now fragile.", o_name);
+		of_on(obj->flags, OF_FRAGILE);
+		player_learn_flag(player, OF_FRAGILE);
+	} else if (one_in_(4)) {
+		/* Failure - unlucky fragile object is destroyed */
+		remove = true;
+		msg("There is a bang and a flash!");
+		take_hit(player, damroll(5, 5), "Failed repairing");
+	}
+	if (remove) {
+		bool none_left = false;
+		struct object *destroyed;
+		if (object_is_carried(player, obj)) {
+			destroyed = gear_object_for_use(obj, 1, false, &none_left);
+			if (destroyed->artifact) {
+				/* Artifacts are marked as lost */
+				history_lose_artifact(player, destroyed->artifact);
 			}
+			object_delete(&destroyed->known);
+			object_delete(&destroyed);
 		} else {
-			/* Success (message already printed) / Non-destructive failure */
-			if (!success)
-				msg("The repair fails.");
+			square_delete_object(cave, obj->grid, obj, true, true);
 		}
 	} else {
-		return false;
+		/* Success (message already printed) / Non-destructive failure */
+		if (!success)
+			msg("The repair fails.");
 	}
+	return success;
+}
+
+/**
+ * Attempts to remove a fault from an object.
+ */
+static bool repair_object(struct object *obj, int strength, random_value value, bool all)
+{
+	int index = 0;
+	bool success = false;
+
+	if (all) {
+		/* Find the highest difficulty fault */
+		int power = 0;
+		int index = -1;
+		for (int i = 1; i < z_info->fault_max; i++) {
+			if ((obj->known->faults[i].power > 0) &&
+				(obj->known->faults[i].power < 100) &&
+				player_knows_fault(player, i)) {
+				power = MAX(power, obj->faults[i].power);
+				index = i;
+			}
+		}
+		if (index < 0) {
+			msg("It has no faults that can be repaired.");
+			return false;
+		}
+		/* Fix the highest difficulty fault */
+		if ((success = do_repair_object(obj, strength, value, index))) {
+			/* If that was successful, silently repair the others */
+			for (int i = 1; i < z_info->fault_max; i++) {
+			if ((obj->known->faults[i].power > 0) &&
+				(obj->known->faults[i].power < 100) &&
+				player_knows_fault(player, i) &&
+				i != index) {
+					remove_object_fault(obj->known, i, false);
+					remove_object_fault(obj, i, true);
+				}
+			}
+		}
+	} else {
+		if (get_fault(&index, obj, value)) {
+			success = do_repair_object(obj, strength, value, index);
+		} else {
+			return false;
+		}
+	}
+
 	player->upkeep->notice |= (PN_COMBINE);
 	player->upkeep->update |= (PU_BONUS);
 	player->upkeep->redraw |= (PR_EQUIP | PR_INVEN);
-	return true;
+	return success;
+}
+
+/**
+ * Attempts to add a fault to an object.
+ */
+static bool break_object(struct object *obj, random_value value)
+{
+	bool broken = false;
+
+	if (item_tester_breakable(obj)) {
+
+		/* Randomly select a fault and adds it to the item in question. */
+		int max_tries = 5000;
+
+		/* This is assumed to intentional (if this wasn't the case messages
+		 * at least would have to be changed), so higher level players should
+		 * be more controlled and produce less high-level faults.
+		 * Result: at level 50, 30 +- 5%. At level 1, 50 +- 49%.
+		 */
+		int lev = levels_in_class(get_class_by_name("Engineer")->cidx);
+		int mean_power = 50 - ((lev * 20) / PY_MAX_LEVEL);
+		int range_power = 49 - ((lev * 44) / PY_MAX_LEVEL);
+		int min_power = mean_power - range_power;
+		int max_power = mean_power + range_power;
+		int power = rand_range(min_power, max_power);
+
+		while (max_tries) {
+			int pick = randint1(z_info->fault_max - 1);
+			if (!faults[pick].poss[obj->tval]) {
+				max_tries--;
+				continue;
+			}
+			if (append_object_fault(obj, pick, power)) {
+				broken = true;
+				break;
+			}
+		}
+	}
+
+	if (broken) {
+		msg("You induce a fault.");
+
+		player->upkeep->notice |= (PN_COMBINE);
+		player->upkeep->update |= (PU_BONUS);
+		player->upkeep->redraw |= (PR_EQUIP | PR_INVEN);
+		return true;
+	} else {
+		msg("It remains untouched.");
+	}
+
+	return false;
 }
 
 /**
@@ -369,6 +494,22 @@ static bool repair_object(struct object *obj, int strength, random_value value)
 static bool item_tester_unknown(const struct object *obj)
 {
     return object_icons_known(obj) ? false : true;
+}
+
+/**
+ * Selects items that have at least one unknown fault icon.
+ */
+static bool item_tester_unknown_faults(const struct object *obj)
+{
+    return object_faults_known(obj) ? false : true;
+}
+
+/**
+ * Selects items that have the fragile flags set
+ */
+static bool item_tester_fragile(const struct object *obj)
+{
+    return of_has(obj->flags, OF_FRAGILE);
 }
 
 /**
@@ -405,6 +546,11 @@ static bool item_tester_hook_weapon(const struct object *obj)
 static bool item_tester_hook_armour(const struct object *obj)
 {
 	return tval_is_armor(obj);
+}
+
+static bool item_tester_recyclable(const struct object *obj)
+{
+	return (recyclable_blocks(obj) > 0);
 }
 
 
@@ -591,10 +737,14 @@ static bool enchant_spell(int num_hit, int num_dam, int num_ac, int num_brand, i
 	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
 
 	/* Describe */
+	const char *bright = "soft";
+	int lights = (num_hit + num_dam + num_ac);
+	if (lights > 1)
+		bright = "bright"; 
 	if ((!num_brand) && (!num_mundane)) {
 		msg("%s %s glow%s %sly!",
 			(object_is_carried(player, obj) ? "Your" : "The"), o_name,
-				   ((obj->number > 1) ? "" : "s"));
+				   ((obj->number > 1) ? "" : "s"), bright);
 	}
 
 	/* Enchant */
@@ -1575,13 +1725,10 @@ static bool effect_handler_DRAIN_LIGHT(effect_handler_context_t *context)
 	return true;
 }
 
-/**
- * Attempt to repair an object
- */
-static bool effect_handler_REMOVE_FAULT(effect_handler_context_t *context)
+static bool do_remove_fault(effect_handler_context_t *context, bool all)
 {
 	const char *prompt = "Repair which item? ";
-	const char *rejmsg = "You have no faults to remove.";
+	const char *rejmsg = "It has no faults to repair.";
 	int itemmode = (USE_EQUIP | USE_INVEN | USE_QUIVER | USE_FLOOR);
 	int strength = effect_calculate_value(context, false);
 	struct object *obj = NULL;
@@ -1597,7 +1744,48 @@ static bool effect_handler_REMOVE_FAULT(effect_handler_context_t *context)
 			itemmode))
 		return false;
 
-	return repair_object(obj, strength, context->value);
+	return repair_object(obj, strength, context->value, all);
+}
+
+/**
+ * Attempt to add faults to an object
+ */
+static bool effect_handler_ADD_FAULT(effect_handler_context_t *context)
+{
+	const char *prompt = "Break which item? ";
+	const char *rejmsg = "It cannot be broken that easily.";
+	int itemmode = (USE_EQUIP | USE_INVEN | USE_QUIVER | USE_FLOOR);
+	int strength = effect_calculate_value(context, false);
+	struct object *obj = NULL;
+
+	context->ident = true;
+
+	if (context->cmd) {
+		if (cmd_get_item(context->cmd, "tgtitem", &obj, prompt,
+				rejmsg, item_tester_breakable, itemmode)) {
+			return false;
+		}
+	} else if (!get_item(&obj, prompt, rejmsg, 0, item_tester_breakable,
+			itemmode))
+		return false;
+
+	return break_object(obj, context->value);
+}
+
+/**
+ * Attempt to repair an object
+ */
+static bool effect_handler_REMOVE_FAULT(effect_handler_context_t *context)
+{
+	return do_remove_fault(context, false);
+}
+
+/**
+ * Attempt to repair an object completely
+ */
+static bool effect_handler_REMOVE_FAULTS(effect_handler_context_t *context)
+{
+	return do_remove_fault(context, true);
 }
 
 /**
@@ -2442,6 +2630,118 @@ static bool effect_handler_IDENTIFY(effect_handler_context_t *context)
 
 	/* Identify the object */
 	object_learn_unknown_icon(player, obj);
+
+	return true;
+}
+
+/**
+ * Convert an item into blocks.
+ */
+static bool effect_handler_RECYCLE(effect_handler_context_t *context)
+{
+	struct object *obj;
+	const char *q, *s;
+	int itemmode = (USE_EQUIP | USE_INVEN | USE_QUIVER | USE_FLOOR);
+	bool used = false;
+
+	context->ident = true;
+
+	/* Get an item */
+	q = "Recycle which item into blocks? ";
+	s = "You have nothing which you could recycle.";
+	if (context->cmd) {
+		if (cmd_get_item(context->cmd, "tgtitem", &obj, q, s,
+				item_tester_recyclable, itemmode)) {
+			return used;
+		}
+	} else if (!get_item(&obj, q, s, 0, item_tester_recyclable, itemmode))
+		return used;
+
+	/* Recycle the object. First print a message. */
+	int blocks = recyclable_blocks(obj);
+	const struct object_material *mat = material + obj->kind->material;
+	if (blocks > 1)
+		msg("You convert it into %d %s blocks.", blocks, mat->name);
+	else
+		msg("You convert it into a %s block.", mat->name);
+
+	/* Then remove it */
+	bool none_left = false;
+	struct object *destroyed;
+	if (object_is_carried(player, obj)) {
+		destroyed = gear_object_for_use(obj, 1, false, &none_left);
+		if (destroyed->artifact) {
+			/* Artifacts are marked as lost */
+			history_lose_artifact(player, destroyed->artifact);
+		}
+		object_delete(&destroyed->known);
+		object_delete(&destroyed);
+	}
+
+	/* Return blocks */
+	struct start_item item = { TV_BLOCK, 0, 1, 1 };
+	item.sval = lookup_sval(TV_BLOCK, mat->name);
+	item.min = item.max = blocks;
+	add_start_items(player, &item, false, false, ORIGIN_CHEAT);
+
+	return true;
+}
+
+/**
+ * Identify an unknown fault icon of an item.
+ */
+static bool effect_handler_ID_FAULT(effect_handler_context_t *context)
+{
+	struct object *obj;
+	const char *q, *s;
+	int itemmode = (USE_EQUIP | USE_INVEN | USE_QUIVER | USE_FLOOR);
+	bool used = false;
+
+	context->ident = true;
+
+	/* Get an item */
+	q = "Identify faults on which item? ";
+	s = "You have nothing with unidentified faults.";
+	if (context->cmd) {
+		if (cmd_get_item(context->cmd, "tgtitem", &obj, q, s,
+				item_tester_unknown_faults, itemmode)) {
+			return used;
+		}
+	} else if (!get_item(&obj, q, s, 0, item_tester_unknown_faults, itemmode))
+		return used;
+
+	/* Identify the object */
+	object_learn_unknown_faults(player, obj);
+
+	return true;
+}
+
+/**
+ * Remove the fragile status from an item.
+ */
+static bool effect_handler_REMOVE_FRAGILE(effect_handler_context_t *context)
+{
+	struct object *obj;
+	const char *q, *s;
+	int itemmode = (USE_EQUIP | USE_INVEN | USE_QUIVER | USE_FLOOR);
+	bool used = false;
+
+	context->ident = true;
+
+	/* Get an item */
+	q = "Rebuild which item? ";
+	s = "You have nothing to rebuild.";
+	if (context->cmd) {
+		if (cmd_get_item(context->cmd, "tgtitem", &obj, q, s,
+				item_tester_fragile, itemmode)) {
+			return used;
+		}
+	} else if (!get_item(&obj, q, s, 0, item_tester_fragile, itemmode))
+		return used;
+
+	/* Remove fragile bit */
+	msg("You rebuild it, making it no longer fragile. (It may still have faults.)");
+	of_off(obj->flags, OF_FRAGILE);
 
 	return true;
 }
@@ -5758,7 +6058,18 @@ static bool kind_is_printable(const struct object_kind *k)
 		return false;
 	if (k->tval == TV_CHEST)
 		return false;
+	if (!(material + k->material)->printable)
+		return false;
 	return true;
+}
+
+static int recyclable_blocks(const struct object *obj)
+{
+	const struct object_kind *k = obj->kind;
+	if (!kind_is_printable(k))
+		return 0;
+
+	return (k->weight * obj->number) / 1000;
 }
 
 /** The effect of a printer
@@ -6524,7 +6835,7 @@ bool effect_handler_HORNS(effect_handler_context_t *context)
 
 bool effect_handler_MESSAGE(effect_handler_context_t *context)
 {
-	msg("honk");
+	msg(context->msg);
 	return (true);
 }
 
@@ -6640,6 +6951,12 @@ bool effect_handler_TAKEOFF(effect_handler_context_t *context)
 bool effect_handler_FORCE_REGEN(effect_handler_context_t *context)
 {
 	timelord_force_regen();
+	return (true);
+}
+
+bool effect_handler_IF_SUCCESSFUL(effect_handler_context_t *context)
+{
+	context->next = context->completed;
 	return (true);
 }
 
@@ -7109,6 +7426,7 @@ bool effect_do(struct effect *effect,
 		int alternate)
 {
 	bool completed = false;
+	bool next = false;
 	effect_handler_f handler;
 	random_value value = { 0, 0, 0, 0 };
 
@@ -7232,17 +7550,20 @@ bool effect_do(struct effect *effect,
 				effect->msg,
 				alternate,
 				*ident,
-				cmd
+				cmd,
+				completed,
+				true
 			};
 
 			completed = handler(&context) || completed;
 			*ident = context.ident;
+			next = context.next;
 		}
 
 		/* Get the next effect, if there is one */
 		while (leftover-- && effect)
 			effect = effect->next;
-	} while (effect && (effect->index != EF_NEXT));
+	} while (effect && (effect->index != EF_NEXT) && next);
 
 	return completed;
 }

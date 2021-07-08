@@ -290,24 +290,6 @@ void do_cmd_wield(struct command *cmd)
 		return;
 	}
 
-/* This will be repurposed for cyberkit */
-#ifdef undef
-	/* Usually if the slot is taken we'll just replace the item in the slot,
-	 * but for rings we need to ask the user which slot they actually
-	 * want to replace */
-	if (tval_is_ring(obj)) {
-		if (cmd_get_item(cmd, "replace", &equip_obj,
-						 /* Prompt */ "Replace which ring? ",
-						 /* Error  */ "Error in do_cmd_wield(), please report.",
-						 /* Filter */ tval_is_ring,
-						 /* Choice */ USE_EQUIP) != CMD_OK)
-			return;
-
-		/* Change slot if necessary */
-		slot = equipped_item_slot(player->body, equip_obj);
-	}
-#endif
-
 	/* Prevent wielding into a stickied slot */
 	if (!obj_can_takeoff(equip_obj)) {
 		object_desc(o_name, sizeof(o_name), equip_obj, ODESC_BASE);

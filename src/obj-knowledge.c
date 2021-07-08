@@ -1686,6 +1686,16 @@ static void object_faults_find_modifiers(struct player *p, struct object *obj)
 	}
 }
 
+static bool icon_is_fault(int icon)
+{
+	for (int i = 1; i < z_info->fault_max; i++) {
+		int index = icon_index(ICON_VAR_FAULT, i);
+		if (index == icon)
+			return true;
+	}
+	return false;
+}
+
 /**
  * Find an elemental property caused by faults
  *
@@ -1730,6 +1740,17 @@ static bool object_faults_find_element(struct player *p, struct object *obj, int
 	return new;
 }
 
+/** True if all faults (if there are any) on the object are known
+ */
+bool object_faults_known(const struct object *obj)
+{
+	for (unsigned i = 0; i < icon_max; i++)
+		if (object_has_icon(obj, i) && !player_knows_icon(player, i) && icon_is_fault(i))
+			return false;
+
+	return true;
+}
+
 /**
  * Get a random unknown icon from an object
  *
@@ -1762,6 +1783,37 @@ int object_find_unknown_icon(struct player *p, struct object *obj)
 }
 
 /**
+ * Get a random unknown fault icon from an object
+ *
+ * \param p is the player
+ * \param obj is the object
+ * \return the index into the icon list, or -1 for no unknown icons
+ */
+int object_find_unknown_fault(struct player *p, struct object *obj)
+{
+	size_t i, num = 0;
+	int *poss_icons;
+	int chosen = -1;
+
+	if (object_icons_known(obj)) return -1;
+
+	poss_icons = mem_zalloc(icon_max * sizeof(int));
+	for (i = 0; i < icon_max; i++) {
+		if (object_has_icon(obj, i) && !player_knows_icon(p, i) && icon_is_fault(i)) {
+			poss_icons[num++] = i;
+		}
+	}
+
+	/* Grab a random icon from among the unknowns  */
+	if (num) {
+		chosen = poss_icons[randint0(num)];
+	}
+
+	mem_free(poss_icons);
+	return chosen;
+}
+
+/**
  * Learn a random unknown icon from an object
  *
  * \param p is the player
@@ -1771,6 +1823,24 @@ void object_learn_unknown_icon(struct player *p, struct object *obj)
 {
 	/* Get a random unknown icon from the object */
 	int i = object_find_unknown_icon(p, obj);
+
+	/* No unknown icons */
+	if (i < 0) return;
+
+	/* Learn the icon */
+	player_learn_icon(p, i, true);
+}
+
+/**
+ * Learn a random unknown fault icon from an object
+ *
+ * \param p is the player
+ * \param obj is the object
+ */
+void object_learn_unknown_faults(struct player *p, struct object *obj)
+{
+	/* Get a random unknown fault icon from the object */
+	int i = object_find_unknown_fault(p, obj);
 
 	/* No unknown icons */
 	if (i < 0) return;

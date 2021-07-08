@@ -968,6 +968,12 @@ static void project_monster_handler_MON_SLOW(project_monster_handler_context_t *
 	context->dam = 0;
 }
 
+/* Lag - this is slowing + damage */
+static void project_monster_handler_MON_LAG(project_monster_handler_context_t *context)
+{
+	context->mon_timed[MON_TMD_SLOW] = context->dam;
+}
+
 /* Confusion (Use "dam" as "power") */
 static void project_monster_handler_MON_CONF(project_monster_handler_context_t *context)
 {

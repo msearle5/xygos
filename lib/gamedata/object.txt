@@ -2955,6 +2955,7 @@ pile:25:2
 power:8
 effect:REMOVE_FAULT
 dice:20+d20
+desc:Attempt to remove a fault from an item. This may fail, which may damage or destroy the item.
 
 name:major repair
 type:card
@@ -2967,6 +2968,7 @@ pile:25:2
 power:20
 effect:REMOVE_FAULT
 dice:50+d50
+desc:Attempt to remove a fault from an item. While it is not entirely infallible, it's far more likely to succeed on difficult faults than the common repair card.
 
 ### Summoning ###
 

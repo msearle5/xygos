@@ -94,6 +94,7 @@ void equip_learn_after_time(struct player *p);
 
 int object_find_unknown_icon(struct player *p, struct object *obj);
 void object_learn_unknown_icon(struct player *p, struct object *obj);
+void object_learn_unknown_faults(struct player *p, struct object *obj);
 void object_learn_on_wield(struct player *p, struct object *obj);
 void shape_learn_on_assume(struct player *p, const char *name);
 void object_learn_on_use(struct player *p, struct object *obj);
@@ -106,3 +107,4 @@ bool object_flavor_is_aware(const struct object *obj);
 bool object_flavor_was_tried(const struct object *obj);
 void object_flavor_aware(struct object *obj);
 void object_flavor_tried(struct object *obj);
+bool object_faults_known(const struct object *obj);

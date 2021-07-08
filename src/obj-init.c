@@ -85,7 +85,7 @@ static const char *py_flags[] =
 };
 
 /* If this struct gets much more than a name, read it from a config file */
-#define MATERIAL(T, N, D, C, M) { N, D, C, M },
+#define MATERIAL(T, N, D, C, M, P) { N, D, C, M, P },
 const struct object_material material[] = {
 #include "list-materials.h"
 };
@@ -2300,7 +2300,7 @@ static enum parser_error parse_ego_item(struct parser *p) {
 		int kidx = lookup_kind(tval, sval)->kidx;
 		struct poss_item *last = NULL;
 		while (pi) {
-			if (pi->kidx == kidx) {
+			if ((int)pi->kidx == kidx) {
 				if (last)
 					last->next = pi->next;
 				else
