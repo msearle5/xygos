@@ -504,7 +504,8 @@ int summon_named_near(struct loc grid, const char *name)
  */
 int summon_specific(struct loc grid, struct monster_race *summoner, int lev, int type, bool delay, bool call)
 {
-	struct loc near;
+	struct loc near = grid;
+	int i;
 	struct monster *mon;
 	struct monster_race *race;
 	struct monster_group_info info = { 0, 0 };
