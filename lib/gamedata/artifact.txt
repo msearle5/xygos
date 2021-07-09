@@ -82,6 +82,14 @@
 # (3.) Adding a new artifact, WILL now affect savefile compatibility for all
 # savefiles.
 
+# Created by you (e.g. by Artifact Creation technique)
+
+name:of You
+base-object:helm:X9
+level:90
+flags:QUEST_ART
+power:450
+desc:Your own creation.
 
 ### Light Sources ###
 
@@ -110,7 +118,7 @@ flags:PROT_CONF | PROT_BLIND
 values:INT[-3] | WIS[-3] | RES_SOUND[1]
 # RES_EDGED
 # | PROT_HALLU
-desc:A helmet with a high pointed plume above each ear. Shielding you from unpleasant truths, this leader's helm also prevents you from getting the point...wd
+desc:A helmet with a high pointed plume above each ear. Shielding you from unpleasant truths, this leader's helm also prevents you from getting the point...
 
 
 ### Light Armor ###

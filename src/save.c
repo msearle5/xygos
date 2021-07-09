@@ -499,6 +499,7 @@ void rdwr_player(void)
 	rdwr_s32b(&player->town_faction);
 	rdwr_s32b(&player->cyber_faction);
 	rdwr_s32b(&player->last_faction_loss);
+	rdwr_string(&player->artifact);
 }
 
 void wr_player(void)

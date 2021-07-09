@@ -141,6 +141,15 @@ static struct object *rd_item(void)
 	if (buf[0]) {
 		obj->artifact = lookup_artifact_name(buf);
 		if (!obj->artifact) {
+			assert(player->artifact);
+			if (streq(buf, player->artifact)) {
+				obj->artifact = lookup_artifact_name("of You");
+				if (obj->artifact->name)
+					string_free(obj->artifact->name);
+				obj->artifact->name = string_make(buf);
+			}
+		}
+		if (!obj->artifact) {
 			note(format("Couldn't find artifact %s!", buf));
 			return NULL;
 		}

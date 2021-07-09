@@ -2954,6 +2954,80 @@ static bool artifact_is_boring(struct artifact *a, struct object_kind *k)
 }
 
 /**
+ * Produce a new random artifact, given a base item and power level
+ * Return true if successful
+ */
+bool new_random_artifact(struct object *obj, struct artifact *art, int power)
+{
+	int aidx = art - a_info;
+	int ap = 0;
+	int art_freq[ART_IDX_TOTAL];
+	struct object_kind *kind = obj->kind;
+	struct artifact_set_data *data = artifact_set_data_new();
+	fixed_frequencies(data);
+	bool ok = false;
+	/* Preserve the name */
+	char *name = art->name;
+
+	/* Structure to hold the old and original artifacts */
+	struct artifact *a_old = mem_zalloc(sizeof *a_old);
+	struct artifact *a_orig = mem_zalloc(sizeof *a_orig);
+	memcpy(a_orig, art, sizeof(*art));
+
+	/* Generate the cumulative frequency table for this base item type */
+	build_freq_table(art, art_freq, data);
+
+	/* Try hard to create an artifact of this type, but it's possible that nothing can be made */
+	int min = 19;
+	int max = 21;
+	for (int tries = 0; tries < MAX_TRIES * 10; tries++) {
+		/* Wipe it */
+		memset(art, 0, sizeof(*art));
+		artifact_prep(art, kind, data);
+
+		if ((tries % MAX_TRIES) == MAX_TRIES-1) {
+			min--;
+			max++;
+		}
+
+		/* Do the actual artifact design */
+		for (int i = 0; i < MAX_TRIES; i++) {
+			/* Copy artifact info temporarily. */
+			copy_artifact(art, a_old);
+
+			/* Add an ability */
+			add_ability(art, power, art_freq, data);
+			remove_contradictory(art);
+
+			/* Check the power */
+			ap = artifact_power(aidx, "artifact attempt", true);
+
+			/* Check power */
+			if (ap > (power * max) / 20 + 1) {
+				/* Too powerful -- put it back */
+				copy_artifact(a_old, art);
+				continue;
+			} else if (ap >= (power * min) / 20) {
+				/* Just right */
+				ok = true;
+				break;
+			}
+		}
+		if (ok)
+			break;
+	}
+
+	if (ok)
+		art->name = name;
+	else
+		memcpy(art, a_orig, sizeof(*art));
+
+	mem_free(a_old);
+	mem_free(a_orig);
+	return ok;
+}
+
+/**
  * Design a random artifact given a tval
  *
  * The artifact is assigned a power based on the range of powers for that tval
@@ -3440,6 +3514,7 @@ void do_randart(u32b randart_seed, bool create_file, bool qa_only)
 			msg("Error - can't close randart.log file.");
 			exit(1);
 		}
+		log_file = NULL;
 		return;
 	}
 
@@ -3473,6 +3548,7 @@ void do_randart(u32b randart_seed, bool create_file, bool qa_only)
 		msg("Error - can't close randart.log file.");
 		exit(1);
 	}
+	log_file = NULL;
 
 	/* Write a data file if required */
 	if (create_file) {
@@ -3494,6 +3570,7 @@ void do_randart(u32b randart_seed, bool create_file, bool qa_only)
 		if (!file_close(log_file)) {
 			quit_fmt("Error - can't close %s.", fname);
 		}
+		log_file = NULL;
 	}
 
 	/* When done, resume use of the Angband "complex" RNG. */

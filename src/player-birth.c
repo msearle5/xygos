@@ -1503,6 +1503,9 @@ void do_cmd_accept_character(struct command *cmd)
 	/* No quest in progress */
 	player->active_quest = -1;
 
+	/* No artifact generated */
+	player->artifact = string_make("of You");
+
 	ignore_birth_init();
 
 	/* Clear old messages, add new starting message */

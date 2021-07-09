@@ -488,6 +488,7 @@ void file_unlock(ang_file *f)
  */
 bool file_skip(ang_file *f, int bytes)
 {
+	if ((!f) || (!f->fh)) return false;
 	return (fseek(f->fh, bytes, SEEK_CUR) == 0);
 }
 
@@ -496,6 +497,7 @@ bool file_skip(ang_file *f, int bytes)
  */
 bool file_readc(ang_file *f, byte *b)
 {
+	if ((!f) || (!f->fh)) return false;
 	int i = fgetc(f->fh);
 
 	if (i == EOF)
@@ -510,6 +512,7 @@ bool file_readc(ang_file *f, byte *b)
  */
 bool file_writec(ang_file *f, byte b)
 {
+	if ((!f) || (!f->fh)) return false;
 	return file_write(f, (const char *)&b, 1);
 }
 
@@ -531,6 +534,7 @@ int file_read(ang_file *f, char *buf, size_t n)
  */
 bool file_write(ang_file *f, const char *buf, size_t n)
 {
+	if ((!f) || (!f->fh)) return false;
 	return fwrite(buf, 1, n, f->fh) == n;
 }
 
@@ -625,7 +629,7 @@ bool file_putf(ang_file *f, const char *fmt, ...)
 	va_list vp;
 	bool status;
 
-	if (!f) return false;
+	if ((!f) || (!f->fh)) return false;
 
 	va_start(vp, fmt);
 	status = file_vputf(f, fmt, vp);
@@ -644,7 +648,7 @@ bool file_vputf(ang_file *f, const char *fmt, va_list vp)
 {
 	char buf[1024];
 
-	if (!f) return false;
+	if((!f) || (!f->fh)) return false;
 
 	(void)vstrnfmt(buf, sizeof(buf), fmt, vp);
 	return file_put(f, buf);

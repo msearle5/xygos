@@ -54,5 +54,6 @@ void do_cmd_monlist(void);
 void do_cmd_itemlist(void);
 struct object *find_object(struct object * (*fn )(struct object *, void *), void *data);
 bool remove_object(struct object *obj);
+struct object *object_is_artifact(struct object *obj, void *av);
 
 #endif /* UI_KNOWLEDGE_H */

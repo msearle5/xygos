@@ -61,6 +61,7 @@ EFFECT(DETECT_SOUL,					false,	NULL,		0,		EFINFO_NONE,	"detects creatures with a
 EFFECT(CREATE_STAIRS,				false,	NULL,		0,		EFINFO_NONE,	"creates a staircase beneath your feet",	"create stairs")
 EFFECT(DISENCHANT,					false,	NULL,		0,		EFINFO_NONE,	"disenchants one of your wielded items",	"disenchant item")
 EFFECT(ENCHANT,						false,	NULL,		0,		EFINFO_NONE,	"attempts to enhance an item",	"enhance item")
+EFFECT(ARTIFACT_CREATION,			false,	NULL,		0,		EFINFO_NONE,	"creates an artifact", "create artifact")
 EFFECT(RECHARGE,					false,	"power",	0,		EFINFO_NONE,	"tries to recharge a wand or staff, destroying the wand or staff on failure",	"recharge")
 EFFECT(PROJECT_LOS,					false,	"power",	1,		EFINFO_SEEN,	"%s which are in line of sight",	"%s in line of sight")
 EFFECT(PROJECT_LOS_AWARE,			false,	"power",	1,		EFINFO_SEEN,	"%s which are in line of sight",	"%s in line of sight")

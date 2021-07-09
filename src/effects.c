@@ -42,6 +42,8 @@
 #include "obj-make.h"
 #include "obj-pile.h"
 #include "obj-power.h"
+#include "obj-properties.h"
+#include "obj-randart.h"
 #include "obj-slays.h"
 #include "obj-tval.h"
 #include "obj-util.h"
@@ -60,6 +62,7 @@
 #include "ui-command.h"
 #include "ui-display.h"
 #include "ui-input.h"
+#include "ui-knowledge.h"
 #include "ui-output.h"
 #include "ui-store.h"
 #include "world.h"
@@ -71,7 +74,7 @@ static void shapechange(const char *shapename, bool verbose);
 
 static int recyclable_blocks(const struct object *obj);
 static bool brand_object(struct object *obj, const char *name);
-static bool mundane_object(struct object *obj);
+static bool mundane_object(struct object *obj, bool silent);
 
 /**
  * ------------------------------------------------------------------------
@@ -294,7 +297,6 @@ static bool item_tester_breakable(const struct object *obj)
 	struct fault_data *c = obj->known->faults;
 	bool ok = false;
 	if (c) {
-		size_t i;
 		for (int i = 1; i < z_info->fault_max; i++) {
 			if (c[i].power == 0) {
 				ok = true;
@@ -305,6 +307,23 @@ static bool item_tester_breakable(const struct object *obj)
 		ok = true;
 	}
     return ok;
+}
+
+/* Artifact creation.
+ * Can't be an artifact or ego, must be equipment, must be a single item
+ */
+static bool item_tester_artifact_creation(const struct object *obj)
+{
+	if (obj->artifact)
+		return false;
+	if (obj->ego[0])
+		return false;
+	/* Check it can be worn */
+	if (!obj_can_wear(obj))
+		return false;
+	if (obj->number > 1)
+		return false;
+	return true;
 }
 
 /**
@@ -755,7 +774,7 @@ static bool enchant_spell(int num_hit, int num_dam, int num_ac, int num_brand, i
 	if (num_brand)
 		okay = brand_object(obj, NULL);
 	if (num_mundane)
-		okay = mundane_object(obj);
+		okay = mundane_object(obj, false);
 
 	/* Failure */
 	if (!okay) {
@@ -810,7 +829,7 @@ static bool brand_object(struct object *obj, const char *name)
 				/* Sometimes things go wrong! */
 				if (one_in_(25)) {
 					msg("The %s flashes briefly, but something's not right...", o_name, (obj->number > 1) ? "glow" : "glows");
-					return mundane_object(obj);
+					return mundane_object(obj, false);
 				}
 
 				/* Make it an ego item */
@@ -878,7 +897,7 @@ static bool brand_object(struct object *obj, const char *name)
  *
  * Returns true if successful
  */
-static bool mundane_object(struct object *obj)
+static bool mundane_object(struct object *obj, bool silent)
 {
 	bool success = false;
 
@@ -934,14 +953,15 @@ static bool mundane_object(struct object *obj)
 	player->upkeep->redraw |= (PR_INVEN | PR_EQUIP);
 
 	event_signal(EVENT_INPUT_FLUSH);
-	if (success) {
-		char o_name[80];
-		object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
-		msg("There is a %s moan, and the %s shudders...", moan, o_name);
-	} else {
-		msg("There is a distant moan, but nothing more appears to happen.");
+	if (!silent) {
+		if (success) {
+			char o_name[80];
+			object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+			msg("There is a %s moan, and the %s shudders...", moan, o_name);
+		} else {
+			msg("There is a distant moan, but nothing more appears to happen.");
+		}
 	}
-
 	return success;
 }
 
@@ -1755,7 +1775,6 @@ static bool effect_handler_ADD_FAULT(effect_handler_context_t *context)
 	const char *prompt = "Break which item? ";
 	const char *rejmsg = "It cannot be broken that easily.";
 	int itemmode = (USE_EQUIP | USE_INVEN | USE_QUIVER | USE_FLOOR);
-	int strength = effect_calculate_value(context, false);
 	struct object *obj = NULL;
 
 	context->ident = true;
@@ -7010,6 +7029,91 @@ bool effect_handler_CLIMBING(effect_handler_context_t *context)
  */
 bool effect_handler_NEXT(effect_handler_context_t *context)
 {
+	return (true);
+}
+
+/* Artifact creation */
+bool effect_handler_ARTIFACT_CREATION(effect_handler_context_t *context)
+{
+	struct object *obj;
+
+	/* Get an item. Avoid the floor because BOOM */
+	const char *q = "Build an artifact from which item? ";
+	const char *s = "You have no suitable base item.";
+	if (context->cmd) {
+		if (cmd_get_item(context->cmd, "tgtitem", &obj, q, s, item_tester_artifact_creation,
+				(USE_EQUIP | USE_INVEN | USE_QUIVER))) {
+			return false;
+		}
+	} else if (!get_item(&obj, q, s, 0, item_tester_artifact_creation, (USE_EQUIP | USE_INVEN | USE_QUIVER)))
+		return false;
+
+	/* Randomize that artifact */
+	struct artifact *art = lookup_artifact_name(player->artifact);
+	assert(art);
+	if (!new_random_artifact(obj, art, player->lev * 10)) {
+		msg("It fails to take hold on such an item.");
+		return false;
+	}
+
+	/* The previous item is no longer an artifact */
+	struct location loc;
+	struct object *previous = locate_object(object_is_artifact, art, &loc);
+	if (previous) {
+		char p_name[80];
+		const char *fall = NULL;
+		/* If you notice it, give a message */
+		if (loc.type == LOCATION_PLAYER) {
+			if (object_is_equipped(player->body, obj))
+				fall = "you are using";
+			else
+				fall = "you are carrying";
+		} else if (loc.type == LOCATION_GROUND) {
+			if (loc_eq(loc.loc, player->grid))
+				fall = "at your feet";
+			else if (square_isview(cave, loc.loc))
+				fall = "on the floor";
+		}
+		if (fall) {
+			object_desc(p_name, sizeof(p_name), previous, ODESC_BASE);
+			msg("The %s %s shudders and writhes awfully.", p_name, fall);
+		}
+		mundane_object(previous, true);
+	}
+
+	/* Make it into an artifact */
+	mundane_object(obj, true);
+	obj->artifact = art;
+	copy_artifact_data(obj, art);
+	obj->el_info[ELEM_FIRE].flags |= EL_INFO_IGNORE;
+	obj->el_info[ELEM_COLD].flags |= EL_INFO_IGNORE;
+	obj->el_info[ELEM_ELEC].flags |= EL_INFO_IGNORE;
+	obj->el_info[ELEM_ACID].flags |= EL_INFO_IGNORE;
+
+	/* Describe the KABOOM */
+	char o_name[80];
+	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+	msg("%s %s radiates a searing blast of white light!", (object_is_carried(player, obj) ? "Your" : "The"), o_name);
+
+	/* Identify it */
+	object_know_all(obj);
+	obj->known->artifact = obj->artifact;
+
+	/* Prompt for a name */
+	char name[80];
+	do {
+		*name = 0;
+		get_string_hook("What do you want to call it? ", name, sizeof(name));
+	} while (strlen(name) == 0);
+	char quoted[83];
+	strnfmt(quoted, sizeof(quoted), "'%s'", name);
+
+	if (art->name)
+		mem_free(art->name);
+	art->name = string_make(isupper(name[0]) ? quoted : name);
+	player->artifact = string_make(art->name);
+
+	/* Something happened */
 	return (true);
 }
 

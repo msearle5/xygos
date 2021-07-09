@@ -650,6 +650,7 @@ struct player {
 	s32b cyber_faction;					/* with the cyber salon */
 	s32b town_faction;					/* and with the rest of town */
 	s32b last_faction_loss;				/* Turn on which the last loss of faction (BM or town) was */
+	char *artifact;						/* Name of the artifact you created */
 
 	u16b noscore;				/* Cheating flags */
 

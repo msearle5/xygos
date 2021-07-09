@@ -1,6 +1,10 @@
 BUGS
 ====
+BUG: An artifact granting protection from blindness stopped a blindness pill from taking effect even
+		when it was only carried in the pack.
+
 BUG: Armoury and Magic Shop need renaming. And possibly BM.
+
 BUG: activate coronet: "You activate it. the Coronet of the Core pulses a soft white" (the should be The)
 
 BUG: Pilot with Caveracer still displays Cavespeeder as an available to take talent
@@ -16,6 +20,7 @@ BUG: TODOs in hq_ok()
 BUG: A Collective Skate that a cyborg started with was {??}
 
 BUG? Stuff isn't transported when you fly - should it be? Should there just be 1 house?
+
 BUG:"You set off the strange rune" and monster spell SHOT need retheming
 
 BUG: Stores which close lose their entrance but don't become ruins. (Only when more than one would?)
@@ -43,7 +48,7 @@ BUG: "no position"
 	from before an object change.
 
 BUG: Gain a talent (e.g. Cavespeeder Pilot) and you (sometimes) end up Starving (0%)
-	UTR easily (for watchpoints)
+	UTR easily (for watchpoints), probably bad save files
 
 BUG:/home/msearle/rogl/angband/v-xygos/angband/src/xygos: Error in flag_on(lore->flags, b->resist_flag): FlagID[0] Size[11] FlagOff[4294967295] FlagBV[128]
 	(Hit a lizard with a laser knife)

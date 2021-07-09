@@ -1446,7 +1446,7 @@ static void display_artifact(int col, int row, bool cursor, int oid)
 	c_prt(attr, o_name, row, col);
 }
 
-static struct object *object_is_artifact(struct object *obj, void *av)
+struct object *object_is_artifact(struct object *obj, void *av)
 {
 	struct artifact *artifact = (struct artifact *)av;
 	return (obj->artifact == artifact) ? obj : NULL;

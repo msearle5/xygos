@@ -509,9 +509,14 @@ spell:Format:38:40:320:1:0:2d120
 seffect:UNBRAND_ITEM
 sdesc:Attempts to remove all additions, positive and negative, from a piece of equipment - to-hit and -dam, egos, activations, faults and so on. Even artifacts will lose everything which makes them special, with no volcano needed.
 
-#spell:Artifice:50:90:10000:1:0:5d10000
-#seffect:ARTIFACT_CREATION
-#sdesc:Transforms an item into a powerful artifact. Be aware that artifacts are unique; only one artifact made by your own hands may exist, whether or not it was built using this technique. The item may be any equippable item type, so long as it is not already an artifact or ego-item. Also watch out for the explosive side effects!
+spell:Artifice:45:90:10000:1:0:5d10000
+seffect:ARTIFACT_CREATION
+seffect:IF_SUCCESSFUL
+seffect:SPOT:LIGHT:15
+sdice:3d8
+seffect:TIMED_INC:BLIND
+sdice:4d10
+sdesc:Transforms an item into a powerful artifact. Be aware that artifacts are unique; only one artifact made by your own hands may exist, whether or not it was built using this technique. The item may be any equippable item type, so long as it is not already an artifact or ego-item. Also watch out for the explosive side effects - you should be at full health and away from anything you care about!
 
 #combine (weld), somehow?
 #artifact creation - once? (Or destroy the previous)?
