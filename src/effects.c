@@ -6087,8 +6087,10 @@ static int recyclable_blocks(const struct object *obj)
 	const struct object_kind *k = obj->kind;
 	if (!kind_is_printable(k))
 		return 0;
-
-	return (k->weight * obj->number) / 1000;
+	int lev = levels_in_class(get_class_by_name("Engineer")->cidx);
+	int cap = 5 + (lev / 2);
+	int rate = lev * 19;
+	return MIN(cap, (k->weight * obj->number) / rate);
 }
 
 /** The effect of a printer
