@@ -10,11 +10,14 @@ void wiz_acquire_great(void);
 void wiz_confirm_quit_no_save(void);
 void wiz_create_all_for_tval(void);
 void wiz_create_artifact(void);
-void wiz_create_item(bool art);
+void wiz_create_item(bool art, bool id);
 void wiz_create_nonartifact(void);
+void wiz_create_unidentified(void);
 void wiz_learn_all_object_kinds(void);
 void wiz_phase_door(void);
 void wiz_proj_demo(void);
 void wiz_teleport(void);
+
+extern bool wiz_create_item_id;
 
 #endif /* INCLUDED_UI_WIZARD_H */

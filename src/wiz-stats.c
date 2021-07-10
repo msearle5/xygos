@@ -1457,8 +1457,10 @@ static void ego_stats(void)
 			if (ok) {
 				egos[i]++;
 				for(int j=0;j<MAX_EGOS;j++) {
-					int e_idx = obj->ego[j] - e_info;
-					levcount[e_idx]++;
+					if (obj->ego[j]) {
+						int e_idx = obj->ego[j] - e_info;
+						levcount[e_idx]++;
+					}
 				}
 			}
 			if (obj)
@@ -1645,12 +1647,17 @@ void stats_collect(int nsim, int simtype)
 			break;
 		case 2:
 			clearing = true;
+			regen = false;
 			break;
 		case 3:
 			artifacts = true;
 			break;
 		case 4:
 			egos = true;
+			break;
+		case 5:
+			clearing = true;
+			regen = true;
 			break;
 	}
 

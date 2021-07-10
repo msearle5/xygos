@@ -108,6 +108,8 @@ void do_cmd_wiz_edit_player_exp(struct command *cmd);
 void do_cmd_wiz_edit_player_gold(struct command *cmd);
 void do_cmd_wiz_edit_player_start(struct command *cmd);
 void do_cmd_wiz_edit_player_stat(struct command *cmd);
+void do_cmd_wiz_egos(struct command *cmd);
+void do_cmd_wiz_help(struct command *cmd);
 void do_cmd_wiz_hit_all_los(struct command *cmd);
 void do_cmd_wiz_increase_exp(struct command *cmd);
 void do_cmd_wiz_jump_level(struct command *cmd);

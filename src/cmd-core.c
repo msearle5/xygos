@@ -115,8 +115,6 @@ static const struct command_info game_cmds[] =
 	{ CMD_REPEAT, "repeat", NULL, false, 0 },
 
 	{ CMD_COMMAND_MONSTER, "make a monster act", do_cmd_mon_command, false, 0 },
-	
-	{ CMD_COMMAND_MONSTER, "make a monster act", do_cmd_mon_command, false, 0 },
 
 	{ CMD_SPOIL_ARTIFACT, "generate spoiler file for artifacts", do_cmd_spoil_artifact, false, 0 },
 	{ CMD_SPOIL_MON, "generate spoiler file for monsters", do_cmd_spoil_monster, false, 0 },
@@ -147,10 +145,12 @@ static const struct command_info game_cmds[] =
 	{ CMD_WIZ_EDIT_PLAYER_GOLD, "change the player's gold", do_cmd_wiz_edit_player_gold, false, 0 },
 	{ CMD_WIZ_EDIT_PLAYER_START, "start editing the player", do_cmd_wiz_edit_player_start, false, 0 },
 	{ CMD_WIZ_EDIT_PLAYER_STAT, "edit one of the player's stats", do_cmd_wiz_edit_player_stat, false, 0 },
+	{ CMD_WIZ_EGOS, "create ego items", do_cmd_wiz_egos, false, 0 },
 	{ CMD_WIZ_HIT_ALL_LOS, "hit all monsters in LOS", do_cmd_wiz_hit_all_los, false, 0 },
 	{ CMD_WIZ_INCREASE_EXP, "increase experience", do_cmd_wiz_increase_exp, false, 0 },
 	{ CMD_WIZ_JUMP_LEVEL, "jump to a level", do_cmd_wiz_jump_level, false, 0 },
 	{ CMD_WIZ_LEARN_OBJECT_KINDS, "learn about kinds of objects", do_cmd_wiz_learn_object_kinds, false, 0 },
+	{ CMD_WIZ_HELP, "help on wizard commands", do_cmd_wiz_help, false, 0 },
 	{ CMD_WIZ_MAGIC_MAP, "map local area", do_cmd_wiz_magic_map, false, 0 },
 	{ CMD_WIZ_PEEK_NOISE_SCENT, "peek at noise and scent", do_cmd_wiz_peek_noise_scent, false, 0 },
 	{ CMD_WIZ_PERFORM_EFFECT, "perform an effect", do_cmd_wiz_perform_effect, false, 0 },

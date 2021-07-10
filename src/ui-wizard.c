@@ -329,10 +329,11 @@ static const menu_iter wiz_create_item_menu = {
 /**
  * Choose and create an instance of an artifact or object kind
  */
-void wiz_create_item(bool art)
+void wiz_create_item(bool art, bool id)
 {
 	int tvals[TV_MAX];
 	int i, n;
+	wiz_create_item_id = id;
 
 	struct menu *menu = menu_new(MN_SKIN_COLUMNS, &wiz_create_item_menu);
 
@@ -397,7 +398,7 @@ void wiz_confirm_quit_no_save(void)
  */
 void wiz_create_artifact(void)
 {
-	wiz_create_item(true);
+	wiz_create_item(true, true);
 }
 
 
@@ -406,7 +407,15 @@ void wiz_create_artifact(void)
  */
 void wiz_create_nonartifact(void)
 {
-	wiz_create_item(false);
+	wiz_create_item(false, true);
+}
+
+/**
+ * Shim for ui-game.c to call wiz_create_item(false).
+ */
+void wiz_create_unidentified(void)
+{
+	wiz_create_item(false, false);
 }
 
 

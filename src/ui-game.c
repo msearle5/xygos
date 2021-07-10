@@ -20,6 +20,7 @@
 #include "angband.h"
 #include "cmds.h"
 #include "datafile.h"
+#include "game-input.h"
 #include "game-world.h"
 #include "grafmode.h"
 #include "init.h"
@@ -219,6 +220,8 @@ struct cmd_info cmd_debug_obj[] =
 	{ "Create an object", { 'c' }, CMD_NULL, wiz_create_nonartifact, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
 	{ "Create an artifact", { 'C' }, CMD_NULL, wiz_create_artifact, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
 	{ "Create all from tval", { 'V' }, CMD_NULL, wiz_create_all_for_tval, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Create unided object", { 'U' }, CMD_NULL, wiz_create_unidentified, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Create all egos", { 'O' }, CMD_WIZ_EGOS, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
 	{ "Acquire good", { 'g' }, CMD_NULL, wiz_acquire_good, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
 	{ "Acquire great", { 'v' }, CMD_NULL, wiz_acquire_great, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
 	{ "Play with item", { 'o' }, CMD_WIZ_PLAY_ITEM, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
@@ -289,6 +292,7 @@ struct cmd_info cmd_debug_misc[] =
 	{ "Banish nearby monsters", { 'z' }, CMD_WIZ_BANISH, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
 	{ "Push objects from square", { '>' }, CMD_WIZ_PUSH_OBJECT, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
 	{ "Quit without saving", { 'X' }, CMD_NULL, wiz_confirm_quit_no_save, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Debug command help", { '?' }, CMD_WIZ_HELP, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
 };
 
 /**

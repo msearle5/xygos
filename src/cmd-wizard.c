@@ -42,12 +42,14 @@
 #include "project.h"
 #include "target.h"
 #include "trap.h"
+#include "ui-help.h"
 #include "ui-input.h"
 #include "ui-map.h"
 #include "ui-output.h"
 #include "ui-target.h"
 #include "wizard.h"
 
+bool wiz_create_item_id = true;
 
 /*
  * Used by do_cmd_wiz_edit_player_*() functions to track the state of the
@@ -291,13 +293,18 @@ static void wiz_display_item(const struct object *obj, bool all)
  *
  * \param obj The object to drop.
  */
-static void wiz_drop_object(struct object *obj)
+static void wiz_drop_object(struct object *obj, bool id)
 {
-	if (obj == NULL) return;
+	if (obj == NULL)
+		return;
 
 	/* Mark as cheat and where it was created */
 	obj->origin = ORIGIN_CHEAT;
 	obj->origin_depth = player->depth;
+
+	/* ID it */
+	if (id)
+		object_know_all(obj);
 
 	/* Drop the object from heaven. */
 	drop_near(cave, &obj, 0, player->grid, true, true);
@@ -718,7 +725,7 @@ void do_cmd_wiz_create_all_artifact(struct command *cmd)
 		struct artifact *art = &a_info[i];
 		struct object *obj = wiz_create_object_from_artifact(art);
 
-		wiz_drop_object(obj);
+		wiz_drop_object(obj, true);
 	}
 }
 
@@ -752,7 +759,7 @@ void do_cmd_wiz_create_all_artifact_from_tval(struct command *cmd)
 			struct object *obj =
 				wiz_create_object_from_artifact(art);
 
-			wiz_drop_object(obj);
+			wiz_drop_object(obj, true);
 		}
 	}
 }
@@ -774,7 +781,7 @@ void do_cmd_wiz_create_all_obj(struct command *cmd)
 		if (kf_has(kind->kind_flags, KF_INSTA_ART)) continue;
 
 		obj = wiz_create_object_from_kind(kind);
-		wiz_drop_object(obj);
+		wiz_drop_object(obj, true);
 	}
 }
 
@@ -815,7 +822,7 @@ void do_cmd_wiz_create_all_obj_from_tval(struct command *cmd)
 			(!art && kf_has(kind->kind_flags, KF_INSTA_ART))) continue;
 
 		obj = wiz_create_object_from_kind(kind);
-		wiz_drop_object(obj);
+		wiz_drop_object(obj, true);
 	}
 }
 
@@ -843,7 +850,7 @@ void do_cmd_wiz_create_artifact(struct command *cmd)
 		struct artifact *art = &a_info[ind];
 		struct object *obj = wiz_create_object_from_artifact(art);
 
-		wiz_drop_object(obj);
+		wiz_drop_object(obj, true);
 	} else {
 		msg("That's not a valid artifact.");
 	}
@@ -874,9 +881,25 @@ void do_cmd_wiz_create_obj(struct command *cmd)
 		struct object_kind *kind = &k_info[ind];
 		struct object *obj = wiz_create_object_from_kind(kind);
 
-		wiz_drop_object(obj);
+		wiz_drop_object(obj, wiz_create_item_id);
 	} else {
 		msg("That's not a valid kind of object.");
+	}
+}
+
+/** Create one item for every ego */
+void do_cmd_wiz_egos(struct command *cmd)
+{
+	struct start_item item = { 0, 0, 1, 1 };
+	for (int i = 1; i < z_info->e_max; i++) {
+		if (e_info[i].poss_items) {
+			struct poss_item *poss = e_info[i].poss_items;
+			while (poss->next) poss = poss->next;
+			item.tval = k_info[poss->kidx].tval;
+			item.sval = k_info[poss->kidx].sval;
+			item.ego[0] = e_info+i;
+			add_start_items(player, &item, false, false, ORIGIN_CHEAT);
+		}
 	}
 }
 
@@ -915,6 +938,33 @@ void do_cmd_wiz_create_trap(struct command *cmd)
 	}
 }
 
+static void cure_all()
+{
+	/* Restore hit & spell points */
+	player->chp = player->mhp;
+	player->chp_frac = 0;
+
+	/* Healing */
+	(void)player_clear_timed(player, TMD_BLIND, true);
+	(void)player_clear_timed(player, TMD_CONFUSED, true);
+	(void)player_clear_timed(player, TMD_POISONED, true);
+	(void)player_clear_timed(player, TMD_AFRAID, true);
+	(void)player_clear_timed(player, TMD_PARALYZED, true);
+	(void)player_clear_timed(player, TMD_IMAGE, true);
+	(void)player_clear_timed(player, TMD_STUN, true);
+	(void)player_clear_timed(player, TMD_CUT, true);
+	(void)player_clear_timed(player, TMD_SLOW, true);
+	(void)player_clear_timed(player, TMD_AMNESIA, true);
+	(void)player_clear_timed(player, TMD_RAD, true);
+
+	/* No longer hungry */
+	player_set_timed(player, TMD_FOOD, PY_FOOD_FULL - 1, false);
+
+	/* Flag what needs to be updated or redrawn */
+	player->upkeep->update |= PU_TORCH | PU_UPDATE_VIEW | PU_MONSTERS;
+	player->upkeep->redraw |= PR_BASIC | PR_EXTRA | PR_MAP | PR_EQUIP;
+}
+
 
 /**
  * Instantly cure the player of everything (CMD_WIZ_CURE_ALL).  Takes no
@@ -942,29 +992,8 @@ void do_cmd_wiz_cure_all(struct command *cmd)
 	/* Restore the level */
 	effect_simple(EF_RESTORE_EXP, source_none(), "0", 0, 0, 0, 0, 0, NULL);
 
-	/* Heal the player */
-	player->chp = player->mhp;
-	player->chp_frac = 0;
-
 	/* Cure stuff */
-	(void) player_clear_timed(player, TMD_BLIND, true);
-	(void) player_clear_timed(player, TMD_CONFUSED, true);
-	(void) player_clear_timed(player, TMD_POISONED, true);
-	(void) player_clear_timed(player, TMD_AFRAID, true);
-	(void) player_clear_timed(player, TMD_PARALYZED, true);
-	(void) player_clear_timed(player, TMD_IMAGE, true);
-	(void) player_clear_timed(player, TMD_STUN, true);
-	(void) player_clear_timed(player, TMD_CUT, true);
-	(void) player_clear_timed(player, TMD_SLOW, true);
-	(void) player_clear_timed(player, TMD_RAD, true);
-	(void) player_clear_timed(player, TMD_AMNESIA, true);
-
-	/* No longer hungry */
-	player_set_timed(player, TMD_FOOD, PY_FOOD_FULL - 1, false);
-
-	/* Flag what needs to be updated or redrawn */
-	player->upkeep->update |= PU_TORCH | PU_UPDATE_VIEW | PU_MONSTERS;
-	player->upkeep->redraw |= PR_BASIC | PR_EXTRA | PR_MAP | PR_EQUIP;
+	cure_all();
 
 	/* Give the player some feedback */
 	msg("You feel *much* better!");
@@ -1629,6 +1658,18 @@ void do_cmd_wiz_perform_effect(struct command *cmd)
 	if (ident) {
 		msg("Identified!");
 	}
+}
+
+/**
+ * Display the debug commands help file.
+ */
+void do_cmd_wiz_help(struct command *cmd) 
+{
+	char buf[80];
+	strnfmt(buf, sizeof(buf), "debug.txt");
+	screen_save();
+	show_file(buf, NULL, 0, 0);
+	screen_load();
 }
 
 
