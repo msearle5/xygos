@@ -1314,7 +1314,7 @@ static bool monster_turn_attack_glyph(struct chunk *c, struct monster *mon,
 	if (randint1(z_info->glyph_hardness) < mon->race->level) {
 		/* Describe observable breakage */
 		if (square_isseen(c, new)) {
-			msg("The rune of protection is broken!");
+			msg("The replusion field is broken!");
 
 			/* Forget the rune */
 			square_forget(c, new);

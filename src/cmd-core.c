@@ -142,7 +142,7 @@ static const struct command_info game_cmds[] =
 	{ CMD_WIZ_DISPLAY_KEYLOG, "display keystroke log", do_cmd_wiz_display_keylog, false, 0 },
 	{ CMD_WIZ_DUMP_LEVEL_MAP, "write map of level", do_cmd_wiz_dump_level_map, false, 0 },
 	{ CMD_WIZ_EDIT_PLAYER_EXP, "change the player's experience", do_cmd_wiz_edit_player_exp, false, 0 },
-	{ CMD_WIZ_EDIT_PLAYER_GOLD, "change the player's gold", do_cmd_wiz_edit_player_gold, false, 0 },
+	{ CMD_WIZ_EDIT_PLAYER_GOLD, "change the player's cash", do_cmd_wiz_edit_player_gold, false, 0 },
 	{ CMD_WIZ_EDIT_PLAYER_START, "start editing the player", do_cmd_wiz_edit_player_start, false, 0 },
 	{ CMD_WIZ_EDIT_PLAYER_STAT, "edit one of the player's stats", do_cmd_wiz_edit_player_stat, false, 0 },
 	{ CMD_WIZ_EGOS, "create ego items", do_cmd_wiz_egos, false, 0 },

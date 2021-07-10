@@ -58,17 +58,17 @@
 name:no trap:no trap
 graphics: :w
 
-name:glyph of warding:glyph of warding
+name:repulsion field:repulsion field
 graphics:;:y
 appear:0:0:0
 flags:GLYPH | VISIBLE | FLOOR
-desc:A magical rune which monsters cannot pass without difficulty.
+desc:A repulsion field which monsters cannot pass without difficulty.
 
 name:decoy:decoy
 graphics:;:G
 appear:0:0:0
 flags:GLYPH | VISIBLE | FLOOR
-desc:A magical decoy which sounds and looks like the player.
+desc:A decoy hologram which sounds and looks like the player.
 
 name:door lock:door lock
 graphics: :w
@@ -154,59 +154,59 @@ msg-xtra:You are impaled on poisonous spikes!
 
 # rune -- summon (OoD) monster
 
-name:strange rune:rune of summon foe
+name:alarm:teleport-in alarm
 graphics:^:B
 appear:1:3:0
 visibility:0
 flags:TRAP | FLOOR | ONETIME | MAGICAL
 effect:SUMMON:MONSTER:0:5
 dice:1
-desc:A magical rune which calls a monster to attack you.
+desc:An alarm and teleporter which calls a monster to attack you.
 msg:A new foe appears from nowhere!
 visibility:0
 
 # rune -- summon monsters
 
-name:strange rune:rune of summoning
+name:alarm:repeating teleport-in alarm
 graphics:^:B
 appear:2:3:0
 visibility:0
 flags:TRAP | FLOOR | ONETIME | MAGICAL
 effect:SUMMON:ANY
 dice:2+1d3
-desc:A magical rune which calls up monsters to attack you.
+desc:An alarm and teleporter which calls up monsters to attack you.
 msg:You are enveloped in a cloud of smoke!
 
 # rune -- summon undead
 
-name:strange rune:rune of necromancy
-graphics:^:B
-appear:1:20:0
-visibility:0
-flags:TRAP | FLOOR | ONETIME | MAGICAL
-effect:SUMMON:UNDEAD
-dice:1d3M2
-desc:A magical rune which calls the undead to attack you.
-msg:A sense of dread washes over you...
+#name:strange rune:rune of necromancy
+#graphics:^:B
+#appear:1:20:0
+#visibility:0
+#flags:TRAP | FLOOR | ONETIME | MAGICAL
+#effect:SUMMON:UNDEAD
+#dice:1d3M2
+#desc:An alarm and teleporter which calls the undead to attack you.
+#msg:A sense of dread washes over you...
 
 # rune -- summon demons
 
-name:strange rune:hellhole
-graphics:^:B
-appear:1:20:0
-visibility:0
-flags:TRAP | FLOOR | ONETIME | MAGICAL
-effect:SUMMON:DEMON
-dice:1+1d3
-desc:A magical rune which calls demons to attack you.
+#name:strange rune:hellhole
+#graphics:^:B
+#appear:1:20:0
+#visibility:0
+#flags:TRAP | FLOOR | ONETIME | MAGICAL
+#effect:SUMMON:DEMON
+#dice:1+1d3
+#desc:An alarm and teleporter which calls demons to attack you.
 msg:Demons appear!
-visibility:0
+#visibility:0
 
 ### 20
 
 # rune -- teleport
 
-name:strange markings:portal
+name:strange pad:portal
 graphics:^:r
 appear:1:1:0
 visibility:30+d30
@@ -220,7 +220,7 @@ msg-bad:You are carried away...
 
 # rune -- teleport
 
-name:strange markings:teleport trap
+name:strange pad:teleport trap
 graphics:^:o
 appear:1:1:0
 visibility:30+d30

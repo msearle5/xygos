@@ -691,7 +691,7 @@ int context_menu_object(struct object *obj)
 				MN_ROW_VALID : MN_ROW_INVALID;
 			ADD_LABEL("Run", CMD_RUN_CARD, valid);
 		} else if (tval_is_pill(obj)) {
-			ADD_LABEL("Quaff", CMD_QUAFF, MN_ROW_VALID);
+			ADD_LABEL("Take pill", CMD_QUAFF, MN_ROW_VALID);
 		} else if (tval_is_edible(obj)) {
 			ADD_LABEL("Eat", CMD_EAT, MN_ROW_VALID);
 		} else if (obj_is_activatable(obj)) {

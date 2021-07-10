@@ -3069,15 +3069,15 @@ static const char *skill_index_to_name(int i)
 
 	switch (i) {
 	case SKILL_DISARM_PHYS:
-		name = "physical disarming";
+		name = "disarming mechanical traps";
 		break;
 
 	case SKILL_DISARM_MAGIC:
-		name = "magical disarming";
+		name = "disarming electronic traps";
 		break;
 
 	case SKILL_DEVICE:
-		name = "magic devices";
+		name = "tech devices";
 		break;
 
 	case SKILL_SAVE:
@@ -3633,12 +3633,12 @@ static menu_action knowledge_actions[] =
 { 0, 0, "Display feature knowledge",  	   do_cmd_knowledge_features  },
 { 0, 0, "Display trap knowledge",          do_cmd_knowledge_traps  },
 { 0, 0, "Display shapechange effects",     do_cmd_knowledge_shapechange },
-{ 0, 0, "Display contents of general store (1)", do_cmd_knowledge_store },
+{ 0, 0, "Display contents of convenience store (1)", do_cmd_knowledge_store },
 { 0, 0, "Display contents of armourer (2)",      do_cmd_knowledge_store },
-{ 0, 0, "Display contents of weaponsmith (3)",   do_cmd_knowledge_store },
-{ 0, 0, "Display contents of bookseller (4)",    do_cmd_knowledge_store },
-{ 0, 0, "Display contents of alchemist (5)",     do_cmd_knowledge_store },
-{ 0, 0, "Display contents of magic shop (6)",    do_cmd_knowledge_store },
+{ 0, 0, "Display contents of weapon dealer (3)",   do_cmd_knowledge_store },
+{ 0, 0, "Display contents of electronics outlet (4)",    do_cmd_knowledge_store },
+{ 0, 0, "Display contents of pharmacy (5)",     do_cmd_knowledge_store },
+{ 0, 0, "Display contents of specialist tech (6)",    do_cmd_knowledge_store },
 { 0, 0, "Display contents of black market (7)",  do_cmd_knowledge_store },
 { 0, 0, "Display contents of home (8)",          do_cmd_knowledge_store },
 { 0, 0, "Display hall of fame",       	   do_cmd_knowledge_scores    },

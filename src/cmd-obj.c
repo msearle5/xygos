@@ -389,7 +389,7 @@ static void use_aux(struct command *cmd, struct object *obj, enum use use,
 	bool none_left = false;
 	int dir = 5;
 	char label = gear_to_label(obj);
-	struct trap_kind *rune = lookup_trap("glyph of warding");
+	struct trap_kind *rune = lookup_trap("repulsion field");
 
 	/* Get arguments */
 	assert(cmd_get_arg_item(cmd, "item", &obj) == CMD_OK);

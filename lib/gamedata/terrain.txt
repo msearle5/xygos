@@ -206,14 +206,14 @@ look-prefix:the entrance to the
 look-in-preposition:at
 desc:A brightly lit white room with a display of medicines.
 
-name:Magic Shop
+name:Specialist Tech
 graphics:6:r
 priority:20
 flags:SHOP | PROJECT | PASSABLE | PERMANENT | INTERESTING | EASY
 info:6:0
 look-prefix:the entrance to the
 look-in-preposition:at
-desc:A shop for devices and adornments with magic trapped within.
+desc:A shop selling mysterious, powerful and often lethal pre-War devices.
 
 name:Black Market
 graphics:7:D
@@ -285,7 +285,7 @@ priority:12
 flags:WALL | ROCK | NO_SCENT | NO_FLOW | MAGMA | TORCH
 info:0:2
 confused-msg:bashes into a wall
-desc:A seam of soft rock.  It can be removed by digging or magic, and passed 
+desc:A seam of soft rock.  It can be removed by digging, and passed 
 desc:through by immaterial monsters.  It stops any spells, missiles or line of 
 desc:sight.
 
@@ -295,7 +295,7 @@ priority:11
 flags:WALL | ROCK | NO_SCENT | NO_FLOW | QUARTZ | TORCH
 info:0:3
 confused-msg:bashes into a wall
-desc:A seam of hardish rock.  It can be removed by digging or magic, and passed 
+desc:A seam of hardish rock.  It can be removed by digging, and passed 
 desc:through by immaterial monsters.  It stops any spells, missiles or line of 
 desc:sight.
 
@@ -305,7 +305,7 @@ priority:19
 flags:WALL | ROCK | INTERESTING | NO_SCENT | NO_FLOW | GOLD | MAGMA
 info:0:2
 confused-msg:bashes into a wall
-desc:A seam of soft rock.  It can be removed by digging or magic, and passed 
+desc:A seam of soft rock.  It can be removed by digging, and passed 
 desc:through by immaterial monsters.  It stops any spells, missiles or line of 
 desc:sight.  It contains visible treasure.
 
@@ -315,7 +315,7 @@ priority:19
 flags:WALL | ROCK | INTERESTING | NO_SCENT | NO_FLOW | GOLD | QUARTZ
 info:0:3
 confused-msg:bashes into a wall
-desc:A seam of hardish rock.  It can be removed by digging or magic, and passed 
+desc:A seam of hardish rock.  It can be removed by digging, and passed 
 desc:through by immaterial monsters.  It stops any spells, missiles or line of 
 desc:sight.  It contains visible treasure.
 

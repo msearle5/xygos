@@ -1602,15 +1602,15 @@ void lore_append_spells(textblock *tb, const struct monster_race *race,
 		/* Intro */
 		textblock_append(tb, "%s may ", initial_pronoun);
 
-		/* Verb Phrase */
-		textblock_append_c(tb, COLOUR_L_RED, "cast spells");
-
 		/* Adverb */
 		if (rf_has(known_flags, RF_SMART))
 			textblock_append(tb, " intelligently");
 
+		/* Verb Phrase */
+		//textblock_append_c(tb, COLOUR_L_RED, "cast spells");
+
 		/* List */
-		textblock_append(tb, " which ");
+		//textblock_append(tb, " which ");
 		lore_append_spell_clause(tb, current_flags, know_hp, race, "or", "");
 
 		/* End the sentence about innate/other spells */

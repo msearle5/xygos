@@ -341,13 +341,13 @@ lore-color-resist:Yellow
 message-vis:{name} breathes force.
 message-invis:You hear a staccato roar.
 
-name:BR_MANA
-hit:100
-effect:BREATH:MANA:0:30
-lore:mana
-lore-color-base:Light Red
-message-vis:{name} breathes raw magic.
-message-invis:You hear a scintillating roar.
+#name:BR_MANA
+#hit:100
+#effect:BREATH:MANA:0:30
+#lore:mana
+#lore-color-base:Light Red
+#message-vis:{name} breathes raw magic.
+#message-invis:You hear a scintillating roar.
 
 name:BOULDER
 hit:60
@@ -571,15 +571,15 @@ lore-color-base:Light Red
 message-vis:{name} projects an inertia-storm!
 message-invis:You feel a wave of inertia pass through you.
 
-name:BA_MANA
-hit:100
-effect:BALL:MANA:2
-dice:$B+10d10
-expr:B:SPELL_POWER:* 5
-lore:invoke mana storms
-lore-color-base:Light Red
-message-vis:{name} invokes a storm of raw magic.
-message-invis:Something screams loudly.
+#name:BA_MANA
+#hit:100
+#effect:BALL:MANA:2
+#dice:$B+10d10
+#expr:B:SPELL_POWER:* 5
+#lore:invoke mana storms
+#lore-color-base:Light Red
+#message-vis:{name} invokes a storm of raw magic.
+#message-invis:Something screams loudly.
 
 name:BA_HOLY
 hit:100
@@ -807,15 +807,15 @@ lore-color-resist:Orange
 message-vis:{name} fires a jet of water.
 message-invis:Something gurgles.
 
-name:BO_MANA
-hit:100
-effect:BOLT:MANA
-dice:50+1d$S
-expr:S:SPELL_POWER:* 5 / 2
-lore:produce mana bolts
-lore-color-base:Light Red
-message-vis:{name} casts a bolt of raw magic.
-message-invis:Something screams.
+#name:BO_MANA
+#hit:100
+#effect:BOLT:MANA
+#dice:50+1d$S
+#expr:S:SPELL_POWER:* 5 / 2
+#lore:produce mana bolts
+#lore-color-base:Light Red
+#message-vis:{name} casts a bolt of raw magic.
+#message-invis:Something screams.
 
 name:BO_PLAS
 hit:100
@@ -844,9 +844,9 @@ hit:100
 effect:BOLT:MISSILE
 dice:$B+2d6
 expr:B:SPELL_POWER:/ 3
-lore:produce magic missiles
+lore:fire missiles
 lore-color-base:Yellow
-message-vis:{name} fires a magic missile.
+message-vis:{name} fires a missile.
 message-invis:Something mumbles.
 
 name:BE_ELEC
@@ -874,7 +874,7 @@ power-cutoff:80
 lore:shoot rays of death
 lore-color-base:Light Red
 lore-color-resist:Light Green
-message-vis:{name} unleashes a ray of death.
+message-vis:{name} unleashes a death ray.
 message-invis:Something intones with deadly menace.
 
 name:SCARE
@@ -949,7 +949,7 @@ dice:$B
 expr:B:SPELL_POWER:* 6
 lore:heal-self
 lore-color-base:Yellow
-message-vis:{name} magically starts closing wounds.
+message-vis:{name} starts closing wounds.
 message-invis:Something mutters.
 
 name:HEAL_KIN

@@ -56,7 +56,7 @@ effect:DRAIN_STAT:CON
 msg:A small needle has pricked you!
 msg-death:a poison needle
 
-name:summoning runes
+name:teleport beacon
 code:SUMMON
 level:15
 effect:SUMMON:ANY

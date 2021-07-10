@@ -1513,7 +1513,7 @@ static bool effect_handler_GLYPH(effect_handler_context_t *context)
 
 	/* See if the effect works */
 	if (!square_istrappable(cave, player->grid)) {
-		msg("There is no clear floor on which to cast the spell.");
+		msg("There is no clear floor on which to deploy the decoy.");
 		return false;
 	}
 
@@ -5784,7 +5784,7 @@ static bool effect_handler_MOVE_ATTACK(effect_handler_context_t *context)
 
 	mon = square_monster(cave, target);
 	if (mon == NULL || !monster_is_obvious(mon)) {
-		msg("This spell must target a monster.");
+		msg("This attack must target a monster.");
 		return false;
 	}
 

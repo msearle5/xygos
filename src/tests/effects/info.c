@@ -243,7 +243,7 @@ static int test_menu_name(void *state) {
 	require(streq(buf, "reduce haste"));
 	n = effect_get_menu_name(buf, sizeof(buf), te->detect_gold);
 	eq(n, strlen(buf));
-	require(streq(buf, "detect gold"));
+	require(streq(buf, "detect cash"));
 	ok;
 }
 

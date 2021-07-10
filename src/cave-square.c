@@ -791,7 +791,7 @@ bool square_isnoscent(struct chunk *c, struct loc grid) {
 
 bool square_iswarded(struct chunk *c, struct loc grid)
 {
-	struct trap_kind *rune = lookup_trap("glyph of warding");
+	struct trap_kind *rune = lookup_trap("repulsion field");
 	return square_trap_specific(c, grid, rune->tidx);
 }
 

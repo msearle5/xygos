@@ -364,7 +364,6 @@ BUG: Long pause after character death
 Theme
 =====
 
-TODO: Remove & replace melee weapons
-TODO: Remove & replace armor
-
-TODO: Reword: Inscription, dungeon, potion, spell, book, Saving Throw, magic, chests, treasure, gold, rune
+TODO: Reword: Inscription (tag?), dungeon (area?),Saving Throw,treasure (valulables?), Xrune(icon, symbol)
+ Xpotion, Xquaff, Xspell, Xbook,  Xmagic, Xchests, Xgold, 
+And monsters (and monster types, summons, slays etc)

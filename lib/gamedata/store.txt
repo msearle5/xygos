@@ -224,7 +224,7 @@ buy:device:medical nanokit
 # Rename
 # Specialist, Alien, Antique, Tech, #GEar
 normal:wand:healing ray, #Supply, Scientific, Engineering/[Hi]Tech[nical] Suply...
-store:6:Magic Shop
+store:6:Specialist Tech
 owner:8:15000:*
 owner:9:15000:*
 owner:10:18000:*

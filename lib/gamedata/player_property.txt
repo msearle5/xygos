@@ -50,7 +50,7 @@ desc:You easily recognize mushrooms.
 type:player
 code:KNOW_ZAPPER
 name:Device Lore
-desc:You easily recognize magic devices.
+desc:You easily recognize mysterious devices.
 
 type:player
 code:SEE_ORE
@@ -78,8 +78,8 @@ desc:You get improved melee with blessed or hafted weapons.
 
 type:player
 code:ZERO_FAIL
-name:Full Spellcaster
-desc:You may obtain a perfect success rate with magic.
+name:Full Tech User
+desc:You may obtain a perfect success rate with techniques.
 
 type:player
 code:BEAM
@@ -93,8 +93,8 @@ desc:You may choose your own spells to study.
 
 type:player
 code:NO_MANA
-name:No Magic
-desc:You cannot cast spells.
+name:No Techniques
+desc:You cannot use techniques.
 
 type:player
 code:CHARM

@@ -307,7 +307,7 @@ aim:0
 power:25
 effect:LIGHT_LEVEL
 dice:1
-desc:completely lights up and magically maps the level, detecting all objects
+desc:completely lights up and maps the level, detecting all objects
 
 
 name:HERO
@@ -388,7 +388,7 @@ effect:DETECT_GOLD
 effect-yx:22:40
 effect:SENSE_OBJECTS
 effect-yx:22:40
-desc:detects gold and objects nearby
+desc:detects objects nearby, calling special attention to cash and buried valuables
 
 name:DETECT_INVIS
 aim:0
@@ -432,35 +432,35 @@ aim:0
 power:15
 effect:ENCHANT:TOHIT
 dice:1
-desc:attempts to magically enhance a weapon's to-hit bonus
+desc:attempts to enhance a weapon's to-hit bonus
 
 name:ENCHANT_TODAM
 aim:0
 power:20
 effect:ENCHANT:TODAM
 dice:1
-desc:attempts to magically enhance a weapon's to-dam bonus
+desc:attempts to enhance a weapon's to-dam bonus
 
 name:ENCHANT_WEAPON
 aim:0
 power:22
 effect:ENCHANT:TOBOTH
 dice:1d3
-desc:attempts to magically enhance a weapon both to-hit and to-dam
+desc:attempts to enhance a weapon both to-hit and to-dam
 
 name:ENCHANT_ARMOR
 aim:0
 power:12
 effect:ENCHANT:TOAC
 dice:1
-desc:attempts to magically enhance a piece of armour
+desc:attempts to enhance a piece of armour
 
 name:ENCHANT_ARMOR2
 aim:0
 power:15
 effect:ENCHANT:TOAC
 dice:2+1d3
-desc:attempts to magically enhance a piece of armour with high chance of success
+desc:attempts to enhance a piece of armour with high chance of success
 
 name:REMOVE_FAULT
 aim:0
@@ -565,7 +565,7 @@ aim:0
 power:7
 effect:NOURISH:INC_TO
 dice:50
-desc:magically renders you comfortably fed
+desc:renders you comfortably fed
 
 name:BLESSING
 aim:0
@@ -967,7 +967,7 @@ power:3
 msg:{name} glows very brightly...
 effect:BOLT_OR_BEAM:MISSILE
 dice:3d4
-desc:fires a magic missile with damage 3d4
+desc:fires a mini-missile with damage 3d4
 
 name:MANA_BOLT
 aim:1
@@ -987,10 +987,10 @@ desc:does bizarre things
 name:ARROW
 aim:1
 power:11
-msg:Your {kind} form{s} a magical arrow...
+msg:Your {kind} arms{s} a missile..
 effect:BOLT:ARROW
 dice:150
-desc:fires a magical arrow with damage 150
+desc:fires a missile with damage 150
 
 name:STINKING_CLOUD
 aim:1
@@ -1030,14 +1030,14 @@ aim:1
 power:3
 effect:BOLT_AWARE:MON_SLOW
 dice:20
-desc:attempts to magically slow a single monster
+desc:attempts to slow a single monster
 
 name:MON_CONFUSE
 aim:1
 power:3
 effect:BOLT_AWARE:MON_CONF
 dice:10
-desc:attempts to magically confuse a single monster
+desc:attempts to confuse a single monster
 
 name:SLEEP_ALL
 aim:1
@@ -1045,14 +1045,14 @@ power:3
 effect:BOLT_AWARE:SLEEP_ALL
 dice:$B
 expr:B:PLAYER_LEVEL:* 10 + 500
-desc:attempts to induce magical sleep in a single monster
+desc:attempts to induce sleep in a single monster
 
 name:MON_SCARE
 aim:1
 power:3
 effect:BOLT_AWARE:TURN_ALL
 dice:10
-desc:attempts to induce magical fear in a single monster
+desc:attempts to induce fear in a single monster
 
 
 name:LIGHT_LINE
@@ -1365,4 +1365,4 @@ aim:1
 power:25
 effect:BREATH:MISSILE:0:20
 dice:300
-desc:allows you to breathe for 300 damage
+desc:allows you to breathe missiles for 300 damage

@@ -1257,7 +1257,7 @@ void do_cmd_wiz_edit_player_gold(struct command *cmd)
 	/* Set default value. */
 	strnfmt(s, sizeof(s), "%ld", (long)(player->au));
 
-	if (!get_string("Gold: ", s, sizeof(s)) ||
+	if (!get_string("Cash: ", s, sizeof(s)) ||
 			!get_long_from_string(s, &newv)) {
 		/* Set next editing stage to break. */
 		edit_player_state = EDIT_PLAYER_BREAK;

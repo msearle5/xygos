@@ -23,6 +23,7 @@
 #include "init.h"
 #include "mon-lore.h"
 #include "obj-chest.h"
+#include "obj-desc.h"
 #include "obj-ignore.h"
 #include "obj-knowledge.h"
 #include "obj-make.h"
@@ -800,6 +801,10 @@ bool do_cmd_disarm_chest(struct object *obj)
 	/* Extract the difficulty */
 	diff = skill - obj->pval;
 
+	/* Get the object name */
+	char o_name[80];
+	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+
 	/* Always have a small chance of success */
 	if (diff < 2) diff = 2;
 
@@ -808,17 +813,17 @@ bool do_cmd_disarm_chest(struct object *obj)
 		msg("I don't see any traps.");
 	} else if (!is_trapped_chest(obj)) {
 		/* Already disarmed/unlocked or no traps */
-		msg("The chest is not trapped.");
+		msg("The %s is not trapped.", o_name);
 	} else if (randint0(100) < diff) {
 		/* Success (get a lot of experience) */
-		msgt(MSG_DISARM, "You have disarmed the chest.");
+		msgt(MSG_DISARM, "You have disarmed the %s.", o_name);
 		player_exp_gain(player, obj->pval);
 		obj->pval = -obj->pval;
 	} else if (randint0(100) < diff) {
 		/* Failure -- Keep trying */
 		more = true;
 		event_signal(EVENT_INPUT_FLUSH);
-		msg("You failed to disarm the chest.");
+		msg("You failed to disarm the %s.", o_name);
 	} else {
 		/* Failure -- Set off the trap */
 		msg("You set off a trap!");

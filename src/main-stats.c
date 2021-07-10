@@ -1150,7 +1150,7 @@ static int stats_level_data_offsetof(const char *member)
 		return offsetof(struct level_data, obj_feelings);
 	else if (streq(member, "mon_feelings"))
 		return offsetof(struct level_data, mon_feelings);
-	else if (streq(member, "gold"))
+	else if (streq(member, "cash"))
 		return offsetof(struct level_data, gold);
 	else if (streq(member, "artifacts"))
 		return offsetof(struct level_data, artifacts);
@@ -1224,7 +1224,7 @@ static int stats_write_db_level_data(const char *table, int max_idx)
 	/* This arcane expression finds the value of 
 			 * level_data[level].<table>[i] */
 			u32b count;
-			if (streq(table, "gold"))
+			if (streq(table, "cash"))
 				count = *((long long *)((byte *)&level_data[level] + offset) + i);
 			else
 				count = *((u32b *)((byte *)&level_data[level] + offset) + i);
@@ -1432,7 +1432,7 @@ static int stats_write_db(u32b run)
 	err = stats_write_db_level_data("mon_feelings", MON_FEEL_MAX);
 	if (err) return err;
 
-	err = stats_write_db_level_data("gold", ORIGIN_STATS);
+	err = stats_write_db_level_data("cash", ORIGIN_STATS);
 	if (err) return err;
 
 	err = stats_write_db_level_data_items("artifacts", z_info->a_max, 

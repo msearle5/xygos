@@ -1095,11 +1095,11 @@ static struct panel *get_panel_skills(void) {
 
 	/* Physical disarming: assume we're disarming a dungeon trap */
 	skill = BOUND(player->state.skills[SKILL_DISARM_PHYS] - depth / 5, 2, 100);
-	panel_line(p, colour_table[skill / 10], "Disarm - phys.", "%d%%", skill);
+	panel_line(p, colour_table[skill / 10], "Disarm - mech.", "%d%%", skill);
 
 	/* Magical disarming */
 	skill = BOUND(player->state.skills[SKILL_DISARM_MAGIC] - depth / 5, 2, 100);
-	panel_line(p, colour_table[skill / 10], "Disarm - magic", "%d%%", skill);
+	panel_line(p, colour_table[skill / 10], "Disarm - elec.", "%d%%", skill);
 
 	/* Devices */
 	skill = player->state.skills[SKILL_DEVICE];
