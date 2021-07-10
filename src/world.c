@@ -110,22 +110,30 @@ void world_connect_towns(struct town *a, struct town *b)
  */
 int world_departure_time(struct town *from, struct town *to)
 {
-	// In a flight to Soviet Russia, you seed the timer from the RNG
-	u32b fi = from - t_info;
-	u32b ti = to - t_info;
-	u32b shook = (ti + (fi * z_info->town_max));
-	shook = LCRNG(shook);
-	shook %= ((60 * 24) / z_info->town_max);
+	// Caveliner pilots don't care about schedules
+	if (player_has(player, PF_FLY_ANY_TIME)) {
+		int timeofday = (turn % (10L * z_info->day_length));
+		timeofday += (50L * z_info->day_length) / (24 * 60);
+		timeofday %= (10L * z_info->day_length);
+		return timeofday;
+	} else {
+		// In a flight to Soviet Russia, you seed the timer from the RNG
+		u32b fi = from - t_info;
+		u32b ti = to - t_info;
+		u32b shook = (ti + (fi * z_info->town_max));
+		shook = LCRNG(shook);
+		shook %= ((60 * 24) / z_info->town_max);
 
-	// Fill in the rest to make sure there are no same minute departures
-	shook *= z_info->town_max;
-	shook += ti;
+		// Fill in the rest to make sure there are no same minute departures
+		shook *= z_info->town_max;
+		shook += ti;
 
-	// Convert from minutes to turns
-	double out = shook;
-	out *= (10L * z_info->day_length);
-	out /= (24 * 60);
-	return out;
+		// Convert from minutes to turns
+		double out = shook;
+		out *= (10L * z_info->day_length);
+		out /= (24 * 60);
+		return out;
+	}
 }
 
 

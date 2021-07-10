@@ -99,6 +99,7 @@ require:Cavespeeder_Pilot
 cancel:Cavespeeder_Pilot
 forbid:Caveracer_Pilot
 forbid:Cavespeeder_Pilot
+forbid:Caveliner_Pilot
 mom-speed:0:1:2:3:3:4:4:4:4:5
 cost:0
 
@@ -133,6 +134,8 @@ class:Pilot
 require:Cavespeeder_Pilot
 cancel:Cavespeeder_Pilot
 forbid:Cavefighter_Pilot
+forbid:Caveliner_Pilot
+forbid:Cavespeeder_Pilot
 mom-speed:0:2:4:6:7:8:8:9:9:9:10
 cost:0
 
@@ -145,6 +148,36 @@ book:[Caveracer]
 spell:Land:1:22:50:3:0:0
 seffect:LAND
 sdesc:Land your caveracer and drag it along with you.
+
+name:Caveliner_Pilot
+gain:You are now flying a caveliner. The world awaits!
+lose:You are no longer able to fly a caveliner.
+brief:You are a caveliner pilot.
+desc:You are a caveliner pilot, faster than the basic cavespeeder and able to navigate between distant towns.
+desc_future:you would be a caveliner pilot, faster than the basic cavespeeder and able to navigate between distant towns.
+flag:talent
+flag:flying
+minlevel:25
+obj-flags:AGGRAVATE | FEATHER
+player-flags:FLY_ANY_TIME
+class:Pilot
+require:Cavespeeder_Pilot
+cancel:Cavespeeder_Pilot
+forbid:Cavefighter_Pilot
+forbid:Caveracer_Pilot
+forbid:Cavespeeder_Pilot
+mom-speed:0:1:2:3:4:5:5:6:6:7
+cost:0
+
+book:[Caveliner]
+spell:Take off:1:22:50:3:0:0
+seffect:TAKEOFF
+sdesc:Get into your caveliner and fly away.
+
+book:[Caveliner]
+spell:Land:1:22:50:3:0:0
+seffect:LAND
+sdesc:Land your caveliner and drag it along with you.
 
 ######### Marksman Skill Abilities ###########
 # These are available only to the Marksman class
