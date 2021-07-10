@@ -1382,6 +1382,25 @@ void player_learn_icon(struct player *p, size_t i, bool message)
 
 	/* Update knowledge */
 	update_player_object_knowledge(p);
+
+	/* Engineers get experience from learning icons */
+	double scale = levels_in_class(get_class_by_name("Engineer")->cidx);
+	if ((scale > 0.0) && (!player->is_dead)) {
+		scale /= player->max_lev;
+		double icons = 0;
+		for (size_t i = 0; i < icon_max; i++)
+			if (player_knows_icon(player, i))
+				icons++;
+
+		/* Get a value from >0 (first) to 1 (all) */
+		double value = (scale * icons) / icon_max;
+
+		/* Convert it to exp */
+		int exper = MAX(1, 0.5 + (value * value * value * z_info->exp_learn_icon));
+
+		/* And award it */
+		player_exp_gain(player, exper);
+	}
 }
 
 /**

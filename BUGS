@@ -1,5 +1,7 @@
 BUGS
 ====
+BUG: "Couldn't find artifact" warning because new char based on previous still had a player-made artifact
+
 BUG: An artifact granting protection from blindness stopped a blindness pill from taking effect even
 		when it was only carried in the pack.
 

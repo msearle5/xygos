@@ -286,3 +286,9 @@ player:start-gold-spread:30
 
 # Number of turns that 1% of player food capacity feeds them for
 player:food-value:100
+
+# Amount of experience that a pure Engineer gains from learning the final icon.
+# Part Engineers are scaled down linearly
+# Preceding icons are scaled geometrically
+player:exp-learn-icon:5000
+
