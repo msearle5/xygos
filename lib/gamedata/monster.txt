@@ -249,6 +249,77 @@ desc:it against burglars such as yourself.
 
 ##### Monster races proper #####
 
+##### , is for MUSHROOM #####
+# (and other food-likes e.g. tomatoes)
+
+name:grey mushroom patch
+plural:grey mushroom patches
+base:mushroom
+color:s
+speed:110
+hit-points:2
+hearing:2
+armor-class:1
+sleepiness:0
+depth:1
+rarity:1
+experience:1
+blow:SPORE:CONFUSE:1d4
+flags:IM_POIS | NEVER_MOVE
+desc:Yum!  It looks quite tasty.
+
+name:yellow mushroom patch
+plural:yellow mushroom patches
+base:mushroom
+color:y
+speed:110
+hit-points:1
+hearing:2
+armor-class:1
+sleepiness:0
+depth:2
+rarity:1
+experience:2
+blow:SPORE:TERRIFY:1d6
+flags:NEVER_MOVE
+flags:IM_POIS
+desc:Yum!  It looks quite tasty.
+
+name:spotted mushroom patch
+plural:spotted mushroom patches
+base:mushroom
+color:o
+speed:110
+hit-points:1
+hearing:2
+armor-class:1
+sleepiness:0
+depth:3
+rarity:1
+experience:3
+blow:SPORE:POISON:2d4
+flags:NEVER_MOVE
+flags:IM_POIS
+desc:Yum!  It looks quite tasty.
+
+name:purple mushroom patch
+plural:purple mushroom patches
+base:mushroom
+color:P
+speed:110
+hit-points:1
+hearing:2
+armor-class:1
+sleepiness:0
+depth:6
+rarity:2
+experience:15
+blow:SPORE:LOSE_CON:1d2
+blow:SPORE:LOSE_CON:1d2
+blow:SPORE:LOSE_CON:1d2
+flags:NEVER_MOVE
+desc:Yum!  It looks quite tasty.
+
 ##### HIDDEN (.) #####
 
 # fire, poison etc?
@@ -389,118 +460,38 @@ spells:SELF_DESTRUCT
 desc:A mine which bursts into a cloud of poisonous fumes.
 
 
-##### HOLOGRAMS #####
-
-name:Inky
-base:hologram
-color:Blue
-speed:110
-hit-points:200
-hearing:2
-smell:2
-armor-class:30
-sleepiness:0
-depth:20
-rarity:1
-experience:200
-blow:TOUCH:BLIND:3d10
-blow:TOUCH:HURT:2d10
-spell-freq:8
-spells:DARKNESS
-desc:A dark shape hangs in the air, with little detail discernible besides the pair of huge white eyes. It reaches out a tendril of darkness towards you...
-flags:UNIQUE | SPECIAL_GEN
-
-name:Blinky
-base:hologram
-color:Green
-speed:110
-hit-points:200
-hearing:2
-smell:2
-armor-class:30
-sleepiness:0
-depth:20
-rarity:1
-experience:200
-blow:TOUCH:CONFUSE:3d10
-blow:TOUCH:HURT:2d10
-spell-freq:5
-spells:BLINK | CONF
-desc:A vague green shape that twists and twirls strangely. It's continually fading in and out of visibility, with the white pop-eyes always being the last to disappear.
-flags:UNIQUE | SPECIAL_GEN
-
-name:Pinky
-base:hologram
-color:Magenta-Pink
-speed:110
-hit-points:200
-hearing:2
-smell:2
-armor-class:30
-sleepiness:0
-depth:20
-rarity:1
-experience:200
-blow:TOUCH:TERRIFY
-blow:TOUCH:HURT:2d10
-desc:A bright pink balloon-like shape, fading into translucency below and behind and with a pair of big white eyes. It looks more like a cartoon ghost than anything, but if it's really so harmless why do you suddenly feel so apprehensive?
-spell-freq:8
-spells:SCARE
-flags:UNIQUE | SPECIAL_GEN
-
-name:Clyde
-base:hologram
-color:Red
-speed:110
-hit-points:200
-hearing:2
-smell:2
-armor-class:30
-sleepiness:0
-depth:20
-rarity:1
-experience:200
-spell-freq:5
-spells:TELE_TO
-blow:TOUCH:FIRE:2d10
-blow:TOUCH:FIRE:2d10
-desc:A glowing fiery red flame-shape in the air, with a trail of smoke and sparks - you can hear it crackling and feel the heat radiating off it from some way off. Wide white eyes stare at you as if you were a fuel.
-spell-freq:5
-spells:BR_FIRE | BO_FIRE
-flags:UNIQUE | SPECIAL_GEN
-
-name:Holo-Triax
-base:hologram
-color:Violet
-speed:110
-hit-points:450
-hearing:20
-armor-class:90
-sleepiness:120
-depth:25
-rarity:0
-experience:2500
-drop:0:Holo-Triax:100:1:1
-blow:GAZE:TERRIFY
-blow:GAZE:CONFUSE:2d8
-blow:TOUCH:FIRE:3d8
-blow:TOUCH:COLD:3d8
-flags:MALE | QUESTOR | UNIQUE | EVIL | SMART | REGENERATE | WEIRD_MIND | SPECIAL_GEN
-flags:INVISIBLE
-flags:DROP_2 | DROP_20 | DROP_40 | DROP_GOOD | ONLY_ITEM
-flags:OPEN_DOOR
-flags:NO_CONF | NO_SLEEP | NO_FEAR | IM_POIS
-flags:FORCE_SLEEP | FORCE_DEPTH
-spell-freq:5
-spells:BLIND | DARKNESS | HEAL | MIND_BLAST | HOLD
-spells:BLINK | TPORT | TELE_TO
-innate-freq:3
-spells:BR_SOUN | BR_LIGHT
-desc:At first panicked glimpse it looked like Triax himself! But a moment later you realise that it is just a translucent image: a hologram. Light and sound. Insubstantial, in a sense. But light and sound can still hurt and so you should not underestimate him just because he isn't really there.
-
-
-
 ##### a is for ANT #####
+
+name:soldier ant
+base:ant
+color:W
+speed:110
+hit-points:6
+hearing:10
+smell:20
+armor-class:4
+sleepiness:40
+depth:1
+rarity:1
+experience:3
+blow:BITE:HURT:1d2
+desc:A large ant with powerful mandibles.
+
+name:giant black ant
+base:ant
+color:D
+speed:110
+hit-points:11
+hearing:8
+smell:20
+armor-class:24
+sleepiness:80
+depth:2
+rarity:1
+experience:8
+blow:BITE:HURT:1d4
+flags:RAND_25
+desc:It is about three feet long.
 
 name:giant white ant
 base:ant
@@ -518,179 +509,156 @@ blow:BITE:HURT:1d4
 friends:100:4d4:same
 desc:It is about two feet long and has sharp pincers.
 
-
-##### HUMANS #####
-
-# fix desc
-name:mugger
-base:person
+name:giant blue ant
+base:ant
 color:b
 speed:110
-hit-points:20
-hearing:20
-armor-class:18
+hit-points:36
+hearing:10
+smell:20
+armor-class:75
 sleepiness:10
-depth:2
-rarity:1
-experience:6
-blow:HIT:HURT:1d6
-blow:TOUCH:EAT_GOLD
-flags:MALE | EVIL
-flags:DROP_40
-flags:OPEN_DOOR | TAKE_ITEM
-drop:card:blinking:35:1:3
-friends-base:20:1d3:person
-friends-base:40:1d3:person
-friends-base:80:1d3:person
-friends:50:1d2:Same
-desc:A rather shifty individual.
-
-name:Slick
-base:person
-color:b
-speed:120
-hit-points:35
-hearing:20
-armor-class:20
-sleepiness:5
-depth:5
-rarity:0
-experience:90
-blow:HIT:HURT:1d4
-blow:TOUCH:EAT_GOLD
-blow:TOUCH:EAT_ITEM
-flags:MALE | EVIL | UNIQUE | QUESTOR | SPECIAL_GEN
-flags:DROP_2
-flags:OPEN_DOOR | TAKE_ITEM
+depth:30
+rarity:2
+experience:80
+blow:BITE:ELEC:5d5
+flags:RAND_25
+flags:IM_ELEC | GROUP_AI
 innate-freq:6
-spell-freq:6
-spells:SHOT | BLINK
-drop:card:blinking:75:1:4
-drop:0:Slick's:100:1:1
-friends:100:3d2:mugger:bodyguard
-desc:A thief who likes to think of himself as being in charge of the Stores. You've come in stealing everything that isn't nailed down without his permission, so he's going to try to get it back.
+spells:SPIT
+friends:100:4d4:Same
+desc:It is a giant ant that crackles with energy.
 
-name:Nijel, the Rat
-base:person
-color:Gray50
-speed:110
-hit-points:180
-hearing:200
-smell:200
-armor-class:5
-sleepiness:200
-depth:9
-rarity:1
+name:giant army ant
+base:ant
+color:o
+speed:120
+hit-points:67
+hearing:10
+smell:20
+armor-class:60
+sleepiness:20
+depth:30
+rarity:3
 experience:90
-blow:HIT:HURT:1d10
-blow:HIT:HURT:1d10
-drop:0:of the Grey Rat:50:1:1
-desc:The Grey Rat - a tall, skinny young man wearing a silly leather outfit that would look better on someone with more muscles and less goosepimples. He kept giant rats in a cellar under the general store, until someone snuck in and killed them - he's now searching for the attacker.
-flags:UNIQUE
-flags:DROP_1 | DROP_60 | DROP_40 | DROP_20
-flags:OPEN_DOOR | SMART | SPIRIT
-flags:MALE
-flags:FORCE_SLEEP | SPECIAL_GEN
+blow:BITE:HURT:2d12
+blow:BITE:HURT:2d12
+flags:RAND_25 | KILL_BODY | GROUP_AI
+friends:100:4d4:Same
+desc:An armoured form moving with purpose.  Powerful on its own, flee when
+desc: hordes of them march.
 
-# friends? ranged?
-name:Ky, the Pie Spy
-base:person
-color:b
+name:giant red ant
+base:ant
+color:r
 speed:110
-hit-points:70
-hearing:20
-armor-class:5
-sleepiness:5
+hit-points:18
+hearing:12
+smell:20
+armor-class:40
+sleepiness:60
 depth:9
-rarity:1
-experience:90
-drop:card:blinking:70:2:6
-drop:card:security:100:1:1
-blow:HIT:HURT:2d4
-blow:TOUCH:EAT_ITEM
-blow:TOUCH:EAT_GOLD
-desc:She looks like just one more of the Black Market's agents - in other words, a grab-and-blink thief. But she matches the description you were given, so hopefully she's still carrying the stolen recipe.
-flags:UNIQUE | EVIL
-flags:DROP_60 | DROP_40 | DROP_20
-flags:OPEN_DOOR | SMART | SPIRIT | TAKE_ITEM
-flags:FEMALE | SPECIAL_GEN | QUESTOR
+rarity:2
+experience:22
+blow:BITE:HURT:1d4
+blow:STING:LOSE_STR:1d4
+desc:It is large and has venomous mandibles.
 
-name:stormtrooper
-base:person
+name:giant silver ant
+base:ant
 color:W
 speed:110
-hit-points:250
-hearing:20
-armor-class:70
-sleepiness:100
-depth:36
+hit-points:41
+hearing:10
+smell:20
+armor-class:100
+sleepiness:40
+depth:23
+rarity:1
+experience:80
+blow:BITE:ACID:4d4
+blow:BITE:ACID:4d4
+flags:RAND_25
+innate-freq:6
+spells:SPIT
+desc:A giant silver ant with a caustic bite and hard scales.
+
+name:giant grey ant
+base:ant
+color:s
+speed:110
+hit-points:86
+hearing:10
+smell:20
+armor-class:200
+sleepiness:10
+depth:26
+rarity:1
+experience:120
+blow:BITE:HURT:2d12
+blow:BITE:HURT:2d12
+flags:RAND_25 | KILL_BODY
+desc:It is an ant encased in an impenetrable exoskeleton.
+
+name:giant fire ant
+base:ant
+color:R
+speed:110
+hit-points:176
+light:2
+hearing:14
+smell:20
+armor-class:58
+sleepiness:40
+depth:35
+rarity:1
+experience:350
+blow:BITE:FIRE:3d12
+blow:BITE:FIRE:3d12
+flags:KILL_BODY
+flags:IM_FIRE | GROUP_AI
+innate-freq:6
+spells:SPIT
+friends:100:4d4:Same
+desc:A giant ant covered in shaggy fur.  Its powerful jaws glow with heat.
+
+
+##### B is for BIRD #####
+
+name:crow
+base:bird
+color:s
+speed:120
+hit-points:9
+hearing:40
+armor-class:14
+sleepiness:0
+depth:2
 rarity:2
-experience:600
-blow:HIT:HURT:3d6
-blow:HIT:HURT:3d6
-flags:MALE | FEMALE | EVIL | SPIRIT
-flags:DROP_40 | CONFUSED
-flags:OPEN_DOOR
-spell-freq:2
-spells:BO_PLAS
-desc:A masked enforcer in awkward-looking white full body armor, and an agent of evil - at least in theory. Between 9 and 5, anyway. Not one that really signed up to it, and in particular not one that paid any attention to target shooting drill.
+experience:8
+blow:BITE:HURT:1d3
+blow:BITE:HURT:1d3
+desc:It is a hooded crow, gray except for the black wings and head.
 
-name:The Dark Helmet
-base:person
-color:D
-speed:125
-hit-points:4000
-hearing:100
-armor-class:80
-sleepiness:0
-depth:50
-rarity:0
-experience:8000
-blow:HIT:HURT:4d10
-blow:HIT:HURT:4d10
-blow:CRUSH:ELEC:6d10
-drop:helm:Dark Helmet:100:1:1
-drop:food:habanero:100:1:3
-flags:UNIQUE | QUESTOR | SPECIAL_GEN
-flags:MALE | EVIL | SMART | SPIRIT
-flags:DROP_3 | DROP_2 | DROP_1 | DROP_60 | DROP_40 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
-flags:MOVE_BODY | OPEN_DOOR | ATTR_FLICKER | REGENERATE
-flags:IM_FIRE
-flags:FORCE_SLEEP
-friends:100:2d3:stormtrooper:bodyguard
-spell-freq:3
-spells:BO_PLAS
-spells:BLINK | S_FRIENDS
-desc:What kind of volcano would it be, without an evil overlord in residence? The Dark Helmet's no Triax, though - much as he would like to think he is. He does go through all the motions - his stupid goons are really stupid, his white cat is really fluffy, and of course his helmet is really big and shiny - but somehow it never comes together into the world domination he dreams of. Still, he is dangerous enough to harass the town above him, and needs to be taken down a hat size or two.
-
-name:Triax, the Emperor
-base:person
-color:D
+name:blood falcon
+base:bird
+color:R
 speed:140
-hit-points:20000
-hearing:100
-armor-class:180
-sleepiness:0
-depth:100
-rarity:0
-experience:500000
-drop:hafted:Dominion:100:1:1
-blow:HIT:SHATTER:20d10
-blow:HIT:SHATTER:20d10
-blow:HIT:LOSE_ALL:10d12
-blow:TOUCH:DRAIN_CHARGES
-flags:UNIQUE | QUESTOR | DEATH_SPECIAL | SPECIAL_GEN
-flags:MALE | EVIL | SMART | SPIRIT
-flags:DROP_4 | DROP_3 | DROP_2 | DROP_1 | DROP_60 | DROP_40 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
-flags:SMASH_WALL | MOVE_BODY | ATTR_FLICKER | REGENERATE
-flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS
-flags:NO_CONF | NO_SLEEP | NO_HOLD | NO_FEAR
-flags:FORCE_DEPTH | FORCE_SLEEP
-spell-freq:2
-spells:BRAIN_SMASH
-spells:BA_RADI | BA_POIS | BA_LIGHT | BA_SHAR | BA_WATE | BA_DARK | BA_GRAV | BA_PLAS
-spells:S_MONSTERS | S_UNIQUE
-desc:The Emperor. Or at least that is how he styles himself - and what he intends to be. A tyrant who has destroyed Xygos in nuclear fire in order to further his ambition of crushing all the Galaxy's systems in his fist. The maker of every deadly robot or unnatural creature, the puppet-master behind every other enemy of freedom that fought against you, and a lethal combatant in his own right - blurring faster than lightning, through rock as if it were air, combining every form of cybernetic enhancement you can imagine and then more.
+hit-points:6
+hearing:50
+smell:20
+armor-class:2
+sleepiness:10
+depth:20
+rarity:2
+experience:50
+blow:CLAW:HURT:2d10
+blow:CLAW:HURT:2d10
+blow:BITE:HURT:3d8
+flags:NO_FEAR
+desc:A blinding whirlwind of fear and feathers. Its razor sharp beak and talons
+desc: fill its foes with terror as it seeks to rend flesh from bone with
+desc: unbridled ferocity.
 
 
 ##### b is for BAT #####
@@ -892,7 +860,249 @@ flags:IM_COLD | NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
 desc:Green bats of immense size with vicious claws, said to have picked up unfortunate explorers and carried them away.
 
 
-##### GRUES #####
+##### c is for CENTIPEDE #####
+
+name:giant yellow centipede
+base:centipede
+color:y
+speed:110
+hit-points:7
+hearing:8
+smell:20
+armor-class:14
+sleepiness:30
+depth:1
+rarity:1
+experience:2
+blow:BITE:HURT:1d3
+blow:STING:HURT:1d3
+desc:It is about four feet long and carnivorous.
+
+name:giant white centipede
+base:centipede
+color:w
+speed:110
+hit-points:9
+hearing:7
+smell:20
+armor-class:12
+sleepiness:40
+depth:1
+rarity:1
+experience:2
+blow:CRAWL:HURT:1d2
+blow:STING:COLD:1d2
+flags:RAND_50 | BASH_DOOR
+desc:It is about four feet long and carnivorous.
+
+name:metallic green centipede
+base:centipede
+color:g
+speed:120
+hit-points:10
+hearing:5
+smell:20
+armor-class:4
+sleepiness:10
+depth:2
+rarity:1
+experience:3
+blow:CRAWL:HURT:1d1
+blow:STING:ACID:1d1
+flags:RAND_50 | BASH_DOOR
+desc:It is about four feet long and carnivorous.
+
+name:metallic blue centipede
+base:centipede
+color:b
+speed:120
+hit-points:12
+hearing:6
+smell:20
+armor-class:7
+sleepiness:15
+depth:3
+rarity:1
+experience:7
+blow:CRAWL:HURT:1d2
+blow:STING:ELEC:1d2
+flags:RAND_50 | BASH_DOOR
+desc:It is about four feet long and carnivorous.
+
+name:giant clear centipede
+base:centipede
+color:w
+speed:110
+hit-points:23
+hearing:12
+smell:20
+armor-class:36
+sleepiness:30
+depth:15
+rarity:2
+experience:30
+blow:BITE:HURT:2d4
+blow:STING:HURT:2d4
+flags:INVISIBLE
+flags:BASH_DOOR
+flags:ATTR_CLEAR
+desc:It is about four feet long and carnivorous.
+
+
+##### C is for DOGGIES ####
+
+name:wild dog
+base:canine
+color:U
+speed:110
+hit-points:3
+hearing:10
+smell:50
+armor-class:3
+sleepiness:10
+depth:1
+rarity:1
+experience:1
+blow:BITE:HURT:1d1
+flags:GROUP_AI
+friends:100:2d7:Same
+desc:It is a yapping snarling dog, dangerous when in a pack.
+
+name:wolf
+plural:wolves
+base:canine
+color:u
+speed:120
+hit-points:21
+hearing:30
+smell:50
+armor-class:45
+sleepiness:10
+depth:10
+rarity:1
+experience:30
+blow:BITE:HURT:1d6
+flags:RAND_25 | BASH_DOOR
+flags:GROUP_AI
+friends:100:2d10:Same
+desc:It howls and snaps at you.
+
+name:Grip, Slick's dog
+base:canine
+color:y
+speed:120
+hit-points:25
+hearing:30
+smell:50
+armor-class:36
+sleepiness:0
+depth:2
+rarity:1
+experience:30
+blow:BITE:HURT:1d4
+flags:UNIQUE
+flags:RAND_25 | BASH_DOOR
+flags:NO_CONF | NO_SLEEP
+desc:A rather vicious dog belonging to Slick.
+
+name:Fang, Slick's dog
+base:canine
+color:y
+speed:120
+hit-points:25
+hearing:30
+smell:50
+armor-class:36
+sleepiness:0
+depth:2
+rarity:1
+experience:30
+blow:BITE:HURT:1d4
+flags:UNIQUE
+flags:RAND_25 | BASH_DOOR
+flags:NO_CONF | NO_SLEEP
+desc:A rather vicious dog belonging to Slick.
+
+
+##### f is for KITTIES ####
+
+name:wild cat
+base:feline
+color:U
+speed:120
+hit-points:9
+hearing:40
+smell:30
+armor-class:14
+sleepiness:0
+depth:2
+rarity:2
+experience:8
+blow:CLAW:HURT:1d3
+blow:CLAW:HURT:1d3
+flags:BASH_DOOR
+desc:A larger than normal feline, hissing loudly.  Its velvet paws conceal a
+desc: fistful of needles.
+
+name:panther
+base:feline
+color:u
+speed:120
+hit-points:45
+hearing:40
+smell:30
+armor-class:36
+sleepiness:0
+depth:10
+rarity:2
+experience:25
+blow:CLAW:HURT:1d8
+blow:CLAW:HURT:1d8
+flags:BASH_DOOR
+desc:A large black cat, stalking you with intent.  It thinks you're its next
+desc: meal.
+
+name:tiger
+base:feline
+color:o
+speed:120
+hit-points:66
+hearing:40
+smell:30
+armor-class:48
+sleepiness:0
+depth:12
+rarity:2
+experience:40
+blow:CLAW:HURT:1d8
+blow:CLAW:HURT:1d8
+blow:BITE:HURT:1d6
+flags:BASH_DOOR
+desc:One of the largest of its species, a sleek orange and black shape creeps
+desc: towards you, ready to pounce.
+
+name:sabre-tooth tiger
+base:feline
+color:y
+speed:120
+hit-points:150
+hearing:40
+smell:30
+armor-class:60
+sleepiness:0
+depth:20
+rarity:2
+experience:120
+blow:CLAW:HURT:1d10
+blow:CLAW:HURT:1d10
+blow:BITE:HURT:1d10
+blow:BITE:HURT:1d10
+flags:BASH_DOOR
+desc:A fierce and dangerous cat, its huge tusks and sharp claws would lacerate
+desc: even the strongest armour.
+
+
+##### G is for GRUE #####
 
 name:Primordial Grue
 base:grue
@@ -911,7 +1121,7 @@ blow:CLAW:HURT:1d24
 blow:CLAW:HURT:1d24
 blow:TOUCH:EAT_LIGHT:2d10
 drop:helm:gruesome:100:1:1
-flags:COLD_BLOOD | BASH_DOOR | SMART
+flags:BASH_DOOR | SMART
 flags:IM_COLD | NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
 flags:UNIQUE | SPECIAL_GEN | QUESTOR
 innate-freq:2
@@ -920,7 +1130,744 @@ spells:DARKNESS | SCARE | BR_DARK | BLIND | MIND_BLAST | BRAIN_SMASH | S_KIN | H
 desc:In absolute darkness, an ill-defined patch manages to be darker. Fear of the dark? This thing's why. Can you kill it? It's had a million years of practice. You might want to run away - but you can't, it's faster than light: wherever light reaches *the dark got there first*.
 
 
-##### LEMMINGS #####
+##### H is for HOLOGRAM #####
+
+name:Inky
+base:hologram
+color:Blue
+speed:110
+hit-points:200
+hearing:2
+smell:2
+armor-class:30
+sleepiness:0
+depth:20
+rarity:1
+experience:200
+blow:TOUCH:BLIND:3d10
+blow:TOUCH:HURT:2d10
+spell-freq:8
+spells:DARKNESS
+flags:UNIQUE | SPECIAL_GEN
+desc:A dark shape hangs in the air, with little detail discernible besides the pair of huge white eyes. It reaches out a tendril of darkness towards you...
+
+name:Blinky
+base:hologram
+color:Green
+speed:110
+hit-points:200
+hearing:2
+smell:2
+armor-class:30
+sleepiness:0
+depth:20
+rarity:1
+experience:200
+blow:TOUCH:CONFUSE:3d10
+blow:TOUCH:HURT:2d10
+spell-freq:5
+spells:BLINK | CONF
+flags:UNIQUE | SPECIAL_GEN
+desc:A vague green shape that twists and twirls strangely. It's continually fading in and out of visibility, with the white pop-eyes always being the last to disappear.
+
+name:Pinky
+base:hologram
+color:Magenta-Pink
+speed:110
+hit-points:200
+hearing:2
+smell:2
+armor-class:30
+sleepiness:0
+depth:20
+rarity:1
+experience:200
+blow:TOUCH:TERRIFY
+blow:TOUCH:HURT:2d10
+spell-freq:8
+spells:SCARE
+flags:UNIQUE | SPECIAL_GEN
+desc:A bright pink balloon-like shape, fading into translucency below and behind and with a pair of big white eyes. It looks more like a cartoon ghost than anything, but if it's really so harmless why do you suddenly feel so apprehensive?
+
+name:Clyde
+base:hologram
+color:Red
+speed:110
+hit-points:200
+hearing:2
+smell:2
+armor-class:30
+sleepiness:0
+depth:20
+rarity:1
+experience:200
+spell-freq:5
+spells:TELE_TO
+blow:TOUCH:FIRE:2d10
+blow:TOUCH:FIRE:2d10
+spell-freq:5
+spells:BR_FIRE | BO_FIRE
+flags:UNIQUE | SPECIAL_GEN
+desc:A glowing fiery red flame-shape in the air, with a trail of smoke and sparks - you can hear it crackling and feel the heat radiating off it from some way off. Wide white eyes stare at you as if you were a fuel.
+
+name:Holo-Triax
+base:hologram
+color:Violet
+speed:110
+hit-points:450
+hearing:20
+armor-class:90
+sleepiness:120
+depth:25
+rarity:0
+experience:2500
+drop:0:Holo-Triax:100:1:1
+blow:GAZE:TERRIFY
+blow:GAZE:CONFUSE:2d8
+blow:TOUCH:FIRE:3d8
+blow:TOUCH:COLD:3d8
+flags:MALE | QUESTOR | UNIQUE | EVIL | SMART | REGENERATE | WEIRD_MIND | SPECIAL_GEN
+flags:INVISIBLE
+flags:DROP_2 | DROP_20 | DROP_40 | DROP_GOOD | ONLY_ITEM
+flags:OPEN_DOOR
+flags:NO_CONF | NO_SLEEP | NO_FEAR | IM_POIS
+flags:FORCE_SLEEP | FORCE_DEPTH
+spell-freq:5
+spells:BLIND | DARKNESS | HEAL | MIND_BLAST | HOLD
+spells:BLINK | TPORT | TELE_TO
+innate-freq:3
+spells:BR_SOUN | BR_LIGHT
+desc:At first panicked glimpse it looked like Triax himself! But a moment later you realise that it is just a translucent image: a hologram. Light and sound. Insubstantial, in a sense. But light and sound can still hurt and so you should not underestimate him just because he isn't really there.
+
+
+##### I is for INSECT #####
+
+name:giant white tick
+base:insect
+color:w
+speed:100
+hit-points:54
+hearing:12
+smell:20
+armor-class:150
+sleepiness:20
+depth:10
+rarity:2
+experience:27
+blow:BITE:POISON:2d6
+flags:ANIMAL | WEIRD_MIND
+flags:IM_POIS
+desc:It is moving slowly towards you.
+
+name:giant fruit fly
+plural:giant fruit flies
+base:insect
+color:G
+speed:120
+hit-points:3
+hearing:8
+armor-class:16
+sleepiness:10
+depth:10
+rarity:3
+experience:4
+blow:BITE:HURT:1d2
+desc:A fast-breeding, annoying pest.
+
+name:hummerhorn
+base:insect
+color:y
+speed:120
+hit-points:3
+hearing:8
+armor-class:16
+sleepiness:10
+depth:18
+rarity:4
+experience:4
+blow:BITE:CONFUSE:2d2
+flags:MOVE_BODY
+desc:A giant buzzing wasp, its stinger drips venom.
+
+##### j is for JELLIES #####
+# (and oozes, etc.)
+
+name:blue ooze
+base:jelly
+color:b
+speed:110
+hit-points:8
+hearing:8
+armor-class:19
+sleepiness:80
+depth:5
+rarity:1
+experience:7
+blow:CRAWL:COLD:1d4
+flags:DROP_40
+flags:RAND_25 | RAND_50
+flags:IM_COLD | NO_CONF | NO_SLEEP
+desc:It's blue and it's oozing.
+
+name:white jelly
+plural:white jellies
+base:jelly
+color:w
+speed:120
+hit-points:36
+hearing:2
+armor-class:1
+sleepiness:99
+depth:2
+rarity:1
+experience:10
+blow:TOUCH:POISON:1d2
+flags:NEVER_MOVE
+flags:HURT_LIGHT | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
+desc:It's a large pile of white flesh.
+
+name:green ooze
+base:jelly
+color:g
+speed:120
+hit-points:8
+hearing:8
+armor-class:19
+sleepiness:80
+depth:3
+rarity:2
+experience:4
+blow:CRAWL:ACID:1d3
+flags:DROP_60
+flags:RAND_25 | RAND_50
+flags:IM_ACID | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
+desc:It's green and it's oozing.
+
+name:silver jelly
+plural:silver jellies
+base:jelly
+color:W
+speed:120
+hit-points:45
+hearing:2
+armor-class:1
+sleepiness:99
+depth:3
+rarity:2
+experience:12
+blow:TOUCH:EAT_LIGHT:1d3
+blow:TOUCH:EAT_LIGHT:1d3
+flags:NEVER_MOVE
+flags:IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
+spell-freq:15
+desc:It is a large pile of silver flesh that sucks all light from its
+desc: surroundings.
+
+name:yellow jelly
+plural:yellow jellies
+base:jelly
+color:y
+speed:120
+hit-points:45
+hearing:2
+armor-class:1
+sleepiness:99
+depth:3
+rarity:1
+experience:12
+blow:TOUCH:POISON:1d3
+flags:NEVER_MOVE
+flags:HURT_LIGHT | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
+spell-freq:15
+desc:It's a large pile of yellow flesh.
+
+name:blue jelly
+plural:blue jellies
+base:jelly
+color:b
+speed:110
+hit-points:54
+hearing:2
+armor-class:1
+sleepiness:99
+depth:4
+rarity:1
+experience:14
+blow:TOUCH:COLD:1d6
+flags:COLD_BLOOD
+flags:NEVER_MOVE
+flags:HURT_LIGHT | IM_COLD | NO_CONF | NO_SLEEP
+desc:It's a large pile of pulsing blue flesh.
+
+name:green jelly
+plural:green jellies
+base:jelly
+color:g
+speed:120
+hit-points:99
+hearing:2
+armor-class:1
+sleepiness:99
+depth:5
+rarity:1
+experience:18
+blow:TOUCH:ACID:1d2
+flags:NEVER_MOVE
+flags:HURT_LIGHT | IM_ACID | HURT_COLD | NO_CONF | NO_SLEEP
+desc:It is a large pile of pulsing green flesh.
+
+name:grape jelly
+plural:grape jellies
+base:jelly
+color:P
+speed:110
+hit-points:234
+light:2
+hearing:2
+armor-class:1
+sleepiness:99
+depth:12
+rarity:3
+experience:60
+blow:TOUCH:EXP_10
+flags:NEVER_MOVE
+flags:HURT_LIGHT | HURT_COLD | IM_POIS | NO_CONF | NO_SLEEP
+spell-freq:11
+desc:Yum!  It looks quite tasty.  It is a pulsing mound of glowing flesh.
+
+name:ochre jelly
+plural:ochre jellies
+base:jelly
+color:U
+speed:120
+hit-points:59
+hearing:12
+armor-class:21
+sleepiness:1
+depth:13
+rarity:3
+experience:40
+blow:TOUCH:ACID:1d10
+blow:TOUCH:ACID:2d6
+blow:TOUCH:ACID:2d6
+flags:COLD_BLOOD
+flags:OPEN_DOOR | BASH_DOOR | TAKE_ITEM
+flags:IM_ACID | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
+desc:A fast moving highly acidic jelly thing, that is eating away the floor it
+desc: rests on.
+
+name:rot jelly
+plural:rot jellies
+base:jelly
+color:u
+speed:120
+hit-points:90
+hearing:2
+armor-class:36
+sleepiness:99
+depth:5
+rarity:1
+experience:15
+blow:TOUCH:EAT_FOOD:2d3
+blow:TOUCH:LOSE_WIS:2d3
+flags:NEVER_MOVE
+flags:HURT_LIGHT | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
+desc:It is a large pile of rotting flesh, whose touch spoils your food.  The
+desc: terrible smell it exudes is also very hard to get rid of...
+
+name:red jelly
+plural:red jellies
+base:jelly
+color:r
+speed:110
+hit-points:117
+hearing:2
+armor-class:1
+sleepiness:99
+depth:7
+rarity:1
+experience:26
+blow:TOUCH:LOSE_STR:1d5
+flags:NEVER_MOVE
+flags:HURT_LIGHT | HURT_COLD | NO_CONF | NO_SLEEP
+desc:It is a large pulsating mound of red flesh.
+
+name:gelatinous cube
+base:jelly
+color:G
+speed:110
+hit-points:316
+hearing:12
+armor-class:21
+sleepiness:1
+depth:16
+rarity:4
+experience:80
+blow:TOUCH:ACID:1d10
+blow:TOUCH:ACID:1d10
+blow:TOUCH:ACID:1d10
+flags:COLD_BLOOD
+flags:DROP_4
+flags:OPEN_DOOR | BASH_DOOR | TAKE_ITEM
+flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS
+flags:NO_CONF | NO_SLEEP
+flags-off:HURT_COLD
+desc:It is a strange, vast gelatinous structure that assumes cubic proportions
+desc: as it lines all four walls of the corridors it patrols.  Through its
+desc: transparent jelly structure you can see treasures it has engulfed, and a
+desc: few corpses as well.
+
+name:rot jelly
+plural:rot jellies
+base:jelly
+color:u
+speed:120
+hit-points:90
+hearing:2
+armor-class:36
+sleepiness:99
+depth:5
+rarity:1
+experience:15
+blow:TOUCH:EAT_FOOD:2d3
+blow:TOUCH:LOSE_WIS:2d3
+flags:NEVER_MOVE
+flags:HURT_LIGHT | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
+desc:It is a large pile of rotting flesh, whose touch spoils your food.  The
+desc: terrible smell it exudes is also very hard to get rid of...
+
+name:red jelly
+plural:red jellies
+base:jelly
+color:r
+speed:110
+hit-points:117
+hearing:2
+armor-class:1
+sleepiness:99
+depth:7
+rarity:1
+experience:26
+blow:TOUCH:LOSE_STR:1d5
+flags:NEVER_MOVE
+flags:HURT_LIGHT | HURT_COLD | NO_CONF | NO_SLEEP
+desc:It is a large pulsating mound of red flesh.
+
+name:black ooze
+base:jelly
+color:D
+speed:90
+hit-points:27
+hearing:10
+armor-class:7
+sleepiness:1
+depth:23
+rarity:1
+experience:7
+blow:TOUCH:ACID:2d6
+flags:MULTIPLY
+flags:DROP_40
+flags:RAND_50 | OPEN_DOOR | BASH_DOOR | KILL_BODY | TAKE_ITEM
+flags:IM_POIS | HURT_COLD
+spell-freq:11
+desc:It is a strangely moving puddle.
+
+##### I is for INSECTS / BUGS #####
+
+name:pill bug
+base:bug
+color:Tan
+speed:90
+hit-points:6
+hearing:2
+smell:10
+armor-class:20
+sleepiness:10
+depth:1
+rarity:5
+drop-base:pill:70:1:1
+experience:2
+blow:BITE:HURT:1d2
+blow:CRAWL:EAT_PILLS
+desc:A small rounded brown creature with overlapping layers of armor and extended jaws.
+
+name:giant white louse
+plural:giant white lice
+base:insect
+color:w
+speed:120
+hit-points:1
+hearing:6
+smell:20
+armor-class:6
+sleepiness:10
+depth:3
+rarity:1
+experience:1
+blow:BITE:HURT:1d1
+desc:It is six inches long.
+
+name:giant black louse
+plural:giant black lice
+base:insect
+color:D
+speed:120
+hit-points:2
+hearing:6
+armor-class:8
+sleepiness:10
+depth:9
+rarity:1
+experience:3
+blow:BITE:HURT:1d2
+desc:It makes you itch just to look at it.
+
+#### J is for SNAKE ####
+#### Really ############
+
+name:large white snake
+base:snake
+color:w
+speed:100
+hit-points:11
+hearing:4
+armor-class:36
+sleepiness:99
+depth:1
+rarity:1
+experience:2
+blow:BITE:HURT:1d1
+blow:CRUSH:HURT:1d1
+flags:RAND_50
+desc:It is about eight feet long.
+
+name:large grey snake
+base:snake
+color:s
+speed:100
+hit-points:27
+hearing:6
+armor-class:61
+sleepiness:100
+depth:4
+rarity:1
+experience:14
+blow:BITE:HURT:1d5
+blow:CRUSH:HURT:1d8
+flags:RAND_25
+desc:It is about ten feet long.
+
+name:copperhead snake
+base:snake
+color:o
+speed:110
+hit-points:14
+hearing:6
+armor-class:30
+sleepiness:10
+depth:5
+rarity:1
+experience:15
+blow:BITE:POISON:2d4
+flags:RAND_50
+flags:IM_POIS
+desc:It has a copper head and sharp venomous fangs.
+
+name:king cobra
+base:snake
+color:g
+speed:110
+hit-points:44
+hearing:8
+armor-class:45
+sleepiness:10
+depth:9
+rarity:2
+experience:28
+blow:SPIT:BLIND:1d2
+blow:BITE:POISON:3d4
+flags:RAND_50
+flags:IM_POIS
+innate-freq:4
+spells:SPIT
+desc:It is a large snake with a hooded face.
+
+name:rattlesnake
+base:snake
+color:r
+speed:110
+hit-points:24
+hearing:6
+armor-class:36
+sleepiness:10
+depth:6
+rarity:1
+experience:20
+blow:BITE:POISON:2d5
+flags:RAND_50
+flags:IM_POIS
+desc:It is recognized by the hard-scaled end of its body that is often rattled
+desc: to frighten its prey.
+
+name:black mamba
+base:snake
+color:D
+speed:120
+hit-points:45
+hearing:10
+armor-class:48
+sleepiness:10
+depth:12
+rarity:3
+experience:40
+blow:BITE:POISON:4d6
+flags:RAND_50
+flags:IM_POIS
+innate-freq:4
+spells:SPIT
+desc:It has glistening black skin, a sleek body and highly venomous fangs.
+
+
+##### K is for KILLER BEETLE #####
+
+name:killer iridescent beetle
+base:killer beetle
+color:b
+speed:110
+hit-points:330
+hearing:16
+armor-class:90
+sleepiness:30
+depth:37
+rarity:2
+experience:850
+blow:CLAW:ELEC:2d12
+blow:CLAW:ELEC:2d12
+blow:GAZE:PARALYZE
+flags:IM_ELEC
+flags:ATTR_FLICKER
+innate-freq:6
+spells:SPIT
+desc:It is a giant beetle, whose carapace shimmers with vibrant energies.
+
+name:killer white beetle
+base:killer beetle
+color:w
+speed:120
+hit-points:800
+hearing:14
+armor-class:106
+sleepiness:30
+depth:45
+rarity:2
+experience:850
+blow:BITE:COLD:8d5
+blow:BITE:HURT:8d5
+blow:SPIT:COLD:8d5
+flags:IM_COLD
+innate-freq:4
+spells:SPIT
+desc:A giant beetle with a gleaming white carapace.  The air condenses around
+desc: its mandibles as it scuttles toward you.
+
+name:killer brown beetle
+base:killer beetle
+color:u
+speed:110
+hit-points:59
+hearing:10
+armor-class:72
+sleepiness:30
+depth:13
+rarity:1
+experience:45
+blow:BITE:HURT:4d4
+desc:It is a vicious insect with a tough carapace.
+
+name:killer stag beetle
+base:killer beetle
+color:g
+speed:110
+hit-points:68
+hearing:12
+armor-class:86
+sleepiness:30
+depth:22
+rarity:1
+experience:80
+blow:CLAW:HURT:3d6
+blow:CLAW:HURT:3d6
+flags:RAND_25
+desc:It is a giant beetle with vicious claws.
+
+name:killer red beetle
+base:killer beetle
+color:r
+speed:110
+hit-points:90
+hearing:14
+armor-class:90
+sleepiness:30
+depth:25
+rarity:1
+experience:90
+blow:BITE:LOSE_STR:4d4
+blow:BITE:HURT:4d4
+flags:RAND_25
+desc:It is a giant beetle with poisonous mandibles.
+
+name:killer fire beetle
+base:killer beetle
+color:R
+speed:110
+hit-points:99
+light:2
+hearing:14
+armor-class:64
+sleepiness:30
+depth:27
+rarity:1
+experience:95
+blow:BITE:FIRE:3d4
+blow:SPIT:FIRE:4d5
+flags:IM_FIRE
+innate-freq:5
+spells:SPIT
+desc:It is a giant beetle wreathed in flames.
+
+name:killer slicer beetle
+base:killer beetle
+color:y
+speed:110
+hit-points:138
+hearing:14
+armor-class:92
+sleepiness:30
+depth:30
+rarity:2
+experience:250
+blow:BITE:HURT:7d8
+blow:BITE:HURT:7d8
+desc:It is a beetle with deadly sharp cutting mandibles and a rock-hard
+desc: carapace.
+
+name:death watch beetle
+base:killer beetle
+color:D
+speed:110
+hit-points:163
+hearing:16
+armor-class:72
+sleepiness:30
+depth:31
+rarity:3
+experience:300
+blow:BITE:HURT:5d6
+blow:BITE:HURT:5d6
+blow:WAIL:TERRIFY:5d6
+desc:It is a giant beetle that produces a chilling sound.
+
+##### l is for LEMMING #####
 
 name:green lemming
 base:lemming
@@ -1150,66 +2097,22 @@ flags:NO_FEAR
 desc:Lemmings hung with weights for their dive from the cliff tops.
 
 
-##### I is for INSECTS / BUGS #####
+##### L(izard) - REPTILES (and amphibians, dinosaurs etc) #####
 
-name:pill bug
-base:bug
-color:Tan
-speed:90
-hit-points:6
-hearing:2
-smell:10
-armor-class:20
-sleepiness:10
-depth:1
-rarity:5
-drop-base:pill:70:1:1
-experience:2
-blow:BITE:HURT:1d2
-blow:CRAWL:EAT_PILLS
-desc:A small rounded brown creature with overlapping layers of armor and extended jaws.
-
-name:giant white louse
-plural:giant white lice
-base:insect
-color:w
-speed:120
-hit-points:1
-hearing:6
-smell:20
-armor-class:6
-sleepiness:10
-depth:3
-rarity:1
-experience:1
-blow:BITE:HURT:1d1
-desc:It is six inches long.
-
-
-##### K is for KILLER BEETLE #####
-
-name:killer iridescent beetle
-base:killer beetle
-color:b
+name:cave lizard
+base:reptile
+color:u
 speed:110
-hit-points:330
-hearing:16
-armor-class:90
-sleepiness:30
-depth:37
-rarity:2
-experience:850
-blow:CLAW:ELEC:2d12
-blow:CLAW:ELEC:2d12
-blow:GAZE:PARALYZE
-flags:IM_ELEC
-flags:ATTR_FLICKER
-innate-freq:6
-spells:SPIT
-desc:It is a giant beetle, whose carapace shimmers with vibrant energies.
-
-
-##### L(izard) - REPTILES (and amphibians) #####
+hit-points:11
+hearing:8
+smell:20
+armor-class:19
+sleepiness:80
+depth:4
+rarity:1
+experience:8
+blow:BITE:HURT:1d5
+desc:It is an armoured lizard with a powerful bite.
 
 name:rock lizard
 base:reptile
@@ -1328,8 +2231,320 @@ flags:BASH_DOOR
 friends:100:3d2:tyrannosaur:servant
 desc:An unnaturally large, tough, intelligent, vicious and fast-moving tyrannosaur - Triax's pet and frequent experimental subject for cybernetic treatments. It makes a formidable guard for the lower half of the fortress!
 
+##### m is for MOLD #####
 
-##### q - QUADRUPEDS #####
+name:grey mold
+base:mold
+color:s
+speed:110
+hit-points:2
+hearing:2
+armor-class:1
+sleepiness:0
+depth:1
+rarity:1
+experience:3
+blow:SPORE:HURT:1d4
+blow:SPORE:HURT:1d4
+flags:EMPTY_MIND | STUPID
+desc:A small strange grey growth.
+
+name:yellow mold
+base:mold
+color:y
+speed:110
+hit-points:36
+hearing:2
+armor-class:12
+sleepiness:99
+depth:3
+rarity:1
+experience:9
+blow:SPORE:HURT:1d4
+flags:EMPTY_MIND | STUPID
+desc:It is a strange yellow growth on the dungeon floor.
+
+name:brown mold
+base:mold
+color:u
+speed:110
+hit-points:68
+hearing:2
+armor-class:14
+sleepiness:99
+depth:6
+rarity:1
+experience:20
+blow:SPORE:CONFUSE:1d4
+flags:EMPTY_MIND | STUPID
+desc:A strange brown growth on the dungeon floor.
+
+name:green mold
+base:mold
+color:g
+speed:110
+hit-points:95
+hearing:2
+armor-class:16
+sleepiness:75
+depth:8
+rarity:1
+experience:28
+blow:SPORE:TERRIFY:1d4
+flags:EMPTY_MIND | STUPID
+flags:IM_ACID
+desc:It is a strange growth on the dungeon floor.
+
+name:hairy mold
+base:mold
+color:o
+speed:110
+hit-points:68
+hearing:2
+armor-class:22
+sleepiness:0
+depth:10
+rarity:1
+experience:32
+blow:SPORE:POISON:1d3
+flags:EMPTY_MIND | STUPID
+desc:It is a strange hairy growth on the dungeon floor.
+
+##### p is for HUMANS #####
+
+# fix desc
+name:mugger
+base:person
+color:b
+speed:110
+hit-points:20
+hearing:20
+armor-class:18
+sleepiness:10
+depth:2
+rarity:1
+experience:6
+blow:HIT:HURT:1d6
+blow:TOUCH:EAT_GOLD
+flags:MALE | EVIL
+flags:DROP_40
+flags:OPEN_DOOR | TAKE_ITEM
+drop:card:blinking:35:1:3
+friends-base:20:1d3:person
+friends-base:40:1d3:person
+friends-base:80:1d3:person
+friends:50:1d2:Same
+desc:A rather shifty individual.
+
+name:Slick
+base:person
+color:b
+speed:120
+hit-points:35
+hearing:20
+armor-class:20
+sleepiness:5
+depth:5
+rarity:0
+experience:90
+blow:HIT:HURT:1d4
+blow:TOUCH:EAT_GOLD
+blow:TOUCH:EAT_ITEM
+flags:MALE | EVIL | UNIQUE | QUESTOR | SPECIAL_GEN
+flags:DROP_2
+flags:OPEN_DOOR | TAKE_ITEM
+innate-freq:6
+spell-freq:6
+spells:SHOT | BLINK
+drop:card:blinking:75:1:4
+drop:0:Slick's:100:1:1
+friends:100:3d2:mugger:bodyguard
+friends:50:1:Fang, Slick's dog:bodyguard
+friends:50:1:Grip, Slick's dog:bodyguard
+desc:A thief who likes to think of himself as being in charge of the Stores. You've come in stealing everything that isn't nailed down without his permission, so he's going to try to get it back.
+
+name:Nijel, the Rat
+base:person
+color:Gray50
+speed:110
+hit-points:180
+hearing:200
+smell:200
+armor-class:5
+sleepiness:200
+depth:9
+rarity:1
+experience:90
+blow:HIT:HURT:1d10
+blow:HIT:HURT:1d10
+drop:0:of the Grey Rat:50:1:1
+desc:The Grey Rat - a tall, skinny young man wearing a silly leather outfit that would look better on someone with more muscles and less goosepimples. He kept giant rats in a cellar under the general store, until someone snuck in and killed them - he's now searching for the attacker.
+flags:UNIQUE
+flags:DROP_1 | DROP_60 | DROP_40 | DROP_20
+flags:OPEN_DOOR | SMART | SPIRIT
+flags:MALE
+flags:FORCE_SLEEP | SPECIAL_GEN
+
+# friends? ranged?
+name:Ky, the Pie Spy
+base:person
+color:b
+speed:110
+hit-points:70
+hearing:20
+armor-class:5
+sleepiness:5
+depth:9
+rarity:1
+experience:90
+drop:card:blinking:70:2:6
+drop:card:security:100:1:1
+blow:HIT:HURT:2d4
+blow:TOUCH:EAT_ITEM
+blow:TOUCH:EAT_GOLD
+desc:She looks like just one more of the Black Market's agents - in other words, a grab-and-blink thief. But she matches the description you were given, so hopefully she's still carrying the stolen recipe.
+flags:UNIQUE | EVIL
+flags:DROP_60 | DROP_40 | DROP_20
+flags:OPEN_DOOR | SMART | SPIRIT | TAKE_ITEM
+flags:FEMALE | SPECIAL_GEN | QUESTOR
+
+name:stormtrooper
+base:person
+color:W
+speed:110
+hit-points:250
+hearing:20
+armor-class:70
+sleepiness:100
+depth:36
+rarity:2
+experience:600
+blow:HIT:HURT:3d6
+blow:HIT:HURT:3d6
+flags:MALE | FEMALE | EVIL | SPIRIT
+flags:DROP_40 | CONFUSED
+flags:OPEN_DOOR
+spell-freq:2
+spells:BO_PLAS
+desc:A masked enforcer in awkward-looking white full body armor, and an agent of evil - at least in theory. Between 9 and 5, anyway. Not one that really signed up to it, and in particular not one that paid any attention to target shooting drill.
+
+name:The Dark Helmet
+base:person
+color:D
+speed:125
+hit-points:4000
+hearing:100
+armor-class:80
+sleepiness:0
+depth:50
+rarity:0
+experience:8000
+blow:HIT:HURT:4d10
+blow:HIT:HURT:4d10
+blow:CRUSH:ELEC:6d10
+drop:helm:Dark Helmet:100:1:1
+drop:food:habanero:100:1:3
+flags:UNIQUE | QUESTOR | SPECIAL_GEN
+flags:MALE | EVIL | SMART | SPIRIT
+flags:DROP_3 | DROP_2 | DROP_1 | DROP_60 | DROP_40 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
+flags:MOVE_BODY | OPEN_DOOR | ATTR_FLICKER | REGENERATE
+flags:IM_FIRE
+flags:FORCE_SLEEP
+friends:100:2d3:stormtrooper:bodyguard
+spell-freq:3
+spells:BO_PLAS
+spells:BLINK | S_FRIENDS
+desc:What kind of volcano would it be, without an evil overlord in residence? The Dark Helmet's no Triax, though - much as he would like to think he is. He does go through all the motions - his stupid goons are really stupid, his white cat is really fluffy, and of course his helmet is really big and shiny - but somehow it never comes together into the world domination he dreams of. Still, he is dangerous enough to harass the town above him, and needs to be taken down a hat size or two.
+
+name:Triax, the Emperor
+base:person
+color:D
+speed:140
+hit-points:20000
+hearing:100
+armor-class:180
+sleepiness:0
+depth:100
+rarity:0
+experience:500000
+drop:hafted:Dominion:100:1:1
+blow:HIT:SHATTER:20d10
+blow:HIT:SHATTER:20d10
+blow:HIT:LOSE_ALL:10d12
+blow:TOUCH:DRAIN_CHARGES
+flags:UNIQUE | QUESTOR | DEATH_SPECIAL | SPECIAL_GEN
+flags:MALE | EVIL | SMART | SPIRIT
+flags:DROP_4 | DROP_3 | DROP_2 | DROP_1 | DROP_60 | DROP_40 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
+flags:SMASH_WALL | MOVE_BODY | ATTR_FLICKER | REGENERATE
+flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS
+flags:NO_CONF | NO_SLEEP | NO_HOLD | NO_FEAR
+flags:FORCE_DEPTH | FORCE_SLEEP
+spell-freq:2
+spells:BRAIN_SMASH
+spells:BA_RADI | BA_POIS | BA_LIGHT | BA_SHAR | BA_WATE | BA_DARK | BA_GRAV | BA_PLAS
+spells:S_MONSTERS | S_UNIQUE
+desc:The Emperor. Or at least that is how he styles himself - and what he intends to be. A tyrant who has destroyed Xygos in nuclear fire in order to further his ambition of crushing all the Galaxy's systems in his fist. The maker of every deadly robot or unnatural creature, the puppet-master behind every other enemy of freedom that fought against you, and a lethal combatant in his own right - blurring faster than lightning, through rock as if it were air, combining every form of cybernetic enhancement you can imagine and then more.
+
+
+##### q is for QUADRUPEDS #####
+
+name:cave bear
+base:quadruped
+color:u
+speed:110
+hit-points:36
+hearing:10
+smell:20
+armor-class:52
+sleepiness:30
+depth:9
+rarity:1
+experience:25
+blow:CLAW:HURT:1d6
+blow:CLAW:HURT:1d6
+blow:BITE:HURT:1d8
+flags:ANIMAL
+flags:RAND_25
+desc:A large bear appears to have made its home in this cave.  It is hungry, and
+desc: you are trespassing in its territory.
+
+name:grizzly bear
+base:quadruped
+color:U
+speed:110
+hit-points:78
+hearing:10
+smell:20
+armor-class:52
+sleepiness:30
+depth:16
+rarity:2
+experience:55
+blow:CLAW:HURT:1d8
+blow:CLAW:HURT:1d8
+blow:BITE:HURT:1d12
+blow:CRUSH:HURT:1d10
+flags:ANIMAL
+desc:A huge, beastly bear, more savage than most of its kind.
+
+name:mammoth
+base:quadruped
+color:s
+speed:110
+hit-points:495
+hearing:20
+smell:20
+armor-class:82
+sleepiness:70
+depth:35
+rarity:2
+experience:2100
+blow:BUTT:HURT:4d6
+blow:BUTT:HURT:4d6
+blow:CRUSH:HURT:4d4
+flags:ANIMAL
+friends:100:4d4:Same
+desc:A massive elephantine form covered in thick brown hair. It looks angry...
 
 name:wumpus
 base:quadruped
@@ -1344,10 +2559,65 @@ depth:38
 rarity:5
 experience:500
 blow:CRUSH:HURT:10d12
-flags:SMART | COLD_BLOOD | WEIRD_MIND | RAND_25 | BASH_DOOR | KILL_BODY | KILL_ITEM
+flags:SMART | ANIMAL | COLD_BLOOD | WEIRD_MIND | RAND_25 | BASH_DOOR | KILL_BODY | KILL_ITEM
 desc:The primeval Beast itself. Many hunt the Wumpus, few return...
 
-##### R - ROBOTS #####
+##### r is for RODENTS #####
+
+name:giant white mouse
+plural:giant white mice
+base:rodent
+color:w
+speed:110
+hit-points:2
+hearing:8
+smell:20
+armor-class:4
+sleepiness:20
+depth:1
+rarity:1
+experience:1
+blow:BITE:HURT:1d2
+flags:MULTIPLY
+flags:RAND_50
+desc:It is about three feet long with large teeth.
+
+name:giant white rat
+base:rodent
+color:W
+speed:110
+hit-points:3
+hearing:8
+smell:20
+armor-class:8
+sleepiness:30
+depth:4
+rarity:1
+experience:1
+blow:BITE:POISON:1d3
+flags:MULTIPLY
+flags:RAND_25
+desc:It is a very vicious rodent.
+
+name:giant grey rat
+base:rodent
+color:s
+speed:110
+hit-points:4
+hearing:8
+smell:20
+armor-class:14
+sleepiness:20
+depth:9
+rarity:1
+experience:2
+blow:BITE:POISON:1d4
+flags:MULTIPLY
+flags:RAND_25
+desc:It is a rodent of unusual size.
+
+
+##### R is for ROBOTS #####
 
 name:Miniac, the Crusher
 base:robot
@@ -1434,7 +2704,8 @@ flags:FORCE_DEPTH | FORCE_SLEEP
 desc:Artificial intelligence, or natural insanity? It's hard to tell where one leaves off and the other begins, when you are facing the demon core: a silicon replica of Triax's brilliant but thoroughly evil mind. Physically, it's simply a vast cuboid of gleaming metal. It has no conventional means of locomotion - it doesn't need any, with its mastery of teleportation. It does however have extensive means of defense...
 
 
-#### S in for SPIDER ####
+#### S is for SPIDER ####
+# (and scorpions)
 
 name:money spider
 base:spider
@@ -1486,8 +2757,172 @@ flags:IM_POIS | GROUP_AI
 friends:100:2d7:Same
 desc:It scuttles towards you.
 
+name:giant spider
+base:spider
+color:V
+speed:110
+hit-points:55
+hearing:8
+armor-class:24
+sleepiness:40
+depth:10
+rarity:2
+experience:35
+blow:BITE:HURT:1d10
+blow:BITE:POISON:1d6
+blow:BITE:POISON:1d6
+blow:BITE:HURT:1d10
+flags:ANIMAL | WEIRD_MIND
+flags:IM_POIS
+innate-freq:10
+spells:WEAVE
+desc:It is a vast black spider whose bulbous body is bloated with poison.
+
+name:giant tarantula
+base:spider
+color:o
+speed:120
+hit-points:80
+hearing:8
+armor-class:48
+sleepiness:20
+depth:15
+rarity:3
+experience:70
+blow:BITE:POISON:1d6
+blow:BITE:POISON:1d6
+blow:BITE:POISON:1d6
+flags:ANIMAL | WEIRD_MIND
+flags:IM_POIS
+desc:A giant, fast-moving spider with hairy black and red legs.
+
+#radscorpion?
+name:giant red scorpion
+base:spider
+color:r
+speed:115
+hit-points:50
+hearing:12
+armor-class:52
+sleepiness:20
+depth:17
+rarity:1
+experience:62
+blow:CLAW:HURT:2d4
+blow:CLAW:HURT:2d4
+blow:STING:LOSE_STR:1d7
+flags:ANIMAL | WEIRD_MIND
+flags:IM_POIS
+desc:It is fast and poisonous.
+
+name:giant black scorpion
+base:spider
+color:s
+speed:120
+hit-points:189
+hearing:12
+armor-class:60
+sleepiness:20
+depth:29
+rarity:3
+experience:425
+blow:CLAW:HURT:1d11
+blow:CLAW:HURT:1d11
+blow:STING:POISON:3d4
+blow:STING:BLIND:3d4
+flags:ANIMAL | WEIRD_MIND
+flags:IM_POIS
+desc:A gleaming black scorpion as large as a lion, with a pulsating stinger
+desc: and two great deadly claws.
+
 
 ##### w is for WORM #####
+
+name:white worm mass
+base:worm
+color:w
+speed:100
+hit-points:10
+hearing:7
+armor-class:1
+sleepiness:14
+depth:1
+rarity:1
+experience:2
+blow:CRAWL:POISON:1d2
+flags:WEIRD_MIND | MULTIPLY | STUPID
+flags:RAND_25 | RAND_50
+flags:HURT_LIGHT | IM_POIS | NO_FEAR
+desc:It is a large slimy mass of worms.
+
+name:green worm mass
+base:worm
+color:g
+speed:100
+hit-points:15
+hearing:7
+armor-class:3
+sleepiness:10
+depth:2
+rarity:1
+experience:3
+blow:CRAWL:ACID:1d3
+flags:WEIRD_MIND | MULTIPLY | STUPID
+flags:RAND_25 | RAND_50
+flags:HURT_LIGHT | IM_ACID | NO_FEAR
+desc:It is a large slimy mass of worms.
+
+name:yellow worm mass
+base:worm
+color:y
+speed:100
+hit-points:18
+hearing:7
+armor-class:4
+sleepiness:10
+depth:3
+rarity:2
+experience:4
+blow:CRAWL:LOSE_DEX:1d3
+flags:WEIRD_MIND | MULTIPLY | STUPID
+flags:RAND_25 | RAND_50
+flags:HURT_LIGHT | NO_FEAR
+desc:It is a large slimy mass of worms.
+
+name:clear worm mass
+base:worm
+color:w
+speed:100
+hit-points:10
+hearing:7
+armor-class:1
+sleepiness:13
+depth:3
+rarity:2
+experience:4
+blow:CRAWL:POISON:1d2
+flags:WEIRD_MIND | INVISIBLE | MULTIPLY | STUPID
+flags:RAND_25 | RAND_50
+flags:HURT_LIGHT | IM_POIS | NO_FEAR
+flags:ATTR_CLEAR
+desc:It is a disgusting mass of poisonous worms.
+
+name:blue worm mass
+base:worm
+color:b
+speed:100
+hit-points:23
+hearing:7
+armor-class:14
+sleepiness:10
+depth:4
+rarity:1
+experience:5
+blow:CRAWL:COLD:1d4
+flags:COLD_BLOOD | WEIRD_MIND | MULTIPLY | STUPID
+flags:RAND_25 | RAND_50
+flags:HURT_LIGHT | IM_COLD | NO_FEAR
+desc:It is a large slimy mass of worms.
 
 name:purple worm
 base:worm
@@ -2133,71 +3568,6 @@ desc:It's Saint Nick, out delivering presents to the town urchins.
 
 ### Dungeon level 1 ###
 
-name:grey mold
-base:mold
-color:s
-speed:110
-hit-points:2
-hearing:2
-armor-class:1
-sleepiness:0
-depth:1
-rarity:1
-experience:3
-blow:SPORE:HURT:1d4
-blow:SPORE:HURT:1d4
-flags:EMPTY_MIND | STUPID
-desc:A small strange grey growth.
-
-name:grey mushroom patch
-plural:grey mushroom patches
-base:mushroom
-color:s
-speed:110
-hit-points:2
-hearing:2
-armor-class:1
-sleepiness:0
-depth:1
-rarity:1
-experience:1
-blow:SPORE:CONFUSE:1d4
-flags:IM_POIS | NEVER_MOVE
-desc:Yum!  It looks quite tasty.
-
-name:giant yellow centipede
-base:centipede
-color:y
-speed:110
-hit-points:7
-hearing:8
-smell:20
-armor-class:14
-sleepiness:30
-depth:1
-rarity:1
-experience:2
-blow:BITE:HURT:1d3
-blow:STING:HURT:1d3
-desc:It is about four feet long and carnivorous.
-
-name:giant white centipede
-base:centipede
-color:w
-speed:110
-hit-points:9
-hearing:7
-smell:20
-armor-class:12
-sleepiness:40
-depth:1
-rarity:1
-experience:2
-blow:CRAWL:HURT:1d2
-blow:STING:COLD:1d2
-flags:RAND_50 | BASH_DOOR
-desc:It is about four feet long and carnivorous.
-
 name:white icky thing
 base:icky thing
 color:w
@@ -2231,73 +3601,6 @@ flags:RAND_25
 flags:ATTR_CLEAR
 desc:It is a smallish, slimy, icky, blobby creature.
 
-name:giant white mouse
-plural:giant white mice
-base:rodent
-color:w
-speed:110
-hit-points:2
-hearing:8
-smell:20
-armor-class:4
-sleepiness:20
-depth:1
-rarity:1
-experience:1
-blow:BITE:HURT:1d2
-flags:MULTIPLY
-flags:RAND_50
-desc:It is about three feet long with large teeth.
-
-name:large white snake
-base:snake
-color:w
-speed:100
-hit-points:11
-hearing:4
-armor-class:36
-sleepiness:99
-depth:1
-rarity:1
-experience:2
-blow:BITE:HURT:1d1
-blow:CRUSH:HURT:1d1
-flags:RAND_50
-desc:It is about eight feet long.
-
-name:small kobold
-base:kobold
-color:y
-speed:110
-hit-points:8
-hearing:20
-smell:20
-armor-class:24
-sleepiness:70
-depth:1
-rarity:1
-experience:5
-blow:HIT:HURT:1d5
-flags:DROP_60
-desc:It is a squat and ugly humanoid figure with a canine face.
-
-name:white worm mass
-base:worm
-color:w
-speed:100
-hit-points:10
-hearing:7
-armor-class:1
-sleepiness:14
-depth:1
-rarity:1
-experience:2
-blow:CRAWL:POISON:1d2
-flags:WEIRD_MIND | MULTIPLY | STUPID
-flags:RAND_25 | RAND_50
-flags:HURT_LIGHT | IM_POIS | NO_FEAR
-desc:It is a large slimy mass of worms.
-
 name:floating eye
 base:eye
 color:o
@@ -2314,55 +3617,7 @@ flags:NEVER_MOVE
 flags:HURT_LIGHT | NO_FEAR
 desc:A disembodied eye, floating a few feet above the ground.
 
-name:wild dog
-base:canine
-color:U
-speed:110
-hit-points:3
-hearing:10
-smell:50
-armor-class:3
-sleepiness:10
-depth:1
-rarity:1
-experience:1
-blow:BITE:HURT:1d1
-flags:GROUP_AI
-friends:100:2d7:Same
-desc:It is a yapping snarling dog, dangerous when in a pack.
-
-name:soldier ant
-base:ant
-color:W
-speed:110
-hit-points:6
-hearing:10
-smell:20
-armor-class:4
-sleepiness:40
-depth:1
-rarity:1
-experience:3
-blow:BITE:HURT:1d2
-desc:A large ant with powerful mandibles.
-
 ### Dungeon level 2 ###
-
-name:kobold
-base:kobold
-color:G
-speed:110
-hit-points:12
-hearing:20
-smell:20
-armor-class:24
-sleepiness:70
-depth:2
-rarity:1
-experience:5
-blow:HIT:HURT:1d8
-flags:DROP_60
-desc:It is a small, dog-headed humanoid.
 
 name:shrieker mushroom patch
 plural:shrieker mushroom patches
@@ -2400,23 +3655,6 @@ flags:EMPTY_MIND
 flags:KILL_BODY | TAKE_ITEM
 flags:IM_POIS
 desc:It is a smallish, slimy, icky, hungry creature.
-
-name:metallic green centipede
-base:centipede
-color:g
-speed:120
-hit-points:10
-hearing:5
-smell:20
-armor-class:4
-sleepiness:10
-depth:2
-rarity:1
-experience:3
-blow:CRAWL:HURT:1d1
-blow:STING:ACID:1d1
-flags:RAND_50 | BASH_DOOR
-desc:It is about four feet long and carnivorous.
 
 name:soldier
 base:person
@@ -2491,76 +3729,6 @@ friends-base:80:1d3:person
 friends:50:1d2:Same
 desc:He is leaving behind a trail of dropped spell components.
 
-name:yellow mushroom patch
-plural:yellow mushroom patches
-base:mushroom
-color:y
-speed:110
-hit-points:1
-hearing:2
-armor-class:1
-sleepiness:0
-depth:2
-rarity:1
-experience:2
-blow:SPORE:TERRIFY:1d6
-flags:NEVER_MOVE
-flags:IM_POIS
-desc:Yum!  It looks quite tasty.
-
-name:white jelly
-plural:white jellies
-base:jelly
-color:w
-speed:120
-hit-points:36
-hearing:2
-armor-class:1
-sleepiness:99
-depth:2
-rarity:1
-experience:10
-blow:TOUCH:POISON:1d2
-flags:NEVER_MOVE
-flags:HURT_LIGHT | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
-desc:It's a large pile of white flesh.
-
-name:giant black ant
-base:ant
-color:D
-speed:110
-hit-points:11
-hearing:8
-smell:20
-armor-class:24
-sleepiness:80
-depth:2
-rarity:1
-experience:8
-blow:BITE:HURT:1d4
-flags:RAND_25
-desc:It is about three feet long.
-
-name:white harpy
-plural:white harpies
-base:hybrid
-color:w
-speed:110
-hit-points:6
-hearing:16
-smell:20
-armor-class:20
-sleepiness:10
-depth:2
-rarity:1
-experience:5
-blow:CLAW:HURT:1d1
-blow:CLAW:HURT:1d1
-blow:BITE:HURT:1d2
-flags:FEMALE | EVIL | ANIMAL
-flags:RAND_50
-desc:A flying, screeching bird with a woman's face.
-
 name:blue yeek
 base:yeek
 color:b
@@ -2576,94 +3744,6 @@ experience:4
 blow:HIT:HURT:1d5
 flags:DROP_60
 desc:A small humanoid figure.
-
-name:Grip, Farmer Maggot's Dog
-base:canine
-color:y
-speed:120
-hit-points:25
-hearing:30
-smell:50
-armor-class:36
-sleepiness:0
-depth:2
-rarity:1
-experience:30
-blow:BITE:HURT:1d4
-flags:UNIQUE
-flags:RAND_25 | BASH_DOOR
-flags:NO_CONF | NO_SLEEP
-desc:A rather vicious dog belonging to Farmer Maggot.  It thinks you are
-desc: stealing mushrooms.
-
-name:Fang, Farmer Maggot's Dog
-base:canine
-color:y
-speed:120
-hit-points:25
-hearing:30
-smell:50
-armor-class:36
-sleepiness:0
-depth:2
-rarity:1
-experience:30
-blow:BITE:HURT:1d4
-flags:UNIQUE
-flags:RAND_25 | BASH_DOOR
-flags:NO_CONF | NO_SLEEP
-desc:A rather vicious dog belonging to Farmer Maggot.  It thinks you are
-desc: stealing mushrooms.
-
-name:green worm mass
-base:worm
-color:g
-speed:100
-hit-points:15
-hearing:7
-armor-class:3
-sleepiness:10
-depth:2
-rarity:1
-experience:3
-blow:CRAWL:ACID:1d3
-flags:WEIRD_MIND | MULTIPLY | STUPID
-flags:RAND_25 | RAND_50
-flags:HURT_LIGHT | IM_ACID | NO_FEAR
-desc:It is a large slimy mass of worms.
-
-name:wild cat
-base:feline
-color:U
-speed:120
-hit-points:9
-hearing:40
-smell:30
-armor-class:14
-sleepiness:0
-depth:2
-rarity:2
-experience:8
-blow:CLAW:HURT:1d3
-blow:CLAW:HURT:1d3
-flags:BASH_DOOR
-desc:A larger than normal feline, hissing loudly.  Its velvet paws conceal a
-desc: fistful of needles.
-
-name:crow
-base:bird
-color:s
-speed:120
-hit-points:9
-hearing:40
-armor-class:14
-sleepiness:0
-depth:2
-rarity:2
-experience:8
-blow:BITE:HURT:1d3
-blow:BITE:HURT:1d3
-desc:It is a hooded crow, gray except for the black wings and head.
 
 ### Dungeon level 3 ###
 
@@ -2685,59 +3765,6 @@ flags:RAND_25 | RAND_50 | TAKE_ITEM
 flags:HURT_LIGHT
 desc:Usually known as Gollum.  He's been sneaking, and he wants his 'precious.'
 
-name:green ooze
-base:jelly
-color:g
-speed:120
-hit-points:8
-hearing:8
-armor-class:19
-sleepiness:80
-depth:3
-rarity:2
-experience:4
-blow:CRAWL:ACID:1d3
-flags:DROP_60
-flags:RAND_25 | RAND_50
-flags:IM_ACID | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
-desc:It's green and it's oozing.
-
-name:poltergeist
-base:ghost
-color:W
-speed:130
-hit-points:6
-hearing:8
-armor-class:18
-sleepiness:10
-depth:3
-rarity:1
-experience:8
-blow:TOUCH:TERRIFY
-flags:DROP_40 | DROP_60
-flags:RAND_25 | RAND_50 | TAKE_ITEM
-flags:HURT_LIGHT
-spell-freq:15
-spells:BLINK
-desc:It is a ghastly, ghostly form.
-
-name:metallic blue centipede
-base:centipede
-color:b
-speed:120
-hit-points:12
-hearing:6
-smell:20
-armor-class:7
-sleepiness:15
-depth:3
-rarity:1
-experience:7
-blow:CRAWL:HURT:1d2
-blow:STING:ELEC:1d2
-flags:RAND_50 | BASH_DOOR
-desc:It is about four feet long and carnivorous.
-
 name:black naga
 base:naga
 color:D
@@ -2753,61 +3780,6 @@ blow:CRUSH:HURT:1d8
 flags:DROP_60
 flags:RAND_25
 desc:A large black serpent's body with a female torso.
-
-name:spotted mushroom patch
-plural:spotted mushroom patches
-base:mushroom
-color:o
-speed:110
-hit-points:1
-hearing:2
-armor-class:1
-sleepiness:0
-depth:3
-rarity:1
-experience:3
-blow:SPORE:POISON:2d4
-flags:NEVER_MOVE
-flags:IM_POIS
-desc:Yum!  It looks quite tasty.
-
-name:silver jelly
-plural:silver jellies
-base:jelly
-color:W
-speed:120
-hit-points:45
-hearing:2
-armor-class:1
-sleepiness:99
-depth:3
-rarity:2
-experience:12
-blow:TOUCH:EAT_LIGHT:1d3
-blow:TOUCH:EAT_LIGHT:1d3
-flags:NEVER_MOVE
-flags:IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
-spell-freq:15
-desc:It is a large pile of silver flesh that sucks all light from its
-desc: surroundings.
-
-name:yellow jelly
-plural:yellow jellies
-base:jelly
-color:y
-speed:120
-hit-points:45
-hearing:2
-armor-class:1
-sleepiness:99
-depth:3
-rarity:1
-experience:12
-blow:TOUCH:POISON:1d3
-flags:NEVER_MOVE
-flags:HURT_LIGHT | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
-spell-freq:15
-desc:It's a large pile of yellow flesh.
 
 name:scruffy looking hobbit
 base:humanoid
@@ -2828,21 +3800,6 @@ flags:TAKE_ITEM
 desc:A short little guy, in bedraggled clothes.  He appears to be looking for a
 desc: good tavern.
 
-name:yellow mold
-base:mold
-color:y
-speed:110
-hit-points:36
-hearing:2
-armor-class:12
-sleepiness:99
-depth:3
-rarity:1
-experience:9
-blow:SPORE:HURT:1d4
-flags:EMPTY_MIND | STUPID
-desc:It is a strange yellow growth on the dungeon floor.
-
 name:metallic red centipede
 base:centipede
 color:r
@@ -2859,41 +3816,6 @@ blow:CRAWL:HURT:1d2
 blow:STING:FIRE:1d2
 flags:RAND_25 | BASH_DOOR
 desc:It is about four feet long and carnivorous.
-
-name:yellow worm mass
-base:worm
-color:y
-speed:100
-hit-points:18
-hearing:7
-armor-class:4
-sleepiness:10
-depth:3
-rarity:2
-experience:4
-blow:CRAWL:LOSE_DEX:1d3
-flags:WEIRD_MIND | MULTIPLY | STUPID
-flags:RAND_25 | RAND_50
-flags:HURT_LIGHT | NO_FEAR
-desc:It is a large slimy mass of worms.
-
-name:clear worm mass
-base:worm
-color:w
-speed:100
-hit-points:10
-hearing:7
-armor-class:1
-sleepiness:13
-depth:3
-rarity:2
-experience:4
-blow:CRAWL:POISON:1d2
-flags:WEIRD_MIND | INVISIBLE | MULTIPLY | STUPID
-flags:RAND_25 | RAND_50
-flags:HURT_LIGHT | IM_POIS | NO_FEAR
-flags:ATTR_CLEAR
-desc:It is a disgusting mass of poisonous worms.
 
 name:radiation eye
 base:eye
@@ -2933,21 +3855,6 @@ friends-base:70:1d2:kobold
 desc:It is a kobold dressed in skins and gesturing wildly.
 
 ### Dungeon level 4 ###
-
-name:cave lizard
-base:reptile
-color:u
-speed:110
-hit-points:11
-hearing:8
-smell:20
-armor-class:19
-sleepiness:80
-depth:4
-rarity:1
-experience:8
-blow:BITE:HURT:1d5
-desc:It is an armoured lizard with a powerful bite.
 
 name:scout
 base:person
@@ -3027,24 +3934,6 @@ friends-base:80:1d3:person
 friends:50:1d2:Same
 desc:A lover of nature.
 
-name:blue jelly
-plural:blue jellies
-base:jelly
-color:b
-speed:110
-hit-points:54
-hearing:2
-armor-class:1
-sleepiness:99
-depth:4
-rarity:1
-experience:14
-blow:TOUCH:COLD:1d6
-flags:COLD_BLOOD
-flags:NEVER_MOVE
-flags:HURT_LIGHT | IM_COLD | NO_CONF | NO_SLEEP
-desc:It's a large pile of pulsing blue flesh.
-
 name:creeping copper coins
 plural:piles of creeping copper coins
 base:creeping coins
@@ -3061,76 +3950,6 @@ blow:HIT:HURT:1d4
 blow:TOUCH:POISON:2d4
 desc:It appears to be a pile of copper coins.
 mimic:cash:small change
-
-name:giant white rat
-base:rodent
-color:W
-speed:110
-hit-points:3
-hearing:8
-smell:20
-armor-class:8
-sleepiness:30
-depth:4
-rarity:1
-experience:1
-blow:BITE:POISON:1d3
-flags:MULTIPLY
-flags:RAND_25
-desc:It is a very vicious rodent.
-
-name:blue worm mass
-base:worm
-color:b
-speed:100
-hit-points:23
-hearing:7
-armor-class:14
-sleepiness:10
-depth:4
-rarity:1
-experience:5
-blow:CRAWL:COLD:1d4
-flags:COLD_BLOOD | WEIRD_MIND | MULTIPLY | STUPID
-flags:RAND_25 | RAND_50
-flags:HURT_LIGHT | IM_COLD | NO_FEAR
-desc:It is a large slimy mass of worms.
-
-name:large grey snake
-base:snake
-color:s
-speed:100
-hit-points:27
-hearing:6
-armor-class:61
-sleepiness:100
-depth:4
-rarity:1
-experience:14
-blow:BITE:HURT:1d5
-blow:CRUSH:HURT:1d8
-flags:RAND_25
-desc:It is about ten feet long.
-
-name:kobold archer
-base:kobold
-color:W
-speed:110
-hit-points:24
-hearing:20
-smell:20
-armor-class:24
-sleepiness:70
-depth:4
-rarity:1
-experience:20
-blow:HIT:HURT:1d9
-flags:DROP_40
-innate-freq:2
-spells:ARROW
-friends-base:30:1d2:kobold
-friends-base:70:1d2:kobold
-desc:It is an ugly dog-headed humanoid wielding a bow.
 
 name:silver mouse
 plural:silver mice
@@ -3153,25 +3972,6 @@ desc: falls on it, it seems to grow stronger.
 
 ### Dungeon level 5 ###
 
-name:Bullroarer the Hobbit
-base:humanoid
-color:U
-speed:120
-hit-points:60
-hearing:16
-armor-class:12
-sleepiness:30
-depth:5
-rarity:3
-experience:90
-blow:HIT:HURT:1d8
-blow:HIT:HURT:1d8
-flags:UNIQUE | MALE
-flags:DROP_2 | DROP_GOOD | ONLY_ITEM
-friends:80:1d7:Scruffy looking hobbit:servant
-desc:He is a sturdy hobbit who is renowned for his unusual strength and vigour.
-desc:  He can prove a troublesome opponent.
-
 name:green naga
 base:naga
 color:g
@@ -3191,23 +3991,6 @@ flags:IM_ACID
 desc:A large green serpent with a female's torso.  Her green skin glistens with
 desc: acid.
 
-name:blue ooze
-base:jelly
-color:b
-speed:110
-hit-points:8
-hearing:8
-armor-class:19
-sleepiness:80
-depth:5
-rarity:1
-experience:7
-blow:CRAWL:COLD:1d4
-flags:DROP_40
-flags:RAND_25 | RAND_50
-flags:IM_COLD | NO_CONF | NO_SLEEP
-desc:It's blue and it's oozing.
-
 name:green glutton ghost
 base:ghost
 color:g
@@ -3224,23 +4007,6 @@ flags:DROP_40 | DROP_60
 flags:RAND_25 | RAND_50
 flags-off:IM_COLD
 desc:It is a very ugly green ghost with a voracious appetite.
-
-name:green jelly
-plural:green jellies
-base:jelly
-color:g
-speed:120
-hit-points:99
-hearing:2
-armor-class:1
-sleepiness:99
-depth:5
-rarity:1
-experience:18
-blow:TOUCH:ACID:1d2
-flags:NEVER_MOVE
-flags:HURT_LIGHT | IM_ACID | HURT_COLD | NO_CONF | NO_SLEEP
-desc:It is a large pile of pulsing green flesh.
 
 name:large kobold
 base:kobold
@@ -3326,22 +4092,6 @@ flags:RAND_25 | RAND_50 | BASH_DOOR
 flags:HURT_LIGHT | IM_FIRE | NO_FEAR
 desc:It is a large slimy mass of worms.
 
-name:copperhead snake
-base:snake
-color:o
-speed:110
-hit-points:14
-hearing:6
-armor-class:30
-sleepiness:10
-depth:5
-rarity:1
-experience:15
-blow:BITE:POISON:2d4
-flags:RAND_50
-flags:IM_POIS
-desc:It has a copper head and sharp venomous fangs.
-
 name:giant white dragon fly
 plural:giant white dragon flies
 base:dragon fly
@@ -3379,59 +4129,7 @@ innate-freq:10
 spells:BR_POIS
 desc:A vast, foul-smelling dragonfly.
 
-name:rot jelly
-plural:rot jellies
-base:jelly
-color:u
-speed:120
-hit-points:90
-hearing:2
-armor-class:36
-sleepiness:99
-depth:5
-rarity:1
-experience:15
-blow:TOUCH:EAT_FOOD:2d3
-blow:TOUCH:LOSE_WIS:2d3
-flags:NEVER_MOVE
-flags:HURT_LIGHT | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
-desc:It is a large pile of rotting flesh, whose touch spoils your food.  The
-desc: terrible smell it exudes is also very hard to get rid of...
-
 ### Dungeon level 6 ###
-
-name:purple mushroom patch
-plural:purple mushroom patches
-base:mushroom
-color:P
-speed:110
-hit-points:1
-hearing:2
-armor-class:1
-sleepiness:0
-depth:6
-rarity:2
-experience:15
-blow:SPORE:LOSE_CON:1d2
-blow:SPORE:LOSE_CON:1d2
-blow:SPORE:LOSE_CON:1d2
-flags:NEVER_MOVE
-desc:Yum!  It looks quite tasty.
-
-name:brown mold
-base:mold
-color:u
-speed:110
-hit-points:68
-hearing:2
-armor-class:14
-sleepiness:99
-depth:6
-rarity:1
-experience:20
-blow:SPORE:CONFUSE:1d4
-flags:EMPTY_MIND | STUPID
-desc:A strange brown growth on the dungeon floor.
 
 name:creeping silver
 plural:piles of creeping silver
@@ -3449,23 +4147,6 @@ blow:HIT:HURT:1d6
 blow:TOUCH:POISON:2d6
 desc:It appears to be a pile of silver nuggets.
 mimic:cash:silver nuggets
-
-name:rattlesnake
-base:snake
-color:r
-speed:110
-hit-points:24
-hearing:6
-armor-class:36
-sleepiness:10
-depth:6
-rarity:1
-experience:20
-blow:BITE:POISON:2d5
-flags:RAND_50
-flags:IM_POIS
-desc:It is recognized by the hard-scaled end of its body that is often rattled
-desc: to frighten its prey.
 
 name:giant black dragon fly
 plural:giant black dragon flies
@@ -3561,23 +4242,6 @@ flags:DROP_60
 flags:RAND_25 | TAKE_ITEM
 desc:A large red snake with a woman's torso.
 
-name:red jelly
-plural:red jellies
-base:jelly
-color:r
-speed:110
-hit-points:117
-hearing:2
-armor-class:1
-sleepiness:99
-depth:7
-rarity:1
-experience:26
-blow:TOUCH:LOSE_STR:1d5
-flags:NEVER_MOVE
-flags:HURT_LIGHT | HURT_COLD | NO_CONF | NO_SLEEP
-desc:It is a large pulsating mound of red flesh.
-
 name:giant red frog
 base:reptile
 color:r
@@ -3648,28 +4312,6 @@ spell-freq:15
 spells:TPORT
 desc:It is almost insubstantial.
 
-name:eastern dwarf
-plural:eastern dwarves
-base:humanoid
-color:D
-speed:110
-hit-points:39
-hearing:20
-armor-class:24
-sleepiness:40
-depth:7
-rarity:2
-experience:25
-blow:HIT:HURT:1d6
-blow:HIT:HURT:1d6
-flags:MALE | EVIL
-flags:DROP_60
-flags:FORCE_SLEEP
-spell-freq:10
-spells:CONF | DARKNESS
-desc:A dwarf of one of the eastern kindreds who has fallen under the sway of
-desc: Morgoth.
-
 name:night lizard
 base:reptile
 color:b
@@ -3685,30 +4327,6 @@ experience:35
 blow:BITE:HURT:1d6
 blow:BITE:HURT:1d6
 desc:It is a black lizard with overlapping scales and a powerful jaw.
-
-name:Mughash the Kobold Lord
-base:kobold
-color:v
-speed:110
-hit-points:150
-hearing:20
-smell:20
-armor-class:30
-sleepiness:40
-depth:7
-rarity:3
-experience:100
-blow:HIT:HURT:1d10
-blow:HIT:HURT:1d10
-blow:HIT:HURT:1d10
-flags:UNIQUE | MALE | MOVE_BODY
-flags:DROP_1 | DROP_GOOD | ONLY_ITEM
-friends:100:1d10:Small kobold:servant
-friends:100:1d10:Kobold:servant
-friends:100:1d3:Kobold shaman:servant
-friends:100:1d5:Kobold archer:servant
-friends:100:1d5:Large kobold:bodyguard
-desc:Strong and powerful, for a kobold.
 
 ### Dungeon level 8 ###
 
@@ -3749,39 +4367,6 @@ innate-freq:9
 spells:BR_FIRE
 desc:A large black and yellow lizard.  You'd better run away!
 
-name:green mold
-base:mold
-color:g
-speed:110
-hit-points:95
-hearing:2
-armor-class:16
-sleepiness:75
-depth:8
-rarity:1
-experience:28
-blow:SPORE:TERRIFY:1d4
-flags:EMPTY_MIND | STUPID
-flags:IM_ACID
-desc:It is a strange growth on the dungeon floor.
-
-name:lemure
-base:minor demon
-color:U
-speed:110
-hit-points:65
-hearing:20
-armor-class:48
-sleepiness:80
-depth:8
-rarity:3
-experience:16
-blow:HIT:HURT:1d8
-flags:OPEN_DOOR | BASH_DOOR
-flags:NO_FEAR
-friends:100:2d7:Same
-desc:It is a minor but aggressive demon.
-
 name:ruffian
 base:person
 color:s
@@ -3804,21 +4389,6 @@ desc:An uncultured brute with a club, a sling and a whip.
 
 ### Dungeon level 9 ###
 
-name:giant black louse
-plural:giant black lice
-base:insect
-color:D
-speed:120
-hit-points:2
-hearing:6
-armor-class:8
-sleepiness:10
-depth:9
-rarity:1
-experience:3
-blow:BITE:HURT:1d2
-desc:It makes you itch just to look at it.
-
 name:bloodshot icky thing
 base:icky thing
 color:r
@@ -3836,173 +4406,7 @@ flags:EMPTY_MIND
 spell-freq:11
 desc:It is a strange, slimy, icky creature.
 
-name:giant grey rat
-base:rodent
-color:s
-speed:110
-hit-points:4
-hearing:8
-smell:20
-armor-class:14
-sleepiness:20
-depth:9
-rarity:1
-experience:2
-blow:BITE:POISON:1d4
-flags:MULTIPLY
-flags:RAND_25
-desc:It is a rodent of unusual size.
-
-name:giant red ant
-base:ant
-color:r
-speed:110
-hit-points:18
-hearing:12
-smell:20
-armor-class:40
-sleepiness:60
-depth:9
-rarity:2
-experience:22
-blow:BITE:HURT:1d4
-blow:STING:LOSE_STR:1d4
-desc:It is large and has venomous mandibles.
-
-name:king cobra
-base:snake
-color:g
-speed:110
-hit-points:44
-hearing:8
-armor-class:45
-sleepiness:10
-depth:9
-rarity:2
-experience:28
-blow:SPIT:BLIND:1d2
-blow:BITE:POISON:3d4
-flags:RAND_50
-flags:IM_POIS
-innate-freq:4
-spells:SPIT
-desc:It is a large snake with a hooded face.
-
-name:cave bear
-base:quadruped
-color:u
-speed:110
-hit-points:36
-hearing:10
-smell:20
-armor-class:52
-sleepiness:30
-depth:9
-rarity:1
-experience:25
-blow:CLAW:HURT:1d6
-blow:CLAW:HURT:1d6
-blow:BITE:HURT:1d8
-flags:ANIMAL
-flags:RAND_25
-desc:A large bear appears to have made its home in this cave.  It is hungry, and
-desc: you are trespassing in its territory.
-
-
-
-########## DUNGEON LEVELS 10-19 ##########
-
-
-
 ### Dungeon level 10 ###
-
-name:giant spider
-base:spider
-color:V
-speed:110
-hit-points:55
-hearing:8
-armor-class:24
-sleepiness:40
-depth:10
-rarity:2
-experience:35
-blow:BITE:HURT:1d10
-blow:BITE:POISON:1d6
-blow:BITE:POISON:1d6
-blow:BITE:HURT:1d10
-flags:ANIMAL | WEIRD_MIND
-flags:IM_POIS
-innate-freq:10
-spells:WEAVE
-desc:It is a vast black spider whose bulbous body is bloated with poison.
-
-name:blacklock mage
-base:humanoid
-color:r
-speed:120
-hit-points:39
-hearing:20
-armor-class:24
-sleepiness:30
-depth:10
-rarity:1
-experience:50
-blow:HIT:HURT:1d6
-blow:HIT:HURT:1d6
-flags:MALE | EVIL
-flags:DROP_60 | ONLY_ITEM
-flags:FORCE_SLEEP
-spell-freq:5
-spells:BLIND | CONF | DARKNESS | MISSILE
-spells:BA_POIS
-desc:A corrupted dwarf from the east, dressed in black mail, hurling spells
-desc: at you.
-
-name:Orfax, Son of Boldor
-base:yeek
-color:B
-speed:120
-hit-points:120
-hearing:18
-smell:20
-armor-class:24
-sleepiness:10
-depth:10
-rarity:3
-experience:80
-blow:HIT:HURT:1d9
-blow:HIT:HURT:1d8
-blow:INSULT
-blow:INSULT
-flags:UNIQUE | MALE | EVIL | SMART
-flags:DROP_1 | DROP_GOOD | ONLY_ITEM
-flags:FORCE_SLEEP
-spell-freq:4
-spells:BLINK | CONF | HEAL | SLOW | TELE_TO
-spells:S_MONSTER
-friends:50:2d5:terrified yeek:servant
-friends:100:2d5:Blue yeek:servant
-friends:50:1d3:Master yeek:servant
-desc:He's just like his daddy!  He knows mighty spells, but fortunately he is a
-desc: yeek.
-
-name:stonefoot warrior
-base:humanoid
-color:u
-speed:110
-hit-points:60
-hearing:20
-armor-class:24
-sleepiness:40
-depth:10
-rarity:1
-experience:50
-blow:HIT:HURT:1d8
-blow:HIT:HURT:1d8
-flags:MALE | EVIL
-flags:DROP_60
-desc:A dwarf of the east in a coat of iron rings and wielding an axe.
 
 name:clear mushroom patch
 plural:clear mushroom patches
@@ -4021,38 +4425,6 @@ flags:COLD_BLOOD | INVISIBLE | MULTIPLY
 flags:NEVER_MOVE
 flags:ATTR_CLEAR
 desc:Yum!  It looks quite tasty.
-
-name:giant white tick
-base:spider
-color:w
-speed:100
-hit-points:54
-hearing:12
-smell:20
-armor-class:150
-sleepiness:20
-depth:10
-rarity:2
-experience:27
-blow:BITE:POISON:2d6
-flags:ANIMAL | WEIRD_MIND
-flags:IM_POIS
-desc:It is moving slowly towards you.
-
-name:hairy mold
-base:mold
-color:o
-speed:110
-hit-points:68
-hearing:2
-armor-class:22
-sleepiness:0
-depth:10
-rarity:1
-experience:32
-blow:SPORE:POISON:1d3
-flags:EMPTY_MIND | STUPID
-desc:It is a strange hairy growth on the dungeon floor.
 
 name:disenchanter mold
 base:mold
@@ -4090,58 +4462,6 @@ flags:IM_ACID
 desc:It appears to be a pile of gold coins, until it starts crawling towards
 desc: you on tiny legs.
 mimic:cash:rare coins
-
-name:wolf
-plural:wolves
-base:canine
-color:u
-speed:120
-hit-points:21
-hearing:30
-smell:50
-armor-class:45
-sleepiness:10
-depth:10
-rarity:1
-experience:30
-blow:BITE:HURT:1d6
-flags:RAND_25 | BASH_DOOR
-flags:GROUP_AI
-friends:100:2d10:Same
-desc:It howls and snaps at you.
-
-name:giant fruit fly
-plural:giant fruit flies
-base:insect
-color:G
-speed:120
-hit-points:3
-hearing:8
-armor-class:16
-sleepiness:10
-depth:10
-rarity:3
-experience:4
-blow:BITE:HURT:1d2
-desc:A fast-breeding, annoying pest.
-
-name:panther
-base:feline
-color:u
-speed:120
-hit-points:45
-hearing:40
-smell:30
-armor-class:36
-sleepiness:0
-depth:10
-rarity:2
-experience:25
-blow:CLAW:HURT:1d8
-blow:CLAW:HURT:1d8
-flags:BASH_DOOR
-desc:A large black cat, stalking you with intent.  It thinks you're its next
-desc: meal.
 
 ### Dungeon level 11 ###
 
@@ -4187,24 +4507,6 @@ desc:A mage of short stature with stumpy legs and a wispy beard.
 
 ### Dungeon level 12 ###
 
-name:black mamba
-base:snake
-color:D
-speed:120
-hit-points:45
-hearing:10
-armor-class:48
-sleepiness:10
-depth:12
-rarity:3
-experience:40
-blow:BITE:POISON:4d6
-flags:RAND_50
-flags:IM_POIS
-innate-freq:4
-spells:SPIT
-desc:It has glistening black skin, a sleek body and highly venomous fangs.
-
 name:white wolf
 plural:white wolves
 base:canine
@@ -4225,25 +4527,6 @@ flags:IM_COLD | GROUP_AI
 friends:100:2d7:Same
 desc:A large and muscled wolf from the northern wastes.  Its breath is cold and
 desc: icy and its fur coated in frost.
-
-name:grape jelly
-plural:grape jellies
-base:jelly
-color:P
-speed:110
-hit-points:234
-light:2
-hearing:2
-armor-class:1
-sleepiness:99
-depth:12
-rarity:3
-experience:60
-blow:TOUCH:EXP_10
-flags:NEVER_MOVE
-flags:HURT_LIGHT | HURT_COLD | IM_POIS | NO_CONF | NO_SLEEP
-spell-freq:11
-desc:Yum!  It looks quite tasty.  It is a pulsing mound of glowing flesh.
 
 name:radiation worm mass
 base:worm
@@ -4309,7 +4592,6 @@ spells:HEAL | SCARE | HEAL_KIN
 spells:BA_LIGHT | BA_HOLY
 spells:S_KIN
 friends:50:1d2:Brigand
-friends:50:1d2:Illusionist
 friends:50:1d2:warrior
 friends:50:1d2:Same
 desc:A robed man, dedicated to his god.
@@ -4351,78 +4633,6 @@ flags:RAND_25 | RAND_50 | BASH_DOOR
 flags:IM_ELEC
 desc:A whirlwind of sentient air.
 
-name:skeleton human
-base:skeleton
-color:w
-speed:110
-hit-points:45
-hearing:20
-armor-class:45
-sleepiness:70
-depth:12
-rarity:1
-experience:38
-blow:HIT:HURT:1d8
-flags:EMPTY_MIND
-flags:OPEN_DOOR | BASH_DOOR
-desc:It is an animated human skeleton.
-
-name:zombified human
-base:zombie
-color:s
-speed:110
-hit-points:54
-hearing:20
-armor-class:36
-sleepiness:100
-depth:12
-rarity:1
-experience:34
-blow:HIT:HURT:1d4
-blow:HIT:HURT:1d4
-flags:EMPTY_MIND
-flags:NO_FEAR
-desc:It is a shambling human corpse dropping chunks of flesh behind it.
-
-name:tiger
-base:feline
-color:o
-speed:120
-hit-points:66
-hearing:40
-smell:30
-armor-class:48
-sleepiness:0
-depth:12
-rarity:2
-experience:40
-blow:CLAW:HURT:1d8
-blow:CLAW:HURT:1d8
-blow:BITE:HURT:1d6
-flags:BASH_DOOR
-desc:One of the largest of its species, a sleek orange and black shape creeps
-desc: towards you, ready to pounce.
-
-name:moaning spirit
-base:ghost
-color:u
-speed:120
-hit-points:23
-hearing:14
-armor-class:24
-sleepiness:10
-depth:12
-rarity:2
-experience:44
-blow:WAIL:TERRIFY
-blow:TOUCH:LOSE_DEX:1d8
-flags:DROP_40 | DROP_60
-flags:RAND_25
-flags:FORCE_SLEEP
-spell-freq:15
-spells:SCARE | TPORT
-desc:A ghostly apparition that shrieks horribly.
-
 name:warrior
 base:person
 color:u
@@ -4444,7 +4654,6 @@ innate-freq:10
 spells:BOLT
 friends:50:1d2:Brigand
 friends:50:1d2:Priest
-friends:50:1d2:Illusionist
 friends:50:1d2:Same
 desc:A warrior of considerable skill.
 
@@ -4466,89 +4675,7 @@ blow:STING:HURT:2d4
 flags:BASH_DOOR
 desc:It is a vast armoured centipede with massive mandibles and a spiked tail.
 
-name:spotted jelly
-plural:spotted jellies
-base:jelly
-color:o
-speed:120
-hit-points:59
-hearing:12
-armor-class:27
-sleepiness:0
-depth:12
-rarity:3
-experience:33
-blow:TOUCH:ACID:1d10
-blow:TOUCH:ACID:2d6
-blow:TOUCH:ACID:2d6
-flags:COLD_BLOOD
-flags:NEVER_MOVE
-flags:HURT_LIGHT | IM_ACID | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
-desc:A strange jelly thing, covered in discoloured blotches.
-
 ### Dungeon level 13 ###
-
-name:killer brown beetle
-base:killer beetle
-color:u
-speed:110
-hit-points:59
-hearing:10
-armor-class:72
-sleepiness:30
-depth:13
-rarity:1
-experience:45
-blow:BITE:HURT:4d4
-desc:It is a vicious insect with a tough carapace.
-
-name:ochre jelly
-plural:ochre jellies
-base:jelly
-color:U
-speed:120
-hit-points:59
-hearing:12
-armor-class:21
-sleepiness:1
-depth:13
-rarity:3
-experience:40
-blow:TOUCH:ACID:1d10
-blow:TOUCH:ACID:2d6
-blow:TOUCH:ACID:2d6
-flags:COLD_BLOOD
-flags:OPEN_DOOR | BASH_DOOR | TAKE_ITEM
-flags:IM_ACID | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
-desc:A fast moving highly acidic jelly thing, that is eating away the floor it
-desc: rests on.
-
-name:Boldor, King of the Yeeks
-base:yeek
-color:P
-speed:120
-hit-points:180
-hearing:18
-smell:20
-armor-class:28
-sleepiness:10
-depth:13
-rarity:3
-experience:200
-blow:HIT:HURT:1d9
-blow:HIT:HURT:1d9
-blow:HIT:HURT:1d8
-flags:UNIQUE | MALE | EVIL | SMART
-flags:DROP_60 | DROP_1 | DROP_GOOD | ONLY_ITEM
-flags:FORCE_SLEEP
-spell-freq:3
-spells:BLIND | BLINK | HEAL | SLOW | TPORT
-spells:S_KIN | S_MONSTER
-friends:50:2d6:terrified yeek:servant
-friends:100:2d6:Blue yeek:servant
-friends:100:2d4:Master yeek:servant
-friends:100:1d1:Orfax, Son of Boldor
-desc:A great yeek, powerful in magic and sorcery, but a yeek all the same.
 
 name:creeping platinum
 plural:piles of creeping platinum
@@ -4568,56 +4695,6 @@ flags:IM_ACID
 desc:It appears to be a pile of sentient platinum bars that doesn't like being
 desc: picked up.
 mimic:cash:platinum bars
-
-name:illusionist
-base:person
-color:I
-speed:120
-hit-points:54
-light:2
-hearing:20
-armor-class:15
-sleepiness:20
-depth:13
-rarity:2
-experience:50
-blow:HIT:HURT:2d2
-flags:MALE | EVIL | SMART
-flags:DROP_1
-flags:OPEN_DOOR
-flags:FORCE_SLEEP
-spell-freq:3
-spells:BLIND | BLINK | CONF | DARKNESS | HASTE | HOLD
-spells:SLOW | TPORT
-friends:50:1d2:Brigand
-friends:50:1d2:Priest
-friends:50:1d2:warrior
-friends:50:1d2:Same
-desc:A deceptive spell caster.
-
-name:druid
-base:person
-color:y
-speed:110
-hit-points:78
-light:2
-hearing:20
-armor-class:15
-sleepiness:20
-depth:13
-rarity:2
-experience:50
-blow:HIT:HURT:2d4
-blow:HIT:HURT:2d4
-flags:MALE | SMART
-flags:DROP_1
-flags:OPEN_DOOR
-flags:FORCE_SLEEP
-spell-freq:3
-spells:BLIND | HASTE | HOLD | SLOW | CONF
-spells:BO_POIS | BO_FIRE | SHAPECHANGE
-spells:S_ANIMAL
-desc:A priest devoted to Nature.
 
 ### Dungeon level 14 ###
 
@@ -4660,40 +4737,6 @@ spells:BLIND | CONF | SCARE
 desc:It is a strange, slimy, icky creature, with rudimentary intelligence, but
 desc: evil cunning.  It hungers for food, and you look tasty.
 
-name:flesh golem
-base:golem
-color:R
-speed:110
-hit-points:54
-hearing:12
-armor-class:36
-sleepiness:10
-depth:14
-rarity:2
-experience:50
-blow:HIT:HURT:1d6
-blow:HIT:HURT:1d6
-flags:BASH_DOOR
-desc:A shambling humanoid monster with long scars.
-
-name:warg
-base:canine
-color:s
-speed:120
-hit-points:36
-hearing:20
-smell:50
-armor-class:30
-sleepiness:10
-depth:14
-rarity:2
-experience:40
-blow:BITE:HURT:1d8
-flags:EVIL | GROUP_AI
-flags:RAND_25 | BASH_DOOR
-friends:100:2d7:Same
-desc:It is a large wolf with eyes full of cunning.
-
 name:lurker
 base:lurker
 color:w
@@ -4711,32 +4754,6 @@ desc:A strange creature that merges with the dungeon floor, trapping its
 desc: victims by enveloping them within its perfectly disguised form.
 
 ### Dungeon level 15 ###
-
-name:wererat
-base:rodent
-color:D
-speed:110
-hit-points:90
-hearing:10
-smell:20
-armor-class:15
-sleepiness:20
-depth:15
-rarity:2
-experience:45
-blow:CLAW:HURT:1d8
-blow:CLAW:HURT:1d8
-blow:BITE:HURT:2d6
-flags:EVIL
-flags:DROP_40 | ONLY_GOLD
-flags:OPEN_DOOR | BASH_DOOR
-flags:FORCE_SLEEP
-spell-freq:9
-spells:BLINK | WOUND
-spells:BA_POIS
-spells:BO_COLD
-desc:A large rat with glowing red eyes.  The wererat is a disgusting creature,
-desc: relishing in filth and disease.
 
 name:magic mushroom patch
 plural:magic mushroom patches
@@ -4760,24 +4777,6 @@ flags:FORCE_SLEEP
 spell-freq:2
 spells:BLINK | DARKNESS | SCARE | SLOW
 desc:Yum!  It looks quite tasty.  It seems to glow with an unusual light.
-
-name:guardian naga
-base:naga
-color:B
-speed:110
-hit-points:144
-hearing:20
-armor-class:78
-sleepiness:120
-depth:15
-rarity:2
-experience:80
-blow:CRUSH:HURT:2d8
-blow:BITE:HURT:1d8
-blow:BITE:HURT:1d8
-flags:DROP_40 | DROP_1
-flags:RAND_25 | OPEN_DOOR
-desc:A giant snake-like figure with a woman's torso.
 
 name:light hound
 base:zephyr hound
@@ -4826,79 +4825,6 @@ friends:100:2d7:Same
 desc:A hole in the air in the shape of a huge hound.  No light falls upon its
 desc: form.
 
-name:giant tarantula
-base:spider
-color:o
-speed:120
-hit-points:80
-hearing:8
-armor-class:48
-sleepiness:20
-depth:15
-rarity:3
-experience:70
-blow:BITE:POISON:1d6
-blow:BITE:POISON:1d6
-blow:BITE:POISON:1d6
-flags:ANIMAL | WEIRD_MIND
-flags:IM_POIS
-desc:A giant, fast-moving spider with hairy black and red legs.
-
-name:giant clear centipede
-base:centipede
-color:w
-speed:110
-hit-points:23
-hearing:12
-smell:20
-armor-class:36
-sleepiness:30
-depth:15
-rarity:2
-experience:30
-blow:BITE:HURT:2d4
-blow:STING:HURT:2d4
-flags:INVISIBLE
-flags:BASH_DOOR
-flags:ATTR_CLEAR
-desc:It is about four feet long and carnivorous.
-
-name:griffon
-base:hybrid
-color:u
-speed:110
-hit-points:135
-hearing:12
-smell:20
-armor-class:22
-sleepiness:40
-depth:15
-rarity:1
-experience:70
-blow:HIT:HURT:3d4
-blow:BITE:HURT:2d6
-flags:ANIMAL
-flags:BASH_DOOR
-desc:It is half lion, half eagle.  It flies menacingly towards you.
-
-name:homunculus
-plural:homunculi
-base:minor demon
-color:y
-speed:110
-hit-points:36
-hearing:20
-armor-class:48
-sleepiness:60
-depth:15
-rarity:3
-experience:40
-blow:HIT:PARALYZE:1d2
-blow:HIT:HURT:1d10
-flags:OPEN_DOOR | BASH_DOOR
-flags:NO_FEAR
-desc:It is a small demonic spirit full of malevolence.
-
 name:clear hound
 base:zephyr hound
 color:w
@@ -4920,50 +4846,7 @@ flags:ATTR_CLEAR
 friends:100:2d7:Same
 desc:A completely translucent hound.
 
-name:clay golem
-base:golem
-color:U
-speed:110
-hit-points:63
-hearing:12
-armor-class:36
-sleepiness:10
-depth:15
-rarity:2
-experience:60
-blow:HIT:HURT:1d8
-blow:HIT:HURT:1d8
-flags:COLD_BLOOD
-flags:BASH_DOOR
-flags:HURT_ROCK | IM_COLD | IM_FIRE | IM_POIS
-desc:It is a massive animated statue made out of hardened clay.
-
 ### Dungeon level 16 ###
-
-name:gelatinous cube
-base:jelly
-color:G
-speed:110
-hit-points:316
-hearing:12
-armor-class:21
-sleepiness:1
-depth:16
-rarity:4
-experience:80
-blow:TOUCH:ACID:1d10
-blow:TOUCH:ACID:1d10
-blow:TOUCH:ACID:1d10
-flags:COLD_BLOOD
-flags:DROP_4
-flags:OPEN_DOOR | BASH_DOOR | TAKE_ITEM
-flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS
-flags:NO_CONF | NO_SLEEP
-flags-off:HURT_COLD
-desc:It is a strange, vast gelatinous structure that assumes cubic proportions
-desc: as it lines all four walls of the corridors it patrols.  Through its
-desc: transparent jelly structure you can see treasures it has engulfed, and a
-desc: few corpses as well.
 
 name:rogue
 base:person
@@ -4985,238 +4868,12 @@ flags:OPEN_DOOR | TAKE_ITEM
 innate-freq:8
 spells:SHOT
 drop:card:blinking:70:2:6
-friends:50:1d2:Illusionist
 friends:50:1d2:Priest
 friends:50:1d2:warrior
 friends:50:1d2:Same
 desc:He is eyeing your backpack.
 
-name:Ulfast, Son of Ulfang
-base:person
-color:U
-speed:110
-hit-points:340
-light:2
-hearing:20
-smell:20
-armor-class:48
-sleepiness:40
-depth:16
-rarity:3
-experience:200
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-flags:UNIQUE | MALE | EVIL
-flags:DROP_60 | DROP_GOOD | ONLY_ITEM
-flags:OPEN_DOOR | TAKE_ITEM
-friends:60:1d3:warrior:servant
-desc:A short and swarthy Easterling.
-
-name:quasit
-base:minor demon
-color:o
-speed:110
-hit-points:27
-hearing:20
-armor-class:36
-sleepiness:20
-depth:16
-rarity:2
-experience:50
-blow:BITE:LOSE_DEX:1d6
-blow:CLAW:HURT:1d3
-blow:CLAW:HURT:1d3
-flags:INVISIBLE | SMART
-flags:DROP_1 | ONLY_ITEM
-flags:RAND_25 | BASH_DOOR
-flags:FORCE_SLEEP
-spell-freq:10
-spells:BLIND | BLINK | CONF | SCARE | TELE_LEVEL | TELE_TO
-spells:TPORT
-desc:A demon of small stature with an annoying bite.
-
-name:grizzly bear
-base:quadruped
-color:U
-speed:110
-hit-points:78
-hearing:10
-smell:20
-armor-class:52
-sleepiness:30
-depth:16
-rarity:2
-experience:55
-blow:CLAW:HURT:1d8
-blow:CLAW:HURT:1d8
-blow:BITE:HURT:1d12
-blow:CRUSH:HURT:1d10
-flags:ANIMAL
-desc:A huge, beastly bear, more savage than most of its kind.
-
-name:craban
-plural:crebain
-base:bird
-color:D
-speed:120
-hit-points:9
-hearing:40
-armor-class:14
-sleepiness:0
-depth:16
-rarity:4
-experience:20
-blow:CLAW:HURT:1d4
-blow:CLAW:HURT:1d4
-innate-freq:8
-spells:SHRIEK
-flags:GROUP_AI
-friends:100:3d3:Same
-desc:A type of crow, specially bred by the forces of evil as spies; their
-desc: rudimentary intelligence guided by an evil mind has tracked you down, and
-desc: now they seek to alert other evil creatures to your presence.
-
-### Dungeon level 17 ###
-
-name:imp
-base:minor demon
-color:g
-speed:110
-hit-points:27
-hearing:20
-armor-class:36
-sleepiness:20
-depth:17
-rarity:2
-experience:55
-blow:HIT:POISON:3d4
-blow:HIT:POISON:3d4
-flags:COLD_BLOOD | INVISIBLE | SMART
-flags:DROP_1 | ONLY_ITEM
-flags:RAND_25 | BASH_DOOR
-flags:FORCE_SLEEP
-spell-freq:10
-spells:BLIND | BLINK | CONF | SCARE | TELE_LEVEL | TELE_TO
-spells:TPORT
-desc:A poisonous little mischief-maker.
-
-name:Nár, the Dwarf
-base:humanoid
-color:y
-speed:110
-hit-points:450
-hearing:25
-armor-class:84
-sleepiness:25
-depth:17
-rarity:2
-experience:250
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-flags:UNIQUE | MALE
-flags:DROP_1 | DROP_GOOD | ONLY_ITEM
-flags:IM_COLD | IM_FIRE | IM_POIS | NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:6
-spells:BLIND | WOUND | CONF | HEAL | MIND_BLAST
-desc:The friend and companion of the dwarven king Thrór, he went mad with grief
-desc: after Thrór's death at the hands of Azog the Orc.  With torn beard and
-desc: ragged clothes, he seems to have fixed on you as a convenient target to
-desc: vent his anger.
-
-name:2-headed hydra
-base:hydra
-color:u
-speed:110
-hit-points:200
-hearing:20
-armor-class:90
-sleepiness:80
-depth:17
-rarity:2
-experience:80
-blow:BITE:HURT:2d6
-blow:BITE:HURT:2d6
-flags:DROP_2
-flags:OPEN_DOOR | MOVE_BODY
-spell-freq:11
-spells:SCARE
-desc:A strange reptilian hybrid with two heads, guarding its hoard.
-
-name:water spirit
-base:elemental
-color:b
-speed:120
-hit-points:41
-hearing:12
-armor-class:42
-sleepiness:20
-depth:17
-rarity:2
-experience:58
-blow:HIT:HURT:2d4
-blow:HIT:HURT:2d4
-flags:COLD_BLOOD
-flags:RAND_25 | BASH_DOOR
-flags:IM_ACID | IM_WATER
-desc:A whirlpool of sentient liquid.
-
-name:giant red scorpion
-base:spider
-color:r
-speed:115
-hit-points:50
-hearing:12
-armor-class:52
-sleepiness:20
-depth:17
-rarity:1
-experience:62
-blow:CLAW:HURT:2d4
-blow:CLAW:HURT:2d4
-blow:STING:LOSE_STR:1d7
-flags:ANIMAL | WEIRD_MIND
-flags:IM_POIS
-desc:It is fast and poisonous.
-
-name:earth spirit
-base:elemental
-color:u
-speed:120
-hit-points:59
-hearing:10
-armor-class:60
-sleepiness:20
-depth:17
-rarity:2
-experience:64
-blow:HIT:HURT:1d8
-blow:HIT:HURT:1d8
-flags:COLD_BLOOD
-flags:RAND_25 | PASS_WALL
-flags:HURT_ROCK | IM_COLD | IM_ELEC | IM_FIRE
-desc:A whirling form of sentient rock.
-
 ### Dungeon level 18 ###
-
-name:hummerhorn
-base:insect
-color:y
-speed:120
-hit-points:3
-hearing:8
-armor-class:16
-sleepiness:10
-depth:18
-rarity:4
-experience:4
-blow:BITE:CONFUSE:2d2
-flags:MOVE_BODY
-desc:A giant buzzing wasp, its stinger drips venom.
 
 name:blackguard
 base:person
@@ -5446,26 +5103,6 @@ desc: flame.
 
 ### Dungeon level 20 ###
 
-name:blood falcon
-base:bird
-color:R
-speed:140
-hit-points:6
-hearing:50
-smell:20
-armor-class:2
-sleepiness:10
-depth:20
-rarity:2
-experience:50
-blow:CLAW:HURT:2d10
-blow:CLAW:HURT:2d10
-blow:BITE:HURT:3d8
-flags:NO_FEAR
-desc:A blinding whirlwind of fear and feathers. Its razor sharp beak and talons
-desc: fill its foes with terror as it seeks to rend flesh from bone with
-desc: unbridled ferocity.
-
 name:Mirkwood spider
 base:spider
 color:g
@@ -5487,27 +5124,6 @@ spells:WEAVE
 friends:100:2d7:Same
 desc:A strong and powerful spider from Mirkwood forest.  Cunning and evil, it
 desc: seeks to taste your juicy insides.
-
-name:3-headed hydra
-base:hydra
-color:o
-speed:120
-hit-points:300
-hearing:20
-armor-class:97
-sleepiness:70
-depth:20
-rarity:2
-experience:350
-blow:BITE:HURT:2d6
-blow:BITE:HURT:2d6
-blow:BITE:POISON:2d6
-flags:DROP_3
-flags:OPEN_DOOR | MOVE_BODY
-flags:IM_POIS
-spell-freq:9
-spells:SCARE
-desc:A 2-headed hydra with an extra head, its mouth dripping venom.
 
 name:earth hound
 base:zephyr hound
@@ -5558,26 +5174,6 @@ friends:100:2d7:Same
 desc:Swirling vapours surround this beast as it floats towards you, seemingly
 desc: walking on air.  Noxious gases sting your throat.
 
-name:sabre-tooth tiger
-base:feline
-color:y
-speed:120
-hit-points:150
-hearing:40
-smell:30
-armor-class:60
-sleepiness:0
-depth:20
-rarity:2
-experience:120
-blow:CLAW:HURT:1d10
-blow:CLAW:HURT:1d10
-blow:BITE:HURT:1d10
-blow:BITE:HURT:1d10
-flags:BASH_DOOR
-desc:A fierce and dangerous cat, its huge tusks and sharp claws would lacerate
-desc: even the strongest armour.
-
 name:water hound
 base:zephyr hound
 color:s
@@ -5619,52 +5215,6 @@ spells:BLINK
 spells:S_MONSTER
 desc:It is a strange pulsing mound of flesh.
 
-name:werewolf
-plural:werewolves
-base:canine
-color:D
-speed:110
-hit-points:230
-hearing:15
-smell:50
-armor-class:36
-sleepiness:70
-depth:20
-rarity:1
-experience:150
-blow:CLAW:HURT:2d6
-blow:CLAW:HURT:2d6
-blow:BITE:HURT:2d10
-flags:EVIL
-flags:RAND_25 | OPEN_DOOR | BASH_DOOR | TAKE_ITEM
-desc:It is a huge wolf with eyes that glow with manly intelligence.
-
-name:dark dwarven lord
-base:humanoid
-color:s
-speed:120
-hit-points:144
-hearing:20
-armor-class:48
-sleepiness:30
-depth:20
-rarity:2
-experience:500
-blow:HIT:HURT:3d8
-blow:HIT:HURT:3d5
-flags:MALE | EVIL
-flags:DROP_2 | ONLY_ITEM
-flags:FORCE_SLEEP
-spell-freq:5
-spells:BLIND | CONF | DARKNESS | HASTE
-spells:BO_COLD | BO_FIRE
-friends:80:1d3:eastern dwarf:servant
-friends:70:1d2:stonefoot warrior:servant
-friends:50:1d1:blacklock mage:servant
-friends:50:1d1:ironfist priest:servant
-desc:A leader of Morgoth's eastern dwarf recruits, dressed in black chainmail
-desc: and radiating evil power.
-
 name:ranger
 base:person
 color:W
@@ -5687,9 +5237,7 @@ spell-freq:5
 spells:ARROW | BLINK | HASTE
 spells:BO_COLD
 spells:S_ANIMAL
-friends:50:1d1:Easterling champion
 friends:50:1d1:rogue
-friends:50:1d2:Illusionist
 friends:50:1d2:Priest
 friends:50:1d1:Paladin
 desc:A warrior who is at one with nature.  A master of both bow and sword, with
@@ -5714,9 +5262,7 @@ flags:DROP_1
 flags:OPEN_DOOR | TAKE_ITEM
 spell-freq:4
 spells:HEAL | SLOW
-friends:50:1d1:Easterling champion
 friends:50:1d1:rogue
-friends:50:1d2:Illusionist
 friends:50:1d2:Priest
 friends:50:1d1:Ranger
 desc:A warrior for a holy cause.  Unfortunately, his god is not yours, and
@@ -5756,61 +5302,6 @@ mimic:card:acquisition
 mimic:card:mass acquisition
 mimic:card:disinto
 
-name:fire vortex
-plural:fire vortices
-base:vortex
-color:r
-speed:110
-hit-points:45
-light:2
-hearing:100
-armor-class:36
-sleepiness:0
-depth:21
-rarity:1
-experience:100
-blow:ENGULF:FIRE:3d3
-flags:IM_FIRE | HURT_COLD
-innate-freq:4
-spells:BR_FIRE
-desc:A whirling maelstrom of fire.
-
-name:water vortex
-plural:water vortices
-base:vortex
-color:s
-speed:110
-hit-points:45
-hearing:100
-armor-class:36
-sleepiness:0
-depth:21
-rarity:1
-experience:100
-blow:ENGULF:ACID:3d3
-flags:IM_ACID | IM_WATER
-innate-freq:4
-spells:BR_ACID
-desc:A caustic spinning whirlpool of water.
-
-name:cold vortex
-plural:cold vortices
-base:vortex
-color:w
-speed:110
-hit-points:45
-hearing:100
-armor-class:36
-sleepiness:0
-depth:21
-rarity:1
-experience:100
-blow:ENGULF:COLD:3d3
-flags:IM_COLD | HURT_FIRE
-innate-freq:4
-spells:BR_COLD
-desc:A twisting whirlpool of frost.
-
 ### Dungeon level 22 ###
 
 name:neekerbreeker
@@ -5832,22 +5323,6 @@ desc:Believed to be an evil relative of the cricket, this creature gets its name
 desc: from its incessant squeaking, which can best be described as "neek-breek,
 desc: neek-breek".  The noise can drive people frantic, and worse still, can be
 desc: heard for quite some distance, alerting other monsters to your presence.
-
-name:killer stag beetle
-base:killer beetle
-color:g
-speed:110
-hit-points:68
-hearing:12
-armor-class:86
-sleepiness:30
-depth:22
-rarity:1
-experience:80
-blow:CLAW:HURT:3d6
-blow:CLAW:HURT:3d6
-flags:RAND_25
-desc:It is a giant beetle with vicious claws.
 
 name:iron golem
 base:golem
@@ -5912,50 +5387,6 @@ friends:100:2d7:Same
 desc:A spider that never seems quite there.  Everywhere you look it is just
 desc: half-seen in the corner of one eye.
 
-name:black ooze
-base:jelly
-color:D
-speed:90
-hit-points:27
-hearing:10
-armor-class:7
-sleepiness:1
-depth:23
-rarity:1
-experience:7
-blow:TOUCH:ACID:2d6
-flags:MULTIPLY
-flags:DROP_40
-flags:RAND_50 | OPEN_DOOR | BASH_DOOR | KILL_BODY | TAKE_ITEM
-flags:IM_POIS | HURT_COLD
-spell-freq:11
-desc:It is a strangely moving puddle.
-
-name:Easterling champion
-base:person
-color:u
-speed:110
-hit-points:90
-light:2
-hearing:20
-armor-class:60
-sleepiness:60
-depth:23
-rarity:1
-experience:60
-blow:HIT:HURT:6d5
-blow:HIT:HURT:6d5
-flags:MALE | EVIL
-flags:DROP_1
-flags:OPEN_DOOR | TAKE_ITEM
-innate-freq:6
-spells:BOLT
-friends:50:1d1:rogue
-friends:50:1d1:Ranger
-friends:50:1d1:Mage
-friends:50:1d1:Paladin
-desc:A scarred warrior who wields an axe and moves with confidence.
-
 name:brigand
 base:person
 color:b
@@ -5976,180 +5407,10 @@ flags:DROP_2
 flags:OPEN_DOOR | TAKE_ITEM
 innate-freq:4
 spells:SHOT
-friends:50:1d1:Easterling champion
 friends:50:1d1:Ranger
 friends:50:1d1:Mage
 friends:50:1d1:Paladin
 desc:A thief of great power and shifty speed.
-
-name:giant silver ant
-base:ant
-color:W
-speed:110
-hit-points:41
-hearing:10
-smell:20
-armor-class:100
-sleepiness:40
-depth:23
-rarity:1
-experience:80
-blow:BITE:ACID:4d4
-blow:BITE:ACID:4d4
-flags:RAND_25
-innate-freq:6
-spells:SPIT
-desc:A giant silver ant with a caustic bite and hard scales.
-
-### Dungeon level 24 ###
-
-name:Ibun, Son of Mîm
-base:humanoid
-color:o
-speed:110
-hit-points:820
-hearing:20
-armor-class:96
-sleepiness:10
-depth:24
-rarity:2
-experience:300
-blow:HIT:HURT:3d6
-blow:HIT:HURT:3d6
-blow:HIT:HURT:3d6
-blow:HIT:DISENCHANT
-flags:UNIQUE | MALE
-flags:DROP_1 | DROP_GOOD | ONLY_ITEM
-flags:IM_COLD | IM_FIRE | NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:8
-spells:HEAL | SLOW
-spells:BO_FIRE
-desc:One of the last of the Petty-Dwarves.  Ibun is a tricky sorcerous little
-desc: being, full of mischief.
-
-name:Khîm, Son of Mîm
-base:humanoid
-color:o
-speed:110
-hit-points:820
-hearing:20
-armor-class:96
-sleepiness:10
-depth:24
-rarity:2
-experience:300
-blow:HIT:HURT:3d6
-blow:HIT:HURT:3d6
-blow:HIT:HURT:3d6
-blow:HIT:DISENCHANT
-flags:UNIQUE | MALE
-flags:DROP_1 | DROP_GOOD | ONLY_ITEM
-flags:IM_COLD | IM_FIRE | NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:8
-spells:HEAL | SLOW
-spells:BO_FIRE
-desc:One of the last of the Petty-Dwarves.  Khîm is a tricky sorcerous little
-desc: being, full of mischief.
-
-name:4-headed hydra
-base:hydra
-color:y
-speed:120
-hit-points:350
-hearing:20
-armor-class:105
-sleepiness:60
-depth:24
-rarity:2
-experience:450
-blow:BITE:HURT:2d6
-blow:BITE:HURT:2d6
-blow:BITE:POISON:2d6
-blow:BITE:FIRE:2d6
-flags:DROP_3
-flags:OPEN_DOOR | MOVE_BODY
-flags:IM_POIS | IM_FIRE
-spell-freq:7
-spells:SCARE
-desc:A 3-headed hydra with an extra, smouldering, head.
-
-name:Sangahyando of Umbar
-base:person
-color:U
-speed:110
-hit-points:800
-light:2
-hearing:25
-armor-class:96
-sleepiness:25
-depth:24
-rarity:2
-experience:400
-blow:HIT:HURT:4d6
-blow:HIT:HURT:4d6
-blow:HIT:HURT:4d6
-blow:HIT:HURT:4d6
-flags:UNIQUE | MALE | EVIL
-flags:DROP_60 | DROP_1 | DROP_GOOD | ONLY_ITEM
-flags:OPEN_DOOR
-flags:IM_ELEC | IM_FIRE | NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:4
-spells:CONF | SLOW
-friends:100:1d1:Angamaitë of Umbar
-desc:A Black Númenórean with a blacker heart.
-
-name:Angamaitë of Umbar
-base:person
-color:U
-speed:110
-hit-points:800
-light:2
-hearing:25
-armor-class:96
-sleepiness:25
-depth:24
-rarity:2
-experience:400
-blow:HIT:HURT:4d6
-blow:HIT:HURT:4d6
-blow:HIT:HURT:4d6
-blow:HIT:HURT:4d6
-flags:UNIQUE | MALE | EVIL
-flags:DROP_60 | DROP_1 | DROP_GOOD | ONLY_ITEM
-flags:OPEN_DOOR
-flags:IM_ELEC | IM_FIRE | NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:4
-spells:CONF | SLOW
-friends:100:1d1:Sangahyando of Umbar
-desc:A Black Númenórean who hates the men of the west.
-
-name:werebear
-base:quadruped
-color:D
-speed:110
-hit-points:325
-hearing:20
-smell:20
-armor-class:75
-sleepiness:40
-depth:24
-rarity:2
-experience:200
-blow:CLAW:HURT:1d10
-blow:CLAW:HURT:1d10
-blow:BITE:HURT:2d8
-blow:CRUSH:HURT:2d6
-flags:EVIL | ANIMAL
-flags:DROP_1
-flags:OPEN_DOOR
-desc:In the eyes of this bear, there glimmers the faintest light of
-desc: intelligence.  And then its form begins to change...  The combination of
-desc: animal cunning, human intelligence and the great physical strength of the
-desc: bear makes for a dangerous enemy.
 
 ### Dungeon level 25 ###
 
@@ -6174,30 +5435,6 @@ friends:60:1d7:Wolf
 friends:80:1d3:Same
 desc:A ten foot tall humanoid with powerful muscles.
 
-name:pukelman
-plural:pukelmen
-base:golem
-color:m
-speed:110
-hit-points:520
-hearing:12
-armor-class:120
-sleepiness:20
-depth:25
-rarity:3
-experience:600
-blow:HIT:HURT:1d12
-blow:HIT:HURT:3d6
-flags:COLD_BLOOD
-flags:BASH_DOOR
-flags:HURT_ROCK | IM_COLD | IM_FIRE | IM_POIS
-flags:FORCE_SLEEP
-spell-freq:4
-spells:CONF | SLOW
-spells:BO_ACID
-desc:A stumpy figure carved from stone, with glittering eyes, this sentinel
-desc: strides towards you with deadly intent.
-
 name:carrion crawler
 base:centipede
 color:o
@@ -6217,22 +5454,6 @@ flags:IM_POIS
 friends:100:2d4:Same
 desc:A hideous centipede covered in slime and with glowing tentacles around its
 desc: head.
-
-name:killer red beetle
-base:killer beetle
-color:r
-speed:110
-hit-points:90
-hearing:14
-armor-class:90
-sleepiness:30
-depth:25
-rarity:1
-experience:90
-blow:BITE:LOSE_STR:4d4
-blow:BITE:HURT:4d4
-flags:RAND_25
-desc:It is a giant beetle with poisonous mandibles.
 
 ### Dungeon level 26 ###
 
@@ -6272,45 +5493,6 @@ blow:BITE:BLIND:1d2
 desc:Clouds of these monsters light up the dungeon - so brightly that you can
 desc: barely see through them.
 
-name:giant grey ant
-base:ant
-color:s
-speed:110
-hit-points:86
-hearing:10
-smell:20
-armor-class:200
-sleepiness:10
-depth:26
-rarity:1
-experience:120
-blow:BITE:HURT:2d12
-blow:BITE:HURT:2d12
-flags:RAND_25 | KILL_BODY
-desc:It is an ant encased in an impenetrable exoskeleton.
-
-name:Ulwarth, Son of Ulfang
-base:person
-color:U
-speed:110
-hit-points:850
-light:2
-hearing:20
-armor-class:48
-sleepiness:40
-depth:26
-rarity:4
-experience:500
-blow:HIT:HURT:4d6
-blow:HIT:HURT:4d6
-blow:HIT:HURT:4d6
-flags:UNIQUE | MALE | EVIL
-flags:DROP_60 | DROP_GOOD | ONLY_ITEM
-flags:OPEN_DOOR | TAKE_ITEM
-friends:60:2d3:Easterling champion:servant
-friends:100:1d1:Ulfast, Son of Ulfang
-desc:A short and swarthy Easterling.
-
 name:displacer beast
 base:feline
 color:D
@@ -6332,7 +5514,7 @@ flags:BASH_DOOR
 desc:It is a huge black panther, clubbed tentacles sprouting from its shoulders.
 
 name:giant fire tick
-base:spider
+base:insect
 color:R
 speed:110
 hit-points:72
@@ -6351,105 +5533,7 @@ innate-freq:20
 spells:SPIT
 desc:It is smoking and burning with great heat.
 
-name:wolf chieftain
-base:canine
-color:D
-speed:120
-hit-points:422
-hearing:20
-smell:50
-armor-class:24
-sleepiness:5
-depth:26
-rarity:5
-experience:120
-blow:CLAW:HURT:2d6
-blow:CLAW:HURT:2d6
-blow:BITE:HURT:2d10
-blow:WAIL:TERRIFY
-flags:MALE | EVIL | SMART
-flags:OPEN_DOOR | BASH_DOOR
-flags:IM_COLD | NO_FEAR
-spell-freq:8
-spells:DARKNESS
-friends:100:2d4:Wolf:servant
-friends:60:2d4:White wolf:servant
-friends:60:2d4:Warg:servant
-friends:60:1d4:Werewolf:servant
-desc:A great wolf-chieftain whose pack is in the service of the Dark Lord, and
-desc: whose howls strike fear into even the boldest heart.
-
-name:ghoul
-base:zombie
-color:U
-speed:110
-hit-points:83
-hearing:30
-armor-class:36
-sleepiness:20
-depth:26
-rarity:2
-experience:95
-blow:CLAW:PARALYZE:1d4
-blow:CLAW:PARALYZE:1d4
-blow:BITE:POISON:1d6
-flags:DROP_40
-flags:HURT_LIGHT
-spell-freq:9
-spells:HOLD | SCARE
-friends:100:4d4:Same
-desc:Flesh is falling off in chunks from this decaying abomination.
-
 ### Dungeon level 27 ###
-
-name:Mîm, Betrayer of Turin
-base:humanoid
-color:I
-speed:120
-hit-points:1100
-hearing:20
-armor-class:96
-sleepiness:20
-depth:27
-rarity:4
-experience:1000
-blow:HIT:HURT:3d8
-blow:HIT:HURT:3d8
-blow:HIT:HURT:3d8
-blow:HIT:DISENCHANT
-flags:UNIQUE | MALE | EVIL
-flags:DROP_2 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
-flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS | NO_CONF
-flags:NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:6
-spells:HEAL | SCARE
-spells:BA_ACID
-spells:BO_ACID
-friends:100:1d1:Ibun, Son of Mîm
-friends:100:1d1:Khîm, Son of Mîm
-desc:The last of his race, Mîm is a Petty-Dwarf.  Petty-Dwarves are strange
-desc: creatures, powerful in sorcery and originating in the East.  They have
-desc: been hunted nearly to extinction by the High Elves.
-
-name:killer fire beetle
-base:killer beetle
-color:R
-speed:110
-hit-points:99
-light:2
-hearing:14
-armor-class:64
-sleepiness:30
-depth:27
-rarity:1
-experience:95
-blow:BITE:FIRE:3d4
-blow:SPIT:FIRE:4d5
-flags:IM_FIRE
-innate-freq:5
-spells:SPIT
-desc:It is a giant beetle wreathed in flames.
 
 name:creeping unobtainium wafers
 plural:piles of creeping unobtainium
@@ -6521,53 +5605,6 @@ spells:BR_NEXU
 friends:100:2d7:Same
 desc:A locus of conflicting points coalesce to form the vague shape of a huge
 desc: hound. Or is it just your imagination?
-
-name:vampire
-base:vampire
-color:W
-speed:110
-hit-points:163
-hearing:20
-smell:20
-armor-class:67
-sleepiness:30
-depth:27
-rarity:1
-experience:175
-blow:HIT:HURT:1d6
-blow:HIT:HURT:1d6
-blow:BITE:EXP_20:2d6
-blow:BITE:EXP_20:2d6
-flags:DROP_40 | DROP_1
-spell-freq:9
-spells:WOUND | DARKNESS | MIND_BLAST | TELE_TO
-spells:HOLD | SCARE
-desc:It is a humanoid with an aura of power.  You notice a sharp set of front
-desc: teeth.
-
-name:gorgimaera
-base:hybrid
-color:o
-speed:110
-hit-points:263
-hearing:12
-smell:20
-armor-class:82
-sleepiness:20
-depth:27
-rarity:2
-experience:400
-blow:BUTT:HURT:2d10
-blow:BITE:FIRE:2d10
-blow:GAZE:PARALYZE:2d6
-flags:BASH_DOOR
-flags:IM_FIRE
-flags:FORCE_SLEEP
-innate-freq:8
-spells:BR_FIRE
-desc:The result of evil experiments, this travesty of nature should never be
-desc: alive.  It has three heads - goat, dragon and gorgon - all attached to a
-desc: lion's body.
 
 name:ogre shaman
 base:ogre
@@ -6659,29 +5696,6 @@ spell-freq:4
 spells:BLIND | DARKNESS | HEAL | MIND_BLAST
 desc:A wraithly snake-like form with the torso of a beautiful woman.
 
-name:5-headed hydra
-base:hydra
-color:g
-speed:120
-hit-points:450
-hearing:20
-armor-class:120
-sleepiness:50
-depth:28
-rarity:2
-experience:650
-blow:BITE:HURT:2d6
-blow:BITE:HURT:2d6
-blow:BITE:POISON:2d6
-blow:BITE:FIRE:2d6
-blow:BITE:ACID:2d6
-flags:DROP_4
-flags:MOVE_BODY
-flags:IM_POIS | IM_FIRE | IM_ACID
-spell-freq:5
-spells:SCARE
-desc:A 4-headed hydra with an extra head, steaming with acidic vapor.
-
 name:black knight
 base:person
 color:s
@@ -6709,56 +5723,6 @@ friends:50:1d1:Mage
 friends:50:1d1:southron assassin
 desc:A hulking figure encased in deep black plate armour; he looks at you
 desc: menacingly.
-
-name:Uldor the Accursed
-base:person
-color:U
-speed:110
-hit-points:1000
-light:2
-hearing:20
-armor-class:84
-sleepiness:40
-depth:28
-rarity:4
-experience:600
-blow:HIT:HURT:4d6
-blow:HIT:HURT:4d6
-blow:HIT:HURT:4d6
-blow:HIT:HURT:4d6
-flags:UNIQUE | MALE | EVIL
-flags:DROP_1 | DROP_GOOD | ONLY_ITEM
-flags:OPEN_DOOR | TAKE_ITEM
-spell-freq:10
-spells:S_KIN
-desc:An evil and cunning man from the East.  Having once sworn allegiance to the
-desc: sons of Fëanor, it was Uldor's treachery that turned the tide of the
-desc: Battle of Unnumbered Tears in Morgoth's favour.
-
-name:mage
-base:person
-color:r
-speed:110
-hit-points:68
-light:2
-hearing:20
-armor-class:48
-sleepiness:10
-depth:28
-rarity:1
-experience:150
-blow:HIT:HURT:2d5
-blow:HIT:HURT:2d5
-flags:MALE | SMART
-flags:DROP_1 | ONLY_ITEM
-flags:OPEN_DOOR
-flags:FORCE_SLEEP
-spell-freq:3
-spells:BLIND | CONF | TPORT | TELE_AWAY
-spells:BO_COLD | BO_ELEC | BO_FIRE
-spells:S_MONSTER
-friends-base:100:1d1:golem
-desc:A mage of some power - you can tell by the size of his hat.
 
 name:mind flayer
 base:humanoid
@@ -6833,126 +5797,7 @@ desc:A lesser relative of the beholder: a globular body with a large toothy
 desc: mouth, a large central eye, and four smaller eyes on stalks protruding
 desc: from the top of its body.
 
-name:Beorn, the Shape-Changer
-base:person
-color:p
-speed:110
-hit-points:1400
-hearing:25
-smell:20
-armor-class:72
-sleepiness:25
-depth:28
-rarity:3
-experience:1000
-blow:PUNCH:HURT:2d8
-blow:PUNCH:HURT:2d8
-blow:HIT:HURT:2d6
-blow:HIT:HURT:2d6
-flags:UNIQUE | MALE | SMART
-flags:DROP_2 | DROP_GOOD | ONLY_ITEM
-flags:FORCE_SLEEP
-spell-freq:2
-spells:SHAPECHANGE
-friends:100:2d3:Cave bear
-friends:100:2d3:Grizzly bear
-friends:100:2d3:Werebear
-shape:Beorn, the Mountain Bear
-desc:Beorn is only occasionally seen in human form these days, preferring to
-desc: appear in the shape of a giant black bear: he also prefers the company of
-desc: beasts to that of humans.  He has never taken kindly to strangers, even
-desc: in human form.
-
-name:Beorn, the Mountain Bear
-base:quadruped
-color:p
-speed:120
-hearing:25
-smell:20
-armor-class:72
-sleepiness:25
-depth:28
-rarity:0
-experience:1000
-blow:CLAW:HURT:2d10
-blow:CLAW:HURT:2d10
-blow:BITE:HURT:4d8
-blow:CRUSH:HURT:3d6
-flags:UNIQUE | MALE | ANIMAL | SMART | SPIRIT
-flags:MOVE_BODY
-desc:Beorn in his form as a great black bear of the mountains, grown to
-desc: giant-size in wrath.  The roar of his voice is like drums, and no weapon
-desc: seems to bite upon him.
-
 ### Dungeon level 29 ###
-
-name:green elf archer
-base:humanoid
-color:W
-speed:120
-hit-points:210
-hearing:15
-armor-class:112
-sleepiness:20
-depth:29
-rarity:3
-experience:500
-blow:HIT:HURT:1d7
-blow:HIT:HURT:1d7
-flags:MALE | SMART
-flags:DROP_1 | ONLY_ITEM
-flags:IM_POIS | NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-innate-freq:3
-spell-freq:12
-spells:CONF | HEAL | BLINK
-spells:ARROW
-desc:An elf of the Land of the Seven Rivers, whose woodcraft was such that a
-desc: stranger might pass through their land from end to end and see none of
-desc: them.
-
-name:giant black scorpion
-base:spider
-color:s
-speed:120
-hit-points:189
-hearing:12
-armor-class:60
-sleepiness:20
-depth:29
-rarity:3
-experience:425
-blow:CLAW:HURT:1d11
-blow:CLAW:HURT:1d11
-blow:STING:POISON:3d4
-blow:STING:BLIND:3d4
-flags:ANIMAL | WEIRD_MIND
-flags:IM_POIS
-desc:A gleaming black scorpion as large as a lion, with a pulsating stinger
-desc: and two great deadly claws.
-
-name:catoblepas
-plural:catoblepones
-base:quadruped
-color:g
-speed:110
-hit-points:165
-hearing:15
-smell:20
-armor-class:66
-sleepiness:40
-depth:29
-rarity:2
-experience:400
-blow:GAZE:TERRIFY:2d4
-blow:GAZE:BLIND:2d4
-blow:BUTT:HURT:2d6
-blow:BITE:HURT:2d12
-flags:ANIMAL
-flags:DROP_2 | ONLY_GOLD
-flags:IM_POIS
-desc:A strange ox-like form with a huge head but a thin, weak neck, it looks
-desc: like the creation of some deranged alchemist.
 
 name:energy vortex
 plural:energy vortices
@@ -7043,124 +5888,7 @@ flags:TROLL | EMPTY_MIND | REGENERATE
 flags:OPEN_DOOR | BASH_DOOR
 desc:It is a troll skeleton animated by dark dweomers.
 
-name:manticore
-base:hybrid
-color:y
-speed:120
-hit-points:220
-hearing:12
-smell:20
-armor-class:22
-sleepiness:20
-depth:30
-rarity:2
-experience:300
-blow:HIT:HURT:3d4
-blow:HIT:HURT:3d4
-blow:HIT:HURT:3d4
-blow:HIT:HURT:3d4
-flags:EVIL
-flags:BASH_DOOR
-flags:FORCE_SLEEP
-innate-freq:5
-spells:ARROW
-desc:It is a winged lion's body with a human torso and a tail covered in vicious
-desc: spikes.
-
-name:giant blue ant
-base:ant
-color:b
-speed:110
-hit-points:36
-hearing:10
-smell:20
-armor-class:75
-sleepiness:10
-depth:30
-rarity:2
-experience:80
-blow:BITE:ELEC:5d5
-flags:RAND_25
-flags:IM_ELEC | GROUP_AI
-innate-freq:6
-spells:SPIT
-friends:100:4d4:Same
-desc:It is a giant ant that crackles with energy.
-
-name:giant army ant
-base:ant
-color:o
-speed:120
-hit-points:67
-hearing:10
-smell:20
-armor-class:60
-sleepiness:20
-depth:30
-rarity:3
-experience:90
-blow:BITE:HURT:2d12
-blow:BITE:HURT:2d12
-flags:RAND_25 | KILL_BODY | GROUP_AI
-friends:100:4d4:Same
-desc:An armoured form moving with purpose.  Powerful on its own, flee when
-desc: hordes of them march.
-
-name:killer slicer beetle
-base:killer beetle
-color:y
-speed:110
-hit-points:138
-hearing:14
-armor-class:92
-sleepiness:30
-depth:30
-rarity:2
-experience:250
-blow:BITE:HURT:7d8
-blow:BITE:HURT:7d8
-desc:It is a beetle with deadly sharp cutting mandibles and a rock-hard
-desc: carapace.
-
 ### Dungeon level 31 ###
-
-name:ghost
-base:ghost
-color:w
-speed:120
-hit-points:59
-hearing:20
-armor-class:36
-sleepiness:10
-depth:31
-rarity:1
-experience:350
-blow:WAIL:TERRIFY
-blow:TOUCH:EXP_20
-blow:CLAW:LOSE_INT:1d6
-blow:CLAW:LOSE_WIS:1d6
-flags:DROP_40 | DROP_1
-flags:RAND_25 | TAKE_ITEM
-flags:FORCE_SLEEP
-spell-freq:15
-spells:BLIND | HOLD
-desc:You don't believe in it.  But it believes in you...
-
-name:death watch beetle
-base:killer beetle
-color:D
-speed:110
-hit-points:163
-hearing:16
-armor-class:72
-sleepiness:30
-depth:31
-rarity:3
-experience:300
-blow:BITE:HURT:5d6
-blow:BITE:HURT:5d6
-blow:WAIL:TERRIFY:5d6
-desc:It is a giant beetle that produces a chilling sound.
 
 name:huorn
 base:tree
@@ -7271,31 +5999,6 @@ desc: before.
 
 ### Dungeon level 33 ###
 
-name:drúadan druid
-base:person
-color:y
-speed:120
-hit-points:240
-hearing:50
-smell:20
-armor-class:112
-sleepiness:20
-depth:33
-rarity:3
-experience:600
-blow:PUNCH:HURT:1d7
-blow:PUNCH:HURT:1d7
-blow:KICK:HURT:3d8
-flags:MALE | SMART
-flags:DROP_1 | ONLY_ITEM
-flags:IM_POIS | NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:3
-spells:HASTE | CONF | DARKNESS | HEAL
-spells:SHAPECHANGE
-spells:S_ANIMAL | S_MONSTER | S_SPIDER
-desc:A short, stocky man with an uncanny connection with nature.
-
 name:stone giant
 base:giant
 color:W
@@ -7363,99 +6066,7 @@ flags:TROLL | EMPTY_MIND | REGENERATE
 flags:OPEN_DOOR | BASH_DOOR
 desc:It is the animated form of a massive two-headed troll.
 
-name:fire elemental
-base:elemental
-color:r
-speed:110
-hit-points:135
-light:2
-hearing:12
-armor-class:60
-sleepiness:50
-depth:33
-rarity:2
-experience:350
-blow:HIT:FIRE:4d6
-blow:HIT:FIRE:4d6
-flags:RAND_25 | BASH_DOOR | KILL_BODY | KILL_ITEM
-flags:IM_ACID | IM_ELEC | IM_FIRE | HURT_COLD
-flags:FORCE_SLEEP
-spell-freq:6
-spells:BO_FIRE
-desc:It is a towering inferno of flames.
-
-name:water elemental
-base:elemental
-color:b
-speed:110
-hit-points:113
-hearing:12
-armor-class:48
-sleepiness:50
-depth:33
-rarity:2
-experience:325
-blow:HIT:HURT:1d10
-blow:HIT:HURT:1d10
-blow:HIT:HURT:1d10
-flags:COLD_BLOOD
-flags:RAND_25 | BASH_DOOR | KILL_BODY | KILL_ITEM
-flags:IM_ACID | IM_COLD | IM_FIRE | IM_WATER
-flags:FORCE_SLEEP
-spell-freq:6
-spells:BO_COLD
-desc:It is a towering tempest of water.
-
 ### Dungeon level 34 ###
-
-name:Maia
-plural:Maiar
-base:ainu
-color:B
-speed:110
-hit-points:528
-light:2
-hearing:30
-armor-class:81
-sleepiness:255
-depth:34
-rarity:4
-experience:1000
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-flags:DROP_2
-spell-freq:3
-spells:BLIND | CONF | HASTE | HEAL | SCARE
-desc:One of the first children of Eru, currently human-like in form, its body
-desc: shining with glorious light.  Whether this being has taken allegiance to
-desc: Morgoth or faces you in combat for some other reason is not clear; all
-desc: you know is that it stands before you, its eyes ablaze as it prepares its
-desc: next volley of spells.
-
-name:shade
-base:ghost
-color:D
-speed:120
-hit-points:147
-light:-2
-hearing:20
-armor-class:36
-sleepiness:10
-depth:34
-rarity:3
-experience:350
-blow:WAIL:TERRIFY
-blow:TOUCH:EXP_40
-blow:CLAW:LOSE_INT:1d10
-flags:DROP_2 | ONLY_ITEM
-flags:RAND_25 | TAKE_ITEM
-flags:FORCE_SLEEP
-spell-freq:15
-spells:BLIND | HOLD
-desc:A shadowy form clutches at you from the darkness.  A powerful undead
-desc: creature with a deadly touch.
 
 name:master thief
 plural:master thieves
@@ -7484,123 +6095,7 @@ friends:50:1d1:Mage
 friends:50:1d1:southron assassin
 desc:Cool and confident, fast and lithe; protect your possessions quickly!
 
-name:Ulfang the Black
-base:person
-color:U
-speed:120
-hit-points:1000
-light:2
-hearing:20
-armor-class:108
-sleepiness:40
-depth:34
-rarity:5
-experience:1200
-blow:HIT:HURT:5d5
-blow:HIT:HURT:5d5
-blow:HIT:HURT:5d5
-blow:HIT:HURT:5d5
-flags:UNIQUE | MALE | EVIL
-flags:DROP_2 | DROP_GOOD | ONLY_ITEM
-flags:OPEN_DOOR | TAKE_ITEM
-spell-freq:10
-spells:S_KIN
-friends:60:1d3:Mûmak
-friends:100:3d3:Easterling champion:bodyguard
-friends:100:1d1:Ulfast, Son of Ulfang
-friends:100:1d1:Ulwarth, Son of Ulfang
-desc:A short and swarthy Easterling dressed in black.  He and his three sons
-desc: once openly swore allegiance to the High Elves, but were secretly in the
-desc: pay of Morgoth.
-
-name:earth elemental
-base:elemental
-color:u
-speed:100
-hit-points:165
-hearing:10
-armor-class:90
-sleepiness:50
-depth:34
-rarity:2
-experience:375
-blow:HIT:HURT:4d6
-blow:HIT:HURT:4d6
-blow:HIT:HURT:4d6
-flags:COLD_BLOOD
-flags:PASS_WALL | KILL_BODY | KILL_ITEM
-flags:HURT_ROCK | IM_COLD | IM_ELEC | IM_FIRE
-flags:FORCE_SLEEP
-spell-freq:8
-spells:BO_ACID
-desc:It is a towering form composed of rock with fists of awesome power.
-
-name:air elemental
-base:elemental
-color:B
-speed:120
-hit-points:90
-hearing:12
-armor-class:60
-sleepiness:50
-depth:34
-rarity:2
-experience:390
-blow:HIT:HURT:1d10
-blow:HIT:CONFUSE:1d4
-blow:HIT:HURT:1d10
-flags:COLD_BLOOD
-flags:RAND_25 | BASH_DOOR | KILL_BODY | KILL_ITEM
-flags:IM_ACID | IM_COLD | IM_ELEC
-flags:FORCE_SLEEP
-spell-freq:8
-spells:BO_ELEC
-desc:It is a towering tornado of winds.
-
-name:Eog golem
-base:golem
-color:u
-speed:100
-hit-points:1050
-hearing:12
-armor-class:187
-sleepiness:20
-depth:34
-rarity:4
-experience:1200
-blow:HIT:HURT:8d6
-blow:HIT:HURT:8d6
-blow:HIT:HURT:6d6
-blow:HIT:HURT:6d6
-flags:COLD_BLOOD
-flags:DROP_2 | ONLY_GOLD
-flags:BASH_DOOR
-flags:IM_COLD | IM_FIRE | IM_POIS
-desc:It is a massive deep brown statue, striding towards you with an
-desc: all-too-familiar purpose.  Your magic surprisingly feels much less
-desc: powerful now.
-
 ### Dungeon level 35 ###
-
-name:wereworm
-base:worm
-color:p
-speed:100
-hit-points:200
-hearing:15
-armor-class:105
-sleepiness:40
-depth:35
-rarity:3
-experience:300
-blow:GAZE:EXP_20
-blow:CRAWL:ACID:2d4
-blow:BITE:HURT:1d10
-blow:BITE:POISON:1d6
-flags:BASH_DOOR
-flags:IM_ACID
-desc:A huge wormlike shape dripping acid, twisted by evil sorcery into a foul
-desc: monster that breeds on death.
 
 name:invisible stalker
 base:elemental
@@ -7697,48 +6192,6 @@ friends:100:2d7:Same
 desc:A deep brown shape is visible before you, its canine form strikes you with
 desc: an almost physical force.  The dungeon floor buckles as if struck by a
 desc: powerful blow as it stalks towards you.
-
-name:mûmak
-plural:mûmakil
-base:quadruped
-color:s
-speed:110
-hit-points:495
-hearing:20
-smell:20
-armor-class:82
-sleepiness:70
-depth:35
-rarity:2
-experience:2100
-blow:BUTT:HURT:4d6
-blow:BUTT:HURT:4d6
-blow:CRUSH:HURT:4d4
-flags:ANIMAL
-friends:100:4d4:Same
-desc:A massive elephantine form with eyes twisted by madness.
-
-name:giant fire ant
-base:ant
-color:R
-speed:110
-hit-points:176
-light:2
-hearing:14
-smell:20
-armor-class:58
-sleepiness:40
-depth:35
-rarity:1
-experience:350
-blow:BITE:FIRE:3d12
-blow:BITE:FIRE:3d12
-flags:KILL_BODY
-flags:IM_FIRE | GROUP_AI
-innate-freq:6
-spells:SPIT
-friends:100:4d4:Same
-desc:A giant ant covered in shaggy fur.  Its powerful jaws glow with heat.
 
 # Luggage?
 #name:chest mimic
@@ -7868,75 +6321,6 @@ friends:60:1d7:Energy hound
 friends:80:1d3:Same
 desc:It is a twenty foot tall giant wreathed in clouds.
 
-name:master vampire
-base:vampire
-color:g
-speed:110
-hit-points:299
-hearing:20
-smell:20
-armor-class:72
-sleepiness:10
-depth:36
-rarity:1
-experience:750
-blow:HIT:HURT:2d6
-blow:HIT:HURT:2d6
-blow:BITE:EXP_40:3d6
-blow:BITE:EXP_40:3d6
-flags:DROP_4
-spell-freq:6
-spells:WOUND | CONF | DARKNESS | MIND_BLAST
-spells:TELE_TO
-spells:BO_RADI
-spells:HOLD | SCARE
-desc:It is a humanoid form dressed in robes.  Power emanates from its chilling
-desc: frame.
-
-name:ooze elemental
-base:elemental
-color:g
-speed:110
-hit-points:72
-hearing:10
-armor-class:120
-sleepiness:50
-depth:36
-rarity:3
-experience:300
-blow:TOUCH:ACID:1d10
-blow:TOUCH:ACID:1d10
-blow:TOUCH:ACID:1d10
-flags:COLD_BLOOD | POWERFUL
-flags:BASH_DOOR | KILL_BODY | KILL_ITEM
-flags:IM_ACID | IM_COLD | IM_FIRE
-flags:FORCE_SLEEP
-spell-freq:5
-spells:BA_ACID
-spells:BO_ACID
-desc:It is a towering mass of filth, an eyesore of ooze.
-
-name:smoke elemental
-base:elemental
-color:D
-speed:120
-hit-points:83
-hearing:10
-armor-class:120
-sleepiness:50
-depth:36
-rarity:3
-experience:375
-blow:ENGULF:HURT:2d6
-blow:ENGULF:HURT:2d6
-flags:BASH_DOOR | KILL_BODY | KILL_ITEM
-flags:IM_COLD | IM_ELEC | IM_FIRE
-flags:FORCE_SLEEP
-spell-freq:5
-spells:DARKNESS
-spells:BO_FIRE
-desc:It is a towering blackened form, crackling with heat.
-
 name:colossus
 plural:colossi
 base:golem
@@ -7978,30 +6362,6 @@ blow:HIT:PARALYZE:15d1
 desc:A larger cousin of the lurker, this creature traps unsuspecting victims and
 desc: paralyzes them, to be slowly digested later.
 
-name:bodak
-base:minor demon
-color:r
-speed:110
-hit-points:193
-light:2
-hearing:10
-armor-class:81
-sleepiness:90
-depth:36
-rarity:2
-experience:750
-blow:HIT:FIRE:4d6
-blow:HIT:FIRE:4d6
-blow:GAZE:EXP_20
-flags:OPEN_DOOR | BASH_DOOR | TAKE_ITEM
-flags:IM_POIS | NO_CONF | NO_SLEEP
-flags:FORCE_SLEEP
-spell-freq:4
-spells:BA_FIRE
-spells:BO_FIRE
-spells:S_DEMON
-desc:It is a humanoid form composed of flames and hatred.
-
 name:dúnadan of Angmar
 plural:dúnedain of Angmar
 base:person
@@ -8028,36 +6388,6 @@ spells:S_UNDEAD
 friends-base:80:1d3:skeleton
 desc:A necromancer recruited to the evil realm of Angmar during the decline of
 desc: the North Kingdom.
-
-name:Lorgan, Chief of the Easterlings
-base:person
-color:P
-speed:120
-hit-points:1800
-light:2
-hearing:25
-armor-class:120
-sleepiness:10
-depth:36
-rarity:2
-experience:1200
-blow:HIT:HURT:6d6
-blow:HIT:HURT:6d6
-blow:HIT:HURT:3d8
-blow:HIT:HURT:3d8
-flags:UNIQUE | MALE | EVIL
-flags:DROP_2 | DROP_GOOD | ONLY_ITEM
-flags:OPEN_DOOR | MOVE_BODY
-flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS | NO_CONF
-flags:NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:4
-spells:TELE_TO
-spells:S_MONSTERS
-friends:50:1d3:Mûmak
-friends:100:2d5:Easterling champion:bodyguard
-desc:A mighty warrior from the east, Lorgan hates everything that he cannot
-desc: control.
 
 name:gauth
 base:eye
@@ -8109,30 +6439,6 @@ spells:BA_COLD
 spells:BO_ICE
 desc:It is a towering glacier of ice.
 
-name:magma elemental
-base:elemental
-color:o
-speed:110
-hit-points:193
-light:2
-hearing:10
-armor-class:105
-sleepiness:50
-depth:37
-rarity:3
-experience:950
-blow:HIT:FIRE:3d7
-blow:HIT:HURT:4d6
-blow:HIT:FIRE:3d7
-flags:POWERFUL
-flags:PASS_WALL | KILL_BODY | KILL_ITEM
-flags:IM_ACID | IM_ELEC | IM_FIRE | HURT_COLD
-flags:FORCE_SLEEP
-spell-freq:7
-spells:BA_FIRE
-spells:BO_PLAS
-desc:It is a towering glowing form of molten hate.
-
 name:nexus vortex
 plural:nexus vortices
 base:vortex
@@ -8172,28 +6478,6 @@ flags:IM_ELEC | IM_FIRE | IM_PLASMA
 innate-freq:4
 spells:BR_PLAS
 desc:A whirlpool of intense flame, charring the stones at your feet.
-
-name:mountain troll
-base:troll
-color:r
-speed:110
-hit-points:660
-hearing:20
-smell:20
-armor-class:120
-sleepiness:40
-depth:37
-rarity:3
-experience:800
-blow:PUNCH:HURT:8d4
-blow:PUNCH:HURT:8d4
-blow:KICK:HURT:5d4
-blow:KICK:HURT:5d4
-flags:DROP_40
-flags:TAKE_ITEM
-flags:NO_CONF | NO_SLEEP
-desc:A massive troll, larger and stronger than many men together.  It needs no
-desc: weapons aside from its massive hands and feet.
 
 name:shardstorm
 base:vortex
@@ -8238,60 +6522,6 @@ spells:BLINK | WOUND | CONF | TPORT
 desc:A strange ball of glowing light.  It disappears and reappears and seems to
 desc: draw you to it.  You seem somehow compelled to stand still and watch its
 desc: strange dancing motion.
-
-name:death knight
-base:person
-color:D
-speed:120
-hit-points:528
-hearing:20
-armor-class:120
-sleepiness:10
-depth:38
-rarity:1
-experience:1000
-blow:HIT:HURT:6d6
-blow:HIT:HURT:5d5
-blow:HIT:HURT:5d5
-flags:EVIL | COLD_BLOOD | SMART
-flags:DROP_2 | ONLY_ITEM
-flags:OPEN_DOOR
-flags:IM_COLD
-flags:FORCE_SLEEP
-spell-freq:5
-spells:BLIND | WOUND | SCARE
-spells:BO_RADI
-spells:S_MONSTERS
-friends:50:1d1:Imp
-desc:It is a humanoid figure dressed in armour of an ancient form.  From beneath
-desc: its helmet, eyes glow a baleful red and seem to pierce you like lances of
-desc: fire.
-
-name:Castamir the Usurper
-base:person
-color:V
-speed:120
-hit-points:880
-light:2
-hearing:20
-armor-class:108
-sleepiness:40
-depth:38
-rarity:5
-experience:1600
-blow:HIT:HURT:5d5
-blow:HIT:HURT:5d5
-blow:HIT:HURT:5d5
-blow:HIT:HURT:5d5
-flags:UNIQUE | MALE | EVIL | SMART
-flags:DROP_2 | DROP_GOOD | ONLY_ITEM
-flags:OPEN_DOOR | TAKE_ITEM
-flags:FORCE_SLEEP
-spell-freq:2
-spells:HEAL | TRAPS
-spells:BO_COLD | BO_ELEC | BO_FIRE | BO_ICE
-desc:A Black Númenórean who usurped the throne of Gondor, he is treacherous and
-desc: evil.
 
 name:time vortex
 plural:time vortices
@@ -8409,34 +6639,6 @@ friends:80:1d4:southron assassin
 desc:A man of Harad clad in black and red and carrying a longbow.  His quiver is
 desc: full of red feathered arrows, and carries an insignia of a black serpent.
 
-name:6-headed hydra
-base:hydra
-color:G
-speed:120
-hit-points:550
-light:2
-hearing:20
-armor-class:135
-sleepiness:35
-depth:39
-rarity:2
-experience:2000
-blow:BITE:HURT:2d6
-blow:BITE:HURT:2d6
-blow:BITE:POISON:2d6
-blow:BITE:FIRE:2d6
-blow:BITE:ACID:2d6
-blow:BITE:BLIND:1d2
-flags:DROP_4
-flags:MOVE_BODY
-flags:IM_POIS | IM_FIRE | IM_ACID
-innate-freq:10
-spell-freq:8
-spells:SCARE
-spells:BR_POIS
-desc:A 5-headed hydra which seems to have an extra head, if you could just see
-desc: it properly.
-
 name:night mare
 base:quadruped
 color:G
@@ -8459,11 +6661,6 @@ flags:OPEN_DOOR
 flags:IM_COLD | IM_POIS | NO_CONF | NO_SLEEP | NO_STUN
 desc:A fearsome skeletal horse with glowing eyes, that watch you with little
 desc: more than a hatred of all that lives.
-
-
-
-########## DUNGEON LEVELS 40-49 ##########
-
 
 ### Dungeon level 40 ###
 
@@ -8492,25 +6689,6 @@ spells:SCARE | SLOW
 spells:BO_ACID | BO_COLD | BO_ELEC | BO_FIRE
 desc:A vile creature with one huge central eye, twelve smaller eyes on stalks,
 desc: and a huge mouth filled with sharp teeth.
-
-name:disenchanter worm mass
-base:worm
-color:v
-speed:100
-hit-points:45
-hearing:7
-armor-class:6
-sleepiness:10
-depth:40
-rarity:3
-experience:30
-blow:CRAWL:DISENCHANT:1d4
-flags:WEIRD_MIND | MULTIPLY | STUPID
-flags:RAND_50 | BASH_DOOR
-flags:HURT_LIGHT | IM_DISEN | NO_FEAR
-flags:ATTR_MULTI
-desc:It is a strange mass of squirming worms.  Magical energy crackles around
-desc: its disgusting form.
 
 name:spirit troll
 base:ghost
@@ -8553,66 +6731,6 @@ spells:FORGET
 desc:An unholy creature of darkness, the aura emanating from this evil being
 desc: saps your very soul.
 
-name:7-headed hydra
-base:hydra
-color:r
-speed:120
-hit-points:650
-light:2
-hearing:20
-armor-class:114
-sleepiness:20
-depth:40
-rarity:2
-experience:3000
-blow:BITE:HURT:2d6
-blow:BITE:HURT:2d6
-blow:BITE:POISON:2d6
-blow:BITE:FIRE:2d6
-blow:BITE:ACID:2d6
-blow:BITE:BLIND:2d6
-blow:BITE:CONFUSE:2d6
-flags:DROP_4
-flags:OPEN_DOOR | MOVE_BODY
-flags:IM_POIS | IM_FIRE | IM_ACID | NO_CONF
-innate-freq:8
-spell-freq:6
-spells:SCARE
-spells:BR_POIS | BR_FIRE
-desc:A 6-headed hydra with an extra head that waves mesmerisingly at you.
-
-name:sorcerer
-base:person
-color:R
-speed:130
-hit-points:457
-light:2
-hearing:20
-armor-class:72
-sleepiness:10
-depth:40
-rarity:2
-experience:2150
-blow:HIT:HURT:2d8
-blow:HIT:HURT:2d8
-blow:HIT:HURT:2d8
-flags:MALE | EVIL
-flags:DROP_3 | ONLY_ITEM
-flags:OPEN_DOOR
-flags:NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:2
-spells:BLIND | BLINK | WOUND | CONF | TELE_TO | TRAPS
-spells:BA_COLD | BA_FIRE
-spells:BO_ACID
-spells:S_MONSTER | S_UNDEAD
-friends:30:1d1:Master thief
-friends:30:1d1:Ranger chieftain
-friends:30:1d1:Patriarch
-friends:30:1d1:Berserker
-desc:A human figure in robes, he moves with magically improved speed, and his
-desc: hands are ablur with spell casting.
-
 name:giant roc
 base:bird
 color:u
@@ -8633,187 +6751,7 @@ desc:A vast legendary bird, its iron talons rake the most impenetrable of
 desc: surfaces and its screech echoes through the many winding dungeon
 desc: corridors.
 
-name:minotaur
-base:hybrid
-color:s
-speed:130
-hit-points:550
-hearing:13
-smell:20
-armor-class:30
-sleepiness:10
-depth:40
-rarity:2
-experience:2100
-blow:BUTT:HURT:4d6
-blow:BUTT:HURT:4d6
-blow:BUTT:HURT:2d6
-blow:BUTT:HURT:2d6
-flags:EVIL
-flags:BASH_DOOR
-desc:It is a cross between a human and a bull.
-
-name:vrock
-base:major demon
-color:s
-speed:110
-hit-points:352
-hearing:20
-armor-class:75
-sleepiness:70
-depth:40
-rarity:2
-experience:2000
-blow:HIT:HURT:3d4
-blow:CRUSH:HURT:8d12
-blow:CRUSH:HURT:8d12
-flags:DROP_40
-flags:IM_FIRE
-spell-freq:8
-spells:BLIND | CONF
-friends:100:4d4:Same
-desc:It is a demon with a long neck and raking claws.
-
-name:death quasit
-base:minor demon
-color:D
-speed:130
-hit-points:387
-hearing:20
-armor-class:96
-sleepiness:0
-depth:40
-rarity:3
-experience:1000
-blow:BITE:LOSE_DEX:3d6
-blow:CLAW:HURT:3d3
-blow:CLAW:HURT:3d3
-flags:INVISIBLE | SMART
-flags:DROP_3 | ONLY_ITEM
-flags:PASS_WALL
-flags:IM_POIS | NO_FEAR | NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:10
-spells:BLIND | WOUND | CONF | SCARE
-spells:S_DEMON
-desc:It is a demon of small stature, but its armoured frame moves with lightning
-desc: speed and its powers make it a tornado of death and destruction.
-
-name:patriarch
-base:person
-color:G
-speed:120
-hit-points:457
-light:2
-hearing:20
-armor-class:90
-sleepiness:20
-depth:40
-rarity:2
-experience:1800
-blow:HIT:HURT:3d4
-blow:HIT:HURT:3d4
-blow:HIT:HURT:3d5
-flags:MALE | SMART
-flags:DROP_2 | ONLY_ITEM
-flags:OPEN_DOOR
-flags:NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:2
-spells:BLIND | HEAL | HEAL_KIN | MIND_BLAST
-spells:BA_LIGHT | BA_ELEC | BA_HOLY
-spells:S_KIN
-friends:30:1d1:Master thief
-friends:30:1d1:Ranger chieftain
-friends:30:1d1:Sorcerer
-friends:30:1d1:Berserker
-desc:A priest of great power, he is convinced of the righteousness of his
-desc: beliefs.  Stand in his way at your peril.
-
 ### Dungeon level 41 ###
-
-name:stiffbeard sorcerer
-base:humanoid
-color:R
-speed:130
-hit-points:700
-hearing:20
-armor-class:84
-sleepiness:10
-depth:41
-rarity:2
-experience:3000
-blow:HIT:HURT:2d8
-blow:HIT:HURT:2d8
-blow:HIT:HURT:2d8
-flags:MALE | EVIL | SMART
-flags:DROP_3 | ONLY_ITEM
-flags:NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:2
-spells:BLIND | BLINK | WOUND | CONF | DARKNESS | HEAL
-spells:TELE_TO
-spells:BA_COLD | BA_FIRE
-spells:BO_ACID
-spells:S_DEMON | S_MONSTER | S_UNDEAD
-desc:A dwarf with plaited beard and painted face, dressed in deepest black.
-desc:  Power seems to crackle from his stocky frame.
-
-name:master lich
-plural:master liches
-base:lich
-color:r
-speed:120
-hit-points:1584
-hearing:20
-armor-class:96
-sleepiness:50
-depth:41
-rarity:2
-experience:10000
-blow:TOUCH:EXP_80
-blow:TOUCH:DRAIN_CHARGES
-blow:TOUCH:LOSE_DEX:2d12
-blow:TOUCH:LOSE_DEX:2d12
-flags:DROP_4 | ONLY_ITEM
-spell-freq:3
-spells:BLIND | BLINK | WOUND | CONF | BRAIN_SMASH
-spells:HOLD | SCARE | TELE_TO
-spells:S_UNDEAD
-friends-base:80:1d3:zombie:servant
-friends-base:80:1d3:skeleton:servant
-desc:A skeletal form wrapped in robes.  Powerful magic crackles along its bony
-desc: fingers.
-
-name:Gorlim, Betrayer of Barahir
-base:person
-color:z
-speed:120
-hit-points:1600
-light:2
-hearing:20
-armor-class:144
-sleepiness:40
-depth:41
-rarity:3
-experience:7000
-blow:HIT:HURT:8d6
-blow:HIT:HURT:8d6
-blow:HIT:DISENCHANT:6d8
-blow:HIT:DISENCHANT:6d8
-flags:UNIQUE | MALE | SMART
-flags:DROP_2 | DROP_GOOD | ONLY_ITEM
-flags:OPEN_DOOR
-flags:IM_ACID | IM_COLD | IM_ELEC | IM_POIS | NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:2
-spells:WOUND
-spells:BO_MANA | BO_WATE
-desc:This sad creature - once a mighty warrior - betrayed his former friends to
-desc: Morgoth's army in return for, he thought, safety for himself and his
-desc: wife.   And so he fell under Morgoth's power and became little more than
-desc: a mindless servant of evil, even though the other side of his "bargain"
-desc: was not kept.
 
 name:ranger chieftain
 base:person
@@ -8839,8 +6777,6 @@ spells:ARROW | BLINK | HASTE | HEAL
 spells:BA_COLD
 spells:S_ANIMAL
 friends:30:1d1:Master thief
-friends:30:1d1:Sorcerer
-friends:30:1d1:Patriarch
 friends:30:1d1:Berserker
 desc:A chieftain among the Rangers.  His understanding of nature gives him
 desc: powerful elemental spells to use against you, in addition to his skills
@@ -8873,30 +6809,6 @@ innate-freq:5
 spells:BR_FIRE
 friends:100:2d5:Same
 desc:It is a giant wolf that glows with heat.  Flames pour from its nostrils.
-
-name:black-hearted huorn
-base:tree
-color:m
-speed:120
-hit-points:1200
-light:-2
-hearing:20
-armor-class:120
-sleepiness:20
-depth:42
-rarity:1
-experience:2900
-blow:CRUSH:HURT:5d6
-blow:CRUSH:HURT:5d6
-blow:CRUSH:HURT:5d6
-blow:CRUSH:HURT:5d6
-flags:DROP_60 | WEIRD_MIND | EVIL
-flags:BASH_DOOR | KILL_BODY
-flags:NO_STUN | NO_SLOW | NO_SLEEP
-innate-freq:8
-spell-freq:7
-spells:HASTE | TELE_TO | DARKNESS | SCARE | BLIND
-desc:A huorn with a bad heart.
 
 name:The Queen Ant
 base:ant
@@ -8931,180 +6843,6 @@ desc:She's upset because you hurt her children.
 
 ### Dungeon level 43 ###
 
-name:Maia of Nienna
-plural:Maiar of Nienna
-base:ainu
-color:W
-speed:120
-hit-points:1250
-light:2
-hearing:30
-armor-class:81
-sleepiness:255
-depth:43
-rarity:4
-experience:1900
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-flags:FEMALE | INVISIBLE
-flags:DROP_2
-spell-freq:3
-spells:BLIND | HASTE | HEAL | SCARE
-spells:BO_MANA
-spells:SHAPECHANGE
-shape:air elemental
-shape:nexus vortex
-desc:A servant of Nienna, who grieves for the hurts to the world caused by
-desc: Morgoth.
-
-name:Maia of Mandos
-plural:Maiar of Mandos
-base:ainu
-color:s
-speed:120
-hit-points:1250
-hearing:30
-armor-class:81
-sleepiness:255
-depth:43
-rarity:4
-experience:1900
-blow:HIT:HURT:4d5
-blow:HIT:HURT:4d5
-blow:HIT:HURT:4d5
-blow:HIT:HURT:4d5
-flags:MALE | INVISIBLE
-flags:DROP_2
-spell-freq:3
-spells:BLIND | HASTE | HOLD | CONF
-spells:SHAPECHANGE
-shape:will o' the wisp
-shape:time vortex
-desc:A servant of Mandos, the summoner of the spirits of the slain.
-
-name:Vargo, Tyrant of Fire
-base:elemental
-color:R
-speed:120
-hit-points:2400
-light:2
-hearing:12
-armor-class:75
-sleepiness:30
-depth:43
-rarity:3
-experience:4000
-blow:HIT:FIRE:4d6
-blow:HIT:FIRE:4d6
-blow:HIT:FIRE:4d6
-blow:HIT:FIRE:4d6
-flags:UNIQUE | POWERFUL
-flags:RAND_25 | BASH_DOOR | KILL_BODY | KILL_ITEM
-flags:IM_ACID | IM_ELEC | IM_FIRE | HURT_COLD
-flags:FORCE_SLEEP
-spell-freq:4
-spells:BA_FIRE
-spells:BO_PLAS
-desc:A towering fire elemental, Vargo burns everything beyond recognition.
-
-name:Waldern, King of Water
-base:elemental
-color:V
-speed:120
-hit-points:2500
-hearing:12
-armor-class:120
-sleepiness:30
-depth:43
-rarity:3
-experience:4250
-blow:HIT:HURT:5d5
-blow:HIT:HURT:5d5
-blow:HIT:HURT:5d5
-blow:HIT:HURT:5d5
-flags:UNIQUE | COLD_BLOOD | POWERFUL
-flags:RAND_25 | BASH_DOOR | KILL_BODY | KILL_ITEM
-flags:IM_ACID | IM_COLD | IM_FIRE | IM_WATER
-flags:FORCE_SLEEP
-spell-freq:4
-spells:BA_COLD | BA_WATE
-spells:BO_ICE | BO_WATE
-desc:A towering water elemental, Waldern is master of all things liquid.  Wave
-desc: after wave drowns your frail body.
-
-name:glabrezu
-plural:glabrezu
-base:major demon
-color:U
-speed:110
-hit-points:616
-hearing:20
-armor-class:60
-sleepiness:70
-depth:43
-rarity:2
-experience:3000
-blow:HIT:HURT:3d4
-blow:HIT:HURT:3d4
-flags:DROP_60
-flags:IM_FIRE
-spell-freq:9
-spells:BO_FIRE
-spells:S_DEMON
-desc:It is demon with arms and pincers, its form a true mockery of life.
-
-name:Quaker, Master of Earth
-base:elemental
-color:U
-speed:110
-hit-points:2800
-hearing:10
-armor-class:145
-sleepiness:50
-depth:43
-rarity:3
-experience:4500
-blow:HIT:HURT:6d6
-blow:HIT:HURT:6d6
-blow:HIT:HURT:6d6
-blow:HIT:SHATTER:10d10
-flags:UNIQUE | MALE | COLD_BLOOD | POWERFUL
-flags:PASS_WALL | KILL_BODY | KILL_ITEM
-flags:HURT_ROCK | IM_COLD | IM_ELEC | IM_FIRE
-flags:FORCE_SLEEP
-spell-freq:6
-spells:BA_ACID | BA_SHAR
-spells:BO_ACID
-desc:A towering stone elemental stands before you.  The walls and ceiling are
-desc: reduced to rubble as Quaker advances.
-
-name:Ariel, Queen of Air
-base:elemental
-color:Z
-speed:130
-hit-points:2700
-hearing:12
-armor-class:75
-sleepiness:30
-depth:43
-rarity:3
-experience:4750
-blow:HIT:HURT:4d6
-blow:HIT:HURT:4d6
-blow:HIT:CONFUSE:4d4
-blow:HIT:CONFUSE:4d4
-flags:UNIQUE | FEMALE | COLD_BLOOD | POWERFUL
-flags:RAND_25 | BASH_DOOR | KILL_BODY | KILL_ITEM
-flags:IM_ACID | IM_COLD | IM_ELEC
-flags:FORCE_SLEEP
-spell-freq:5
-spells:BA_COLD | BA_ELEC
-spells:BO_ELEC
-desc:A towering air elemental, Ariel, the sorceress, avoids your blows with her
-desc: extreme speed.
-
 name:multi-hued hound
 base:zephyr hound
 color:v
@@ -9130,146 +6868,7 @@ spells:BR_ACID | BR_COLD | BR_ELEC | BR_FIRE | BR_POIS
 friends:100:2d7:Same
 desc:Shimmering in rainbow hues, this hound is beautiful and deadly.
 
-### Dungeon level 44 ###
-
-name:8-headed hydra
-base:hydra
-color:R
-speed:120
-hit-points:950
-hearing:20
-armor-class:120
-sleepiness:20
-depth:44
-rarity:2
-experience:6000
-blow:BITE:HURT:2d6
-blow:BITE:HURT:2d6
-blow:BITE:POISON:2d6
-blow:BITE:FIRE:2d6
-blow:BITE:ACID:2d6
-blow:BITE:BLIND:2d6
-blow:BITE:CONFUSE:2d6
-blow:BITE:EXP_10:2d6
-flags:DROP_4
-flags:OPEN_DOOR | MOVE_BODY
-flags:IM_FIRE | IM_POIS | IM_ACID
-innate-freq:7
-spell-freq:5
-spells:SCARE
-spells:BR_FIRE | BR_POIS | BR_ACID
-desc:A 7-headed hydra with an extra head which reeks of death.
-
-name:dread
-base:ghost
-color:o
-speed:120
-hit-points:263
-hearing:20
-armor-class:36
-sleepiness:10
-depth:44
-rarity:2
-experience:600
-blow:HIT:HURT:6d6
-blow:HIT:HURT:6d6
-blow:HIT:LOSE_STR:3d4
-flags:DROP_2 | ONLY_ITEM
-flags:RAND_25 | TAKE_ITEM
-flags:FORCE_SLEEP
-spell-freq:15
-spells:BLIND | CONF | HOLD
-spells:BO_RADI
-friends:100:2d5:Same
-desc:It is a form that screams its presence against the eye.  Death incarnate,
-desc: its hideous black body seems to struggle against reality as the universe
-desc: itself struggles to banish it.
-
 ### Dungeon level 45 ###
-
-name:killer white beetle
-base:killer beetle
-color:w
-speed:120
-hit-points:800
-hearing:14
-armor-class:106
-sleepiness:30
-depth:45
-rarity:2
-experience:850
-blow:BITE:COLD:8d5
-blow:BITE:HURT:8d5
-blow:SPIT:COLD:8d5
-flags:IM_COLD
-innate-freq:4
-spells:SPIT
-desc:A giant beetle with a gleaming white carapace.  The air condenses around
-desc: its mandibles as it scuttles toward you.
-
-name:rotting quylthulg
-base:quylthulg
-color:u
-speed:120
-hit-points:420
-hearing:20
-armor-class:1
-sleepiness:0
-depth:45
-rarity:1
-experience:3000
-spell-freq:2
-spells:BLINK | TPORT
-spells:S_UNDEAD
-desc:It is a pulsing flesh mound that reeks of death and putrefaction.
-
-name:undead beholder
-base:eye
-color:u
-speed:120
-hit-points:2376
-hearing:30
-armor-class:120
-sleepiness:10
-depth:45
-rarity:3
-experience:8000
-blow:GAZE:EXP_40:3d6
-blow:GAZE:DRAIN_CHARGES:3d6
-blow:GAZE:LOSE_INT:3d6
-blow:BITE:EXP_40:7d6
-flags:UNDEAD | EVIL | COLD_BLOOD | SPIRIT
-flags:BASH_DOOR
-flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS | NO_CONF
-flags:NO_SLEEP | NO_STUN
-flags:FORCE_SLEEP
-spell-freq:2
-spells:BRAIN_SMASH | WOUND | CONF | FORGET | MIND_BLAST
-spells:SLOW
-spells:BA_COLD | BA_FIRE
-spells:BO_ACID | BO_MANA | BO_RADI
-spells:S_UNDEAD
-desc:A beholder which has cheated death.  Black radiation storms rage around the
-desc: bloodshot pupil of its central giant eye, and light seems to bend as it
-desc: sucks its power from the very air around it.  Your soul chills as it
-desc: drains your vitality for its evil enchantments.
-
-name:demonic quylthulg
-base:quylthulg
-color:r
-speed:120
-hit-points:420
-hearing:20
-armor-class:1
-sleepiness:0
-depth:45
-rarity:1
-experience:3000
-spell-freq:2
-spells:BLINK | TPORT
-spells:S_DEMON
-desc:A pile of pulsing flesh that glows with an inner hellish fire.  The world
-desc: itself seems to cry out against it.
 
 name:berserker
 base:person
@@ -9294,8 +6893,6 @@ spell-freq:4
 spells:HASTE | SCARE
 friends:30:1d1:Master thief
 friends:30:1d1:Ranger chieftain
-friends:30:1d1:Patriarch
-friends:30:1d1:Sorcerer
 desc:Even the strongest of normal human warriors fears the Berserker - the one
 desc: who can drive himself into such a terrible battle-frenzy that he can
 desc: survive blows which should kill him, and still apparently feel no pain.
@@ -9324,88 +6921,7 @@ innate-freq:8
 spells:BOULDER
 desc:A gigantic ugly humanoid with but one eye and very thick skin.
 
-
-### Dungeon level 46 ###
-
-name:lord of Carn Dûm
-plural:lords of Carn Dûm
-base:person
-color:i
-speed:120
-hit-points:557
-hearing:20
-armor-class:90
-sleepiness:20
-depth:46
-rarity:2
-experience:2100
-blow:HIT:HURT:5d4
-blow:HIT:HURT:5d4
-blow:HIT:HURT:3d5
-flags:MALE | EVIL | SMART
-flags:DROP_2 | ONLY_ITEM
-flags:OPEN_DOOR
-flags:NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:2
-spells:BLIND | WOUND | HEAL | HOLD
-spells:S_MONSTER | S_UNDEAD
-friends:30:1d1:Master thief
-friends:30:1d1:Ranger chieftain
-friends:30:1d1:Sorcerer
-friends:30:1d1:Berserker
-desc:An evil priest, dressed all in black.  Deadly spells hit you at an alarming
-desc: rate as his black spiked mace rains down blow after blow on your pitiful
-desc: frame.
-
-name:vampire lord
-base:vampire
-color:b
-speed:120
-hit-points:1400
-hearing:20
-smell:20
-armor-class:84
-sleepiness:10
-depth:46
-rarity:1
-experience:1800
-blow:HIT:HURT:3d6
-blow:HIT:HURT:3d6
-blow:BITE:EXP_80:4d6
-blow:BITE:EXP_80:4d6
-flags:DROP_4
-spell-freq:7
-spells:BLIND | BRAIN_SMASH | WOUND | DARKNESS
-spells:BO_RADI
-spells:HOLD | SCARE
-friends:40:1d4:Vampire:servant
-desc:A foul wind chills your bones as this ghastly figure approaches.
-
 ### Dungeon level 47 ###
-
-name:marilith
-base:major demon
-color:y
-speed:120
-hit-points:1232
-hearing:20
-armor-class:112
-sleepiness:60
-depth:47
-rarity:2
-experience:7000
-blow:HIT:HURT:4d6
-blow:HIT:HURT:4d6
-blow:HIT:HURT:4d6
-blow:HIT:HURT:4d6
-flags:FEMALE
-flags:DROP_1
-flags:IM_FIRE
-spell-freq:9
-spells:BLIND | WOUND
-spells:S_DEMON
-desc:She is a demon of female form with many arms, each bearing deadly weapons.
 
 name:death mold
 base:mold
@@ -9541,67 +7057,6 @@ friends:60:1d7:Energy hound
 friends:80:1d3:Same
 desc:It is a twenty-five foot tall giant wreathed in lightning.
 
-name:lesser Balrog
-base:major demon
-color:p
-speed:120
-hit-points:1760
-light:2
-hearing:20
-armor-class:75
-sleepiness:50
-depth:49
-rarity:2
-experience:10000
-blow:HIT:FIRE:4d12
-blow:HIT:FIRE:4d12
-blow:CRUSH:HURT:3d12
-blow:TOUCH:DRAIN_CHARGES
-flags:POWERFUL
-flags:DROP_2
-flags:MOVE_BODY
-flags:IM_FIRE
-innate-freq:14
-spell-freq:5
-spells:BLIND | CONF
-spells:BR_FIRE
-spells:S_DEMON
-desc:It is a massive humanoid demon wreathed in flames.
-
-name:Eöl, the Dark Elf
-base:humanoid
-color:v
-speed:130
-hit-points:2400
-hearing:20
-armor-class:150
-sleepiness:40
-depth:49
-rarity:2
-experience:25000
-blow:HIT:HURT:3d8
-blow:HIT:HURT:3d8
-blow:HIT:HURT:3d8
-flags:UNIQUE | MALE | EVIL | SMART
-flags:DROP_4 | DROP_GOOD | ONLY_ITEM
-flags:HURT_LIGHT | IM_COLD | IM_FIRE | IM_POIS | NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:2
-spells:BLIND | BLINK | WOUND | CONF | DARKNESS | HEAL
-spells:TELE_TO
-spells:BA_ACID | BA_COLD | BA_ELEC | BA_FIRE | BA_RADI
-spells:BO_MANA
-spells:S_DEMON | S_MONSTERS | S_UNDEAD
-desc:A lord of the Teleri, Eöl is a mighty metalsmith, the only one to ever
-desc: forge weapons of meteorite iron.  The mortal enemy of the Eldar, he is
-desc: currently fleeing their wrath, following the murder of Princess Aredhel of
-desc: Gondolin.
-
-
-
-########## DUNGEON LEVELS 50-59 ##########
-
-
 ### Dungeon level 50 ###
 
 name:master mystic
@@ -9632,31 +7087,6 @@ friends-base:50:2d4:spider
 desc:A lord of all that is natural, skilled in the mystic ways.  He is a master
 desc: of martial arts and is at one with nature, able to summon help from the
 desc: wild if need be.
-
-name:shadow
-base:ghost
-color:D
-speed:120
-hit-points:175
-light:-2
-hearing:30
-armor-class:36
-sleepiness:20
-depth:50
-rarity:3
-experience:800
-blow:TOUCH:EXP_80
-blow:TOUCH:EXP_40
-blow:CLAW:LOSE_INT:3d10
-blow:CLAW:LOSE_WIS:3d10
-flags:DROP_1 | ONLY_ITEM
-flags:FORCE_SLEEP
-spell-freq:8
-spells:SLOW | TELE_TO
-spells:BO_RADI
-desc:A mighty spirit of darkness of vaguely humanoid form.  Razor-edged claws
-desc: reach out to end your life as it glides towards you, seeking to suck the
-desc: energy from your soul to feed its power.
 
 ### Dungeon level 51 ###
 
@@ -9765,86 +7195,7 @@ spells:TELE_TO | TELE_SELF_TO | BLINK | TRAPS | DARKNESS | BLIND | HOLD
 desc:He is a master of disguise, an expert of stealth, a genius at traps, and
 desc: moves with blinding speed.  Check your pockets!
 
-### Dungeon level 52 ###
-
-name:Maia of Oromë
-plural:Maiar of Oromë
-base:ainu
-color:w
-speed:120
-hit-points:2000
-light:2
-hearing:30
-armor-class:96
-sleepiness:255
-depth:52
-rarity:4
-experience:2500
-blow:HIT:HURT:4d6
-blow:HIT:HURT:6d5
-blow:HIT:HURT:4d6
-blow:HIT:HURT:6d5
-flags:MALE
-flags:DROP_2
-innate-freq:5
-spell-freq:5
-spells:ARROW
-spells:SHAPECHANGE
-spells:S_HOUND
-shape:ranger chieftain
-shape:giant
-shape:Huan, Wolfhound of the Valar
-desc:A servant of Oromë, hunter of monsters and fell beasts.
-
-name:hasty ent
-base:tree
-color:t
-speed:120
-hit-points:3000
-hearing:20
-armor-class:120
-sleepiness:20
-depth:52
-rarity:1
-experience:3500
-blow:PUNCH:HURT:10d5
-blow:PUNCH:HURT:10d5
-blow:CRUSH:HURT:3d10
-blow:CRUSH:HURT:3d10
-flags:DROP_2
-flags:MOVE_BODY | KILL_WALL | KILL_ITEM
-flags:NO_STUN | NO_SLOW | NO_SLEEP | IM_ACID
-friends:100:3d4:huorn
-desc:Ents are not altogether on anybody's side, because nobody is altogether on
-desc: their side.  This one seems quite roused, and does not seem to be on
-desc: your side.
-
 ### Dungeon level 53 ###
-
-name:hezrou
-base:major demon
-color:g
-speed:100
-hit-points:1850
-hearing:20
-armor-class:60
-sleepiness:70
-depth:53
-rarity:3
-experience:7000
-blow:CLAW:HURT:3d4
-blow:BITE:ACID:3d10
-blow:BITE:BLIND:3d10
-flags:SMART | DROP_1
-flags:IM_FIRE | IM_ACID | NO_FEAR
-spell-freq:3
-spells:BO_FIRE | BO_ACID
-spells:BR_FIRE | BR_ACID
-spells:S_DEMON
-friends:100:1d2:Same
-desc:A sluggish demon of lizard form, firing powerful missiles.  From the
-desc: terribly oversized jaws to the stumpy lashing tail, pools of burning
-desc: acid froth and sizzle.
 
 name:chaos vortex
 plural:chaos vortices
@@ -9867,147 +7218,6 @@ flags:ATTR_MULTI
 innate-freq:4
 spells:BR_CHAO
 desc:Void, nothingness, spinning destructively.
-
-### Dungeon level 54 ###
-
-name:The Phoenix
-base:bird
-color:r
-speed:120
-hit-points:3600
-light:2
-hearing:60
-armor-class:156
-sleepiness:0
-depth:54
-rarity:3
-experience:40000
-blow:BITE:FIRE:12d6
-blow:BITE:FIRE:12d6
-blow:HIT:FIRE:9d12
-blow:HIT:FIRE:9d12
-flags:UNIQUE
-flags:DROP_2 | DROP_GOOD | ONLY_ITEM
-flags:OPEN_DOOR | BASH_DOOR
-flags:IM_ACID | IM_ELEC | IM_FIRE | IM_POIS | IM_PLASMA | NO_CONF
-flags:NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-innate-freq:6
-spell-freq:5
-spells:BA_FIRE
-spells:BO_FIRE | BO_PLAS
-spells:BR_FIRE | BR_LIGHT | BR_PLAS
-spells:S_KIN
-desc:A massive glowing eagle bathed in flames.  The searing heat chars your skin
-desc: and melts your armour.
-
-name:demilich
-plural:demiliches
-base:lich
-color:U
-speed:120
-hit-points:2816
-hearing:20
-armor-class:150
-sleepiness:40
-depth:54
-rarity:2
-experience:12500
-blow:TOUCH:EXP_80
-blow:TOUCH:DRAIN_CHARGES
-blow:TOUCH:LOSE_DEX:4d12
-blow:TOUCH:LOSE_DEX:4d12
-flags:DROP_3 | ONLY_ITEM
-spell-freq:3
-spells:BLIND | BLINK | WOUND | CONF | BRAIN_SMASH
-spells:FORGET | HEAL | HOLD | SCARE | TELE_TO
-spells:TPORT
-spells:S_DEMON | S_UNDEAD
-desc:A lich who is partially immaterial, on its way to a new, ethereal form.
-
-name:dreadmaster
-base:ghost
-color:y
-speed:120
-hit-points:1056
-hearing:20
-armor-class:120
-sleepiness:10
-depth:54
-rarity:2
-experience:8000
-blow:HIT:HURT:6d6
-blow:HIT:HURT:6d6
-blow:HIT:LOSE_STR:3d4
-blow:HIT:LOSE_STR:3d4
-flags:SMART
-flags:DROP_4 | ONLY_ITEM
-flags:RAND_25 | TAKE_ITEM
-flags:FORCE_SLEEP
-spell-freq:9
-spells:BLIND | WOUND | CONF | HOLD | TELE_LEVEL
-spells:BO_RADI
-spells:S_UNDEAD
-desc:It is an unlife of power almost unequaled.  An affront to existence, its
-desc: very touch abuses and disrupts the flow of life, and its unearthly limbs,
-desc: of purest black, crush rock and flesh with ease.
-
-
-### Dungeon level 55 ###
-
-name:Ar-Pharazôn the Golden
-base:person
-color:y
-speed:130
-hit-points:4000
-light:2
-hearing:30
-armor-class:54
-sleepiness:255
-depth:55
-rarity:1
-experience:32500
-blow:HIT:HURT:8d8
-blow:HIT:HURT:8d8
-blow:HIT:HURT:8d8
-blow:HIT:HURT:8d8
-flags:UNIQUE | MALE | EVIL | SMART | ATTR_FLICKER
-flags:DROP_3 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
-flags:OPEN_DOOR | MOVE_BODY | TAKE_ITEM
-flags:IM_ELEC | IM_FIRE | IM_POIS
-flags:FORCE_SLEEP
-spell-freq:6
-spells:HEAL | TELE_AWAY
-spells:S_KIN | S_MONSTERS
-desc:Last and proudest king of ancient Númenor.  Corrupted by power and avarice,
-desc: he fell victim to Sauron's wiles, tried to fight the Valar themselves, and
-desc: condemned Númenor to oblivion.
-
-name:barbazu
-plural:barbazu
-base:major demon
-color:G
-speed:120
-hit-points:700
-hearing:25
-armor-class:90
-sleepiness:70
-depth:55
-rarity:4
-experience:3000
-blow:HIT:HURT:4d10
-blow:HIT:HURT:4d10
-blow:HIT:LOSE_CON:10d2
-blow:STING:POISON:5d5
-flags:DROP_1
-flags:IM_POIS
-spell-freq:10
-spells:SCARE
-spells:S_DEMON
-friends:100:4d4:Same
-desc:A foul, humanoid creature with a long tail, clawed hands and feet, and a
-desc: disgusting, wiry, snaky beard.  They are the elite shock troops of the
-desc: hells, capable of a terrifying berserk fury.
 
 ### Dungeon level 56 ###
 
@@ -10068,266 +7278,7 @@ desc:He is one of the few true masters of the art, being extremely skillful in
 desc: all forms of unarmed combat and controlling the world's natural creatures
 desc: with disdainful ease.
 
-name:hand druj
-base:skeleton
-color:y
-speed:130
-hit-points:528
-hearing:20
-armor-class:132
-sleepiness:10
-depth:57
-rarity:2
-experience:12000
-flags:SMART | ATTR_FLICKER | SPIRIT
-flags:NEVER_BLOW | NEVER_MOVE
-flags:FORCE_SLEEP
-spell-freq:1
-spells:BLIND | WOUND | CONF | DARKNESS | FORGET | SCARE
-spells:TELE_AWAY
-spells:BO_ACID | BO_COLD | BO_ELEC | BO_FIRE
-desc:A skeletal hand floating in the air, motionless except for its flexing
-desc: fingers.
-
-name:9-headed hydra
-base:hydra
-color:P
-speed:120
-hit-points:1200
-light:2
-hearing:20
-armor-class:168
-sleepiness:20
-depth:57
-rarity:2
-experience:7000
-blow:BITE:HURT:2d6
-blow:BITE:HURT:2d6
-blow:BITE:POISON:2d6
-blow:BITE:FIRE:2d6
-blow:BITE:ACID:2d6
-blow:BITE:BLIND:2d6
-blow:BITE:CONFUSE:2d6
-blow:BITE:EXP_10:2d6
-blow:BITE:HURT:10d6
-flags:SMART | POWERFUL | REGENERATE
-flags:DROP_3
-flags:OPEN_DOOR | KILL_BODY
-flags:IM_FIRE | IM_POIS | IM_ACID | IM_RADIATION | NO_CONF | NO_SLEEP | NO_HOLD
-innate-freq:4
-spell-freq:9
-spells:SCARE
-spells:BR_FIRE | BR_POIS | BR_ACID | BR_RADI
-spells:S_HYDRA | S_KIN
-desc:A massive legendary hydra, like an 8-headed hydra, but with a massive
-desc: extra head that opens its mighty jaws at you.  Its many eyes
-desc: stare at you as clouds of vapour rise from its seething form.  And it
-desc: grows new heads as fast as you chop them off.
-
-### Dungeon level 58 ###
-
-name:Baphomet the Minotaur Lord
-base:hybrid
-color:v
-speed:130
-hit-points:4700
-hearing:30
-smell:20
-armor-class:144
-sleepiness:30
-depth:58
-rarity:4
-experience:24000
-blow:BUTT:HURT:12d13
-blow:BUTT:HURT:12d13
-blow:HIT:HURT:10d10
-blow:HIT:HURT:10d10
-flags:UNIQUE | MALE | EVIL
-flags:DROP_4 | DROP_GOOD | ONLY_ITEM
-flags:BASH_DOOR
-flags:IM_FIRE | NO_CONF | NO_SLEEP | NO_HOLD | NO_STUN
-flags:FORCE_SLEEP
-innate-freq:10
-spell-freq:8
-spells:ARROW | SLOW
-spells:BA_ELEC
-spells:BO_MANA | BO_PLAS
-spells:BR_WALL
-desc:A fearsome bull-headed monster, Baphomet swings a mighty axe as he curses
-desc: all that defy him.
-
-### Dungeon level 59 ###
-
-name:elder vampire
-base:vampire
-color:r
-speed:120
-hit-points:2640
-hearing:20
-smell:20
-armor-class:108
-sleepiness:10
-depth:59
-rarity:3
-experience:4500
-blow:HIT:HURT:4d6
-blow:HIT:HURT:4d6
-blow:BITE:EXP_80:5d6
-blow:BITE:EXP_80:5d6
-flags:INVISIBLE
-flags:DROP_4
-flags:PASS_WALL
-spell-freq:5
-spells:BRAIN_SMASH | WOUND | DARKNESS
-spells:BO_RADI
-spells:S_UNDEAD
-spells:HOLD | SCARE
-friends-base:30:1d3:ghost
-desc:A terrible robed undead figure, this creature has existed in its unlife for
-desc: many centuries by stealing the life of others.  It can summon the very
-desc: shades of its victims from beyond the grave to come enslaved to its aid.
-
-name:Fundin Bluecloak
-base:humanoid
-color:Z
-speed:130
-hit-points:5000
-hearing:25
-armor-class:234
-sleepiness:10
-depth:59
-rarity:2
-experience:20000
-blow:HIT:HURT:8d8
-blow:HIT:HURT:8d8
-blow:HIT:HURT:8d8
-blow:HIT:HURT:8d8
-flags:UNIQUE | MALE
-flags:DROP_4 | DROP_GOOD | ONLY_ITEM
-flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS | NO_CONF
-flags:NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:4
-spells:BLIND | BRAIN_SMASH | WOUND | CONF | HEAL
-spells:SCARE
-spells:S_ANIMAL | S_MONSTERS
-desc:He is one of the greatest dwarven priests to walk the earth.  Fundin has
-desc: earned a high position in the church, and his skill with both weapon and
-desc: spell only justify his position further.  His combination of both dwarven
-desc: strength and priestly wisdom are a true match for any adventurer.
-
-
-
-########## DUNGEON LEVELS 60-69 ##########
-
-
 ### Dungeon level 60 ###
-
-name:Gilim, the Giant of Eruman
-base:giant
-color:w
-speed:120
-hit-points:4000
-hearing:30
-armor-class:96
-sleepiness:15
-depth:60
-rarity:3
-experience:6000
-blow:HIT:COLD:9d10
-blow:HIT:COLD:9d10
-blow:HIT:HURT:10d9
-blow:HIT:CONFUSE:10d9
-flags:UNIQUE | MALE | SMART | ATTR_FLICKER
-flags:DROP_4 | DROP_GOOD | ONLY_ITEM
-flags:OPEN_DOOR | TAKE_ITEM | IM_COLD
-flags:FORCE_SLEEP
-innate-freq:6
-spell-freq:3
-spells:BOULDER
-spells:BO_ICE | STORM
-spells:S_MONSTERS
-desc:Known as the giant of winter and the northern reaches,
-desc: he is tall even among giants, and his name is cursed in many lands.
-
-name:Maia of Yavanna
-plural:Maiar of Yavanna
-base:ainu
-color:g
-speed:120
-hit-points:3500
-light:2
-hearing:30
-armor-class:90
-sleepiness:255
-depth:60
-rarity:4
-experience:3600
-blow:HIT:HURT:4d6
-blow:HIT:HURT:6d5
-blow:HIT:HURT:4d6
-blow:HIT:HURT:6d5
-flags:FEMALE
-flags:DROP_3
-flags:IM_ACID
-spell-freq:3
-spells:BO_MANA | BO_WATE
-spells:S_AINU | S_ANIMAL
-spells:SHAPECHANGE
-shape:tree
-desc:A servant of Yavanna Kementári, Queen of the Earth, the Giver of Fruits
-desc: and lover of all things that grow.
-
-name:Maia of Aulë
-plural:Maiar of Aulë
-base:ainu
-color:u
-speed:120
-hit-points:3500
-hearing:30
-armor-class:120
-sleepiness:255
-depth:60
-rarity:4
-experience:3600
-blow:HIT:HURT:6d6
-blow:HIT:HURT:6d6
-blow:HIT:HURT:6d6
-blow:HIT:SHATTER:10d10
-flags:MALE | PASS_WALL
-flags:DROP_3
-flags:IM_ELEC
-innate-freq:5
-spell-freq:5
-spells:BOULDER
-spells:SHAPECHANGE
-shape:shardstorm
-shape:great earth elemental
-shape:Quaker, Master of Earth
-desc:A servant of Aulë the Smith, lord of all the substances of Arda and friend
-desc: of the Noldor.
-
-name:great earth elemental
-base:elemental
-color:u
-speed:120
-hearing:10
-armor-class:145
-sleepiness:50
-depth:60
-rarity:0
-blow:HIT:HURT:6d6
-blow:HIT:HURT:6d6
-blow:HIT:HURT:6d6
-blow:HIT:SHATTER:10d10
-flags:COLD_BLOOD | POWERFUL
-flags:PASS_WALL | KILL_BODY | KILL_ITEM
-flags:HURT_ROCK | IM_ELEC
-innate-freq:6
-spell-freq:6
-spells:BOULDER | BR_SHAR | BA_SHAR
-desc:Appearing as a giant of stone, this mighty elemental seems to draw its
-desc: power from the very fabric of the dungeon.
 
 name:aether vortex
 plural:aether vortices
@@ -10355,99 +7306,7 @@ spells:BR_FIRE | BR_GRAV | BR_INER | BR_LIGHT | BR_RADI | BR_NEXU
 spells:BR_PLAS | BR_POIS | BR_SHAR | BR_SOUN | BR_TIME | BR_WALL
 desc:An awesome vortex of pure magic, power radiates from its frame.
 
-### Dungeon level 61 ###
-
-
-name:bile demon
-base:major demon
-color:R
-speed:120
-hit-points:2464
-hearing:40
-armor-class:135
-sleepiness:40
-depth:61
-rarity:2
-experience:12000
-blow:HIT:HURT:8d8
-blow:HIT:HURT:8d8
-blow:CRUSH:ACID:9d9
-flags:POWERFUL
-flags:DROP_3
-flags:IM_ACID | IM_POIS
-innate-freq:6
-spell-freq:10
-spells:ARROW | BLIND | CONF
-spells:BR_ACID | BR_POIS
-spells:S_DEMON
-desc:It's big.  It's fat.  It's red.  It's ugly.  It's got a severe attack of
-desc: highly poisonous flatulence.  And its insides are corrosive.  All of
-desc: which go together to make the single most repulsive sight - and smell -
-desc: you have ever experienced.
-
-### Dungeon level 62 ###
-
-name:dreadlord
-base:ghost
-color:r
-speed:120
-hit-points:2640
-hearing:20
-armor-class:180
-sleepiness:10
-depth:62
-rarity:2
-experience:20000
-blow:HIT:EXP_40:6d6
-blow:HIT:EXP_40:6d6
-blow:HIT:LOSE_STR:4d6
-blow:HIT:LOSE_STR:4d6
-flags:ATTR_FLICKER
-flags:DROP_4 | ONLY_ITEM
-flags:TAKE_ITEM
-flags:FORCE_SLEEP
-spell-freq:4
-spells:BLIND | BLINK | BRAIN_SMASH | CONF | HOLD
-spells:TELE_TO | TPORT
-spells:BA_RADI
-spells:S_UNDEAD
-friends:50:2d3:Dread:servant
-desc:It is a massive form of animated death, its colour deeper than black.  It
-desc: drinks in light, and space around it is twisted and torn by the weight of
-desc: its evil.  It is unlife and it knows nothing but the stealing of souls
-desc: and the stench of death.  Flee its hunger!
-
 ### Dungeon level 63 ###
-
-name:werewolf of Sauron
-plural:werewolves of Sauron
-base:canine
-color:G
-speed:120
-hit-points:2200
-hearing:30
-smell:50
-armor-class:88
-sleepiness:5
-depth:63
-rarity:2
-experience:4000
-blow:BITE:EXP_20:2d4
-blow:CLAW:POISON:4d10
-blow:CLAW:POISON:4d10
-flags:FORCE_SLEEP | SMART | EVIL
-flags:OPEN_DOOR | BASH_DOOR | MOVE_BODY
-flags:IM_POIS | IM_COLD | IM_FIRE | IM_RADIATION
-flags:NO_FEAR | NO_CONF | NO_SLEEP
-innate-freq:6
-spell-freq:7
-spells:BR_RADI | BR_DARK
-spells:S_HOUND
-friends:50:2d4:warg:servant
-friends:50:2d3:hellhound:servant
-friends:100:2d3:werewolf:servant
-desc:A massive wolf, appearing like a mighty shadow.  Its glowing red eyes
-desc: glare malevolently as it defends its evil master's fortress.
 
 name:spider of Gorgoroth
 plural:spiders of Gorgoroth
@@ -10508,145 +7367,7 @@ desc:A constantly changing canine form, this hound rushes towards you as if
 desc: expecting mayhem and chaos ahead.  It appears to have an almost kamikaze
 desc: relish for combat.  You suspect all may not be as it seems.
 
-name:archlich
-plural:archliches
-base:lich
-color:B
-speed:120
-hit-points:3520
-hearing:20
-armor-class:180
-sleepiness:40
-depth:64
-rarity:2
-experience:20000
-blow:TOUCH:EXP_80
-blow:TOUCH:DRAIN_CHARGES
-blow:TOUCH:LOSE_DEX:8d12
-blow:TOUCH:LOSE_DEX:8d12
-flags:DROP_4 | ONLY_ITEM
-flags:PASS_WALL
-spell-freq:3
-spells:BLINK | WOUND | FORGET | HEAL | BRAIN_SMASH
-spells:HOLD | SCARE | TELE_TO | TPORT
-spells:BA_RADI
-spells:S_DEMON | S_HI_UNDEAD
-desc:A lich who has reached its ultimate evolutionary stage: a completely
-desc: immaterial state.
-
 ### Dungeon level 65 ###
-
-name:Maia of Ulmo
-plural:Maiar of Ulmo
-base:ainu
-color:b
-speed:120
-hit-points:4700
-hearing:30
-armor-class:90
-sleepiness:255
-depth:65
-rarity:4
-experience:5000
-blow:TOUCH:TERRIFY:6d5
-blow:TOUCH:PARALYZE:6d5
-blow:ENGULF:ACID:6d10
-blow:ENGULF:ACID:6d10
-flags:MALE
-flags:DROP_4
-flags:IM_ACID | IM_ELEC | IM_WATER
-spell-freq:3
-spells:BA_WATE
-spells:BO_MANA | BO_WATE
-spells:S_AINU
-spells:SHAPECHANGE
-shape:great water elemental
-shape:water vortex
-shape:cold vortex
-desc:A servant of Ulmo, Lord of Waters, who speaks to those who dwell in
-desc: Middle-earth with voices that are heard only as the music of water.
-
-name:great water elemental
-base:elemental
-color:b
-speed:120
-hearing:12
-armor-class:120
-sleepiness:30
-depth:65
-rarity:0
-experience:4250
-blow:ENGULF:TERRIFY:6d5
-blow:ENGULF:PARALYZE:6d5
-blow:ENGULF:ACID:6d10
-blow:ENGULF:ACID:6d10
-flags:COLD_BLOOD | POWERFUL
-flags:BASH_DOOR | KILL_BODY | KILL_ITEM
-flags:IM_ACID | IM_WATER | IM_COLD
-innate-freq:5
-spell-freq:5
-spells:BA_WATE | BO_WATE
-spells:BR_COLD
-desc:A mighty column of water, terrible as a mounting wave that strides to the
-desc: land.
-
-name:The Mouth of Sauron
-base:person
-color:v
-speed:130
-hit-points:7000
-hearing:60
-armor-class:120
-sleepiness:10
-depth:65
-rarity:3
-experience:38000
-blow:HIT:DISENCHANT:6d8
-blow:HIT:DISENCHANT:6d8
-blow:HIT:DRAIN_CHARGES:5d5
-blow:HIT:DRAIN_CHARGES:5d5
-flags:UNIQUE | MALE | EVIL | INVISIBLE | SMART
-flags:DROP_4 | DROP_GOOD | ONLY_ITEM
-flags:OPEN_DOOR
-flags:IM_COLD | IM_ELEC | IM_FIRE | NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:2
-spells:WOUND | HOLD | TELE_TO | TRAPS
-spells:BA_DARK | BA_FIRE | BA_MANA | BA_RADI | BA_WATE
-spells:BO_PLAS
-spells:S_HI_DEMON | S_HI_UNDEAD
-desc:The Mouth of Sauron is a mighty spell caster.  So old that even he cannot
-desc: remember his own name, his power and evil are undeniable.  He believes
-desc: unshakably that he is unbeatable and laughs as he weaves his awesome
-desc: spells.
-
-name:osyluth
-base:major demon
-color:W
-speed:130
-hit-points:2288
-hearing:20
-armor-class:112
-sleepiness:30
-depth:65
-rarity:2
-experience:13000
-blow:HIT:LOSE_WIS:6d6
-blow:HIT:LOSE_CON:6d6
-blow:BITE:POISON:8d8
-blow:STING:LOSE_STR:5d5
-flags:INVISIBLE | POWERFUL
-flags:DROP_3
-flags:MOVE_BODY
-flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS
-spell-freq:6
-spells:SCARE
-spells:BA_COLD | BA_ELEC
-spells:BO_ICE
-spells:S_DEMON
-desc:It is a demon made almost entirely out of bones.  It is humanoid, but with
-desc: a large tail similar to that of a giant scorpion, and emits a foul smell
-desc: of decay and rot.  They are despised even in the hells.
 
 name:Fëanorian raider
 base:humanoid
@@ -10673,29 +7394,6 @@ desc:A veteran of the battles waged by Fëanor and his sons in pursuit of the
 desc: Silmarils, he attacks you with agility, power and cruelty.
 
 ### Dungeon level 66 ###
-
-name:eye druj
-base:skeleton
-color:r
-speed:130
-hit-points:1080
-hearing:20
-armor-class:108
-sleepiness:10
-depth:66
-rarity:2
-experience:18000
-flags:SMART | ATTR_FLICKER | SPIRIT
-flags:NEVER_BLOW | NEVER_MOVE
-flags:IM_FIRE
-flags:FORCE_SLEEP
-spell-freq:1
-spells:BRAIN_SMASH
-spells:BA_RADI
-spells:BO_MANA | BO_RADI
-spells:S_UNDEAD
-desc:A bloodshot eyeball floating in the air, you'd be forgiven for assuming it
-desc: harmless.
 
 name:greater titan
 base:giant
@@ -10724,66 +7422,7 @@ desc:A forty foot tall humanoid that shakes the ground as it walks.  The power
 desc: radiating from its frame shakes your courage, its hatred inspired by your
 desc: defiance.
 
-name:Tevildo, Prince of Cats
-base:feline
-color:v
-speed:130
-hit-points:4800
-hearing:100
-smell:30
-armor-class:240
-sleepiness:0
-depth:66
-rarity:3
-experience:30000
-blow:CLAW:CONFUSE:12d12
-blow:CLAW:LOSE_DEX:2d12
-blow:CLAW:BLIND:10d5
-blow:BITE:PARALYZE:15d1
-flags:UNIQUE | MALE | INVISIBLE | SPIRIT
-flags:DROP_4 | DROP_GOOD | ONLY_ITEM
-flags:OPEN_DOOR | BASH_DOOR
-flags:IM_COLD | IM_FIRE | NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:3
-spells:TELE_TO
-spells:S_KIN
-friends:100:2d4:Tiger:servant
-friends:100:2d4:Sabre-tooth tiger:servant
-friends:100:2d4:Displacer beast:servant
-desc:Master of all things feline, Tevildo serves his master Morgoth well.
-desc:  He delights in small torments and cunning stratagems, and laughs merrily
-desc: as he bats you about.
-
 ### Dungeon level 67 ###
-
-name:Thuringwethil, the Vampire Messenger
-base:vampire
-color:v
-speed:130
-hit-points:5000
-hearing:20
-smell:20
-armor-class:174
-sleepiness:10
-depth:67
-rarity:4
-experience:23000
-blow:BITE:EXP_80:6d6
-blow:BITE:EXP_80:6d6
-blow:HIT:CONFUSE:6d6
-blow:HIT:CONFUSE:6d6
-flags:UNIQUE | FEMALE | SMART
-flags:DROP_4 | DROP_GOOD | ONLY_ITEM
-flags-off:HURT_FIRE
-spell-freq:3
-spells:BLIND | BRAIN_SMASH | WOUND
-spells:BA_RADI
-spells:S_HI_UNDEAD | S_KIN
-spells:HOLD | SCARE
-desc:Chief messenger between Sauron and Morgoth, she is surely the most deadly
-desc: of her vampire race.  At first she is charming to meet, but her wings and
-desc: eyes give away her true form.
 
 name:beholder hive-mother
 base:eye
@@ -10841,61 +7480,6 @@ spells:BR_CHAO
 desc:"Beware the Jabberwock, my son!  The jaws that bite, the claws that catch!"
 desc: Run and run quickly, for death incarnate chases behind you!
 
-name:Tselakus, the Dreadlord
-base:ghost
-color:R
-speed:130
-hit-points:6500
-hearing:20
-armor-class:180
-sleepiness:10
-depth:68
-rarity:2
-experience:35000
-blow:HIT:HURT:10d10
-blow:HIT:HURT:10d10
-blow:HIT:LOSE_STR:4d6
-blow:HIT:LOSE_STR:4d6
-flags:UNIQUE | MALE
-flags:DROP_4 | DROP_GOOD | ONLY_ITEM
-flags:FORCE_SLEEP
-spell-freq:3
-spells:BLIND | CONF | HOLD
-spells:BA_DARK | BA_RADI
-spells:S_HI_UNDEAD | S_KIN
-desc:This huge affront to existence twists and tears at the fabric of space.  A
-desc: master of mighty magic, Tselakus hungers for your tender flesh.  Darkness
-desc: itself recoils from the touch of Tselakus as he leaves a trail of death
-desc: and destruction.  Tselakus is a being of sneering contempt, laughing at
-desc: your pitiful efforts to defy him.  Mighty claws rend reality as he
-desc: annihilates all in his path to your soul!
-
-name:bone golem
-base:golem
-color:D
-speed:120
-hit-points:3080
-hearing:20
-armor-class:255
-sleepiness:20
-depth:68
-rarity:3
-experience:23000
-blow:HIT:DISENCHANT:8d8
-blow:HIT:DISENCHANT:8d8
-blow:HIT:LOSE_STR:6d6
-blow:HIT:LOSE_STR:6d6
-flags:UNDEAD | COLD_BLOOD
-flags:OPEN_DOOR | BASH_DOOR
-flags:IM_COLD | IM_FIRE | IM_POIS | NO_STUN
-flags:FORCE_SLEEP
-spell-freq:8
-spells:BRAIN_SMASH | WOUND | TELE_TO
-spells:BA_RADI
-spells:S_UNDEAD
-desc:A skeletal form, black as night, constructed from the bones of its previous
-desc: victims.
-
 ### Dungeon level 69 ###
 
 name:hound of Tindalos
@@ -10924,35 +7508,6 @@ spells:BR_RADI | BR_DISE | BR_TIME
 friends:100:2d7:Same
 desc:Bodies of death, receptacles of all foulness, they emerge like smoke from
 desc: the angles of time, ravenous and snarling and unsatisfied.
-
-name:Nan, the Giant
-base:giant
-color:o
-speed:120
-hit-points:3344
-hearing:30
-armor-class:150
-sleepiness:15
-depth:69
-rarity:3
-experience:23500
-blow:HIT:HURT:12d12
-blow:HIT:HURT:12d12
-blow:HIT:CONFUSE:12d12
-blow:HIT:CONFUSE:12d12
-flags:UNIQUE | MALE | SMART | ATTR_FLICKER
-flags:DROP_4 | DROP_GOOD | ONLY_ITEM
-flags:TAKE_ITEM | IM_FIRE
-flags:FORCE_SLEEP
-innate-freq:6
-spell-freq:4
-spell-power:85
-spells:BOULDER
-spells:BO_PLAS | BA_FIRE
-spells:S_MONSTERS
-desc:Known as the giant of summer and the south, he towers above you
-desc: like a great elm. In his right hand, he holds the longest
-desc: sword you have ever beheld.
 
 name:nightcrawler
 base:snake
@@ -10989,282 +7544,7 @@ desc:  Its gaping maw is a void of blackness, acid drips from its steely hide.
 desc:  It is like nothing you have ever seen before, and a terrible chill runs
 desc: down your spine as you face it.
 
-name:gelugon
-base:major demon
-color:w
-speed:130
-hit-points:3080
-hearing:20
-armor-class:150
-sleepiness:30
-depth:69
-rarity:3
-experience:14000
-blow:CLAW:COLD:6d8
-blow:CLAW:COLD:6d8
-blow:BITE:COLD:9d9
-blow:HIT:PARALYZE:5d5
-flags:POWERFUL | REGENERATE
-flags:DROP_4
-flags:IM_COLD
-innate-freq:20
-spell-freq:8
-spells:HOLD | SCARE | SLOW
-spells:BA_COLD
-spells:BO_ICE
-spells:BR_COLD | BR_SHAR
-spells:S_HI_DEMON
-desc:This demon from the icy regions is a truly terrifying sight.  It has an
-desc: extremely large, insect-like body towering a full twelve feet tall, with
-desc: great claws on its hands and pincers on its mouth, and its head bulges
-desc: with great multi-faceted eyes.  Its tail is covered with razor-sharp
-desc: spikes.
-
-
-########## DUNGEON LEVELS 70-79 ##########
-
-
-### Dungeon level 70 ###
-
-### Dungeon level 71 ###
-
-name:Maia of Manwë
-plural:Maiar of Manwë
-base:ainu
-color:B
-speed:130
-hit-points:5000
-light:2
-hearing:30
-armor-class:120
-sleepiness:255
-depth:71
-rarity:4
-experience:7000
-blow:HIT:ELEC:10d12
-blow:HIT:ELEC:10d12
-blow:ENGULF:CONFUSE:8d10
-blow:ENGULF:CONFUSE:8d10
-flags:MALE
-flags:DROP_4
-flags:IM_ACID | IM_ELEC | IM_WATER
-spell-freq:3
-spells:STORM | BA_ELEC
-spells:S_AINU
-spells:SHAPECHANGE
-shape:elemental
-shape:vortex
-desc:A servant of Manwë Súlimo, the first of all Kings, lord of the realm of
-desc: Arda and ruler of all that dwell therein.
-
-name:Maia of Varda
-plural:Maiar of Varda
-base:ainu
-color:y
-speed:130
-hit-points:5000
-light:3
-hearing:30
-armor-class:110
-sleepiness:255
-depth:71
-rarity:4
-experience:12000
-blow:TOUCH:TERRIFY:6d5
-blow:TOUCH:PARALYZE:6d5
-blow:ENGULF:ACID:6d10
-blow:ENGULF:ACID:6d10
-flags:FEMALE
-flags:DROP_4
-flags:IM_ACID | IM_ELEC
-spell-freq:3
-spells:BA_LIGHT
-spells:BO_MANA
-spells:S_AINU
-spells:SHAPECHANGE
-shape:elemental
-shape:vortex
-desc:A servant of Varda, Lady of the Stars, who the elves call Elbereth and
-desc: love above all the Valar.
-
-name:greater demonic quylthulg
-base:quylthulg
-color:R
-speed:120
-hit-points:1320
-hearing:20
-armor-class:1
-sleepiness:0
-depth:71
-rarity:2
-experience:10500
-flags:ATTR_FLICKER
-spell-freq:2
-spells:BLINK | TELE_TO
-spells:S_HI_DEMON
-desc:A massive pulsating mound of flesh, glowing with a hellish light.
-
-name:greater rotting quylthulg
-base:quylthulg
-color:U
-speed:120
-hit-points:1320
-hearing:20
-armor-class:1
-sleepiness:0
-depth:71
-rarity:2
-experience:10500
-flags:ATTR_FLICKER
-spell-freq:2
-spells:BLINK | TELE_TO
-spells:S_HI_UNDEAD
-desc:A massive pile of rotting flesh.  A disgusting stench fills the air as it
-desc: throbs and writhes.
-
-### Dungeon level 72 ###
-
-name:horned reaper
-base:major demon
-color:B
-speed:130
-hit-points:3344
-hearing:40
-armor-class:180
-sleepiness:20
-depth:72
-rarity:3
-experience:18000
-blow:HIT:HURT:11d11
-blow:HIT:HURT:11d11
-blow:HIT:HURT:11d11
-blow:HIT:HURT:11d11
-flags:REGENERATE
-flags:DROP_4
-flags:KILL_BODY
-flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS
-spell-freq:5
-spells:HASTE | SCARE | SLOW
-spells:S_HI_DEMON
-desc:A giant humanoid demon wielding a massive, heavy and sharp scythe.
-desc:  Feared by foes and friends alike when it flies into one of its berserk
-desc: rages, the Horned Reaper will cut down anything in its path between it
-desc: and you - even the minions it has just summoned.
-
-name:Ossë, Herald of Ulmo
-base:ainu
-color:w
-speed:130
-hit-points:6000
-hearing:40
-armor-class:204
-sleepiness:10
-depth:72
-rarity:3
-experience:30000
-blow:HIT:DISENCHANT:10d5
-blow:HIT:DISENCHANT:10d5
-blow:HIT:HURT:10d10
-blow:HIT:HURT:10d10
-flags:UNIQUE | MALE
-flags:DROP_4 | DROP_GOOD
-flags:MOVE_BODY
-flags:IM_ACID | IM_ELEC | IM_WATER | IM_DISEN
-innate-freq:4
-spell-freq:2
-spells:BLIND | TELE_TO | WHIP
-spells:BA_WATE | STORM
-spells:BO_MANA | BO_WATE
-spells:BR_DISE
-spells:S_AINU
-desc:Encrusted with barnacles, slimy and dripping, the Maia of the untamed
-desc: sea has dragged himself down into Angband to send you to a watery grave.
-desc: Ossë is the most powerful and heartless of Ulmo's servants and embodies
-desc: the untamed power of the ocean. Terror grows in your heart with each
-desc: squelching step of his approach.
-
-
-### Dungeon level 73 ###
-
-
-name:Omarax, the Eye Tyrant
-base:eye
-color:v
-speed:130
-hit-points:6500
-hearing:30
-armor-class:96
-sleepiness:10
-depth:73
-rarity:3
-experience:25000
-blow:GAZE:DISENCHANT:6d6
-blow:GAZE:DRAIN_CHARGES:6d6
-blow:GAZE:LOSE_INT:6d6
-blow:BITE:EXP_80:8d8
-flags:UNIQUE | MALE | EVIL | SMART
-flags:BASH_DOOR
-flags:IM_ACID | IM_COLD | IM_FIRE | IM_POIS | NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:2
-spells:BLIND | BRAIN_SMASH | CONF | FORGET | SCARE
-spells:BA_ACID | BA_COLD | BA_DARK | BA_FIRE | BA_RADI
-spells:BO_MANA
-spells:S_KIN
-desc:A beholder of great size and age, floating in the air.  His gaze seems to
-desc: shred your soul and his spells crush your will.  He is ancient, his
-desc: history steeped in forgotten evils, his atrocities numerous and sickening.
-
 ### Dungeon level 74 ###
-
-name:skull druj
-base:skeleton
-color:o
-speed:130
-hit-points:1540
-hearing:20
-armor-class:144
-sleepiness:10
-depth:74
-rarity:2
-experience:23000
-flags:SMART | ATTR_FLICKER | SPIRIT
-flags:NEVER_BLOW | NEVER_MOVE
-flags:IM_FIRE
-flags:FORCE_SLEEP
-spell-freq:1
-spells:BRAIN_SMASH | WOUND | TRAPS
-spells:BA_WATE
-spells:BO_RADI | BO_PLAS
-spells:S_UNDEAD
-desc:A glowing skull possessed by sorcerous power.  It need not move, but merely
-desc: blast you with mighty magic as it speaks the words of power.
-
-name:black reaver
-base:lich
-color:D
-speed:120
-hit-points:3960
-hearing:20
-armor-class:255
-sleepiness:40
-depth:74
-rarity:3
-experience:23000
-blow:HIT:DISENCHANT:6d8
-blow:HIT:DISENCHANT:6d8
-blow:HIT:LOSE_STR:4d6
-blow:HIT:LOSE_STR:4d6
-flags:ATTR_FLICKER
-flags:DROP_2 | ONLY_ITEM
-flags:KILL_WALL
-spell-freq:3
-spells:BLIND | WOUND | CONF | BRAIN_SMASH
-spells:HOLD | TELE_TO
-spells:BA_MANA | BA_RADI
-spells:S_UNDEAD
-desc:A humanoid form, black as night, advancing steadily and unstoppably, even
-desc: the very rock of the dungeon cannot prevent it reaching you.
 
 name:aether hound
 base:zephyr hound
@@ -11296,70 +7576,6 @@ desc:A shifting, swirling form.  It seems to be all colours and sizes and
 desc: shapes, though the dominant form is that of a huge dog.  You feel very
 desc: uncertain all of a sudden.
 
-### Dungeon level 75 ###
-
-name:Ungoliant, the Unlight
-base:spider
-color:D
-speed:130
-hit-points:13000
-light:-4
-hearing:40
-armor-class:240
-sleepiness:10
-depth:75
-rarity:1
-experience:35000
-blow:CLAW:POISON:8d6
-blow:CLAW:POISON:8d6
-blow:BITE:PARALYZE:8d10
-blow:STING:LOSE_STR:8d4
-flags:UNIQUE | FEMALE | EVIL | ANIMAL | SMART | SPIRIT
-flags:DROP_4 | DROP_GOOD | ONLY_ITEM
-flags:HURT_LIGHT | IM_ACID | IM_POIS | NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-innate-freq:11
-spell-freq:4
-spells:BLIND | CONF | HEAL | SCARE | WEAVE
-spells:BA_DARK
-spells:BR_DARK | BR_POIS
-spells:S_KIN
-desc:This enormous, hideous spirit of void is in the form of a spider of immense
-desc: proportions.  She is surrounded by a cloud of Unlight as she sucks in all
-desc: living light into her bloated body, and breathes out the blackest of
-desc: darkness. She is always ravenously hungry and would even eat herself to
-desc: avoid starvation.
-
-name:bronze golem
-base:golem
-color:o
-speed:120
-hit-points:3520
-light:2
-hearing:20
-armor-class:255
-sleepiness:20
-depth:75
-rarity:3
-experience:26000
-blow:HIT:HURT:10d10
-blow:HIT:HURT:10d10
-blow:HIT:HURT:10d10
-blow:HIT:HURT:10d10
-flags:DEMON | COLD_BLOOD
-flags:OPEN_DOOR | BASH_DOOR
-flags:IM_ACID | IM_FIRE | IM_POIS
-flags:FORCE_SLEEP
-innate-freq:40
-spell-freq:9
-spells:TELE_TO
-spells:BA_ELEC | BA_FIRE
-spells:BO_PLAS
-spells:BR_FIRE
-spells:S_DEMON
-desc:A gigantic four-armed animated bronze statue of demonic shape, glowing with
-desc: great heat.
-
 ### Dungeon level 76 ###
 
 name:master quylthulg
@@ -11379,71 +7595,6 @@ spells:BLINK | TELE_TO
 spells:S_ANIMAL | S_HI_DEMON | S_HI_UNDEAD | S_MONSTERS
 desc:A giant seething mass of flesh, overwhelming you with monster after
 desc: monster.
-
-### Dungeon level 77 ###
-
-name:Feagwath, the Undead Sorcerer
-base:lich
-color:v
-speed:130
-hit-points:5000
-hearing:20
-armor-class:127
-sleepiness:10
-depth:77
-rarity:2
-experience:30000
-blow:TOUCH:EXP_80:6d12
-blow:TOUCH:DRAIN_CHARGES:6d12
-blow:TOUCH:LOSE_DEX:6d12
-blow:TOUCH:LOSE_DEX:6d12
-flags:UNIQUE | MALE
-flags:DROP_4 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
-spell-freq:2
-spells:BLIND | BLINK | WOUND | HOLD | SCARE | BRAIN_SMASH
-spells:TELE_TO | TRAPS
-spells:BA_MANA | BA_RADI
-spells:BO_MANA
-spells:S_KIN | S_MONSTERS | S_UNDEAD
-friends:100:2d4:Dread:servant
-friends:40:1d2:Dreadmaster:servant
-friends:10:1d2:Dreadlord:servant
-friends:100:1d4:Lich:servant
-friends:40:1d2:Master lich:servant
-friends:10:1d2:Archlich:servant
-desc:A stench of corruption and decay surrounds this sorcerer, who has clearly
-desc: risen from the dead to continue his foul plots and schemes.
-
-name:pit fiend
-base:major demon
-color:o
-speed:130
-hit-points:3520
-hearing:30
-armor-class:180
-sleepiness:20
-depth:77
-rarity:3
-experience:22000
-blow:CLAW:FIRE:6d10
-blow:CLAW:FIRE:6d10
-blow:BITE:POISON:5d10
-blow:BITE:LOSE_CON:5d10
-flags:POWERFUL | REGENERATE
-flags:DROP_4
-flags:MOVE_BODY
-flags:IM_FIRE | IM_POIS
-innate-freq:12
-spell-freq:8
-spells:WOUND | SCARE
-spells:BA_FIRE
-spells:BR_CHAO | BR_FIRE | BR_POIS
-spells:S_HI_DEMON
-desc:Appearing as a giant, clawed and winged humanoid with a scaly red body and
-desc: massive fangs dripping a foul green liquid, the pit fiend is a dreadful
-desc: enemy from the lowest depths of the hells.  They are often the commanders
-desc: of vast demon armies.
-
 
 ### Dungeon level 78 ###
 
@@ -11470,60 +7621,7 @@ desc:Writhing coil upon coil, this mighty spawn of chaos constantly
 desc: disintegrates and reforms before your dazzled eyes.  It seeks to
 desc: obliterate you utterly; beware!
 
-
-### Dungeon level 79 ###
-
-name:Qlzqqlzuup, the Emperor Quylthulg
-base:quylthulg
-color:v
-speed:130
-hit-points:5000
-hearing:30
-armor-class:1
-sleepiness:0
-depth:79
-rarity:3
-experience:20000
-flags:UNIQUE
-flags:DROP_4 | DROP_GOOD | ONLY_ITEM
-flags:ATTR_MULTI
-spell-freq:1
-spells:S_AINU | S_ANIMAL | S_HI_DEMON | S_HI_UNDEAD | S_HOUND
-spells:S_HYDRA | S_KIN | S_MONSTERS | S_SPIDER | S_UNIQUE
-desc:A gigantic seething mass of flesh, Qlzqqlzuup changes colours in front of
-desc: your eyes.  Pulsating first one colour then the next, it knows only it
-desc: must bring help to protect itself.
-
-
-########## DUNGEON LEVELS 80-89 ##########
-
-
 ### Dungeon level 80 ###
-
-name:fury
-plural:furies
-base:major demon
-color:t
-speed:130
-hit-points:4000
-hearing:30
-armor-class:120
-sleepiness:20
-depth:80
-rarity:2
-experience:23000
-blow:CLAW:HURT:6d8
-blow:CLAW:HURT:6d8
-blow:BITE:CONFUSE:5d10
-blow:ENGULF:HALLU:4d10
-flags:FEMALE
-flags:DROP_4 | PASS_WALL
-flags:IM_FIRE | IM_POIS | IM_COLD
-spell-freq:4
-spells:WOUND | SCARE | BRAIN_SMASH
-spells:BLINK | TELE_SELF_TO
-spells:S_HI_DEMON
-desc:A female embodiment of rage, intent on tearing your mind and body apart.
 
 name:Wiruin, the Maelstrom
 base:vortex
@@ -11549,266 +7647,6 @@ spells:S_KIN
 desc:A violent icy whirlpool, brought from the frozen wastes of the Helcaraxë
 desc: by Morgoth as guard and entertainment.  Smaller vortices arise on its
 desc: edges, and you feel as if you will never be free of its deafening roar.
-
-### Dungeon level 81 ###
-
-name:Maeglin, the Traitor of Gondolin
-base:humanoid
-color:p
-speed:130
-hit-points:6000
-hearing:70
-armor-class:144
-sleepiness:20
-depth:81
-rarity:2
-experience:35000
-blow:HIT:HURT:8d8
-blow:HIT:HURT:8d8
-blow:HIT:HURT:8d8
-blow:HIT:HURT:8d8
-flags:UNIQUE | MALE | EVIL
-flags:DROP_4 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
-flags:KILL_WALL | MOVE_BODY
-flags:IM_COLD | IM_FIRE | IM_POIS | NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:6
-spells:S_ANIMAL | S_HI_DEMON | S_HI_UNDEAD | S_MONSTERS | S_UNIQUE
-desc:The son of Eöl the Dark Elf, Maeglin is every bit as evil as his father and
-desc: more.  His greed for gold led him to betray the Hidden Kingdom of
-desc: Gondolin to Morgoth's forces.  He is a mighty warrior himself, and some of
-desc: Morgoth's greatest servants answer to his call.
-
-### Dungeon level 82 ###
-
-name:Pazuzu, Lord of Air
-base:major demon
-color:Z
-speed:140
-hit-points:5500
-hearing:40
-armor-class:150
-sleepiness:10
-depth:82
-rarity:2
-experience:30000
-blow:HIT:ELEC:12d12
-blow:HIT:ELEC:12d12
-blow:HIT:ELEC:12d12
-blow:HIT:ELEC:12d12
-flags:UNIQUE | MALE | INVISIBLE
-flags:DROP_4 | DROP_GOOD
-flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS
-spell-freq:3
-spells:MIND_BLAST
-spells:BA_ELEC
-spells:BO_ELEC | BO_MANA
-spells:S_HI_DEMON
-friends:100:2d3:Giant roc:servant
-desc:A winged humanoid demon, Pazuzu grins inhumanely at you as he decides
-desc: your fate.
-
-### Dungeon level 83 ###
-
-name:Draugluin, Sire of All Werewolves
-base:canine
-color:m
-speed:130
-hit-points:7000
-hearing:80
-smell:50
-armor-class:135
-sleepiness:10
-depth:83
-rarity:2
-experience:40000
-blow:CLAW:HURT:6d8
-blow:CLAW:HURT:6d8
-blow:BITE:POISON:6d6
-blow:BITE:POISON:6d6
-flags:UNIQUE | MALE | EVIL
-flags:DROP_1 | DROP_GOOD | ONLY_ITEM
-flags:RAND_25 | OPEN_DOOR | BASH_DOOR | MOVE_BODY | TAKE_ITEM
-flags:IM_POIS
-flags:FORCE_SLEEP
-spell-freq:3
-spells:SCARE
-spells:S_HOUND | S_MONSTERS
-friends:100:3d5:Werewolf:servant
-friends:100:2d4:Wolf Chieftain:servant
-desc:Draugluin provides Sauron with a fearsome personal guard.  He is an
-desc: enormous wolf inhabited with a human spirit.  He is chief of all his kind.
-
-### Dungeon level 84 ###
-
-name:Cantoras, the Skeletal Lord
-base:skeleton
-color:W
-speed:140
-hit-points:7500
-hearing:20
-armor-class:180
-sleepiness:40
-depth:84
-rarity:2
-experience:45000
-blow:GAZE:EXP_80:5d5
-blow:GAZE:EXP_80:5d5
-blow:TOUCH:POISON:5d5
-blow:TOUCH:POISON:5d5
-flags:UNIQUE | MALE | SMART | SPIRIT | ATTR_FLICKER
-flags:DROP_4 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
-flags:OPEN_DOOR | BASH_DOOR
-flags:IM_FIRE
-flags:FORCE_SLEEP
-spell-freq:2
-spell-power:110
-spells:BRAIN_SMASH | WOUND | SCARE | TELE_TO
-spells:BA_RADI | BA_WATE
-spells:BO_ICE | BO_MANA
-spells:S_HI_UNDEAD
-desc:A legion of evil undead druj animating the skeleton of a once mighty
-desc: sorcerer.  His power is devastating and his speed unmatched in the
-desc: underworld.  Flee his wrath!
-
-### Dungeon level 85 ###
-
-name:greater Balrog
-base:major demon
-color:P
-speed:130
-hit-points:4500
-light:2
-hearing:40
-armor-class:210
-sleepiness:20
-depth:85
-rarity:3
-experience:25000
-blow:HIT:FIRE:8d12
-blow:HIT:FIRE:8d12
-blow:CRUSH:HURT:9d12
-blow:TOUCH:DRAIN_CHARGES
-flags:POWERFUL | ATTR_FLICKER
-flags:DROP_4
-flags:MOVE_BODY | KILL_WALL
-flags:IM_ELEC | IM_FIRE | IM_POIS | IM_PLASMA
-innate-freq:5
-spell-freq:4
-spells:CONF | BA_FIRE | BO_PLAS | BA_DARK
-spells:WHIP | BR_FIRE | BR_PLAS
-spells:S_HI_DEMON | S_UNDEAD
-desc:Originally of the semi-divine Maiar, this evil spirit swore allegiance to
-desc: Morgoth at the beginning of time and is now one of his most terrible
-desc: demonic servants.  With its flaming whip and sword it seeks to destroy
-desc: you.
-
-### Dungeon level 86 ###
-
-### Dungeon level 87 ###
-
-name:Meássë, the Bloody
-base:ainu
-color:r
-speed:120
-hit-points:7000
-hearing:30
-armor-class:180
-sleepiness:15
-depth:87
-rarity:3
-experience:42000
-blow:HIT:CONFUSE:12d12
-blow:HIT:CONFUSE:12d12
-blow:HIT:CONFUSE:12d12
-blow:HIT:CONFUSE:12d12
-flags:UNIQUE | FEMALE
-flags:DROP_4 | DROP_GOOD
-flags:MOVE_BODY
-flags:IM_ACID | IM_ELEC | NO_STUN
-innate-freq:6
-spell-freq:5
-spells:HEAL | HEAL_KIN
-spells:BOULDER
-spells:BA_SHAR | BR_SOUN
-spells:S_KIN | S_MONSTERS
-friends:50:1d4:Maia of Oromë:servant
-friends:50:1d4:Maia of Aulë:servant
-friends:50:1d3:Lesser titan:servant
-friends:50:1d2:Greater titan:servant
-desc:Sister of Makar the Warrior, she would shout encouragement to the
-desc: warriors of their hall and heal their wounds so they could battle on,
-desc: until her arms were reddened to the elbow.  Meássë is delighted by
-desc: all violence, and recruits any beings of like abilities to her service.
-
-
-### Dungeon level 88 ###
-
-
-########## DUNGEON LEVELS 90-100 ##########
-
-
-### Dungeon level 90 ###
-
-name:Huan, Wolfhound of the Valar
-base:canine
-color:W
-speed:130
-hit-points:8000
-hearing:50
-smell:50
-armor-class:192
-sleepiness:10
-depth:90
-rarity:1
-experience:40000
-blow:CLAW:COLD:9d12
-blow:CLAW:COLD:9d12
-blow:BITE:COLD:9d12
-blow:BITE:COLD:9d12
-flags:UNIQUE | MALE | SMART | ATTR_FLICKER
-flags:DROP_4 | DROP_GOOD | ONLY_ITEM
-flags:OPEN_DOOR | BASH_DOOR | KILL_BODY
-flags:IM_ACID | IM_COLD | IM_ELEC | NO_FEAR | NO_CONF | NO_SLEEP | NO_HOLD | NO_STUN
-flags:FORCE_SLEEP
-innate-freq:5
-spells:BR_COLD | BR_LIGHT | BR_SHAR | BR_SOUN
-desc:The wolfhound of the Valar, Huan has served many masters in his time, from
-desc: Celegorm son of Fëanor to Beren son of Barahir: but now he runs wild and
-desc: acknowledges no master save himself, as he hunts alone for his nemesis -
-desc: Carcharoth, the terrible wolf of Angband.
-
-name:Carcharoth, the Jaws of Thirst
-base:canine
-color:p
-speed:130
-hit-points:8000
-light:2
-hearing:50
-smell:50
-armor-class:192
-sleepiness:10
-depth:90
-rarity:1
-experience:40000
-blow:CLAW:FIRE:9d12
-blow:CLAW:FIRE:9d12
-blow:BITE:FIRE:9d12
-blow:BITE:FIRE:9d12
-flags:UNIQUE | MALE | EVIL | SMART | ATTR_FLICKER
-flags:DROP_4 | DROP_GOOD | ONLY_ITEM
-flags:OPEN_DOOR | BASH_DOOR | MOVE_BODY
-flags:IM_FIRE | IM_POIS | NO_CONF | NO_SLEEP | NO_HOLD | IM_RADIATION
-flags:FORCE_SLEEP
-innate-freq:3
-spell-freq:15
-spells:BR_DARK | BR_FIRE | BR_RADI | BR_POIS
-spells:S_HOUND
-desc:The first guard of Angband, Carcharoth, also known as 'The Red Maw', is the
-desc: greatest wolf to ever walk the earth.  He is highly intelligent and a
-desc: deadly opponent in combat.
-
-### Dungeon level 92 ###
 
 ### Dungeon level 95 ###
 
@@ -11836,37 +7674,3 @@ spells:BR_CHAO | BR_DISE | BR_TIME
 desc:Howling through the disintegrating dungeon, this whirlpool of Unmagic rips
 desc: the enchantments from everything it touches.
 
-### Dungeon level 99 ###
-
-name:Sauron, the Sorcerer
-base:ainu
-color:p
-speed:130
-hit-points:8000
-hearing:100
-armor-class:192
-sleepiness:0
-depth:99
-rarity:1
-experience:50000
-blow:HIT:DISENCHANT:10d12
-blow:HIT:DISENCHANT:10d12
-blow:HIT:DRAIN_CHARGES:8d12
-blow:HIT:DRAIN_CHARGES:8d12
-flags:UNIQUE | MALE | EVIL | REGENERATE
-flags:DROP_4 | DROP_GOOD | DROP_GREAT | ONLY_ITEM
-flags:MOVE_BODY
-flags:IM_ELEC | NO_FEAR
-spell-freq:2
-spell-power:130
-spells:BRAIN_SMASH | WOUND | TELE_LEVEL | TPORT
-spells:BA_DARK | BA_FIRE | BA_RADI
-spells:BO_ICE | BO_PLAS
-spells:S_HI_DEMON | S_HI_UNDEAD | S_UNIQUE | S_WRAITH
-desc:Greatest and most terrible of the servants of Morgoth, creator of the One
-desc: Ring.  A sorcerer of dreadful powers, master of shadows and of phantoms,
-desc: foul in wisdom, cruel in strength, misshaping what he rules, lord of
-desc: werewolves; his dominion is torment.  He has many servants, and rarely
-desc: fights without them.
-
-### Dungeon level 100 ###
