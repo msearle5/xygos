@@ -4,13 +4,13 @@ Version Information
 
 Xygos is a variant of Angband. The current version is 0.0.3.
 It was forked from Angband part way through 4.2.1; most of the contributions
-to 4.2.2 have also been merged in.
+to 4.2.3 have also been merged in.
 
 Angband has been maintained and developed by a succession of volunteers since
 it was written in the early 1990s. The current maintainer is Nick McConnell.
 
-The current version is 4.2.2. Detailed information about this version and
-previous versions can be found at http://rephial.org.  Also additional
+The current version is 4.2.3. Detailed information about this version and
+previous versions can be found at http://angband.github.io/angband.  Also additional
 information can be found at the angband forums (http://angband.oook.cz).
 
 This file was last updated for Angband 3.1.2 and remains here mainly

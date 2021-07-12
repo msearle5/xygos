@@ -14,6 +14,7 @@ If you need help in-game, press `?`.
 - **Installing Xygos:** [compile it yourself - see this Angband documentation](https://angband.readthedocs.io/en/latest/hacking/compiling.html).
 	- [but get the source from here](https://github.com/msearle5/xygos)
 	- [Or get the latest builds for Windows or Mac here](https://github.com/msearle5/xygos/releases)
+	- [also see the official Angband webite](https://angband.github.io/angband/)
 - **How to Play:** [The Angband Manual](https://angband.readthedocs.io/en/latest/)
 - **Getting Help:** [Angband Forums](http://angband.oook.cz/forum/)
 
