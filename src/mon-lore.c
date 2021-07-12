@@ -1047,6 +1047,8 @@ void lore_append_movement(textblock *tb, const struct monster_race *race,
 		/* Adverb */
 		if (rf_has(known_flags, RF_CONFUSED))
 			textblock_append(tb, " and shoots");
+		else if (rf_has(known_flags, RF_RAND_100))
+			textblock_append(tb, " entirely");
 		else if (rf_has(known_flags, RF_RAND_50) && rf_has(known_flags, RF_RAND_25))
 			textblock_append(tb, " extremely");
 		else if (rf_has(known_flags, RF_RAND_50))

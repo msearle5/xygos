@@ -52,11 +52,11 @@ bool monster_is_living(const struct monster *mon)
 }
 
 /**
- * Nonliving and stupid monsters are destroyed rather than dying
+ * Nonliving and stupid non-animal monsters are destroyed rather than dying
  */
 bool monster_is_destroyed(const struct monster *mon)
 {
-	return (monster_is_nonliving(mon) || rf_has(mon->race->flags, RF_STUPID));
+	return ((monster_is_nonliving(mon) || rf_has(mon->race->flags, RF_STUPID)) && (!rf_has(mon->race->flags, RF_ANIMAL)));
 }
 
 /**

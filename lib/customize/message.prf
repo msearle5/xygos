@@ -157,6 +157,9 @@ message:MON_ENGULF:w
 # MSG_MON_CRAWL
 message:MON_CRAWL:w
 
+# MSG_MON_SUCK
+message:MON_SUCK:w
+
 # MSG_MON_DROOL
 message:MON_DROOL:w
 

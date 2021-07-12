@@ -193,6 +193,10 @@ static bool monster_hates_grid(struct chunk *c, struct monster *mon,
 	if (rf_has(mon->race->flags, RF_ALL_TERRAIN))
 		return false;
 
+	/* Aquatic creatures can't leave water */
+	if (rf_has(mon->race->flags, RF_AQUATIC))
+		return square_iswater(c, grid);
+
 	/* Only some creatures can handle damaging terrain */
 	if (square_isdamaging(c, grid) &&
 		!rf_has(mon->race->flags, square_feat(c, grid)->resist_flag)) {
@@ -1100,6 +1104,12 @@ static enum monster_stagger monster_turn_should_stagger(struct monster *mon)
 		chance += 50;
 		if (monster_is_visible(mon))
 			rf_on(lore->flags, RF_RAND_50);
+	}
+
+	if (rf_has(mon->race->flags, RF_RAND_100)) {
+		chance += 100;
+		if (monster_is_visible(mon))
+			rf_on(lore->flags, RF_RAND_100);
 	}
 
 	if (rf_has(mon->race->flags, RF_CONFUSED)) {

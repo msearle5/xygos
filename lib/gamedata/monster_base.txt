@@ -40,6 +40,11 @@ flags:IM_COLD | IM_FIRE | IM_POIS | NO_CONF | NO_SLEEP | NO_HOLD
 flags:FORCE_SLEEP
 desc:Ainu/maia
 
+# Fish etc, most can't leave water. Lavathings go here as well.
+name:aquatic
+flags:ANIMAL | WEIRD_MIND | AQUATIC | IM_WATER
+desc:Aquatic creatures
+
 # Ants have lowish HP but highish armor class, and powerful melee for their
 # depth
 name:ant
@@ -53,14 +58,14 @@ desc:Ant
 name:bat
 glyph:b
 pain:4
-flags:ANIMAL
+flags:ANIMAL | FLYING
 desc:Bat
 
 # Quickish monsters usually with some effect beyond melee
 name:bird
 glyph:B
 pain:8
-flags:ANIMAL | CLEAR_WEB
+flags:ANIMAL | CLEAR_WEB | FLYING
 desc:Bird
 
 # Wolves are animals which mostly come in packs, and are associated with evil
@@ -80,7 +85,7 @@ flags:ANIMAL | WEIRD_MIND
 desc:Centipede
 
 # Creeping coins are mimics which look like coins until they attack, hit to
-# poison, and drop the approriate type of treasure
+# poison, and drop the appropriate type of treasure
 name:creeping coins
 glyph:$
 pain:1
@@ -405,6 +410,15 @@ pain:9
 flags:UNDEAD | EVIL | COLD_BLOOD | CLEAR_WEB
 flags:IM_COLD | IM_POIS | NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
 desc:Skeleton
+
+# or snail
+name:slug
+glyph:s
+pain:2
+#flags:CORPSE | TIN | EGG
+flags:ANIMAL | MALE | FEMALE | WEIRD_MIND
+#weight:40kg
+desc:Slug/Snail
 
 # Snakes are typically slow, but have high armor class
 name:snake

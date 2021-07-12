@@ -110,6 +110,15 @@ msg:MON_CRAWL
 act:crawls on {target}
 desc:crawl on you
 
+name:SUCK
+cut:0
+stun:0
+miss:0
+phys:0
+msg:MON_SUCK
+act:sucks at {target}
+desc:suck at you
+
 name:DROOL
 cut:0
 stun:0

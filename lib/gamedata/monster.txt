@@ -249,6 +249,15 @@ desc:it against burglars such as yourself.
 
 ##### Monster races proper #####
 
+##### ; is for FISH #####
+# And lava-beasts.
+# Not all have AQUATIC (meaning that they must stay in the water/lava), but that's the default
+# and most do - graphics characters are assigned based on appearance. So the flying whale gets ;,
+# as does a robot fish. But amphibians get L (or maybe A), and AQUATIC creatures that fit another
+# class (a sea monkey, sea snake etc) get that class's character.
+
+
+
 ##### , is for MUSHROOM #####
 # (and other food-likes e.g. tomatoes)
 
@@ -285,10 +294,10 @@ flags:NEVER_MOVE
 flags:IM_POIS
 desc:Yum!  It looks quite tasty.
 
-name:shrieker mushroom patch
-plural:shrieker mushroom patches
+# These should be found at any depth, as they are never hard to kill but wake other monsters.
+name:shrieker
 base:mushroom
-color:R
+color:Tomato
 speed:110
 hit-points:1
 hearing:4
@@ -302,7 +311,7 @@ flags:IM_POIS
 flags:FORCE_SLEEP
 innate-freq:4
 spells:SHRIEK
-desc:Yum!  It looks quite tasty.  It doesn't sound so nice, though...
+desc:A large red mushroom. Yum!  It looks quite tasty. It doesn't sound so nice, though...
 
 name:spotted mushroom patch
 plural:spotted mushroom patches
@@ -356,6 +365,28 @@ flags:COLD_BLOOD | INVISIBLE | MULTIPLY
 flags:NEVER_MOVE
 flags:ATTR_CLEAR
 desc:Yum!  It looks quite tasty.
+
+name:shambling mound
+base:mushroom
+color:g
+speed:110
+hit-points:70
+hearing:20
+armor-class:19
+sleepiness:40
+depth:18
+rarity:2
+experience:75
+blow:HIT:HURT:1d8
+blow:HIT:HURT:1d8
+flags:EVIL
+flags:DROP_60 | ONLY_GOLD
+flags:OPEN_DOOR | BASH_DOOR
+innate-freq:4
+spells:SHRIEK
+friends:60:1d1:Giant fruit fly
+desc:A pile of rotting vegetation that slides towards you with a disgusting
+desc: stench, waking all it nears.
 
 ##### HIDDEN (.) #####
 
@@ -899,7 +930,7 @@ desc:Green bats of immense size with vicious claws, said to have picked up unfor
 
 ##### c is for CENTIPEDE #####
 
-name:giant yellow centipede
+name:yellow centipede
 base:centipede
 color:y
 speed:110
@@ -915,7 +946,7 @@ blow:BITE:HURT:1d3
 blow:STING:HURT:1d3
 desc:It is about four feet long and carnivorous.
 
-name:giant white centipede
+name:white centipede
 base:centipede
 color:w
 speed:110
@@ -929,7 +960,7 @@ rarity:1
 experience:2
 blow:CRAWL:HURT:1d2
 blow:STING:COLD:1d2
-flags:RAND_50 | BASH_DOOR
+flags:RAND_50
 desc:It is about four feet long and carnivorous.
 
 name:metallic green centipede
@@ -946,7 +977,7 @@ rarity:1
 experience:3
 blow:CRAWL:HURT:1d1
 blow:STING:ACID:1d1
-flags:RAND_50 | BASH_DOOR
+flags:RAND_50
 desc:It is about four feet long and carnivorous.
 
 name:metallic blue centipede
@@ -963,7 +994,7 @@ rarity:1
 experience:7
 blow:CRAWL:HURT:1d2
 blow:STING:ELEC:1d2
-flags:RAND_50 | BASH_DOOR
+flags:RAND_50
 desc:It is about four feet long and carnivorous.
 
 name:metallic red centipede
@@ -980,7 +1011,7 @@ rarity:1
 experience:12
 blow:CRAWL:HURT:1d2
 blow:STING:FIRE:1d2
-flags:RAND_25 | BASH_DOOR
+flags:RAND_25
 desc:It is about four feet long and carnivorous.
 
 name:giant clear centipede
@@ -1001,6 +1032,47 @@ flags:INVISIBLE
 flags:BASH_DOOR
 flags:ATTR_CLEAR
 desc:It is about four feet long and carnivorous.
+
+# These descriptions repeat, and are repetitive, and all move in unison.
+# These descriptions repeat, and are repetitive, and all move in unison.
+# These descriptions repeat, and are repetitive, and all move in unison.
+#
+name:nickelpede:centipede
+color:LightSlateGray
+depth:23
+rarity:2
+desc:Ten feet long and carnivorous, bright as a new nickel and deadly fast. It has
+desc:dozens of legs; all move in unison as it crawls this way and that.
+grow:quarterpede
+speed:110
+hit-points:80
+hearing:12
+armor-class:35
+sleepiness:30
+blow:BITE:HURT:2d10
+blow:STING:POISON:2d8
+flags:KILL_BODY
+#weight:30kg
+flags:RAND_25 | METAL
+flags:SMART | WEIRD_MIND
+
+name:quarterpede:centipede
+color:White
+depth:37
+rarity:2
+desc:Twenty feet long and carnivorous, gleaming like silver and deadly fast.  It has
+desc:dozens of legs; all move in unison as it crawls this way and that.
+speed:110
+hit-points:130
+hearing:12
+armor-class:40
+sleepiness:30
+blow:BITE:HURT:2d16
+blow:STING:POISON:2d8
+flags:KILL_BODY
+#weight:80kg
+flags:RAND_25 | METAL
+flags:SMART | WEIRD_MIND
 
 
 ##### C is for DOGGIES ####
@@ -1082,7 +1154,8 @@ desc:A rather vicious dog belonging to Slick.
 
 name:wild cat
 base:feline
-color:U
+grow:panther
+color:Beige
 speed:120
 hit-points:9
 hearing:40
@@ -1100,7 +1173,8 @@ desc: fistful of needles.
 
 name:panther
 base:feline
-color:u
+grow:tiger
+color:Gray25
 speed:120
 hit-points:45
 hearing:40
@@ -1118,7 +1192,8 @@ desc: meal.
 
 name:tiger
 base:feline
-color:o
+color:Orange
+grow:sabre-tooth tiger
 speed:120
 hit-points:66
 hearing:40
@@ -1137,7 +1212,8 @@ desc: towards you, ready to pounce.
 
 name:sabre-tooth tiger
 base:feline
-color:y
+color:Goldenrod
+grow:cave lion
 speed:120
 hit-points:150
 hearing:40
@@ -1149,11 +1225,27 @@ rarity:2
 experience:120
 blow:CLAW:HURT:1d10
 blow:CLAW:HURT:1d10
-blow:BITE:HURT:1d10
-blow:BITE:HURT:1d10
+blow:BITE:WOUND:1d10
+blow:BITE:WOUND:1d10
 flags:BASH_DOOR
 desc:A fierce and dangerous cat, its huge tusks and sharp claws would lacerate
 desc: even the strongest armour.
+
+name:cave lion
+base:feline
+color:DarkGoldenrod
+depth:47
+rarity:2
+desc:The biggest lion you've ever seen. Fast, lithe, hungry and coming your way.
+speed:110
+hit-points:150
+rarity:5
+hearing:25
+armor-class:25
+sleepiness:20
+blow:CLAW:WOUND:2d10
+blow:BITE:WOUND:2d32
+flags:SMART
 
 
 ##### G is for GRUE #####
@@ -1381,6 +1473,7 @@ desc:It's blue and it's oozing.
 
 name:white jelly
 plural:white jellies
+grow:yellow jelly
 base:jelly
 color:w
 speed:120
@@ -1413,8 +1506,8 @@ flags:RAND_25 | RAND_50
 flags:IM_ACID | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
 desc:It's green and it's oozing.
 
-name:silver jelly
-plural:silver jellies
+name:gruesome jelly
+plural:gruesome jellies
 base:jelly
 color:W
 speed:120
@@ -1428,15 +1521,16 @@ experience:12
 blow:TOUCH:EAT_LIGHT:1d3
 blow:TOUCH:EAT_LIGHT:1d3
 flags:NEVER_MOVE
-flags:IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
-spell-freq:15
+flags:IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP | HURT_LIGHT
+spell-freq:6
+spells:DARKNESS
 desc:It is a large pile of silver flesh that sucks all light from its
 desc: surroundings.
 
 name:yellow jelly
 plural:yellow jellies
 base:jelly
-color:y
+color:Yellow
 speed:120
 hit-points:45
 hearing:2
@@ -1448,13 +1542,12 @@ experience:12
 blow:TOUCH:POISON:1d3
 flags:NEVER_MOVE
 flags:HURT_LIGHT | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
-spell-freq:15
 desc:It's a large pile of yellow flesh.
 
 name:blue jelly
 plural:blue jellies
 base:jelly
-color:b
+color:Blue
 speed:110
 hit-points:54
 hearing:2
@@ -1472,7 +1565,7 @@ desc:It's a large pile of pulsing blue flesh.
 name:green jelly
 plural:green jellies
 base:jelly
-color:g
+color:Green
 speed:120
 hit-points:99
 hearing:2
@@ -1486,10 +1579,48 @@ flags:NEVER_MOVE
 flags:HURT_LIGHT | IM_ACID | HURT_COLD | NO_CONF | NO_SLEEP
 desc:It is a large pile of pulsing green flesh.
 
+name:rot jelly
+plural:rot jellies
+base:jelly
+color:BurntUmber
+speed:120
+hit-points:90
+hearing:2
+armor-class:36
+sleepiness:99
+depth:5
+rarity:1
+experience:15
+blow:TOUCH:EAT_FOOD:2d3
+blow:TOUCH:LOSE_CHR:2d3
+flags:NEVER_MOVE
+flags:HURT_LIGHT | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
+desc:It is a large pile of rotting flesh, whose touch spoils your food.  The
+desc: terrible smell it exudes is also very hard to get rid of...
+
+name:red jelly
+plural:red jellies
+base:jelly
+grow:spotted jelly
+color:r
+speed:110
+hit-points:117
+hearing:2
+armor-class:1
+sleepiness:99
+depth:7
+rarity:1
+experience:26
+blow:TOUCH:LOSE_STR:1d5
+flags:NEVER_MOVE
+flags:HURT_LIGHT | HURT_COLD | NO_CONF | NO_SLEEP
+desc:It is a large pulsating mound of red flesh.
+
 name:grape jelly
 plural:grape jellies
 base:jelly
-color:P
+grow:ochre jelly
+color:Violet
 speed:110
 hit-points:234
 light:2
@@ -1505,17 +1636,40 @@ flags:HURT_LIGHT | HURT_COLD | IM_POIS | NO_CONF | NO_SLEEP
 spell-freq:11
 desc:Yum!  It looks quite tasty.  It is a pulsing mound of glowing flesh.
 
+name:spotted jelly
+base:jelly
+color:Orange
+depth:12
+rarity:5
+desc:A strange jelly-like thing, covered in discoloured blotches, anchored to the floor but able to extend a blobby protuberance towards you.
+grow:ochre jelly
+speed:110
+hit-points:35
+hearing:12
+armor-class:5
+sleepiness:99
+blow:TOUCH:ACID:2d6
+blow:TOUCH:ACID:2d6
+blow:TOUCH:ACID:2d6
+flags:COLD_BLOOD
+flags:NEVER_MOVE
+flags:NO_FEAR | NO_CONF | NO_SLEEP
+flags:IM_POIS | IM_ACID
+flags:HURT_LIGHT
+flags:STUPID | EMPTY_MIND
+
 name:ochre jelly
 plural:ochre jellies
 base:jelly
-color:U
+color:BrownOchre
+grow:jelly-mold
 speed:120
 hit-points:59
 hearing:12
 armor-class:21
 sleepiness:1
 depth:13
-rarity:3
+rarity:5
 experience:40
 blow:TOUCH:ACID:1d10
 blow:TOUCH:ACID:2d6
@@ -1526,52 +1680,16 @@ flags:IM_ACID | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
 desc:A fast moving highly acidic jelly thing, that is eating away the floor it
 desc: rests on.
 
-name:rot jelly
-plural:rot jellies
-base:jelly
-color:u
-speed:120
-hit-points:90
-hearing:2
-armor-class:36
-sleepiness:99
-depth:5
-rarity:1
-experience:15
-blow:TOUCH:EAT_FOOD:2d3
-blow:TOUCH:LOSE_WIS:2d3
-flags:NEVER_MOVE
-flags:HURT_LIGHT | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
-desc:It is a large pile of rotting flesh, whose touch spoils your food.  The
-desc: terrible smell it exudes is also very hard to get rid of...
-
-name:red jelly
-plural:red jellies
-base:jelly
-color:r
-speed:110
-hit-points:117
-hearing:2
-armor-class:1
-sleepiness:99
-depth:7
-rarity:1
-experience:26
-blow:TOUCH:LOSE_STR:1d5
-flags:NEVER_MOVE
-flags:HURT_LIGHT | HURT_COLD | NO_CONF | NO_SLEEP
-desc:It is a large pulsating mound of red flesh.
-
 name:gelatinous cube
 base:jelly
-color:G
+color:LimeGreen
 speed:110
 hit-points:316
 hearing:12
 armor-class:21
 sleepiness:1
 depth:16
-rarity:4
+rarity:5
 experience:80
 blow:TOUCH:ACID:1d10
 blow:TOUCH:ACID:1d10
@@ -1587,42 +1705,6 @@ desc: as it lines all four walls of the corridors it patrols.  Through its
 desc: transparent jelly structure you can see treasures it has engulfed, and a
 desc: few corpses as well.
 
-name:rot jelly
-plural:rot jellies
-base:jelly
-color:u
-speed:120
-hit-points:90
-hearing:2
-armor-class:36
-sleepiness:99
-depth:5
-rarity:1
-experience:15
-blow:TOUCH:EAT_FOOD:2d3
-blow:TOUCH:LOSE_WIS:2d3
-flags:NEVER_MOVE
-flags:HURT_LIGHT | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
-desc:It is a large pile of rotting flesh, whose touch spoils your food.  The
-desc: terrible smell it exudes is also very hard to get rid of...
-
-name:red jelly
-plural:red jellies
-base:jelly
-color:r
-speed:110
-hit-points:117
-hearing:2
-armor-class:1
-sleepiness:99
-depth:7
-rarity:1
-experience:26
-blow:TOUCH:LOSE_STR:1d5
-flags:NEVER_MOVE
-flags:HURT_LIGHT | HURT_COLD | NO_CONF | NO_SLEEP
-desc:It is a large pulsating mound of red flesh.
-
 name:black ooze
 base:jelly
 color:D
@@ -1632,7 +1714,7 @@ hearing:10
 armor-class:7
 sleepiness:1
 depth:23
-rarity:1
+rarity:4
 experience:7
 blow:TOUCH:ACID:2d6
 flags:MULTIPLY
@@ -1641,6 +1723,47 @@ flags:RAND_50 | OPEN_DOOR | BASH_DOOR | KILL_BODY | TAKE_ITEM
 flags:IM_POIS | HURT_COLD
 spell-freq:11
 desc:It is a strangely moving puddle.
+
+name:electric jelly
+plural:electric jellies
+base:jelly
+color:SkyBlue
+depth:33
+rarity:3
+desc:A mound of strange, quivering blue jelly. It sizzles and spits blue sparks.
+grow:acidic cytoplasm
+hit-points:140
+hearing:12
+armor-class:12
+sleepiness:1
+blow:TOUCH:ELEC:1d40
+blow:ENGULF:CONFUSE:4d4
+flags:NO_FEAR | NO_CONF | NO_SLEEP
+flags:IM_POIS | IM_ELEC
+flags:STUPID | EMPTY_MIND
+flags:OPEN_DOOR
+
+name:acidic cytoplasm
+base:jelly
+color:SlateGray
+depth:46
+rarity:5
+desc:A disgusting animated blob of destruction.  Flee its gruesome hunger!
+speed:120
+hit-points:210
+hearing:12
+armor-class:12
+sleepiness:1
+blow:TOUCH:ACID:1d15
+blow:TOUCH:ACID:1d15
+blow:TOUCH:ACID:1d15
+flags:KILL_BODY
+flags:TAKE_ITEM
+flags:NO_FEAR | NO_CONF | NO_SLEEP
+flags:IM_POIS | IM_ACID
+flags:STUPID | EMPTY_MIND
+flags:OPEN_DOOR
+
 
 ##### I is for INSECTS / BUGS #####
 
@@ -2007,6 +2130,7 @@ depth:5
 rarity:5
 experience:10
 deathspells:EXPLODE
+friends:60:1d4:Same
 blow:HIT:HURT:1d3
 flags:MALE | FEMALE | COLD_BLOOD | WEIRD_MIND
 flags:NO_FEAR
@@ -2068,8 +2192,10 @@ flags:MALE | FEMALE | COLD_BLOOD | WEIRD_MIND
 flags:NO_FEAR
 desc:A blue-green furry critter that might even be cute, if there weren't so many of them that you can't even see the ground. 
 
+#Dawnstyle reincarnation, with a suitable msg?
 name:highland lemming
 base:lemming
+grow:pit lemming
 color:BurntUmber
 speed:110
 hit-points:16
@@ -2088,6 +2214,7 @@ desc:It shrieks 'There can be only one!' as it hurls itself over cliffs in its e
 
 name:lemming aviator
 base:lemming
+grow:pit lemming
 color:CadetBlue
 speed:120
 hit-points:16
@@ -2106,6 +2233,7 @@ desc:A lemming that has learned to miss the ground, and now falls forever.
 
 name:shadow lemming
 base:lemming
+grow:pit lemming
 color:Gray25
 speed:110
 hit-points:20
@@ -2128,6 +2256,7 @@ desc:A shadowy black lemming that seeks the deepest pits to ambush you from.
 
 name:pit lemming
 base:lemming
+grow:hill lemming
 color:Beige
 speed:110
 hit-points:25
@@ -2144,6 +2273,7 @@ blow:CLAW:HURT:1d11
 flags:MALE | FEMALE | COLD_BLOOD | WEIRD_MIND
 flags:RAND_25
 flags:NO_FEAR
+friends:90:2d3:Same
 desc:A golden-brown rodent famous for plummeting into holes, the deeper the better.
 
 name:aquatic lemming
@@ -2161,10 +2291,216 @@ experience:81
 blow:BITE:HURT:2d7
 blow:CLAW:HURT:2d9
 blow:CLAW:HURT:2d9
-flags:MALE | FEMALE | COLD_BLOOD | WEIRD_MIND
+flags:MALE | FEMALE | COLD_BLOOD | WEIRD_MIND | AQUATIC
+flags:RAND_25 | NO_FEAR
+desc:Lemmings hung with weights for their dive from the cliff tops.
+
+name:hill lemming
+base:lemming
+color:ForestGreen
+depth:16
+rarity:2
+desc:Hardy lemmings tumbling from the hilltops.
+grow:cliff lemming
+hit-points:35
+hearing:4
+armor-class:50
+sleepiness:20
+blow:BITE:HURT:2d7
+blow:CLAW:HURT:2d9
+blow:CLAW:HURT:2d9
+flags:RAND_25
+friends:90:2d3:Same
+flags:NO_FEAR | WEIRD_MIND
+
+name:cliff lemming
+base:lemming
+color:SlateGray
+depth:19
+rarity:2
+desc:Long-clawed lemmings that went for a plummet, and stopped half way down.
+grow:ice lemming
+hit-points:30
+hearing:4
+armor-class:40
+sleepiness:40
+blow:CLAW:HURT:2d13
+blow:CLAW:HURT:2d13
+flags:RAND_25
+flags:NO_FEAR | WEIRD_MIND
+
+name:ice lemming
+base:lemming
+color:AliceBlue
+depth:21
+rarity:2
+desc:A vicious lemming in white vermine coat.
+grow:crevasse lemming
+hit-points:70
+hearing:4
+armor-class:50
+sleepiness:40
+blow:BITE:HURT:1d7
+blow:CLAW:HURT:2d10
+blow:CLAW:HURT:2d10
 flags:RAND_25
 flags:NO_FEAR
-desc:Lemmings hung with weights for their dive from the cliff tops.
+flags:IM_COLD
+flags:WEIRD_MIND
+
+name:Superlemming
+base:lemming
+color:Red
+depth:38
+rarity:3
+desc:Superlemming. Superlemming! SUPERLEMMING!
+speed:115
+hit-points:360
+hearing:4
+armor-class:90
+sleepiness:1
+blow:BITE:HURT:2d10
+blow:CLAW:HURT:2d12
+blow:CLAW:HURT:2d12
+flags:ATTR_MULTI
+flags:UNIQUE
+flags:NO_FEAR | NO_CONF | NO_SLEEP
+flags:SMART
+flags:OPEN_DOOR
+
+name:infernal lemming
+base:lemming
+color:OrangeRed
+depth:39
+rarity:5
+desc:The 'True Lemmings of the Volcano'. This tribe also believe themselve
+desc:immune to the heat of molten lava - with more reason than the common
+desc:volcano lemmings.
+grow:mutated lemming
+hit-points:300f
+hearing:4
+armor-class:70
+sleepiness:20
+blow:CLAW:FIRE:3d10
+blow:CLAW:FIRE:3d10
+spell-freq:1
+spell-power:33
+friends:90:2d3:Same
+spells:BA_FIRE
+flags:NO_FEAR
+flags:IM_FIRE
+flags:WEIRD_MIND
+flags:OPEN_DOOR
+
+name:mutated lemming
+base:lemming
+color:Violet
+depth:41
+rarity:4
+desc:Strangely twisted lemmings surrounded with a dim blue glow. FIXME!
+grow:peak lemming
+speed:115
+hit-points:300
+armor-class:70
+sleepiness:1
+blow:CLAW:HURT:2d8
+blow:CLAW:HURT:2d8
+flags:NO_FEAR
+flags:IM_POIS | IM_RADIATION
+flags:WEIRD_MIND
+flags:OPEN_DOOR
+
+name:Cyberlemming
+base:lemming
+color:Silver
+depth:44
+rarity:10
+desc:A gleaming chrome lemming - half rodent, half robot - leaping into peril faster than ever before.
+speed:120
+hit-points:600
+hearing:4
+armor-class:90
+sleepiness:1
+blow:CLAW:HURT:2d8
+blow:CLAW:HURT:2d8
+blow:CLAW:HURT:2d8
+blow:CLAW:HURT:2d8
+flags:ATTR_MULTI
+spell-freq:1
+spell-power:50
+spells:BE_ELEC
+flags:UNIQUE
+flags:NO_FEAR | IM_COLD | IM_POIS | IM_ELEC
+flags:SMART | OPEN_DOOR
+
+name:peak lemming
+base:lemming
+color:White
+depth:46
+rarity:6
+desc:The ruling clan of all lemmings. A handful of great white lemmings from 
+desc:above the snow-line, where every direction is down.
+speed:110
+hit-points:450
+hearing:4
+armor-class:70
+sleepiness:1
+blow:BITE:HURT:3d10
+blow:CLAW:HURT:3d12
+blow:CLAW:HURT:3d12
+spell-freq:8
+spell-power:22
+flags:NO_FEAR | NO_SLEEP
+flags:IM_COLD
+spells:TELE_SELF_TO | S_KIN
+flags:SMART
+flags:OPEN_DOOR
+
+name:Plummet's Champion, the Nameless Lemming
+base:lemming
+color:LightYellow
+depth:47
+rarity:1
+desc:Supreme warrior among the peak lemmings. The Nameless Lemming is the 
+desc:fearless defender of Plummet, King over the Mountain.
+speed:110
+hit-points:650
+hearing:4
+armor-class:90
+sleepiness:1
+blow:BITE:HURT:3d12
+blow:CLAW:HURT:3d14
+blow:CLAW:HURT:3d14
+flags:ATTR_MULTI | UNIQUE
+flags:NO_FEAR | NO_CONF | NO_SLEEP
+flags:IM_COLD | SMART | OPEN_DOOR
+
+name:Plummet, King over the Mountain
+base:lemming
+color:Violet
+depth:49
+rarity:4
+desc:Plummet! Among lemmings' greatest warriors, the legendary King over 
+desc:the Mountain is known everywhere that lemmings fall.
+speed:110
+hit-points:450
+hearing:4
+armor-class:90
+sleepiness:1
+blow:BITE:HURT:3d10
+blow:CLAW:HURT:3d12
+blow:CLAW:HURT:3d12
+flags:ATTR_MULTI
+flags:MALE
+flags:UNIQUE
+spell-freq:2
+spells:S_KIN
+friends:100:3d6:emming:servant
+flags:NO_FEAR | NO_CONF | NO_SLEEP
+flags:IM_COLD
+flags:SMART
+flags:OPEN_DOOR
+spells:TELE_SELF_TO
 
 
 ##### L(izard) - REPTILES (and amphibians, dinosaurs etc) #####
@@ -2278,9 +2614,26 @@ spell-freq:12
 spells:HEAL | SPIT
 desc:It has the rough shape of a long-necked dinosaur - perhaps being modelled on a diplodocus. But it's clearly no living beast - it's an animatronic creation, all smooth curves without visible eyes or other protuberances, just a mass of sticky, wobbling bright blue gel.
 
+name:archaeopteryx
+base:reptile
+color:AntiqueWhite
+depth:31
+rarity:3
+speed:115
+hit-points:30
+hearing:4
+armor-class:28
+sleepiness:100
+rarity:10
+blow:CLAW:HURT:1d3
+blow:CLAW:HURT:1d3
+blow:BITE:HURT:2d20
+flags:FLYING | EVASIVE | COLD_BLOOD | SMART
+desc:Is it a bird? Is it a plane? No... it's a dinosaur?!
+
 name:tyrannosaur
 base:reptile
-color:G
+color:LightForestGreen
 speed:110
 hit-points:600
 hearing:20
@@ -2296,6 +2649,23 @@ blow:CRUSH:HURT:4d4
 flags:POWERFUL | RAND_25
 flags:BASH_DOOR | KILL_BODY
 desc:King of dinosaurs. Immense muscular legs support a heavy tail, an almost comically tiny pair of clawed arms and a mouth big enough to climb inside. Although I wouldn't recommend it.
+
+name:circulasaurus
+base:reptile
+depth:44
+rarity:8
+color:Brick
+speed:110
+hit-points:750
+armor-class:120
+sleepiness:20
+blow:CLAW:HURT:1d8
+blow:CLAW:HURT:1d8
+blow:BITE:HURT:4d32
+flags:FORCE_SLEEP
+flags:SMART
+flags:OPEN_DOOR
+desc:A cyborg tyrannosaurus, with a mouthful of screaming steel.
 
 name:Impy, the Tyrannosaur
 base:reptile
@@ -2316,7 +2686,8 @@ blow:CRUSH:HURT:4d6
 flags:UNIQUE | QUESTOR | SMART | FORCE_DEPTH | SPECIAL_GEN
 flags:POWERFUL
 flags:BASH_DOOR
-friends:100:3d2:tyrannosaur:servant
+friends:100:2d2:tyrannosaur:servant
+friends:100:1d2:circulasaurus:servant
 desc:An unnaturally large, tough, intelligent, vicious and fast-moving tyrannosaur - Triax's pet and frequent experimental subject for cybernetic treatments. It makes a formidable guard for the lower half of the fortress!
 
 ##### m is for MOLD #####
@@ -2650,7 +3021,43 @@ blow:CRUSH:HURT:10d12
 flags:SMART | ANIMAL | COLD_BLOOD | WEIRD_MIND | RAND_25 | BASH_DOOR | KILL_BODY | KILL_ITEM
 desc:The primeval Beast itself. Many hunt the Wumpus, few return...
 
+name:dropbear:quadruped
+color:Beige
+depth:40
+rarity:3
+desc:A larger relative of the koala, which drops from trees onto passing 
+desc:victims. Knocked out by the impact, its prey doesn't need to be chased down by 
+desc:the slow-moving dropbear, which remains unharmed thanks to its large padded butt.
+grow:thunder wumpus
+speed:105
+hit-points:150
+hearing:3
+armor-class:80
+sleepiness:1
+blow:CLAW:HURT:3d12
+blow:CLAW:HURT:3d12
+#flags:HIDE_DROP
+#weight:120kg
+flags:RAND_25
+flags:SMART
+
 ##### r is for RODENTS #####
+
+name:rabbit
+base:rodent
+color:Beige
+depth:1
+rarity:3
+grow:vorpal rabbit
+speed:115
+hit-points:1
+hearing:5
+armor-class:5
+sleepiness:20
+blow:BITE:HURT:1d1
+flags:MULTIPLY
+flags:FORCE_SLEEP
+desc:It's big, it's hungry and if it can't find any carrots, you'll do instead.
 
 name:giant white mouse
 plural:giant white mice
@@ -2663,12 +3070,29 @@ smell:20
 armor-class:4
 sleepiness:20
 depth:1
-rarity:1
+rarity:2
 experience:1
 blow:BITE:HURT:1d2
 flags:MULTIPLY
 flags:RAND_50
 desc:It is about three feet long with large teeth.
+
+name:white rabbit
+base:rodent
+color:White
+depth:2
+rarity:8
+desc:Big floppy ears, long white fur, and a mad gleam in its eyes.
+grow:vorpal rabbit
+speed:15
+hit-points:8
+hearing:6
+armor-class:10
+sleepiness:20
+blow:BITE:HURT:1d2
+blow:CLAW:HALLU:3d3
+flags:FORCE_SLEEP | RAND_50
+flags:SMART
 
 name:giant white rat
 base:rodent
@@ -2721,8 +3145,116 @@ experience:2
 blow:BITE:POISON:1d4
 flags:MULTIPLY
 flags:RAND_25
-desc:It is a rodent of unusual size.
+desc:A rodent the size of a dog with sleek grey fur and a pink nose.  Ignore the
+desc:teeth, and it might actually look cute.
 
+#rock mole?
+name:golden mouse
+base:rodent
+color:LightYellow
+depth:10
+rarity:3
+desc:A bright yellow mouse of unusual size, capable of chewing through solid rock.
+grow:bilge rat
+hit-points:14
+hearing:10
+armor-class:7
+sleepiness:25
+blow:BITE:HURT:3d5
+flags:FORCE_SLEEP
+flags:KILL_WALL
+flags:SMART | WEIRD_MIND
+
+name:bilge rat
+base:rodent
+color:GreenishUmber
+depth:12
+rarity:4
+desc:A highly aggressive swarming rodent with greasy flea-bitten fur and outsized
+desc:incisors.
+grow:pack rat
+hit-points:14
+hearing:10
+armor-class:7
+sleepiness:25
+#blow:BITE:INFECT:1d4
+blow:BITE:POISON:1d4
+flags:FORCE_SLEEP
+friends:95:3d4:Same
+flags:SMART | WEIRD_MIND
+
+name:vorpal rabbit
+base:rodent
+color:White
+depth:15
+rarity:8
+desc:A white rabbit, the size of a rabbit! Now that's unusual in itself, but 
+desc:something in the way it moves tells you that this is no ordinary rabbit...
+speed:100
+hit-points:42
+armor-class:15
+sleepiness:1
+blow:BITE:POISON:1d12
+blow:BITE:POISON:1d12
+blow:CLAW:HURT:1d12
+blow:CLAW:HURT:1d12
+flags:ATTR_MULTI
+flags:FORCE_SLEEP
+flags:NO_FEAR | NO_SLEEP
+flags:SMART | WEIRD_MIND
+spell-freq:3
+spell-power:5
+spells:SPIT | RAGE
+
+name:dust bunny
+base:rodent
+color:SandyBrown
+depth:18
+rarity:2
+desc:A dust-coloured desert rabbit, difficult to spot until it moves.
+speed:115
+hit-points:30
+armor-class:5
+sleepiness:1
+blow:BITE:HURT:1d12
+blow:CLAW:HURT:1d10
+blow:CLAW:HURT:1d10
+flags:FORCE_SLEEP
+flags:SMART
+
+name:jackrabbit
+base:rodent
+color:Tan
+depth:23
+rarity:2
+desc:A large, brown rabbit capable of incredible speeds.
+speed:120
+hit-points:30
+armor-class:15
+sleepiness:1
+blow:BITE:HURT:1d8
+blow:KICK:HURT:1d6
+blow:KICK:HURT:1d6
+flags:FORCE_SLEEP
+flags:SMART
+
+name:jackalope
+base:rodent
+color:BurntUmber
+depth:30
+rarity:5multiply
+desc:This strange creature resembles a rabbit with an antelope's head, complete with
+desc:a set of dangerous-looking antlers.
+speed:120
+hit-points:55
+armor-class:18
+sleepiness:1
+blow:BUTT:HURT:2d12
+blow:BITE:HURT:1d10
+blow:KICK:HURT:1d8
+blow:KICK:HURT:1d8
+flags:FORCE_SLEEP
+flags:SMART
 
 ##### R is for ROBOTS #####
 
@@ -2809,6 +3341,113 @@ flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS
 flags:NO_CONF | NO_SLEEP | NO_HOLD | NO_FEAR
 flags:FORCE_DEPTH | FORCE_SLEEP
 desc:Artificial intelligence, or natural insanity? It's hard to tell where one leaves off and the other begins, when you are facing the demon core: a silicon replica of Triax's brilliant but thoroughly evil mind. Physically, it's simply a vast cuboid of gleaming metal. It has no conventional means of locomotion - it doesn't need any, with its mastery of teleportation. It does however have extensive means of defense...
+
+
+##### s is for SLUG #####
+# (and snails, leeches, other slimy things)
+
+name:banana slug
+base:slug
+color:Banana
+depth:1
+desc:A large slug, the size and colour of a banana. The taste is completely different though.
+grow:elephant slug
+speed:100
+hit-points:10
+hearing:1
+armor-class:1
+sleepiness:200
+rarity:2
+blow:SUCK:HURT:1d1
+flags:COLD_BLOOD
+flags:RAND_25
+flags:HURT_LIGHT
+flags:STUPID | WEIRD_MIND
+
+name:elephant slug
+base:slug
+color:SlateGray
+depth:9
+desc:A great grey slug the size of a cow!
+grow:dragon slug
+speed:100
+hit-points:70
+hearing:1
+armor-class:1
+sleepiness:200
+rarity:1
+blow:SUCK:HURT:3d3
+flags:COLD_BLOOD
+flags:RAND_25
+flags:HURT_LIGHT
+flags:STUPID | WEIRD_MIND
+
+name:dragon slug
+base:slug
+color:BurntUmber
+depth:11
+rarity:1
+desc:It is slowly making its way towards you, eating everything in its path...
+speed:100
+hit-points:80
+hearing:10
+armor-class:12
+sleepiness:25
+blow:BITE:ACID:2d4
+blow:BITE:ACID:2d4
+flags:KILL_ITEM
+flags:KILL_BODY
+spell-freq:10
+spell-power:30
+spells:BR_ACID
+flags:IM_WATER | STUPID | EMPTY_MIND
+
+name:giant leech
+base:slug
+color:Gray25
+depth:17
+rarity:1
+desc:Slick black pulsing /thing/, three great jaws snap at air...
+hit-points:90
+hearing:1
+armor-class:1
+sleepiness:20
+blow:BITE:WOUND:1d6
+blow:BITE:WOUND:1d6
+blow:BITE:WOUND:1d6
+flags:COLD_BLOOD
+flags:RAND_25
+flags:HURT_LIGHT | STUPID | WEIRD_MIND
+
+name:rakonan snail
+base:slug
+color:Magenta
+depth:22
+rarity:1
+desc:A huge snail, green with an angular, bright pink shell.
+speed:100
+hit-points:120
+hearing:1
+armor-class:15
+sleepiness:200
+blow:SUCK:HURT:3d5
+flags:COLD_BLOOD | HURT_LIGHT | STUPID | WEIRD_MIND
+
+name:neptunian slug
+base:slug
+color:LimeGreen
+depth:27
+rarity:8
+desc:A pale green slug-like creature that can inflate itself to a great size.
+speed:100
+hit-points:160
+hearing:1
+armor-class:1
+sleepiness:200
+blow:DROOL:HURT:4d5
+flags:COLD_BLOOD
+flags:RAND_25 | HURT_LIGHT | STUPID | WEIRD_MIND
+
 
 
 #### S is for SPIDER ####
@@ -2904,7 +3543,7 @@ flags:IM_POIS
 desc:A giant, fast-moving spider with hairy black and red legs.
 
 #radscorpion?
-name:giant red scorpion
+name:red scorpion
 base:spider
 color:r
 speed:115
@@ -2915,14 +3554,14 @@ sleepiness:20
 depth:17
 rarity:1
 experience:62
-blow:CLAW:HURT:2d4
-blow:CLAW:HURT:2d4
+blow:CLAW:POISON:2d4
+blow:CLAW:POISON:2d4
 blow:STING:LOSE_STR:1d7
 flags:ANIMAL | WEIRD_MIND
 flags:IM_POIS
-desc:It is fast and poisonous.
+desc:A giant scorpion, fast and deadly poisonous.
 
-name:giant black scorpion
+name:black scorpion
 base:spider
 color:s
 speed:120
@@ -2941,6 +3580,30 @@ flags:ANIMAL | WEIRD_MIND
 flags:IM_POIS
 desc:A gleaming black scorpion as large as a lion, with a pulsating stinger
 desc: and two great deadly claws.
+
+
+##### T is for TREE #####
+# and other plants
+
+name:memory moss
+base:mushroom
+color:r
+speed:110
+hit-points:2
+hearing:30
+armor-class:1
+sleepiness:5
+depth:32
+rarity:3
+experience:150
+blow:HIT:CONFUSE:1d4
+blow:HIT:CONFUSE:1d4
+flags:NEVER_MOVE
+flags:FORCE_SLEEP
+spell-freq:6
+spells:FORGET
+desc:A mass of green vegetation.  You don't remember seeing anything like it
+desc: before.
 
 
 ##### t is for TOWNIE #####
@@ -4510,11 +5173,13 @@ sleepiness:30
 depth:12
 rarity:2
 experience:40
+#weight:90kg
 blow:BITE:HURT:2d4
 blow:BITE:HURT:2d4
 blow:STING:HURT:2d4
-flags:BASH_DOOR
-desc:It is a vast armoured centipede with massive mandibles and a spiked tail.
+flags:BASH_DOOR | KILL_BODY | RAND_25
+desc:It is a vast armoured centipede with massive mandibles and a spiked tail. Dozens 
+desc:of legs carry it towards you.
 
 ### Dungeon level 13 ###
 
@@ -4840,28 +5505,6 @@ spells:BLINK | TELE_TO
 friends:100:2d7:Same
 desc:A strange magical member of the canine race, its form seems to shimmer and
 desc: fade in front of your very eyes.
-
-name:shambling mound
-base:mushroom
-color:g
-speed:110
-hit-points:70
-hearing:20
-armor-class:19
-sleepiness:40
-depth:18
-rarity:2
-experience:75
-blow:HIT:HURT:1d8
-blow:HIT:HURT:1d8
-flags:EVIL
-flags:DROP_60 | ONLY_GOLD
-flags:OPEN_DOOR | BASH_DOOR
-innate-freq:4
-spells:SHRIEK
-friends:60:1d1:Giant fruit fly
-desc:A pile of rotting vegetation that slides towards you with a disgusting
-desc: stench, waking all it nears.
 
 name:evil eye
 base:eye
@@ -5275,6 +5918,7 @@ rarity:2
 experience:60
 blow:STING:PARALYZE:2d6
 blow:STING:PARALYZE:2d6
+#weight:40kg
 flags:RAND_25 | BASH_DOOR
 flags:IM_POIS
 friends:100:2d4:Same
@@ -5781,26 +6425,6 @@ friends:50:1d1:Master thief
 friends:50:1d1:Mage
 friends:50:1d1:blackguard
 desc:A man of Harad clothed in black who moves with blinding speed.
-
-name:memory moss
-base:mushroom
-color:r
-speed:110
-hit-points:2
-hearing:30
-armor-class:1
-sleepiness:5
-depth:32
-rarity:3
-experience:150
-blow:HIT:CONFUSE:1d4
-blow:HIT:CONFUSE:1d4
-flags:NEVER_MOVE
-flags:FORCE_SLEEP
-spell-freq:6
-spells:FORGET
-desc:A mass of green vegetation.  You don't remember seeing anything like it
-desc: before.
 
 ### Dungeon level 33 ###
 

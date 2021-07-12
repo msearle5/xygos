@@ -9,8 +9,6 @@ BUG: Armoury and Magic Shop need renaming. And possibly BM.
 
 BUG: activate coronet: "You activate it. the Coronet of the Core pulses a soft white" (the should be The)
 
-BUG: Pilot with Caveracer still displays Cavespeeder as an available to take talent
-
 BUG: Badly named: "an universal detector" - there is no way to infer a/an reliably from spelling alone, so would have to add a flag (such as a leading character).
 
 BUG: "level X of the fortress" in hiscores: not the actual dungeon (which was the Caverns)
@@ -107,8 +105,12 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+BUG: Pilot with Caveracer still displays Cavespeeder as an available to take talent
+	Fixed 4e5082356
+
 BUG: "hologram nonliving creature" in monster info should just be "hologram".
 	Fixed 1bd14dc1050161d11f17841d03f3271da27f5afc
+
 BUG: "But not by buying stuff and selling it back again" checks origin. This stops buy-selling something that originated in the store, but not something that you found. (So add a 'once sold' flag? Or just vanish the item)
 
 BUG: Starting characters can get a scrap of flesh - require cost > 0, for random?

@@ -833,8 +833,26 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear)
 	/* See if the player hit */
 	success = test_hit(chance, mon->race->ac, monster_is_visible(mon));
 
+	/* Handle EVASIVE monsters.
+	 * This is a second chance to avoid the hit. Unlike AC it only affects
+	 * melee and isn't affected by your + to hit - only relative speed.
+	 * Chance of fail is 35% at equal speed, maximum 90%.
+	 */
+	if ((success) && (rf_has(mon->race->flags, RF_EVASIVE))) {
+		/* Chance of failure */
+		int diff_speed = 35 + mon->race->speed - player->state.speed;
+		if (diff_speed > 90)
+			diff_speed = 90;
+		if (randint0(100) < diff_speed) {
+			/* Failure */
+			monster_desc(m_name, sizeof(m_name), mon, MDESC_CAPITAL | MDESC_HIDE | (monster_is_visible(mon) ? MDESC_PRO_VIS : MDESC_PRO_HID));
+			msgt(MSG_MISS, "%s evades your blow.", m_name);
+			return false;
+		}
+	}
+
 	/* If a miss, skip this hit */
-	if (!success) {
+	else if (!success) {
 		msgt(MSG_MISS, "You miss %s.", m_name);
 
 		/* Small chance of bloodlust side-effects */

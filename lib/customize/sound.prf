@@ -355,6 +355,9 @@ sound:MON_ENGULF:mco_dino_talk mco_dino_yawn
 # Attack - crawl
 sound:MON_CRAWL:mco_card_shuffle mco_shake_roll
 
+# Attack - suck
+sound:MON_SUCK:mco_liquid_squirt
+
 # Attack - drool
 sound:MON_DROOL:mco_creature_choking mco_liquid_squirt
 
