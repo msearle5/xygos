@@ -482,7 +482,6 @@ textblock *effect_describe(const struct effect *e, const struct object *obj, con
 				case EFINFO_STAT:
 					{
 						int stat = e->subtype;
-
 						strnfmt(desc, sizeof(desc), edesc,
 							lookup_obj_property(OBJ_PROPERTY_STAT, stat)->name);
 					}
@@ -581,7 +580,7 @@ textblock *effect_describe(const struct effect *e, const struct object *obj, con
 					break;
 
 				case EFINFO_NONE:
-					strnfmt(desc, sizeof(desc), edesc);
+					strnfmt(desc, sizeof(desc), "%s", edesc);
 					break;
 
 				default:
@@ -650,7 +649,7 @@ size_t effect_get_menu_name(char *buf, size_t max, const struct effect *e)
 	case EFINFO_CONST:
 	case EFINFO_QUAKE:
 	case EFINFO_NONE:
-		len = strnfmt(buf, max, fmt);
+		len = strnfmt(buf, max, "%s", fmt);
 		break;
 
 	case EFINFO_FOOD:
