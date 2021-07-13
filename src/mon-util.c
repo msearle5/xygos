@@ -1845,27 +1845,33 @@ bool monster_change_shape(struct monster *mon)
 		}
 
 		/* Pick one */
-		which = randint0(poss);
-		index = rsf_next(summon_spells, FLAG_START);
-		for (i = 0; i < which; i++) {
-			index = rsf_next(summon_spells, index);
-		}
-		spell = monster_spell_by_index(index);
+		if (poss) {
+			which = randint0(poss);
+			index = rsf_next(summon_spells, FLAG_START);
+			for (i = 0; i < which; i++) {
+				index = rsf_next(summon_spells, index);
+			}
+			spell = monster_spell_by_index(index);
 
-		/* Set the summon type, and the kin_base if necessary */
-		summon_type = spell->effect->subtype;
-		if (summon_type == summon_name_to_idx("KIN")) {
-			kin_base = mon->race->base;
-		}
+			/* Set the summon type, and the kin_base if necessary */
+			summon_type = spell->effect->subtype;
+			if (summon_type == summon_name_to_idx("KIN")) {
+				kin_base = mon->race->base;
+			}
 
-		/* Choose a race */
-		race = select_shape(mon, summon_type);
+			/* Choose a race */
+			race = select_shape(mon, summon_type);
+		}
+	}
+	if (!race && mon->race->grow) {
+		/* or their grow target */
+		race = lookup_monster(mon->race->grow);
 	}
 
 	/* Print a message immediately, update visuals */
 	if (monster_is_obvious(mon)) {
 		char m_name[80];
-		monster_desc(m_name, sizeof(m_name), mon, MDESC_IND_HID);
+		monster_desc(m_name, sizeof(m_name), mon, MDESC_IND_HID | MDESC_CAPITAL);
 		msgt(MSG_GENERIC, "%s %s", m_name, "shimmers and changes!");
 		if (player->upkeep->health_who == mon)
 			player->upkeep->redraw |= (PR_HEALTH);
@@ -1898,7 +1904,7 @@ bool monster_revert_shape(struct monster *mon)
 	if (mon->original_race) {
 		if (monster_is_obvious(mon)) {
 			char m_name[80];
-			monster_desc(m_name, sizeof(m_name), mon, MDESC_IND_HID);
+			monster_desc(m_name, sizeof(m_name), mon, MDESC_IND_HID | MDESC_CAPITAL);
 			msgt(MSG_GENERIC, "%s %s", m_name, "shimmers and changes!");
 			if (player->upkeep->health_who == mon)
 				player->upkeep->redraw |= (PR_HEALTH);

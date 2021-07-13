@@ -1276,6 +1276,112 @@ spells:DARKNESS | SCARE | BR_DARK | BLIND | MIND_BLAST | BRAIN_SMASH | S_KIN | H
 desc:In absolute darkness, an ill-defined patch manages to be darker. Fear of the dark? This thing's why. Can you kill it? It's had a million years of practice. You might want to run away - but you can't, it's faster than light: wherever light reaches *the dark got there first*.
 
 
+##### h is for HUMANOID #####
+# (not human, but similarly shaped. And while townies may be base:humanoid,
+#  they go in their own section of the file, not here.)
+
+name:novice munchkin
+base:humanoid
+color:Y
+depth:12
+rarity:10
+desc:'DING! Level 1!!!!' 
+desc:He may be inexperienced but he has the confidence that comes with six 
+desc:consecutive natural 18's.
+grow:munchkin
+hit-points:40
+armor-class:20
+sleepiness:20
+blow:HIT:WOUND:6d1
+blow:HIT:WOUND:6d1
+spell-power:5
+spell-freq:8
+spells:BLINK | SHAPECHANGE
+
+name:munchkin
+base:humanoid
+color:Yellow
+depth:24:50
+desc:An acolyte of the RNG. Leaving the worm-farms behind, he's after more lucrative prey.
+grow:master munchkin
+speed:110
+hit-points:80
+armor-class:40
+sleepiness:20
+blow:HIT:WOUND:12d1
+blow:HIT:WOUND:12d1
+blow:HIT:WOUND:12d1
+spell-power:25
+spell-freq:6
+spells:TPORT | TELE_TO | TELE_SELF_TO | SHAPECHANGE
+
+name:master munchkin
+base:humanoid
+color:Orange
+depth:48
+rarity:20
+desc:A follower of the Golden Path. Blurred with cybernetically enhanced speed, 
+desc:surrounded by an aura of fire and ice, this creature regards you as a 
+desc:competitor and will do anything to stop you saving the Galaxy first and 
+desc:hogging all the credit.
+speed:120
+hit-points:320
+armor-class:80
+sleepiness:20
+blow:HIT:FIRE:20d1
+blow:HIT:COLD:20d1
+blow:HIT:WOUND:20d1
+blow:HIT:WOUND:20d1
+spell-power:50
+spells:BO_RADI | BO_FIRE | BO_COLD | TPORT | TELE_TO | TELE_SELF_TO
+
+name:Mr Blobby
+base:humanoid:Magenta
+depth:70
+rarity:20
+desc:Blobby blobby blobby! 
+desc:A vaguely humanoid blob-man, splotched in unnaturally bright green and pink, 
+desc:with a fixed, creepy grin and huge staring eyes. 
+hit-points:600
+armor-class:120
+sleepiness:200
+blow:TOUCH:CONFUSE:2d20
+blow:TOUCH:PARALYZE:2d20
+blow:TOUCH:HALLU:2d20
+blow:TOUCH:TERRIFY:2d20
+spell-power:150
+spell-freq:4
+spells:BR_CHAO
+flags:UNIQUE | EVIL
+# | SPEAK
+#s:shoggoth
+flags:NO_CONF | NO_SLEEP | IM_FIRE | IM_COLD
+spells:BLIND | CONF | SCARE | FORGET | MIND_BLAST | BRAIN_SMASH
+flags:SMART
+
+name:Max, Ultimate Munchkin
+base:humanoid
+color:OrangeRed
+depth:96
+rarity:20
+desc:Max maxes. Everything. Max always has the First and Final Word. Run!
+speed:130
+hit-points:1280
+armor-class:160
+sleepiness:20
+blow:HIT:WOUND:60d1
+blow:HIT:WOUND:60d1
+blow:HIT:WOUND:60d1
+blow:HIT:WOUND:60d1
+flags:ATTR_MULTI
+flags:UNIQUE
+spell-power:200
+spells:S_KIN
+spells:BA_RADI
+flags:NO_FEAR | NO_CONF | NO_SLEEP
+spells:TPORT | TELE_TO
+
+
 ##### H is for HOLOGRAM #####
 
 name:Inky
