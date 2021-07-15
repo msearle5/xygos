@@ -3176,7 +3176,7 @@ static bool effect_handler_SUMMON(effect_handler_context_t *context)
 		}
 
 		if (grow) {
-			count = summon_named_near(player->grid, grow);
+			count = summon_named_near(mon->grid, grow);
 		} else {
 			/* Continue summoning until we reach the current dungeon level */
 			rlev = mon->race->level;

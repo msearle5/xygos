@@ -1076,7 +1076,7 @@ effect:MON_TIMED_INC:CHANGED
 dice:5+d10
 lore:change shape
 lore-color-base:Orange
-message-vis:{name} intones strange words.
+#message-vis:{name} transforms!
 message-invis:There is an unsettling liquid sound.
 
 name:GROW
@@ -1085,7 +1085,7 @@ effect:MON_TIMED_INC:CHANGED
 dice:999999999
 lore:transform permanently
 lore-color-base:Orange
-message-vis:{name} intones strange words.
+#message-vis:{name} transforms!
 message-invis:There is an unsettling liquid sound.
 
 name:S_FRIENDS
@@ -1256,4 +1256,4 @@ dice:8
 lore:spawn
 lore-color-base:Light Red
 message-vis:{name} spawns.
-message-invis:You hear something appear nearby!
+message-invis:There is an unsettling liquid sound.

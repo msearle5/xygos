@@ -577,6 +577,37 @@ static void melee_effect_handler_POISON(melee_effect_handler_context_t *context)
 }
 
 /**
+ * Melee effect handler: Infect the player.
+ * This is like poison and uses poison resistance to reduce damage, but doesn't
+ * increment the poison counter. Instead an infected counter is used, which is
+ * difficult to get rid of and lasts for longer, though for that reason effects
+ * must be less nasty (at least the damage must be). It's not cumulative.
+ *
+ * Like poison (above), we can't use melee_effect_timed(), because this is both
+ * an elemental attack and a status attack. Note the false value for pure_element
+ * for melee_effect_elemental().
+ */
+static void melee_effect_handler_INFECT(melee_effect_handler_context_t *context)
+{
+	/* Take damage */
+	melee_effect_elemental(context, PROJ_POIS, false);
+
+	/* Player is dead or not attacked */
+	if (!context->p || context->p->is_dead)
+		return;
+
+	/* Take "infect" effect */
+	int previous = player->timed[TMD_INFECTED];
+	if (!previous)
+		context->obvious = true;
+	int max = MAX(previous, 50 + (3 * damroll(3, context->rlev)));
+	player_set_timed(context->p, TMD_INFECTED, max, true);
+
+	/* Learn about the player */
+	update_smart_learn(context->mon, context->p, 0, 0, ELEM_POIS);
+}
+
+/**
  * Melee effect handler: Wound the player.
  *
  * This takes damage directly and adds to the cuts status.
@@ -1147,6 +1178,7 @@ melee_effect_handler_f melee_handler_for_blow_effect(const char *name)
 		{ "HURT", melee_effect_handler_HURT },
 		{ "WOUND", melee_effect_handler_WOUND },
 		{ "POISON", melee_effect_handler_POISON },
+		{ "INFECT", melee_effect_handler_INFECT },
 		{ "DISENCHANT", melee_effect_handler_DISENCHANT },
 		{ "DRAIN_CHARGES", melee_effect_handler_DRAIN_CHARGES },
 		{ "EAT_GOLD", melee_effect_handler_EAT_GOLD },

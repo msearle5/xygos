@@ -948,6 +948,7 @@ static void cure_all()
 	(void)player_clear_timed(player, TMD_BLIND, true);
 	(void)player_clear_timed(player, TMD_CONFUSED, true);
 	(void)player_clear_timed(player, TMD_POISONED, true);
+	(void)player_clear_timed(player, TMD_INFECTED, true);
 	(void)player_clear_timed(player, TMD_AFRAID, true);
 	(void)player_clear_timed(player, TMD_PARALYZED, true);
 	(void)player_clear_timed(player, TMD_IMAGE, true);

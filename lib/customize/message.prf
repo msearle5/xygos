@@ -199,6 +199,9 @@ message:CONFUSED:w
 # MSG_POISONED
 message:POISONED:w
 
+# MSG_INFECTED
+message:INFECTED:w
+
 # MSG_AFRAID
 message:AFRAID:o
 

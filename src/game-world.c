@@ -370,6 +370,7 @@ static void decrease_timeouts(void)
 			}
 
 			case TMD_POISONED:
+			case TMD_INFECTED:
 			case TMD_STUN:
 			{
 				decr = adjust;

@@ -2052,19 +2052,19 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	if (p->timed[TMD_TERROR]) {
 		state->speed += 10;
 	}
-	if (p->timed[TMD_OPP_ACID] && (state->el_info[ELEM_ACID].res_level < 2)) {
+	if (p->timed[TMD_OPP_ACID] && (state->el_info[ELEM_ACID].res_level < IMMUNITY-1)) {
 			state->el_info[ELEM_ACID].res_level++;
 	}
-	if (p->timed[TMD_OPP_ELEC] && (state->el_info[ELEM_ELEC].res_level < 2)) {
+	if (p->timed[TMD_OPP_ELEC] && (state->el_info[ELEM_ELEC].res_level < IMMUNITY-1)) {
 			state->el_info[ELEM_ELEC].res_level++;
 	}
-	if (p->timed[TMD_OPP_FIRE] && (state->el_info[ELEM_FIRE].res_level < 2)) {
+	if (p->timed[TMD_OPP_FIRE] && (state->el_info[ELEM_FIRE].res_level < IMMUNITY-1)) {
 			state->el_info[ELEM_FIRE].res_level++;
 	}
-	if (p->timed[TMD_OPP_COLD] && (state->el_info[ELEM_COLD].res_level < 2)) {
+	if (p->timed[TMD_OPP_COLD] && (state->el_info[ELEM_COLD].res_level < IMMUNITY-1)) {
 			state->el_info[ELEM_COLD].res_level++;
 	}
-	if (p->timed[TMD_OPP_POIS] && (state->el_info[ELEM_POIS].res_level < 2)) {
+	if (p->timed[TMD_OPP_POIS] && (state->el_info[ELEM_POIS].res_level < IMMUNITY-1)) {
 			state->el_info[ELEM_POIS].res_level++;
 	}
 	if (p->timed[TMD_CONFUSED]) {
@@ -2074,6 +2074,9 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		adjust_skill_scale(&state->skills[SKILL_DEVICE], -1, 5, 0);
 	}
 	if (p->timed[TMD_POISONED]) {
+		adjust_skill_scale(&state->skills[SKILL_DEVICE], -1, 20, 0);
+	}
+	if (p->timed[TMD_INFECTED]) {
 		adjust_skill_scale(&state->skills[SKILL_DEVICE], -1, 20, 0);
 	}
 	if (p->timed[TMD_IMAGE]) {
@@ -2526,7 +2529,6 @@ void update_stuff(struct player *p)
 		p->upkeep->update &= ~(PU_MONSTERS);
 		update_monsters(false);
 	}
-
 
 	if (p->upkeep->update & (PU_PANEL)) {
 		p->upkeep->update &= ~(PU_PANEL);

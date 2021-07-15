@@ -42,6 +42,17 @@ effect-type:element
 resist:POIS
 lash-type:POIS
 
+name:INFECT
+power:25
+eval:12
+desc:infect
+lore-color-base:Light Red
+lore-color-resist:Orange
+lore-color-immune:Light Green
+effect-type:element
+resist:POIS
+lash-type:POIS
+
 name:DISENCHANT
 power:10
 eval:30

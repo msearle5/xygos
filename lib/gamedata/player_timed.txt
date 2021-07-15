@@ -122,6 +122,15 @@ on-decrease:You are less poisoned.
 msgt:POISONED
 fail:2:POIS
 
+name:INFECTED
+desc:disease
+grade:o:10000:Ill:You feel deathly sick!
+on-end:You recover from your illness.
+on-increase:You feel much worse!
+on-decrease:Your illness is reduced.
+msgt:INFECTED
+fail:2:POIS
+
 name:CUT
 desc:wounds
 grade:y:10:Graze:You have been given a graze.
@@ -152,7 +161,7 @@ grade:v:10000:*RAD*:You have lethal radiation sickness.
 on-end:You no longer have radiation sickness.
 msgt:2:RADI
 
-# Note food grades are in percantages here, and are translated on parsing
+# Note food grades are in percentages here, and are translated on parsing
 name:FOOD
 desc:nourishment
 grade:R:1:Starving: :You are starving!!

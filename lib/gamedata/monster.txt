@@ -4372,30 +4372,6 @@ spell-power:22
 experience:600
 spells:BO_PLAS | BA_POIS | BA_ELEC | CONF | SCARE
 
-name:xenomorph
-color:Slate
-base:xorn
-depth:38
-rarity:6
-grow:facehugger
-speed:110
-hit-points:245
-hearing:250
-armor-class:45
-sleepiness:0
-blow:BITE:ACID:1d9
-blow:BITE:ACID:1d9
-blow:CLAW:HURT:2d8
-blow:CLAW:HURT:2d8
-flags:NO_FEAR | NO_CONF | NO_SLEEP
-flags:EVIL | IM_ACID | SMART | WEIRD_MIND
-spells:BR_ACID | MULTIPLY_GROW
-spell-power:15
-spell-freq:6
-innate-freq:30
-experience:900
-desc:A sleek black darting acidic alien. It is looking for genetic material - you!
-
 name:xorn
 base:xorn
 color:u
@@ -4416,6 +4392,30 @@ flags:IM_COLD | IM_ELEC | IM_FIRE
 desc:A huge creature of the element Earth.  Able to merge with its element, it
 desc: has four huge arms protruding from its enormous torso.
 
+name:xenomorph
+color:Slate
+base:xorn
+depth:38
+rarity:6
+grow:facehugger
+speed:115
+hit-points:245
+hearing:250
+armor-class:45
+sleepiness:0
+blow:BITE:ACID:1d9
+blow:BITE:ACID:1d9
+blow:CLAW:HURT:2d8
+blow:CLAW:HURT:2d8
+flags:NO_FEAR | NO_CONF | NO_SLEEP
+flags:EVIL | IM_ACID | SMART | WEIRD_MIND
+spells:BR_ACID | MULTIPLY_GROW
+spell-power:15
+spell-freq:6
+innate-freq:15
+experience:900
+desc:A sleek black darting acidic alien. It is looking for genetic material - you!
+
 name:facehugger
 color:Beige
 base:xorn
@@ -4429,12 +4429,14 @@ hearing:200
 armor-class:15
 sleepiness:0
 experience:800
-blow:ENGULF:POISON:1d12
+blow:ENGULF:INFECT:1d12
 blow:BITE:ACID:1d12
 blow:CRUSH:PARALYZE:1d6
 flags:NO_FEAR | NO_CONF | NO_SLEEP | IM_ACID | KILL_BODY | EVIL
+spells:GROW
+flags:SMART | WEIRD_MIND
 spell-power:1
-spell-freq:40
+spell-freq:30
 
 name:white horror
 color:White

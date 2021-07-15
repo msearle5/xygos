@@ -107,10 +107,14 @@ static void spell_message(struct monster *mon,
 		in_cursor = level->message;
 	}
 
+	/* Exit early if there isn't one */
+	if (!in_cursor)
+		return;
+
 	next = strchr(in_cursor, '{');
 	while (next) {
 		/* Copy the text leading up to this { */
-		strnfcat(buf, 1024, &end, "%.*s", next - in_cursor, in_cursor);
+		strnfcat(buf, sizeof(buf), &end, "%.*s", next - in_cursor, in_cursor);
 
 		s = next + 1;
 		while (*s && isalpha((unsigned char) *s)) s++;

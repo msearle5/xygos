@@ -582,6 +582,7 @@ void player_regen_hp(struct player *p)
 	if (p->timed[TMD_PARALYZED]) percent = 0;
 	if (p->timed[TMD_HELD]) percent = 0;
 	if (p->timed[TMD_POISONED]) percent = 0;
+	if (p->timed[TMD_INFECTED]) percent /= 4;
 	if (p->timed[TMD_STUN]) percent = 0;
 	if (p->timed[TMD_RAD]) percent = 0;
 	if (p->timed[TMD_CUT]) percent = 0;
@@ -1418,7 +1419,7 @@ void player_resting_complete_special(struct player *p)
 			!p->timed[TMD_PARALYZED] && !p->timed[TMD_IMAGE] &&
 			!p->timed[TMD_HELD] &&
 			!p->word_recall && !p->deep_descent)
-			/* Stop resting */
+			/* Stop resting. Infected is left off intentionally */
 			disturb(p);
 	} else if (p->upkeep->resting == REST_SOME_POINTS) {
 		if (p->chp == p->mhp)
