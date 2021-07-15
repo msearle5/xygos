@@ -1125,6 +1125,15 @@ static void melee_effect_handler_BLACK_BREATH(melee_effect_handler_context_t *co
 }
 
 /**
+ * Melee method handler: Gives one turn held (after the current one).
+ */
+static void melee_method_handler_CONSTRICT(melee_effect_handler_context_t *context)
+{
+	if (!context->p->timed[TMD_HELD])
+		player_inc_timed(context->p, TMD_HELD, 2, true, true); 
+}
+
+/**
  * ------------------------------------------------------------------------
  * Monster blow melee handler selection
  * ------------------------------------------------------------------------ */
@@ -1168,6 +1177,32 @@ melee_effect_handler_f melee_handler_for_blow_effect(const char *name)
 		{ "EXP_80", melee_effect_handler_EXP_80 },
 		{ "HALLU", melee_effect_handler_HALLU },
 		{ "BLACK_BREATH", melee_effect_handler_BLACK_BREATH },
+		{ NULL, NULL },
+	};
+	const struct effect_handler_s *current = effect_handlers;
+
+	while (current->name != NULL && current->function != NULL) {
+		if (my_stricmp(name, current->name) == 0)
+			return current->function;
+
+		current++;
+	}
+
+	return NULL;
+}
+
+/**
+ * ------------------------------------------------------------------------
+ * Monster blow method melee handler selection.
+ * Most don't have an effect
+ * ------------------------------------------------------------------------ */
+melee_effect_handler_f melee_handler_for_blow_method(const char *name)
+{
+	static const struct effect_handler_s {
+		const char *name;
+		melee_effect_handler_f function;
+	} effect_handlers[] = {
+		{ "CONSTRICT", melee_method_handler_CONSTRICT },
 		{ NULL, NULL },
 	};
 	const struct effect_handler_s *current = effect_handlers;

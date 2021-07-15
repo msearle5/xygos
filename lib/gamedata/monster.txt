@@ -256,6 +256,96 @@ desc:it against burglars such as yourself.
 # as does a robot fish. But amphibians get L (or maybe A), and AQUATIC creatures that fit another
 # class (a sea monkey, sea snake etc) get that class's character.
 
+name:globefish
+base:aquatic
+color:Slate
+depth:25
+rarity:1
+desc:This cute fish is among the most poisonous creatures there are.
+hit-points:50
+armor-class:15
+sleepiness:30
+blow:BITE:POISON:5d5
+blow:BITE:POISON:5d5
+spell-power:2
+spell-freq:7
+spells:BR_POIS
+flags:IM_WATER | NO_STUN
+flags:IM_POIS
+flags:STUPID | EMPTY_MIND
+
+name:electric eel
+base:aquatic
+color:SkyBlue
+depth:33
+rarity:5
+desc:This cute little serpentine creature can create a deadly voltage. 
+desc:Better watch out!
+speed:110
+hit-points:16
+hearing:15
+armor-class:35
+sleepiness:1
+blow:CONSTRICT:ELEC:1d20
+flags:EVASIVE
+flags:RAND_25 | RAND_50
+friends:90:2d3:Same
+
+name:great white shark
+base:aquatic
+color:White
+depth:34
+rarity:2
+desc:Fast moving hunter of the depths, when this creature moves, 
+desc:everybody in water is in danger!
+speed:120
+hit-points:225
+armor-class:35
+sleepiness:20
+blow:BITE:HURT:3d6
+blow:BITE:HURT:3d6
+blow:BITE:HURT:3d6
+blow:BITE:HURT:3d6
+flags:FORCE_SLEEP
+
+name:Jaws
+base:aquatic
+color:White
+depth:42
+rarity:2
+desc:The biggest white shark who has ever lived, it is hunting for you now! 
+speed:120
+hit-points:320
+hearing:10
+armor-class:40
+sleepiness:12
+blow:BITE:HURT:11d2
+blow:BITE:HURT:22d1
+blow:BITE:HURT:11d2
+blow:BITE:HURT:22d1
+flags:UNIQUE
+flags:ATTR_MULTI
+flags:NO_CONF | NO_SLEEP
+flags:IM_POIS
+flags:WEIRD_MIND
+
+name:megalodon
+base:aquatic
+color:Violet
+depth:56
+rarity:2
+desc:/Otodus megalodon/ or Meg to friends. From 22 to 3.6 million BCE and from 2407 to date, thanks to Sirius Genetics - because after all, a gigantic shark big enough to bite a whale in half is just too awesome not to recreate. (What could possibly go wrong?)
+speed:120
+hit-points:750
+hearing:10
+armor-class:60
+sleepiness:12
+blow:BITE:HURT:22d2
+blow:BITE:HURT:33d1
+blow:BITE:HURT:22d2
+blow:BITE:HURT:33d1
+flags:NO_CONF | NO_SLEEP
+flags:WEIRD_MIND
 
 
 ##### , is for MUSHROOM #####
@@ -387,6 +477,27 @@ spells:SHRIEK
 friends:60:1d1:Giant fruit fly
 desc:A pile of rotting vegetation that slides towards you with a disgusting
 desc: stench, waking all it nears.
+
+name:memory moss
+base:mushroom
+color:r
+speed:110
+hit-points:2
+hearing:30
+armor-class:1
+sleepiness:5
+depth:32
+rarity:3
+experience:150
+blow:HIT:CONFUSE:1d4
+blow:HIT:CONFUSE:1d4
+flags:NEVER_MOVE
+flags:FORCE_SLEEP
+spell-freq:6
+spells:FORGET
+desc:A mass of green vegetation.  You don't remember seeing anything like it
+desc: before.
+
 
 ##### HIDDEN (.) #####
 
@@ -891,7 +1002,7 @@ desc:Steel-grey blood-sucking bats, with a deadly bite.
 
 name:Lou, the Cybat
 base:bat
-color:Silver
+color:Gray75
 speed:120
 hit-points:140
 hearing:12
@@ -1038,7 +1149,7 @@ desc:It is about four feet long and carnivorous.
 # These descriptions repeat, and are repetitive, and all move in unison.
 #
 name:nickelpede:centipede
-color:LightSlateGray
+color:Light Slate
 depth:23
 rarity:2
 desc:Ten feet long and carnivorous, bright as a new nickel and deadly fast. It has
@@ -1094,25 +1205,6 @@ flags:GROUP_AI
 friends:100:2d7:Same
 desc:It is a yapping snarling dog, dangerous when in a pack.
 
-name:wolf
-plural:wolves
-base:canine
-color:u
-speed:120
-hit-points:21
-hearing:30
-smell:50
-armor-class:45
-sleepiness:10
-depth:10
-rarity:1
-experience:30
-blow:BITE:HURT:1d6
-flags:RAND_25 | BASH_DOOR
-flags:GROUP_AI
-friends:100:2d10:Same
-desc:It howls and snaps at you.
-
 name:Grip, Slick's dog
 base:canine
 color:y
@@ -1148,6 +1240,73 @@ flags:UNIQUE
 flags:RAND_25 | BASH_DOOR
 flags:NO_CONF | NO_SLEEP
 desc:A rather vicious dog belonging to Slick.
+
+name:wolf
+plural:wolves
+base:canine
+color:u
+speed:120
+hit-points:21
+hearing:30
+smell:50
+armor-class:45
+sleepiness:10
+depth:10
+rarity:1
+experience:30
+blow:BITE:HURT:1d6
+flags:RAND_25 | BASH_DOOR
+flags:GROUP_AI
+friends:100:2d10:Same
+desc:It howls and snaps at you.
+
+name:dire-wolf
+plural:dire-wolves
+base:canine
+color:Gray25
+depth:21
+rarity:2
+desc:It is a large wolf with eyes full of cunning.
+speed:110
+hit-points:27
+armor-class:12
+sleepiness:40
+blow:CLAW:HURT:1d5
+blow:CLAW:HURT:1d5
+blow:BITE:HURT:1d8
+flags:EVIL
+flags:RAND_25
+friends:95:3d4:Same
+flags:SMART
+
+name:alpha wolf
+plural:alpha wolves
+base:canine
+color:Gray25
+depth:26
+rarity:5
+desc:Leader of a pack of slavering dire-wolves. A wolf that shouldn't
+desc:be released any time soon...
+speed:115
+hit-points:42
+armor-class:20
+sleepiness:5
+blow:CLAW:HURT:1d6
+blow:CLAW:HURT:1d6
+blow:BITE:HURT:1d10
+#blow:WAIL:TERRIFY:9d9
+flags:EVIL
+flags:MALE
+friends:100:3d6:dire-wolf:servant
+friends:30:3d2:wolf:servant
+flags:NO_FEAR
+flags:IM_COLD | IM_ACID
+flags:SMART
+flags:OPEN_DOOR
+
+
+##### F is for FLY #####
+
 
 
 ##### f is for KITTIES ####
@@ -1233,7 +1392,7 @@ desc: even the strongest armour.
 
 name:cave lion
 base:feline
-color:DarkGoldenrod
+color:Yellow
 depth:47
 rarity:2
 desc:The biggest lion you've ever seen. Fast, lithe, hungry and coming your way.
@@ -1767,7 +1926,7 @@ flags:STUPID | EMPTY_MIND
 name:ochre jelly
 plural:ochre jellies
 base:jelly
-color:BrownOchre
+color:Mud
 grow:jelly-mold
 speed:120
 hit-points:59
@@ -1851,7 +2010,7 @@ flags:OPEN_DOOR
 
 name:acidic cytoplasm
 base:jelly
-color:SlateGray
+color:Slate
 depth:46
 rarity:5
 desc:A disgusting animated blob of destruction.  Flee its gruesome hunger!
@@ -1923,6 +2082,93 @@ desc:It makes you itch just to look at it.
 
 #### J is for SNAKE ####
 #### Really ############
+#
+# to add(?):
+# Ouroborous (hoopsnake)?
+#
+# Snakes do not IRL move very fast - the black mamba is the fastest. Like other reptiles,
+# they should probably all have HURT_COLD (SLOW_COLD?) - but remember that not every J is
+# a real, live snake. (Patchsnakes, laser anacondas etc aren't - SLOW_HEAT?)
+# Most snakes should either have a CONSTRICT attack or poison. Remember that CONSTRICT
+# prevents escape, so keep damage low.
+# Small snakes may be hidden in some way.
+#
+
+name:milk snake
+base:snake
+color:White
+depth:1
+rarity:1
+desc:A legless reptile covered in overlapping scales.  It is milky-white in
+desc:color, eight feet long, and well-protected.
+grow:python
+speed:100
+rarity:10
+hit-points:12
+hearing:4
+armor-class:13
+sleepiness:99
+blow:CONSTRICT:HURT:2d1
+flags:RAND_50
+flags:HURT_COLD
+flags:SMART | WEIRD_MIND
+flags:PASS_DOOR
+
+name:pinsnake
+base:snake
+color:BurntUmber
+depth:1
+rarity:5
+desc:A tiny, but venomous snake.
+grow:viper
+speed:100
+rarity:10
+hit-points:1
+hearing:4
+armor-class:18
+sleepiness:99
+blow:BITE:POISON:2d2
+flags:HURT_COLD
+flags:SMART | WEIRD_MIND
+flags:PASS_DOOR
+
+# Vipers may not be blue-green IRL. It's the same with others - there are a lot of snakes,
+# and they should be easily distinguishable.
+# (This may be relaxed now that any color can be used, but only so far.)
+#
+name:viper
+base:snake
+color:Teal
+depth:2
+rarity:1
+desc:A small blue-green venomous snake.
+grow:rattlesnake
+hit-points:12
+hearing:4
+armor-class:8
+sleepiness:99
+blow:BITE:POISON:1d2
+flags:RAND_50
+flags:HURT_COLD
+flags:SMART | WEIRD_MIND
+flags:PASS_DOOR
+
+name:python
+base:snake
+color:Yellow
+depth:3
+rarity:1
+desc:One of the smaller pythons; it is about ten feet long and quite muscular.
+grow:boa
+speed:105
+hit-points:22
+hearing:6
+armor-class:15
+sleepiness:30
+blow:CONSTRICT:HURT:2d4
+flags:RAND_25
+flags:HURT_COLD
+flags:SMART | WEIRD_MIND
 
 name:large white snake
 base:snake
@@ -2265,7 +2511,7 @@ desc:A lemming painted in gaudy designs, waving a carved staff. Where it leads h
 
 name:bungee lemming
 base:lemming
-color:LightSlateGray
+color:Light Slate
 speed:115
 hit-points:10
 hearing:4
@@ -2421,7 +2667,7 @@ flags:NO_FEAR | WEIRD_MIND
 
 name:cliff lemming
 base:lemming
-color:SlateGray
+color:Slate
 depth:19
 rarity:2
 desc:Long-clawed lemmings that went for a plummet, and stopped half way down.
@@ -2483,7 +2729,7 @@ desc:The 'True Lemmings of the Volcano'. This tribe also believe themselve
 desc:immune to the heat of molten lava - with more reason than the common
 desc:volcano lemmings.
 grow:mutated lemming
-hit-points:300f
+hit-points:300
 hearing:4
 armor-class:70
 sleepiness:20
@@ -2518,7 +2764,7 @@ flags:OPEN_DOOR
 
 name:Cyberlemming
 base:lemming
-color:Silver
+color:Gray75
 depth:44
 rarity:10
 desc:A gleaming chrome lemming - half rodent, half robot - leaping into peril faster than ever before.
@@ -2564,7 +2810,7 @@ flags:OPEN_DOOR
 
 name:Plummet's Champion, the Nameless Lemming
 base:lemming
-color:LightYellow
+color:Light Yellow
 depth:47
 rarity:1
 desc:Supreme warrior among the peak lemmings. The Nameless Lemming is the 
@@ -2722,7 +2968,7 @@ desc:It has the rough shape of a long-necked dinosaur - perhaps being modelled o
 
 name:archaeopteryx
 base:reptile
-color:AntiqueWhite
+color:Cream
 depth:31
 rarity:3
 speed:115
@@ -2739,7 +2985,7 @@ desc:Is it a bird? Is it a plane? No... it's a dinosaur?!
 
 name:tyrannosaur
 base:reptile
-color:LightForestGreen
+color:ForestGreen
 speed:110
 hit-points:600
 hearing:20
@@ -3257,7 +3503,7 @@ desc:teeth, and it might actually look cute.
 #rock mole?
 name:golden mouse
 base:rodent
-color:LightYellow
+color:Light Yellow
 depth:10
 rarity:3
 desc:A bright yellow mouse of unusual size, capable of chewing through solid rock.
@@ -3273,7 +3519,7 @@ flags:SMART | WEIRD_MIND
 
 name:bilge rat
 base:rodent
-color:GreenishUmber
+color:Mud
 depth:12
 rarity:4
 desc:A highly aggressive swarming rodent with greasy flea-bitten fur and outsized
@@ -3472,7 +3718,7 @@ flags:STUPID | WEIRD_MIND
 
 name:elephant slug
 base:slug
-color:SlateGray
+color:Slate
 depth:9
 desc:A great grey slug the size of a cow!
 grow:dragon slug
@@ -3527,7 +3773,7 @@ flags:HURT_LIGHT | STUPID | WEIRD_MIND
 
 name:rakonan snail
 base:slug
-color:Magenta
+color:Magenta-Pink
 depth:22
 rarity:1
 desc:A huge snail, green with an angular, bright pink shell.
@@ -3691,25 +3937,93 @@ desc: and two great deadly claws.
 ##### T is for TREE #####
 # and other plants
 
-name:memory moss
-base:mushroom
-color:r
+name:martian tumbleweed
+base:tree
+color:Brick
+depth:6
+rarity:10
+desc:A network of fine reddish tendrils connect leaves shaped to catch the thin
+desc:Martian winds. Poisoned barbs catch onto anything it rolls into.
+grow:martian cabbage
 speed:110
-hit-points:2
-hearing:30
+hit-points:1
+hearing:1
+armor-class:1
+sleepiness:1
+blow:CONSTRICT:POISON:1d4
+flags:COLD_BLOOD
+spells:GROW
+spell-freq:30
+flags:RAND_25 | RAND_50
+flags:NO_FEAR | NO_CONF | NO_SLEEP
+spell-power:4
+flags:STUPID | EMPTY_MIND
+
+name:martian cabbage
+base:tree
+depth:6
+rarity:2
+color:DarkSandyBrown
+desc:A rough sphere of dense, glossy rust-red vegetation, the size of a beach
+desc:ball. It looks harmless enough...
+hit-points:20
+hearing:1
+armor-class:40
+sleepiness:100
+rarity:10
+deathspells:BA_POIS
+blow:TOUCH:POISON:1d8
+#flags:DEATH_SPECIAL
+flags:COLD_BLOOD
+flags:NEVER_MOVE
+#cloud:2:POISON
+flags:NO_FEAR | NO_CONF | NO_SLEEP
+flags:STUPID | EMPTY_MIND
+
+#is this really a T?
+#
+name:sunflower
+base:tree
+color:Light Yellow
+depth:12
+rarity:2
+desc:A round silvery flower on a tall stalk. As you approach the flower head slowly
+desc:turns to face you. 
+speed:100
+rarity:10
+hit-points:200
+rarity:5
+hearing:1
+armor-class:1
+sleepiness:1
+flags:NEVER_MOVE
+flags:REFLECT
+spell-freq:1
+spell-power:8
+friends:90:2d3:Same
+spells:BE_LIGHT
+flags:IM_LIGHT | NO_FEAR | NO_CONF | NO_SLEEP
+flags:IM_FIRE
+flags:STUPID | EMPTY_MIND
+
+name:choke-apple tree
+base:tree
+color:YellowGreen
+depth:68
+rarity:3
+desc:A stumpy tree, sprouting creepers that spread across the ground as you watch. 
+desc:An unhealthy-looking greenish fog drifts around it, and you notice a skeleton 
+desc:lying beneath.
+hit-points:550
+hearing:10
 armor-class:1
 sleepiness:5
-depth:32
-rarity:3
-experience:150
-blow:HIT:CONFUSE:1d4
-blow:HIT:CONFUSE:1d4
+blow:CONSTRICT:POISON:10d10
 flags:NEVER_MOVE
-flags:FORCE_SLEEP
-spell-freq:6
-spells:FORGET
-desc:A mass of green vegetation.  You don't remember seeing anything like it
-desc: before.
+flags:MULTIPLY
+#cloud:2:POISON
+flags:NO_FEAR | NO_CONF | NO_SLEEP
+flags:STUPID | WEIRD_MIND
 
 
 ##### t is for TOWNIE #####
@@ -3770,6 +4084,21 @@ flags:NO_CONF | NO_SLEEP
 spell-freq:4
 spells:BLINK | HEAL
 desc:It's Saint Nick, out delivering presents to the town urchins.
+
+name:Christmas tree monster
+color:White
+speed:100
+base:tree
+depth:1
+rarity:2
+hit-points:1
+armor-class:1
+sleepiness:1
+spell-power:1
+flags:SEASONAL
+flags:DROP_1 | DROP_GOOD | ONLY_ITEM
+flags:NO_CONF | NO_SLEEP
+desc:A glittery silver tree, covered with flashing coloured lights. What's that underneath?
 
 
 ##### w is for WORM #####
@@ -4000,7 +4329,6 @@ spell-power:15
 experience:500
 spells:BA_ELEC | BA_FIRE | BO_PLAS | CONF | SCARE
 
-#name?
 name:yellow horror
 color:Yellow
 base:xorn
@@ -4022,8 +4350,9 @@ spell-power:20
 experience:550
 spells:BO_FIRE | BO_POIS | BA_POIS | BA_FIRE | CONF | SCARE
 
+#name?
 name:turquoise horror
-color:Cyan
+color:Light Teal
 base:xorn
 depth:34
 rarity:4
@@ -4044,7 +4373,7 @@ experience:600
 spells:BO_PLAS | BA_POIS | BA_ELEC | CONF | SCARE
 
 name:xenomorph
-color:SlateGray
+color:Slate
 base:xorn
 depth:38
 rarity:6
@@ -4150,7 +4479,7 @@ flags:IM_COLD | IM_ELEC | IM_FIRE
 desc:It is a tougher relative of the Xorn.  Its hide glitters with metal ores.
 
 name:shambler
-color:LightYellow
+color:Light Yellow
 base:xorn
 depth:92
 rarity:8

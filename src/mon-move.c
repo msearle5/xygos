@@ -195,7 +195,7 @@ static bool monster_hates_grid(struct chunk *c, struct monster *mon,
 
 	/* Aquatic creatures can't leave water */
 	if (rf_has(mon->race->flags, RF_AQUATIC))
-		return square_iswater(c, grid);
+		return !square_iswater(c, grid);
 
 	/* Only some creatures can handle damaging terrain */
 	if (square_isdamaging(c, grid) &&

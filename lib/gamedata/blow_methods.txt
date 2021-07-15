@@ -83,6 +83,15 @@ msg:MON_BUTT
 act:butts {target}
 desc:butt
 
+name:CONSTRICT
+cut:0
+stun:1
+miss:1
+phys:1
+msg:MON_CONSTRICT
+act:constricts {target}
+desc:constrict
+
 name:CRUSH
 cut:0
 stun:1

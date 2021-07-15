@@ -1294,7 +1294,7 @@ static void project_m_apply_side_effects(project_monster_handler_context_t *cont
  * to plasma.
  *
  * If can breath radiation, then it resists it as well.
- * This should actually be coded into monster records rather than aasumed - NRM
+ * This should actually be coded into monster records rather than assumed - NRM
  *
  * Damage reductions use the following formulas:
  *   Note that "dam = dam * 6 / (randint1(6) + 6);"

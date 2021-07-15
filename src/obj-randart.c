@@ -2593,12 +2593,14 @@ static void remove_contradictory_activation(struct artifact *art)
 			switch (pcurr->kind) {
 			case EFPROP_BRAND:
 				maxmult = 1;
-				for (i = 1; i < z_info->brand_max; ++i) {
-					if (!art->brands[i]) continue;
-					if (brands[i].resist_flag !=
-						brands[pcurr->idx].resist_flag) continue;
-					maxmult = MAX(brands[i].multiplier,
-						maxmult);
+				if (art->brands) {
+					for (i = 1; i < z_info->brand_max; ++i) {
+						if (!art->brands[i]) continue;
+						if (brands[i].resist_flag !=
+							brands[pcurr->idx].resist_flag) continue;
+						maxmult = MAX(brands[i].multiplier,
+							maxmult);
+					}
 				}
 				if (maxmult < brands[pcurr->idx].multiplier) {
 					redundant = false;
@@ -2607,11 +2609,13 @@ static void remove_contradictory_activation(struct artifact *art)
 
 			case EFPROP_SLAY:
 				maxmult = 1;
-				for (i = 1; i < z_info->slay_max; ++i) {
-					if (!art->slays[i]) continue;
-					if (!same_monsters_slain(i, pcurr->idx)) continue;
-					maxmult = MAX(slays[i].multiplier,
-						maxmult);
+				if (art->slays) {
+					for (i = 1; i < z_info->slay_max; ++i) {
+						if (!art->slays[i]) continue;
+						if (!same_monsters_slain(i, pcurr->idx)) continue;
+						maxmult = MAX(slays[i].multiplier,
+							maxmult);
+					}
 				}
 				if (maxmult < slays[pcurr->idx].multiplier) {
 					redundant = false;

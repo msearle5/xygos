@@ -42,6 +42,8 @@ desc:Ainu/maia
 
 # Fish etc, most can't leave water. Lavathings go here as well.
 name:aquatic
+glyph:;
+pain:2
 flags:ANIMAL | WEIRD_MIND | AQUATIC | IM_WATER
 desc:Aquatic creatures
 

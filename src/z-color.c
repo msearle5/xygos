@@ -188,19 +188,53 @@ int color_char_to_attr(char c)
 
 
 /**
- * Converts a string to a terminal color byte.
+ * Converts a string to a terminal color byte, defaulting to 'def'.
+ * If the string is 1 character, treat it as a color char.
  */
-int color_text_to_attr(const char *name)
+int get_color_by_name(const char *name, int def)
 {
 	int a;
 
+	/* Single character colours */
+	if (strlen(name) == 1) {
+		char c = name[0];
+
+		/* Is negative -- spit it right back out */
+		if (c < 0) return (c);
+
+		/* Is a space or '\0' -- return black */
+		if (c == '\0' || c == ' ') return (COLOUR_DARK);
+
+		/* Search the color table */
+		for (a = 0; a < BASIC_COLORS; a++)
+		{
+			/* Look for the index */
+			if (color_table[a].index_char == c) break;
+		}
+
+		/* If we don't find the color, we assume white */
+		if (a == BASIC_COLORS) return (def);
+
+		/* Return the color */
+		return (a);
+	}
+
+	/* Multi character colours */
 	for (a = 0; a < MAX_COLORS; a++)
 	{
 		if (my_stricmp(name, color_table[a].name) == 0) return (a);
 	}
 
-	/* Default to white */
-	return (COLOUR_WHITE);
+	/* Default color */
+	return (def);
+}
+
+/**
+ * Converts a string to a terminal color byte, defaulting to white.
+ */
+int color_text_to_attr(const char *name)
+{
+	return get_color_by_name(name, COLOUR_WHITE);
 }
 
 

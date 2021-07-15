@@ -580,6 +580,7 @@ void player_regen_hp(struct player *p)
 
 	/* Various things interfere with physical healing */
 	if (p->timed[TMD_PARALYZED]) percent = 0;
+	if (p->timed[TMD_HELD]) percent = 0;
 	if (p->timed[TMD_POISONED]) percent = 0;
 	if (p->timed[TMD_STUN]) percent = 0;
 	if (p->timed[TMD_RAD]) percent = 0;
@@ -1415,6 +1416,7 @@ void player_resting_complete_special(struct player *p)
 			!p->timed[TMD_TERROR] && !p->timed[TMD_STUN] &&
 			!p->timed[TMD_CUT] && !p->timed[TMD_SLOW] &&
 			!p->timed[TMD_PARALYZED] && !p->timed[TMD_IMAGE] &&
+			!p->timed[TMD_HELD] &&
 			!p->word_recall && !p->deep_descent)
 			/* Stop resting */
 			disturb(p);

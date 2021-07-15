@@ -319,7 +319,7 @@ sound:KILL:mco_howl_croak mco_howl_deep mco_howl_distressed mco_howl_high mco_ho
 # A unique is killed.
 sound:KILL_UNIQUE:sum_ghost_wail
 
-# Morgoth, Lord of Darkness is killed.
+# Boss monster is killed.
 sound:KILL_KING:amb_guitar_chord
 
 # Attack - hit
@@ -348,6 +348,9 @@ sound:MON_BUTT:mco_cuica_rubbing mco_thud_crash
 
 # Attack - crush
 sound:MON_CRUSH:mco_dino_low mco_squish_hit
+
+# Attack - constrict
+sound:MON_CONSTRICT:mco_dino_low mco_squish_hit
 
 # Attack - engulf
 sound:MON_ENGULF:mco_dino_talk mco_dino_yawn

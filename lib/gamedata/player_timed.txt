@@ -81,6 +81,13 @@ on-end:You can move again.
 msgt:PARALYZED
 fail:1:FREE_ACT
 
+name:HELD
+desc:holding
+grade:r:10000:Held!:You are unable to move!
+on-end:You can move again.
+msgt:HELD
+fail:1:FREE_ACT
+
 name:CONFUSED
 desc:confusion
 grade:o:10000:Confused:You are confused!

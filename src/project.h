@@ -124,6 +124,7 @@ bool projectable(struct chunk *c, struct loc grid1, struct loc grid2, int flg);
 int proj_name_to_idx(const char *name);
 const char *proj_idx_to_name(int type);
 
+struct loc bounce_target(struct loc source, struct loc target);
 struct loc origin_get_loc(struct source origin);
 
 bool project(struct source origin, int rad, struct loc finish, int dam, int typ,

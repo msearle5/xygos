@@ -381,7 +381,7 @@ static bool do_repair_object(struct object *obj, int strength, random_value valu
 		/* Failure - unlucky fragile object is destroyed */
 		remove = true;
 		msg("There is a bang and a flash!");
-		take_hit(player, damroll(5, 5), "Failed repairing");
+		take_hit(player, damroll(5, 5), "failed repairing");
 	}
 	if (remove) {
 		bool none_left = false;
@@ -1412,7 +1412,8 @@ static bool effect_handler_TIMED_INC(effect_handler_context_t *context)
 				mon_tmd_effect = MON_TMD_SLOW;
 				break;
 			}
-			case TMD_PARALYZED: {
+			case TMD_PARALYZED:
+			case TMD_HELD: {
 				mon_tmd_effect = MON_TMD_HOLD;
 				break;
 			}
@@ -3261,7 +3262,7 @@ static bool effect_handler_BANISH(effect_handler_context_t *context)
 
 	context->ident = true;
 
-	if (!get_com("Choose a monster race (by symbol) to banish: ", &typ))
+	if (!get_com("Choose a monster race (by symbol) to exterminate: ", &typ))
 		return false;
 
 	/* Delete the monsters of that "type" */
@@ -3285,7 +3286,7 @@ static bool effect_handler_BANISH(effect_handler_context_t *context)
 	}
 
 	/* Hurt the player */
-	take_hit(player, dam, "the strain of casting Banishment");
+	take_hit(player, dam, "the strain of extermination");
 
 	/* Update monster list window */
 	player->upkeep->redraw |= PR_MONLIST;
@@ -3327,7 +3328,7 @@ static bool effect_handler_MASS_BANISH(effect_handler_context_t *context)
 	}
 
 	/* Hurt the player */
-	take_hit(player, dam, "the strain of casting Mass Banishment");
+	take_hit(player, dam, "the strain of mass extermination");
 
 	/* Update monster list window */
 	player->upkeep->redraw |= PR_MONLIST;

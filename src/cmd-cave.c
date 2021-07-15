@@ -1114,6 +1114,9 @@ void move_player(int dir, bool disarm)
 		} else {
 			py_attack(player, grid);
 		}
+	} else if (player->timed[TMD_HELD]) {
+		/* If held, you can attack monsters but not do anything else */
+		msg("You are unable to move!");
 	} else if (((trap && disarm) || door) && square_isknown(cave, grid)) {
 		/* Auto-repeat if not already repeating */
 		if (cmd_get_nrepeats() == 0)

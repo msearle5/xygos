@@ -354,12 +354,14 @@ void improve_attack_modifier(struct object *obj, const struct monster *mon,
 							 bool range)
 {
 	int i, best_mult = 1;
+	if (!mon) return;
 	struct monster_lore *lore = get_lore(mon->race);
 
 	/* Set the current best multiplier */
 	if (*brand_used) {
 		struct brand *b = &brands[*brand_used];
-		best_mult = MAX(best_mult, get_monster_brand_multiplier(mon, b));
+		if (mon)
+			best_mult = MAX(best_mult, get_monster_brand_multiplier(mon, b));
 	} else if (*slay_used) {
 		struct slay *s = &slays[*slay_used];
 		if (!OPT(player, birth_percent_damage)) {
@@ -381,7 +383,7 @@ void improve_attack_modifier(struct object *obj, const struct monster *mon,
 		}
  
 		/* Is the monster is vulnerable? */
-		if (!rf_has(mon->race->flags, b->resist_flag)) {
+		if (mon && !rf_has(mon->race->flags, b->resist_flag)) {
 			int mult = get_monster_brand_multiplier(mon, b);
 
 			/* Record the best multiplier */

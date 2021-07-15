@@ -238,7 +238,9 @@ static int critical_shot(const struct player *p,
 		int weight, int plus,
 		int dam, u32b *msg_type)
 {
-	int debuff_to_hit = is_debuffed(monster) ? DEBUFF_CRITICAL_HIT : 0;
+	int debuff_to_hit = 0;
+	if ((monster) && (is_debuffed(monster)))
+		debuff_to_hit = DEBUFF_CRITICAL_HIT;
 	int chance = (weight / 20) + (p->state.to_h + plus + debuff_to_hit) * 4 + p->lev * 2;
 	int power = (weight / 20) + randint1(500);
 	int new_dam = dam;
@@ -270,7 +272,9 @@ static int o_critical_shot(const struct player *p,
 						   const struct object *launcher,
 						   u32b *msg_type)
 {
-	int debuff_to_hit = is_debuffed(monster) ? DEBUFF_CRITICAL_HIT : 0;
+	int debuff_to_hit = 0;
+	if ((monster) && (is_debuffed(monster)))
+		debuff_to_hit = DEBUFF_CRITICAL_HIT;
 	int power = chance_of_missile_hit(p, missile, launcher, monster->grid)
 		+ debuff_to_hit;
 	int add_dice = 0;
@@ -467,7 +471,7 @@ static int ranged_damage(struct player *p, const struct monster *mon,
 	int mult = (launcher ? p->state.ammo_mult : 1);
 
 	/* If we have a slay or brand, modify the multiplier appropriately */
-	if (b) {
+	if (b && mon) {
 		mult += get_monster_brand_multiplier(mon, &brands[b]);
 	} else if (s) {
 		mult += slays[s].multiplier;
@@ -1231,6 +1235,7 @@ static const struct hit_types ranged_hit_types[] = {
 	{ MSG_HIT_SUPERB, "It was a superb hit!" }
 };
 
+
 /**
  * This is a helper function used by do_cmd_throw and do_cmd_fire.
  *
@@ -1288,6 +1293,19 @@ static void ranged_helper(struct command *cmd, struct player *p,	struct object *
 	/* Calculate the path */
 	path_n = project_path(path_g, range, grid, target, 0);
 
+	/* With reflection */
+	struct monster *mon = square_monster(cave, path_g[path_n-1]);
+	if (mon && rf_has(mon->race->flags, RF_REFLECT)) {
+		/* Boing!
+		 * Return to sender, or deflect randomly.
+		 */
+		struct loc boing = bounce_target(grid, target);
+
+		/* The additional path after bouncing. Allow it to hit anything. */
+		path_n += project_path(path_g + path_n, z_info->max_range, target,
+								  boing, PROJECT_KILL | PROJECT_PLAY | PROJECT_SELF);
+	}
+
 	/* Calculate potential piercing */
 	if (player->timed[TMD_POWERSHOT]) {
 		pierce = player->state.ammo_mult;
@@ -1314,7 +1332,7 @@ static void ranged_helper(struct command *cmd, struct player *p,	struct object *
 
 		/* Try the attack on the monster at (x, y) if any */
 		mon = square_monster(cave, path_g[i]);
-		if (mon) {
+		if ((mon) && (!rf_has(mon->race->flags, RF_REFLECT))) {
 			char m_name[80];
 			monster_desc(m_name, sizeof(m_name), mon, MDESC_OBJE);
 
@@ -1392,6 +1410,16 @@ static void ranged_helper(struct command *cmd, struct player *p,	struct object *
 			pierce--;
 			if (pierce) continue;
 			else break;
+		} else if (mon) {
+			/* Reflection */
+			msgt(MSG_SHOOT_HIT, "The %s bounces!", o_name);
+		} else if (loc_eq(grid, player->grid)) {
+			/* Oops */
+			msgt(MSG_SHOOT_HIT, "The %s hits you!", o_name);
+			struct attack_result result = attack(cmd, p, obj, grid);
+			breaks = result.breaks;
+			int dmg = result.dmg;
+			take_hit(player, dmg, "reflection");
 		}
 
 		/* Stop if non-projectable but passable */
@@ -1433,7 +1461,7 @@ static struct attack_result make_ranged_shot(struct command *cmd, struct player 
 	my_strcpy(hit_verb, "hits", 20);
 
 	/* Did we hit it (penalize distance travelled) */
-	if (!test_hit(chance, mon->race->ac, monster_is_visible(mon)))
+	if (!test_hit(chance, (mon ? mon->race->ac : player->state.ac), (mon ? monster_is_visible(mon) : true)))
 		return result;
 
 	result.success = true;
@@ -1503,7 +1531,7 @@ static struct attack_result make_ranged_throw(struct command *cmd, struct player
 	}
 
 	/* If we missed then we're done */
-	if (!test_hit(chance, mon->race->ac, monster_is_visible(mon)))
+	if (!test_hit(chance, (mon ? mon->race->ac : player->state.ac), (mon ? monster_is_visible(mon) : true)))
 		return result;
 
 	result.success = true;

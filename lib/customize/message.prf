@@ -151,6 +151,9 @@ message:MON_BUTT:w
 # MSG_MON_CRUSH
 message:MON_CRUSH:w
 
+# MSG_MON_CONSTRICT
+message:MON_CONSTRICT:w
+
 # MSG_MON_ENGULF
 message:MON_ENGULF:w
 
@@ -201,6 +204,9 @@ message:AFRAID:o
 
 # MSG_PARALYZED
 message:PARALYZED:w
+
+# MSG_HELD
+message:HELD:w
 
 # MSG_DRUGGED
 message:DRUGGED:w

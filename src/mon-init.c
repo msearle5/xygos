@@ -1129,10 +1129,7 @@ static enum parser_error parse_monster_color(struct parser *p) {
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
 	color = parser_getsym(p, "color");
-	if (strlen(color) > 1)
-		attr = color_text_to_attr(color);
-	else
-		attr = color_char_to_attr(color[0]);
+	attr = get_color_by_name(color, -1);
 
 	if (attr < 0)
 		return PARSE_ERROR_INVALID_COLOR;

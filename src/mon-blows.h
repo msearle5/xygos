@@ -89,5 +89,6 @@ extern struct blow_effect *blow_effects;
 int blow_index(const char *name);
 char *monster_blow_method_action(struct blow_method *method, int midx);
 extern melee_effect_handler_f melee_handler_for_blow_effect(const char *name);
+extern melee_effect_handler_f melee_handler_for_blow_method(const char *name);
 
 #endif /* MON_BLOWS_H */

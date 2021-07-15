@@ -590,7 +590,7 @@ bool make_attack_normal(struct monster *mon, struct player *p)
 
 		char *act = NULL;
 
-		/* Extract the attack infomation */
+		/* Extract the attack information */
 		struct blow_effect *effect = mon->race->blow[ap_cnt].effect;
 		struct blow_method *method = mon->race->blow[ap_cnt].method;
 		random_value dice = mon->race->blow[ap_cnt].dice;
@@ -658,8 +658,8 @@ bool make_attack_normal(struct monster *mon, struct player *p)
 				}
 			}
 
-			/* Perform the actual effect. */
-			effect_handler = melee_handler_for_blow_effect(effect->name);
+			/* Perform method effects first if present. */
+			effect_handler = melee_handler_for_blow_method(method->name);
 			if (effect_handler != NULL) {
 				melee_effect_handler_context_t context = {
 					p,
@@ -680,6 +680,30 @@ bool make_attack_normal(struct monster *mon, struct player *p)
 				obvious = context.obvious;
 				blinked = context.blinked;
 				damage = context.damage;
+			}
+
+			/* Perform the actual effect. */
+			effect_handler = melee_handler_for_blow_effect(effect->name);
+			if (effect_handler != NULL) {
+				melee_effect_handler_context_t context = {
+					p,
+					mon,
+					NULL,
+					rlev,
+					method,
+					p->state.ac + p->state.to_a,
+					ddesc,
+					obvious,
+					blinked,
+					damage,
+				};
+
+				effect_handler(&context);
+
+				/* Save any changes made in the handler for later use. */
+				obvious |= context.obvious;
+				blinked |= context.blinked;
+				damage |= context.damage;
 			} else {
 				msg("ERROR: Effect handler not found for %s.", effect->name);
 			}

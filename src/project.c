@@ -430,6 +430,27 @@ struct loc origin_get_loc(struct source origin)
 }
 
 /**
+ * Target of a bounding bolt or object
+ */
+struct loc bounce_target(struct loc source, struct loc target)
+{
+	struct loc boing = source;
+	if (!one_in_(3)) {
+		struct loc new;
+		for(int i=0;i<1000;i++) {
+			new = target;
+			new.x += randint0(41) - 20;
+			new.y += randint0(41) - 20;
+			if (((new.x != target.x) || (new.y != target.y)) && (square_in_bounds_fully(cave, new))) {
+				boing = new;
+				break;
+			}
+		}
+	}
+	return boing;
+}
+
+/**
  * Generic "beam"/"bolt"/"ball" projection routine.
  *   -BEN-, some changes by -LM-
  *
@@ -660,7 +681,7 @@ bool project(struct source origin, int rad, struct loc finish,
 	 * projection path.
 	 */
 	if (loc_eq(start, finish)) {
-		blast_grid[num_grids] =  finish;
+		blast_grid[num_grids] = finish;
 		centre = finish;
 		distance_to_grid[num_grids] = 0;
 		sqinfo_on(square(cave, finish)->info, SQUARE_PROJECT);
@@ -674,6 +695,24 @@ bool project(struct source origin, int rad, struct loc finish,
 		num_path_grids = project_path(path_grid, z_info->max_range, start,
 									  finish, flg);
 
+		/* Handle reflection */
+		if (!(flg & (PROJECT_BEAM))) {
+			struct monster *mon = square_monster(cave, path_grid[num_path_grids-1]);
+			if (mon && rf_has(mon->race->flags, RF_REFLECT)) {
+				/* Boing!
+				 * Return to sender, or deflect randomly.
+				 */
+				struct loc boing = bounce_target(start, finish);
+
+				/* Allow it to hit anything */
+				flg |= PROJECT_KILL | PROJECT_PLAY | PROJECT_SELF;
+
+				/* The additional path after bouncing */
+				num_path_grids += project_path(path_grid + num_path_grids, z_info->max_range, finish,
+										  boing, flg);
+			}
+		}
+
 		/* Some beams have limited length. */
 		if (flg & (PROJECT_BEAM)) {
 			/* Use length limit, if any is given. */
@@ -681,7 +720,6 @@ bool project(struct source origin, int rad, struct loc finish,
 				num_path_grids = rad;
 			}
 		}
-
 
 		/* Project along the path (except for arcs) */
 		if (!(flg & (PROJECT_ARC))) {

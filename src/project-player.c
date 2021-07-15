@@ -866,7 +866,7 @@ bool project_p(struct source origin, int r, struct loc grid, int dam, int typ,
 		case SRC_PLAYER: {
 			/* Don't affect projector unless explicitly allowed */
 			if (!self) return false;
-
+			strnfmt(killer, sizeof(killer), "yourself");
 			break;
 		}
 

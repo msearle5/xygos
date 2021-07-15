@@ -1195,6 +1195,7 @@ void process_player(void)
 				!player->timed[TMD_AMNESIA] &&
 				!player->timed[TMD_STUN] &&
 				!player->timed[TMD_PARALYZED] &&
+				!player->timed[TMD_HELD] &&
 				!player->timed[TMD_TERROR] &&
 				!player->timed[TMD_AFRAID])
 				effect_simple(EF_DETECT_GOLD, source_none(), "0", 0, 0, 0, 3, 3, NULL);
