@@ -103,7 +103,7 @@ flavor:132:Light Slate:knurled
 flavor:133:Light Slate:ribbed
 
 #flavor:134:Yellow:brassy
-#branching
+#branching, three-pronged
 
 ##### Gadgets #####
 # These are 'feelings/impressions', mostly of otherness, complexity, confusion.
@@ -111,7 +111,7 @@ flavor:133:Light Slate:ribbed
 
 kind:gadget:-
 
-# freaky, crazy, sophisticated
+# freaky, crazy, sophisticated, uncanny
 flavor:137:Light Umber:alien
 flavor:138:Slate:arcane
 flavor:139:Light Slate:baffling
@@ -149,40 +149,38 @@ flavor:170:Light Blue:unfamiliar
 flavor:171:White:unusual
 flavor:172:Slate:weird
 
-# Wrought Iron
-
 ##### Mushrooms #####
 # These are 'textures'
 
 kind:mushroom:,
 
-flavor:173:Light Purple:Spotted
-flavor:174:Light Dark:Rubbery
-flavor:175:Mustard:Crumbly
-flavor:176:Light Yellow:Moldy
-flavor:177:Blue:Mottled
-flavor:178:Green:Firm
-flavor:179:Mud:Woody
-flavor:180:Yellow:Wrinkled
-flavor:181:Light Slate:Furry
-flavor:182:Light Red:Fragile
-flavor:183:Slate:Marbled
-flavor:184:Light Blue:Gelatinous
-flavor:185:Light Green:Speckled
-flavor:186:Violet:Glowing
-flavor:187:Red:Striped
-flavor:188:Slate:Slimy
-flavor:189:Deep Light Blue:Moist
-flavor:190:White:Withered
-flavor:191:White:Waxy
-flavor:192:Umber:Smelly
+flavor:173:Light Purple:spotted
+flavor:174:Light Dark:rubbery
+flavor:175:Mustard:crumbly
+flavor:176:Light Yellow:moldy
+flavor:177:Blue:mottled
+flavor:178:Green:firm
+flavor:179:Mud:woody
+flavor:180:Yellow:wrinkled
+flavor:181:Light Slate:furry
+flavor:182:Light Red:fragile
+flavor:183:Slate:marbled
+flavor:184:Light Blue:gelatinous
+flavor:185:Light Green:speckled
+flavor:186:Violet:glowing
+flavor:187:Red:striped
+flavor:188:Slate:slimy
+flavor:189:Deep Light Blue:moist
+flavor:190:White:withered
+flavor:191:White:waxy
+flavor:192:Umber:smelly
 
-# Fleshy
-# Fuzzy
-# Luminescent
-# Blotchy
-# Leathery
-# Rotting
+# fleshy
+# fuzzy
+# luminescent
+# blotchy
+# leathery
+# rotting
 
 ##### Pills #####
 # These are two part names to be combined at random

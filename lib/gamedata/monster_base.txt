@@ -27,6 +27,13 @@
 
 ##### Normal monster templates #####
 
+# Full grid monsters
+name:fullgrid
+glyph:#
+pain:11
+flags:EMPTY_MIND
+desc:Monsters that fill the grid
+
 # Amphibians
 name:amphibian
 glyph:A

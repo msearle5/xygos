@@ -249,6 +249,59 @@ desc:it against burglars such as yourself.
 
 ##### Monster races proper #####
 
+##### # is for FULL GRID #####
+
+name:black obelisk
+base:fullgrid
+color:Gray25
+depth:60
+rarity:5
+desc:A glossy black monolith of an unknown material that seems impossible to even scratch.
+grow:white obelisk
+hit-points:1500
+armor-class:150
+rarity:5
+sleepiness:1
+blow:TOUCH:ELEC:4d8
+blow:TOUCH:ELEC:4d8
+blow:TOUCH:ELEC:4d8
+blow:TOUCH:ELEC:4d8
+flags:NEVER_MOVE
+flags:REFLECT
+spell-freq:2
+spell-power:50
+spells:BA_DARK
+flags:NO_FEAR | NO_CONF | NO_SLEEP
+flags:IM_FIRE | IM_COLD | IM_POIS | IM_ELEC
+rarity:10
+spells:HEAL
+flags:STUPID | EMPTY_MIND
+
+name:white obelisk
+base:fullgrid
+color:White
+depth:77
+rarity:5
+desc:A glossy white pillar of an unknown material that seems impossible to even scratch.
+hit-points:1500
+armor-class:200
+rarity:5
+sleepiness:1
+blow:TOUCH:ELEC:6d8
+blow:TOUCH:ELEC:6d8
+blow:TOUCH:ELEC:6d8
+blow:TOUCH:ELEC:6d8
+flags:NEVER_MOVE
+flags:REFLECT
+spell-freq:1
+spell-power:40
+spells:BA_LIGHT
+flags:NO_FEAR | NO_CONF | NO_SLEEP
+flags:IM_FIRE | IM_COLD | IM_POIS | IM_ELEC
+spells:HEAL
+flags:STUPID | EMPTY_MIND
+
+
 ##### ; is for FISH #####
 # And lava-beasts.
 # Not all have AQUATIC (meaning that they must stay in the water/lava), but that's the default
@@ -349,7 +402,11 @@ flags:WEIRD_MIND
 
 
 ##### , is for MUSHROOM #####
-# (and other food-likes e.g. tomatoes)
+# (and other food-likes e.g. tomatoes. But not mosses, molds, etc.)
+#
+# mushroom, or mushroom patch?
+# reserve 'mushroom' for special things such as walking mushrooms, and maybe shriekers and magics?
+# death mushroom, crawling fungus (fungus = replicating?) etc.
 
 name:grey mushroom patch
 plural:grey mushroom patches
