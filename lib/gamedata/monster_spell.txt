@@ -1178,16 +1178,6 @@ lore-color-base:Orange
 message-vis:{name} summons hydras.
 message-invis:You hear some things appear nearby!
 
-name:S_AINU
-msgt:SUM_AINU
-hit:100
-effect:SUMMON:AINU
-dice:1
-lore:summon an ainu
-lore-color-base:Orange
-message-vis:{name} summons an ainu.
-message-invis:You hear something appear nearby!
-
 name:S_DEMON
 msgt:SUM_DEMON
 hit:100

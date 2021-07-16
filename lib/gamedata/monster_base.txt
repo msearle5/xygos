@@ -27,25 +27,19 @@
 
 ##### Normal monster templates #####
 
-# Ainur were the founding spirits of Arda, and could take any form they wished.
-# Ainur in Angband typically have shapechanges and many possibe other spells,
-# but typically don't breathe
-name:ainu
+# Amphibians
+name:amphibian
 glyph:A
-pain:1
-flags:POWERFUL | SPIRIT | SMART
-flags:ONLY_ITEM
-flags:OPEN_DOOR | BASH_DOOR | TAKE_ITEM | CLEAR_WEB
-flags:IM_COLD | IM_FIRE | IM_POIS | NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-desc:Ainu/maia
+pain:5
+flags:ANIMAL | IM_WATER | CLEAR_WEB | COLD_BLOOD
+desc:Amphibian
 
 # Fish etc, most can't leave water. Lavathings go here as well.
 name:aquatic
 glyph:;
 pain:2
-flags:ANIMAL | WEIRD_MIND | AQUATIC | IM_WATER
-desc:Aquatic creatures
+flags:ANIMAL | WEIRD_MIND | AQUATIC | IM_WATER | COLD_BLOOD
+desc:Aquatic creature
 
 # Ants have lowish HP but highish armor class, and powerful melee for their
 # depth
@@ -252,16 +246,6 @@ flags:OPEN_DOOR | BASH_DOOR | SPIRIT | CLEAR_WEB
 flags:IM_POIS
 desc:Kobold
 
-# Powerful undead spellcasters, tending to drain dexterity and charges in melee
-name:lich
-glyph:L
-pain:1
-flags:UNDEAD | EVIL | COLD_BLOOD | SMART | SPIRIT
-flags:OPEN_DOOR | BASH_DOOR | CLEAR_WEB
-flags:IM_COLD | IM_POIS | NO_CONF | NO_SLEEP | NO_STUN | NO_HOLD
-flags:FORCE_SLEEP
-desc:Lich
-
 # Weird monsters tha look like floor.
 name:lurker
 glyph:.
@@ -379,12 +363,13 @@ flags:NO_FEAR | NO_CONF | NO_SLEEP | NO_HOLD
 flags:FORCE_SLEEP
 desc:Quylthulg
 
-# Mostly early monsters, but later ones are dangerous.  Not fast for depth
+# Mostly early monsters, but later ones are dangerous.  Not fast for depth.
+# L is for lizard, though most aren't, as R is taken by robots and r by rodents.
 name:reptile
 glyph:L
 pain:5
-flags:ANIMAL | HURT_COLD | CLEAR_WEB
-desc:Reptile/Amphibian
+flags:ANIMAL | HURT_COLD | CLEAR_WEB | COLD_BLOOD
+desc:Reptile
 
 # Small, weak, early breeders, with one surprise non-breeder
 name:rodent

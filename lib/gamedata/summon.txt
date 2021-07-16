@@ -104,12 +104,6 @@ uniques:0
 base:hydra
 desc:hydras
 
-name:AINU
-msgt:SUM_AINU
-uniques:0
-base:ainu
-desc:ainur
-
 name:DEMON
 msgt:SUM_DEMON
 uniques:0
@@ -133,7 +127,6 @@ msgt:SUM_HI_UNDEAD
 uniques:1
 base:vampire
 base:wraith
-base:lich
 desc:greater undead
 
 name:WRAITH

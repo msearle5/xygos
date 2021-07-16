@@ -639,6 +639,73 @@ spells:SELF_DESTRUCT
 desc:A mine which bursts into a cloud of poisonous fumes.
 
 
+##### A is for AMPHIBIAN #####
+
+name:giant green frog
+base:amphibian
+color:g
+speed:110
+hit-points:9
+hearing:12
+smell:20
+armor-class:9
+sleepiness:30
+depth:3
+rarity:1
+experience:8
+blow:BITE:HURT:1d3
+flags:RAND_25 | BASH_DOOR
+spell-freq:8
+spells:HOP
+desc:A mountain chicken - a green frog as big as a wolf.
+
+name:giant red frog
+base:amphibian
+color:r
+speed:110
+hit-points:23
+hearing:12
+smell:20
+armor-class:19
+sleepiness:50
+depth:7
+rarity:1
+experience:16
+blow:BITE:LOSE_STR:2d4
+flags:RAND_50 | BASH_DOOR
+spell-freq:8
+spells:HOP
+desc:It looks poisonous.
+
+name:Hypnotoad
+base:amphibian
+color:Violet
+speed:110
+hit-points:1800
+hearing:12
+smell:40
+sleepiness:150
+armor-class:80
+depth:55
+rarity:5
+experience:3400
+blow:GAZE:HALLU
+blow:GAZE:TERRIFY
+blow:GAZE:PARALYZE
+blow:BITE:POISON:6d8
+flags:BASH_DOOR | MOVE_BODY | SMART | UNIQUE | ATTR_MULTI
+desc:All glory to the Hypnotoad! All glory to the Hypnotoad! All glory to the Hypnotoad!
+spell-freq:10
+friends-base:100:1d1:person:servant
+friends-base:80:1d2:person:servant
+friends-base:80:1d2:person:servant
+friends-base:80:1d2:person:servant
+friends-base:80:1d2:person:servant
+friends-base:80:1d2:person:servant
+friends-base:80:1d2:person:servant
+spells:BRAIN_SMASH | MIND_BLAST
+
+
 ##### a is for ANT #####
 
 name:soldier ant
@@ -2887,24 +2954,6 @@ experience:6
 blow:BITE:HURT:1d1
 desc:It is a small lizard with a hardened hide.
 
-name:giant green frog
-base:reptile
-color:g
-speed:110
-hit-points:9
-hearing:12
-smell:20
-armor-class:9
-sleepiness:30
-depth:3
-rarity:1
-experience:8
-blow:BITE:HURT:1d3
-flags:RAND_25 | BASH_DOOR
-spell-freq:8
-spells:HOP
-desc:A mountain chicken - a green frog as big as a wolf.
-
 name:lazy lizard
 base:reptile
 color:b
@@ -2921,24 +2970,6 @@ blow:BITE:PARALYZE:1d1
 flags:RAND_25
 flags:NO_SLEEP
 desc:A small blue lizard, creeping half-heartedly around with eyes half-shut.
-
-name:giant red frog
-base:reptile
-color:r
-speed:110
-hit-points:23
-hearing:12
-smell:20
-armor-class:19
-sleepiness:50
-depth:7
-rarity:1
-experience:16
-blow:BITE:LOSE_STR:2d4
-flags:RAND_50 | BASH_DOOR
-spell-freq:8
-spells:HOP
-desc:It looks poisonous.
 
 name:Icky Sticky Dinosaur
 base:reptile

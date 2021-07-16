@@ -1219,8 +1219,9 @@ static bool monster_turn_can_move(struct chunk *c, struct monster *mon,
 
 		return true;
 	} else if (square_iscloseddoor(c, new) || square_issecretdoor(c, new)) {
-		/* Don't allow a confused move to open a door. */
-		bool can_open = rf_has(mon->race->flags, RF_OPEN_DOOR) &&
+		bool can_pass = rf_has(mon->race->flags, RF_PASS_DOOR);
+		/* Don't allow a confused move to open or pass under a door. */
+		bool can_open = (can_pass || rf_has(mon->race->flags, RF_OPEN_DOOR)) &&
 			!confused;
 		/* During a confused move, a monster only bashes sometimes. */
 		bool can_bash = rf_has(mon->race->flags, RF_BASH_DOOR) &&
@@ -1233,14 +1234,22 @@ static bool monster_turn_can_move(struct chunk *c, struct monster *mon,
 		/* Learn about door abilities */
 		if (!confused && monster_is_visible(mon)) {
 			rf_on(lore->flags, RF_OPEN_DOOR);
+			rf_on(lore->flags, RF_PASS_DOOR);
 			rf_on(lore->flags, RF_BASH_DOOR);
 		}
 
-		/* If creature can open or bash doors, make a choice */
+		/* If creature can open, pass or bash doors, make a choice */
 		if (can_open) {
 			/* Sometimes bash anyway (impatient) */
 			if (can_bash) {
 				will_bash = one_in_(2) ? true : false;
+			}
+			/* Slithering is always faster */
+			if (can_pass) {
+				if (rf_has(mon->race->flags, RF_SMART))
+					will_bash = false;
+				else if (!(rf_has(mon->race->flags, RF_STUPID)))
+					will_bash = one_in_(5) ? true : false;
 			}
 		} else if (can_bash) {
 			/* Only choice */
@@ -1255,6 +1264,11 @@ static bool monster_turn_can_move(struct chunk *c, struct monster *mon,
 			return false;
 		}
 
+		/* If it's not going to bash and can pass under it, do so */
+		if ((can_pass) && (!will_bash)) {
+			msg("%s slithers under the door.", m_name);
+			return true;
+		}
 		/* Now outcome depends on type of door */
 		if (square_islockeddoor(c, new)) {
 			/* Locked door -- test monster strength against door strength */
