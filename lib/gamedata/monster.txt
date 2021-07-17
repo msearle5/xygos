@@ -255,7 +255,6 @@ name:black obelisk
 base:fullgrid
 color:Gray25
 depth:60
-rarity:5
 desc:A glossy black monolith of an unknown material that seems impossible to even scratch.
 grow:white obelisk
 hit-points:1500
@@ -281,7 +280,6 @@ name:white obelisk
 base:fullgrid
 color:White
 depth:77
-rarity:5
 desc:A glossy white pillar of an unknown material that seems impossible to even scratch.
 hit-points:1500
 armor-class:200
@@ -1272,7 +1270,8 @@ desc:It is about four feet long and carnivorous.
 # These descriptions repeat, and are repetitive, and all move in unison.
 # These descriptions repeat, and are repetitive, and all move in unison.
 #
-name:nickelpede:centipede
+name:nickelpede
+base:centipede
 color:Light Slate
 depth:23
 rarity:2
@@ -1291,7 +1290,8 @@ flags:KILL_BODY
 flags:RAND_25 | METAL
 flags:SMART | WEIRD_MIND
 
-name:quarterpede:centipede
+name:quarterpede
+base:centipede
 color:White
 depth:37
 rarity:2
@@ -1585,6 +1585,7 @@ name:munchkin
 base:humanoid
 color:Yellow
 depth:24:50
+rarity:15
 desc:An acolyte of the RNG. Leaving the worm-farms behind, he's after more lucrative prey.
 grow:master munchkin
 speed:110
@@ -1600,7 +1601,7 @@ spells:TPORT | TELE_TO | TELE_SELF_TO | SHAPECHANGE
 
 name:master munchkin
 base:humanoid
-color:Orange
+#color:Orange
 depth:48
 rarity:20
 desc:A follower of the Golden Path. Blurred with cybernetically enhanced speed, 
@@ -1865,7 +1866,7 @@ plural:white jellies
 grow:yellow jelly
 base:jelly
 color:w
-speed:120
+speed:110
 hit-points:36
 hearing:2
 armor-class:1
@@ -1874,6 +1875,7 @@ depth:2
 rarity:1
 experience:10
 blow:TOUCH:POISON:1d2
+passive:TOUCH:POISON:2d2
 flags:NEVER_MOVE
 flags:HURT_LIGHT | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
 desc:It's a large pile of white flesh.
@@ -1906,6 +1908,7 @@ armor-class:1
 sleepiness:99
 depth:3
 rarity:2
+light:-3
 experience:12
 blow:TOUCH:EAT_LIGHT:1d3
 blow:TOUCH:EAT_LIGHT:1d3
@@ -1920,7 +1923,7 @@ name:yellow jelly
 plural:yellow jellies
 base:jelly
 color:Yellow
-speed:120
+speed:110
 hit-points:45
 hearing:2
 armor-class:1
@@ -1929,6 +1932,7 @@ depth:3
 rarity:1
 experience:12
 blow:TOUCH:POISON:1d3
+passive:TOUCH:POISON:2d3
 flags:NEVER_MOVE
 flags:HURT_LIGHT | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
 desc:It's a large pile of yellow flesh.
@@ -1946,6 +1950,7 @@ depth:4
 rarity:1
 experience:14
 blow:TOUCH:COLD:1d6
+passive:TOUCH:COLD:3d6
 flags:COLD_BLOOD
 flags:NEVER_MOVE
 flags:HURT_LIGHT | IM_COLD | NO_CONF | NO_SLEEP
@@ -1955,7 +1960,7 @@ name:green jelly
 plural:green jellies
 base:jelly
 color:Green
-speed:120
+speed:110
 hit-points:99
 hearing:2
 armor-class:1
@@ -1964,6 +1969,7 @@ depth:5
 rarity:1
 experience:18
 blow:TOUCH:ACID:1d2
+passive:TOUCH:ACID:2d5
 flags:NEVER_MOVE
 flags:HURT_LIGHT | IM_ACID | HURT_COLD | NO_CONF | NO_SLEEP
 desc:It is a large pile of pulsing green flesh.
@@ -2040,6 +2046,7 @@ sleepiness:99
 blow:TOUCH:ACID:2d6
 blow:TOUCH:ACID:2d6
 blow:TOUCH:ACID:2d6
+passive:TOUCH:ACID:5d8:passive
 flags:COLD_BLOOD
 flags:NEVER_MOVE
 flags:NO_FEAR | NO_CONF | NO_SLEEP
@@ -2052,7 +2059,7 @@ plural:ochre jellies
 base:jelly
 color:Mud
 grow:jelly-mold
-speed:120
+speed:115
 hit-points:59
 hearing:12
 armor-class:21
@@ -2063,6 +2070,7 @@ experience:40
 blow:TOUCH:ACID:1d10
 blow:TOUCH:ACID:2d6
 blow:TOUCH:ACID:2d6
+passive:TOUCH:ACID:4d8
 flags:COLD_BLOOD
 flags:OPEN_DOOR | BASH_DOOR | TAKE_ITEM
 flags:IM_ACID | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
@@ -2077,12 +2085,13 @@ hit-points:316
 hearing:12
 armor-class:21
 sleepiness:1
-depth:16
+depth:18
 rarity:5
 experience:80
 blow:TOUCH:ACID:1d10
 blow:TOUCH:ACID:1d10
 blow:TOUCH:ACID:1d10
+passive:TOUCH:ACID:4d8
 flags:COLD_BLOOD
 flags:DROP_4
 flags:OPEN_DOOR | BASH_DOOR | TAKE_ITEM
@@ -2127,6 +2136,7 @@ armor-class:12
 sleepiness:1
 blow:TOUCH:ELEC:1d40
 blow:ENGULF:CONFUSE:4d4
+passive:TOUCH:CONFUSE:3d12
 flags:NO_FEAR | NO_CONF | NO_SLEEP
 flags:IM_POIS | IM_ELEC
 flags:STUPID | EMPTY_MIND
@@ -2146,6 +2156,7 @@ sleepiness:1
 blow:TOUCH:ACID:1d15
 blow:TOUCH:ACID:1d15
 blow:TOUCH:ACID:1d15
+passive:TOUCH:ACID:2d20
 flags:KILL_BODY
 flags:TAKE_ITEM
 flags:NO_FEAR | NO_CONF | NO_SLEEP
@@ -3206,6 +3217,7 @@ depth:10
 rarity:1
 experience:32
 blow:SPORE:POISON:1d3
+passive:TOUCH:POISON:1d3:passive
 flags:EMPTY_MIND | STUPID
 desc:It is a strange hairy growth on the dungeon floor.
 
@@ -3461,7 +3473,8 @@ blow:CRUSH:HURT:10d12
 flags:SMART | ANIMAL | COLD_BLOOD | WEIRD_MIND | RAND_25 | BASH_DOOR | KILL_BODY | KILL_ITEM
 desc:The primeval Beast itself. Many hunt the Wumpus, few return...
 
-name:dropbear:quadruped
+name:dropbear
+base:quadruped
 color:Beige
 depth:40
 rarity:3
@@ -4084,7 +4097,7 @@ rarity:5
 hearing:1
 armor-class:1
 sleepiness:1
-flags:NEVER_MOVE
+flags:NEVER_MOVE | NEVER_BLOW
 flags:REFLECT
 spell-freq:1
 spell-power:8
@@ -4165,13 +4178,13 @@ sleepiness:3
 depth:0
 rarity:1
 experience:0
-flags:SEASONAL
+flags:SEASONAL | NEVER_BLOW
 flags:UNIQUE
 flags:DROP_1 | DROP_GOOD | ONLY_ITEM
 flags:NO_CONF | NO_SLEEP
 spell-freq:4
 spells:BLINK | HEAL
-desc:It's Saint Nick, out delivering presents to the town urchins.
+desc:It's Saint Nick, out delivering presents. Have you been naughty or nice?
 
 name:Christmas tree monster
 color:White
@@ -4183,7 +4196,7 @@ hit-points:1
 armor-class:1
 sleepiness:1
 spell-power:1
-flags:SEASONAL
+flags:SEASONAL | NEVER_BLOW
 flags:DROP_1 | DROP_GOOD | ONLY_ITEM
 flags:NO_CONF | NO_SLEEP
 desc:A glittery silver tree, covered with flashing coloured lights. What's that underneath?
@@ -6080,12 +6093,13 @@ speed:110
 hit-points:77
 light:2
 hearing:2
-armor-class:19
+armor-class:19 
 sleepiness:70
 depth:19
 rarity:1
 experience:64
 blow:SPORE:FIRE:4d4
+passive:TOUCH:FIRE:4d6
 flags:EMPTY_MIND | STUPID
 flags:IM_FIRE
 flags-off:HURT_FIRE

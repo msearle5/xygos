@@ -556,240 +556,252 @@ int adjust_dam_armor(int damage, int ac)
 }
 
 /**
+ * Make one blow.
+ * Used for normal and passive attacks.
+ * Return true to continue with further blows.
+ */
+bool make_attack_blow(struct monster *mon, struct player *p, struct monster_blow *blow, struct monster_blow *loreblow, bool *blinked)
+{
+	struct monster_lore *lore = get_lore(mon->race);
+	int rlev = ((mon->race->level >= 1) ? mon->race->level : 1);
+	struct loc pgrid = p->grid;
+	bool visible = monster_is_visible(mon) || (mon->race->light > 0);
+	int accuracy = 100 - (mon->m_timed[MON_TMD_STUN] ? STUN_HIT_REDUCTION : 0);
+	bool obvious = false;
+	char m_name[80];
+	char ddesc[80];
+
+	int damage = 0;
+	bool do_cut = false;
+	bool do_stun = false;
+	int sound_msg = MSG_GENERIC;
+
+	char *act = NULL;
+
+	/* Get the "died from" information (i.e. "a kobold") */
+	monster_desc(ddesc, sizeof(ddesc), mon, MDESC_SHOW | MDESC_IND_VIS);
+
+	/* Get the monster name (or "it") */
+	monster_desc(m_name, sizeof(m_name), mon, MDESC_STANDARD);
+
+	/* Extract the attack information */
+	struct blow_effect *effect = blow->effect;
+	struct blow_method *method = blow->method;
+	random_value dice = blow->dice;
+
+	/* No more attacks */
+	if (!method) return false;
+
+	/* Handle "leaving" */
+	if (p->is_dead || p->upkeep->generate_level) return false;
+
+	/* Monster hits player */
+	assert(effect);
+	if (streq(effect->name, "NONE") ||
+		check_hit(p, effect->power, rlev, accuracy)) {
+		melee_effect_handler_f effect_handler;
+
+		/* Always disturbing */
+		disturb(p);
+
+		/* Hack -- Apply "protection from evil" */
+		if (p->timed[TMD_PROTEVIL] > 0) {
+			/* Learn about the evil flag */
+			if (monster_is_visible(mon))
+				rf_on(lore->flags, RF_EVIL);
+
+			if (monster_is_evil(mon) && p->lev >= rlev &&
+			    randint0(100) + p->lev > 50) {
+				/* Message */
+				msg("%s is repelled.", m_name);
+
+				/* Hack -- Next attack */
+				return true;
+			}
+		}
+
+		/* Describe the attack method */
+		act = monster_blow_method_action(method, -1);
+		do_cut = method->cut;
+		do_stun = method->stun;
+		sound_msg = method->msgt;
+
+		/* Hack -- assume all attacks are obvious */
+		obvious = true;
+
+		/* Roll dice */
+		damage = randcalc(dice, rlev, RANDOMISE);
+
+		/* Reduce damage when stunned */
+		if (mon->m_timed[MON_TMD_STUN]) {
+			damage = (damage * (100 - STUN_DAM_REDUCTION)) / 100;
+		}
+
+		/* Message */
+		if (act) {
+			const char *fullstop = ".";
+			if (suffix(act, "'") || suffix(act, "!")) {
+				fullstop = "";
+			}
+
+			if (OPT(p, show_damage)) {
+				msgt(sound_msg, "%s %s (%d)%s", m_name, act, damage,
+					 fullstop);
+			} else {
+				msgt(sound_msg, "%s %s%s", m_name, act, fullstop);
+			}
+		}
+
+		/* Perform method effects first if present. */
+		effect_handler = melee_handler_for_blow_method(method->name);
+		if (effect_handler != NULL) {
+			melee_effect_handler_context_t context = {
+				p,
+				mon,
+				NULL,
+				rlev,
+				method,
+				p->state.ac + p->state.to_a,
+				ddesc,
+				obvious,
+				*blinked,
+				damage,
+			};
+
+			effect_handler(&context);
+
+			/* Save any changes made in the handler for later use. */
+			obvious = context.obvious;
+			*blinked = context.blinked;
+			damage = context.damage;
+		}
+
+		/* Perform the actual effect. */
+		effect_handler = melee_handler_for_blow_effect(effect->name);
+		if (effect_handler != NULL) {
+			melee_effect_handler_context_t context = {
+				p,
+				mon,
+				NULL,
+				rlev,
+				method,
+				p->state.ac + p->state.to_a,
+				ddesc,
+				obvious,
+				*blinked,
+				damage,
+			};
+
+			effect_handler(&context);
+
+			/* Save any changes made in the handler for later use. */
+			obvious |= context.obvious;
+			*blinked |= context.blinked;
+			damage |= context.damage;
+		} else {
+			msg("ERROR: Effect handler not found for %s.", effect->name);
+		}
+
+		/* Don't cut or stun if player is dead */
+		if (p->is_dead) {
+			do_cut = false;
+			do_stun = false;
+		}
+
+		/* Hack -- only one of cut or stun */
+		if (do_cut && do_stun) {
+			/* Cancel cut */
+			if (randint0(100) < 50)
+				do_cut = false;
+
+			/* Cancel stun */
+			else
+				do_stun = false;
+		}
+
+		/* Handle cut */
+		if (do_cut) {
+			/* Critical hit (zero if non-critical) */
+			int amt, tmp = monster_critical(dice, rlev, damage);
+
+			/* Roll for damage */
+			switch (tmp) {
+				case 0: amt = 0; break;
+				case 1: amt = randint1(5); break;
+				case 2: amt = randint1(5) + 5; break;
+				case 3: amt = randint1(20) + 20; break;
+				case 4: amt = randint1(50) + 50; break;
+				case 5: amt = randint1(100) + 100; break;
+				case 6: amt = 300; break;
+				default: amt = 500; break;
+			}
+
+			/* Apply the cut */
+			if (amt) (void)player_inc_timed(p, TMD_CUT, amt, true, true);
+		}
+
+		/* Handle stun */
+		if (do_stun) {
+			/* Critical hit (zero if non-critical) */
+			int amt, tmp = monster_critical(dice, rlev, damage);
+
+			/* Roll for damage */
+			switch (tmp) {
+				case 0: amt = 0; break;
+				case 1: amt = randint1(5); break;
+				case 2: amt = randint1(10) + 10; break;
+				case 3: amt = randint1(20) + 20; break;
+				case 4: amt = randint1(30) + 30; break;
+				case 5: amt = randint1(40) + 40; break;
+				case 6: amt = 100; break;
+				default: amt = 200; break;
+			}
+
+			/* Apply the stun */
+			if (amt)
+				(void)player_inc_timed(p, TMD_STUN, amt, true, true);
+		}
+
+		string_free(act);
+	} else {
+		/* Visible monster missed player, so notify if appropriate. */
+		if (monster_is_visible(mon) &&	method->miss) {
+			/* Disturbing */
+			disturb(p);
+			msg("%s misses you.", m_name);
+		}
+	}
+
+	/* Analyze "visible" monsters only */
+	if (visible) {
+		/* Count "obvious" attacks (and ones that cause damage) */
+		if (obvious || damage || (blow->times_seen > 10)) {
+			/* Count attacks of this type */
+			if (loreblow->times_seen < UCHAR_MAX)
+				loreblow->times_seen++;
+		}
+	}
+
+	/* Skip the other blows if the player has moved */
+	if (!loc_eq(p->grid, pgrid)) return false;
+	return true;
+}
+
+/**
  * Attack the player via physical attacks.
  */
 bool make_attack_normal(struct monster *mon, struct player *p)
 {
 	struct monster_lore *lore = get_lore(mon->race);
-	int rlev = ((mon->race->level >= 1) ? mon->race->level : 1);
-	int ap_cnt;
-	char m_name[80];
-	char ddesc[80];
 	bool blinked = false;
-	int accuracy = 100 - (mon->m_timed[MON_TMD_STUN] ? STUN_HIT_REDUCTION : 0);
 
 	/* Not allowed to attack */
 	if (rf_has(mon->race->flags, RF_NEVER_BLOW)) return (false);
 
-	/* Get the monster name (or "it") */
-	monster_desc(m_name, sizeof(m_name), mon, MDESC_STANDARD);
-
-	/* Get the "died from" information (i.e. "a kobold") */
-	monster_desc(ddesc, sizeof(ddesc), mon, MDESC_SHOW | MDESC_IND_VIS);
-
 	/* Scan through all blows */
-	for (ap_cnt = 0; ap_cnt < z_info->mon_blows_max; ap_cnt++) {
-		struct loc pgrid = p->grid;
-		bool visible = monster_is_visible(mon) || (mon->race->light > 0);
-		bool obvious = false;
-
-		int damage = 0;
-		bool do_cut = false;
-		bool do_stun = false;
-		int sound_msg = MSG_GENERIC;
-
-		char *act = NULL;
-
-		/* Extract the attack information */
-		struct blow_effect *effect = mon->race->blow[ap_cnt].effect;
-		struct blow_method *method = mon->race->blow[ap_cnt].method;
-		random_value dice = mon->race->blow[ap_cnt].dice;
-
-		/* No more attacks */
-		if (!method) break;
-
-		/* Handle "leaving" */
-		if (p->is_dead || p->upkeep->generate_level) break;
-
-		/* Monster hits player */
-		assert(effect);
-		if (streq(effect->name, "NONE") ||
-			check_hit(p, effect->power, rlev, accuracy)) {
-			melee_effect_handler_f effect_handler;
-
-			/* Always disturbing */
-			disturb(p);
-
-			/* Hack -- Apply "protection from evil" */
-			if (p->timed[TMD_PROTEVIL] > 0) {
-				/* Learn about the evil flag */
-				if (monster_is_visible(mon))
-					rf_on(lore->flags, RF_EVIL);
-
-				if (monster_is_evil(mon) && p->lev >= rlev &&
-				    randint0(100) + p->lev > 50) {
-					/* Message */
-					msg("%s is repelled.", m_name);
-
-					/* Hack -- Next attack */
-					continue;
-				}
-			}
-
-			/* Describe the attack method */
-			act = monster_blow_method_action(method, -1);
-			do_cut = method->cut;
-			do_stun = method->stun;
-			sound_msg = method->msgt;
-
-			/* Hack -- assume all attacks are obvious */
-			obvious = true;
-
-			/* Roll dice */
-			damage = randcalc(dice, rlev, RANDOMISE);
-
-			/* Reduce damage when stunned */
-			if (mon->m_timed[MON_TMD_STUN]) {
-				damage = (damage * (100 - STUN_DAM_REDUCTION)) / 100;
-			}
-
-			/* Message */
-			if (act) {
-				const char *fullstop = ".";
-				if (suffix(act, "'") || suffix(act, "!")) {
-					fullstop = "";
-				}
-
-				if (OPT(p, show_damage)) {
-					msgt(sound_msg, "%s %s (%d)%s", m_name, act, damage,
-						 fullstop);
-				} else {
-					msgt(sound_msg, "%s %s%s", m_name, act, fullstop);
-				}
-			}
-
-			/* Perform method effects first if present. */
-			effect_handler = melee_handler_for_blow_method(method->name);
-			if (effect_handler != NULL) {
-				melee_effect_handler_context_t context = {
-					p,
-					mon,
-					NULL,
-					rlev,
-					method,
-					p->state.ac + p->state.to_a,
-					ddesc,
-					obvious,
-					blinked,
-					damage,
-				};
-
-				effect_handler(&context);
-
-				/* Save any changes made in the handler for later use. */
-				obvious = context.obvious;
-				blinked = context.blinked;
-				damage = context.damage;
-			}
-
-			/* Perform the actual effect. */
-			effect_handler = melee_handler_for_blow_effect(effect->name);
-			if (effect_handler != NULL) {
-				melee_effect_handler_context_t context = {
-					p,
-					mon,
-					NULL,
-					rlev,
-					method,
-					p->state.ac + p->state.to_a,
-					ddesc,
-					obvious,
-					blinked,
-					damage,
-				};
-
-				effect_handler(&context);
-
-				/* Save any changes made in the handler for later use. */
-				obvious |= context.obvious;
-				blinked |= context.blinked;
-				damage |= context.damage;
-			} else {
-				msg("ERROR: Effect handler not found for %s.", effect->name);
-			}
-
-			/* Don't cut or stun if player is dead */
-			if (p->is_dead) {
-				do_cut = false;
-				do_stun = false;
-			}
-
-			/* Hack -- only one of cut or stun */
-			if (do_cut && do_stun) {
-				/* Cancel cut */
-				if (randint0(100) < 50)
-					do_cut = false;
-
-				/* Cancel stun */
-				else
-					do_stun = false;
-			}
-
-			/* Handle cut */
-			if (do_cut) {
-				/* Critical hit (zero if non-critical) */
-				int amt, tmp = monster_critical(dice, rlev, damage);
-
-				/* Roll for damage */
-				switch (tmp) {
-					case 0: amt = 0; break;
-					case 1: amt = randint1(5); break;
-					case 2: amt = randint1(5) + 5; break;
-					case 3: amt = randint1(20) + 20; break;
-					case 4: amt = randint1(50) + 50; break;
-					case 5: amt = randint1(100) + 100; break;
-					case 6: amt = 300; break;
-					default: amt = 500; break;
-				}
-
-				/* Apply the cut */
-				if (amt) (void)player_inc_timed(p, TMD_CUT, amt, true, true);
-			}
-
-			/* Handle stun */
-			if (do_stun) {
-				/* Critical hit (zero if non-critical) */
-				int amt, tmp = monster_critical(dice, rlev, damage);
-
-				/* Roll for damage */
-				switch (tmp) {
-					case 0: amt = 0; break;
-					case 1: amt = randint1(5); break;
-					case 2: amt = randint1(10) + 10; break;
-					case 3: amt = randint1(20) + 20; break;
-					case 4: amt = randint1(30) + 30; break;
-					case 5: amt = randint1(40) + 40; break;
-					case 6: amt = 100; break;
-					default: amt = 200; break;
-				}
-
-				/* Apply the stun */
-				if (amt)
-					(void)player_inc_timed(p, TMD_STUN, amt, true, true);
-			}
-
-			string_free(act);
-		} else {
-			/* Visible monster missed player, so notify if appropriate. */
-			if (monster_is_visible(mon) &&	method->miss) {
-				/* Disturbing */
-				disturb(p);
-				msg("%s misses you.", m_name);
-			}
-		}
-
-		/* Analyze "visible" monsters only */
-		if (visible) {
-			/* Count "obvious" attacks (and ones that cause damage) */
-			if (obvious || damage || (lore->blows[ap_cnt].times_seen > 10)) {
-				/* Count attacks of this type */
-				if (lore->blows[ap_cnt].times_seen < UCHAR_MAX)
-					lore->blows[ap_cnt].times_seen++;
-			}
-		}
-
-		/* Skip the other blows if the player has moved */
-		if (!loc_eq(p->grid, pgrid)) break;
+	for (int ap_cnt = 0; ap_cnt < z_info->mon_blows_max; ap_cnt++) {
+		if (!make_attack_blow(mon, p, &mon->race->blow[ap_cnt], &lore->blows[ap_cnt], &blinked))
+			break;
 	}
 
 	/* Blink away */

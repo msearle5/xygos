@@ -323,6 +323,18 @@ void lore_update(const struct monster_race *race, struct monster_lore *lore)
 		}
 	}
 
+	/* Passive blows */
+	for (i = 0; i < z_info->mon_passive_max; i++) {
+		if (!race->passive) break;
+		if (lore->passive_known[i] || lore->passive[i].times_seen ||
+			lore->all_known) {
+			lore->passive_known[i] = true;
+			lore->passive[i].method = race->passive[i].method;
+			lore->passive[i].effect = race->passive[i].effect;
+			lore->passive[i].dice = race->passive[i].dice;
+		}
+	}
+
 	/* Killing a monster reveals some properties */
 	if ((lore->tkills > 0) || lore->all_known) {
 		lore->armour_known = true;
@@ -375,6 +387,8 @@ void wipe_monster_lore(const struct monster_race *race, struct monster_lore *lor
 {
 	struct monster_blow *blows;
 	bool *blow_known;
+	struct monster_blow *passive;
+	bool *passive_known;
 	struct monster_drop *d;
 	struct monster_friends *f;
 	struct monster_friends_base *fb;
@@ -415,9 +429,17 @@ void wipe_monster_lore(const struct monster_race *race, struct monster_lore *lor
 	memset(blows, 0, z_info->mon_blows_max * sizeof(*blows));
 	blow_known = lore->blow_known;
 	memset(blow_known, 0, z_info->mon_blows_max * sizeof(*blow_known));
+	passive = lore->passive;
+	memset(passive, 0, z_info->mon_passive_max * sizeof(*passive));
+	passive_known = lore->passive_known;
+	memset(passive_known, 0, z_info->mon_passive_max * sizeof(*passive_known));
+
 	memset(lore, 0, sizeof(*lore));
+
 	lore->blows = blows;
 	lore->blow_known = blow_known;
+	lore->passive = passive;
+	lore->passive_known = passive_known;
 }
 
 /**
@@ -1640,88 +1662,44 @@ void lore_append_spells(textblock *tb, const struct monster_race *race,
 	}
 }
 
-/**
- * Append the monster's melee attacks to a textblock.
- *
- * Known race flags are passed in for simplicity/efficiency.
- *
- * \param tb is the textblock we are adding to.
- * \param race is the monster race we are describing.
- * \param lore is the known information about the monster race.
- * \param known_flags is the preprocessed bitfield of race flags known to the
- *        player.
- * \param melee_colors is a list of colors that is associated with each
- *        blow effect.
- */
-void lore_append_attack(textblock *tb, const struct monster_race *race,
+static void lore_append_blows(textblock *tb, const struct monster_race *race,
 						const struct monster_lore *lore,
-						bitflag known_flags[RF_SIZE])
+						bitflag known_flags[RF_SIZE], struct monster_blow *blow, bool *blow_known, int blows_max,
+						int known, int total, bool caps, bool active)
 {
-	int i, known_attacks, total_attacks, described_count, total_centidamage;
-	monster_sex_t msex = MON_SEX_NEUTER;
-
-	assert(tb && race && lore);
-
 	/* Extract a gender (if applicable) */
-	msex = lore_monster_sex(race);
+	monster_sex_t msex = lore_monster_sex(race);
 
-	/* Notice lack of attacks */
-	if (rf_has(known_flags, RF_NEVER_BLOW)) {
-		textblock_append(tb, "%s has no physical attacks.  ",
-						 lore_pronoun_nominative(msex, true));
-		return;
-	}
-
-	total_attacks = 0;
-	known_attacks = 0;
-
-	/* Count the number of defined and known attacks */
-	for (i = 0; i < z_info->mon_blows_max; i++) {
-		/* Skip non-attacks */
-		if (!race->blow[i].method) continue;
-
-		total_attacks++;
-		if (lore->blow_known[i])
-			known_attacks++;
-	}
-
-	/* Describe the lack of knowledge */
-	if (known_attacks == 0) {
-		textblock_append_c(tb, COLOUR_ORANGE, "Nothing is known about %s attack.  ",
-						 lore_pronoun_possessive(msex, false));
-		return;
-	}
-
-	described_count = 0;
-	total_centidamage = 99; // round up the final result to the next higher point
+	int described_count = 0;
+	int total_centidamage = 99; // round up the final result to the next higher point
 
 	/* Describe each melee attack */
-	for (i = 0; i < z_info->mon_blows_max; i++) {
+	for (int i = 0; i < blows_max; i++) {
 		random_value dice;
 		const char *effect_str = NULL;
 
 		/* Skip unknown and undefined attacks */
-		if (!race->blow[i].method || !lore->blow_known[i]) continue;
+		if (!blow[i].method || !blow_known[i]) continue;
 
 		/* Extract the attack info */
-		dice = race->blow[i].dice;
-		effect_str = race->blow[i].effect->desc;
+		dice = blow[i].dice;
+		effect_str = blow[i].effect->desc;
 
 		/* Introduce the attack description */
 		if (described_count == 0)
 			textblock_append(tb, "%s can ",
-							 lore_pronoun_nominative(msex, true));
-		else if (described_count < known_attacks - 1)
+							 lore_pronoun_nominative(msex, caps));
+		else if (described_count < known - 1)
 			textblock_append(tb, ", ");
 		else
 			textblock_append(tb, ", and ");
 
 		/* Describe the method */
-		textblock_append(tb, "%s", race->blow[i].method->desc);
+		textblock_append(tb, "%s", blow[i].method->desc);
 
 		/* Describe the effect (if any) */
 		if (effect_str && strlen(effect_str) > 0) {
-			int index = blow_index(race->blow[i].effect->name);
+			int index = blow_index(blow[i].effect->name);
 			/* Describe the attack type */
 			textblock_append(tb, " to ");
 			textblock_append_c(tb, blow_color(player, index), "%s", effect_str);
@@ -1745,7 +1723,7 @@ void lore_append_attack(textblock *tb, const struct monster_race *race,
 			long chance = 0, chance2 = 0;
 			// These calculations are based on check_hit() and test_hit();
 			// make sure to keep it in sync
-			chance = (race->blow[i].effect->power + (race->level * 3));
+			chance = (blow[i].effect->power + (race->level * 3));
 			if (chance < 9) {
 				chance = 9;
 			}
@@ -1763,12 +1741,137 @@ void lore_append_attack(textblock *tb, const struct monster_race *race,
 	}
 
 	textblock_append(tb, ", averaging");
-	if (known_attacks < total_attacks) {
+	if (known < total) {
 		textblock_append_c(tb, COLOUR_ORANGE, " at least");
 	}
 	textblock_append_c(tb, COLOUR_L_GREEN, " %d", total_centidamage/100);
-	textblock_append(tb, " damage on each of %s turns.  ",
-					 lore_pronoun_possessive(msex, false));
+	textblock_append(tb, " damage on ");
+	if (active)
+		textblock_append(tb, "each of %s turns.  ", lore_pronoun_possessive(msex, false));
+	else
+		textblock_append(tb, "each turn you attack %s.  ", lore_pronoun_nominative(msex, false));
+}
+
+static void lore_append_active(textblock *tb, const struct monster_race *race,
+						const struct monster_lore *lore,
+						bitflag known_flags[RF_SIZE],
+						int known, int total, bool caps)
+{
+	lore_append_blows(tb, race, lore, known_flags, race->blow, lore->blow_known, z_info->mon_blows_max, known, total, caps, true);
+}
+
+static void lore_append_passive(textblock *tb, const struct monster_race *race,
+						const struct monster_lore *lore,
+						bitflag known_flags[RF_SIZE],
+						int known, int total, bool caps)
+{
+	lore_append_blows(tb, race, lore, known_flags, race->passive, lore->passive_known, z_info->mon_passive_max, known, total, caps, false);
+}
+
+/**
+ * Append the monster's melee attacks to a textblock.
+ *
+ * Known race flags are passed in for simplicity/efficiency.
+ *
+ * \param tb is the textblock we are adding to.
+ * \param race is the monster race we are describing.
+ * \param lore is the known information about the monster race.
+ * \param known_flags is the preprocessed bitfield of race flags known to the
+ *        player.
+ * \param melee_colors is a list of colors that is associated with each
+ *        blow effect.
+ */
+void lore_append_attack(textblock *tb, const struct monster_race *race,
+						const struct monster_lore *lore,
+						bitflag known_flags[RF_SIZE])
+{
+	int i, known_attacks, total_attacks;
+
+	assert(tb && race && lore);
+
+	/* Extract a gender (if applicable) */
+	monster_sex_t msex = lore_monster_sex(race);
+
+	/* Passive attacks */
+	int known_passive = 0;
+	int total_passive = 0;
+
+	/* Count the number of defined and known passive attacks */
+	for (i = 0; i < z_info->mon_passive_max; i++) {
+		/* Skip non-attacks */
+		if (!race->passive[i].method) continue;
+		total_passive++;
+		if (lore->passive_known[i])
+			known_passive++;
+	}
+
+	/* Active attacks */
+	total_attacks = 0;
+	known_attacks = 0;
+
+	/* Count the number of defined and known active attacks */
+	for (i = 0; i < z_info->mon_blows_max; i++) {
+		/* Skip non-attacks */
+		if (!race->blow[i].method) continue;
+
+		total_attacks++;
+		if (lore->blow_known[i])
+			known_attacks++;
+	}
+
+	/* Notice lack of attacks */
+	if (rf_has(known_flags, RF_NEVER_BLOW) && !total_passive) {
+		textblock_append(tb, "%s has no melee attacks.  ",
+						 lore_pronoun_nominative(msex, true));
+		return;
+	}
+
+	/* Describe the lack of knowledge */
+	if ((known_attacks == 0) && (known_passive == 0)) {
+		textblock_append_c(tb, COLOUR_ORANGE, "Nothing is known about %s attack.  ",
+						 lore_pronoun_possessive(msex, false));
+		return;
+	}
+
+	/* Passive attacks only, unknown */
+	if (known_attacks == 0) {
+		if (total_attacks > 0) {
+			textblock_append(tb, "Nothing is known about %s direct attack, but %s can retaliate if attacked",
+						 lore_pronoun_possessive(msex, false), lore_pronoun_nominative(msex, false));
+		} else {
+			textblock_append(tb, "%s has no direct melee attacks, but can retaliate if attacked", lore_pronoun_nominative(msex, true));
+		}
+		if (!known_passive) {
+			textblock_append(tb, ".  Nothing is known about this attack.  ");
+			return;
+		} else if (known_passive == total_passive) {
+			textblock_append(tb, " - ");
+		} else {
+			textblock_append(tb, ". Not everything is known about this attack, but %s can ", lore_pronoun_nominative(msex, true));
+		}
+		lore_append_passive(tb, race, lore, known_flags,
+						known_passive, total_passive, false);
+		return;
+	}
+
+	/* Otherwise, active attacks come first */
+	lore_append_active(tb, race, lore, known_flags,
+						known_attacks, total_attacks, true);
+
+	/* Followed by passive attacks if present */
+	if (total_passive > 0) {
+		if (!known_passive) {
+			textblock_append(tb, "%s can also retaliate if attacked, but nothing is known about how.  ", lore_pronoun_nominative(msex, true));
+			return;
+		} else if (known_passive == total_passive) {
+			textblock_append(tb, "%s can also retaliate if attacked - ", lore_pronoun_nominative(msex, true));
+		} else {
+			textblock_append(tb, "%s can also retaliate if attacked.  Not everything is known about how, but ",
+				lore_pronoun_nominative(msex, true));
+		}
+		lore_append_passive(tb, race, lore, known_flags,
+						known_passive, total_passive, false);
+	}
 }
 
 /**
@@ -1780,13 +1883,42 @@ struct monster_lore *get_lore(const struct monster_race *race)
 	return &l_list[race->ridx];
 }
 
+static void write_lore_blow(const char *name, int max, struct monster_lore *lore, struct monster_blow *blows, bool *blow_known, ang_file *fff)
+{
+	for (int n = 0; n < max; n++) {
+		/* End of blows */
+		if (!blow_known[n] && !lore->all_known) continue;
+		if (!blows[n].method) continue;
+
+		/* Output blow method */
+		file_putf(fff, "%s:%s", name, blows[n].method->name);
+
+		/* Output blow effect (may be none) */
+		file_putf(fff, ":%s", blows[n].effect->name);
+
+		/* Output blow damage (may be 0) */
+		file_putf(fff, ":%d+%dd%dM%d", blows[n].dice.base,
+				blows[n].dice.dice,
+				blows[n].dice.sides,
+				blows[n].dice.m_bonus);
+
+		/* Output number of times that blow has been seen */
+		file_putf(fff, ":%d", blows[n].times_seen);
+
+		/* Output blow index */
+		file_putf(fff, ":%d", n);
+
+		/* End line */
+		file_putf(fff, "\n");
+	}
+}
 
 /**
  * Write the monster lore
  */
 static void write_lore_entries(ang_file *fff)
 {
-	int i, n;
+	int i;
 
 	for (i = 0; i < z_info->r_max; i++) {
 		/* Current entry */
@@ -1810,32 +1942,10 @@ static void write_lore_entries(ang_file *fff)
 				  lore->cast_innate, lore->cast_spell);
 
 		/* Output blow (up to max blows) */
-		for (n = 0; n < z_info->mon_blows_max; n++) {
-			/* End of blows */
-			if (!lore->blow_known[n] && !lore->all_known) continue;
-			if (!lore->blows[n].method) continue;
+		write_lore_blow("blow", z_info->mon_blows_max, lore, lore->blows, lore->blow_known, fff);
 
-			/* Output blow method */
-			file_putf(fff, "blow:%s", lore->blows[n].method->name);
-
-			/* Output blow effect (may be none) */
-			file_putf(fff, ":%s", lore->blows[n].effect->name);
-
-			/* Output blow damage (may be 0) */
-			file_putf(fff, ":%d+%dd%dM%d", lore->blows[n].dice.base,
-					lore->blows[n].dice.dice,
-					lore->blows[n].dice.sides,
-					lore->blows[n].dice.m_bonus);
-
-			/* Output number of times that blow has been seen */
-			file_putf(fff, ":%d", lore->blows[n].times_seen);
-
-			/* Output blow index */
-			file_putf(fff, ":%d", n);
-
-			/* End line */
-			file_putf(fff, "\n");
-		}
+		/* and passive blows */
+		write_lore_blow("passive", z_info->mon_passive_max, lore, lore->passive, lore->passive_known, fff);
 
 		/* Output flags */
 		write_flags(fff, "flags:", lore->flags, RF_SIZE, r_info_flags);

@@ -1244,18 +1244,17 @@ static enum parser_error parse_monster_experience(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-static enum parser_error parse_monster_blow(struct parser *p) {
-	struct monster_race *r = parser_priv(p);
-	struct monster_blow *b = r->blow;
-
+static enum parser_error do_parse_monster_blow(struct parser *p, struct monster_race *r, struct monster_blow **blow)
+{
+	struct monster_blow *b = NULL;
 	if (!r)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
 	/* Go to the last valid blow, then allocate a new one */
 	if (!b) {
-		r->blow = mem_zalloc(sizeof(struct monster_blow));
-		b = r->blow;
+		*blow = b = mem_zalloc(sizeof(struct monster_blow));
 	} else {
+		b = *blow;
 		while (b->next)
 			b = b->next;
 		b->next = mem_zalloc(sizeof(struct monster_blow));
@@ -1277,6 +1276,16 @@ static enum parser_error parse_monster_blow(struct parser *p) {
 		b->dice = parser_getrand(p, "damage");
 
 	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_monster_blow(struct parser *p) {
+	struct monster_race *r = parser_priv(p);
+	return do_parse_monster_blow(p, r, &r->blow);
+}
+
+static enum parser_error parse_monster_passive(struct parser *p) {
+	struct monster_race *r = parser_priv(p);
+	return do_parse_monster_blow(p, r, &r->passive);
 }
 
 static enum parser_error parse_monster_flags(struct parser *p) {
@@ -1682,6 +1691,7 @@ struct parser *init_parse_monster(void) {
 	parser_reg(p, "name str name", parse_monster_name);
 	parser_reg(p, "base sym base", parse_monster_base);
 	parser_reg(p, "blow sym method ?sym effect ?rand damage", parse_monster_blow);
+	parser_reg(p, "passive sym method ?sym effect ?rand damage", parse_monster_passive);
 	parser_reg(p, "flags ?str flags", parse_monster_flags);
 	parser_reg(p, "spells str spells", parse_monster_spells);
 	parser_reg(p, "drop sym tval sym sval uint chance uint min uint max", parse_monster_drop);
@@ -1769,17 +1779,26 @@ static errr finish_parse_monster(struct parser *p) {
 	/* Scan the list for the max id and max blows */
 	z_info->r_max = 0;
 	z_info->mon_blows_max = 0;
+	z_info->mon_passive_max = 0;
 	r = parser_priv(p);
 	while (r) {
 		int max_blows = 0;
+		int max_passive = 0;
 		struct monster_blow *b = r->blow;
+		struct monster_blow *bp = r->passive;
 		z_info->r_max++;
 		while (b) {
 			b = b->next;
 			max_blows++;
 		}
+		while (bp) {
+			bp = bp->next;
+			max_passive++;
+		}
 		if (max_blows > z_info->mon_blows_max)
 			z_info->mon_blows_max = max_blows;
+		if (max_passive > z_info->mon_passive_max)
+			z_info->mon_passive_max = max_passive;
 		r = r->next;
 	}
 
@@ -1828,6 +1847,34 @@ static errr finish_parse_monster(struct parser *p) {
 		}
 		r_info[ridx].blow = b_new;
 
+		/* Passive blows */
+		b_new = mem_zalloc(z_info->mon_passive_max * sizeof(*b_new));
+		if (r->passive) {
+			struct monster_blow *b_temp, *b_old = r->passive;
+
+			/* Allocate space and copy */
+			for (i = 0; i < z_info->mon_passive_max; i++) {
+				memcpy(&b_new[i], b_old, sizeof(*b_old));
+				b_old = b_old->next;
+				if (!b_old) break;
+			}
+
+			/* Make next point correctly */
+			for (i = 0; i < z_info->mon_passive_max; i++)
+				if (b_new[i].next)
+					b_new[i].next = &b_new[i + 1];
+
+			/* Tidy up */
+			b_old = r->passive;
+			b_temp = b_old;
+			while (b_temp) {
+				b_temp = b_old->next;
+				mem_free(b_old);
+				b_old = b_temp;
+			}
+		}
+
+		r_info[ridx].passive = b_new;
 		mem_free(r);
 	}
 	z_info->r_max += 1;
@@ -1861,12 +1908,46 @@ static errr finish_parse_monster(struct parser *p) {
 		}
 	}
 
+	/* Verify correctness.
+	 * (This could be extended!)
+	 **/
+	for (i = 0; i < z_info->r_max; i++) {
+		struct monster_race *race = &r_info[i];
+		if (race->ridx) {
+			if (!race->base)
+				quit_fmt("Monster %s has no base\n", race->name);
+			/* Total active attacks */
+			int attacks = 0;
+
+			/* Count the number of active attacks */
+			for (int j = 0; j < z_info->mon_blows_max; j++) {
+				/* Skip non-attacks */
+				if (!race->blow[j].method) continue;
+				attacks++;
+			}
+
+			if ((rf_has(race->flags, RF_NEVER_BLOW)) && (attacks != 0))
+				quit_fmt("Monster %s has %d blows, but NEVER_BLOW is set\n", race->name, attacks);
+			if ((!(rf_has(race->flags, RF_NEVER_BLOW))) && (attacks == 0))
+				quit_fmt("Monster %s has no blows, but NEVER_BLOW is not set\n", race->name);
+
+			if ((!race->rarity) && (!(rf_has(race->flags, RF_SPECIAL_GEN))))
+				fprintf(stderr,"Monster %s has 0 rarity, but SPECIAL_GEN is not set\n",  race->name);
+			if (race->avg_hp < 1)
+				fprintf(stderr,"Monster %s has <=0 hitpoints\n",  race->name);
+			if (race->ac < 0)
+				fprintf(stderr,"Monster %s has <0 AC\n",  race->name);
+		}
+	}
+
 	/* Allocate space for the monster lore */
 	l_list = mem_zalloc(z_info->r_max * sizeof(struct monster_lore));
 	for (i = 0; i < z_info->r_max; i++) {
 		struct monster_lore *l = &l_list[i];
 		l->blows = mem_zalloc(z_info->mon_blows_max * sizeof(struct monster_blow));
 		l->blow_known = mem_zalloc(z_info->mon_blows_max * sizeof(bool));
+		l->passive = mem_zalloc(z_info->mon_passive_max * sizeof(struct monster_blow));
+		l->passive_known = mem_zalloc(z_info->mon_passive_max * sizeof(bool));
 	}
 
 	/* Verify exp */
@@ -2422,8 +2503,7 @@ static enum parser_error parse_lore_counts(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-static enum parser_error parse_lore_blow(struct parser *p) {
-	struct monster_lore *l = parser_priv(p);
+static enum parser_error do_parse_lore_blow(struct parser *p, struct monster_lore *l, struct monster_blow *b) {
 	struct blow_method *method = NULL;
 	struct blow_effect *effect = NULL;
 	int seen = 0, index = 0;
@@ -2452,7 +2532,7 @@ static enum parser_error parse_lore_blow(struct parser *p) {
 
 	/* Interpret */
 	if (seen) {
-		struct monster_blow *b = &l->blows[index];
+		b = b+index;
 		b->method = method;
 		b->effect = effect;
 		b->dice = dam;
@@ -2460,6 +2540,16 @@ static enum parser_error parse_lore_blow(struct parser *p) {
 	}
 
 	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_lore_blow(struct parser *p) {
+	struct monster_lore *l = parser_priv(p);
+	return do_parse_lore_blow(p, l, l->blows);
+}
+
+static enum parser_error parse_lore_passive(struct parser *p) {
+	struct monster_lore *l = parser_priv(p);
+	return do_parse_lore_blow(p, l, l->passive);
 }
 
 static enum parser_error parse_lore_flags(struct parser *p) {
@@ -2656,6 +2746,7 @@ static struct parser *init_parse_lore(void) {
 	parser_reg(p, "base sym base", parse_lore_base);
 	parser_reg(p, "counts int sights int deaths int tkills int wake int ignore int innate int spell", parse_lore_counts);
 	parser_reg(p, "blow sym method ?sym effect ?rand damage ?int seen ?int index", parse_lore_blow);
+	parser_reg(p, "passive sym method ?sym effect ?rand damage ?int seen ?int index", parse_lore_passive);
 	parser_reg(p, "flags ?str flags", parse_lore_flags);
 	parser_reg(p, "spells str spells", parse_lore_spells);
 	parser_reg(p, "drop sym tval sym sval uint chance uint min uint max", parse_lore_drop);
@@ -2754,6 +2845,8 @@ static void cleanup_lore(void)
 		}
 		mem_free(l->blows);
 		mem_free(l->blow_known);
+		mem_free(l->passive);
+		mem_free(l->passive_known);
 	}
 
 	mem_free(l_list);

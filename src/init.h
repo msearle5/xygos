@@ -44,6 +44,7 @@ struct angband_constants
 	u16b slay_max;			/**< Maximum number of slays */
 	u16b brand_max;			/**< Maximum number of brands */
 	u16b mon_blows_max;		/**< Maximum number of monster blows */
+	u16b mon_passive_max;		/**< Maximum number of monster blows */
 	u16b blow_methods_max;	/**< Maximum number of monster blow methods */
 	u16b blow_effects_max;	/**< Maximum number of monster blow effects */
 	u16b equip_slots_max;	/**< Maximum number of player equipment slots */

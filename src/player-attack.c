@@ -24,6 +24,7 @@
 #include "game-input.h"
 #include "generate.h"
 #include "init.h"
+#include "mon-attack.h"
 #include "mon-desc.h"
 #include "mon-lore.h"
 #include "mon-make.h"
@@ -790,7 +791,7 @@ double py_unarmed_damage(struct player *p)
 /**
  * Attack the monster at the given location with a single blow.
  */
-bool py_attack_real(struct player *p, struct loc grid, bool *fear)
+bool py_attack_real(struct player *p, struct loc grid, bool *fear, bool *hit)
 {
 	/* Information about the target of the attack */
 	struct monster *mon = square_monster(cave, grid);
@@ -867,6 +868,8 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear)
 
 		return false;
 	}
+
+	if (hit) *hit = true;
 
 	/* Handle normal weapon */
 	if (obj) {
@@ -1109,7 +1112,7 @@ int get_extra_attacks(struct attack **list, int length)
  * Attempt a 'extra' attack against the specified monster. Return true if the
  * attack killed the target.
  */
-bool py_attack_extra(struct player *p, struct loc grid, struct monster *mon, struct attack *att)
+bool py_attack_extra(struct player *p, struct loc grid, struct monster *mon, struct attack *att, bool *hit)
 {
 	char m_name[80];
 
@@ -1127,6 +1130,8 @@ bool py_attack_extra(struct player *p, struct loc grid, struct monster *mon, str
 		msgt(MSG_MISS, "You miss %s.", m_name);
 		return false;
 	}
+
+	if (hit) *hit = true;
 
 	/* You hit.
 	 * Extra attacks are not influenced by equipment slays, brands etc.
@@ -1174,7 +1179,7 @@ void py_attack(struct player *p, struct loc grid)
 {
 	int avail_energy = MIN(p->energy, z_info->move_energy);
 	int blow_energy = 100 * z_info->move_energy / p->state.num_blows;
-	bool slain = false, fear = false;
+	bool slain = false, fear = false, hit = false;
 	struct monster *mon = square_monster(cave, grid);
 
 	/* Disturb the player */
@@ -1182,13 +1187,7 @@ void py_attack(struct player *p, struct loc grid)
 
 	/* Initialize the energy used */
 	p->upkeep->energy_use = 0;
-#ifdef undef
-	/* Reward BGs with 5% of max SPs, min 1/2 point */
-	if (player_has(p, PF_COMBAT_REGEN)) {
-		s32b sp_gain = (s32b)(MAX(p->msp, 10) << 16) / 20;
-		player_adjust_mana_precise(p, sp_gain);
-	}
-#endif
+
 	/* Player attempts a shield bash if they can, and if monster is visible
 	 * and not too pathetic */
 	if (player_has(p, PF_SHIELD_BASH) && monster_is_visible(mon)) {
@@ -1200,7 +1199,7 @@ void py_attack(struct player *p, struct loc grid)
 	 * a full turn or until the enemy dies. We limit energy use
 	 * to avoid giving monsters a possible double move. */
 	while (avail_energy - p->upkeep->energy_use >= blow_energy && !slain) {
-		slain = py_attack_real(p, grid, &fear);
+		slain = py_attack_real(p, grid, &fear, &hit);
 		p->upkeep->energy_use += blow_energy;
 	}
 
@@ -1213,11 +1212,27 @@ void py_attack(struct player *p, struct loc grid)
 	for(int i=0; i<attacks; i++) {
 		if (slain)
 			break;
-		slain = py_attack_extra(p, grid, mon, att[i]);
+		slain = py_attack_extra(p, grid, mon, att[i], &hit);
+	}
+
+	/* Passive attacks against you */
+	if (hit && !slain) {
+		struct monster_lore *lore = get_lore(mon->race);
+		bool blinked = false;
+
+		if (z_info->mon_passive_max && mon->race->passive[0].method) {
+			msg("It retaliates!");
+			/* Scan through all blows */
+			for (int i = 0; i < z_info->mon_passive_max; i++) {
+				/* Extract the passive blow information and make the attack */
+				if (!make_attack_blow(mon, p, &mon->race->passive[i], &lore->passive[i], &blinked))
+					break;
+			}
+		}
 	}
 
 	/* Hack - delay fear messages */
-	if (fear && monster_is_visible(mon)) {
+	if (!slain && fear && monster_is_visible(mon)) {
 		add_monster_message(mon, MON_MSG_FLEE_IN_TERROR, true);
 	}
 }

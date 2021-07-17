@@ -46,6 +46,7 @@ typedef struct monster_lore
 	byte cast_spell;		/* Max number of other spells seen */
 
 	struct monster_blow *blows; /* Knowledge of blows */
+	struct monster_blow *passive; /* Knowledge of passive attacks */
 
 	bitflag flags[RF_SIZE]; /* Observed racial flags - a 1 indicates
 	                         * the flag (or lack thereof) is known to
@@ -60,6 +61,7 @@ typedef struct monster_lore
 	/* Derived known fields, put here for simplicity */
 	bool all_known;
 	bool *blow_known;
+	bool *passive_known;
 	bool armour_known;
 	bool drop_known;
 	bool sleep_known;

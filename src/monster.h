@@ -340,6 +340,7 @@ struct monster_race {
 	byte mut_chance;		/* Chance of mutation */
 
 	struct monster_blow *blow; /* Melee blows */
+	struct monster_blow *passive; /* Melee passive blows */
 
 	int level;				/* Level of creature */
 	int rarity;				/* Rarity of creature */
