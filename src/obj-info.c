@@ -511,7 +511,7 @@ static void calculate_melee_crits(struct player_state *state, int weight,
  *
  * Return value is 100x number of dice
  */
-static int o_calculate_melee_crits(struct player_state state,
+int o_calculate_melee_crits(struct player_state state,
 								   const struct object *obj)
 {
 	int dice = 0;

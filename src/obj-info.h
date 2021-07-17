@@ -40,5 +40,6 @@ textblock *object_info(const struct object *obj, oinfo_detail_t mode);
 textblock *object_info_ego(struct ego_item *ego);
 void object_info_spoil(ang_file *f, const struct object *obj, int wrap);
 void object_info_chardump(ang_file *f, const struct object *obj, int indent, int wrap);
+int o_calculate_melee_crits(struct player_state state, const struct object *obj);
 
 #endif /* OBJECT_INFO_H */

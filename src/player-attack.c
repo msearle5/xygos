@@ -35,6 +35,7 @@
 #include "monster.h"
 #include "obj-desc.h"
 #include "obj-gear.h"
+#include "obj-info.h"
 #include "obj-knowledge.h"
 #include "obj-pile.h"
 #include "obj-slays.h"
@@ -392,7 +393,7 @@ static int o_critical_melee(const struct player *p,
 /**
  * Determine standard melee damage.
  *
- * Factor in damage dice, to-dam and any brand or slay.
+ * Factor in damage dice, to-dam and any brand or slay (whichever is higher).
  * If deflate is >1, divide the base damage only (not the additional damage from slays/brands) by that factor.
  */
 static int melee_damage(const struct monster *mon, struct object *obj, int b, int s, int deflate)
@@ -400,11 +401,13 @@ static int melee_damage(const struct monster *mon, struct object *obj, int b, in
 	int dmg = damroll(obj->dd, obj->ds);
 	int base_dmg = dmg;
 
-	if (s) {
-		dmg *= slays[s].multiplier;
-	} else if (b) {
-		dmg *= get_monster_brand_multiplier(mon, &brands[b]);
-	}
+	int slaymul = 1;
+	if (s)
+		slaymul = slays[s].multiplier;
+	int brandmul = 1;
+	if (b)
+		brandmul = get_monster_brand_multiplier(mon, &brands[b]);
+	dmg *= MAX(slaymul, brandmul);
 
 	dmg -= base_dmg;
 	base_dmg += obj->to_d;
@@ -414,6 +417,60 @@ static int melee_damage(const struct monster *mon, struct object *obj, int b, in
 
 	return dmg + base_dmg;
 }
+
+/**
+ * Determine O-combat average melee damage.
+ * This does not handle the case of both slay and brand being present.
+ *
+ * Deadliness and any brand or slay add extra sides to the damage dice,
+ * criticals add extra dice.
+ */
+static int o_melee_average_damage(struct player *p, const struct monster *mon,
+		struct object *obj, int b, int s, int deflate)
+{
+	int dice = obj->dd;
+	int sides, dmg, add = 0;
+
+	/* Get the average value of a single damage die. (x10) */
+	int die_average = (10 * (obj->ds + 1)) / 2;
+
+	/* Adjust the average for slays and brands. (10x inflation) */
+	if (s) {
+		die_average *= slays[s].o_multiplier;
+		add = slays[s].o_multiplier - 10;
+	} else if (b) {
+		int bmult = get_monster_brand_multiplier(mon, &brands[b]);
+
+		die_average *= bmult;
+		add = bmult - 10;
+	} else {
+		die_average *= 10;
+	}
+
+	/* Apply deadliness to average. (100x inflation) */
+	apply_deadliness(&die_average, MIN(obj->to_d + p->state.to_d, 150));
+
+	/* Calculate the actual number of sides to each die (x10000). */
+	sides = (2 * die_average) - 10000;
+
+	/* Get number of critical dice */
+	double extra_dice = 0.0;
+	if (deflate <= 1)
+		extra_dice = o_calculate_melee_crits(p->state, obj) * 0.01;
+
+	/* Average damage. */
+	dmg = ((dice + extra_dice) * (sides + 1.0)) / 2.0;
+
+	/* Reduce if deflating */
+	if (deflate > 1)
+		dmg = (dmg + deflate + 1) / deflate;
+
+	/* Apply any special additions to damage. */
+	dmg += add;
+
+	return dmg;
+}
+
 
 /**
  * Determine O-combat melee damage.
@@ -430,6 +487,16 @@ static int o_melee_damage(struct player *p, const struct monster *mon,
 
 	/* Get the average value of a single damage die. (x10) */
 	int die_average = (10 * (obj->ds + 1)) / 2;
+
+	/* Determine whether to use slay or brand, if both are present */
+	if (s && b) {
+		int slay = o_melee_average_damage(p, mon, obj, 0, s, deflate);
+		int brand = o_melee_average_damage(p, mon, obj, b, 0, deflate);
+		if (slay > brand)
+			b = 0;
+		else
+			s = 0;
+	}
 
 	/* Adjust the average for slays and brands. (10x inflation) */
 	if (s) {
