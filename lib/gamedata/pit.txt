@@ -308,10 +308,10 @@ mon-base:ogre
 mon-base:troll
 mon-base:giant
 
-name:Creatures of Earth
+name:Aliens
 room:3
 alloc:8:35
-mon-base:xorn
+mon-base:alien
 
 name:Elemental creatures
 room:3

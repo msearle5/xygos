@@ -393,10 +393,12 @@ static int o_critical_melee(const struct player *p,
  * Determine standard melee damage.
  *
  * Factor in damage dice, to-dam and any brand or slay.
+ * If deflate is >1, divide the base damage only (not the additional damage from slays/brands) by that factor.
  */
-static int melee_damage(const struct monster *mon, struct object *obj, int b, int s)
+static int melee_damage(const struct monster *mon, struct object *obj, int b, int s, int deflate)
 {
 	int dmg = damroll(obj->dd, obj->ds);
+	int base_dmg = dmg;
 
 	if (s) {
 		dmg *= slays[s].multiplier;
@@ -404,9 +406,13 @@ static int melee_damage(const struct monster *mon, struct object *obj, int b, in
 		dmg *= get_monster_brand_multiplier(mon, &brands[b]);
 	}
 
-	dmg += obj->to_d;
+	dmg -= base_dmg;
+	base_dmg += obj->to_d;
+	if (deflate > 1) {
+		base_dmg = (base_dmg + deflate - 1) / deflate;
+	}
 
-	return dmg;
+	return dmg + base_dmg;
 }
 
 /**
@@ -416,7 +422,7 @@ static int melee_damage(const struct monster *mon, struct object *obj, int b, in
  * criticals add extra dice.
  */
 static int o_melee_damage(struct player *p, const struct monster *mon,
-		struct object *obj, int b, int s, u32b *msg_type)
+		struct object *obj, int b, int s, u32b *msg_type, int deflate)
 {
 	int dice = obj->dd;
 	int sides, dmg, add = 0;
@@ -448,10 +454,15 @@ static int o_melee_damage(struct player *p, const struct monster *mon,
 	sides += (extra ? 1 : 0);
 
 	/* Get number of critical dice */
-	dice += o_critical_melee(p, mon, obj, msg_type);
+	if (deflate <= 1)
+		dice += o_critical_melee(p, mon, obj, msg_type);
 
 	/* Roll out the damage. */
 	dmg = damroll(dice, sides);
+
+	/* Reduce if deflating */
+	if (deflate > 1)
+		dmg = (dmg + deflate + 1) / deflate;
 
 	/* Apply any special additions to damage. */
 	dmg += add;
@@ -672,7 +683,7 @@ static bool py_attack_hit(struct player *p, struct loc grid, struct monster *mon
 			msgt(msg_type, "You %s %s%s. %s", verb, m_name, dmg_text,
 					melee_hit_types[i].text);
 		else
-			msgt(msg_type, "You %s %s%s%s", verb, m_name, dmg_text);
+			msgt(msg_type, "You %s %s%s.", verb, m_name, dmg_text);
 	}
 
 	/* Pre-damage side effects */
@@ -795,6 +806,7 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear, bool *hit)
 {
 	/* Information about the target of the attack */
 	struct monster *mon = square_monster(cave, grid);
+	struct monster_lore *lore = get_lore(mon->race);
 	char m_name[80];
 
 	/* The weapon used */
@@ -852,6 +864,7 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear, bool *hit)
 			/* Failure */
 			monster_desc(m_name, sizeof(m_name), mon, MDESC_CAPITAL | MDESC_HIDE | (monster_is_visible(mon) ? MDESC_PRO_VIS : MDESC_PRO_HID));
 			msgt(MSG_MISS, "%s evades your blow.", m_name);
+			lore_learn_flag_if_visible(lore, mon, RF_EVASIVE);
 			return false;
 		}
 	}
@@ -890,12 +903,35 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear, bool *hit)
 		improve_attack_modifier(obj, mon, &b, &s, verb, false);
 		improve_attack_modifier(NULL, mon, &b, &s, verb, false);
 
+		/* Handle resistance to edged / blunt weapons.
+		 * All objects are either pointy or blunt, and anything that isn't TV_BLUNT
+		 * is considered pointy. (This only makes sense because most items can't be
+		 * wielded.)
+		 * If the monster has IM_EDGED and the weapon is pointy, or if the monster
+		 * has IM_BLUNT and the weapon is blunt, deflate damage to 1/4 and prevent
+		 * critical hits.
+		 * Either way, it applies to base and + to damage, but not to the extra damage
+		 * gained from brands and slays or to bonuses from strength, etc.
+		 */
+		bool is_blunt = tval_is_blunt(obj);
+		int deflate = 0;
+		if (((rf_has(mon->race->flags, RF_IM_EDGED) && !is_blunt)) ||
+			((rf_has(mon->race->flags, RF_IM_BLUNT) && is_blunt))) {
+			deflate = 4;
+			my_strcpy(verb, "weakly hit", sizeof(verb));
+			if (rf_has(mon->race->flags, RF_IM_EDGED))
+				lore_learn_flag_if_visible(lore, mon, RF_IM_EDGED);
+			if (rf_has(mon->race->flags, RF_IM_BLUNT))
+				lore_learn_flag_if_visible(lore, mon, RF_IM_BLUNT);
+		}
+
 		/* Get the damage */
 		if (!OPT(p, birth_percent_damage)) {
-			dmg = melee_damage(mon, obj, b, s);
-			dmg = critical_melee(p, mon, obj, weight, obj->to_h, dmg, &msg_type);
+			dmg = melee_damage(mon, obj, b, s, deflate);
+			if (!deflate)
+				dmg = critical_melee(p, mon, obj, weight, obj->to_h, dmg, &msg_type);
 		} else {
-			dmg = o_melee_damage(p, mon, obj, b, s, &msg_type);
+			dmg = o_melee_damage(p, mon, obj, b, s, &msg_type, deflate);
 		}
 
 		/* Splash damage and earthquakes */
@@ -904,6 +940,7 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear, bool *hit)
 			do_quake = true;
 			equip_learn_flag(p, OF_IMPACT);
 		}
+
 	} else {
 		/* Handle unarmed melee.
 		 * Only Wrestlers can get critical hits - the chance depends on armor weight,

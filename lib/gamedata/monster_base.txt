@@ -504,13 +504,14 @@ flags:UNDEAD | EVIL | COLD_BLOOD | SPIRIT | CLEAR_WEB
 flags:HURT_LIGHT | IM_COLD | IM_POIS | NO_CONF | NO_SLEEP | NO_STUN | NO_HOLD
 desc:Wight/Wraith
 
-# Strange part rock beings which can destroy or pass through walls
-name:xorn
+# Non-humanoid, (usually) intelligent aliens
+# Includes xorn/xaren
+name:alien
 glyph:X
 pain:4
 flags:COLD_BLOOD | EMPTY_MIND | CLEAR_WEB
-flags:HURT_ROCK | IM_POIS | NO_CONF | NO_SLEEP
-desc:Xorn/Xaren
+flags:IM_POIS | NO_CONF | NO_SLEEP
+desc:Alien
 
 # Small, weak, comical humanoids
 name:yeek

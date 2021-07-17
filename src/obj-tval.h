@@ -68,6 +68,7 @@ bool tval_is_device(const struct object *obj);
 bool tval_is_useable(const struct object *obj);
 bool tval_is_wand(const struct object *obj);
 bool tval_is_weapon(const struct object *obj);
+bool tval_is_blunt(const struct object *obj);
 bool tval_has_variable_power(const struct object *obj);
 bool tval_is_wearable(const struct object *obj);
 bool tval_is_edible(const struct object *obj);

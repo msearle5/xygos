@@ -2146,7 +2146,7 @@ void equip_learn_on_ranged_attack(struct player *p)
 
 /**
  * Learn things which happen on making a melee attack.
- * Does not apply to gun
+ * Does not apply to guns.
  *
  * \param p is the player
  */

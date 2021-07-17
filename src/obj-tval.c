@@ -102,6 +102,11 @@ bool tval_is_light(const struct object *obj)
 	return obj->tval == TV_LIGHT;
 }
 
+bool tval_is_blunt(const struct object *obj)
+{
+	return obj->tval == TV_HAFTED;
+}
+
 bool tval_is_light_k(const struct object_kind *kind)
 {
 	return kind->tval == TV_LIGHT;
