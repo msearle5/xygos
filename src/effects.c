@@ -21,6 +21,7 @@
 #include "cave.h"
 #include "effects.h"
 #include "game-input.h"
+#include "game-world.h"
 #include "generate.h"
 #include "init.h"
 #include "mon-desc.h"
@@ -4056,6 +4057,8 @@ static bool effect_handler_RUBBLE(effect_handler_context_t *context)
 					square_set_feat(cave, grid, FEAT_PASS_RUBBLE);
 				else
 					square_set_feat(cave, grid, FEAT_RUBBLE);
+				if (cave->depth == 0)
+					expose_to_sun(cave, grid, is_daytime());
 				rubble_grids--;
 			}
 		}
@@ -4078,6 +4081,7 @@ static bool effect_handler_GRANITE(effect_handler_context_t *context)
 {
 	struct trap *trap = context->origin.which.trap;
 	square_set_feat(cave, trap->grid, FEAT_GRANITE);
+	if (cave->depth == 0) expose_to_sun(cave, trap->grid, is_daytime());
 
 	player->upkeep->update |= (PU_UPDATE_VIEW | PU_MONSTERS);
 	player->upkeep->redraw |= (PR_MONLIST | PR_ITEMLIST);
