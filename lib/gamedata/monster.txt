@@ -807,7 +807,7 @@ depth:3
 rarity:1
 experience:7
 blow:BITE:HURT:1d4
-friends:100:4d4:same
+friends:100:4d4:Same
 desc:It is about two feet long and has sharp pincers.
 
 name:giant blue ant
@@ -3319,6 +3319,27 @@ flags:DROP_60 | DROP_40 | DROP_20
 flags:OPEN_DOOR | SMART | SPIRIT | TAKE_ITEM
 flags:FEMALE | SPECIAL_GEN | QUESTOR
 
+name:stormtrooper cadet
+base:person
+color:CadetBlue
+speed:110
+hit-points:160
+hearing:20
+armor-class:50
+sleepiness:100
+depth:24
+rarity:3
+experience:300
+blow:HIT:HURT:2d6
+blow:HIT:HURT:2d6
+flags:MALE | FEMALE | EVIL | SPIRIT
+flags:DROP_20 | CONFUSED
+flags:OPEN_DOOR
+spell-freq:4
+spells:BO_PLAS
+friends:20:1d2:stormtrooper cadet
+desc:An evil enforcer in training. Wearing the Imperial stormtroopers' usual clumsy white full body armor marked with the "training wheels" - concentric blue circles on the chest and back - that identify the wearer as being a new recruit. 
+
 name:stormtrooper
 base:person
 color:W
@@ -3337,7 +3358,30 @@ flags:DROP_40 | CONFUSED
 flags:OPEN_DOOR
 spell-freq:2
 spells:BO_PLAS
+friends:60:1d2:Same
+friends:30:1d1:stormtrooper cadet
 desc:A masked enforcer in awkward-looking white full body armor, and an agent of evil - at least in theory. Between 9 and 5, anyway. Not one that really signed up to it, and in particular not one that paid any attention to target shooting drill.
+
+name:stormtrooper captain
+base:person
+color:Orange
+speed:110
+hit-points:320
+hearing:20
+armor-class:90
+sleepiness:100
+depth:45
+rarity:2
+experience:950
+blow:HIT:HURT:4d6
+blow:HIT:HURT:4d6
+flags:MALE | FEMALE | EVIL | SPIRIT
+flags:DROP_60 | CONFUSED
+flags:OPEN_DOOR
+spell-freq:1
+spells:BO_PLAS
+friends:100:2d3:stormtrooper:servant
+desc:An officer of the Imperial stormtroopers, in bulky white full body armor adorned with flashy gold trim. Armed with a powerful phased plasma rifle, but luckily for you still not any good at aiming it.
 
 name:The Dark Helmet
 base:person
@@ -3362,6 +3406,7 @@ flags:MOVE_BODY | OPEN_DOOR | ATTR_FLICKER | REGENERATE
 flags:IM_FIRE
 flags:FORCE_SLEEP
 friends:100:2d3:stormtrooper:bodyguard
+friends:100:1d1:stormtrooper captain:bodyguard
 spell-freq:3
 spells:BO_PLAS
 spells:BLINK | S_FRIENDS

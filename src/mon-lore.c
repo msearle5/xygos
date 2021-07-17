@@ -1492,6 +1492,14 @@ void lore_append_abilities(textblock *tb, const struct monster_race *race,
 			rf_on(current_flags, flag);
 		}
 	}
+
+	/* Silly special case to avoid sillier "They resist bright light, and do not resist light" */
+	if (rf_has(current_flags, RF_HURT_LIGHT) &&
+		rf_has(lore->flags, RF_IM_LIGHT) &&
+		!rf_has(known_flags, RF_IM_LIGHT)) {
+			rf_off(current_flags, RF_HURT_LIGHT);
+	}
+
 	if (prev)
 		my_strcpy(start, ", but resist%s ", sizeof(start));
 	else
