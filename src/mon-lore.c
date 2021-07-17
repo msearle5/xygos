@@ -577,37 +577,38 @@ void monster_flags_known(const struct monster_race *race,
  *
  * \param awareness is the inactivity counter of the race (monster_race.sleep).
  */
-static const char *lore_describe_awareness(s16b awareness)
+static const char *lore_describe_awareness(s16b awareness, enum monster_sex ms)
 {
 	/* Value table ordered descending, for priority. Terminator is
 	 * {SHRT_MAX, NULL}. */
 	static const struct lore_awareness {
 		s16b threshold;
+		const char *descriptions;
 		const char *description;
 	} lore_awareness_description[] = {
-		{200,	"prefers to ignore"},
-		{95,	"pays very little attention to"},
-		{75,	"pays little attention to"},
-		{45,	"tends to overlook"},
-		{25,	"takes quite a while to see"},
-		{10,	"takes a while to see"},
-		{5,		"is fairly observant of"},
-		{3,		"is observant of"},
-		{1,		"is very observant of"},
-		{0,		"is vigilant for"},
+		{200,	"prefers to ignore", "prefer to ignore"},
+		{95,	"pays very little attention to", "pay very little attention to"},
+		{75,	"pays little attention to", "pays little attention to"},
+		{45,	"tends to overlook", "tend to overlook"},
+		{25,	"takes quite a while to see", "take quite a while to see"},
+		{10,	"takes a while to see", "take a while to see"},
+		{5,		"are fairly observant of", "is fairly observant of"},
+		{3,		"are observant of", "is observant of"},
+		{1,		"are very observant of", "is very observant of"},
+		{0,		"are vigilant for", "is vigilant for"},
 		{SHRT_MAX,	NULL},
 	};
 	const struct lore_awareness *current = lore_awareness_description;
 
 	while (current->threshold != SHRT_MAX && current->description != NULL) {
 		if (awareness > current->threshold)
-			return current->description;
+			return (ms != MON_SEX_EITHER) ? current->description : current->description;
 
 		current++;
 	}
 
 	/* Values zero and less are the most vigilant */
-	return "is ever vigilant for";
+	return (ms != MON_SEX_EITHER) ? "are ever vigilant for" : "is ever vigilant for";
 }
 
 /**
@@ -809,6 +810,78 @@ static const char *lore_pronoun_possessive(monster_sex_t sex, bool title_case)
 		case_index = 1;
 
 	return lore_pronouns[pronoun_index][case_index];
+}
+
+/** Return a "s" or empty string attached to the preceding verb.
+ * 
+ * Descriptions are in a table within the function. Table must match
+ * monster_sex_t values.
+ *
+ * \param sex is the gender value (as provided by `lore_monster_sex()`.
+ */
+static const char *lore_verb_s(monster_sex_t sex)
+{
+	static const char *lore_s[MON_SEX_MAX] = {
+		"s",
+		"s",
+		"s",
+		"",
+	};
+
+	int index = MON_SEX_NEUTER;
+
+	if (sex < MON_SEX_MAX)
+		index = sex;
+
+	return lore_s[index];
+}
+
+/** Return a "s" if necesary, space and possessive pronoun.
+ * 
+ * Descriptions are in a table within the function. Table must match
+ * monster_sex_t values.
+ *
+ * \param sex is the gender value (as provided by `lore_monster_sex()`.
+ */
+static const char *lore_pronoun_possessive_s(monster_sex_t sex)
+{
+	static const char *lore_pronouns[MON_SEX_MAX] = {
+		"s its",
+		"s his",
+		"s her",
+		" their",
+	};
+
+	int pronoun_index = MON_SEX_NEUTER;
+
+	if (sex < MON_SEX_MAX)
+		pronoun_index = sex;
+
+	return lore_pronouns[pronoun_index];
+}
+
+/** Return "is" or "are"
+ * 
+ * Descriptions are in a table within the function. Table must match
+ * monster_sex_t values.
+ *
+ * \param sex is the gender value (as provided by `lore_monster_sex()`.
+ */
+static const char *lore_is_are(monster_sex_t sex)
+{
+	static const char *is[MON_SEX_MAX] = {
+		"is",
+		"is",
+		"is",
+		"are",
+	};
+
+	int index = MON_SEX_NEUTER;
+
+	if (sex < MON_SEX_MAX)
+		index = sex;
+
+	return is[index];
 }
 
 /**
@@ -1359,6 +1432,8 @@ void lore_append_abilities(textblock *tb, const struct monster_race *race,
 	 * sentences */
 	msex = lore_monster_sex(race);
 	initial_pronoun = lore_pronoun_nominative(msex, true);
+	const char *s = lore_verb_s(msex);
+	const char *is = lore_is_are(msex);
 	const char *does = lore_does(msex);
 
 	/* Describe environment-shaping abilities. */
@@ -1378,28 +1453,28 @@ void lore_append_abilities(textblock *tb, const struct monster_race *race,
 		textblock_append(tb, "%s disguises itself as something else.  ",
 						 initial_pronoun);
 	if (rf_has(known_flags, RF_MULTIPLY))
-		textblock_append_c(tb, COLOUR_ORANGE, "%s breeds explosively.  ",
-						   initial_pronoun);
+		textblock_append_c(tb, COLOUR_ORANGE, "%s breed%s explosively.  ",
+						   initial_pronoun, s);
 	if (rf_has(known_flags, RF_REGENERATE))
-		textblock_append(tb, "%s regenerates quickly.  ", initial_pronoun);
+		textblock_append(tb, "%s regenerate%s quickly.  ", initial_pronoun, s);
 
 	/* Describe light */
 	if (race->light > 1) {
-		textblock_append(tb, "%s illuminates %s surroundings.  ",
-						 initial_pronoun, lore_pronoun_possessive(msex, false));
+		textblock_append(tb, "%s illuminate%s surroundings.  ",
+						 initial_pronoun, lore_pronoun_possessive_s(msex));
 	} else if (race->light == 1) {
-		textblock_append(tb, "%s is illuminated.  ", initial_pronoun);
+		textblock_append(tb, "%s %s illuminated.  ", initial_pronoun, is);
 	} else if (race->light == -1) {
-		textblock_append(tb, "%s is darkened.  ", initial_pronoun);
+		textblock_append(tb, "%s %s darkened.  ", initial_pronoun, is);
 	} else if (race->light < -1) {
-		textblock_append(tb, "%s shrouds %s surroundings in darkness.  ",
-						 initial_pronoun, lore_pronoun_possessive(msex, false));
+		textblock_append(tb, "%s shroud%s surroundings in darkness.  ",
+						 initial_pronoun, lore_pronoun_possessive_s(msex));
 	}
 
 	/* Collect susceptibilities */
 	create_mon_flag_mask(current_flags, RFT_VULN, RFT_VULN_I, RFT_MAX);
 	rf_inter(current_flags, known_flags);
-	my_strcpy(start, format("%s is hurt by ", initial_pronoun), sizeof(start));
+	my_strcpy(start, format("%s %s hurt by ", initial_pronoun, is), sizeof(start));
 	lore_append_clause(tb, current_flags, COLOUR_VIOLET, start, "and", "");
 	if (!rf_is_empty(current_flags)) {
 		prev = true;
@@ -1418,9 +1493,9 @@ void lore_append_abilities(textblock *tb, const struct monster_race *race,
 		}
 	}
 	if (prev)
-		my_strcpy(start, ", but resists ", sizeof(start));
+		my_strcpy(start, ", but resist%s ", sizeof(start));
 	else
-		my_strcpy(start, format("%s resists ", initial_pronoun), sizeof(start));
+		my_strcpy(start, format("%s resist%s ", initial_pronoun, s), sizeof(start));
 	lore_append_clause(tb, current_flags, COLOUR_L_UMBER, start, "and", "");
 	if (!rf_is_empty(current_flags)) {
 		prev = true;
@@ -1499,12 +1574,12 @@ void lore_append_awareness(textblock *tb, const struct monster_race *race,
 	/* Do we know how aware it is? */
 	if (lore->sleep_known)
 	{
-		const char *aware = lore_describe_awareness(race->sleep);
+		const char *aware = lore_describe_awareness(race->sleep, msex);
 		textblock_append(tb, "%s %s intruders, which %s may notice from ",
 						 lore_pronoun_nominative(msex, true), aware,
 						 lore_pronoun_nominative(msex, false));
 		textblock_append_c(tb, COLOUR_L_BLUE, "%d", 10 * race->hearing);
-		textblock_append(tb, " feet.  ");
+		textblock_append(tb, " meters.  ");
 	}
 }
 
