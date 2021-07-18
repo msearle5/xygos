@@ -190,6 +190,9 @@ message:MON_INSULT:w
 # MSG_MON_MOAN
 message:MON_MOAN:w
 
+# MSG_MON_BOAST
+message:MON_BOAST:w
+
 # MSG_RECOVER
 message:RECOVER:w
 

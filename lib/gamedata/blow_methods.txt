@@ -213,13 +213,44 @@ stun:0
 miss:0
 phys:0
 msg:MON_MOAN
-act:wants his mushrooms back
-act:tells {target} to get off his land
-act:looks for his dogs
-act:says 'Did you kill my Fang?'
-act:asks 'Do you want to buy any mushrooms?'
-act:seems sad about something
-act:asks if {target} {has} seen his dogs
-act:mumbles something about mushrooms
-desc:moan
+act:mentions the genuine imitation leather upholstery
+act:tells you that smart buyers buy refurbished
+act:says that you too can have your very own spacecraft
+act:informs you that his prices are surprisingly affordable
+act:says that you can get into space for a couple of billion
+act:tells you to beware of cut-price imitations
+act:says that only numpties would buy a new spacecraft
+act:says that the official prices are highway robbery
+act:asks 'Do you want to buy a used Cobra, for 1.99 gigs?'
+act:discusses the merits of different hyperdrives
+act:suggests that you should buy accessories for your Cobra
+act:quotes a price for shooting your car into space for LOLs
+act:rambles on about something mysterious called Raxxla
+act:assure you that his price can't be beaten on any planet
+desc:try to sell you a used spacecraft
 
+name:BOAST
+cut:0
+stun:0
+miss:0
+phys:0
+msg:MON_BOAST
+act:says 'Hey, watch this!'
+act:spins around
+act:does a cartwheel
+act:does a handstand
+act:does a backflip
+act:says 'See ya, bye!'
+act:technobabbles about cybergear
+act:shows you go-faster stripes
+act:says 'Out of my way, slo-mo!'
+act:says 'Shift it, snail!'
+act:shouts 'Move, granny!'
+act:yells 'Spee-eeeeed!'
+act:blathers about equipment
+act:boasts about something obscure
+act:shows you a shiny badge
+act:denounces Sirius cyberware
+act:enthuses about Collective gear
+act:flashes a Cyber Salon member's card
+desc:boast

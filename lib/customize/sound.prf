@@ -391,6 +391,9 @@ sound:MON_INSULT:mco_strange_thwoink
 # Attack - moan
 sound:MON_MOAN:mco_strange_music
 
+# Attack - boast
+sound:MON_BOAST:mco_man_mumble
+
 # Attack - shriek
 sound:SHRIEK:mco_mouse_squeaks
 
