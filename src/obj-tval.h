@@ -41,7 +41,8 @@ bool tval_can_have_timeout(const struct object *obj);
 int tval_find_idx(const char *name);
 const char *tval_find_name(int tval);
 bool tval_is_ammo(const struct object *obj);
-bool kind_tval_is_armor(const struct object_kind *kind);
+bool tval_is_sharp_missile(const struct object *obj);
+bool tval_is_bolt(const struct object *obj);
 bool tval_is_armor(const struct object *obj);
 bool tval_is_battery(const struct object *obj);
 bool tval_is_body_armor(const struct object *obj);
@@ -76,5 +77,6 @@ bool tval_is_zapper(const struct object *obj);
 int tval_sval_count(const char *name);
 int tval_sval_list(const char *name, int *list, int max_size);
 bool kind_tval_is_weapon(const struct object_kind *kind);
+bool kind_tval_is_armor(const struct object_kind *kind);
 
 #endif /* OBJECT_TVAL_H */

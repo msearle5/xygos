@@ -552,22 +552,8 @@ static const int enchant_table[16] =
 };
 
 /**
- * Hook to specify "weapon"
+ * Hook to specify "recyclable into blocks"
  */
-static bool item_tester_hook_weapon(const struct object *obj)
-{
-	return tval_is_weapon(obj);
-}
-
-
-/**
- * Hook to specify "armour"
- */
-static bool item_tester_hook_armour(const struct object *obj)
-{
-	return tval_is_armor(obj);
-}
-
 static bool item_tester_recyclable(const struct object *obj)
 {
 	return (recyclable_blocks(obj) > 0);
@@ -735,8 +721,9 @@ static bool enchant_spell(int num_hit, int num_dam, int num_ac, int num_brand, i
 
 	const char *q, *s;
 	int itemmode = (USE_EQUIP | USE_INVEN | USE_QUIVER | USE_FLOOR);
+
 	item_tester filter = num_ac ?
-		item_tester_hook_armour : item_tester_hook_weapon;
+		tval_is_armor : tval_is_weapon;
 	if (num_brand)
 		filter = item_tester_hook_brandable;
 	if (num_mundane)
@@ -964,41 +951,6 @@ static bool mundane_object(struct object *obj, bool silent)
 		}
 	}
 	return success;
-}
-
-/**
- * Hook for "get_item()".  Determine if something is rechargable.
- */
-static bool item_tester_hook_recharge(const struct object *obj)
-{
-	/* Recharge devices and wands */
-	if (tval_can_have_charges(obj)) return true;
-
-	return false;
-}
-
-/**
- * Hook to specify a device
- */
-static bool item_tester_hook_device(const struct object *obj)
-{
-	return obj->tval == TV_DEVICE;
-}
-
-/**
- * Hook to specify "ammo"
- */
-static bool item_tester_hook_ammo(const struct object *obj)
-{
-	return tval_is_ammo(obj);
-}
-
-/**
- * Hook to specify bolts
- */
-static bool item_tester_hook_bolt(const struct object *obj)
-{
-	return obj->tval == TV_AMMO_12;
 }
 
 /**
@@ -2947,11 +2899,10 @@ static bool effect_handler_RECHARGE(effect_handler_context_t *context)
 	s = "You have nothing to recharge.";
 	if (context->cmd) {
 		if (cmd_get_item(context->cmd, "tgtitem", &obj, q, s,
-				item_tester_hook_recharge, itemmode)) {
+				tval_can_have_charges, itemmode)) {
 			return used;
 		}
-	} else if (!get_item(&obj, q, s, 0, item_tester_hook_recharge,
-				  itemmode)) {
+	} else if (!get_item(&obj, q, s, 0, tval_can_have_charges, itemmode)) {
 		return (used);
 	}
 
@@ -5492,43 +5443,13 @@ static bool effect_handler_BRAND_AMMO(effect_handler_context_t *context)
 	s = "You have nothing to brand.";
 	if (context->cmd) {
 		if (cmd_get_item(context->cmd, "tgtitem", &obj, q, s,
-				item_tester_hook_ammo, itemmode)) {
+				tval_is_ammo, itemmode)) {
 			return used;
 		}
-	} else if (!get_item(&obj, q, s, 0, item_tester_hook_ammo, itemmode))
+	} else if (!get_item(&obj, q, s, 0, tval_is_ammo, itemmode))
 		return used;
 
 	/* Brand the ammo */
-	brand_object(obj, NULL);
-
-	/* Done */
-	return (true);
-}
-
-/**
- * Enchant some (non-ego/artifact) ammo
- */
-static bool effect_handler_BRAND_BOLTS(effect_handler_context_t *context)
-{
-	struct object *obj;
-	const char *q, *s;
-	int itemmode = (USE_INVEN | USE_QUIVER | USE_FLOOR);
-	bool used = false;
-
-	context->ident = true;
-
-	/* Get an item */
-	q = "Brand which bolts? ";
-	s = "You have no bolts to brand.";
-	if (context->cmd) {
-		if (cmd_get_item(context->cmd, "tgtitem", &obj, q, s,
-				item_tester_hook_bolt, itemmode)) {
-			return used;
-		}
-	} else if (!get_item(&obj, q, s, 0, item_tester_hook_bolt, itemmode))
-		return used;
-
-	/* Brand the bolts */
 	brand_object(obj, NULL);
 
 	/* Done */
@@ -5553,10 +5474,10 @@ static bool effect_handler_CREATE_ARROWS(effect_handler_context_t *context)
 	s = "You have no device to use.";
 	if (context->cmd) {
 		if (cmd_get_item(context->cmd, "tgtitem", &obj, q, s,
-				item_tester_hook_device, itemmode)) {
+				tval_is_device, itemmode)) {
 			return false;
 		}
-	} else if (!get_item(&obj, q, s, 0, item_tester_hook_device,
+	} else if (!get_item(&obj, q, s, 0, tval_is_device,
 				  itemmode)) {
 		return false;
 	}
@@ -5594,6 +5515,7 @@ static bool effect_handler_CREATE_ARROWS(effect_handler_context_t *context)
 
 /* Change player shape */
 static void shapechange(const char *shapename, bool verbose)
+
 {
 	/* Change shape */
 	player->shape = lookup_player_shape(shapename);

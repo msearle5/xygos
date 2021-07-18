@@ -113,7 +113,6 @@ EFFECT(UNBRAND_ITEM,				false,	NULL,		0,		EFINFO_NONE,	"removes ego and other po
 EFFECT(BRAND_ITEM,					false,	NULL,		0,		EFINFO_NONE,	"brands an item as an ego",	"brand item")
 EFFECT(BRAND_WEAPON,				false,	NULL,		0,		EFINFO_NONE,	"brands your wielded melee weapon",	"brand weapon")
 EFFECT(BRAND_AMMO,					false,	NULL,		0,		EFINFO_NONE,	"brands a stack of ammunition",	"brand ammunition")
-EFFECT(BRAND_BOLTS,					false,	NULL,		0,		EFINFO_NONE,	"brands bolts with fire, in an unbalanced fashion",	"brand bolts")
 EFFECT(CREATE_ARROWS,				false,	NULL,		0,		EFINFO_NONE,	"uses a staff to create a stack of arrows",	"use staff for arrows")
 EFFECT(SHAPECHANGE,					false,	NULL,		0,		EFINFO_NONE,	"changes the player's shape",	"change shape")
 EFFECT(CURSE,						true,	"dam",		0,		EFINFO_NONE,	"damages a monster directly",	"curse")

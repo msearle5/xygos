@@ -777,9 +777,8 @@ desc:cures you of fear and poison
 name:FIREBRAND
 aim:0
 power:25
-effect:BRAND_BOLTS
-desc:brands bolts with fire, in an unbalanced fashion
-
+effect:BRAND_AMMO
+desc:brands ammo with fire, in an unbalanced fashion
 
 name:FIRE_BOLT
 aim:1
