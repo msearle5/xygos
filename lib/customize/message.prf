@@ -166,6 +166,9 @@ message:MON_SUCK:w
 # MSG_MON_DROOL
 message:MON_DROOL:w
 
+# MSG_MON_CHARGE
+message:MON_CHARGE:w
+
 # MSG_MON_SPIT
 message:MON_SPIT:w
 

@@ -1932,11 +1932,23 @@ static errr finish_parse_monster(struct parser *p) {
 				quit_fmt("Monster %s has no blows, but NEVER_BLOW is not set\n", race->name);
 
 			if ((!race->rarity) && (!(rf_has(race->flags, RF_SPECIAL_GEN))))
-				fprintf(stderr,"Monster %s has 0 rarity, but SPECIAL_GEN is not set\n",  race->name);
+				fprintf(stderr,"Monster %s has 0 rarity, but SPECIAL_GEN is not set\n", race->name);
 			if (race->avg_hp < 1)
-				fprintf(stderr,"Monster %s has <=0 hitpoints\n",  race->name);
+				fprintf(stderr,"Monster %s has <=0 hitpoints\n", race->name);
 			if (race->ac < 0)
-				fprintf(stderr,"Monster %s has <0 AC\n",  race->name);
+				fprintf(stderr,"Monster %s has <0 AC\n", race->name);
+			if (race->grow) {
+				bool ok = false;
+				for (int j = 0; j < z_info->r_max; j++) {
+					if (r_info[j].name && streq(race->grow, r_info[j].name)) {
+						ok = true;
+						break;
+					}
+				}
+				if (!ok) {
+					fprintf(stderr,"Monster %s has unknown grow '%s'\n", race->name, race->grow);
+				}
+			}
 		}
 	}
 

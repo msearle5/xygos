@@ -3482,6 +3482,29 @@ flags:SMART
 flags:OPEN_DOOR
 desc:A cyborg tyrannosaurus, with a mouthful of screaming steel.
 
+name:Barney the Dinosaur
+base:reptile
+color:Magenta-Pink
+depth:46
+rarity:2
+desc:The lovable purple reptile is making a guest appearance here.  Flee while you still can!
+speed:110
+hit-points:415
+hearing:10
+armor-class:45
+sleepiness:20
+blow:DROOL:LOSE_INT:1d6
+blow:DROOL:LOSE_WIS:1d6
+blow:CHARGE:EAT_GOLD:3d20
+blow:CHARGE:EAT_GOLD:9d9
+flags:EVIL | MALE
+#flags:SPEAK
+flags:UNIQUE | FORCE_SLEEP
+spell-freq:3
+spells:BA_POIS | BR_RADI | BR_CHAO
+flags:IM_WATER | NO_CONF | NO_SLEEP | IM_POIS | SMART
+spells:DARKNESS | BLIND | SLOW | SHRIEK | RAGE | FORGET | TELE_TO
+
 name:Impy, the Tyrannosaur
 base:reptile
 color:Violet
@@ -3504,6 +3527,29 @@ flags:BASH_DOOR
 friends:100:2d2:tyrannosaur:servant
 friends:100:1d2:circulasaurus:servant
 desc:An unnaturally large, tough, intelligent, vicious and fast-moving tyrannosaur - Triax's pet and frequent experimental subject for cybernetic treatments. It makes a formidable guard for the lower half of the fortress!
+
+name:Godzilla
+base:reptile
+color:DarkSeaGreen
+depth:96
+rarity:2
+speed:120
+hit-points:6500
+hearing:50
+armor-class:140
+sleepiness:20
+blow:CLAW:POISON:5d10
+blow:CLAW:POISON:5d10
+blow:BITE:HURT:20d10
+blow:CRUSH:LOSE_ALL:5d12
+flags:UNIQUE | FORCE_SLEEP | EVIL
+innate-freq:2
+spells:BR_RADI | BR_PLAS | BR_POIS
+flags:IM_RADIATION | IM_ACID | IM_POIS | IM_WATER | NO_CONF | NO_SLEEP | IM_FIRE | IM_COLD
+flags:WEIRD_MIND | BASH_DOOR
+desc:Godzilla rose from the contaminated sea. 
+desc:Fear its anger, for its devastation is unmatched!
+
 
 ##### m is for MOLD #####
 
@@ -3808,6 +3854,24 @@ desc:The Emperor. Or at least that is how he styles himself - and what he intend
 
 ##### q is for QUADRUPEDS #####
 
+name:pocket elephant
+base:quadruped
+color:Light Slate
+depth:2:83
+grow:elephant
+hit-points:12
+rarity:2
+hearing:7
+armor-class:20
+sleepiness:20
+blow:BUTT:HURT:2d3
+flags:TAKE_ITEM
+flags:DROP_RANDOM
+#weight:60kg
+friends:90:2d3:Same
+flags:SMART
+desc:A cute lil elephant the size of a large dog. Popular as pets a few years ago (Sirius Genetics strikes again), but many were abandoned and feral herds are now a common sight.
+
 name:cave bear
 base:quadruped
 color:u
@@ -3879,7 +3943,8 @@ depth:38
 rarity:5
 experience:500
 blow:CRUSH:HURT:10d12
-flags:SMART | ANIMAL | COLD_BLOOD | WEIRD_MIND | RAND_25 | BASH_DOOR | KILL_BODY | KILL_ITEM
+#weight:12t
+flags:SMART | ANIMAL | COLD_BLOOD | WEIRD_MIND | RAND_25 | BASH_DOOR | KILL_BODY | KILL_ITEM | IM_EDGED
 desc:The primeval Beast itself. Many hunt the Wumpus, few return...
 
 name:dropbear
@@ -3902,6 +3967,45 @@ blow:CLAW:HURT:3d12
 #weight:120kg
 flags:RAND_25
 flags:SMART
+
+# intermediate between wumpus and thunderwumpus?
+name:thunder wumpus
+base:quadruped
+color:Green
+depth:64
+rarity:8
+speed:100
+rarity:10
+hit-points:900
+hearing:10
+armor-class:80
+sleepiness:10
+blow:CRUSH:HURT:10d40
+flags:KILL_BODY | FORCE_SLEEP | IM_BLUNT | IM_EDGED | SMART
+#weight:18t
+desc:A great Wumpus that roars like thunder and shakes the ground even as it stirs.
+
+name:First Great Wumpus
+base:quadruped
+color:Light Green
+depth:80
+rarity:8
+speed:100
+rarity:10
+hit-points:1500
+hearing:10
+armor-class:120
+sleepiness:10
+blow:CRUSH:HURT:10d50
+flags:KILL_BODY | KILL_WALL | FORCE_SLEEP | UNIQUE
+flags:IM_EDGED | IM_BLUNT | ATTR_FLICKER | SMART
+spells:S_KIN
+spell-freq:10
+#weight:30t
+desc:Before this world was made, the Wumpus was. The creator of its own twisted 
+desc:parallel universe and with it every lesser Wumpus, who still answer to its 
+desc:call.
+
 
 ##### r is for RODENTS #####
 
@@ -6823,31 +6927,6 @@ blow:HIT:PARALYZE:15d1
 desc:A larger cousin of the lurker, this creature traps unsuspecting victims and
 desc: paralyzes them, to be slowly digested later.
 
-name:gauth
-base:eye
-color:D
-speed:110
-hit-points:264
-hearing:20
-armor-class:75
-sleepiness:25
-depth:36
-rarity:2
-experience:600
-blow:GAZE:DISENCHANT:5d2
-blow:GAZE:DISENCHANT:5d2
-blow:GAZE:DRAIN_CHARGES:5d2
-blow:GAZE:DRAIN_CHARGES:5d2
-flags:EVIL | SPIRIT
-flags:BASH_DOOR
-flags:FORCE_SLEEP
-spell-freq:5
-spells:WOUND | HOLD | TELE_AWAY
-spells:BA_COLD
-spells:BO_ELEC
-desc:Another lesser relative of the beholder, this six-eyed creature feeds on
-desc: magic.
-
 ### Dungeon level 37 ###
 
 name:ice elemental
@@ -6912,23 +6991,6 @@ flags:IM_ELEC | IM_FIRE | IM_PLASMA
 innate-freq:4
 spells:BR_PLAS
 desc:A whirlpool of intense flame, charring the stones at your feet.
-
-name:shardstorm
-base:vortex
-color:u
-speed:120
-hit-points:176
-hearing:40
-armor-class:14
-sleepiness:0
-depth:37
-rarity:1
-experience:800
-blow:ENGULF:HURT:6d6
-innate-freq:4
-spells:BR_SHAR
-desc:A howling blast of razor-sharp mountain fragments, kept intact by perilous
-desc: magics.
 
 ### Dungeon level 38 ###
 
