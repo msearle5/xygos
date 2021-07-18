@@ -83,6 +83,7 @@ struct angband_constants
 	u16b life_drain_percent;	/**< Percent of player life drained */
 	u16b flee_range;			/**< Monsters run this many grids out of view */
 	u16b turn_range;			/**< Monsters turn to fight closer than this */
+	u16b drop_random;			/**< Monsters drop an item 1 in this many turns */
 
 	/* Dungeon generation constants, read from constants.txt */
 	u16b level_room_max;	/**< Maximum number of rooms on a level */

@@ -1152,7 +1152,7 @@ blow:HIT:WOUND:3d4
 blow:HIT:WOUND:3d4
 blow:BITE:ELEC:2d12
 flags:COLD_BLOOD | REGENERATE | METAL
-flags:RAND_50
+flags:RAND_50 | ATTR_FLICKER | UNIQUE | IM_POIS
 flags:IM_COLD | NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
 desc:A silvery fast-flapping mechanical bat. It looks lethal.
 
@@ -1171,8 +1171,10 @@ blow:BITE:HURT:1d10
 blow:CLAW:WOUND:3d4
 blow:CLAW:WOUND:3d4
 flags:COLD_BLOOD | REGENERATE | TAKE_ITEM | BASH_DOOR
-flags:RAND_50
-flags:IM_COLD | NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
+flags:RAND_50 | DROP_RANDOM
+flags:IM_COLD | NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN | SMART | WEIRD_MIND
+friends:90:2d3:Same
+spells:BLINK | TPORT
 desc:Green bats of immense size with vicious claws, said to have picked up unfortunate explorers and carried them away.
 
 

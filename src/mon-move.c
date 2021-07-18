@@ -1506,6 +1506,30 @@ static void monster_turn_grab_objects(struct chunk *c, struct monster *mon,
 	}
 }
 
+/**
+ * Drop one item
+ * Return an object if that item was dropped, or NULL.
+ */
+static struct object * monster_drop_one_item(struct monster *mon)
+{
+	struct object *drop = mon->held_obj;
+	if (!drop)
+		return NULL;
+
+	struct object *next = drop->next;
+
+	/* Object no longer held */
+	drop->held_m_idx = 0;
+	pile_excise(&mon->held_obj, drop);
+
+	/* Drop it */
+	drop_near(cave, &drop, 0, mon->grid, true, false);
+
+	/* Next object */
+	mon->held_obj = next;
+
+	return drop;
+}
 
 /**
  * Process a monster's turn
@@ -1586,6 +1610,19 @@ static void monster_turn(struct chunk *c, struct monster *mon)
 
 	/* Attempt a ranged attack */
 	if (make_ranged_attack(mon)) return;
+
+	/* Drop items */
+	if (rf_has(mon->race->flags, RF_DROP_RANDOM)) {
+		if (one_in_(z_info->drop_random)) {
+			struct object *obj = monster_drop_one_item(mon);
+			char o_name[80];
+			if ((obj) && (monster_is_visible(mon))) {
+				object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX);
+				msg("%s drops %s.", m_name, o_name);
+				return;
+			}
+		}
+	}
 
 	/* Work out what kind of movement to use - random movement or AI */
 	stagger = monster_turn_should_stagger(mon);

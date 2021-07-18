@@ -82,6 +82,9 @@ mon-play:flee-range:5
 # and closer than this distance.
 mon-play:turn-range:5
 
+# Monsters with DROP_RANDOM will every drop-random turns drop an item.
+mon-play:drop-random:20
+
 #---------------------------------------------------------------------
 # Dungeon Generation
 #---------------------------------------------------------------------

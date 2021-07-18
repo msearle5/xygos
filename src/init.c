@@ -467,6 +467,8 @@ static enum parser_error parse_constants_mon_play(struct parser *p) {
 		z->flee_range = value;
 	else if (streq(label, "turn-range"))
 		z->turn_range = value;
+	else if (streq(label, "drop-random"))
+		z->drop_random = value;
 	else
 		return PARSE_ERROR_UNDEFINED_DIRECTIVE;
 
