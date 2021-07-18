@@ -1501,7 +1501,7 @@ void lore_append_abilities(textblock *tb, const struct monster_race *race,
 	}
 
 	if (prev)
-		my_strcpy(start, ", but resist%s ", sizeof(start));
+		my_strcpy(start, format(", but resist%s ", s), sizeof(start));
 	else
 		my_strcpy(start, format("%s resist%s ", initial_pronoun, s), sizeof(start));
 	lore_append_clause(tb, current_flags, COLOUR_L_UMBER, start, "and", "");
