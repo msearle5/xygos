@@ -2544,11 +2544,17 @@ static enum parser_error do_parse_lore_blow(struct parser *p, struct monster_lor
 
 static enum parser_error parse_lore_blow(struct parser *p) {
 	struct monster_lore *l = parser_priv(p);
+	if (!l)
+		return PARSE_ERROR_NONE;
+
 	return do_parse_lore_blow(p, l, l->blows);
 }
 
 static enum parser_error parse_lore_passive(struct parser *p) {
 	struct monster_lore *l = parser_priv(p);
+	if (!l)
+		return PARSE_ERROR_NONE;
+
 	return do_parse_lore_blow(p, l, l->passive);
 }
 

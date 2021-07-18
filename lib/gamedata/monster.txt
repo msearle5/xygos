@@ -2339,7 +2339,7 @@ desc:It is about ten feet long.
 
 name:copperhead snake
 base:snake
-color:o
+color:Copper
 speed:110
 hit-points:14
 hearing:6
@@ -2353,25 +2353,6 @@ flags:RAND_50
 flags:IM_POIS
 desc:It has a copper head and sharp venomous fangs.
 
-name:king cobra
-base:snake
-color:g
-speed:110
-hit-points:44
-hearing:8
-armor-class:45
-sleepiness:10
-depth:9
-rarity:2
-experience:28
-blow:SPIT:BLIND:1d2
-blow:BITE:POISON:3d4
-flags:RAND_50
-flags:IM_POIS
-innate-freq:4
-spells:SPIT
-desc:It is a large snake with a hooded face.
-
 name:rattlesnake
 base:snake
 color:r
@@ -2384,29 +2365,270 @@ depth:6
 rarity:1
 experience:20
 blow:BITE:POISON:2d5
-flags:RAND_50
-flags:IM_POIS
-desc:It is recognized by the hard-scaled end of its body that is often rattled
+flags:RAND_50 | IM_POIS
+desc:A slender-bodied snake about four feet long, recognized by the hard-scaled end of its body that is often rattled
 desc: to frighten its prey.
 
+name:patchsnake
+base:snake
+color:Deep Light Blue
+depth:7
+rarity:3
+grow:hoop snake
+speed:120
+hit-points:20
+hearing:8
+armor-class:30
+sleepiness:40
+blow:BITE:ELEC:1d3
+blow:CONSTRICT:HURT:1d5
+flags:RAND_25 | RAND_50
+friends:90:2d3:Same
+flags:IM_ELEC
+spell-power:1
+spells:WHIP
+flags:SMART | WEIRD_MIND
+flags:PASS_DOOR
+flags-off:HURT_COLD
+desc:A long thin electric-blue snake that weaves across the floor faster than 
+desc:the eye can follow. Did you see a spark across its jaws?
+
+name:spitting cobra
+base:snake
+color:Slate
+speed:110
+hit-points:44
+hearing:8
+armor-class:45
+sleepiness:10
+depth:9
+rarity:2
+experience:28
+blow:SPIT:BLIND:1d2
+blow:BITE:POISON:3d4
+flags:RAND_50 | IM_POIS | PASS_DOOR
+innate-freq:4
+spells:SPIT
+desc:A large, impressively-hooded cobra, six feet long and ash-grey in color.
+desc:Its fangs drip with poison and its spit can blind.
+
+name:hoop snake
+base:snake
+color:Green
+depth:12
+rarity:3
+speed:115
+hit-points:30
+hearing:8
+armor-class:15
+sleepiness:20
+blow:CONSTRICT:HURT:2d6
+#flags:TURN_SLOW
+flags:SMART | WEIRD_MIND
+desc:So they do exist after all. A slender green snake, tail in mouth, rolling 
+desc:like a hoop at great speed. It looks dangerous, and maybe dangerous to you 
+desc:as well as to itself.
+grow:boa
+
 name:black mamba
+grow:Imperial cobra
 base:snake
 color:D
-speed:120
+speed:115
 hit-points:45
 hearing:10
 armor-class:48
 sleepiness:10
-depth:12
+depth:14
 rarity:3
 experience:40
 blow:BITE:POISON:4d6
-flags:RAND_50
-flags:IM_POIS
+flags:RAND_50 | PASS_DOOR | IM_POIS
 innate-freq:4
 spells:SPIT
-desc:It has glistening black skin, a sleek body and highly venomous fangs.
+friends:90:1d3:Same
+desc:Seven feet of writhing scales, with a coffin-shaped head, a purple-black 
+desc:mouth, and deadly poisonous fangs.
 
+name:boa
+base:snake
+color:BurntUmber
+depth:19
+rarity:1
+grow:anaconda
+speed:105
+hit-points:60
+hearing:8
+armor-class:23
+sleepiness:8
+blow:CONSTRICT:HURT:2d13
+flags:RAND_25
+flags:SMART | WEIRD_MIND
+desc:A large constrictor. It doesn't move quickly, but it has a powerful grip - don't
+desc:let it get too close!
+
+# inchworm (grows into this)
+name:Imperial cobra
+base:snake
+color:Green
+depth:23
+rarity:2
+grow:black adder
+hit-points:55
+hearing:6
+armor-class:20
+sleepiness:10
+blow:BITE:POISON:6d9
+flags:RAND_25 | IM_POIS | SMART | WEIRD_MIND | PASS_DOOR
+spell-freq:4
+spell-power:40
+spells:SPIT
+desc:Twelve feet long and emerald green, famed for sudden ambush and sudden death.
+
+name:floating adder
+base:snake
+color:Blue
+depth:29
+rarity:6
+speed:115
+hit-points:30
+hearing:4
+armor-class:10
+sleepiness:10
+blow:BITE:POISON:6d15
+blow:BITE:LOSE_SPD:6d15
+flags:IM_WATER | AQUATIC
+flags:IM_POIS
+flags:SMART | WEIRD_MIND
+flags-off:HURT_COLD
+flags:PASS_DOOR
+desc:A small but dangerous sea snake.
+
+name:anaconda
+base:snake
+color:LimeGreen
+depth:33
+rarity:2
+hit-points:140
+hearing:10
+armor-class:26
+sleepiness:4
+blow:CONSTRICT:HURT:2d20
+flags:RAND_25
+flags:SMART | WEIRD_MIND
+desc:A huge constrictor, FIXME.
+
+name:boadile
+base:snake
+color:Green
+depth:38:50
+speed:110
+hit-points:120
+armor-class:15
+sleepiness:30
+rarity:3
+blow:BITE:HURT:2d5
+blow:CRUSH:HURT:2d8
+blow:CRUSH:HURT:2d8
+flags:COLD_BLOOD
+flags:IM_WATER
+flags:STUPID
+desc:"...Head something like a croc's, only bigger. Around forty
+desc:feet long. Able to roll itself into a big beachball with teeth.
+desc: Fast on land or in water - and a hell of a lot of little legs
+desc:on each side."
+
+name:black adder
+base:snake
+color:Gray25
+depth:42
+rarity:5
+speed:115
+hit-points:95
+hearing:6
+armor-class:20
+sleepiness:40
+blow:BITE:POISON:6d10
+flags:RAND_25
+friends:100:2d3:Same
+flags:IM_POIS
+flags:SMART | WEIRD_MIND | PASS_DOOR
+desc:Horribly swarming black snakes marked with a black diamond pattern.
+
+# Use a cycle?
+# White / Light Green
+name:Serpent of the Matrix
+base:snake
+color:White
+depth:42
+rarity:5
+speed:115
+hit-points:300
+hearing:6
+armor-class:20
+sleepiness:40
+blow:BITE:POISON:1d10
+blow:BITE:FIRE:1d10
+blow:BITE:HURT:1d10
+blow:BITE:HURT:1d10
+blow:BITE:POISON:1d10
+blow:BITE:FIRE:1d10
+blow:BITE:HURT:1d10
+blow:BITE:HURT:1d10
+blow:BITE:HURT:1d10
+flags:ATTR_MULTI
+flags:UNIQUE
+flags:RAND_25
+flags:IM_COLD | IM_POIS
+flags:HURT_FIRE
+flags:SMART | WEIRD_MIND
+desc:A snake of extraordinary size, screaming horribly as its great finned head casts about. 
+desc:White, green-barred and inky-fanged, this ancient beast is the last of its kind, 
+desc:a relic of another age. 
+desc:This creature is said to move as fast as a laser, and leave nothing behind but smears.
+
+name:copper anaconda
+base:snake
+color:Copper
+depth:58
+rarity:6
+grow:laser anaconda
+speed:110
+hit-points:700
+hearing:10
+armor-class:26
+sleepiness:4
+blow:CONSTRICT:HURT:2d30
+blow:BITE:ELEC:1d40
+flags:RAND_25
+flags:IM_ELEC
+flags-off:HURT_COLD
+flags:SMART | WEIRD_MIND
+desc:Gleaming black coils, hundreds of meters long and as thick as your arm. 
+desc:A bright copper head looks down on you, weaving slowly from side to side and spitting fat blue sparks.
+
+name:laser anaconda
+base:snake
+color:OrangeRed
+depth:71
+rarity:6
+speed:110
+hit-points:1600
+hearing:10
+armor-class:26
+sleepiness:4
+blow:CONSTRICT:HURT:2d45
+blow:BITE:LIGHT:3d30
+spell-freq:3
+spell-power:40
+flags:RAND_25
+spells:BE_LIGHT
+flags:IM_LIGHT
+flags:IM_ELEC
+flags-off:HURT_COLD
+flags:SMART | WEIRD_MIND
+desc:Thousands of meters of orange coils stretch far away into the darkness. 
+desc:A glowing red head flicks from side to side like a metronome. Laser pulses blast the rock around you.
 
 ##### K is for KILLER BEETLE #####
 
@@ -3985,7 +4207,7 @@ desc:It is a black spider that moves in fits and starts.
 
 name:wood spider
 base:spider
-color:U
+color:Burlywood
 speed:120
 hit-points:11
 hearing:8
@@ -3999,7 +4221,7 @@ blow:STING:POISON:1d4
 flags:ANIMAL | WEIRD_MIND
 flags:IM_POIS | GROUP_AI
 friends:100:2d7:Same
-desc:It scuttles towards you.
+desc:A venomous brown spider.  It scuttles towards you.
 
 name:giant spider
 base:spider
@@ -4427,13 +4649,13 @@ sleepiness:30
 depth:16
 rarity:1
 experience:75
+experience:90
 blow:GAZE:CONFUSE
 blow:HIT:HURT:1d6
 blow:HIT:HURT:1d6
 blow:BITE:HURT:2d6
 flags:EVIL | ANIMAL
 flags:BASH_DOOR | KILL_WALL
-experience:90
 desc:This bizarre creature has glaring eyes and large mandibles capable of
 desc: slicing through rock.
 
@@ -4642,7 +4864,7 @@ blow:CLAW:HURT:3d12
 blow:CLAW:HURT:3d12
 blow:CRUSH:HURT:8d12
 blow:CRUSH:HURT:8d12
-flags:IM_WATER | EVIL | NO_CONF | NO_SLEEP | OPEN_DOOR | FORCE_SLEEP | SMART
+flags:IM_WATER | EVIL | NO_CONF | NO_SLEEP | BASH_DOOR | FORCE_SLEEP | SMART
 spell-power:120
 spell-freq:3
 spells:BR_ELEC

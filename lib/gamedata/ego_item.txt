@@ -973,6 +973,15 @@ values:STEALTH[d3]
 min-values:STEALTH[1]
 desc:Urban camo. Dappled grey with all the typically shiny fasteners dull black, and it moves with a minimum of rustling.
 
+name:(stylish)
+info:1000:5
+alloc:30:1 to 30
+type:cloak
+type:helm
+flags:IGNORE_FIRE
+values:RES_FIRE[1] | CHR[d4M2]
+desc:Be cool and look the part with this gear!
+
 #name:of Aman
 #info:4000:20
 #alloc:10:20 to 127

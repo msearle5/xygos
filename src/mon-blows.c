@@ -944,6 +944,14 @@ static void melee_effect_handler_COLD(melee_effect_handler_context_t *context)
 }
 
 /**
+ * Melee effect handler: Attack the player with light.
+ */
+static void melee_effect_handler_LIGHT(melee_effect_handler_context_t *context)
+{
+	melee_effect_elemental(context, PROJ_LIGHT, true);
+}
+
+/**
  * Melee effect handler: Blind the player.
  */
 static void melee_effect_handler_BLIND(melee_effect_handler_context_t *context)
@@ -1190,6 +1198,7 @@ melee_effect_handler_f melee_handler_for_blow_effect(const char *name)
 		{ "ELEC", melee_effect_handler_ELEC },
 		{ "FIRE", melee_effect_handler_FIRE },
 		{ "COLD", melee_effect_handler_COLD },
+		{ "LIGHt", melee_effect_handler_LIGHT },
 		{ "BLIND", melee_effect_handler_BLIND },
 		{ "CONFUSE", melee_effect_handler_CONFUSE },
 		{ "TERRIFY", melee_effect_handler_TERRIFY },
