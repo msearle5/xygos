@@ -58,6 +58,14 @@ dice:4d6
 message-vis:{name} goes up in flames!
 message-invis:You hear a loud *whoomph*.
 
+name:POP
+msgt:BR_FIRE
+hit:100
+effect:SPOT:SHARD:1
+dice:2d6
+message-vis:{name} bursts!
+message-invis:You hear a loud bang.
+
 name:EXPLODE
 msgt:BR_FIRE
 hit:100
@@ -1263,3 +1271,20 @@ lore:spawn
 lore-color-base:Light Red
 message-vis:{name} spawns.
 message-invis:There is an unsettling liquid sound.
+
+name:TOADSTOOL
+msgt:SUM_GROW
+hit:100
+effect:SPOT:SHARD:2
+dice:2d6
+effect:SUMMON:GROW
+effect:SUMMON:GROW
+effect:RANDOM
+dice:2
+effect:SUMMON:GROW
+effect:NONE
+dice:8
+lore:burst into spores
+lore-color-base:Light Red
+message-vis:{name} bursts.
+message-invis:There is an odd popping sound.

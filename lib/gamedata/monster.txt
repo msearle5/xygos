@@ -452,7 +452,7 @@ depth:2
 rarity:1
 experience:1
 flags:NEVER_BLOW | NEVER_MOVE
-flags:IM_POIS
+flags:IM_POIS | IN_LEVEL
 flags:FORCE_SLEEP
 innate-freq:4
 spells:SHRIEK
@@ -533,6 +533,49 @@ friends:60:1d1:Giant fruit fly
 desc:A pile of rotting vegetation that slides towards you with a disgusting
 desc: stench, waking all it nears.
 
+##################################
+# Toadstools
+# Spores are not generated directly. only by the giant toadstool.
+# The toadstool will occasionally drop a spore, and produce a lot if killed.
+
+# This is not really a "lurker", but I want to use "."
+name:toadstool spore
+base:lurker
+color:Green
+depth:20
+rarity:0
+desc:A tiny floating green spore from a giant toadstool.
+grow:giant toadstool
+speed:110
+hit-points:1
+armor-class:1
+sleepiness:10
+spell-freq:10
+spell-power:1
+deathspells:POP
+flags:RAND_100 | EVASIVE | SPECIAL_GEN | NEVER_BLOW
+flags-off:INVISIBLE | NEVER_MOVE | CHAR_CLEAR | ATTR_CLEAR
+flags:NO_SLOW
+spells:GROW
+
+name:giant toadstool
+base:mushroom
+color:LimeGreen
+depth:20
+rarity:2
+desc:An enormous green swaying toadstool.
+grow:toadstool spore
+speed:100
+rarity:10
+hit-points:20
+armor-class:1
+sleepiness:10
+deathspells:TOADSTOOL
+flags:NEVER_MOVE | NO_SLOW | NEVER_BLOW
+spell-freq:8
+spells:MULTIPLY_GROW
+friends:50:1d2:Same
+
 name:memory moss
 base:mushroom
 color:r
@@ -552,7 +595,6 @@ spell-freq:6
 spells:FORGET
 desc:A mass of green vegetation.  You don't remember seeing anything like it
 desc: before.
-
 
 ##### HIDDEN (.) #####
 
@@ -1310,6 +1352,8 @@ desc:It is about four feet long and carnivorous.
 # These descriptions repeat, and are repetitive, and all move in unison.
 # These descriptions repeat, and are repetitive, and all move in unison.
 #
+
+# These are metal covered but not robots.
 name:nickelpede
 base:centipede
 color:Light Slate
@@ -1905,8 +1949,8 @@ friends:95:3d4:Same
 flags:EMPTY_MIND
 desc:It is poisonous and aggressive.
 
-name:giant white louse
-plural:giant white lice
+name:white louse
+plural:white lice
 base:insect
 color:w
 speed:120
@@ -1960,8 +2004,8 @@ spells:MULTIPLY_GROW
 deathspells:FLAMES3
 desc:A huge nest buzzing full of wasps.
 
-name:giant black louse
-plural:giant black lice
+name:black louse
+plural:black lice
 base:insect
 color:D
 speed:120
@@ -4052,7 +4096,7 @@ desc:The Emperor. Or at least that is how he styles himself - and what he intend
 name:pocket elephant
 base:quadruped
 color:Light Slate
-depth:2:83
+depth:2
 grow:elephant
 hit-points:12
 rarity:2
@@ -4069,7 +4113,7 @@ desc:A cute lil elephant the size of a large dog. Popular as pets a few years ag
 
 name:cave bear
 base:quadruped
-color:u
+color:BurntUmber
 speed:110
 hit-points:36
 hearing:10
@@ -4082,14 +4126,14 @@ experience:25
 blow:CLAW:HURT:1d6
 blow:CLAW:HURT:1d6
 blow:BITE:HURT:1d8
-flags:ANIMAL
-flags:RAND_25
+flags:ANIMAL | RAND_25 | KILL_BODY
+#weight:220kg
 desc:A large bear appears to have made its home in this cave.  It is hungry, and
 desc: you are trespassing in its territory.
 
 name:grizzly bear
 base:quadruped
-color:U
+color:DarkTan
 speed:110
 hit-points:78
 hearing:10
@@ -4104,7 +4148,31 @@ blow:CLAW:HURT:1d8
 blow:BITE:HURT:1d12
 blow:CRUSH:HURT:1d10
 flags:ANIMAL
-desc:A huge, beastly bear, more savage than most of its kind.
+#weight:350kg
+desc:A huge mean bear, more savage than most of its kind.
+
+name:elephant
+base:quadruped
+color:Slate
+depth:18
+rarity:4
+speed:110
+grow:white elephant
+hit-points:35
+hearing:10
+armor-class:35
+sleepiness:10
+blow:BUTT:HURT:3d4
+blow:CRUSH:HURT:3d8
+flags:KILL_BODY
+flags:TAKE_ITEM
+flags:TAKE_NEAR
+flags:DROP_RANDOM
+friends:70:2d3:Same
+flags:IM_EDGED
+#weight:6t
+flags:SMART
+desc:A large, angry elephant with /tusksh like thish/.
 
 name:mammoth
 base:quadruped
@@ -5702,42 +5770,6 @@ desc:A small humanoid figure.
 
 ### Dungeon level 3 ###
 
-name:scruffy looking hobbit
-base:humanoid
-color:b
-speed:110
-hit-points:9
-hearing:16
-armor-class:9
-sleepiness:10
-depth:3
-rarity:1
-experience:4
-blow:HIT:HURT:1d4
-blow:TOUCH:EAT_GOLD
-flags:MALE | EVIL
-flags:DROP_60
-flags:TAKE_ITEM
-desc:A short little guy, in bedraggled clothes.  He appears to be looking for a
-desc: good tavern.
-
-name:radiation eye
-base:eye
-color:R
-speed:110
-hit-points:11
-hearing:2
-armor-class:7
-sleepiness:10
-depth:3
-rarity:1
-experience:6
-blow:GAZE:LOSE_STR:1d6
-flags:NEVER_MOVE
-flags:HURT_LIGHT | NO_FEAR
-spell-freq:11
-desc:A disembodied eye, crackling with energy.
-
 ### Dungeon level 4 ###
 
 name:creeping copper coins
@@ -5758,40 +5790,6 @@ desc:It appears to be a pile of copper coins.
 mimic:cash:small change
 
 ### Dungeon level 5 ###
-
-name:grey icky thing
-base:icky thing
-color:s
-speed:110
-hit-points:18
-hearing:14
-armor-class:14
-sleepiness:15
-depth:5
-rarity:1
-experience:10
-blow:TOUCH:HURT:1d5
-flags:EMPTY_MIND
-desc:It is a smallish, slimy, icky, nasty creature.
-
-name:disenchanter eye
-base:eye
-color:v
-speed:100
-hit-points:32
-hearing:2
-armor-class:7
-sleepiness:10
-depth:5
-rarity:2
-experience:20
-blow:GAZE:DISENCHANT
-flags:NEVER_MOVE
-flags:HURT_LIGHT | IM_DISEN | NO_FEAR
-flags:ATTR_MULTI
-spell-freq:9
-desc:A disembodied eye, crackling with magic.
-
 name:red worm mass
 base:worm
 color:r
@@ -5847,22 +5845,6 @@ flags:HURT_LIGHT | NO_FEAR
 spell-freq:7
 desc:A disembodied eye, bloodshot and nasty.
 
-name:green icky thing
-base:icky thing
-color:g
-speed:110
-hit-points:23
-hearing:14
-armor-class:14
-sleepiness:20
-depth:7
-rarity:2
-experience:18
-blow:TOUCH:ACID:2d5
-flags:EMPTY_MIND
-flags:IM_ACID
-desc:It is a smallish, slimy, icky, acidic creature.
-
 name:night lizard
 base:reptile
 color:b
@@ -5880,23 +5862,6 @@ blow:BITE:HURT:1d6
 desc:It is a black lizard with overlapping scales and a powerful jaw.
 
 ### Dungeon level 8 ###
-
-name:terrified yeek
-base:yeek
-color:u
-speed:110
-hit-points:18
-hearing:18
-smell:20
-armor-class:21
-sleepiness:10
-depth:8
-rarity:1
-experience:11
-flags:DROP_40 | FRIGHTENED | NEVER_BLOW
-innate-freq:9
-spells:SHRIEK
-desc:It is a strange small humanoid in a constant state of extreme terror.
 
 name:giant salamander
 base:reptile
@@ -5940,23 +5905,6 @@ desc:An uncultured brute with a club, a sling and a whip.
 
 ### Dungeon level 9 ###
 
-name:bloodshot icky thing
-base:icky thing
-color:r
-speed:110
-hit-points:32
-hearing:14
-armor-class:21
-sleepiness:20
-depth:9
-rarity:3
-experience:24
-blow:TOUCH:HURT:1d4
-blow:CRAWL:ACID:2d4
-flags:EMPTY_MIND
-spell-freq:11
-desc:It is a strange, slimy, icky creature.
-
 ### Dungeon level 10 ###
 
 name:disenchanter mold
@@ -5998,28 +5946,6 @@ mimic:cash:rare coins
 
 ### Dungeon level 11 ###
 
-name:drúadan mage
-base:person
-color:r
-speed:110
-hit-points:52
-hearing:18
-armor-class:30
-sleepiness:20
-depth:11
-rarity:2
-experience:48
-blow:HIT:HURT:1d5
-flags:MALE
-flags:DROP_60
-flags:FORCE_SLEEP
-spell-freq:4
-spells:BLINK | DARKNESS
-spells:BO_COLD
-spells:S_MONSTER
-friends:100:4d4:Same
-desc:A mage of short stature with stumpy legs and a wispy beard.
-
 ### Dungeon level 12 ###
 
 name:white wolf
@@ -6043,24 +5969,6 @@ friends:100:2d7:Same
 desc:A large and muscled wolf from the northern wastes.  Its breath is cold and
 desc: icy and its fur coated in frost.
 
-name:radiation worm mass
-base:worm
-color:D
-speed:100
-hit-points:23
-hearing:10
-armor-class:22
-sleepiness:10
-depth:12
-rarity:3
-experience:6
-blow:TOUCH:EXP_10
-flags:WEIRD_MIND | MULTIPLY | STUPID
-flags:RAND_25 | RAND_50 | BASH_DOOR
-flags:HURT_LIGHT | NO_FEAR | IM_RADIATION
-desc:It is a disgusting mass of dark worms, eating each other, the floor, the
-desc: air, you....
-
 name:master yeek
 base:yeek
 color:U
@@ -6082,54 +5990,6 @@ spells:BLIND | BLINK | SLOW | TPORT
 spells:BA_POIS
 spells:S_MONSTER
 desc:A small humanoid that radiates some power.
-
-name:priest
-base:person
-color:g
-speed:110
-hit-points:54
-light:2
-hearing:20
-armor-class:26
-sleepiness:40
-depth:12
-rarity:1
-experience:36
-blow:HIT:HURT:2d3
-blow:HIT:HURT:2d3
-flags:MALE | SMART
-flags:DROP_60
-flags:OPEN_DOOR
-flags:FORCE_SLEEP
-spell-freq:3
-spell-power:6
-spells:HEAL | SCARE | HEAL_KIN
-spells:BA_LIGHT | BA_HOLY
-spells:S_KIN
-friends:50:1d2:Brigand
-friends:50:1d2:warrior
-friends:50:1d2:Same
-desc:A robed man, dedicated to his god.
-
-name:ironfist priest
-base:humanoid
-color:P
-speed:120
-hit-points:39
-hearing:20
-armor-class:45
-sleepiness:40
-depth:12
-rarity:1
-experience:50
-blow:HIT:HURT:1d9
-blow:HIT:HURT:1d10
-flags:MALE | EVIL | SMART
-flags:DROP_1 | ONLY_ITEM
-flags:FORCE_SLEEP
-spell-freq:5
-spells:BLIND | WOUND | CONF | DARKNESS | HEAL
-desc:A dwarf of the east, dressed all in black, chanting words of dark sorcery.
 
 name:air spirit
 base:elemental
@@ -6168,7 +6028,6 @@ flags:OPEN_DOOR
 innate-freq:10
 spells:BOLT
 friends:50:1d2:Brigand
-friends:50:1d2:Priest
 friends:50:1d2:Same
 desc:A warrior of considerable skill.
 
@@ -6214,30 +6073,6 @@ desc: picked up.
 mimic:cash:platinum bars
 
 ### Dungeon level 14 ###
-
-name:blue icky thing
-base:icky thing
-color:b
-speed:100
-hit-points:35
-hearing:15
-armor-class:30
-sleepiness:10
-depth:14
-rarity:4
-experience:20
-blow:CRAWL:POISON:1d4
-blow:CRAWL:EAT_FOOD
-blow:HIT:HURT:1d4
-blow:HIT:HURT:1d4
-flags:EVIL | MULTIPLY
-flags:OPEN_DOOR | BASH_DOOR
-flags:IM_POIS
-flags:FORCE_SLEEP
-spell-freq:8
-spells:BLIND | CONF | SCARE
-desc:It is a strange, slimy, icky creature, with rudimentary intelligence, but
-desc: evil cunning.  It hungers for food, and you look tasty.
 
 name:lurker
 base:lurker
@@ -6302,7 +6137,6 @@ flags:OPEN_DOOR | TAKE_ITEM
 innate-freq:8
 spells:SHOT
 drop:card:blinking:70:2:6
-friends:50:1d2:Priest
 friends:50:1d2:warrior
 friends:50:1d2:Same
 desc:He is eyeing your backpack.
@@ -6467,7 +6301,6 @@ flags:DROP_2
 flags:OPEN_DOOR | TAKE_ITEM
 innate-freq:4
 spells:SHOT
-friends:50:1d1:Mage
 desc:A thief of great power and shifty speed.
 
 ### Dungeon level 25 ###
@@ -6494,25 +6327,6 @@ desc:A hideous centipede covered in slime and with glowing tentacles around its
 desc: head.
 
 ### Dungeon level 26 ###
-
-name:abyss worm mass
-base:worm
-color:D
-speed:100
-hit-points:35
-light:-2
-hearing:10
-armor-class:25
-sleepiness:10
-depth:26
-rarity:3
-experience:6
-blow:CRAWL:EXP_10:1d5
-flags:EVIL | WEIRD_MIND | MULTIPLY | STUPID
-flags:RAND_25 | RAND_50 | BASH_DOOR | KILL_WALL
-flags:HURT_LIGHT | NO_FEAR | COLD_BLOOD | INVISIBLE
-desc:A writhing wormlike shimmer of blackness, large as your arm. It squirms
-desc: through air and walls with equal facility, leaving void in its wake.
 
 name:giant firefly
 plural:giant fireflies
@@ -6753,7 +6567,6 @@ flags:DROP_1
 flags:OPEN_DOOR
 flags:NO_CONF | NO_SLEEP
 friends:50:1d1:Master thief
-friends:50:1d1:Mage
 desc:A man of Harad clothed in black who moves with blinding speed.
 
 ### Dungeon level 33 ###
@@ -6809,7 +6622,6 @@ flags:OPEN_DOOR | TAKE_ITEM
 innate-freq:10
 spell-freq:6
 spells:SHOT | BLINK | TRAPS
-friends:50:1d1:Mage
 friends:50:1d1:southron assassin
 desc:Cool and confident, fast and lithe; protect your possessions quickly!
 
