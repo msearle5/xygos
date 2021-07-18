@@ -300,25 +300,27 @@ struct monster_race *get_mon_num(int level)
 	/* Try for a "harder" monster once (50%) or twice (10%) */
 	p = randint0(100);
 
-	if (p < 60) {
-		struct monster_race *old = race;
+	if (!rf_has(race->flags, RF_IN_LEVEL)) {
+		if (p < 60) {
+			struct monster_race *old = race;
 
-		/* Pick a new monster */
-		race = get_mon_race_aux(total, table);
+			/* Pick a new monster */
+			race = get_mon_race_aux(total, table);
 
-		/* Keep the deepest one */
-		if (race->level < old->level) race = old;
-	}
+			/* Keep the deepest one */
+			if (race->level < old->level) race = old;
+		}
 
-	/* Try for a "harder" monster twice (10%) */
-	if (p < 10) {
-		struct monster_race *old = race;
+		/* Try for a "harder" monster twice (10%) */
+		if (p < 10) {
+			struct monster_race *old = race;
 
-		/* Pick a monster */
-		race = get_mon_race_aux(total, table);
+			/* Pick a monster */
+			race = get_mon_race_aux(total, table);
 
-		/* Keep the deepest one */
-		if (race->level < old->level) race = old;
+			/* Keep the deepest one */
+			if (race->level < old->level) race = old;
+		}
 	}
 
 	/* Occasionally try for a mutant */

@@ -42,6 +42,22 @@ lore-color-base:Orange
 message-vis:{name} makes a high-pitched shriek.
 message-invis:Something makes a high-pitched shriek.
 
+name:FLAMES
+msgt:BR_FIRE
+hit:100
+effect:SPOT:FIRE:2
+dice:3d6
+message-vis:{name} goes up in flames!
+message-invis:You hear a 'whoomph'.
+
+name:FLAMES3
+msgt:BR_FIRE
+hit:100
+effect:SPOT:FIRE:3
+dice:4d6
+message-vis:{name} goes up in flames!
+message-invis:You hear a loud *whoomph*.
+
 name:EXPLODE
 msgt:BR_FIRE
 hit:100

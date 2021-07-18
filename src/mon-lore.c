@@ -1128,9 +1128,12 @@ void lore_append_movement(textblock *tb, const struct monster_race *race,
 		else
 			textblock_append(tb, " is normally found ");
 
-		textblock_append(tb, "at depths of ");
+		if (rf_has(known_flags, RF_IN_LEVEL))
+			textblock_append(tb, "at or below ");
+		else
+			textblock_append(tb, "at depths of ");
 		textblock_append_c(tb, colour, "%d", race->level * 50);
-		textblock_append(tb, " feet (level ");
+		textblock_append(tb, " meters (level ");
 		textblock_append_c(tb, colour, "%d", race->level);
 		textblock_append(tb, ")");
 	}

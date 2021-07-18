@@ -99,14 +99,16 @@ flags:IM_ELEC | IM_POIS | NO_CONF | NO_SLEEP
 flags:MIMIC_INV
 desc:Creeping Coins
 
-# Early, weak breathers which move quickly and erratically
-name:dragon fly
+# Anything called *fly, possibly including dragonflies (early, weak breathers
+# which move quickly and erratically)
+
+name:fly
 glyph:F
 pain:7
 flags:ANIMAL | WEIRD_MIND
 flags:RAND_50 | BASH_DOOR
 flags:FORCE_SLEEP
-desc:Dragon Fly
+desc:Fly
 
 # These come in two stages:
 # 1. Motionless creatures which cause bad effects if you stand next to them
@@ -212,16 +214,8 @@ pain:2
 flags:RAND_50
 desc:Icky Thing
 
-# Insects are small, a bit fast, weak breeders which bite for various effects
+# Insects are small, a bit fast, weak, sometimes breeders, which bite for various effects
 name:insect
-glyph:I
-pain:7
-flags:ANIMAL | WEIRD_MIND | MULTIPLY
-flags:RAND_50 | RAND_25
-desc:Insect
-
-# For insects that don't fit the pattern (not breeders or randomly moving)
-name:bug
 glyph:I
 pain:7
 flags:ANIMAL | WEIRD_MIND
