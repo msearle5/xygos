@@ -1683,16 +1683,70 @@ desc:In absolute darkness, an ill-defined patch manages to be darker. Fear of th
 # (not human, but similarly shaped. And while townies may be base:humanoid,
 #  they go in their own section of the file, not here.)
 
+name:bogon
+base:humanoid
+color:LawnGreen
+depth:8
+rarity:1
+grow:bogon frogrider
+speed:105
+hit-points:30
+hearing:9
+smell:5
+armor-class:20
+sleepiness:15
+blow:HIT:HURT:9d1
+blow:HIT:HURT:9d1
+flags:NO_CONF | NO_SLEEP | ORTHOGONAL
+flags:OPEN_DOOR
+desc:A green warty toadish humanoid from the Bogstar.
+
+name:bogon frogrider
+base:humanoid
+color:SapGreen
+depth:9
+rarity:4
+grow:horde bogon
+hit-points:33
+hearing:12
+smell:5
+armor-class:25
+sleepiness:35
+blow:HIT:HURT:9d1
+blow:BITE:HURT:1d5
+flags:ORTHOGONAL
+spells:HOP
+flags:NO_CONF | NO_SLEEP
+desc:A Bogon riding on a leapy green frog.
+
+name:bogon poet
+base:humanoid
+color:Teal
+depth:11
+rarity:1
+grow:horde bogon
+speed:100
+rarity:10
+hit-points:15
+hearing:6
+armor-class:10
+sleepiness:30
+blow:HIT:HURT:7d1
+blow:INSULT:HURT:1d5
+blow:INSULT:TERRIFY:1d5
+flags:NO_CONF | NO_SLEEP | ORTHOGONAL
+desc:Bogon poetry is one of the most unpleasant experiences in the Galaxy, 
+desc:and wandering poets such as this are widely feared.
+
 name:novice munchkin
 base:humanoid
 color:Y
 depth:12
 rarity:10
-desc:'DING! Level 1!!!!' 
-desc:He may be inexperienced but he has the confidence that comes with six 
-desc:consecutive natural 18's.
 grow:munchkin
 hit-points:40
+hearing:20
+smell:5
 armor-class:20
 sleepiness:20
 blow:HIT:WOUND:6d1
@@ -1700,16 +1754,43 @@ blow:HIT:WOUND:6d1
 spell-power:5
 spell-freq:8
 spells:BLINK | SHAPECHANGE
+desc:'DING! Level 1!!!!' 
+desc:He may be inexperienced but he has the confidence that comes with six 
+desc:consecutive natural 18's.
+
+name:horde bogon
+base:humanoid
+color:Olive
+depth:15
+rarity:4
+speed:100
+hit-points:30
+hearing:9
+smell:5
+armor-class:30
+sleepiness:15
+blow:HIT:HURT:15d1
+blow:HIT:HURT:15d1
+flags:NO_CONF | NO_SLEEP | OPEN_DOOR
+friends:100:2d2:Same
+friends:100:3d5:bogon
+friends:40:1d3:bogon frogrider
+friends:20:1d2:bogon poet
+desc:The Bogon hordes are countless. The typical patrol contains a few trained soldiers 
+desc:such as these and a swarm of other Bogons - untrained and not well armed, but 
+desc:dangerous through sheer numbers.
 
 name:munchkin
+desc:A green warty toadish humanoid from the Bogstar.
 base:humanoid
+grow:master munchkin
 color:Yellow
 depth:24:50
-rarity:15
-desc:An acolyte of the RNG. Leaving the worm-farms behind, he's after more lucrative prey.
-grow:master munchkin
 speed:110
+rarity:15
 hit-points:80
+hearing:20
+smell:5
 armor-class:40
 sleepiness:20
 blow:HIT:WOUND:12d1
@@ -1718,18 +1799,17 @@ blow:HIT:WOUND:12d1
 spell-power:25
 spell-freq:6
 spells:TPORT | TELE_TO | TELE_SELF_TO | SHAPECHANGE
+desc:An acolyte of the RNG. Leaving the worm-farms behind, he's after more lucrative prey.
 
 name:master munchkin
 base:humanoid
-#color:Orange
+color:Orange
 depth:48
 rarity:20
-desc:A follower of the Golden Path. Blurred with cybernetically enhanced speed, 
-desc:surrounded by an aura of fire and ice, this creature regards you as a 
-desc:competitor and will do anything to stop you saving the Galaxy first and 
-desc:hogging all the credit.
 speed:120
 hit-points:320
+hearing:20
+smell:5
 armor-class:80
 sleepiness:20
 blow:HIT:FIRE:20d1
@@ -1738,15 +1818,19 @@ blow:HIT:WOUND:20d1
 blow:HIT:WOUND:20d1
 spell-power:50
 spells:BO_RADI | BO_FIRE | BO_COLD | TPORT | TELE_TO | TELE_SELF_TO
+desc:A follower of the Golden Path. Blurred with cybernetically enhanced speed, 
+desc:surrounded by an aura of fire and ice, this creature regards you as a 
+desc:competitor and will do anything to stop you saving the Galaxy first and 
+desc:hogging all the credit.
 
 name:Mr Blobby
-base:humanoid:Magenta
+base:humanoid
+color:Magenta-Pink
 depth:70
 rarity:20
-desc:Blobby blobby blobby! 
-desc:A vaguely humanoid blob-man, splotched in unnaturally bright green and pink, 
-desc:with a fixed, creepy grin and huge staring eyes. 
 hit-points:600
+hearing:20
+smell:5
 armor-class:120
 sleepiness:200
 blow:TOUCH:CONFUSE:2d20
@@ -1758,32 +1842,35 @@ spell-freq:4
 spells:BR_CHAO
 flags:UNIQUE | EVIL
 # | SPEAK
-#s:shoggoth
-flags:NO_CONF | NO_SLEEP | IM_FIRE | IM_COLD
+flags:NO_CONF | NO_SLEEP | IM_FIRE | IM_COLD | SMART
 spells:BLIND | CONF | SCARE | FORGET | MIND_BLAST | BRAIN_SMASH
-flags:SMART
+desc:Blobby blobby blobby! 
+desc:A vaguely humanoid blob-man, splotched in unnaturally bright green and pink, 
+desc:with a fixed, creepy grin and huge staring eyes. 
 
 name:Max, Ultimate Munchkin
 base:humanoid
 color:OrangeRed
 depth:96
 rarity:20
-desc:Max maxes. Everything. Max always has the First and Final Word. Run!
 speed:130
 hit-points:1280
 armor-class:160
-sleepiness:20
+hearing:20
+smell:5
+sleepiness:10
 blow:HIT:WOUND:60d1
 blow:HIT:WOUND:60d1
 blow:HIT:WOUND:60d1
 blow:HIT:WOUND:60d1
 flags:ATTR_MULTI
 flags:UNIQUE
-spell-power:200
+spell-power:100
 spells:S_KIN
 spells:BA_RADI
 flags:NO_FEAR | NO_CONF | NO_SLEEP
 spells:TPORT | TELE_TO
+desc:Max maxes. Everything. Max always has the First and Final Word. Run!
 
 
 ##### H is for HOLOGRAM #####
@@ -4995,7 +5082,7 @@ rarity:1
 experience:2
 blow:CRAWL:POISON:1d2
 flags:WEIRD_MIND | MULTIPLY | STUPID
-flags:RAND_25 | RAND_50
+flags:RAND_25 | RAND_50 | PASS_DOOR
 flags:HURT_LIGHT | IM_POIS | NO_FEAR
 desc:It is a large slimy mass of worms.
 
@@ -5012,7 +5099,7 @@ rarity:1
 experience:3
 blow:CRAWL:ACID:1d3
 flags:WEIRD_MIND | MULTIPLY | STUPID
-flags:RAND_25 | RAND_50
+flags:RAND_25 | RAND_50 | PASS_DOOR
 flags:HURT_LIGHT | IM_ACID | NO_FEAR
 desc:It is a large slimy mass of worms.
 
@@ -5029,7 +5116,7 @@ rarity:2
 experience:4
 blow:CRAWL:LOSE_DEX:1d3
 flags:WEIRD_MIND | MULTIPLY | STUPID
-flags:RAND_25 | RAND_50
+flags:RAND_25 | RAND_50 | PASS_DOOR
 flags:HURT_LIGHT | NO_FEAR
 desc:It is a large slimy mass of worms.
 
@@ -5046,7 +5133,7 @@ rarity:2
 experience:4
 blow:CRAWL:POISON:1d2
 flags:WEIRD_MIND | INVISIBLE | MULTIPLY | STUPID
-flags:RAND_25 | RAND_50
+flags:RAND_25 | RAND_50 | PASS_DOOR
 flags:HURT_LIGHT | IM_POIS | NO_FEAR
 flags:ATTR_CLEAR
 desc:It is a disgusting mass of poisonous worms.
@@ -5065,7 +5152,7 @@ experience:5
 blow:CRAWL:COLD:1d4
 flags:COLD_BLOOD | WEIRD_MIND | MULTIPLY | STUPID
 flags:RAND_25 | RAND_50
-flags:HURT_LIGHT | IM_COLD | NO_FEAR
+flags:HURT_LIGHT | IM_COLD | NO_FEAR | PASS_DOOR
 desc:It is a large slimy mass of worms.
 
 name:purple worm
@@ -5079,7 +5166,7 @@ sleepiness:30
 depth:29
 rarity:3
 experience:400
-blow:HIT:HURT:1d8
+blow:CONSTRICT:HURT:1d8
 blow:BITE:ACID:2d8
 blow:STING:POISON:1d8
 flags:BASH_DOOR

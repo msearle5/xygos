@@ -37,7 +37,7 @@ extern const s16b clockwise_ddd[9];
 extern const struct loc clockwise_grid[9];
 extern const int *dist_offsets_y[10];
 extern const int *dist_offsets_x[10];
-extern const byte side_dirs[20][8];
+extern const byte side_dirs[2][20][8];
 
 enum {
 	DIR_UNKNOWN = 0,

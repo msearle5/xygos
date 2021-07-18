@@ -746,7 +746,7 @@ static bool get_move_flee(struct chunk *c, struct monster *mon)
  * Note that the input is an offset to the monster's current position, and
  * the output direction is intended as an index into the side_dirs array.
  */
-static int get_move_choose_direction(struct loc offset)
+static int get_move_choose_direction(struct loc offset, bool orthogonal)
 {
 	int dir = 0;
 	int dx = offset.x, dy = offset.y;
@@ -755,67 +755,102 @@ static int get_move_choose_direction(struct loc offset)
 	int ay = ABS(dy);
 	int ax = ABS(dx);
 
-	/* We mostly want to move vertically */
-	if (ay > (ax * 2)) {
-		/* Choose between directions '8' and '2' */
-		if (dy > 0) {
-			/* We're heading down */
-			dir = 2;
-			if ((dx > 0) || (dx == 0 && turn % 2 == 0))
-				dir += 10;
-		} else {
-			/* We're heading up */
-			dir = 8;
-			if ((dx < 0) || (dx == 0 && turn % 2 == 0))
-				dir += 10;
+	/* Move to 2, 4, 6, 8 only */
+	if (orthogonal) {
+		/* We mostly want to move vertically */
+		if (ay > ax) {
+			/* Choose between directions '8' and '2' */
+			if (dy > 0) {
+				/* We're heading down */
+				dir = 2;
+				if ((dx > 0) || (dx == 0 && turn % 2 == 0))
+					dir += 10;
+			} else {
+				/* We're heading up */
+				dir = 8;
+				if ((dx < 0) || (dx == 0 && turn % 2 == 0))
+					dir += 10;
+			}
 		}
-	}
 
-	/* We mostly want to move horizontally */
-	else if (ax > (ay * 2)) {
-		/* Choose between directions '4' and '6' */
-		if (dx > 0) {
-			/* We're heading right */
-			dir = 6;
-			if ((dy < 0) || (dy == 0 && turn % 2 == 0))
-				dir += 10;
-		} else {
-			/* We're heading left */
-			dir = 4;
-			if ((dy > 0) || (dy == 0 && turn % 2 == 0))
-				dir += 10;
+		/* We mostly want to move horizontally */
+		else {
+			/* Choose between directions '4' and '6' */
+			if (dx > 0) {
+				/* We're heading right */
+				dir = 6;
+				if ((dy < 0) || (dy == 0 && turn % 2 == 0))
+					dir += 10;
+			} else {
+				/* We're heading left */
+				dir = 4;
+				if ((dy > 0) || (dy == 0 && turn % 2 == 0))
+					dir += 10;
+			}
 		}
-	}
-
-	/* We want to move down and sideways */
-	else if (dy > 0) {
-		/* Choose between directions '1' and '3' */
-		if (dx > 0) {
-			/* We're heading down and right */
-			dir = 3;
-			if ((ay < ax) || (ay == ax && turn % 2 == 0))
-				dir += 10;
-		} else {
-			/* We're heading down and left */
-			dir = 1;
-			if ((ay > ax) || (ay == ax && turn % 2 == 0))
-				dir += 10;
+	} else {
+		/* We mostly want to move vertically */
+		if (ay > (ax * 2)) {
+			/* Choose between directions '8' and '2' */
+			if (dy > 0) {
+				/* We're heading down */
+				dir = 2;
+				if ((dx > 0) || (dx == 0 && turn % 2 == 0))
+					dir += 10;
+			} else {
+				/* We're heading up */
+				dir = 8;
+				if ((dx < 0) || (dx == 0 && turn % 2 == 0))
+					dir += 10;
+			}
 		}
-	}
 
-	/* We want to move up and sideways */
-	else {
-		/* Choose between directions '7' and '9' */
-		if (dx > 0) {
-			/* We're heading up and right */
-			dir = 9;
-			if ((ay > ax) || (ay == ax && turn % 2 == 0))
-				dir += 10;
-		} else {
-			/* We're heading up and left */
-			dir = 7;
-			if ((ay < ax) || (ay == ax && turn % 2 == 0))
-				dir += 10;
+		/* We mostly want to move horizontally */
+		else if (ax > (ay * 2)) {
+			/* Choose between directions '4' and '6' */
+			if (dx > 0) {
+				/* We're heading right */
+				dir = 6;
+				if ((dy < 0) || (dy == 0 && turn % 2 == 0))
+					dir += 10;
+			} else {
+				/* We're heading left */
+				dir = 4;
+				if ((dy > 0) || (dy == 0 && turn % 2 == 0))
+					dir += 10;
+			}
+		}
+
+		/* We want to move down and sideways */
+		else if (dy > 0) {
+			/* Choose between directions '1' and '3' */
+			if (dx > 0) {
+				/* We're heading down and right */
+				dir = 3;
+				if ((ay < ax) || (ay == ax && turn % 2 == 0))
+					dir += 10;
+			} else {
+				/* We're heading down and left */
+				dir = 1;
+				if ((ay > ax) || (ay == ax && turn % 2 == 0))
+					dir += 10;
+			}
+		}
+
+		/* We want to move up and sideways */
+		else {
+			/* Choose between directions '7' and '9' */
+			if (dx > 0) {
+				/* We're heading up and right */
+				dir = 9;
+				if ((ay > ax) || (ay == ax && turn % 2 == 0))
+					dir += 10;
+			} else {
+				/* We're heading up and left */
+				dir = 7;
+				if ((ay < ax) || (ay == ax && turn % 2 == 0))
+					dir += 10;
+			}
 		}
 	}
 
@@ -841,8 +876,9 @@ static int get_move_choose_direction(struct loc offset)
  *
  * The function then returns false if we're already where we want to be, and
  * otherwise sets the chosen direction to step and returns true.
+ * It also returns true in *ortho if orthogonal movement is wanted.
  */
-static bool get_move(struct chunk *c, struct monster *mon, int *dir, bool *good)
+static bool get_move(struct chunk *c, struct monster *mon, int *dir, bool *good, bool *ortho)
 {
 	struct loc target = monster_is_decoyed(mon) ? cave_find_decoy(c) :
 		player->grid;
@@ -969,7 +1005,12 @@ static bool get_move(struct chunk *c, struct monster *mon, int *dir, bool *good)
 	if (loc_is_zero(grid)) return (false);
 
 	/* Pick the correct direction */
-	*dir = get_move_choose_direction(grid);
+	*ortho = rf_has(mon->race->flags, RF_ORTHOGONAL);
+	if (*ortho) {
+		if ((grid.x >= -1) && (grid.y >= -1) && (grid.x <= 1) && (grid.y <= 1))
+			*ortho = false;
+	}
+	*dir = get_move_choose_direction(grid, *ortho);
 
 	/* Want to move */
 	return (true);
@@ -1626,9 +1667,10 @@ static void monster_turn(struct chunk *c, struct monster *mon)
 
 	/* Work out what kind of movement to use - random movement or AI */
 	stagger = monster_turn_should_stagger(mon);
+	bool ortho = false;
 	if (stagger == NO_STAGGER) {
 		/* If there's no sensible move, we're done */
-		if (!get_move(c, mon, &dir, &tracking)) return;
+		if (!get_move(c, mon, &dir, &tracking, &ortho)) return;
 	}
 
 	/* Try to move first in the chosen direction, or next either side of the
@@ -1637,7 +1679,7 @@ static void monster_turn(struct chunk *c, struct monster *mon)
 	 * can't move in their chosen direction. */
 	for (i = 0; i < 5 && !did_something; i++) {
 		/* Get the direction (or stagger) */
-		int d = (stagger != NO_STAGGER) ? ddd[randint0(8)] : side_dirs[dir][i];
+		int d = (stagger != NO_STAGGER) ? ddd[randint0(8)] : side_dirs[ortho][dir][i];
 
 		/* Get the grid to step to or attack */
 		struct loc new = loc_sum(mon->grid, ddgrid[d]);
