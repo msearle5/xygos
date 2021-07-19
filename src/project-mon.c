@@ -319,19 +319,21 @@ static void project_monster_resist_other(project_monster_handler_context_t *cont
  */
 static void project_monster_hurt_immune(project_monster_handler_context_t *context, int hurt_flag, int imm_flag, int hurt_factor, int imm_factor, enum mon_messages hurt_msg, enum mon_messages die_msg)
 {
-	if (context->seen) {
-		rf_on(context->lore->flags, imm_flag);
-		rf_on(context->lore->flags, hurt_flag);
-	}
+	if (context->dam) {
+		if (context->seen) {
+			rf_on(context->lore->flags, imm_flag);
+			rf_on(context->lore->flags, hurt_flag);
+		}
 
-	if (rf_has(context->mon->race->flags, imm_flag)) {
-		context->hurt_msg = MON_MSG_RESIST_A_LOT;
-		context->dam /= imm_factor;
-	}
-	else if (rf_has(context->mon->race->flags, hurt_flag)) {
-		context->hurt_msg = hurt_msg;
-		context->die_msg = die_msg;
-		context->dam *= hurt_factor;
+		if (rf_has(context->mon->race->flags, imm_flag)) {
+			context->hurt_msg = MON_MSG_RESIST_A_LOT;
+			context->dam /= imm_factor;
+		}
+		else if (rf_has(context->mon->race->flags, hurt_flag)) {
+			context->hurt_msg = hurt_msg;
+			context->die_msg = die_msg;
+			context->dam *= hurt_factor;
+		}
 	}
 }
 

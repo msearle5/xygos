@@ -19,11 +19,12 @@ H:A greedy banishment can be a fatal mistake, especially if you are low on hits.
 H:A restore pill will not restore your drained life experience.
 H:A wounded enemy's ranged attacks are as strong as a healthy one's.
 H:Acid can destroy your stuff - fight acid users at a distance if possible.
-H:Acid can destroy your stuff - watch out for water hounds and water vortices.
+H:Acid can destroy your stuff - watch out for acid breathers.
 H:Acid damage can destroy items in your inventory.
 H:Acquisition cards produce better items if you run them deeper down.
 H:Afraid of your money getting stolen? Invest it!
 H:Afraid of your valuables getting stolen? Carry more junk!
+H:Airline regulations require flights to be scheduled at the same time each day.
 H:Always carry around an escape that you can use while blind and confused.
 H:Always look out for trapdoors when you're feeling special.
 H:Always stay well fed; hunger has killed many adventurers.
@@ -44,7 +45,6 @@ H:Be as resistant as you can, especially fire, cold, electricity, acid, poison.
 H:Be careful hallucinating, you might be fighting something entirely different...
 H:Be sure to set your hitpoint warning in the options menu ('=').
 H:Below 2500m you'll need a reliable means of large heal-self.
-H:Beware the Jabberwock, my son! The jaws that bite, the claws that catch...
 H:Blind? Eat a carrot!
 H:Blink and you're dead.
 H:Blink can be a good escape, but only if the terrain is appropriate.
@@ -63,6 +63,8 @@ H:Confused monsters cannot make ranged attacks reliably and may misstep.
 H:Containers may contain very useful things - and some nasty traps.
 H:Cool guys can resist fire.
 H:Curing pills can reduce or eliminate cuts, stunning and poison.
+H:Cyberware can help most characters, but not androids.
+H:Dark Helmet's stormtroopers can't shoot straight - hope they shoot each other!
 H:Deep waters are a nice separation against some poisonous animals.
 H:Deep waters may contain poisonous animals.
 H:Descent will send you further down.
@@ -97,7 +99,7 @@ H:Ha, treasures! Like all vaults it was full of depths and dangers.
 H:Half the treasures of a vault could be crushed by an earthquake.
 H:Having troubles with summoners? Door creation is your friend!
 H:He who fights and runs away lives to fight another day.
-H:Healing monsters is useful! Hint: fireball, @....moo(o)ooo
+H:Healing monsters is useful! Hint: fireball, @....mll(l)lll
 H:Held monsters will take no action until it wears off or they take damage.
 H:Hold life will not block all experience drain, just most of it.
 H:I smell a maze of twisty little passages.
@@ -141,9 +143,10 @@ H:It is often a good idea to throw items that you don't want to eat or drink.
 H:It seems not smart to have your high bonus ammo destroyed by breathers.
 H:It's a happy moment when sufficient DEX makes you "grab hold of your backpack".
 H:It's your own fault if you don't use all non-cheating means of awareness.
+H:It's worth listening to the travel agent's advice.
 H:Levels are generated randomly, and you can never go back. Usually.
 H:MAKE MONEY FAST! Find a Treasure Pit!
-H:Many items are bad, but few are faulty to the point of needing a repair device.
+H:Many items are bad, but few are faulty to the point of needing a repair item.
 H:Many items are bad, but few are force-locked and unable to be removed.
 H:Melee attacks, damage, and some effects will wake sleeping monsters.
 H:Monsters that breathe fire, acid, electricity, or cold can deal big damage.
@@ -164,8 +167,8 @@ H:Pay attention to how your enemies move - some are erratic, some can blink.
 H:Pills are available which can will protect you from being scared.
 H:Poison will kill you slowly.
 H:Probing an enemy to learn its abilities is always useful.
-H:Quivers can hold different types of ammo in one inventory slot (max. 99).
 H:Recall will send you to and from the depths.
+H:Recall will send you to and from the surface.
 H:Regeneration improves your recovery of hitpoints.
 H:Regeneration makes you hungry more quickly.
 H:Resistance to the elements is 50% for single, 66% for double, 72%, 75%, 77%...
@@ -181,6 +184,10 @@ H:Sing Fury: "This is not the time to wonder, this is not the time to cry!"
 H:Sing Garbage: "The trick is keep on breathing." - or was it the RHCPs?
 H:Sing Morisette: "Life has a funny way, helping you out." So innovate!
 H:Sing Pythons: "Always look on the bright side of death." Only a breath away!
+H:Some monsters can retaliate with a passive melee attack. So shoot them!
+H:Some monsters aren't much harmed by edged weapons. So shoot them!
+H:Some monsters aren't much harmed by blunt weapons. So shoot them!
+H:Some monsters reflect projectiles. So use area-effect blasts, or melee.
 H:Some pills (combat and max-combat) will protect you from being scared.
 H:Someone's been spiking the pits!
 H:Stairway creation may be slower than level teleportation, but it's safer...
@@ -206,6 +213,7 @@ H:The stores change their stock every so often.
 H:The strong rely on strength. The not-so-strong must mint means of shrewdness.
 H:The thrum of serious risk-taking heightens the suspense. Hitchcock them!
 H:The worse the name the worse the monster.
+H:The worse the description the worse the monster.
 H:There *is* a good use for some pills that you wouldn't want to eat.
 H:There are no guarantees in life, but it's smarter to take fewer chances.
 H:There is a way to turn boots of speed (-20) into boots of speed (+20).
@@ -250,7 +258,6 @@ H:They say that playing Worms might be helpful.
 H:They say that radiation isn't always bad for your health.
 H:They say that shopkeepers sometimes try to cheat the customer.
 H:They say that smart guys hang around at 1500m.
-H:They say that spam is not entirely useless.
 H:They say that speed kills.
 H:They say that sticky situations are back, but with patience can be discharged.
 H:They say that the key to killing tougher monsters is called "hit&run".
@@ -277,7 +284,6 @@ H:Time is a weird attack - not even sustained stats will save you.
 H:Time spent within sight or hearing range will eventually wake sleepers.
 H:To a full belly all food is bad.
 H:To attack a monster in a wall with your weapon, use the 'T'unnel command.
-H:Tolkien said: "The dread of the Ringwraith cannot be shaken off." Fearless!
 H:Too much stunning will knock you out! This is to be avoided if possible.
 H:Try inscribing thrown weapons, "@v0" for example.
 H:Two wrongs don't make a right, but three lefts do.
@@ -294,9 +300,7 @@ H:When all else fails, read the instructions.
 H:When running from a nasty monster, go back the way you came.
 H:When shapechanged inspect items with I. Resume your shape with m or p.
 H:Why doesn't monster detection show invisible monsters? 'Cos you can't see 'em!
-H:Wield your ammo to have it take fewer inventory slots.
 H:Without information life is quite short.
-H:Word of Recall will send you to and from the dungeon.
 H:You always get the first move when entering a level. 
 H:You can attack a monster in a wall with your melee weapon.
 H:You can combine equipment that resists cold and a pill with the same effect.

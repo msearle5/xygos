@@ -511,6 +511,23 @@ flags:NEVER_MOVE
 flags:ATTR_CLEAR
 desc:Yum!  It looks quite tasty.
 
+name:cherry tomato
+base:mushroom
+color:Tomato
+depth:14
+rarity:10
+grow:killer tomato
+speed:130
+hit-points:1
+armor-class:1
+sleepiness:10
+blow:BITE:HURT:1d5
+spells:HOP
+deathspells:SPLAT
+friends:90:2d3:Same
+flags:NO_SLOW
+desc:Yum!  It looks quite tasty.  But wait, why is it twitching like that?
+
 name:shambling mound
 base:mushroom
 color:g
@@ -532,6 +549,22 @@ spells:SHRIEK
 friends:60:1d1:Giant fruit fly
 desc:A pile of rotting vegetation that slides towards you with a disgusting
 desc: stench, waking all it nears.
+
+name:killer tomato
+base:mushroom
+color:Tomato
+depth:28
+rarity:10
+speed:130
+hit-points:1
+armor-class:1
+sleepiness:10
+blow:BITE:HURT:2d6
+spells:HOP
+deathspells:SPLAT
+friends:95:3d4:Same
+flags:NO_SLOW
+desc:Yum!  It looks quite tasty.  But wait, why is it twitching like that?
 
 ##################################
 # Toadstools
@@ -5023,6 +5056,24 @@ flags:ANIMAL | WEIRD_MIND
 flags:IM_POIS
 desc:A giant, fast-moving spider with hairy black and red legs.
 
+name:yellow scorpion
+base:spider
+color:Goldenrod
+speed:110
+hit-points:54
+hearing:12
+armor-class:45
+sleepiness:20
+depth:17
+rarity:1
+experience:60
+blow:CLAW:HURT:1d8
+blow:CLAW:HURT:1d8
+blow:STING:POISON:2d5
+flags:ANIMAL | WEIRD_MIND
+flags:IM_POIS
+desc:A gigantic dull yellow scorpion with a slim, sharp stinger whipping about.
+
 #radscorpion?
 name:red scorpion
 base:spider
@@ -5032,7 +5083,7 @@ hit-points:50
 hearing:12
 armor-class:52
 sleepiness:20
-depth:17
+depth:23
 rarity:1
 experience:62
 blow:CLAW:POISON:2d4
@@ -5152,7 +5203,7 @@ blow:ENGULF:ACID:3d6
 flags:WEIRD_MIND
 flags:MOVE_BODY
 flags:NO_STUN | NO_SLOW | NO_SLEEP
-desc:Caution: Heavy Plant Crossing. The triffid is a muddy, shrub-like clump of vegetation with a flexible stem in yellow shading to red which extends around three meters up. At the end is a bell-shaped speckled pink flower from which protrudes a sticky, coiling, tongue-like stigma. The whole thing can move with alarming speed though means that are unclear beneath the dirt, and it feeds by grabbing its prey with the venomous tongue and plunging it head-first into the smothering petals.
+desc:Caution: Heavy Plant Crossing. The triffid is a muddy, shrub-like clump of vegetation with a flexible stem in yellow shading to red which extends around three meters up. At the end is a bell-shaped speckled pink flower from which protrudes a sticky, coiling, tongue-like stigma. The whole thing can move with alarming speed through means that are unclear beneath the dirt, and it feeds by grabbing its prey with the venomous tongue and plunging it head-first into the smothering petals.
 
 name:choke-apple tree
 base:tree
@@ -5791,42 +5842,7 @@ desc:A tall shaggy, furry humanoid, it could call the yeti brother.
 
 
 
-### Dungeon level 0 ###
-
 ### Dungeon level 1 ###
-
-name:white icky thing
-base:icky thing
-color:w
-speed:110
-hit-points:6
-hearing:12
-armor-class:8
-sleepiness:10
-depth:1
-rarity:1
-experience:1
-blow:TOUCH:HURT:1d2
-flags:EMPTY_MIND
-flags:RAND_25
-desc:It is a smallish, slimy, icky creature.
-
-name:clear icky thing
-base:icky thing
-color:w
-speed:110
-hit-points:6
-hearing:12
-armor-class:7
-sleepiness:10
-depth:1
-rarity:1
-experience:2
-blow:TOUCH:HURT:1d2
-flags:INVISIBLE | EMPTY_MIND
-flags:RAND_25
-flags:ATTR_CLEAR
-desc:It is a smallish, slimy, icky, blobby creature.
 
 name:floating eye
 base:eye
@@ -5845,24 +5861,6 @@ flags:HURT_LIGHT | NO_FEAR
 desc:A disembodied eye, floating a few feet above the ground.
 
 ### Dungeon level 2 ###
-
-name:blubbering icky thing
-base:icky thing
-color:W
-speed:110
-hit-points:18
-hearing:14
-armor-class:4
-sleepiness:10
-depth:2
-rarity:1
-experience:8
-blow:CRAWL:POISON:1d4
-blow:CRAWL:EAT_FOOD
-flags:EMPTY_MIND
-flags:KILL_BODY | TAKE_ITEM
-flags:IM_POIS
-desc:It is a smallish, slimy, icky, hungry creature.
 
 name:soldier
 base:person
@@ -5887,22 +5885,6 @@ friends-base:80:1d3:person
 friends:50:1d2:Same
 desc:An inexperienced but tough warrior.
 
-name:blue yeek
-base:yeek
-color:b
-speed:110
-hit-points:7
-hearing:18
-smell:20
-armor-class:16
-sleepiness:10
-depth:2
-rarity:1
-experience:4
-blow:HIT:HURT:1d5
-flags:DROP_60
-desc:A small humanoid figure.
-
 ### Dungeon level 3 ###
 
 ### Dungeon level 4 ###
@@ -5923,24 +5905,6 @@ blow:HIT:HURT:1d4
 blow:TOUCH:POISON:2d4
 desc:It appears to be a pile of copper coins.
 mimic:cash:small change
-
-### Dungeon level 5 ###
-name:red worm mass
-base:worm
-color:r
-speed:100
-hit-points:23
-hearing:7
-armor-class:14
-sleepiness:10
-depth:5
-rarity:1
-experience:6
-blow:CRAWL:FIRE:1d6
-flags:WEIRD_MIND | MULTIPLY | STUPID
-flags:RAND_25 | RAND_50 | BASH_DOOR
-flags:HURT_LIGHT | IM_FIRE | NO_FEAR
-desc:It is a large slimy mass of worms.
 
 ### Dungeon level 6 ###
 
@@ -5998,26 +5962,6 @@ desc:It is a black lizard with overlapping scales and a powerful jaw.
 
 ### Dungeon level 8 ###
 
-name:giant salamander
-base:reptile
-color:y
-speed:110
-hit-points:24
-hearing:6
-smell:20
-armor-class:60
-sleepiness:80
-depth:8
-rarity:1
-experience:50
-blow:BITE:FIRE:3d6
-flags:RAND_25
-flags:IM_FIRE
-flags:FORCE_SLEEP
-innate-freq:9
-spells:BR_FIRE
-desc:A large black and yellow lizard.  You'd better run away!
-
 name:ruffian
 base:person
 color:s
@@ -6060,23 +6004,6 @@ desc: you on tiny legs.
 mimic:cash:rare coins
 
 ### Dungeon level 12 ###
-
-name:air spirit
-base:elemental
-color:B
-speed:130
-hit-points:36
-hearing:12
-armor-class:48
-sleepiness:20
-depth:12
-rarity:2
-experience:40
-blow:HIT:HURT:1d3
-flags:COLD_BLOOD | INVISIBLE
-flags:RAND_25 | RAND_50 | BASH_DOOR
-flags:IM_ELEC
-desc:A whirlwind of sentient air.
 
 name:warrior
 base:person
@@ -6186,68 +6113,6 @@ friends:50:1d2:warrior
 friends:50:1d2:Same
 desc:He is eyeing your backpack.
 
-### Dungeon level 18 ###
-
-name:fire spirit
-base:elemental
-color:r
-speed:120
-hit-points:50
-light:2
-hearing:16
-armor-class:36
-sleepiness:20
-depth:18
-rarity:2
-experience:75
-blow:HIT:FIRE:2d6
-blow:HIT:FIRE:2d6
-flags:RAND_25 | BASH_DOOR
-flags:IM_FIRE | HURT_COLD
-desc:A whirlwind of sentient flame.
-
-name:blink dog
-base:canine
-color:B
-speed:120
-hit-points:36
-hearing:20
-smell:50
-armor-class:24
-sleepiness:10
-depth:18
-rarity:2
-experience:50
-blow:BITE:HURT:1d8
-flags:RAND_25 | BASH_DOOR | GROUP_AI | ATTR_FLICKER
-spell-freq:4
-spells:BLINK | TELE_TO
-friends:100:2d7:Same
-desc:A strange magical member of the canine race, its form seems to shimmer and
-desc: fade in front of your very eyes.
-
-### Dungeon level 19 ###
-
-name:red mold
-base:mold
-color:r
-speed:110
-hit-points:77
-light:2
-hearing:2
-armor-class:19 
-sleepiness:70
-depth:19
-rarity:1
-experience:64
-blow:SPORE:FIRE:4d4
-passive:TOUCH:FIRE:4d6
-flags:EMPTY_MIND | STUPID
-flags:IM_FIRE
-flags-off:HURT_FIRE
-desc:It is a strange red growth on the dungeon floor; it seems to burn with
-desc: flame.
-
 ### Dungeon level 21 ###
 
 name:card mimic
@@ -6281,50 +6146,7 @@ mimic:card:acquisition
 mimic:card:mass acquisition
 mimic:card:disinto
 
-### Dungeon level 22 ###
-
-name:giant yellow scorpion
-base:spider
-color:y
-speed:110
-hit-points:54
-hearing:12
-armor-class:45
-sleepiness:20
-depth:22
-rarity:1
-experience:60
-blow:CLAW:HURT:1d8
-blow:CLAW:HURT:1d8
-blow:STING:POISON:2d5
-flags:ANIMAL | WEIRD_MIND
-flags:IM_POIS
-desc:It is a giant scorpion with a sharp stinger.
-
-
 ### Dungeon level 23 ###
-
-name:phase spider
-base:spider
-color:B
-speed:120
-hit-points:27
-hearing:15
-armor-class:30
-sleepiness:80
-depth:23
-rarity:2
-experience:60
-blow:BITE:HURT:1d8
-blow:BITE:POISON:1d6
-blow:BITE:POISON:1d6
-flags:ANIMAL | WEIRD_MIND | ATTR_FLICKER
-flags:IM_POIS | GROUP_AI
-spell-freq:5
-spells:BLINK | TELE_TO | TELE_SELF_TO
-friends:100:2d7:Same
-desc:A spider that never seems quite there.  Everywhere you look it is just
-desc: half-seen in the corner of one eye.
 
 name:brigand
 base:person
@@ -6453,8 +6275,6 @@ desc:It appears to be a pile of unobtainium wafers, slithering
 desc: toward you on lots of tiny legs.
 mimic:cash:unobtainium wafers
 
-### Dungeon level 29 ###
-
 ### Dungeon level 32 ###
 
 name:serpent of the brownlands
@@ -6479,7 +6299,7 @@ spells:HOLD | BLIND | CONF
 desc:A great serpent, with coils of steel, a lunge faster than the eye can see,
 desc: and fangs that drip with acidic poison.  Its eyes are mesmerizing.
 
-name:southron assassin
+name:assassin
 base:person
 color:M
 speed:120
@@ -6498,36 +6318,7 @@ flags:DROP_1
 flags:OPEN_DOOR
 flags:NO_CONF | NO_SLEEP
 friends:50:1d1:Master thief
-desc:A man of Harad clothed in black who moves with blinding speed.
-
-### Dungeon level 33 ###
-
-name:mystic
-base:person
-color:o
-speed:120
-hit-points:308
-hearing:30
-armor-class:60
-sleepiness:5
-depth:33
-rarity:3
-experience:500
-blow:KICK:HURT:10d2
-blow:KICK:HURT:10d2
-blow:KICK:HURT:10d2
-blow:KICK:HURT:10d2
-flags:MALE | INVISIBLE
-flags:DROP_1 | ONLY_ITEM
-flags:OPEN_DOOR
-flags:IM_ACID | IM_POIS | NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:6
-spells:HEAL
-spells:S_ANIMAL | S_SPIDER
-friends-base:50:2d4:spider
-desc:An adept at unarmed combat, the mystic strikes with stunning power.  He can
-desc: summon help from nature and is able to focus his power to ease any pain.
+desc:Clothed in black, following the shadows, moving silently yet with blinding speed.
 
 ### Dungeon level 34 ###
 
@@ -6553,7 +6344,7 @@ flags:OPEN_DOOR | TAKE_ITEM
 innate-freq:10
 spell-freq:6
 spells:SHOT | BLINK | TRAPS
-friends:50:1d1:southron assassin
+friends:50:1d1:assassin
 desc:Cool and confident, fast and lithe; protect your possessions quickly!
 
 ### Dungeon level 35 ###
@@ -6649,97 +6440,4 @@ spell-power:10
 desc:A massive spider, heaving the bloated bag of its body between great
 desc: spined legs.
 
-### Dungeon level 47 ###
-
 ### Dungeon level 48 ###
-
-name:ancient spider
-base:spider
-color:r
-speed:120
-hit-points:1050
-hearing:20
-armor-class:78
-sleepiness:50
-depth:48
-rarity:5
-experience:2500
-blow:CLAW:POISON:5d8
-blow:CLAW:POISON:5d8
-blow:BITE:POISON:5d6
-blow:BITE:POISON:5d6
-flags:EVIL | ANIMAL | SMART | SPIRIT
-flags:OPEN_DOOR
-flags:HURT_LIGHT | IM_POIS
-flags:FORCE_SLEEP
-innate-freq:20
-spell-freq:6
-spells:WOUND | HEAL | HOLD | SLOW
-spells:BR_DARK
-spells:S_KIN | S_SPIDER
-friends:100:4d4:spider
-desc:A foul creature of spider form, older even than the pits of Angband.
-
-### Dungeon level 50 ###
-
-name:master mystic
-base:person
-color:o
-speed:130
-hit-points:968
-hearing:30
-armor-class:72
-sleepiness:5
-depth:50
-rarity:3
-experience:6000
-blow:KICK:HURT:10d2
-blow:KICK:HURT:10d2
-blow:HIT:PARALYZE:20d1
-blow:HIT:PARALYZE:15d1
-flags:MALE | INVISIBLE | ATTR_FLICKER
-flags:DROP_2 | ONLY_ITEM
-flags:OPEN_DOOR
-flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS | NO_CONF
-flags:NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:3
-spells:HEAL
-spells:S_ANIMAL
-friends-base:50:2d4:spider
-desc:A lord of all that is natural, skilled in the mystic ways.  He is a master
-desc: of martial arts and is at one with nature, able to summon help from the
-desc: wild if need be.
-
-### Dungeon level 57 ###
-
-name:grand master mystic
-base:person
-color:o
-speed:130
-hit-points:1936
-hearing:30
-armor-class:96
-sleepiness:5
-depth:57
-rarity:3
-experience:15000
-blow:KICK:HURT:20d2
-blow:KICK:HURT:10d2
-blow:HIT:PARALYZE:20d1
-blow:HIT:PARALYZE:15d1
-flags:MALE | INVISIBLE | ATTR_FLICKER
-flags:DROP_4 | ONLY_ITEM
-flags:OPEN_DOOR
-flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS | NO_CONF
-flags:NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-spell-freq:3
-spells:HEAL | MIND_BLAST
-spells:S_ANIMAL | S_HOUND | S_SPIDER
-friends-base:80:3d5:spider
-desc:He is one of the few true masters of the art, being extremely skillful in
-desc: all forms of unarmed combat and controlling the world's natural creatures
-desc: with disdainful ease.
-
-### Dungeon level 68 ###

@@ -58,6 +58,14 @@ dice:4d6
 message-vis:{name} goes up in flames!
 message-invis:You hear a loud *whoomph*.
 
+name:SPLAT
+msgt:BR_FIRE
+hit:100
+effect:SPOT:FIRE:1
+dice:0
+message-vis:Splat!
+message-invis:You hear a wet splat.
+
 name:POP
 msgt:BR_FIRE
 hit:100

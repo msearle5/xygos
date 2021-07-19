@@ -96,6 +96,7 @@ R:Beware of pits that fill the whole level!
 R:Beware of sanity blasting!
 R:Beware the 1 headed hydra.
 R:Beware the breath of the pukeman.
+R:Beware the Jabberwock, my son! The jaws that bite, the claws that catch...
 R:Bill Stickers is innocent!
 R:Bite me doughboy!
 R:Bite my shiny metal ass!
@@ -398,6 +399,7 @@ R:They say that Leeroy Jenkins is like Forrest Gump.
 R:They say that Magikarp is Magikrap.
 R:They say that Raxxla is like Erewhon.
 R:They say that ReadyoActive Brek gives you a healthy glow.
+R:They say that spam is not entirely useless.
 R:They say that Soylent Green is people. People!
 R:They say that Triax has stolen your Destinator and you can't leave without it.
 R:They say that Wizard is about to die.
