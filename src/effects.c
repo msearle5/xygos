@@ -3214,6 +3214,12 @@ static bool effect_handler_BANISH(effect_handler_context_t *context)
 
 	context->ident = true;
 
+	/* Don't allow in an arena. */
+	if (player->upkeep->arena_level) {
+		msg("Nothing happens.");
+		return true;
+	}
+
 	if (!get_com("Choose a monster race (by symbol) to exterminate: ", &typ))
 		return false;
 
@@ -3258,6 +3264,12 @@ static bool effect_handler_MASS_BANISH(effect_handler_context_t *context)
 	unsigned dam = 0;
 
 	context->ident = true;
+
+	/* Don't allow in an arena. */
+	if (player->upkeep->arena_level) {
+		msg("Nothing happens.");
+		return true;
+	}
 
 	/* Delete the (nearby) monsters */
 	for (i = 1; i < cave_monster_max(cave); i++) {
