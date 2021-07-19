@@ -1875,6 +1875,21 @@ desc:Max maxes. Everything. Max always has the First and Final Word. Run!
 
 ##### H is for HOLOGRAM #####
 
+name:hologram
+base:hologram
+color:Blue
+depth:8
+rarity:1
+desc:If it wasn't for the silver H on the forehead, you wouldn't know 
+desc:that there is nothing there but light and sound.
+hit-points:1
+hearing:10
+armor-class:150
+sleepiness:30
+blow:GAZE:LIGHT:1d11
+blow:GAZE:SOUND:2d4
+flags:EVASIVE | FLYING | COLD_BLOOD | PASS_WALL  IM_LIGHT | SMART
+
 name:Inky
 base:hologram
 color:Blue
@@ -1981,6 +1996,30 @@ spells:BLINK | TPORT | TELE_TO
 innate-freq:3
 spells:BR_SOUN | BR_LIGHT
 desc:At first panicked glimpse it looked like Triax himself! But a moment later you realise that it is just a translucent image: a hologram. Light and sound. Insubstantial, in a sense. But light and sound can still hurt and so you should not underestimate him just because he isn't really there.
+
+name:Rimmer
+base:hologram
+color:v
+speed:120
+hit-points:520
+hearing:20
+armor-class:75
+sleepiness:10
+depth:28
+rarity:5
+experience:750
+blow:HIT:POISON:3d4
+blow:HIT:POISON:3d4
+blow:HIT:HURT:3d4
+blow:INSULT
+flags:UNIQUE | INVISIBLE | SMART
+flags:DROP_4 | DROP_GOOD | ONLY_ITEM
+flags:RAND_25 | BASH_DOOR
+flags:FORCE_SLEEP
+spell-freq:5
+spells:BLIND | BLINK | CONF | SCARE | TELE_AWAY | TELE_LEVEL
+spells:TELE_TO | TPORT | S_KIN
+desc:An intensely irritating git of a monster.
 
 
 ##### I is for INSECT #####
@@ -3755,6 +3794,40 @@ spell-freq:12
 spells:HEAL | SPIT
 desc:It has the rough shape of a long-necked dinosaur - perhaps being modelled on a diplodocus. But it's clearly no living beast - it's an animatronic creation, all smooth curves without visible eyes or other protuberances, just a mass of sticky, wobbling bright blue gel.
 
+name:velociraptor
+base:reptile
+color:SapGreen
+speed:115
+hit-points:15
+armor-class:40
+sleepiness:50
+depth:18
+rarity:4
+experience:80
+blow:BITE:HURT:2d3
+blow:CLAW:HURT:1d6
+blow:CLAW:HURT:1d6
+flags:RAND_25 | BASH_DOOR | GROUP_AI
+friends:80:1d4:Same
+desc:A small dinosaur - no bigger than a large turkey. It is still an effective predator even alone, with viciously clawed feet and a nasty bite - and is especially dangerous when hunting as a pack.
+
+name:deinonychus
+base:reptile
+color:LimeGreen
+speed:120
+hit-points:60
+hearing:20
+armor-class:70
+sleepiness:50
+depth:26
+rarity:4
+experience:330
+blow:BITE:HURT:2d6
+blow:CLAW:HURT:1d20
+blow:CLAW:HURT:1d20
+flags:RAND_25 | BASH_DOOR
+desc:A three meter long dinosaur - two powerful legs allow it to run at high speed, with a narrow head and long neck ahead balanced by a long tail waving behind. Each foot has a prominent, sickle-shaped talon - all the better to tear you apart with.
+
 name:archaeopteryx
 base:reptile
 color:Cream
@@ -3893,7 +3966,7 @@ experience:3
 blow:SPORE:HURT:1d4
 blow:SPORE:HURT:1d4
 flags:EMPTY_MIND | STUPID
-desc:A small strange grey growth.
+desc:A small strange near-colorless growth on the ground.
 
 name:yellow mold
 base:mold
@@ -3908,7 +3981,7 @@ rarity:1
 experience:9
 blow:SPORE:HURT:1d4
 flags:EMPTY_MIND | STUPID
-desc:It is a strange yellow growth on the dungeon floor.
+desc:It is a strange yellow growth on the ground.
 
 name:brown mold
 base:mold
@@ -3923,7 +3996,7 @@ rarity:1
 experience:20
 blow:SPORE:CONFUSE:1d4
 flags:EMPTY_MIND | STUPID
-desc:A strange brown growth on the dungeon floor.
+desc:A strange brown growth on the ground.
 
 name:green mold
 base:mold
@@ -3939,7 +4012,7 @@ experience:28
 blow:SPORE:TERRIFY:1d4
 flags:EMPTY_MIND | STUPID
 flags:IM_ACID
-desc:It is a strange growth on the dungeon floor.
+desc:It is a strange growth on the ground.
 
 name:hairy mold
 base:mold
@@ -3955,7 +4028,99 @@ experience:32
 blow:SPORE:POISON:1d3
 passive:TOUCH:POISON:1d3:passive
 flags:EMPTY_MIND | STUPID
-desc:It is a strange hairy growth on the dungeon floor.
+desc:It is a strange hairy growth on the ground.
+
+name:shimmering mold
+base:mold
+grow:crystal mold
+depth:27
+rarity:1
+color:b
+speed:110
+hit-points:144
+light:1
+hearing:2
+armor-class:36
+sleepiness:0
+experience:140
+blow:SPORE:ELEC:5d4
+blow:SPORE:ELEC:5d4
+passive:SPORE:ELEC:5d8
+flags:EMPTY_MIND | STUPID | ATTR_FLICKER
+flags:IM_ELEC
+spell-freq:4
+spell-power:10
+spells:BE_ELEC
+desc:It is a strange growth on the dungeon floor, glowing and crackling with
+desc: sparks.
+
+name:venom mold
+base:mold
+color:Green
+depth:37
+rarity:1
+desc:A pestiferous growth on the floor; its spores are deadly.
+grow:death mold
+speed:110
+hit-points:250
+rarity:4
+hearing:4
+armor-class:10
+sleepiness:0
+blow:SPORE:POISON:3d12
+blow:SPORE:INFECT:3d12
+passive:TOUCH:INFECT:3d24
+flags:NEVER_MOVE
+#cloud:5:POISON
+flags:NO_FEAR | NO_CONF | NO_SLEEP
+flags:IM_POIS
+flags:STUPID | EMPTY_MIND
+
+name:crystal mold
+base:mold
+color:AliceBlue
+depth:44
+rarity:2
+grow:death mold
+speed:120
+hit-points:375
+hearing:4
+armor-class:45
+sleepiness:0
+blow:HIT:WOUND:4d8
+blow:TOUCH:LOSE_CHR:3d12
+passive:HIT:WOUND:8d8
+flags:NEVER_MOVE
+flags:NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
+flags:IM_FIRE | IM_COLD | IM_POIS | ATTR_FLICKER
+flags:STUPID | EMPTY_MIND
+innate-freq:3
+spell-power:22
+spells:SPIKE
+desc:A lovely shimmering form, with razor sharp spikes thrusting out in all
+desc:directions. It patiently waits to destroy anyone who ventures nearby.
+
+name:death mold
+base:mold
+color:D
+speed:140
+hit-points:1050
+hearing:200
+armor-class:72
+sleepiness:0
+depth:51
+rarity:1
+experience:1000
+blow:SPORE:DISENCHANT:7d7
+blow:SPORE:LOSE_ALL:7d7
+blow:SPORE:POISON:7d7
+blow:SPORE:INFECT:5d5
+passive:TOUCH:EXP_80:5d5
+flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE
+flags:FORCE_SLEEP | ATTR_FLICKER
+flags-off: HURT_FIRE
+desc:A motionless pile of dull black mold. It doesn't look like anything unusual, but it is so extraordinarily poisonous that merely entering the same room as it (or - just maybe - even thinking about entering that room!) can be lethal.
+
 
 ##### p is for HUMANS #####
 
@@ -4970,14 +5135,30 @@ flags:IM_LIGHT | NO_FEAR | NO_CONF | NO_SLEEP
 flags:IM_FIRE
 flags:STUPID | EMPTY_MIND
 
+name:triffid
+base:tree
+color:Orange
+speed:110
+hit-points:1000
+hearing:20
+armor-class:80
+sleepiness:20
+depth:31
+rarity:1
+experience:1200
+blow:STING:POISON:3d6
+blow:CONSTRICT:HURT:3d12
+blow:ENGULF:ACID:3d6
+flags:WEIRD_MIND
+flags:MOVE_BODY
+flags:NO_STUN | NO_SLOW | NO_SLEEP
+desc:Caution: Heavy Plant Crossing. The triffid is a muddy, shrub-like clump of vegetation with a flexible stem in yellow shading to red which extends around three meters up. At the end is a bell-shaped speckled pink flower from which protrudes a sticky, coiling, tongue-like stigma. The whole thing can move with alarming speed though means that are unclear beneath the dirt, and it feeds by grabbing its prey with the venomous tongue and plunging it head-first into the smothering petals.
+
 name:choke-apple tree
 base:tree
 color:YellowGreen
 depth:68
 rarity:3
-desc:A stumpy tree, sprouting creepers that spread across the ground as you watch. 
-desc:An unhealthy-looking greenish fog drifts around it, and you notice a skeleton 
-desc:lying beneath.
 hit-points:550
 hearing:10
 armor-class:1
@@ -4988,6 +5169,9 @@ flags:MULTIPLY
 #cloud:2:POISON
 flags:NO_FEAR | NO_CONF | NO_SLEEP
 flags:STUPID | WEIRD_MIND
+desc:A stumpy tree, sprouting creepers that spread across the ground as you watch. 
+desc:An unhealthy-looking greenish fog drifts around it, and you notice a skeleton 
+desc:lying beneath.
 
 
 ##### t is for TOWNIE #####
@@ -5854,27 +6038,7 @@ innate-freq:8
 spells:SHOT | WHIP
 desc:An uncultured brute with a club, a sling and a whip.
 
-### Dungeon level 9 ###
-
 ### Dungeon level 10 ###
-
-name:disenchanter mold
-base:mold
-color:v
-speed:110
-hit-points:72
-hearing:2
-armor-class:30
-sleepiness:10
-depth:10
-rarity:1
-experience:40
-blow:SPORE:DISENCHANT:1d6
-flags:EMPTY_MIND | STUPID
-flags:IM_DISEN
-flags:ATTR_MULTI
-spell-freq:11
-desc:It is a strange glowing growth on the dungeon floor.
 
 name:creeping gold coins
 plural:piles of creeping gold coins
@@ -5895,52 +6059,7 @@ desc:It appears to be a pile of gold coins, until it starts crawling towards
 desc: you on tiny legs.
 mimic:cash:rare coins
 
-### Dungeon level 11 ###
-
 ### Dungeon level 12 ###
-
-name:white wolf
-plural:white wolves
-base:canine
-color:w
-speed:120
-hit-points:28
-hearing:30
-smell:50
-armor-class:45
-sleepiness:15
-depth:12
-rarity:1
-experience:30
-blow:BITE:HURT:1d3
-blow:BITE:HURT:1d4
-flags:RAND_25 | BASH_DOOR
-flags:IM_COLD | GROUP_AI
-friends:100:2d7:Same
-desc:A large and muscled wolf from the northern wastes.  Its breath is cold and
-desc: icy and its fur coated in frost.
-
-name:master yeek
-base:yeek
-color:U
-speed:110
-hit-points:60
-hearing:18
-smell:20
-armor-class:28
-sleepiness:10
-depth:12
-rarity:2
-experience:28
-blow:HIT:HURT:1d8
-flags:EVIL
-flags:DROP_40
-flags:FORCE_SLEEP
-spell-freq:4
-spells:BLIND | BLINK | SLOW | TPORT
-spells:BA_POIS
-spells:S_MONSTER
-desc:A small humanoid that radiates some power.
 
 name:air spirit
 base:elemental
@@ -6040,31 +6159,6 @@ blow:HIT:HURT:1d8
 blow:HIT:HURT:1d8
 desc:A strange creature that merges with the dungeon floor, trapping its
 desc: victims by enveloping them within its perfectly disguised form.
-
-### Dungeon level 15 ###
-
-name:magic mushroom patch
-plural:magic mushroom patches
-base:mushroom
-color:B
-speed:140
-hit-points:1
-light:2
-hearing:40
-armor-class:12
-sleepiness:0
-depth:15
-rarity:2
-experience:10
-blow:SPORE:CONFUSE
-blow:SPORE:CONFUSE
-blow:SPORE:HALLU
-blow:SPORE:HALLU
-flags:NEVER_MOVE
-flags:FORCE_SLEEP
-spell-freq:2
-spells:BLINK | DARKNESS | SCARE | SLOW
-desc:Yum!  It looks quite tasty.  It seems to glow with an unusual light.
 
 ### Dungeon level 16 ###
 
@@ -6359,81 +6453,7 @@ desc:It appears to be a pile of unobtainium wafers, slithering
 desc: toward you on lots of tiny legs.
 mimic:cash:unobtainium wafers
 
-name:shimmering mold
-base:mold
-grow:crystal mold
-depth:27
-rarity:1
-color:b
-speed:110
-hit-points:144
-light:1
-hearing:2
-armor-class:36
-sleepiness:0
-experience:140
-blow:SPORE:ELEC:5d4
-blow:SPORE:ELEC:5d4
-passive:SPORE:ELEC:5d8
-flags:EMPTY_MIND | STUPID | ATTR_FLICKER
-flags:IM_ELEC
-desc:It is a strange growth on the dungeon floor, glowing and crackling with
-desc: sparks.
-
 ### Dungeon level 29 ###
-
-name:energy vortex
-plural:energy vortices
-base:vortex
-color:b
-speed:110
-hit-points:65
-light:1
-hearing:100
-armor-class:36
-sleepiness:0
-depth:29
-rarity:1
-experience:140
-blow:ENGULF:ELEC:3d4
-flags:ATTR_FLICKER
-flags:IM_ELEC
-innate-freq:4
-spell-freq:5
-spells:BR_ELEC | BE_ELEC
-desc:A shimmering tornado of air, sparks crackle along its length.
-
-
-########## DUNGEON LEVELS 30-39 ##########
-
-
-### Dungeon level 30 ###
-
-### Dungeon level 31 ###
-
-name:huorn
-base:tree
-color:G
-speed:115
-hit-points:1000
-light:-2
-hearing:20
-armor-class:80
-sleepiness:20
-depth:31
-rarity:1
-experience:1200
-blow:CRUSH:HURT:3d6
-blow:CRUSH:HURT:3d6
-blow:CRUSH:HURT:3d6
-blow:CRUSH:HURT:3d6
-flags:DROP_60 | WEIRD_MIND
-flags:MOVE_BODY
-flags:NO_STUN | NO_SLOW | NO_SLEEP
-spell-freq:9
-spells:HASTE | TELE_TO | DARKNESS
-desc:A tree which has become entish, or maybe an ent which has become tree-ish.
-
 
 ### Dungeon level 32 ###
 
@@ -6557,79 +6577,7 @@ flags:RAND_50 | OPEN_DOOR | BASH_DOOR
 flags:IM_ELEC
 desc:It is impossible to define its form but its violence is legendary.
 
-name:silent watcher
-base:golem
-color:r
-speed:110
-hit-points:1040
-hearing:42
-armor-class:96
-sleepiness:10
-depth:35
-rarity:3
-experience:800
-blow:GAZE:TERRIFY
-blow:GAZE:PARALYZE
-blow:GAZE:LOSE_STR
-blow:GAZE:HALLU
-flags:EVIL | COLD_BLOOD
-flags:NEVER_MOVE
-flags:HURT_ROCK | HURT_LIGHT | IM_COLD | IM_FIRE | IM_POIS
-innate-freq:10
-spell-freq:6
-spells:CONF | HOLD | MIND_BLAST | SHRIEK
-spells:S_MONSTER | S_MONSTERS
-desc:A figure carved from stone, with three vulture faces whose eyes glow with a
-desc: malevolent light.
-
 ### Dungeon level 36 ###
-
-name:colbran
-base:golem
-color:b
-speed:120
-hit-points:520
-light:1
-hearing:12
-armor-class:120
-sleepiness:20
-depth:36
-rarity:2
-experience:900
-blow:HIT:ELEC:3d8
-blow:HIT:ELEC:3d8
-flags:COLD_BLOOD
-flags:BASH_DOOR
-flags:IM_POIS
-flags:FORCE_SLEEP
-spell-freq:3
-spell-power:20
-spells:BO_ELEC | BE_ELEC | TELE_SELF_TO
-desc:A man-shaped form of living lightning.  Sparks and shocks crackle all over
-desc: this madly capering figure, as it leaps and whirls around and about you.
-
-name:colossus
-plural:colossi
-base:golem
-color:G
-speed:100
-hit-points:2640
-hearing:12
-armor-class:180
-sleepiness:10
-depth:36
-rarity:4
-experience:850
-blow:HIT:HURT:10d10
-blow:HIT:HURT:10d10
-blow:HIT:HURT:6d6
-blow:HIT:HURT:6d6
-flags:COLD_BLOOD
-flags:BASH_DOOR
-flags:IM_COLD | IM_FIRE | IM_POIS
-desc:An enormous construct resembling a titan made from stone.  It strides
-desc: purposefully towards you, swinging its slow fists with earth-shattering
-desc: power.
 
 name:trapper
 base:lurker
@@ -6648,71 +6596,6 @@ blow:HIT:PARALYZE:15d1
 blow:HIT:PARALYZE:15d1
 desc:A larger cousin of the lurker, this creature traps unsuspecting victims and
 desc: paralyzes them, to be slowly digested later.
-
-### Dungeon level 37 ###
-
-name:ice elemental
-base:elemental
-color:w
-speed:110
-hit-points:193
-hearing:10
-armor-class:90
-sleepiness:50
-depth:37
-rarity:3
-experience:650
-blow:TOUCH:COLD:4d3
-blow:HIT:HURT:4d6
-blow:TOUCH:COLD:4d3
-flags:COLD_BLOOD | POWERFUL
-flags:BASH_DOOR | KILL_BODY | KILL_ITEM
-flags:IM_ACID | IM_COLD | IM_ELEC | HURT_FIRE
-flags:FORCE_SLEEP
-spell-freq:5
-spells:BA_COLD
-spells:BO_ICE
-desc:It is a towering glacier of ice.
-
-name:nexus vortex
-plural:nexus vortices
-base:vortex
-color:P
-speed:120
-hit-points:176
-hearing:100
-armor-class:48
-sleepiness:0
-depth:37
-rarity:1
-experience:800
-blow:ENGULF:HURT:5d5
-flags:RAND_25
-flags:IM_NEXUS
-innate-freq:4
-spells:BR_NEXU
-desc:A maelstrom of potent magical energy.
-
-name:plasma vortex
-plural:plasma vortices
-base:vortex
-color:R
-speed:120
-hit-points:176
-light:2
-hearing:100
-armor-class:48
-sleepiness:0
-depth:37
-rarity:1
-experience:800
-blow:ENGULF:FIRE:4d8
-blow:ENGULF:ELEC:4d8
-flags:RAND_25
-flags:IM_ELEC | IM_FIRE | IM_PLASMA
-innate-freq:4
-spells:BR_PLAS
-desc:A whirlpool of intense flame, charring the stones at your feet.
 
 ### Dungeon level 38 ###
 
@@ -6768,29 +6651,6 @@ desc: spined legs.
 
 ### Dungeon level 47 ###
 
-name:death mold
-base:mold
-color:D
-speed:140
-hit-points:1050
-hearing:200
-armor-class:72
-sleepiness:0
-depth:47
-rarity:1
-experience:1000
-blow:SPORE:DISENCHANT:7d7
-blow:SPORE:DISENCHANT:7d7
-blow:SPORE:DISENCHANT:7d7
-blow:SPORE:EXP_80:5d5
-flags:EVIL
-flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE
-flags:FORCE_SLEEP | ATTR_FLICKER
-flags-off: HURT_FIRE
-desc:It is the epitome of all that is evil, in a mold.  Its lifeless form draws
-desc: power from sucking the souls of those that approach it, a nimbus of pure
-desc: evil surrounds it.  Luckily for you, it can't move.
-
 ### Dungeon level 48 ###
 
 name:ancient spider
@@ -6819,31 +6679,6 @@ spells:BR_DARK
 spells:S_KIN | S_SPIDER
 friends:100:4d4:spider
 desc:A foul creature of spider form, older even than the pits of Angband.
-
-name:winged horror
-base:bird
-color:p
-speed:120
-hit-points:1013
-hearing:30
-armor-class:96
-sleepiness:5
-depth:48
-rarity:3
-experience:4000
-blow:CLAW:HURT:3d8
-blow:CLAW:HURT:3d8
-blow:BITE:EXP_40:4d6
-blow:BITE:EXP_40:4d6
-flags:IM_COLD | IM_POIS | IM_RADIATION
-innate-freq:6
-spells:BR_DARK | BR_RADI | BR_POIS
-desc:A terrifying sight: a winged creature greater than any bird you have ever
-desc: seen, and with no feathers on its horrid black leathery wings.  Descended
-desc: from a creature of an older world perhaps, bred by Sauron to be a winged
-desc: steed for his Ringwraiths.
-
-### Dungeon level 49 ###
 
 ### Dungeon level 50 ###
 
@@ -6875,84 +6710,6 @@ friends-base:50:2d4:spider
 desc:A lord of all that is natural, skilled in the mystic ways.  He is a master
 desc: of martial arts and is at one with nature, able to summon help from the
 desc: wild if need be.
-
-### Dungeon level 51 ###
-
-name:radiation hound
-base:zephyr hound
-color:G
-speed:120
-hit-points:330
-hearing:30
-smell:50
-armor-class:120
-sleepiness:0
-depth:51
-rarity:4
-experience:5000
-blow:CLAW:HURT:2d12
-blow:CLAW:HURT:2d12
-blow:BITE:HURT:2d12
-blow:BITE:HURT:2d12
-flags:OPEN_DOOR | BASH_DOOR
-flags:NO_CONF | NO_SLEEP | IM_RADIATION
-flags:FORCE_SLEEP
-innate-freq:5
-spells:BR_RADI
-friends:100:2d7:Same
-desc:You feel a soul-tearing chill upon viewing this beast, a ghostly form of
-desc: darkness in the shape of a large dog.
-
-name:time hound
-base:zephyr hound
-color:B
-speed:130
-hit-points:330
-hearing:30
-smell:50
-armor-class:120
-sleepiness:0
-depth:51
-rarity:4
-experience:5000
-blow:CLAW:HURT:2d12
-blow:CLAW:HURT:2d12
-blow:BITE:HURT:2d12
-blow:BITE:HURT:2d12
-flags:ATTR_FLICKER
-flags:OPEN_DOOR | BASH_DOOR
-flags:NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-innate-freq:5
-spells:BR_TIME
-friends:100:2d7:Same
-desc:You get a terrible sense of deja vu, or is it a premonition?  All at once
-desc: you see a little puppy and a toothless old dog.  Perhaps you should give
-desc: up and go to bed.
-
-### Dungeon level 53 ###
-
-name:chaos vortex
-plural:chaos vortices
-base:vortex
-color:v
-speed:120
-hit-points:315
-hearing:100
-armor-class:96
-sleepiness:0
-depth:53
-rarity:3
-experience:4000
-blow:ENGULF:CONFUSE:5d5
-blow:ENGULF:CONFUSE:5d5
-blow:ENGULF:CONFUSE:5d5
-blow:ENGULF:HALLU:5d5
-flags:RAND_25
-flags:ATTR_MULTI
-innate-freq:4
-spells:BR_CHAO
-desc:Void, nothingness, spinning destructively.
 
 ### Dungeon level 57 ###
 
@@ -6986,67 +6743,3 @@ desc: all forms of unarmed combat and controlling the world's natural creatures
 desc: with disdainful ease.
 
 ### Dungeon level 68 ###
-
-name:jabberwock
-base:hybrid
-color:v
-speed:130
-hit-points:2816
-hearing:35
-smell:20
-armor-class:187
-sleepiness:100
-depth:68
-rarity:3
-experience:19000
-blow:CLAW:HURT:10d10
-blow:CLAW:HURT:10d10
-blow:BITE:HURT:10d10
-blow:BITE:HURT:10d10
-flags:ANIMAL
-flags:DROP_40 | DROP_60 | ONLY_ITEM
-flags:BASH_DOOR
-flags:ATTR_MULTI | FORCE_SLEEP | NO_CONF
-innate-freq:9
-spell-freq:10
-spells:WOUND
-spells:BR_CHAO
-desc:"Beware the Jabberwock, my son!  The jaws that bite, the claws that catch!"
-desc: Run and run quickly, for death incarnate chases behind you!
-
-### Dungeon level 69 ###
-
-name:nightcrawler
-base:snake
-color:D
-speed:120
-hit-points:2440
-hearing:20
-armor-class:192
-sleepiness:10
-depth:69
-rarity:3
-experience:15000
-blow:STING:LOSE_CON:8d8
-blow:STING:LOSE_CON:8d8
-blow:BITE:ACID:10d10
-blow:BITE:ACID:10d10
-flags:SMART | ATTR_FLICKER
-flags:DROP_2 | ONLY_ITEM
-flags:OPEN_DOOR
-flags:UNDEAD | EVIL | COLD_BLOOD | SPIRIT
-flags:HURT_LIGHT| NO_CONF | NO_SLEEP | NO_STUN | NO_HOLD
-flags:IM_FIRE | IM_COLD | IM_POIS | IM_RADIATION
-flags:FORCE_SLEEP
-flags-off:HURT_COLD
-innate-freq:25
-spell-freq:4
-spells:BLIND | BRAIN_SMASH | SCARE
-spells:BA_RADI
-spells:BO_MANA | BO_RADI
-spells:BR_RADI
-spells:S_UNDEAD
-desc:This intensely evil creature bears the form of a gargantuan black worm.
-desc:  Its gaping maw is a void of blackness, acid drips from its steely hide.
-desc:  It is like nothing you have ever seen before, and a terrible chill runs
-desc: down your spine as you face it.

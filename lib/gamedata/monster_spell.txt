@@ -106,7 +106,7 @@ lore-color-base:Orange
 message-vis:{name} spits {type} at you.
 message-invis:You hear a soft sound.
 
-name:SHOT
+name:SLING
 hit:50
 effect:BOLT:ARROW
 dice:$Dd5
@@ -180,6 +180,52 @@ lore-color-base:Yellow
 message-vis:{name} fires a seeker bolt.
 message-invis:You hear a loud thwung.
 message-miss:{name} fires a seeker bolt, but misses.
+
+name:SPIKE
+hit:50
+effect:BOLT:ARROW
+dice:$Dd7
+expr:D:SPELL_POWER:/ 8 + 1
+lore:fling little spikes
+lore-color-base:Yellow
+message-vis:{name} flings a little spike.
+message-invis:You hear a soft pop.
+message-miss:{name} flings a little spike, but misses.
+power-cutoff:25
+lore:fling barbed spikes
+lore-color-base:Yellow
+message-vis:{name} flings a barbed spike.
+message-invis:You hear a pop.
+message-miss:{name} flings a barbed spike, but misses.
+power-cutoff:60
+lore:fling vicious spikes
+lore-color-base:Yellow
+message-vis:{name} fires a vicious spike.
+message-invis:You hear a loud pop.
+message-miss:{name} flings a vicious spike, but misses.
+
+name:SHOT
+hit:50
+effect:BOLT:ARROW
+dice:$Dd10
+expr:D:SPELL_POWER:/ 8 + 1
+lore:fire bullets
+lore-color-base:Yellow
+message-vis:{name} fires a bullet at {target}.
+message-invis:You hear a loud bang.
+message-miss:{name} fires a bullet, but misses.
+power-cutoff:25
+lore:fire bullets
+lore-color-base:Yellow
+message-vis:{name} fires a bullet at {target}.
+message-invis:You hear a gunshot.
+message-miss:{name} fires a bullet, but misses.
+power-cutoff:60
+lore:fire armor-piercing bullets
+lore-color-base:Yellow
+message-vis:{name} fire a bullet at {target}.
+message-invis:You hear a loud gunshot.
+message-miss:{name} fires a bullet, but misses.
 
 name:BR_ACID
 msgt:BR_ACID

@@ -265,10 +265,12 @@ R:Mindthewolfwhatwolfcrunch.
 R:Money is the root of all evil.
 R:Money lost, little lost; honor lost, much lost; pluck lost, all lost.
 R:Monsters sleep because you are boring, not because they ever get tired.
+R:Most instant coffee is 90% dried mushrooms.
 R:Most monsters prefer minced meat. That's why they are hitting you!
 R:Most rumors are just as misleading as this one.
 R:My cat's breath smells like cat food.
 R:My eyes! The goggles do nothing!
+R:My outift may be ugly, but at least it doesn't have a tarantula on the back.
 R:NO CARRIER.
 R:Nadath na i moe cerich.
 R:Nai tiruvantel ar varyuvantel i Valar tielyanna nu vilya.
@@ -302,6 +304,7 @@ R:PLEASE ignore the previous rumor.
 R:PLEASE ignore the previous rumor. It breathes poison. You die...
 R:Pick up the phone box - and die!
 R:Playing AD&D may be helpful.
+R:Playing Xygos may be helpful... oh wait, you already are!
 R:Plop plop fizz fizz oh what a relief it is.
 R:Poison will kill you slowly.
 R:Quidquid latine dictum sit, altum viditur.
@@ -616,7 +619,7 @@ R:You are fated to die should you ever enter... the rest is illegible.
 R:You are fated to ever die by the hand of a mortal being.
 R:You are fated to find a machete on level 5.
 R:You are fated to find something not at all special on level 3.
-R:You are fated to find something special on Level 99.
+R:You are fated to find something special on Level 120.
 R:You are fated to never die by the hand of a mortal being.
 R:You are fated to win this game.
 R:You are going to have some new clothes.
