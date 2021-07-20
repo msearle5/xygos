@@ -227,6 +227,7 @@ act:suggests that you should buy accessories for your Cobra
 act:quotes a price for shooting your car into space for LOLs
 act:rambles on about something mysterious called Raxxla
 act:assure you that his price can't be beaten on any planet
+act:repeats an advertising slogan, then laughs
 desc:try to sell you a used spacecraft
 
 name:BOAST

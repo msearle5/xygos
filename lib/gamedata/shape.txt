@@ -67,20 +67,6 @@ values:STR[-3] | STEALTH[5] | BLOWS[1] | MOVES[1]
 blow:bite
 blow:claw
 
-name:Pukel-man
-combat:0:5:20
-skill-save:20
-obj-flags:SUST_STR | SUST_CON | PROT_STUN | REGEN | HOLD_LIFE
-player-flags:ROCK
-values:STR[4] | CON[4] | STEALTH[-2] | SPD[-5] | RES_POIS[3] | RES_SHARD[1]
-values:DAM_RED[10]
-effect:CURE:POISONED
-effect:CURE:STUN
-blow:punch
-blow:crush
-blow:thump
-blow:strike
-
 name:bear
 combat:15:15:5
 skill-disarm-phys:-5
@@ -125,46 +111,3 @@ blow:punch
 blow:crush
 blow:thump
 blow:strike
-
-name:warg
-combat:5:5:0
-values:BLOWS[2]
-effect:DAMAGE
-dice:1d$S
-expr:S:PLAYER_LEVEL:+ 0
-effect-msg:taking warg form
-effect:CURE:AFRAID
-effect:TIMED_INC:SHERO
-dice:5+1d20
-blow:bite
-blow:bite
-blow:claw
-blow:tear
-
-name:vampire
-combat:3:3:-5
-obj-flags:SEE_INVIS | HOLD_LIFE
-values:LIGHT[-1] | STEALTH[5] | INFRA[5] | SPD[5]
-effect:DAMAGE
-dice:$B
-expr:B:PLAYER_HP:/ 4
-effect-msg:taking vampire form
-effect:TIMED_INC:ATT_VAMP
-dice:10+1d20
-blow:bite
-
-name:werewolf
-combat:5:5:0
-obj-flags:REGEN
-values:BLOWS[1] | MOVES[1]
-effect-msg:taking werewolf form
-effect:PROJECT_LOS:TURN_ALL
-dice:$B
-expr:B:PLAYER_LEVEL:+ 0
-effect:CURE:AFRAID
-effect:TIMED_INC:SHERO
-dice:5+1d20
-blow:bite
-blow:bite
-blow:slash
-blow:tear

@@ -969,13 +969,13 @@ effect:BOLT_OR_BEAM:MISSILE
 dice:3d4
 desc:fires a mini-missile with damage 3d4
 
-name:MANA_BOLT
+name:ROCKET
 aim:1
-power:7
-msg:Your {kind} glow{s} white...
-effect:BOLT:MANA
-dice:12d8
-desc:fires a mana bolt with damage 12d8
+power:15
+msg:Your {kind} launches a missile!
+effect:BALL:SHARD:3
+dice:5d80
+desc:fires a missile with damage 5d80
 
 name:BIZARRE
 aim:1
@@ -987,10 +987,10 @@ desc:does bizarre things
 name:ARROW
 aim:1
 power:11
-msg:Your {kind} arms{s} a missile..
+msg:Your {kind} fire{s} a bullet..
 effect:BOLT:ARROW
 dice:150
-desc:fires a missile with damage 150
+desc:fires a bullet with damage 150
 
 name:STINKING_CLOUD
 aim:1

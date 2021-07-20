@@ -742,16 +742,6 @@ static void project_monster_handler_MISSILE(project_monster_handler_context_t *c
 {
 }
 
-static void project_monster_handler_MANA(project_monster_handler_context_t *context)
-{
-}
-
-/* Holy Orb -- hurts Evil */
-static void project_monster_handler_HOLY_ORB(project_monster_handler_context_t *context)
-{
-	project_monster_resist_other(context, RF_EVIL, 2, false, MON_MSG_HIT_HARD);
-}
-
 static void project_monster_handler_ARROW(project_monster_handler_context_t *context)
 {
 }

@@ -1099,8 +1099,6 @@ static int apply_fault(struct object *obj, int lev)
 	int power = randint1(9) + 10 * m_bonus(9, lev);
 	int new_lev = lev;
 
-	if (of_has(obj->flags, OF_BLESSED)) return lev;
-
 	while (max_faults--) {
 		/* Try to break it */
 		int tries = 3;

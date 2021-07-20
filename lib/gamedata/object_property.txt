@@ -82,7 +82,7 @@ power:12
 mult:15
 adjective:healthy
 neg-adjective:sickly
-drain-adjective:hale
+drain-adjective:tough
 bindui:stat_mod_ui_compact_0<CON>:0
 
 name:charisma
@@ -149,7 +149,6 @@ type-mult:gun:0
 type-mult:light:3
 type-mult:soft armor:3
 type-mult:hard armor:3
-type-mult:dragon armor:3
 type-mult:cloak:3
 type-mult:shield:3
 type-mult:helm:3
@@ -169,7 +168,6 @@ type-mult:digger:0
 type-mult:light:4
 type-mult:soft armor:4
 type-mult:hard armor:4
-type-mult:dragon armor:4
 type-mult:cloak:4
 type-mult:shield:4
 type-mult:helm:4
@@ -189,7 +187,6 @@ type-mult:digger:0
 type-mult:light:0
 type-mult:soft armor:0
 type-mult:hard armor:0
-type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
@@ -209,7 +206,6 @@ type-mult:digger:0
 type-mult:light:0
 type-mult:soft armor:0
 type-mult:hard armor:0
-type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
@@ -364,7 +360,6 @@ power:5
 type-mult:light:2
 type-mult:soft armor:2
 type-mult:hard armor:2
-type-mult:dragon armor:2
 type-mult:cloak:2
 type-mult:shield:2
 type-mult:helm:2
@@ -382,7 +377,6 @@ code:TELEPATHY
 type-mult:light:2
 type-mult:soft armor:2
 type-mult:hard armor:2
-type-mult:dragon armor:2
 type-mult:cloak:2
 type-mult:shield:2
 type-mult:helm:2
@@ -418,7 +412,6 @@ code:SEE_INVIS
 type-mult:light:2
 type-mult:soft armor:2
 type-mult:hard armor:2
-type-mult:dragon armor:2
 type-mult:cloak:2
 type-mult:shield:2
 type-mult:helm:2
@@ -437,7 +430,6 @@ power:8
 type-mult:light:2
 type-mult:soft armor:2
 type-mult:hard armor:2
-type-mult:dragon armor:2
 type-mult:cloak:2
 type-mult:shield:2
 type-mult:helm:2
@@ -456,7 +448,6 @@ power:5
 type-mult:light:2
 type-mult:soft armor:2
 type-mult:hard armor:2
-type-mult:dragon armor:2
 type-mult:cloak:2
 type-mult:shield:2
 type-mult:helm:2
@@ -476,7 +467,6 @@ type-mult:gun:0
 type-mult:light:0
 type-mult:soft armor:0
 type-mult:hard armor:0
-type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
@@ -484,25 +474,6 @@ type-mult:gloves:0
 type-mult:boots:0
 msg:Your {name} causes an earthquake!
 desc:Sometimes creates earthquakes on impact
-
-name:blessed melee
-type:flag
-subtype:melee
-id-type:on wield
-code:BLESSED
-power:1
-type-mult:gun:0
-type-mult:light:0
-type-mult:soft armor:0
-type-mult:hard armor:0
-type-mult:dragon armor:0
-type-mult:cloak:0
-type-mult:shield:0
-type-mult:helm:0
-type-mult:gloves:0
-type-mult:boots:0
-bindui:bless_ui_compact_0:0
-desc:Blessed by the gods (combat bonuses for holy casters)
 
 name:burns out
 type:flag

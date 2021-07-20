@@ -72,11 +72,6 @@ name:Relentless [30]
 desc:You become immune to fear at level 30.
 
 type:player
-code:BLESS_WEAPON
-name:Blessed Fighter
-desc:You get improved melee with blessed or hafted weapons.
-
-type:player
 code:ZERO_FAIL
 name:Full Tech User
 desc:You may obtain a perfect success rate with techniques.

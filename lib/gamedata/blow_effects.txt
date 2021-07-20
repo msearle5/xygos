@@ -56,7 +56,7 @@ lash-type:POIS
 name:DISENCHANT
 power:10
 eval:30
-desc:disenchant
+desc:drain
 lore-color-base:Light Red
 lore-color-resist:Light Green
 effect-type:element
@@ -75,7 +75,7 @@ lash-type:DISEN
 name:EAT_GOLD
 power:0
 eval:5
-desc:steal gold
+desc:steal cash
 lore-color-base:Yellow
 lore-color-resist:Light Green
 effect-type:theft

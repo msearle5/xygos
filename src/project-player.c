@@ -617,16 +617,6 @@ static int project_player_handler_MISSILE(project_player_handler_context_t *cont
 	return 0;
 }
 
-static int project_player_handler_MANA(project_player_handler_context_t *context)
-{
-	return 0;
-}
-
-static int project_player_handler_HOLY_ORB(project_player_handler_context_t *context)
-{
-	return 0;
-}
-
 static int project_player_handler_ARROW(project_player_handler_context_t *context)
 {
 	return 0;

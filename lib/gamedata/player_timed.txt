@@ -377,12 +377,6 @@ grade:w:10000:AttEvil:Your {kind} {is} imbued with holy force!
 on-end:Holy force fades from your {kind}.
 slay:EVIL_2
 
-name:ATT_DEMON
-desc:temporary slay demon
-grade:R:10000:AttDemon:Your {kind} become{s} a bane of demons!
-on-end:Your {kind} return{s} to normal.
-slay:DEMON_5
-
 name:ATT_VAMP
 desc:temporary hitpoint siphoning
 grade:p:10000:AttVamp:Your can drain life from your victims!

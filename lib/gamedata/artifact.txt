@@ -216,13 +216,8 @@ attack:2d20:25:35
 brand:DARK_3
 values:RES_DARK[5] | BLOWS[5] | DEX[5] | STR[5]
 flags:SEE_INVIS | TELEPATHY | AGGRAVATE
-slay:DRAGON_5
 slay:ANIMAL_2
 slay:EVIL_2
-slay:UNDEAD_5
-slay:DEMON_5
-slay:TROLL_3
-slay:ORC_3
 desc:Twin absorption beams, glowing deep red shot with streaks of white, extend in both directions. The uniquely powerful weapon that Triax defeated all his enemies except yourself with, nothing could move faster.
 
 name:of the Core

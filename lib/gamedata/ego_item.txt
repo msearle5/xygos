@@ -365,12 +365,12 @@ desc:This bloodthirsty {kind} is death to all animals, and will guide its wielde
 forbid:mighty
 
 name:(*opinionated*)
-info:5000:20
+info:4400:20
 alloc:15:10 to 127
 type:sword
 type:polearm
 type:hafted
-flags:BLESSED | RAND_RES_POWER
+flags:RAND_RES_POWER
 values:WIS[d2]
 min-values:WIS[0]
 slay:EVIL_2

@@ -591,12 +591,6 @@ static void count_weapon_abilities(const struct artifact *art,
 		data->art_probs[ART_IDX_WEAPON_AGGR]++;
 	}
 
-	/* Blessed weapon? */
-	if (of_has(art->flags, OF_BLESSED)) {
-		file_putf(log_file, "Adding 1 for blessed weapon\n");
-		(data->art_probs[ART_IDX_MELEE_BLESS])++;
-	}
-
 	/* See invisible? */
 	if (of_has(art->flags, OF_SEE_INVIS)) {
 		file_putf(log_file, "Adding 1 for see invisible (weapon case)\n");
@@ -2339,10 +2333,6 @@ static void add_ability_aux(struct artifact *art, int r, s32b target_power,
 				add_flag(art, OF_AGGRAVATE);
 			break;
 
-		case ART_IDX_MELEE_BLESS:
-			add_flag(art, OF_BLESSED);
-			break;
-
 		case ART_IDX_GUN_BRAND:
 		case ART_IDX_MELEE_BRAND:
 		case ART_IDX_NONWEAPON_BRAND:
@@ -2727,11 +2717,6 @@ static void add_ability(struct artifact *art, s32b target_power, int *freq,
 
 	/* Now remove contradictory or redundant powers. */
 	remove_contradictory(art);
-
-	/* Adding WIS to sharp weapons always blesses them */
-	if (art->modifiers[OBJ_MOD_WIS] &&
-		(art->tval == TV_SWORD || art->tval == TV_POLEARM))
-		add_flag(art, OF_BLESSED);
 }
 
 
@@ -2741,8 +2726,6 @@ static void add_ability(struct artifact *art, s32b target_power, int *freq,
 static void add_fault(struct artifact *art, int level)
 {
 	int max_tries = 5;
-
-	if (of_has(art->flags, OF_BLESSED)) return;
 
 	while (max_tries) {
 		int pick = randint1(z_info->fault_max - 1);

@@ -280,12 +280,12 @@ wake:1
 color:Light Slate
 
 code:DISEN
-name:disenchantment
+name:draining
 type:element
-desc:disenchantment
-player-desc:disenchantment
+desc:draining
+player-desc:draining
 blind-desc:something strange
-lash-desc:unmagic
+lash-desc:draining
 numerator:6
 denominator:8+1d4
 divisor:6
@@ -393,34 +393,6 @@ msgt:GENERIC
 obvious:1
 wake:1
 color:Violet
-
-code:MANA
-name:mana
-type:element
-desc:mana
-player-desc:the elements
-blind-desc:something
-lash-desc:raw magic
-divisor:3
-damage-cap:1600
-msgt:BR_ELEMENTS
-obvious:1
-wake:1
-color:Light dark
-
-code:HOLY_ORB
-name:holy power
-type:element
-desc:a holy orb
-player-desc:holy power
-blind-desc:something
-lash-desc:holy power
-divisor:6
-damage-cap:0
-msgt:GENERIC
-obvious:1
-wake:1
-color:Light Dark
 
 code:ARROW
 name:arrows

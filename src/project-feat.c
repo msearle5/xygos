@@ -538,24 +538,6 @@ static void project_feature_handler_MISSILE(project_feature_handler_context_t *c
 	}
 }
 
-static void project_feature_handler_MANA(project_feature_handler_context_t *context)
-{
-	/* Grid is in line of sight and player is not blind */
-	if (square_isview(cave, context->grid) && !player->timed[TMD_BLIND]) {
-		/* Observe */
-		context->obvious = true;
-	}
-}
-
-static void project_feature_handler_HOLY_ORB(project_feature_handler_context_t *context)
-{
-	/* Grid is in line of sight and player is not blind */
-	if (square_isview(cave, context->grid) && !player->timed[TMD_BLIND]) {
-		/* Observe */
-		context->obvious = true;
-	}
-}
-
 static void project_feature_handler_ARROW(project_feature_handler_context_t *context)
 {
 	/* Grid is in line of sight and player is not blind */

@@ -1901,11 +1901,6 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		state->el_info[ELEM_DARK].res_level = 1;
 	}
 
-	/* Evil */
-	if (player_has(p, PF_EVIL) && character_dungeon) {
-		state->el_info[ELEM_HOLY_ORB].res_level = -1;
-	}
-
 	/* Calculate the various stat values */
 	for (i = 0; i < STAT_MAX; i++) {
 		int add, use, ind;
@@ -2235,13 +2230,6 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 		if (!state->heavy_wield) {
 			state->num_blows = calc_blows(p, weapon, state, extra_blows);
 			state->skills[SKILL_DIGGING] += (weapon->weight / 454);
-		}
-
-		/* Divine weapon bonus for blessed weapons */
-		if (player_has(p, PF_BLESS_WEAPON) && of_has(state->flags, OF_BLESSED)) {
-			state->to_h += 2;
-			state->to_d += 2;
-			state->bless_wield = true;
 		}
 	} else {
 		/* Unarmed */

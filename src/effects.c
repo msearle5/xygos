@@ -5999,7 +5999,7 @@ static bool effect_handler_BIZARRE(effect_handler_context_t *context)
 		case 5:
 		case 6:
 		{
-			/* Mana Ball */
+			/* Radiation Ball */
 			int flg = PROJECT_THRU | PROJECT_STOP | PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL;
 			struct loc target = loc_sum(player->grid, ddgrid[context->dir]);
 
@@ -6011,7 +6011,7 @@ static bool effect_handler_BIZARRE(effect_handler_context_t *context)
 			}
 
 			/* Aim at the target, explode */
-			return (project(source_player(), 3, target, 300, PROJ_MANA, flg, 0,
+			return (project(source_player(), 3, target, 300, PROJ_RADIATION, flg, 0,
 							0, context->obj));
 		}
 
@@ -6020,7 +6020,7 @@ static bool effect_handler_BIZARRE(effect_handler_context_t *context)
 		case 9:
 		case 10:
 		{
-			/* Mana Bolt */
+			/* Radiation Bolt */
 			int flg = PROJECT_STOP | PROJECT_KILL | PROJECT_THRU;
 			struct loc target = loc_sum(player->grid, ddgrid[context->dir]);
 
@@ -6029,7 +6029,7 @@ static bool effect_handler_BIZARRE(effect_handler_context_t *context)
 				target_get(&target);
 
 			/* Aim at the target, do NOT explode */
-			return project(source_player(), 0, target, 250, PROJ_MANA, flg, 0,
+			return project(source_player(), 0, target, 250, PROJ_RADIATION, flg, 0,
 						   0, context->obj);
 		}
 	}
