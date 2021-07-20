@@ -227,10 +227,6 @@ room:2
 alloc:1:40
 obj-rarity:5
 mon-base:snake
-mon-base:naga
-mon-base:hydra
-spell-ban:BA_POIS
-spell-ban:BR_FIRE
 
 name:Lesser undead
 room:2
@@ -256,12 +252,6 @@ obj-rarity:0
 mon-base:bat
 mon-base:vampire
 flags-req:UNDEAD
-
-name:Hydra
-room:2
-alloc:1:60
-obj-rarity:8
-mon-base:hydra
 
 name:Golems
 room:1

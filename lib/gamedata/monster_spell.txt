@@ -427,16 +427,64 @@ message-invis:You hear a staccato roar.
 #message-vis:{name} breathes raw magic.
 #message-invis:You hear a scintillating roar.
 
+name:ROCKET
+hit:100
+effect:BALL:SHARD:3
+dice:$D
+expr:D:SPELL_POWER:* 7
+lore:fire rockets
+lore-color-base:Orange
+message-vis:{name} fires a rocket!
+message-invis:You hear a whoosh.
+message-miss:{name} fires a rocket!
+power-cutoff:30
+lore:launch missiles
+lore-color-base:Red
+message-vis:{name} launches a missile!
+message-invis:You hear a roar.
+message-miss:{name} launches a missile!
+
 name:BOULDER
 hit:60
 effect:BOLT:ARROW
 dice:$Dd12
 expr:D:SPELL_POWER:/ 7 + 1
+lore:throw pebbles
+lore-color-base:Yellow
+message-vis:{name} flings a pebble.
+message-invis:You hear a grunt of exertion.
+message-miss:{name} flings a pebble, but misses.
+power-cutoff:7
+lore:throw stones
+lore-color-base:Yellow
+message-vis:{name} throws a stone.
+message-invis:You hear a grunt of exertion.
+message-miss:{name} throws a stone, but misses.
+power-cutoff:21
+lore:throw rocks
+lore-color-base:Yellow
+message-vis:{name} chucks a rock.
+message-invis:You hear a grunt of exertion.
+message-miss:{name} chucks a rock, but misses.
+power-cutoff:42
 lore:throw boulders
 lore-color-base:Yellow
 message-vis:{name} hurls a boulder.
 message-invis:You hear a grunt of exertion.
 message-miss:{name} hurls a boulder, but misses.
+power-cutoff:70
+lore:throw huge boulders
+lore-color-base:Yellow
+message-vis:{name} hurls a huge boulder.
+message-invis:You hear a grunt of exertion.
+message-miss:{name} hurls a huge boulder, but misses.
+
+power-cutoff:60
+lore:fling vicious spikes
+lore-color-base:Yellow
+message-vis:{name} fires a vicious spike.
+message-invis:You hear a loud pop.
+message-miss:{name} flings a vicious spike, but misses.
 
 name:WEAVE
 msgt:CREATE_TRAP
@@ -1245,16 +1293,6 @@ lore:summon hounds
 lore-color-base:Orange
 message-vis:{name} summons hounds.
 message-invis:You hear barking things appear nearby!
-
-name:S_HYDRA
-msgt:SUM_HYDRA
-hit:100
-effect:SUMMON:HYDRA
-dice:6
-lore:summon hydras
-lore-color-base:Orange
-message-vis:{name} summons hydras.
-message-invis:You hear some things appear nearby!
 
 name:S_DEMON
 msgt:SUM_DEMON

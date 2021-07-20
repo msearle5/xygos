@@ -1716,6 +1716,24 @@ desc:In absolute darkness, an ill-defined patch manages to be darker. Fear of th
 # (not human, but similarly shaped. And while townies may be base:humanoid,
 #  they go in their own section of the file, not here.)
 
+name:bogling
+base:humanoid
+color:Light Green
+depth:5
+rarity:2
+grow:bogon
+speed:100
+hit-points:15
+hearing:6
+armor-class:10
+sleepiness:30
+blow:HIT:HURT:6d1
+flags:STUPID | WEIRD_MIND | ORTHOGONAL | OPEN_DOOR
+desc:A young Bogon plodding about the galaxy.
+spell-freq:25
+spells:GROW
+friends:20:1d2:bogling
+
 name:bogon
 base:humanoid
 color:LawnGreen
@@ -1730,8 +1748,7 @@ armor-class:20
 sleepiness:15
 blow:HIT:HURT:9d1
 blow:HIT:HURT:9d1
-flags:NO_CONF | NO_SLEEP | ORTHOGONAL
-flags:OPEN_DOOR
+flags:NO_CONF | NO_SLEEP | ORTHOGONAL | STUPID | WEIRD_MIND | OPEN_DOOR
 desc:A green warty toadish humanoid from the Bogstar.
 
 name:bogon frogrider
@@ -1747,9 +1764,9 @@ armor-class:25
 sleepiness:35
 blow:HIT:HURT:9d1
 blow:BITE:HURT:1d5
-flags:ORTHOGONAL
+flags:ORTHOGONAL | NO_CONF | NO_SLEEP | STUPID | WEIRD_MIND
+spell-freq:10
 spells:HOP
-flags:NO_CONF | NO_SLEEP
 desc:A Bogon riding on a leapy green frog.
 
 name:bogon poet
@@ -1767,7 +1784,7 @@ sleepiness:30
 blow:HIT:HURT:7d1
 blow:INSULT:HURT:1d5
 blow:INSULT:TERRIFY:1d5
-flags:NO_CONF | NO_SLEEP | ORTHOGONAL
+flags:NO_CONF | NO_SLEEP | ORTHOGONAL | WEIRD_MIND
 desc:Bogon poetry is one of the most unpleasant experiences in the Galaxy, 
 desc:and wandering poets such as this are widely feared.
 
@@ -1804,17 +1821,17 @@ armor-class:30
 sleepiness:15
 blow:HIT:HURT:15d1
 blow:HIT:HURT:15d1
-flags:NO_CONF | NO_SLEEP | OPEN_DOOR
+flags:NO_CONF | NO_SLEEP | OPEN_DOOR | STUPID | WEIRD_MIND | ORTHOGONAL
 friends:100:2d2:Same
 friends:100:3d5:bogon
 friends:40:1d3:bogon frogrider
 friends:20:1d2:bogon poet
+friends:20:1d2:bogling
 desc:The Bogon hordes are countless. The typical patrol contains a few trained soldiers 
 desc:such as these and a swarm of other Bogons - untrained and not well armed, but 
 desc:dangerous through sheer numbers.
 
 name:munchkin
-desc:A green warty toadish humanoid from the Bogstar.
 base:humanoid
 grow:master munchkin
 color:Yellow
@@ -3983,6 +4000,75 @@ desc:Godzilla rose from the contaminated sea.
 desc:Fear its anger, for its devastation is unmatched!
 
 
+##### M is for MONKEY #####
+# and also apes, whatever the Librarian might say.
+
+name:monkey
+base:monkey
+color:BurntUmber
+depth:2
+rarity:1
+grow:spider monkey
+speed:115
+hit-points:6
+hearing:4
+armor-class:20
+sleepiness:1
+blow:HIT:HURT:1d3
+blow:TOUCH:EAT_ITEM
+flags:TAKE_ITEM | DROP_RANDOM | RAND_25
+innate-freq:5
+spell-power:1
+friends:90:2d3:Same
+spells:BOULDER
+desc:Fuzzy, brown, cute, fast moving, light fingered.
+
+name:spider monkey
+base:monkey
+color:Red
+depth:10
+rarity:4
+grow:flying monkey
+speed:110
+hit-points:18
+hearing:4
+armor-class:24
+sleepiness:1
+blow:BITE:POISON:1d8
+blow:HIT:HURT:1d2
+blow:HIT:HURT:1d2
+blow:HIT:HURT:1d2
+blow:HIT:HURT:1d2
+blow:HIT:HURT:1d2
+blow:HIT:HURT:1d2
+blow:TOUCH:EAT_ITEM
+blow:TOUCH:EAT_ITEM
+flags:TAKE_ITEM | DROP_RANDOM
+innate-freq:5
+spell-power:3
+flags:RAND_25
+friends:90:2d3:Same
+spells:BOULDER
+desc:Little red monkeys with eight limbs and a venomous bite. Ick!
+
+name:flying monkey
+base:monkey
+color:Violet
+depth:18
+rarity:3
+grow:gorilla
+speed:120
+hit-points:35
+hearing:12
+armor-class:30
+sleepiness:50
+blow:HIT:HURT:2d8
+flags:FLYING | TAKE_ITEM | DROP_RANDOM | RAND_25
+friends:90:2d3:Same
+desc:A strange monkey with bat-like wings on arms and legs.
+
+
+
 ##### m is for MOLD #####
 
 name:grey mold
@@ -4153,6 +4239,74 @@ flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE
 flags:FORCE_SLEEP | ATTR_FLICKER
 flags-off: HURT_FIRE
 desc:A motionless pile of dull black mold. It doesn't look like anything unusual, but it is so extraordinarily poisonous that merely entering the same room as it (or - just maybe - even thinking about entering that room!) can be lethal.
+
+
+##### P is for GIANT HUMANOID #####
+
+#description?
+name:Rancour
+base:giant
+depth:45
+rarity:5
+color:BurntUmber
+speed:105
+hit-points:150
+hearing:20
+rarity:10
+armor-class:120
+sleepiness:60
+blow:BITE:HURT:2d8
+blow:HIT:HURT:3d8
+blow:HIT:HURT:2d8
+flags:MALE
+flags:NO_FEAR | NO_CONF | STUPID | WEIRD_MIND
+desc:A striding armour-plated alien. 
+desc:It looks unfriendly.
+
+name:cyberdemon
+base:giant
+color:SteelBlue
+depth:89
+rarity:4
+speed:110
+hit-points:2500
+hearing:90
+armor-class:45
+sleepiness:90
+blow:HIT:HURT:1d50
+blow:HIT:HURT:1d50
+blow:HIT:HURT:1d50
+blow:HIT:HURT:1d50
+flags:EVIL | FORCE_SLEEP | RAND_25 | IM_FIRE | IM_POIS
+flags:STUPID | WEIRD_MIND
+#weight:3t
+spell-freq:4
+spells:ROCKET
+desc:Reverberant metal steps announce the arrival of this huge creature, 
+desc:half alien half machine. It has an unsurpassable firepower.
+
+name:Oremorj, Cyberdemon Lord
+base:giant
+color:Violet
+depth:97
+rarity:4
+speed:120
+hit-points:2800
+hearing:90
+armor-class:45
+sleepiness:90
+blow:HIT:HURT:2d40
+blow:HIT:HURT:2d40
+blow:HIT:HURT:2d40
+blow:HIT:HURT:2d40
+flags:EVIL | UNIQUE | FORCE_SLEEP | ATTR_MULTI
+flags:RAND_25 | WEIRD_MIND | IM_FIRE | IM_POIS
+spell-freq:3
+spells:S_KIN
+#weight:4t
+spells:ROCKET
+#was S_CYBER
+desc:The mightiest of Cyberdemons, their lord and ruler.
 
 
 ##### p is for HUMANS #####
@@ -5038,7 +5192,24 @@ innate-freq:10
 spells:WEAVE
 desc:It is a vast black spider whose bulbous body is bloated with poison.
 
-name:giant tarantula
+name:redback
+base:spider
+color:Red
+depth:12
+rarity:2
+grow:grue-spider
+speed:110
+hit-points:45
+hearing:15
+armor-class:16
+sleepiness:20
+blow:BITE:POISON:2d8
+blow:CLAW:WOUND:1d8
+flags:IM_POIS
+flags:SMART | WEIRD_MIND
+desc:A hairy spider, black with red markings and huge fangs.
+
+name:tarantula
 base:spider
 color:o
 speed:120
@@ -5483,6 +5654,22 @@ flags:RAND_25 | RAND_50
 flags:HURT_LIGHT | IM_COLD | NO_FEAR | PASS_DOOR
 desc:It is a large slimy mass of worms.
 
+name:mutant earthworm
+base:worm
+color:BurntUmber
+depth:20
+rarity:1
+grow:purple worm
+speed:100
+hit-points:90
+hearing:7
+armor-class:15
+sleepiness:10
+blow:SUCK:HURT:3d10
+flags:RAND_25 | NO_FEAR | HURT_LIGHT
+flags:STUPID | EMPTY_MIND | MOVE_BODY | KILL_WALL
+desc:The ground beneath you shakes as three great jaws chew through rock as if it were butter.
+
 name:purple worm
 base:worm
 color:P
@@ -5501,6 +5688,23 @@ flags:BASH_DOOR
 flags:IM_ACID | IM_POIS
 desc:It is a massive worm form, many feet in length.  Its vast maw drips acid
 desc: and poison.
+
+name:Big Gulp, the Worm
+base:worm
+color:YellowGreen
+depth:47
+rarity:4
+speed:115
+hit-points:400
+hearing:14
+armor-class:40
+sleepiness:30
+light:2
+blow:SUCK:HURT:4d12
+blow:CONSTRICT:HURT:1d15
+flags:ATTR_MULTI | UNIQUE | IM_RADIATION | IM_POIS | IM_ACID
+desc:Famed in myth and lies, there was often said to be - conveniently far out in the Glowing Lands where nobody could check on it - just one burrowing worm that dwarfed the common mutant earthworms. You never gave such stories much credence, but it turns out the worm is real after all - it even glows as described, in a sickly yellow-green.
+
 
 
 ##### X - MISC CREATURES #####
@@ -5584,6 +5788,29 @@ flags:EVIL | ANIMAL
 flags:BASH_DOOR | KILL_WALL
 desc:This bizarre creature has glaring eyes and large mandibles capable of
 desc: slicing through rock.
+
+name:moon beast
+base:alien
+color:Light Slate
+depth:20
+rarity:5
+speed:110
+hit-points:36
+hearing:30
+armor-class:15
+sleepiness:20
+blow:CLAW:HURT:1d3
+blow:CLAW:HURT:1d3
+blow:BUTT:HURT:1d6
+flags:EVIL | IM_FIRE
+spell-freq:6
+spell-power:30
+spells:DARKNESS | BLIND | CONF | WOUND | HEAL
+flags:SMART | OPEN_DOOR
+desc:"Great greyish-white slippery things which could expand and 
+desc:contract at will, and whose principal shape... was that of a 
+desc:sort of toad without any eyes, but with a curious vibrating mass 
+desc:of short pink tentacles on the end of its blunt, vague snout."
 
 name:corpser
 base:alien

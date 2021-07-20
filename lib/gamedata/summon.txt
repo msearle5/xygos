@@ -98,12 +98,6 @@ base:zephyr hound
 base:canine
 desc:hounds
 
-name:HYDRA
-msgt:SUM_HYDRA
-uniques:0
-base:hydra
-desc:hydras
-
 name:DEMON
 msgt:SUM_DEMON
 uniques:0

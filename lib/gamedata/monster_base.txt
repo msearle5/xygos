@@ -196,16 +196,12 @@ pain:1
 flags:CLEAR_WEB
 desc:Hybrid
 
-# Quick monsters with strong melee, the higher level ones getting fire and/or
-# poison attacks
-name:hydra
+# Generally smart, will pick up items amd throw
+name:monkey
 glyph:M
 pain:4
-flags:ANIMAL
-flags:ONLY_GOLD
-flags:BASH_DOOR | CLEAR_WEB
-flags:FORCE_SLEEP | HURT_COLD
-desc:Hydra
+flags:ANIMAL | SMART
+desc:Monkey/Ape
 
 # Non-descript early monsters that demonstrate some stuff but are mostly filler
 name:icky thing
