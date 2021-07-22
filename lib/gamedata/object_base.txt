@@ -21,7 +21,7 @@
 default:break-chance:10
 default:max-stack:99
 
-name:chest:chest~
+name:chest:container~
 graphics:slate
 # max-stack:1
 flags:HATES_ACID | HATES_FIRE
@@ -73,14 +73,14 @@ flags:SHOW_MULT
 material:steel
 randart:150:200:300:8:7
 
-name:digger:Digger~
+name:digger:digging tool~
 graphics:slate
 # max-stack:1
 flags:SHOW_DICE
 material:steel
 randart:75:175:300:2:0
 
-name:hafted:Hafted weapon~
+name:hafted:blunt weapon~
 graphics:white
 # max-stack:1
 flags:HATES_ACID | HATES_FIRE
@@ -88,7 +88,7 @@ flags:SHOW_DICE
 material:steel
 randart:135:280:450:4:2
 
-name:polearm:Polearm~
+name:polearm:polearm~
 graphics:white
 # max-stack:1
 flags:HATES_ACID | HATES_FIRE
@@ -96,7 +96,7 @@ flags:SHOW_DICE
 material:steel
 randart:80:230:350:3:2
 
-name:sword:Bladed weapon~
+name:sword:bladed weapon~
 graphics:white
 # max-stack:1
 flags:HATES_ACID
@@ -104,66 +104,61 @@ flags:SHOW_DICE
 material:steel
 randart:80:200:450:20:10
 
-name:boots:Boot~
+name:boots:boot~
 graphics:light umber
 # max-stack:1
 flags:HATES_ACID | HATES_FIRE
 randart:75:200:375:6:4
 
-name:gloves:Glove~
+name:gloves:glove~
 graphics:light umber
 # max-stack:1
 flags:HATES_ACID | HATES_FIRE
 randart:60:135:260:8:4
 
-name:helm:Helm~
+name:helm:headgear
 graphics:light umber
 # max-stack:1
 flags:HATES_ACID
 material:steel
 randart:25:150:320:7:4
 
-name:belt:Belt~
+name:belt:belt~
 graphics:light green
 # max-stack:1
 flags:HATES_ELEC | HATES_FIRE
 material:plastic
 randart:150:250:330:1:2
 
-name:shield:Shield~
+name:shield:shield~
 graphics:light umber
 # max-stack:1
 flags:HATES_ACID
 material:leather
 randart:120:180:230:7:4
 
-name:cloak:Cloak~
+name:cloak:cloak~
 graphics:light umber
 # max-stack:1
 flags:HATES_ACID | HATES_FIRE
 material:cloth
 randart:60:120:220:7:4
 
-name:soft armor:Soft Armor~
+name:soft armor:soft armor~
 graphics:slate
 # max-stack:1
 flags:HATES_ACID | HATES_FIRE
 material:leather
 randart:170:200:240:3:3
 
-name:hard armor:Hard Armor~
+name:hard armor:hard armor~
 graphics:slate
 # max-stack:1
 flags:HATES_ACID
 material:steel
 randart:190:280:380:7:3
 
-name:dragon armor:Dragon Armor~
-graphics:slate
-# max-stack:1
-material:leather
-
-name:light:Light~
+name:light:light~
 graphics:yellow
 break:50
 # max-stack:10
@@ -209,7 +204,7 @@ break:80
 flags:HATES_ACID | HATES_FIRE | HATES_ELEC
 flags:EASY_KNOW
 
-name:food:Food
+name:food:food
 graphics:light umber
 break:100
 # max-stack:10

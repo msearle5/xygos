@@ -937,7 +937,7 @@ power:9
 msg:{name} glows white...
 effect:BOLT:MON_DRAIN
 dice:90
-desc:drains up to 90 hit points of life from a target creature.  Does not affect undead, demons, golems, elementals or vortices
+desc:fires a death ray at a target creature, which can do 90 hit points of damage.  It only affects living things - robots and holograms won't be affected. (Cyborgs and aliens will be, though.)
 
 name:DRAIN_LIFE2
 aim:1
@@ -945,21 +945,21 @@ power:10
 msg:Your {kind} glow{s} black...
 effect:BOLT:MON_DRAIN
 dice:120
-desc:drains up to 120 hit points of life from a target creature.  Does not affect undead, demons, golems, elementals or vortices
+desc:fires a powerful death ray at a target creature, which can do 120 hit points of damage.  It only affects living things - robots and holograms won't be affected. (Cyborgs and aliens will be, though.)
 
 name:DRAIN_LIFE3
 aim:1
 power:11
 effect:BOLT:MON_DRAIN
 dice:150
-desc:drains up to 150 hit points of life from a target creature.  Does not affect undead, demons, golems, elementals or vortices
+desc:fires a terrible beam of death at a target creature, which can do 150 hit points of damage.  It only affects living things - robots and holograms won't be affected. (Cyborgs and aliens will be, though.)
 
 name:DRAIN_LIFE4
 aim:1
 power:12
 effect:BOLT:MON_DRAIN
 dice:250
-desc:drains up to 250 hit points of life from a target creature.  Does not affect undead, demons, golems, elementals or vortices
+desc:fires a deadly annihilation beam at a target creature, which can do 250 hit points of damage.  It only affects living things - robots and holograms won't be affected. (Cyborgs and aliens will be, though.)
 
 name:MISSILE
 aim:1
@@ -1061,7 +1061,7 @@ power:6
 msg:A line of shimmering blue light appears.
 effect:LINE:LIGHT_WEAK
 dice:6d8
-desc:lights up part of the dungeon in a straight line
+desc:lights up part of the terrain in a straight line
 
 name:DISABLE_TRAPS
 aim:1
@@ -1083,13 +1083,12 @@ dice:$B
 expr:B:PLAYER_LEVEL:+ 0
 desc:polymorphs a monster into another kind of creature
 
-
 name:STARLIGHT
 aim:0
 power:5
 effect:STAR:LIGHT_WEAK
 dice:6d8
-desc:fires a line of light in all directions, each one causing light-sensitive creatures 6d8 damage
+desc:projects a beam of light in all directions, each one causing light-sensitive creatures 6d8 damage
 
 name:STARLIGHT2
 aim:0
@@ -1097,7 +1096,7 @@ power:7
 msg:Your {kind} glow{s} with the light of a thousand stars...
 effect:STAR:LIGHT
 dice:10d8
-desc:fires a line of light in all directions, each one causing 10d8 damage
+desc:fires a laser beam in all directions, each one causing 10d8 damage
 
 name:BERSERKER
 aim:0
@@ -1107,7 +1106,6 @@ effect:TIMED_INC:SHERO
 dice:50+1d50
 desc:puts you in a berserker rage for d50+50 turns
 
-
 name:WONDER
 aim:1
 power:9
@@ -1115,7 +1113,6 @@ effect:WONDER
 dice:$B+1d100
 expr:B:PLAYER_LEVEL:/ 5
 desc:creates random and unpredictable effects
-
 
 name:WAND_BREATH
 aim:1
@@ -1137,24 +1134,24 @@ desc:shoots a large cone of one of the base elements for 120-200 damage
 name:DEVICE_HOLY
 aim:0
 power:12
-effect:PROJECT_LOS:DISP_EVIL:0:1
+effect:PROJECT_LOS:DISP_ALL:0:1
 dice:120
 effect:HEAL_HP
 dice:50
-effect:TIMED_INC:PROTEVIL
-dice:$B+1d25
-expr:B:PLAYER_LEVEL:* 3
 effect:CURE:POISONED
 effect:CURE:TERROR
 effect:CURE:AFRAID
 effect:CURE:STUN
 effect:CURE:CUT
 effect:CURE:SLOW
+effect:CURE:HELD
 effect:CURE:BLIND
 effect:CURE:CONFUSED
 effect:CURE:IMAGE
+effect:CURE:INFECTED
+effect:CURE:RAD
 effect:CURE:AMNESIA
-desc:inflicts damage on evil creatures you can see, heals 50 hit points, cures all temporary negative effects and grants you protection from evil
+desc:inflicts 120 hp damage on everything in sight, heals 50 hit points, and cures all temporary negative effects
 
 name:DRINK_BREATH
 aim:1
@@ -1321,7 +1318,7 @@ effect:BREATH:CHAOS:0:20
 dice:220
 effect:BREATH:DISEN:0:20
 dice:220
-desc:allows you to breathe chaos or disenchantment for 220 damage
+desc:allows you to breathe chaos or draining for 220 damage
 
 name:DRAGON_LAW
 aim:1

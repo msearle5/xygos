@@ -125,8 +125,10 @@ chart:29:30:45
 phrase: as a bartender.
 chart:29:30:50
 phrase: as a protocol droid.
-chart:29:30:60
+chart:29:30:55
 phrase: as a construction mechanoid.
+chart:29:30:62
+phrase: to deliver parcels.
 chart:29:30:70
 phrase: for industrial automation.
 chart:29:30:80

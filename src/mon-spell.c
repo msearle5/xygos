@@ -159,8 +159,9 @@ static void spell_message(struct monster *mon,
 					/* Get the attack type (assuming lash) */
 					int type = mon->race->blow[0].effect->lash_type;
 					char *type_name = projections[type].lash_desc;
-
-					strnfcat(buf, sizeof(buf), &end, type_name);
+					if (type_name) {
+						strnfcat(buf, sizeof(buf), &end, type_name);
+					}
 					break;
 				}
 

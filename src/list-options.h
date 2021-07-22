@@ -57,9 +57,9 @@ OP(cheat_hear,            "Cheat: Peek into monster creation",
 CHEAT, false)
 OP(score_hear,            "Score: Peek into monster creation",
 SCORE, false)
-OP(cheat_room,            "Cheat: Peek into dungeon creation",
+OP(cheat_room,            "Cheat: Peek into level creation",
 CHEAT, false)
-OP(score_room,            "Score: Peek into dungeon creation",
+OP(score_room,            "Score: Peek into level creation",
 SCORE, false)
 OP(cheat_xtra,            "Cheat: Peek into something else",
 CHEAT, false)
@@ -77,7 +77,7 @@ OP(birth_connect_stairs,  "Generate connected stairs",
 BIRTH, true)
 OP(birth_force_descend,   "Force player descent (never make up stairs)",
 BIRTH, false)
-OP(birth_no_recall,       "Word of Recall has no effect",
+OP(birth_no_recall,       "Recall has no effect",
 BIRTH, false)
 OP(birth_no_artifacts,    "Restrict creation of artifacts",
 BIRTH, false)

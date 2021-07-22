@@ -27,6 +27,15 @@
 
 ##### Normal monster templates #####
 
+# Mines / bombs
+# May not move, usually explodes if provoked.
+name:mine
+glyph:!
+pain:9
+flags:COLD_BLOOD | CLEAR_WEB | WEIRD_MIND | METAL | NONLIVING
+flags:IM_COLD | IM_POIS | NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
+desc:Mine
+
 # Full grid monsters
 name:fullgrid
 glyph:#
@@ -89,7 +98,7 @@ desc:Centipede
 
 # Creeping coins are mimics which look like coins until they attack, hit to
 # poison, and drop the appropriate type of treasure
-name:creeping coins
+name:creeping cash
 glyph:$
 pain:1
 flags:COLD_BLOOD | METAL | UNAWARE | EMPTY_MIND
@@ -97,7 +106,7 @@ flags:ONLY_GOLD
 flags:BASH_DOOR | CLEAR_WEB
 flags:IM_ELEC | IM_POIS | NO_CONF | NO_SLEEP
 flags:MIMIC_INV
-desc:Creeping Coins
+desc:Creeping Cash
 
 # Anything called *fly, possibly including dragonflies (early, weak breathers
 # which move quickly and erratically)
@@ -105,7 +114,7 @@ desc:Creeping Coins
 name:fly
 glyph:F
 pain:7
-flags:ANIMAL | WEIRD_MIND
+flags:ANIMAL | FLYING | WEIRD_MIND
 flags:RAND_50 | BASH_DOOR
 flags:FORCE_SLEEP
 desc:Fly
@@ -136,16 +145,6 @@ pain:6
 flags:ANIMAL | CLEAR_WEB
 desc:Feline (Cat)
 
-# Wall-passing invisible spirits, frequently drain experience and/or stats.
-# Relatively weak to compensate for being hard to escape
-name:ghost
-glyph:G
-pain:1
-flags:UNDEAD | EVIL | INVISIBLE | COLD_BLOOD | SPIRIT
-flags:PASS_WALL
-flags:IM_COLD | IM_POIS | NO_CONF | NO_SLEEP | NO_STUN | NO_HOLD
-desc:Ghost
-
 # Giants are big, strong humanoids which hit hard and throw boulders.  They
 # may be associated with an element and have some spells, but their focus is
 # powerful melee.
@@ -155,15 +154,6 @@ pain:1
 flags:GIANT | EVIL | SPIRIT
 flags:BASH_DOOR | CLEAR_WEB
 desc:Giant Humanoid
-
-# Mostly slow with lots of hitpoints and armor
-name:golem
-glyph:g
-pain:1
-flags:EMPTY_MIND | CLEAR_WEB
-flags:IM_ELEC | NO_FEAR | NO_CONF | NO_SLEEP
-flags:NONLIVING
-desc:Golem
 
 # Invisible, associated with darkness so hurt by light
 name:grue
@@ -234,15 +224,6 @@ flags:ANIMAL | WEIRD_MIND
 flags:BASH_DOOR
 desc:Killer Beetle
 
-# Early-game equivalents of things like orcs and trolls
-name:kobold
-glyph:k
-pain:1
-flags:EVIL
-flags:OPEN_DOOR | BASH_DOOR | SPIRIT | CLEAR_WEB
-flags:IM_POIS
-desc:Kobold
-
 # Weird monsters tha look like floor.
 name:lurker
 glyph:.
@@ -276,15 +257,6 @@ flags:NO_FEAR | NO_CONF | NO_SLEEP
 flags:FORCE_SLEEP | ATTR_CLEAR
 desc:Mimic
 
-# Mines / bombs
-# May not move, usually explodes if provoked.
-name:mine
-glyph:X
-pain:9
-flags:COLD_BLOOD | CLEAR_WEB | WEIRD_MIND | METAL | NONLIVING
-flags:IM_COLD | IM_POIS | NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
-desc:Mine
-
 # Demons are evil and tend to be fire-based.  Minor demons are mostly
 # annoying rather than dangerous.
 name:minor demon
@@ -310,32 +282,6 @@ pain:2
 flags:EMPTY_MIND | STUPID
 flags:HURT_FIRE | NO_FEAR | NO_CONF | NO_SLEEP
 desc:Mushroom
-
-# Female serpent-like monsters
-name:naga
-glyph:n
-pain:1
-flags:FEMALE | EVIL | HURT_COLD | SPIRIT
-flags:BASH_DOOR | CLEAR_WEB
-desc:Naga
-
-# Ogres are like small giants, or large orcs.  Mostly straightforward melee
-# fighters who come in packs, with occaisonal lone spellcasters.
-name:ogre
-glyph:O
-pain:1
-flags:GIANT | EVIL | SPIRIT
-flags:OPEN_DOOR | BASH_DOOR | CLEAR_WEB
-desc:Ogre
-
-# Orcs are the foot-soldiers of Morgoth.  They melee and use archery, but 
-# mostly don't use magic.  They tend to appear in groups.
-name:orc
-glyph:o
-pain:1
-flags:MALE | ORC | EVIL | SPIRIT
-flags:OPEN_DOOR | BASH_DOOR | CLEAR_WEB
-desc:Orc
 
 name:person
 glyph:p
@@ -383,17 +329,6 @@ pain:9
 flags:COLD_BLOOD | CLEAR_WEB | WEIRD_MIND | METAL | NONLIVING
 flags:IM_COLD | IM_POIS | NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
 desc:Robot
-
-# The non-unique skeletons break into two (early and late) groups:
-# 1. Empty minded animated skeletons with movement and melee but no spells
-# 2. Smart drujs with no movement or melee, but which have high speed and
-#    cast spells every turn
-name:skeleton
-glyph:s
-pain:9
-flags:UNDEAD | EVIL | COLD_BLOOD | CLEAR_WEB
-flags:IM_COLD | IM_POIS | NO_FEAR | NO_CONF | NO_SLEEP | NO_STUN
-desc:Skeleton
 
 # or snail
 name:slug
@@ -446,26 +381,6 @@ flags:CLEAR_WEB | COLD_BLOOD | REGENERATE
 flags:NO_FEAR | NO_CONF | HURT_FIRE | IM_WATER
 desc:Tree/Ent
 
-# Trolls are evil, larger than human-size humanoids. They have strong melee
-# combat, and many are hurt by light.  They fall roughly between ogres and
-# giants in Morgoth's humanoid soldiery.
-name:troll
-glyph:T
-pain:1
-flags:TROLL | EVIL | SPIRIT
-flags:OPEN_DOOR | BASH_DOOR | CLEAR_WEB
-desc:Troll
-
-# Powerful undead which drain experience
-name:vampire
-glyph:V
-pain:1
-flags:UNDEAD | EVIL | COLD_BLOOD | REGENERATE | SPIRIT
-flags:OPEN_DOOR | BASH_DOOR | CLEAR_WEB
-flags:HURT_LIGHT | HURT_FIRE | IM_COLD | IM_POIS | NO_CONF | NO_SLEEP | NO_STUN
-flags:FORCE_SLEEP
-desc:Vampire
-
 # Always awake, elemental objects which engulf and breathe their element(s)
 name:vortex
 glyph:v
@@ -483,16 +398,6 @@ glyph:w
 pain:1
 flags:ANIMAL
 desc:Worm/Worm Mass
-
-# Undead which range from wights to wraiths to the Ringwraiths.  Experience
-# drainers and spellcasters; the Ringwraiths summon each other and are the
-# only monsters which get the Black Breath melee attack.
-name:wraith
-glyph:W
-pain:1
-flags:UNDEAD | EVIL | COLD_BLOOD | SPIRIT | CLEAR_WEB
-flags:HURT_LIGHT | IM_COLD | IM_POIS | NO_CONF | NO_SLEEP | NO_STUN | NO_HOLD
-desc:Wight/Wraith
 
 # Non-humanoid, (usually) intelligent aliens
 # Includes xorn/xaren
@@ -520,24 +425,6 @@ flags:ANIMAL
 flags:OPEN_DOOR | BASH_DOOR | CLEAR_WEB
 flags:IM_COLD
 desc:Yeti
-
-# Zephyr hounds come in packs and (with a couple of exceptions) breathe a
-# single element, with melee that matches where possible.  Simple.
-name:zephyr hound
-glyph:Z
-pain:3
-flags:ANIMAL | GROUP_AI | CLEAR_WEB
-desc:Zephyr Hound
-
-# Animated corpses, frequently with no mind of their own.  Mostly fairly weak
-# for their level
-name:zombie
-glyph:z
-pain:10
-flags:UNDEAD | EVIL | COLD_BLOOD
-flags:OPEN_DOOR | BASH_DOOR | CLEAR_WEB
-flags:IM_COLD | IM_POIS | HURT_FIRE | NO_CONF | NO_SLEEP | NO_STUN
-desc:Zombie/Mummy
 
 ##### Special templates #####
 

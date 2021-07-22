@@ -324,6 +324,7 @@ owner:0:0:SkyRats
 owner:0:0:Mercury Rising
 owner:0:0:Starhopper
 owner:0:0:Bounce Air
+owner:0:0:WeHaul
 #danger:99:99
 
 store:11:Cyber Salon

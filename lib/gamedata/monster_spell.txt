@@ -114,6 +114,14 @@ lore-color-base:Orange
 message-vis:{name} spits {type} at you.
 message-invis:You hear a soft sound.
 
+name:STING
+hit:100
+effect:LASH:MISSILE:3
+lore:sting you from a distance
+lore-color-base:Orange
+message-vis:{name} flicks a {type} stinger at you.
+message-invis:You hear a snap.
+
 name:SLING
 hit:50
 effect:BOLT:ARROW

@@ -249,6 +249,148 @@ desc:it against burglars such as yourself.
 
 ##### Monster races proper #####
 
+
+
+##### ! is for MINE #####
+# glyph?
+# fire, poison etc?
+# clusters?
+
+# Visible (as it moves), self destruct when close
+name:crawler mine
+base:mine
+color:Yellow
+speed:100
+hit-points:1
+hearing:0
+smell:0
+armor-class:5
+sleepiness:0
+depth:12
+rarity:5
+experience:20
+spell-freq:1
+flags:SMART | NEVER_BLOW
+deathspells:MINE_EXPLODE
+spells:SELF_DESTRUCT
+desc:A small tracked vehicle, clearly a rolling bomb.
+
+# Invisible, immobile, doesn't do anything unless hit.
+name:smart mine
+base:mine
+color:Red
+speed:110
+hit-points:1
+hearing:0
+smell:0
+armor-class:5
+sleepiness:0
+depth:15
+rarity:4
+experience:25
+flags:INVISIBLE | SMART | NEVER_MOVE | NEVER_BLOW
+deathspells:MINE_EXPLODE
+desc:A nasty, well-hidden trap. Step on it and it's the big BOOM.
+
+# Invisible, immobile, relies on spell range
+name:proximity mine
+base:mine
+color:Violet
+speed:110
+hit-points:1
+hearing:0
+smell:0
+armor-class:5
+sleepiness:0
+depth:18
+rarity:5
+experience:30
+spell-freq:1
+flags:INVISIBLE | SMART | NEVER_MOVE | NEVER_BLOW
+deathspells:MINE_EXPLODE
+spells:SELF_DESTRUCT
+desc:A nasty, well-hidden trap. Get too close and it's the big BOOM.
+
+# Visible (as it moves), same idea as the crawler but MUCH faster
+name:jet mine
+base:mine
+color:CadetBlue
+speed:130
+hit-points:1
+hearing:0
+smell:0
+armor-class:5
+sleepiness:0
+depth:20
+rarity:6
+experience:45
+spell-freq:1
+flags:SMART | NEVER_BLOW
+deathspells:MINE_EXPLODE
+spells:SELF_DESTRUCT
+desc:A missile/mine - on detection of a threat it can fly a short distance towards its target before detonating.
+
+# Visible (as it moves), teleports/holds you, self destructs when close
+name:magnetic mine
+base:mine
+color:Magenta-Pink
+speed:110
+hit-points:1
+hearing:0
+smell:0
+armor-class:5
+sleepiness:0
+depth:25
+rarity:6
+experience:70
+spell-freq:1
+blow:TOUCH:PARALYZE:1d1
+flags:SMART | NEVER_MOVE
+deathspells:MINE_EXPLODE
+spells:TELE_TO | TELE_SELF_TO | HOLD | SELF_DESTRUCT
+desc:A dangerous trap, capable of pulling you in from a distance and holding you in place.
+
+# Invisible, shoots fire
+name:flamer mine
+base:mine
+color:Orange
+speed:110
+hit-points:1
+hearing:0
+smell:0
+armor-class:5
+sleepiness:0
+depth:30
+rarity:6
+experience:85
+spell-power:70
+spell-freq:1
+flags:SMART | NEVER_BLOW
+deathspells:BA3_FIRE
+spells:SELF_DESTRUCT
+desc:A mine which blasts its target with a gout of fire.
+
+# Invisible, produces gas
+name:gas mine
+base:mine
+color:Green
+speed:110
+hit-points:1
+hearing:0
+smell:0
+armor-class:5
+sleepiness:0
+depth:35
+rarity:6
+experience:95
+spell-power:90
+spell-freq:1
+flags:SMART | NEVER_BLOW | NEVER_MOVE | INVISIBLE
+deathspells:BA8_POIS
+spells:SELF_DESTRUCT
+desc:A mine which bursts into a cloud of poisonous fumes.
+
+
 ##### # is for FULL GRID #####
 
 name:black obelisk
@@ -298,6 +440,100 @@ flags:NO_FEAR | NO_CONF | NO_SLEEP
 flags:IM_FIRE | IM_COLD | IM_POIS | IM_ELEC
 spells:HEAL
 flags:STUPID | EMPTY_MIND
+
+
+##### $ is for CREEPING CASH #####
+
+name:creeping wad
+plural:wads of creeping cash
+base:creeping cash
+color:ForestGreen
+speed:100
+hit-points:32
+hearing:3
+armor-class:28
+sleepiness:10
+depth:4
+rarity:3
+experience:9
+blow:HIT:HURT:1d4
+blow:TOUCH:POISON:2d4
+desc:A fat wad of cash. But you recognize the metal band around it as a defensive strap - capable of crawling about and stabbing you if you get too close.
+mimic:cash:used bills
+
+name:creeping silver
+plural:piles of creeping silver
+base:creeping cash
+color:White
+speed:100
+hit-points:54
+hearing:4
+armor-class:36
+sleepiness:10
+depth:6
+rarity:3
+experience:18
+blow:HIT:HURT:1d6
+blow:TOUCH:POISON:2d6
+desc:It appears to be a clear plastic bag of silver nuggets. Closer inspection reveals that the nugget lying beside the bag is in fact a disguised defence drone. Wired to the bag, it can't move very fast - but it has some nasty spiky attachments which you don't want to get too close to.
+mimic:cash:silver nuggets
+
+name:creeping gold coins
+plural:piles of creeping gold coins
+base:creeping cash
+color:Yellow
+speed:100
+hit-points:81
+hearing:5
+armor-class:43
+sleepiness:10
+depth:10
+rarity:3
+experience:32
+blow:HIT:HURT:2d5
+blow:TOUCH:POISON:3d5
+flags:IM_ACID
+desc:A roll of gleaming gold coins. At each end is a hemisphere of duller metal, making the roll into a little two-wheeled robot.
+mimic:cash:rare coins
+
+name:creeping platinum
+plural:piles of creeping platinum
+base:creeping cash
+color:Light Slate
+speed:110
+hit-points:90
+hearing:5
+armor-class:60
+sleepiness:10
+depth:13
+rarity:3
+experience:45
+blow:HIT:HURT:2d5
+blow:TOUCH:POISON:3d5
+flags:IM_ACID 
+desc:It's a pile of platinum bars, but each is attached to a defensive robot platform - they really won't like being
+desc: picked up, or even approached.
+mimic:cash:platinum bars
+
+name:creeping unobtainium wafers
+plural:piles of creeping unobtainium
+base:creeping cash
+color:SkyBlue
+speed:120
+hit-points:180
+hearing:5
+armor-class:120
+sleepiness:10
+depth:27
+rarity:3
+experience:60
+blow:HIT:POISON:3d4
+blow:TOUCH:POISON:3d5
+blow:HIT:HURT:1d12
+blow:HIT:HURT:1d12
+flags:IM_ACID
+desc:A pile of unobtainium wafers, worth many times their weight in gold and apparently unguarded... until it you see it start to slither about. It seems that this treasure is attached to a swarm of defensive robots to deter thieves.
+mimic:cash:unobtainium wafers
 
 
 ##### ; is for FISH #####
@@ -629,144 +865,75 @@ spells:FORGET
 desc:A mass of green vegetation.  You don't remember seeing anything like it
 desc: before.
 
+
 ##### HIDDEN (.) #####
 
-# fire, poison etc?
-# clusters?
-
-# Visible (as it moves), self destruct when close
-name:crawler mine
-base:mine
-color:Yellow
-speed:100
-hit-points:1
-hearing:0
-smell:0
-armor-class:5
-sleepiness:0
-depth:12
-rarity:5
-experience:20
-spell-freq:1
-flags:SMART | NEVER_BLOW
-deathspells:MINE_EXPLODE
-spells:SELF_DESTRUCT
-desc:A small tracked vehicle, clearly a rolling bomb.
-
-# Invisible, immobile, doesn't do anything unless hit.
-name:smart mine
-base:mine
-color:Red
+name:lurker
+base:lurker
+color:w
 speed:110
-hit-points:1
-hearing:0
-smell:0
-armor-class:5
-sleepiness:0
-depth:15
-rarity:4
-experience:25
-flags:INVISIBLE | SMART | NEVER_MOVE | NEVER_BLOW
-deathspells:MINE_EXPLODE
-desc:A nasty, well-hidden trap. Step on it and it's the big BOOM.
+hit-points:176
+hearing:30
+armor-class:30
+sleepiness:10
+depth:14
+rarity:3
+experience:80
+blow:HIT:HURT:1d8
+blow:HIT:HURT:1d8
+desc:A strange creature that merges with the ground, trapping its
+desc: victims by enveloping them within its perfectly disguised form.
 
-# Invisible, immobile, relies on spell range
-name:proximity mine
-base:mine
-color:Violet
+name:trapper
+base:lurker
+color:w
+speed:120
+hit-points:528
+hearing:30
+armor-class:90
+sleepiness:10
+depth:36
+rarity:3
+experience:580
+blow:HIT:HURT:3d8
+blow:HIT:HURT:3d8
+blow:HIT:PARALYZE:15d1
+blow:HIT:PARALYZE:15d1
+desc:A larger cousin of the lurker, this creature traps unsuspecting victims and
+desc: paralyzes them, to be slowly digested later.
+
+
+##### - is for CARD MIMIC #####
+
+name:card mimic
+base:mimic
+glyph:-
+color:w
 speed:110
-hit-points:1
-hearing:0
-smell:0
-armor-class:5
+hit-points:75
+hearing:30
+armor-class:48
 sleepiness:0
-depth:18
-rarity:5
-experience:30
-spell-freq:1
-flags:INVISIBLE | SMART | NEVER_MOVE | NEVER_BLOW
-deathspells:MINE_EXPLODE
-spells:SELF_DESTRUCT
-desc:A nasty, well-hidden trap. Get too close and it's the big BOOM.
-
-# Visible (as it moves), same idea as the crawler but MUCH faster
-name:jet mine
-base:mine
-color:CadetBlue
-speed:130
-hit-points:1
-hearing:0
-smell:0
-armor-class:5
-sleepiness:0
-depth:20
-rarity:6
-experience:45
-spell-freq:1
-flags:SMART | NEVER_BLOW
-deathspells:MINE_EXPLODE
-spells:SELF_DESTRUCT
-desc:A missile/mine - on detection of a threat it can fly a short distance towards its target before detonating.
-
-# Visible (as it moves), teleports/holds you, self destructs when close
-name:magnetic mine
-base:mine
-color:Magenta-Pink
-speed:110
-hit-points:1
-hearing:0
-smell:0
-armor-class:5
-sleepiness:0
-depth:25
-rarity:6
+depth:21
+rarity:3
 experience:70
-spell-freq:1
-blow:TOUCH:PARALYZE:1d1
-flags:SMART | NEVER_MOVE
-deathspells:MINE_EXPLODE
-spells:TELE_TO | TELE_SELF_TO | HOLD | SELF_DESTRUCT
-desc:A dangerous trap, capable of pulling you in from a distance and holding you in place.
-
-# Invisible, shoots fire
-name:flamer mine
-base:mine
-color:Orange
-speed:110
-hit-points:1
-hearing:0
-smell:0
-armor-class:5
-sleepiness:0
-depth:30
-rarity:6
-experience:85
-spell-power:70
-spell-freq:1
-flags:SMART | NEVER_BLOW
-deathspells:BA3_FIRE
-spells:SELF_DESTRUCT
-desc:A mine which blasts its target with a gout of fire.
-
-# Invisible, produces gas
-name:gas mine
-base:mine
-color:Green
-speed:110
-hit-points:1
-hearing:0
-smell:0
-armor-class:5
-sleepiness:0
-depth:35
-rarity:6
-experience:95
-spell-power:90
-spell-freq:1
-flags:SMART | NEVER_BLOW | NEVER_MOVE | INVISIBLE
-deathspells:BA8_POIS
-spells:SELF_DESTRUCT
-desc:A mine which bursts into a cloud of poisonous fumes.
+blow:HIT:POISON:3d4
+blow:HIT:POISON:3d4
+blow:HIT:HURT:2d3
+blow:HIT:HURT:2d3
+flags:HURT_FIRE
+spell-freq:5
+spells:BO_FIRE
+spells:S_MONSTER
+spells:BLIND | WOUND | CONF | SCARE
+desc:A trap, capable of doing a variety of nasty things, and baited with a valuable-looking card, 
+mimic:card:extermination
+mimic:card:mass extermination
+mimic:card:vertical teleport
+mimic:card:portal
+mimic:card:acquisition
+mimic:card:mass acquisition
+mimic:card:disinto
 
 
 ##### A is for AMPHIBIAN #####
@@ -794,7 +961,7 @@ base:amphibian
 color:Light Yellow
 depth:5
 rarity:2
-grow:giant red frog
+grow:great red frog
 hit-points:4
 hearing:12
 armor-class:4
@@ -804,7 +971,7 @@ passive:TOUCH:POISON:2d5
 flags:COLD_BLOOD | RAND_25 | IM_WATER | EMPTY_MIND
 desc:A small but venomous toad. Although as its bright colourful appearance indicates, it is more dangerous to touch it than to be bitten by it.
 
-name:giant red frog
+name:great red frog
 base:amphibian
 color:r
 speed:110
@@ -820,7 +987,26 @@ blow:BITE:LOSE_STR:2d4
 flags:RAND_50 | BASH_DOOR | COLD_BLOOD | IM_WATER | WEIRD_MIND
 spell-freq:8
 spells:HOP
-desc:It looks poisonous.
+desc:It looks poisonous - lurid red, almost unnaturally so.
+
+name:battle toad
+base:amphibian
+color:ForestGreen
+speed:110
+hit-points:65
+hearing:12
+smell:20
+armor-class:35
+sleepiness:10
+depth:13
+rarity:1
+experience:35
+blow:HIT:HURT:2d7
+blow:HIT:HURT:2d7
+flags:BASH_DOOR | COLD_BLOOD | IM_WATER | SMART
+desc:A muscular toad that stands upright on slim legs. It has somehow obtained some scraps 
+desc:of leather around its wrists and across its body and in general seems smarter than the 
+desc:average amphibian. 
 
 name:Hypnotoad
 base:amphibian
@@ -1362,6 +1548,26 @@ blow:STING:FIRE:1d2
 flags:RAND_25
 desc:It is about four feet long and carnivorous.
 
+name:stegocentipede
+base:centipede
+color:u
+speed:120
+hit-points:59
+hearing:12
+smell:20
+armor-class:36
+sleepiness:30
+depth:12
+rarity:2
+experience:40
+#weight:90kg
+blow:BITE:HURT:2d4
+blow:BITE:HURT:2d4
+blow:STING:HURT:2d4
+flags:BASH_DOOR | KILL_BODY | RAND_25
+desc:It is a vast armoured centipede with massive mandibles and a spiked tail. Dozens 
+desc:of legs carry it towards you.
+
 name:giant clear centipede
 base:centipede
 color:w
@@ -1406,6 +1612,27 @@ flags:KILL_BODY
 #weight:30kg
 flags:RAND_25 | METAL
 flags:SMART | WEIRD_MIND
+
+name:carrion crawler
+base:centipede
+color:o
+speed:110
+hit-points:130
+hearing:15
+smell:20
+armor-class:60
+sleepiness:20
+depth:25
+rarity:2
+experience:60
+blow:STING:PARALYZE:2d6
+blow:STING:PARALYZE:2d6
+#weight:40kg
+flags:RAND_25 | BASH_DOOR
+flags:IM_POIS
+friends:100:2d4:Same
+desc:A hideous centipede covered in slime and with groping tentacles around its
+desc: head.
 
 name:quarterpede
 base:centipede
@@ -1550,7 +1777,7 @@ flags:OPEN_DOOR
 
 name:giant fruit fly
 plural:giant fruit flies
-base:insect
+base:fly
 color:G
 speed:120
 hit-points:3
@@ -1560,9 +1787,26 @@ sleepiness:10
 depth:10
 rarity:3
 experience:4
-flags:MULTIPLY | FLYING | RAND_25 | RAND_50
+flags:MULTIPLY | RAND_25 | RAND_50
 blow:BITE:HURT:1d2
 desc:A fast-breeding, annoying pest.
+
+name:giant firefly
+plural:giant fireflies
+base:fly
+speed:120
+hit-points:5
+light:2
+hearing:8
+armor-class:21
+sleepiness:10
+depth:26
+rarity:4
+experience:4
+flags:MULTIPLY | RAND_25 | RAND_50
+blow:BITE:BLIND:1d2
+desc:Clouds of these monsters light up the dungeon - so brightly that you can
+desc: barely see through them.
 
 name:chaos butterfly
 base:fly
@@ -1577,7 +1821,7 @@ sleepiness:10
 blow:CLAW:HURT:3d7
 blow:CLAW:HURT:3d7
 blow:CRUSH:HURT:10d5
-flags:FORCE_SLEEP | FLYING | ATTR_FLICKER | EVIL
+flags:FORCE_SLEEP | ATTR_FLICKER | EVIL
 flags:NO_CONF | NO_SLEEP | SMART | WEIRD_MIND | RAND_25 | RAND_50
 spells:BR_CHAO
 innate-freq:9
@@ -2076,6 +2320,18 @@ desc:An intensely irritating git of a monster.
 #
 # Also includes insect hives (although these are fullgrid based)
 #
+name:swarm
+base:insect
+color:BurntUmber
+depth:1
+rarity:2
+desc:A swarm of little stinging insects.
+speed:105
+hit-points:3
+armor-class:8
+sleepiness:10
+blow:STING:HURT:1d2
+flags:FLYING | RAND_100 | EMPTY_MIND | MULTIPLY
 
 name:pill bug
 base:insect
@@ -2095,35 +2351,21 @@ blow:CRAWL:EAT_PILLS
 flags:RAND_25 | IN_LEVEL
 desc:A small rounded brown creature with overlapping layers of armor and extended jaws.
 
-name:swarm
+name:grid bug
 base:insect
-color:BurntUmber
-depth:1
-rarity:2
-desc:A swarm of little stinging insects.
-speed:105
-hit-points:3
-armor-class:8
-sleepiness:10
-blow:STING:HURT:1d2
-flags:FLYING | RAND_100 | EMPTY_MIND | MULTIPLY
-
-name:killer bee
-base:insect
-color:Yellow
-depth:17
-rarity:2
-speed:110
-hit-points:4
-hearing:12
-armor-class:25
-sleepiness:10
-blow:STING:POISON:1d4
-blow:STING:LOSE_STR:1d4
-flags:FLYING | RAND_25 | RAND_50
-friends:95:3d4:Same
-flags:EMPTY_MIND
-desc:It is poisonous and aggressive.
+color:Goldenrod
+depth:3
+rarity:4
+desc:A huge bug, thrashing blindly about, but there's a spark of malign intelligence in its red eyes...
+grow:network bug
+hit-points:1
+armor-class:30
+sleepiness:1
+blow:STING:ELEC:1d2
+flags:ORTHOGONAL | SMART | WEIRD_MIND | RAND_50
+spell-freq:20
+spells:GROW
+friends:90:2d3:Same
 
 name:white louse
 plural:white lice
@@ -2196,6 +2438,24 @@ flags:MULTIPLY | RAND_25 | RAND_50
 blow:BITE:HURT:1d2
 desc:It makes you itch just to look at it.
 
+name:spark bug
+base:insect
+color:Orange
+depth:9
+rarity:3
+desc:A crawling insect with a waving stinger.
+grow:arc bug
+speed:115
+hit-points:6
+armor-class:5
+sleepiness:20
+blow:BITE:HURT:1d3
+blow:STING:ELEC:1d6
+flags:RAND_25 | EMPTY_MIND
+spell-freq:12
+innate-freq:3
+spells:GROW | STING
+
 name:giant white tick
 base:insect
 color:w
@@ -2230,6 +2490,23 @@ flags:MULTIPLY | BASH_DOOR | RAND_50
 spell-freq:8
 spells:HOP
 desc:It makes you itch just to look at it.
+
+name:killer bee
+base:insect
+color:Yellow
+depth:17
+rarity:2
+speed:110
+hit-points:4
+hearing:12
+armor-class:25
+sleepiness:10
+blow:STING:POISON:1d4
+blow:STING:LOSE_STR:1d4
+flags:FLYING | RAND_25 | RAND_50
+friends:95:3d4:Same
+flags:EMPTY_MIND
+desc:It is poisonous and aggressive.
 
 name:hummerhorn
 base:insect
@@ -2754,7 +3031,7 @@ desc:It is about eight feet long.
 
 name:large grey snake
 base:snake
-color:s
+color:Slate
 speed:100
 hit-points:27
 hearing:6
@@ -2786,7 +3063,7 @@ desc:It has a copper head and sharp venomous fangs.
 
 name:rattlesnake
 base:snake
-color:r
+color:Brick
 speed:110
 hit-points:24
 hearing:6
@@ -2935,9 +3212,31 @@ flags-off:HURT_COLD
 flags:PASS_DOOR
 desc:A small but dangerous sea snake.
 
-name:anaconda
+name:serpent of the Glowing Lands
+plural:serpents of the Glowing Lands
 base:snake
 color:LimeGreen
+speed:120
+hit-points:150
+hearing:10
+armor-class:90
+sleepiness:99
+depth:32
+rarity:2
+experience:300
+blow:SPIT:BLIND:1d6
+blow:BITE:ACID:2d12
+blow:BITE:POISON:2d12
+blow:CRUSH:HURT:4d4
+flags:RAND_25 | KILL_BODY
+spell-freq:8
+spells:HOLD | BLIND | CONF
+desc:A great serpent, with coils like steel, a lunge faster than the eye can see,
+desc: and fangs that drip with acidic poison.  Its eyes are mesmerizing.
+
+name:anaconda
+base:snake
+color:Olive
 depth:33
 rarity:2
 hit-points:140
@@ -2947,7 +3246,7 @@ sleepiness:4
 blow:CONSTRICT:HURT:2d20
 flags:RAND_25
 flags:SMART | WEIRD_MIND
-desc:A huge constrictor, FIXME.
+desc:A huge, heavily built constrictor. It's a dull olive green, splotched with black and must be at least five meters long. 
 
 name:boadile
 base:snake
@@ -2964,9 +3263,9 @@ blow:CRUSH:HURT:2d8
 flags:COLD_BLOOD
 flags:IM_WATER
 flags:STUPID
-desc:"...Head something like a croc's, only bigger. Around forty
+desc:"...Head something like a croc's, only bigger. Around forty 
 desc:feet long. Able to roll itself into a big beachball with teeth.
-desc: Fast on land or in water - and a hell of a lot of little legs
+desc: Fast on land or in water - and a hell of a lot of little legs 
 desc:on each side."
 
 name:black adder
@@ -3007,7 +3306,7 @@ blow:BITE:FIRE:1d10
 blow:BITE:HURT:1d10
 blow:BITE:HURT:1d10
 blow:BITE:HURT:1d10
-flags:ATTR_MULTI
+flags:ATTR_FLICKER
 flags:UNIQUE
 flags:RAND_25
 flags:IM_COLD | IM_POIS
@@ -3771,6 +4070,21 @@ spells:TELE_SELF_TO
 
 ##### L(izard) - REPTILES (and amphibians, dinosaurs etc) #####
 
+name:rock lizard
+base:reptile
+color:Beige
+speed:110
+hit-points:8
+hearing:20
+smell:20
+armor-class:20
+sleepiness:15
+depth:2
+rarity:1
+experience:6
+blow:BITE:HURT:1d1
+desc:It is a small lizard with a hardened hide.
+
 name:cave lizard
 base:reptile
 color:u
@@ -3786,21 +4100,6 @@ experience:8
 blow:BITE:HURT:1d5
 desc:It is an armoured lizard with a powerful bite.
 
-name:rock lizard
-base:reptile
-color:U
-speed:110
-hit-points:8
-hearing:20
-smell:20
-armor-class:20
-sleepiness:15
-depth:2
-rarity:1
-experience:6
-blow:BITE:HURT:1d1
-desc:It is a small lizard with a hardened hide.
-
 name:lazy lizard
 base:reptile
 color:b
@@ -3810,13 +4109,29 @@ hearing:8
 smell:20
 armor-class:6
 sleepiness:250
-depth:4
+depth:5
 rarity:1
 experience:15
 blow:BITE:PARALYZE:1d1
 flags:RAND_25
 flags:NO_SLEEP
 desc:A small blue lizard, creeping half-heartedly around with eyes half-shut.
+
+name:night lizard
+base:reptile
+color:b
+speed:110
+hit-points:18
+hearing:20
+smell:20
+armor-class:19
+sleepiness:30
+depth:7
+rarity:2
+experience:35
+blow:BITE:HURT:1d6
+blow:BITE:HURT:1d6
+desc:It is a black lizard with overlapping scales and a powerful jaw.
 
 name:Icky Sticky Dinosaur
 base:reptile
@@ -4216,7 +4531,7 @@ flags:STUPID | EMPTY_MIND
 innate-freq:3
 spell-power:22
 spells:SPIKE
-desc:A lovely shimmering form, with razor sharp spikes thrusting out in all
+desc:A lovely shimmering form, with razor sharp spikes thrusting out in all 
 desc:directions. It patiently waits to destroy anyone who ventures nearby.
 
 name:death mold
@@ -4311,6 +4626,29 @@ desc:The mightiest of Cyberdemons, their lord and ruler.
 
 ##### p is for HUMANS #####
 
+name:guard
+base:person
+color:u
+speed:110
+hit-points:23
+light:2
+hearing:20
+armor-class:24
+sleepiness:80
+depth:2
+rarity:1
+experience:6
+blow:HIT:HURT:1d7
+blow:HIT:HURT:1d7
+flags:MALE | FEMALE
+flags:DROP_60
+flags:OPEN_DOOR
+friends-base:20:1d3:person
+friends-base:40:1d3:person
+friends-base:80:1d3:person
+friends:50:1d2:Same
+desc:An inexperienced but tough warfighter for hire, specifically one hired by Triax.
+
 # fix desc
 name:mugger
 base:person
@@ -4362,6 +4700,26 @@ friends:50:1:Fang, Slick's dog:bodyguard
 friends:50:1:Grip, Slick's dog:bodyguard
 desc:A thief who likes to think of himself as being in charge of the Stores. You've come in stealing everything that isn't nailed down without his permission, so he's going to try to get it back.
 
+name:robber
+base:person
+color:s
+speed:110
+hit-points:36
+hearing:20
+armor-class:28
+sleepiness:10
+depth:8
+rarity:2
+experience:26
+blow:HIT:HURT:2d4
+blow:HIT:HURT:2d4
+flags:MALE | FEMALE | EVIL
+flags:DROP_1
+flags:OPEN_DOOR | TAKE_ITEM
+innate-freq:8
+spells:SHOT | BLINK
+desc:Carries a handgun and a long knife, and looks very avoidable.
+
 name:Nijel, the Rat
 base:person
 color:Gray50
@@ -4407,6 +4765,75 @@ flags:DROP_60 | DROP_40 | DROP_20
 flags:OPEN_DOOR | SMART | SPIRIT | TAKE_ITEM
 flags:FEMALE | SPECIAL_GEN | QUESTOR
 
+name:sergeant
+base:person
+color:u
+speed:110
+hit-points:54
+light:2
+hearing:20
+armor-class:51
+sleepiness:70
+depth:12
+rarity:1
+experience:40
+blow:HIT:HURT:3d5
+blow:HIT:HURT:3d5
+flags:MALE | FEMALE
+flags:DROP_1
+flags:OPEN_DOOR
+innate-freq:10
+spells:SHOT
+friends:50:1d3:guard
+friends:50:1d2:Same
+desc:An experienced member of Triax's forces.
+
+name:pickpocket
+base:person
+color:b
+speed:115
+hit-points:62
+hearing:20
+armor-class:48
+sleepiness:5
+depth:16
+rarity:2
+experience:50
+blow:HIT:HURT:2d4
+blow:HIT:HURT:2d4
+blow:TOUCH:EAT_ITEM
+flags:MALE | FEMALE | EVIL
+flags:DROP_1
+flags:OPEN_DOOR | TAKE_ITEM
+innate-freq:8
+spells:SHOT
+drop:card:blinking:70:2:6
+friends:50:1d2:robber
+friends:50:1d2:Same
+desc:A suspicious character, eyeing your backpack.
+
+name:thief
+base:person
+color:b
+speed:120
+hit-points:75
+hearing:20
+armor-class:45
+sleepiness:5
+depth:23
+rarity:2
+experience:110
+blow:HIT:HURT:2d8
+blow:HIT:HURT:2d8
+blow:HIT:EAT_GOLD:4d4
+blow:HIT:EAT_ITEM:4d4
+flags:MALE | FEMALE | EVIL
+flags:DROP_2
+flags:OPEN_DOOR | TAKE_ITEM
+innate-freq:4
+spells:SHOT
+desc:A thief of great skill and shifty speed.
+
 name:stormtrooper cadet
 base:person
 color:CadetBlue
@@ -4420,13 +4847,58 @@ rarity:3
 experience:300
 blow:HIT:HURT:2d6
 blow:HIT:HURT:2d6
-flags:MALE | FEMALE | EVIL | SPIRIT
+flags:MALE | FEMALE | EVIL
 flags:DROP_20 | CONFUSED
 flags:OPEN_DOOR
 spell-freq:4
 spells:BO_PLAS
 friends:20:1d2:stormtrooper cadet
 desc:An evil enforcer in training. Wearing the Imperial stormtroopers' usual clumsy white full body armor marked with the "training wheels" - concentric blue circles on the chest and back - that identify the wearer as being a new recruit. 
+
+name:assassin
+base:person
+color:Gray25
+speed:120
+hit-points:85
+hearing:20
+armor-class:72
+sleepiness:10
+depth:32
+rarity:2
+experience:300
+blow:HIT:POISON:3d4
+blow:HIT:LOSE_STR:3d4
+blow:HIT:LOSE_STR:3d4
+flags:MALE | FEMALE | EVIL
+flags:DROP_1
+flags:OPEN_DOOR
+flags:NO_CONF | NO_SLEEP
+friends:50:1d1:bandit
+desc:Clothed in black, following the shadows, moving silently yet with blinding speed.
+
+name:bandit
+base:person
+color:b
+speed:130
+hit-points:99
+hearing:20
+armor-class:45
+sleepiness:5
+depth:34
+rarity:2
+experience:350
+blow:HIT:HURT:2d8
+blow:HIT:HURT:3d4
+blow:HIT:EAT_GOLD:4d4
+blow:HIT:EAT_ITEM:4d5
+flags:MALE | FEMALE | EVIL
+flags:DROP_2
+flags:OPEN_DOOR | TAKE_ITEM
+innate-freq:10
+spell-freq:6
+spells:SHOT | BLINK | TRAPS
+friends:50:1d1:assassin
+desc:Cool and confident, fast and lithe; protect your possessions quickly!
 
 name:stormtrooper
 base:person
@@ -4925,6 +5397,60 @@ flags:FORCE_SLEEP
 flags:SMART
 
 ##### R is for ROBOTS #####
+
+name:talky toaster
+base:robot
+color:OrangeRed
+speed:105
+hit-points:14
+hearing:10
+armor-class:10
+sleepiness:10
+depth:8
+rarity:1
+blow:HIT:FIRE:1d6
+blow:HIT:ELEC:1d6
+blow:TOUCH:EAT_FOOD
+spell-freq:3
+spells:BR_FIRE
+flags:SMART | METAL
+desc:The Talky Toaster has extraordinary intelligence, but is handicapped by a complete obsession with bread and toasting. Unfortunately that has resulted in it wanting to toast you.
+
+name:talky freezer
+base:robot
+color:SkyBlue
+speed:100
+hit-points:150
+hearing:10
+armor-class:10
+sleepiness:10
+depth:16
+rarity:1
+blow:CRUSH:COLD:1d6
+blow:TOUCH:EAT_FOOD
+spell-power:8
+spell-freq:3
+spells:BR_COLD
+flags:SMART | METAL
+desc:The Talky Freezer has extraordinary intelligence, but is handicapped by a complete obsession with ice and freezing. Unfortunately that has resulted in it wanting to turn you into a popsicle.
+
+name:talky microwave
+base:robot
+color:Light Yellow
+speed:110
+hit-points:90
+hearing:10
+armor-class:10
+sleepiness:10
+depth:21
+rarity:1
+blow:CRUSH:ELEC:1d20
+blow:TOUCH:EAT_FOOD
+spell-power:8
+spell-freq:3
+spells:BR_RADI
+flags:SMART | METAL
+desc:The Talky Microwave has extraordinary intelligence, but is handicapped by a complete obsession with defrosting and cooking. Unfortunately that has resulted in it wanting to cook you.
 
 name:Miniac, the Crusher
 base:robot
@@ -6024,7 +6550,6 @@ spells:BR_ELEC
 desc:This elemental creature is power incarnate; it looks like a huge polar bear with a huge gaping maw instead of a head.
 
 
-
 ##### Y is for YETI #####
 # or SASQUATCH
 # (should these be X's?)
@@ -6065,606 +6590,3 @@ blow:CLAW:HURT:1d10
 blow:BITE:HURT:2d8
 desc:A tall shaggy, furry humanoid, it could call the yeti brother.
 
-
-
-
-
-### Dungeon level 1 ###
-
-name:floating eye
-base:eye
-color:o
-speed:110
-hit-points:11
-hearing:2
-armor-class:7
-sleepiness:10
-depth:1
-rarity:1
-experience:1
-blow:GAZE:PARALYZE
-flags:NEVER_MOVE
-flags:HURT_LIGHT | NO_FEAR
-desc:A disembodied eye, floating a few feet above the ground.
-
-### Dungeon level 2 ###
-
-name:soldier
-base:person
-color:u
-speed:110
-hit-points:23
-light:2
-hearing:20
-armor-class:24
-sleepiness:80
-depth:2
-rarity:1
-experience:6
-blow:HIT:HURT:1d7
-blow:HIT:HURT:1d7
-flags:MALE
-flags:DROP_60
-flags:OPEN_DOOR
-friends-base:20:1d3:person
-friends-base:40:1d3:person
-friends-base:80:1d3:person
-friends:50:1d2:Same
-desc:An inexperienced but tough warrior.
-
-### Dungeon level 3 ###
-
-### Dungeon level 4 ###
-
-name:creeping copper coins
-plural:piles of creeping copper coins
-base:creeping coins
-color:u
-speed:100
-hit-points:32
-hearing:3
-armor-class:28
-sleepiness:10
-depth:4
-rarity:3
-experience:9
-blow:HIT:HURT:1d4
-blow:TOUCH:POISON:2d4
-desc:It appears to be a pile of copper coins.
-mimic:cash:small change
-
-### Dungeon level 6 ###
-
-name:creeping silver
-plural:piles of creeping silver
-base:creeping coins
-color:s
-speed:100
-hit-points:54
-hearing:4
-armor-class:36
-sleepiness:10
-depth:6
-rarity:3
-experience:18
-blow:HIT:HURT:1d6
-blow:TOUCH:POISON:2d6
-desc:It appears to be a pile of silver nuggets.
-mimic:cash:silver nuggets
-
-### Dungeon level 7 ###
-
-name:bloodshot eye
-base:eye
-color:r
-speed:110
-hit-points:45
-hearing:2
-armor-class:7
-sleepiness:10
-depth:7
-rarity:3
-experience:15
-blow:GAZE:BLIND:2d6
-flags:NEVER_MOVE
-flags:HURT_LIGHT | NO_FEAR
-spell-freq:7
-desc:A disembodied eye, bloodshot and nasty.
-
-name:night lizard
-base:reptile
-color:b
-speed:110
-hit-points:18
-hearing:20
-smell:20
-armor-class:19
-sleepiness:30
-depth:7
-rarity:2
-experience:35
-blow:BITE:HURT:1d6
-blow:BITE:HURT:1d6
-desc:It is a black lizard with overlapping scales and a powerful jaw.
-
-### Dungeon level 8 ###
-
-name:ruffian
-base:person
-color:s
-speed:110
-hit-points:36
-hearing:20
-armor-class:28
-sleepiness:10
-depth:8
-rarity:2
-experience:26
-blow:HIT:HURT:2d4
-blow:HIT:HURT:2d4
-flags:MALE | EVIL
-flags:DROP_1
-flags:OPEN_DOOR | TAKE_ITEM
-innate-freq:8
-spells:SHOT | WHIP
-desc:An uncultured brute with a club, a sling and a whip.
-
-### Dungeon level 10 ###
-
-name:creeping gold coins
-plural:piles of creeping gold coins
-base:creeping coins
-color:y
-speed:100
-hit-points:81
-hearing:5
-armor-class:43
-sleepiness:10
-depth:10
-rarity:3
-experience:32
-blow:HIT:HURT:2d5
-blow:TOUCH:POISON:3d5
-flags:IM_ACID
-desc:It appears to be a pile of gold coins, until it starts crawling towards
-desc: you on tiny legs.
-mimic:cash:rare coins
-
-### Dungeon level 12 ###
-
-name:warrior
-base:person
-color:u
-speed:110
-hit-points:54
-light:2
-hearing:20
-armor-class:51
-sleepiness:70
-depth:12
-rarity:1
-experience:40
-blow:HIT:HURT:3d5
-blow:HIT:HURT:3d5
-flags:MALE
-flags:DROP_1
-flags:OPEN_DOOR
-innate-freq:10
-spells:BOLT
-friends:50:1d2:Brigand
-friends:50:1d2:Same
-desc:A warrior of considerable skill.
-
-name:stegocentipede
-base:centipede
-color:u
-speed:120
-hit-points:59
-hearing:12
-smell:20
-armor-class:36
-sleepiness:30
-depth:12
-rarity:2
-experience:40
-#weight:90kg
-blow:BITE:HURT:2d4
-blow:BITE:HURT:2d4
-blow:STING:HURT:2d4
-flags:BASH_DOOR | KILL_BODY | RAND_25
-desc:It is a vast armoured centipede with massive mandibles and a spiked tail. Dozens 
-desc:of legs carry it towards you.
-
-### Dungeon level 13 ###
-
-name:creeping platinum
-plural:piles of creeping platinum
-base:creeping coins
-color:B
-speed:110
-hit-points:90
-hearing:5
-armor-class:60
-sleepiness:10
-depth:13
-rarity:3
-experience:45
-blow:HIT:HURT:2d5
-blow:TOUCH:POISON:3d5
-flags:IM_ACID
-desc:It appears to be a pile of sentient platinum bars that doesn't like being
-desc: picked up.
-mimic:cash:platinum bars
-
-### Dungeon level 14 ###
-
-name:lurker
-base:lurker
-color:w
-speed:110
-hit-points:176
-hearing:30
-armor-class:30
-sleepiness:10
-depth:14
-rarity:3
-experience:80
-blow:HIT:HURT:1d8
-blow:HIT:HURT:1d8
-desc:A strange creature that merges with the dungeon floor, trapping its
-desc: victims by enveloping them within its perfectly disguised form.
-
-### Dungeon level 16 ###
-
-name:rogue
-base:person
-color:b
-speed:115
-hit-points:62
-hearing:20
-armor-class:48
-sleepiness:5
-depth:16
-rarity:2
-experience:50
-blow:HIT:HURT:2d4
-blow:HIT:HURT:2d4
-blow:TOUCH:EAT_ITEM
-flags:MALE | EVIL
-flags:DROP_1
-flags:OPEN_DOOR | TAKE_ITEM
-innate-freq:8
-spells:SHOT
-drop:card:blinking:70:2:6
-friends:50:1d2:warrior
-friends:50:1d2:Same
-desc:He is eyeing your backpack.
-
-### Dungeon level 21 ###
-
-name:card mimic
-base:mimic
-glyph:?
-color:w
-speed:110
-hit-points:75
-hearing:30
-armor-class:48
-sleepiness:0
-depth:21
-rarity:3
-experience:70
-blow:HIT:POISON:3d4
-blow:HIT:POISON:3d4
-blow:HIT:HURT:2d3
-blow:HIT:HURT:2d3
-flags:HURT_FIRE
-spell-freq:5
-spells:BO_FIRE
-spells:S_MONSTER
-spells:BLIND | WOUND | CONF | SCARE
-desc:A strange creature that disguises itself as a discarded card to lure
-desc: unsuspecting adventurers within reach of its venomous claws.
-mimic:card:extermination
-mimic:card:mass extermination
-mimic:card:vertical teleport
-mimic:card:portal
-mimic:card:acquisition
-mimic:card:mass acquisition
-mimic:card:disinto
-
-### Dungeon level 23 ###
-
-name:brigand
-base:person
-color:b
-speed:120
-hit-points:75
-hearing:20
-armor-class:45
-sleepiness:5
-depth:23
-rarity:2
-experience:110
-blow:HIT:HURT:2d8
-blow:HIT:HURT:2d8
-blow:HIT:EAT_GOLD:4d4
-blow:HIT:EAT_ITEM:4d4
-flags:MALE | EVIL
-flags:DROP_2
-flags:OPEN_DOOR | TAKE_ITEM
-innate-freq:4
-spells:SHOT
-desc:A thief of great power and shifty speed.
-
-### Dungeon level 25 ###
-
-name:carrion crawler
-base:centipede
-color:o
-speed:110
-hit-points:130
-hearing:15
-smell:20
-armor-class:60
-sleepiness:20
-depth:25
-rarity:2
-experience:60
-blow:STING:PARALYZE:2d6
-blow:STING:PARALYZE:2d6
-#weight:40kg
-flags:RAND_25 | BASH_DOOR
-flags:IM_POIS
-friends:100:2d4:Same
-desc:A hideous centipede covered in slime and with glowing tentacles around its
-desc: head.
-
-### Dungeon level 26 ###
-
-name:giant firefly
-plural:giant fireflies
-base:insect
-color:r
-speed:120
-hit-points:5
-light:2
-hearing:8
-armor-class:21
-sleepiness:10
-depth:26
-rarity:4
-experience:4
-blow:BITE:BLIND:1d2
-desc:Clouds of these monsters light up the dungeon - so brightly that you can
-desc: barely see through them.
-
-name:displacer beast
-base:feline
-color:D
-speed:110
-hit-points:138
-hearing:35
-smell:30
-armor-class:150
-sleepiness:10
-depth:26
-rarity:2
-experience:100
-blow:BITE:HURT:2d8
-blow:HIT:HURT:1d10
-blow:HIT:HURT:1d10
-blow:HIT:HURT:1d10
-flags:INVISIBLE
-flags:BASH_DOOR
-desc:It is a huge black panther, clubbed tentacles sprouting from its shoulders.
-
-name:giant fire tick
-base:insect
-color:R
-speed:110
-hit-points:72
-light:2
-hearing:14
-armor-class:120
-sleepiness:20
-depth:26
-rarity:1
-experience:90
-blow:BITE:FIRE:3d6
-flags:ANIMAL | WEIRD_MIND
-flags:RAND_25
-flags:IM_FIRE
-innate-freq:20
-spells:SPIT
-desc:It is smoking and burning with great heat.
-
-### Dungeon level 27 ###
-
-name:creeping unobtainium wafers
-plural:piles of creeping unobtainium
-base:creeping coins
-color:G
-speed:120
-hit-points:260
-hearing:5
-armor-class:60
-sleepiness:10
-depth:27
-rarity:3
-experience:60
-blow:BITE:POISON:3d4
-blow:TOUCH:POISON:3d5
-blow:HIT:HURT:1d12
-blow:HIT:HURT:1d12
-flags:IM_ACID
-desc:It appears to be a pile of unobtainium wafers, slithering
-desc: toward you on lots of tiny legs.
-mimic:cash:unobtainium wafers
-
-### Dungeon level 32 ###
-
-name:serpent of the brownlands
-plural:serpents of the brownlands
-base:snake
-color:u
-speed:120
-hit-points:150
-hearing:10
-armor-class:90
-sleepiness:99
-depth:32
-rarity:2
-experience:300
-blow:SPIT:BLIND:1d6
-blow:BITE:ACID:2d12
-blow:BITE:POISON:2d12
-blow:CRUSH:HURT:4d4
-flags:RAND_25 | KILL_BODY
-spell-freq:8
-spells:HOLD | BLIND | CONF
-desc:A great serpent, with coils of steel, a lunge faster than the eye can see,
-desc: and fangs that drip with acidic poison.  Its eyes are mesmerizing.
-
-name:assassin
-base:person
-color:M
-speed:120
-hit-points:85
-hearing:20
-armor-class:72
-sleepiness:10
-depth:32
-rarity:2
-experience:300
-blow:HIT:POISON:3d4
-blow:HIT:LOSE_STR:3d4
-blow:HIT:LOSE_STR:3d4
-flags:MALE | EVIL
-flags:DROP_1
-flags:OPEN_DOOR
-flags:NO_CONF | NO_SLEEP
-friends:50:1d1:Master thief
-desc:Clothed in black, following the shadows, moving silently yet with blinding speed.
-
-### Dungeon level 34 ###
-
-name:master thief
-plural:master thieves
-base:person
-color:b
-speed:130
-hit-points:99
-hearing:20
-armor-class:45
-sleepiness:5
-depth:34
-rarity:2
-experience:350
-blow:HIT:HURT:2d8
-blow:HIT:HURT:3d4
-blow:HIT:EAT_GOLD:4d4
-blow:HIT:EAT_ITEM:4d5
-flags:MALE | EVIL
-flags:DROP_2
-flags:OPEN_DOOR | TAKE_ITEM
-innate-freq:10
-spell-freq:6
-spells:SHOT | BLINK | TRAPS
-friends:50:1d1:assassin
-desc:Cool and confident, fast and lithe; protect your possessions quickly!
-
-### Dungeon level 35 ###
-
-name:invisible stalker
-base:elemental
-color:y
-speed:130
-hit-points:124
-hearing:20
-armor-class:69
-sleepiness:10
-depth:35
-rarity:3
-experience:300
-blow:HIT:HURT:1d6
-blow:HIT:HURT:1d6
-blow:HIT:HURT:1d6
-flags:EVIL | COLD_BLOOD | INVISIBLE
-flags:RAND_50 | OPEN_DOOR | BASH_DOOR
-flags:IM_ELEC
-desc:It is impossible to define its form but its violence is legendary.
-
-### Dungeon level 36 ###
-
-name:trapper
-base:lurker
-color:w
-speed:120
-hit-points:528
-hearing:30
-armor-class:90
-sleepiness:10
-depth:36
-rarity:3
-experience:580
-blow:HIT:HURT:3d8
-blow:HIT:HURT:3d8
-blow:HIT:PARALYZE:15d1
-blow:HIT:PARALYZE:15d1
-desc:A larger cousin of the lurker, this creature traps unsuspecting victims and
-desc: paralyzes them, to be slowly digested later.
-
-### Dungeon level 38 ###
-
-name:will o' the wisp
-base:elemental
-color:W
-speed:130
-hit-points:176
-light:2
-hearing:30
-armor-class:180
-sleepiness:0
-depth:38
-rarity:4
-experience:500
-blow:HIT:HURT:1d9
-blow:HIT:HURT:1d9
-blow:HIT:HALLU:1d9
-flags:INVISIBLE | SMART
-flags:RAND_50 | PASS_WALL
-flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE
-flags:FORCE_SLEEP
-spell-freq:2
-spells:BLINK | WOUND | CONF | TPORT
-desc:A strange ball of glowing light.  It disappears and reappears and seems to
-desc: draw you to it.  You seem somehow compelled to stand still and watch its
-desc: strange dancing motion.
-
-name:abyss spider
-base:spider
-color:G
-speed:120
-hit-points:264
-hearing:20
-armor-class:54
-sleepiness:50
-depth:38
-rarity:3
-experience:250
-blow:CLAW:HURT:2d8
-blow:STING:POISON:2d6
-blow:STING:POISON:2d6
-blow:BITE:CONFUSE:1d3
-flags:EVIL | ANIMAL
-flags:WEIRD_MIND | HURT_LIGHT | IM_POIS
-innate-freq:6
-spell-freq:5
-spells:WEAVE | CONF | SLOW | BLIND
-spells:BR_POIS | BR_DARK
-spell-power:10
-desc:A massive spider, heaving the bloated bag of its body between great
-desc: spined legs.
-
-### Dungeon level 48 ###

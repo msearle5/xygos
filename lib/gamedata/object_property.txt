@@ -488,7 +488,6 @@ type-mult:digger:0
 type-mult:gun:0
 type-mult:soft armor:0
 type-mult:hard armor:0
-type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
@@ -508,7 +507,6 @@ type-mult:digger:0
 type-mult:gun:0
 type-mult:soft armor:0
 type-mult:hard armor:0
-type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
@@ -528,7 +526,6 @@ type-mult:digger:0
 type-mult:gun:0
 type-mult:soft armor:0
 type-mult:hard armor:0
-type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
@@ -633,7 +630,6 @@ type-mult:digger:0
 type-mult:gun:0
 type-mult:soft armor:0
 type-mult:hard armor:0
-type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
@@ -653,7 +649,6 @@ type-mult:digger:0
 type-mult:gun:0
 type-mult:soft armor:0
 type-mult:hard armor:0
-type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
@@ -673,7 +668,6 @@ type-mult:digger:0
 type-mult:gun:0
 type-mult:soft armor:0
 type-mult:hard armor:0
-type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
@@ -693,7 +687,6 @@ type-mult:digger:0
 type-mult:gun:0
 type-mult:soft armor:0
 type-mult:hard armor:0
-type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
@@ -737,7 +730,6 @@ type-mult:digger:0
 type-mult:gun:0
 type-mult:soft armor:0
 type-mult:hard armor:0
-type-mult:dragon armor:0
 type-mult:cloak:0
 type-mult:shield:0
 type-mult:helm:0
@@ -753,7 +745,6 @@ power:5
 type-mult:light:2
 type-mult:soft armor:2
 type-mult:hard armor:2
-type-mult:dragon armor:2
 type-mult:cloak:2
 type-mult:shield:2
 type-mult:helm:2

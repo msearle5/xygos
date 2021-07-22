@@ -1949,6 +1949,14 @@ static errr finish_parse_monster(struct parser *p) {
 					fprintf(stderr,"Monster %s has unknown grow '%s'\n", race->name, race->grow);
 				}
 			}
+			/* WHIP, STING and SPIT.
+			 * These all require an elemental attack as the last blow
+			 */
+			if (rsf_has(race->spell_flags, RSF_SPIT) || rsf_has(race->spell_flags, RSF_WHIP) || rsf_has(race->spell_flags, RSF_STING)) {
+				if ((attacks < 1) || (!race->blow[0].effect->lash_type)) {
+					fprintf(stderr,"Monster %s has SPIT/WHIP/STING spell, but the last blow's effect doesn't have a lash type defined", race->name);
+				}
+			}
 		}
 	}
 
