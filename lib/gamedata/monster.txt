@@ -1025,7 +1025,6 @@ blow:GAZE:TERRIFY
 blow:GAZE:PARALYZE
 blow:BITE:POISON:6d8
 flags:BASH_DOOR | MOVE_BODY | SMART | UNIQUE | ATTR_MULTI
-desc:All glory to the Hypnotoad! All glory to the Hypnotoad! All glory to the Hypnotoad!
 spell-freq:10
 friends-base:100:1d1:person:servant
 friends-base:80:1d2:person:servant
@@ -1035,6 +1034,7 @@ friends-base:80:1d2:person:servant
 friends-base:80:1d2:person:servant
 friends-base:80:1d2:person:servant
 spells:BRAIN_SMASH | MIND_BLAST
+desc:All glory to the Hypnotoad! All glory to the Hypnotoad! All glory to the Hypnotoad!
 
 
 ##### a is for ANT #####
@@ -1639,8 +1639,6 @@ base:centipede
 color:White
 depth:37
 rarity:2
-desc:Twenty feet long and carnivorous, gleaming like silver and deadly fast.  It has
-desc:dozens of legs; all move in unison as it crawls this way and that.
 speed:110
 hit-points:130
 hearing:12
@@ -1652,6 +1650,8 @@ flags:KILL_BODY
 #weight:80kg
 flags:RAND_25 | METAL
 flags:SMART | WEIRD_MIND
+desc:Twenty feet long and carnivorous, gleaming like silver and deadly fast.  It has
+desc:dozens of legs; all move in unison as it crawls this way and that.
 
 
 ##### C is for DOGGIES ####
@@ -1734,7 +1734,6 @@ base:canine
 color:Gray25
 depth:21
 rarity:2
-desc:It is a large wolf with eyes full of cunning.
 speed:110
 hit-points:27
 armor-class:12
@@ -1746,6 +1745,7 @@ flags:EVIL
 flags:RAND_25
 friends:95:3d4:Same
 flags:SMART
+desc:It is a large wolf with eyes full of cunning.
 
 name:alpha wolf
 plural:alpha wolves
@@ -1753,8 +1753,6 @@ base:canine
 color:Gray25
 depth:26
 rarity:5
-desc:Leader of a pack of slavering dire-wolves. A wolf that shouldn't
-desc:be released any time soon...
 speed:115
 hit-points:42
 armor-class:20
@@ -1771,6 +1769,8 @@ flags:NO_FEAR
 flags:IM_COLD | IM_ACID
 flags:SMART
 flags:OPEN_DOOR
+desc:Leader of a pack of slavering dire-wolves. A wolf that shouldn't
+desc:be released any time soon...
 
 
 ##### F is for FLY #####
@@ -1916,7 +1916,6 @@ base:feline
 color:Yellow
 depth:47
 rarity:2
-desc:The biggest lion you've ever seen. Fast, lithe, hungry and coming your way.
 speed:110
 hit-points:150
 rarity:5
@@ -1926,6 +1925,7 @@ sleepiness:20
 blow:CLAW:WOUND:2d10
 blow:BITE:WOUND:2d32
 flags:SMART
+desc:The biggest lion you've ever seen. Fast, lithe, hungry and coming your way.
 
 
 ##### G is for GRUE #####
@@ -1973,10 +1973,10 @@ armor-class:10
 sleepiness:30
 blow:HIT:HURT:6d1
 flags:STUPID | WEIRD_MIND | ORTHOGONAL | OPEN_DOOR
-desc:A young Bogon plodding about the galaxy.
 spell-freq:25
 spells:GROW
 friends:20:1d2:bogling
+desc:A young Bogon plodding about the galaxy.
 
 name:bogon
 base:humanoid
@@ -2174,8 +2174,6 @@ base:hologram
 color:Blue
 depth:8
 rarity:1
-desc:If it wasn't for the silver H on the forehead, you wouldn't know 
-desc:that there is nothing there but light and sound.
 hit-points:1
 hearing:10
 armor-class:150
@@ -2183,6 +2181,8 @@ sleepiness:30
 blow:GAZE:LIGHT:1d11
 blow:GAZE:SOUND:2d4
 flags:EVASIVE | FLYING | COLD_BLOOD | PASS_WALL  IM_LIGHT | SMART
+desc:If it wasn't for the silver H on the forehead, you wouldn't know 
+desc:that there is nothing there but light and sound.
 
 name:Inky
 base:hologram
@@ -2325,13 +2325,13 @@ base:insect
 color:BurntUmber
 depth:1
 rarity:2
-desc:A swarm of little stinging insects.
 speed:105
 hit-points:3
 armor-class:8
 sleepiness:10
 blow:STING:HURT:1d2
 flags:FLYING | RAND_100 | EMPTY_MIND | MULTIPLY
+desc:A swarm of little stinging insects.
 
 name:pill bug
 base:insect
@@ -2356,7 +2356,6 @@ base:insect
 color:Goldenrod
 depth:3
 rarity:4
-desc:A huge bug, thrashing blindly about, but there's a spark of malign intelligence in its red eyes...
 grow:network bug
 hit-points:1
 armor-class:30
@@ -2366,6 +2365,7 @@ flags:ORTHOGONAL | SMART | WEIRD_MIND | RAND_50
 spell-freq:20
 spells:GROW
 friends:90:2d3:Same
+desc:A huge bug, thrashing blindly about, but there's a spark of malign intelligence in its red eyes...
 
 name:white louse
 plural:white lice
@@ -2422,6 +2422,27 @@ spells:MULTIPLY_GROW
 deathspells:FLAMES3
 desc:A huge nest buzzing full of wasps.
 
+name:software bug
+base:insect
+color:Violet
+depth:8
+rarity:16
+grow:network bug
+speed:100
+hit-points:1
+armor-class:30
+sleepiness:1
+blow:BITE:CONFUSE:1d2
+blow:BITE:SLOW:1d2
+flags:INVISIBLE | ATTR_MULTI | EVASIVE | MULTIPLY
+flags:ORTHOGONAL | RAND_25 | RAND_50 | SMART | WEIRD_MIND
+deathspells:POP
+spell-freq:10
+spell-power:10
+spells:GROW | RAGE
+desc:Few can track one down, fewer still have any hope of destroying one, but all
+desc:minds are prey for this terrifying creature of pure thought.
+
 name:black louse
 plural:black lice
 base:insect
@@ -2474,6 +2495,49 @@ flags:MULTIPLY
 flags:IM_POIS
 desc:It is moving slowly towards you.
 
+name:network bug
+base:insect
+color:Light Blue
+depth:11
+rarity:6
+grow:matrix bug
+speed:110
+hit-points:12
+hearing:30
+armor-class:10
+sleepiness:1
+blow:STING:ELEC:1d10
+flags:MULTIPLY
+deathspells:POP
+flags:ORTHOGONAL | EVASIVE | INVISIBLE
+flags:SMART | WEIRD_MIND
+friends:90:2d3:Same
+spell-freq:5
+spell-power:8
+spells:BLINK | TPORT | GROW
+desc:Hidden behind the walls, moving fast as lightning, there are few creatures more 
+desc:elusive.
+
+name:arc bug
+base:insect
+color:Yellow
+depth:13
+rarity:3
+grow:lightning bug
+speed:110
+hit-points:15
+hearing:30
+armor-class:10
+sleepiness:1
+blow:STING:ELEC:1d12
+blow:BITE:HURT:1d6
+flags:RAND_25 | EMPTY_MIND
+spells:GROW
+spell-freq:3
+spell-power:5
+spells:BE_ELEC
+desc:A crawling insect with a glowing, waving stinger. Sparks snap around it. 
+
 name:giant flea
 base:insect
 color:s
@@ -2525,13 +2589,31 @@ flags:MULTIPLY | FLYING | RAND_25 | RAND_50
 flags:MOVE_BODY
 desc:A giant buzzing wasp, its stinger drips venom.
 
+name:lightning bug
+base:insect
+color:Light Yellow
+depth:25
+rarity:3
+grow:iridescent beetle
+speed:115
+hit-points:35
+hearing:30
+armor-class:15
+sleepiness:1
+light:1
+blow:STING:ELEC:1d20
+blow:BITE:HURT:1d10
+flags:RAND_25 | EMPTY_MIND
+spells:BR_ELEC | GROW
+spell-freq:3
+spell-power:60
+desc:A brightly shining insect with a threatening stinger, surrounded by crackling sparks.
+
 name:shimmering hornet
 base:insect
 color:Violet
 depth:28
 rarity:2
-desc:It resembles a Beraban wasp, but is mainly purple with green wings. It's also
-desc:bigger, meaner and faster...
 grow:demon hornet
 speed:110
 hit-points:30
@@ -2543,13 +2625,14 @@ flags:FLYING | EVASIVE | RAND_25 | RAND_50 | WEIRD_MIND
 friends:90:2d3:Same
 deathspells:FLAMES
 flags:WEIRD_MIND
+desc:It resembles a Beraban wasp, but is mainly purple with green wings. It's also
+desc:bigger, meaner and faster...
 
 name:hornets' nest
 base:fullgrid
 color:Violet
 depth:30
 rarity:4
-desc:A hornets' nest taller than you, and wider. A loud drone tells you it's occupied.
 grow:shimmering hornet
 speed:120
 rarity:4
@@ -2561,13 +2644,13 @@ flags:NEVER_MOVE | HURT_FIRE | WEIRD_MIND | NEVER_BLOW
 innate-freq:4
 deathspells:FLAMES3
 spells:MULTIPLY_GROW
+desc:A hornets' nest taller than you, and wider. A loud drone tells you it's occupied.
 
 name:demon hornet
 base:insect
 color:Tomato
 depth:40
 rarity:2
-desc:Wopse bad. Big big red wopse worser.
 speed:120
 hit-points:46
 armor-class:90
@@ -2579,6 +2662,7 @@ flags:FLYING | EVASIVE | RAND_25 | RAND_50 | WEIRD_MIND
 spells:BO_FIRE
 deathspells:FLAMES
 friends:90:2d3:Same
+desc:Wopse bad. Big big red wopse worser.
 
 name:huge hornets' nest
 base:fullgrid
@@ -2795,7 +2879,6 @@ base:jelly
 color:Orange
 depth:12
 rarity:5
-desc:A strange jelly-like thing, covered in discoloured blotches, anchored to the floor but able to extend a blobby protuberance towards you.
 grow:ochre jelly
 speed:110
 hit-points:35
@@ -2812,6 +2895,7 @@ flags:NO_FEAR | NO_CONF | NO_SLEEP
 flags:IM_POIS | IM_ACID
 flags:HURT_LIGHT
 flags:STUPID | EMPTY_MIND
+desc:A strange jelly-like thing, covered in discoloured blotches, anchored to the floor but able to extend a blobby protuberance towards you.
 
 name:ochre jelly
 plural:ochre jellies
@@ -2887,7 +2971,6 @@ base:jelly
 color:SkyBlue
 depth:33
 rarity:3
-desc:A mound of strange, quivering blue jelly. It sizzles and spits blue sparks.
 grow:acidic cytoplasm
 hit-points:140
 hearing:12
@@ -2900,13 +2983,13 @@ flags:NO_FEAR | NO_CONF | NO_SLEEP
 flags:IM_POIS | IM_ELEC
 flags:STUPID | EMPTY_MIND
 flags:OPEN_DOOR
+desc:A mound of strange, quivering blue jelly. It sizzles and spits blue sparks.
 
 name:acidic cytoplasm
 base:jelly
 color:Slate
 depth:46
 rarity:5
-desc:A disgusting animated blob of destruction.  Flee its gruesome hunger!
 speed:120
 hit-points:210
 hearing:12
@@ -2922,6 +3005,7 @@ flags:NO_FEAR | NO_CONF | NO_SLEEP
 flags:IM_POIS | IM_ACID
 flags:STUPID | EMPTY_MIND
 flags:OPEN_DOOR
+desc:A disgusting animated blob of destruction.  Flee its gruesome hunger!
 
 #### J is for SNAKE ####
 #### Really ############
@@ -2942,9 +3026,7 @@ base:snake
 color:White
 depth:1
 rarity:1
-desc:A legless reptile covered in overlapping scales.  It is milky-white in
-desc:color, eight feet long, and well-protected.
-grow:python
+grow:ball python
 speed:100
 rarity:10
 hit-points:12
@@ -2956,13 +3038,14 @@ flags:RAND_50
 flags:HURT_COLD
 flags:SMART | WEIRD_MIND
 flags:PASS_DOOR
+desc:A legless reptile covered in overlapping scales.  It is milky-white in
+desc:color, a few feet long, and well-protected.
 
 name:pinsnake
 base:snake
 color:BurntUmber
 depth:1
 rarity:5
-desc:A tiny, but venomous snake.
 grow:viper
 speed:100
 rarity:10
@@ -2974,6 +3057,7 @@ blow:BITE:POISON:2d2
 flags:HURT_COLD
 flags:SMART | WEIRD_MIND
 flags:PASS_DOOR
+desc:A tiny, but venomous snake.
 
 # Vipers may not be blue-green IRL. It's the same with others - there are a lot of snakes,
 # and they should be easily distinguishable.
@@ -2984,7 +3068,6 @@ base:snake
 color:Teal
 depth:2
 rarity:1
-desc:A small blue-green venomous snake.
 grow:rattlesnake
 hit-points:12
 hearing:4
@@ -2995,13 +3078,13 @@ flags:RAND_50
 flags:HURT_COLD
 flags:SMART | WEIRD_MIND
 flags:PASS_DOOR
+desc:A small blue-green venomous snake.
 
-name:python
+name:ball python
 base:snake
 color:Yellow
 depth:3
 rarity:1
-desc:One of the smaller pythons; it is about ten feet long and quite muscular.
 grow:boa
 speed:105
 hit-points:22
@@ -3012,6 +3095,7 @@ blow:CONSTRICT:HURT:2d4
 flags:RAND_25
 flags:HURT_COLD
 flags:SMART | WEIRD_MIND
+desc:One of the smaller pythons; it is about six feet long and quite muscular.
 
 name:large white snake
 base:snake
@@ -3045,9 +3129,10 @@ blow:CRUSH:HURT:1d8
 flags:RAND_25
 desc:It is about ten feet long.
 
-name:copperhead snake
+name:copperhead
 base:snake
 color:Copper
+grow:copper anaconda
 speed:110
 hit-points:14
 hearing:6
@@ -3056,10 +3141,12 @@ sleepiness:10
 depth:5
 rarity:1
 experience:15
-blow:BITE:POISON:2d4
-flags:RAND_50
-flags:IM_POIS
-desc:It has a copper head and sharp venomous fangs.
+blow:BITE:ELEC:2d4
+flags:SMART | WEIRD_MIND
+flags:RAND_50 | IM_POIS
+flags:IM_ELEC
+flags-off:HURT_COLD
+desc:Long, skinny, smooth dull black with a copper-coloured head. Fast-moving, and looking right at you...
 
 name:rattlesnake
 base:snake
@@ -3088,16 +3175,15 @@ hit-points:20
 hearing:8
 armor-class:30
 sleepiness:40
-blow:BITE:ELEC:1d3
 blow:CONSTRICT:HURT:1d5
+blow:BITE:ELEC:1d3
 flags:RAND_25 | RAND_50
-friends:90:2d3:Same
 flags:IM_ELEC
+flags:SMART | WEIRD_MIND | PASS_DOOR
+flags-off:HURT_COLD
+friends:90:2d3:Same
 spell-power:1
 spells:WHIP
-flags:SMART | WEIRD_MIND
-flags:PASS_DOOR
-flags-off:HURT_COLD
 desc:A long thin electric-blue snake that weaves across the floor faster than 
 desc:the eye can follow. Did you see a spark across its jaws?
 
@@ -3311,6 +3397,7 @@ flags:UNIQUE
 flags:RAND_25
 flags:IM_COLD | IM_POIS
 flags:HURT_FIRE
+flags-off:HURT_COLD
 flags:SMART | WEIRD_MIND
 desc:A snake of extraordinary size, screaming horribly as its great finned head casts about. 
 desc:White, green-barred and inky-fanged, this ancient beast is the last of its kind, 
@@ -3333,13 +3420,13 @@ blow:BITE:ELEC:1d40
 flags:RAND_25
 flags:IM_ELEC
 flags-off:HURT_COLD
-flags:SMART | WEIRD_MIND
+flags:SMART | WEIRD_MIND | ATTR_FLICKER
 desc:Gleaming black coils, hundreds of meters long and as thick as your arm. 
 desc:A bright copper head looks down on you, weaving slowly from side to side and spitting fat blue sparks.
 
 name:laser anaconda
 base:snake
-color:OrangeRed
+color:Red
 depth:71
 rarity:6
 speed:110
@@ -3356,9 +3443,10 @@ spells:BE_LIGHT
 flags:IM_LIGHT
 flags:IM_ELEC
 flags-off:HURT_COLD
-flags:SMART | WEIRD_MIND
+flags:SMART | WEIRD_MIND | ATTR_FLICKER
 desc:Thousands of meters of orange coils stretch far away into the darkness. 
 desc:A glowing red head flicks from side to side like a metronome. Laser pulses blast the rock around you.
+
 
 ##### K is for KILLER BEETLE #####
 
@@ -3735,12 +3823,34 @@ flags:MALE | FEMALE | COLD_BLOOD | WEIRD_MIND | AQUATIC
 flags:RAND_25 | NO_FEAR
 desc:Lemmings hung with weights for their dive from the cliff tops.
 
+name:lurking lemming
+base:lemming
+color:DarkSlateGray
+depth:15
+rarity:4
+grow:hill lemming
+speed:100
+rarity:10
+hit-points:80
+hearing:10
+armor-class:40
+sleepiness:1
+blow:BITE:HURT:2d9
+blow:CLAW:HURT:2d11
+blow:CLAW:HURT:2d11
+flags:COLD_BLOOD
+flags:ATTR_CLEAR
+flags:INVISIBLE
+flags:CHAR_CLEAR
+flags:NO_FEAR | NO_SLEEP
+flags:WEIRD_MIND
+desc:Lurking lemmings hide in the rocks above, then plummet!
+
 name:hill lemming
 base:lemming
 color:ForestGreen
 depth:16
 rarity:2
-desc:Hardy lemmings tumbling from the hilltops.
 grow:cliff lemming
 hit-points:35
 hearing:4
@@ -3752,6 +3862,7 @@ blow:CLAW:HURT:2d9
 flags:RAND_25
 friends:90:2d3:Same
 flags:NO_FEAR | WEIRD_MIND
+desc:Hardy lemmings tumbling from the hilltops.
 
 name:cliff lemming
 base:lemming
@@ -3774,7 +3885,6 @@ base:lemming
 color:AliceBlue
 depth:21
 rarity:2
-desc:A vicious lemming in white vermine coat.
 grow:crevasse lemming
 hit-points:70
 hearing:4
@@ -3787,6 +3897,7 @@ flags:RAND_25
 flags:NO_FEAR
 flags:IM_COLD
 flags:WEIRD_MIND
+desc:A vicious lemming in white vermine coat.
 
 name:master lemming
 base:lemming
@@ -3913,12 +4024,55 @@ flags:WEIRD_MIND
 desc:A great white lemming that seems unstoppable, striking with the speed 
 desc:of a glacier.
 
+name:deep lemming
+base:lemming
+color:Gray25
+depth:34
+rarity:8
+desc:Little black rodents with huge bug-eyes, razory claws and surprising tenacity. They hunt as a pack and together can take prey many times ther size.
+grow:rock lemming
+speed:110
+hit-points:125
+rarity:8
+hearing:40
+armor-class:50
+sleepiness:1
+blow:BITE:HURT:1d6
+blow:CLAW:HURT:2d8
+blow:CLAW:HURT:2d8
+friends:95:3d4:Same
+flags:NO_FEAR | HURT_LIGHT | WEIRD_MIND | GROUP_AI
+
+name:rock lemming
+base:lemming
+color:RawUmber
+depth:37
+rarity:5
+desc:A lemming from deep caves, carrying a shovel and pick-axe, leading the 
+desc:way for others.
+grow:infernal lemming
+hit-points:200
+rarity:5
+hearing:4
+armor-class:60
+sleepiness:40
+blow:BITE:HURT:1d8
+blow:CLAW:HURT:2d8
+blow:CLAW:HURT:2d8
+flags:KILL_WALL
+flags:DEATH_SPECIAL
+spell-freq:6
+spell-power:22
+spells:S_KIN
+flags:NO_FEAR
+spells:SHRIEK
+flags:SMART
+
 name:Superlemming
 base:lemming
 color:Red
 depth:38
 rarity:3
-desc:Superlemming. Superlemming! SUPERLEMMING!
 speed:115
 hit-points:360
 hearing:4
@@ -3927,60 +4081,54 @@ sleepiness:1
 blow:BITE:HURT:2d10
 blow:CLAW:HURT:2d12
 blow:CLAW:HURT:2d12
-flags:ATTR_MULTI
-flags:UNIQUE
+flags:ATTR_MULTI | UNIQUE
 flags:NO_FEAR | NO_CONF | NO_SLEEP
-flags:SMART
-flags:OPEN_DOOR
+flags:SMART | OPEN_DOOR
+desc:Superlemming. Superlemming! SUPERLEMMING!
 
 name:infernal lemming
 base:lemming
 color:OrangeRed
+grow:mutated lemming
 depth:39
 rarity:5
-desc:The 'True Lemmings of the Volcano'. This tribe also believe themselve
-desc:immune to the heat of molten lava - with more reason than the common
-desc:volcano lemmings.
-grow:mutated lemming
 hit-points:300
 hearing:4
 armor-class:70
 sleepiness:20
 blow:CLAW:FIRE:3d10
 blow:CLAW:FIRE:3d10
+flags:NO_FEAR | IM_FIRE | WEIRD_MIND | OPEN_DOOR
+friends:90:2d3:Same
 spell-freq:1
 spell-power:33
-friends:90:2d3:Same
 spells:BA_FIRE
-flags:NO_FEAR
-flags:IM_FIRE
-flags:WEIRD_MIND
-flags:OPEN_DOOR
+desc:The 'True Lemmings of the Volcano'. This tribe also believe themselves 
+desc:immune to the heat of molten lava - and with more reason than the common 
+desc:volcano lemmings.
 
 name:mutated lemming
 base:lemming
 color:Violet
 depth:41
 rarity:4
-desc:Strangely twisted lemmings surrounded with a dim blue glow. FIXME!
 grow:peak lemming
 speed:115
 hit-points:300
 armor-class:70
+light:2
 sleepiness:1
 blow:CLAW:HURT:2d8
 blow:CLAW:HURT:2d8
 flags:NO_FEAR
-flags:IM_POIS | IM_RADIATION
-flags:WEIRD_MIND
-flags:OPEN_DOOR
+flags:IM_POIS | IM_RADIATION | WEIRD_MIND | OPEN_DOOR
+desc:Strangely twisted lemmings surrounded with a dim blue glow; you are glad that it it shines too weakly to clearly delineate their form.
 
 name:Cyberlemming
 base:lemming
 color:Gray75
 depth:44
 rarity:10
-desc:A gleaming chrome lemming - half rodent, half robot - leaping into peril faster than ever before.
 speed:120
 hit-points:600
 hearing:4
@@ -3990,21 +4138,18 @@ blow:CLAW:HURT:2d8
 blow:CLAW:HURT:2d8
 blow:CLAW:HURT:2d8
 blow:CLAW:HURT:2d8
-flags:ATTR_MULTI
+flags:ATTR_MULTI | UNIQUE | METAL
+flags:NO_FEAR | IM_COLD | IM_POIS | IM_ELEC | SMART | OPEN_DOOR
 spell-freq:1
 spell-power:50
 spells:BE_ELEC
-flags:UNIQUE
-flags:NO_FEAR | IM_COLD | IM_POIS | IM_ELEC
-flags:SMART | OPEN_DOOR
+desc:A gleaming chrome lemming - half rodent, half robot - leaping into peril faster than ever before.
 
 name:peak lemming
 base:lemming
 color:White
 depth:46
 rarity:6
-desc:The ruling clan of all lemmings. A handful of great white lemmings from 
-desc:above the snow-line, where every direction is down.
 speed:110
 hit-points:450
 hearing:4
@@ -4015,19 +4160,16 @@ blow:CLAW:HURT:3d12
 blow:CLAW:HURT:3d12
 spell-freq:8
 spell-power:22
-flags:NO_FEAR | NO_SLEEP
-flags:IM_COLD
+flags:NO_FEAR | NO_SLEEP | IM_COLD | SMART | OPEN_DOOR
 spells:TELE_SELF_TO | S_KIN
-flags:SMART
-flags:OPEN_DOOR
+desc:The ruling clan of all lemmings. A handful of great white lemmings from 
+desc:above the snow-line, where every direction is down.
 
 name:Plummet's Champion, the Nameless Lemming
 base:lemming
 color:Light Yellow
 depth:47
 rarity:1
-desc:Supreme warrior among the peak lemmings. The Nameless Lemming is the 
-desc:fearless defender of Plummet, King over the Mountain.
 speed:110
 hit-points:650
 hearing:4
@@ -4036,17 +4178,17 @@ sleepiness:1
 blow:BITE:HURT:3d12
 blow:CLAW:HURT:3d14
 blow:CLAW:HURT:3d14
-flags:ATTR_MULTI | UNIQUE
+flags:ATTR_FLICKER | UNIQUE
 flags:NO_FEAR | NO_CONF | NO_SLEEP
 flags:IM_COLD | SMART | OPEN_DOOR
+desc:Supreme warrior among the peak lemmings. The Nameless Lemming is the 
+desc:fearless defender of Plummet, King over the Mountain.
 
 name:Plummet, King over the Mountain
 base:lemming
 color:Violet
 depth:49
 rarity:4
-desc:Plummet! Among lemmings' greatest warriors, the legendary King over 
-desc:the Mountain is known everywhere that lemmings fall.
 speed:110
 hit-points:450
 hearing:4
@@ -4055,17 +4197,15 @@ sleepiness:1
 blow:BITE:HURT:3d10
 blow:CLAW:HURT:3d12
 blow:CLAW:HURT:3d12
-flags:ATTR_MULTI
-flags:MALE
-flags:UNIQUE
+flags:ATTR_FLICKER | MALE | UNIQUE | NO_FEAR | NO_CONF | NO_SLEEP
+flags:IM_COLD | SMART | OPEN_DOOR
+friends:100:3d6:emming:servant
+friends:80:1d1:Plummet's Champion, the Nameless Lemming:bodyguard
+spells:TELE_SELF_TO
 spell-freq:2
 spells:S_KIN
-friends:100:3d6:emming:servant
-flags:NO_FEAR | NO_CONF | NO_SLEEP
-flags:IM_COLD
-flags:SMART
-flags:OPEN_DOOR
-spells:TELE_SELF_TO
+desc:Plummet! Among lemmings' greatest warriors, the legendary King over 
+desc:the Mountain is known everywhere that lemmings fall.
 
 
 ##### L(izard) - REPTILES (and amphibians, dinosaurs etc) #####
@@ -4251,7 +4391,6 @@ base:reptile
 color:Magenta-Pink
 depth:46
 rarity:2
-desc:The lovable purple reptile is making a guest appearance here.  Flee while you still can!
 speed:110
 hit-points:415
 hearing:10
@@ -4263,11 +4402,11 @@ blow:CHARGE:EAT_GOLD:3d20
 blow:CHARGE:EAT_GOLD:9d9
 flags:EVIL | MALE
 #flags:SPEAK
-flags:UNIQUE | FORCE_SLEEP
+flags:UNIQUE | FORCE_SLEEP | IM_WATER | NO_CONF | NO_SLEEP | IM_POIS | SMART
 spell-freq:3
 spells:BA_POIS | BR_RADI | BR_CHAO
-flags:IM_WATER | NO_CONF | NO_SLEEP | IM_POIS | SMART
 spells:DARKNESS | BLIND | SLOW | SHRIEK | RAGE | FORGET | TELE_TO
+desc:The lovable purple reptile is making a guest appearance here.  Flee while you still can!
 
 name:Impy, the Tyrannosaur
 base:reptile
@@ -4286,8 +4425,7 @@ blow:CLAW:HURT:1d8
 blow:CLAW:HURT:1d8
 blow:CRUSH:HURT:4d6
 flags:UNIQUE | QUESTOR | SMART | FORCE_DEPTH | SPECIAL_GEN
-flags:POWERFUL
-flags:BASH_DOOR
+flags:POWERFUL | BASH_DOOR
 friends:100:2d2:tyrannosaur:servant
 friends:100:1d2:circulasaurus:servant
 desc:An unnaturally large, tough, intelligent, vicious and fast-moving tyrannosaur - Triax's pet and frequent experimental subject for cybernetic treatments. It makes a formidable guard for the lower half of the fortress!
@@ -4493,7 +4631,6 @@ base:mold
 color:Green
 depth:37
 rarity:1
-desc:A pestiferous growth on the floor; its spores are deadly.
 grow:death mold
 speed:110
 hit-points:250
@@ -4509,6 +4646,7 @@ flags:NEVER_MOVE
 flags:NO_FEAR | NO_CONF | NO_SLEEP
 flags:IM_POIS
 flags:STUPID | EMPTY_MIND
+desc:A pestiferous growth on the floor; its spores are deadly.
 
 name:crystal mold
 base:mold
@@ -4734,13 +4872,13 @@ rarity:1
 experience:90
 blow:HIT:HURT:1d10
 blow:HIT:HURT:1d10
-drop:0:of the Grey Rat:50:1:1
-desc:The Grey Rat - a tall, skinny young man wearing a silly leather outfit that would look better on someone with more muscles and less goosepimples. He kept giant rats in a cellar under the general store, until someone snuck in and killed them - he's now searching for the attacker.
 flags:UNIQUE
 flags:DROP_1 | DROP_60 | DROP_40 | DROP_20
 flags:OPEN_DOOR | SMART | SPIRIT
 flags:MALE
 flags:FORCE_SLEEP | SPECIAL_GEN
+drop:0:of the Grey Rat:50:1:1
+desc:The Grey Rat - a tall, skinny young man wearing a silly leather outfit that would look better on someone with more muscles and less goosepimples. He kept giant rats in a cellar under the general store, until someone snuck in and killed them - he's now searching for the attacker.
 
 # friends? ranged?
 name:Ky, the Pie Spy
@@ -4759,11 +4897,11 @@ drop:card:security:100:1:1
 blow:HIT:HURT:2d4
 blow:TOUCH:EAT_ITEM
 blow:TOUCH:EAT_GOLD
-desc:She looks like just one more of the Black Market's agents - in other words, a grab-and-blink thief. But she matches the description you were given, so hopefully she's still carrying the stolen recipe.
 flags:UNIQUE | EVIL
 flags:DROP_60 | DROP_40 | DROP_20
 flags:OPEN_DOOR | SMART | SPIRIT | TAKE_ITEM
 flags:FEMALE | SPECIAL_GEN | QUESTOR
+desc:She looks like just one more of the Black Market's agents - in other words, a grab-and-blink thief. But she matches the description you were given, so hopefully she's still carrying the stolen recipe.
 
 name:sergeant
 base:person
@@ -5062,6 +5200,8 @@ flags:ANIMAL
 #weight:350kg
 desc:A huge mean bear, more savage than most of its kind.
 
+#water bolt? only if wording is right
+#
 name:elephant
 base:quadruped
 color:Slate
@@ -5126,9 +5266,6 @@ base:quadruped
 color:Beige
 depth:40
 rarity:3
-desc:A larger relative of the koala, which drops from trees onto passing 
-desc:victims. Knocked out by the impact, its prey doesn't need to be chased down by 
-desc:the slow-moving dropbear, which remains unharmed thanks to its large padded butt.
 grow:thunder wumpus
 speed:105
 hit-points:150
@@ -5141,6 +5278,9 @@ blow:CLAW:HURT:3d12
 #weight:120kg
 flags:RAND_25
 flags:SMART
+desc:A larger relative of the koala, which drops from trees onto passing 
+desc:victims. Knocked out by the impact, its prey doesn't need to be chased down by 
+desc:the slow-moving dropbear, which remains unharmed thanks to its large padded butt.
 
 # intermediate between wumpus and thunderwumpus?
 name:thunder wumpus
@@ -5222,7 +5362,6 @@ base:rodent
 color:White
 depth:2
 rarity:8
-desc:Big floppy ears, long white fur, and a mad gleam in its eyes.
 grow:vorpal rabbit
 speed:15
 hit-points:8
@@ -5233,6 +5372,7 @@ blow:BITE:HURT:1d2
 blow:CLAW:HALLU:3d3
 flags:FORCE_SLEEP | RAND_50
 flags:SMART
+desc:Big floppy ears, long white fur, and a mad gleam in its eyes.
 
 name:giant white rat
 base:rodent
@@ -5294,7 +5434,6 @@ base:rodent
 color:Light Yellow
 depth:10
 rarity:3
-desc:A bright yellow mouse of unusual size, capable of chewing through solid rock.
 grow:bilge rat
 hit-points:14
 hearing:10
@@ -5304,6 +5443,7 @@ blow:BITE:HURT:3d5
 flags:FORCE_SLEEP
 flags:KILL_WALL
 flags:SMART | WEIRD_MIND
+desc:A bright yellow mouse of unusual size, capable of chewing through solid rock.
 
 name:bilge rat
 base:rodent
@@ -5328,8 +5468,6 @@ base:rodent
 color:White
 depth:15
 rarity:8
-desc:A white rabbit, the size of a rabbit! Now that's unusual in itself, but 
-desc:something in the way it moves tells you that this is no ordinary rabbit...
 speed:100
 hit-points:42
 armor-class:15
@@ -5345,6 +5483,8 @@ flags:SMART | WEIRD_MIND
 spell-freq:3
 spell-power:5
 spells:SPIT | RAGE
+desc:A white rabbit, the size of a rabbit! Now that's unusual in itself, but 
+desc:something in the way it moves tells you that this is no ordinary rabbit...
 
 name:dust bunny
 base:rodent

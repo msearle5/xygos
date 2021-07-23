@@ -112,12 +112,36 @@ static void parser_freeold(struct parser *p) {
 	}
 }
 
+void quit_fmt_p(struct parser *p, const char *fmt, ...) {
+	char prefix[256];
+	char *res;
+	char *err;
+	va_list vp;
+
+	/* Begin the Varargs Stuff */
+	va_start(vp, fmt);
+
+	/* Format */
+	res = vformat(fmt, vp);
+
+	/* Add the prefix */
+	snprintf(prefix, sizeof prefix, "Line %d, col %d: ", p->lineno, p->colno);
+	err = malloc(strlen(res) + strlen(prefix) + 1);
+	sprintf(err, "%s%s", prefix, res);
+
+	/* End the Varargs Stuff */
+	va_end(vp);
+
+	/* Call quit() */
+	quit(err);
+}
+
 static bool parse_random(const char *str, random_value *bonus) {
 	bool negative = false;
 
 	char buffer[50];
 	int i = 0, b, dn, ds, mb;
-	
+
 	const char end_chr = '|';
 	char eov;
 

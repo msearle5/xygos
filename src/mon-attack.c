@@ -565,7 +565,6 @@ bool make_attack_blow(struct monster *mon, struct player *p, struct monster_blow
 	int rlev = ((mon->race->level >= 1) ? mon->race->level : 1);
 	struct loc pgrid = p->grid;
 	bool visible = monster_is_visible(mon) || (mon->race->light > 0);
-	int accuracy = 100 - (mon->m_timed[MON_TMD_STUN] ? STUN_HIT_REDUCTION : 0);
 	bool obvious = false;
 	char m_name[80];
 	char ddesc[80];

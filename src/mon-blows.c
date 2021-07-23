@@ -970,6 +970,15 @@ static void melee_effect_handler_CONFUSE(melee_effect_handler_context_t *context
 }
 
 /**
+ * Melee effect handler: Slow the player.
+ */
+static void melee_effect_handler_SLOW(melee_effect_handler_context_t *context)
+{
+	melee_effect_timed(context, TMD_SLOW, 3 + randint1(context->rlev),
+					   OF_FREE_ACT, false, NULL);
+}
+
+/**
  * Melee effect handler: Terrify the player.
  */
 static void melee_effect_handler_TERRIFY(melee_effect_handler_context_t *context)
@@ -1201,6 +1210,7 @@ melee_effect_handler_f melee_handler_for_blow_effect(const char *name)
 		{ "LIGHt", melee_effect_handler_LIGHT },
 		{ "BLIND", melee_effect_handler_BLIND },
 		{ "CONFUSE", melee_effect_handler_CONFUSE },
+		{ "SLOW", melee_effect_handler_SLOW },
 		{ "TERRIFY", melee_effect_handler_TERRIFY },
 		{ "PARALYZE", melee_effect_handler_PARALYZE },
 		{ "LOSE_STR", melee_effect_handler_LOSE_STR },

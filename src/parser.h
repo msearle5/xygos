@@ -64,5 +64,6 @@ extern struct random parser_getrand(struct parser *p, const char *name);
 extern wchar_t parser_getchar(struct parser *p, const char *name);
 extern int parser_getstate(struct parser *p, struct parser_state *s);
 extern void parser_setstate(struct parser *p, unsigned int col, const char *msg);
+extern void quit_fmt_p(struct parser *p, const char *fmt, ...);
 
 #endif /* !PARSER_H */

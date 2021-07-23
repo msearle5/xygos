@@ -1387,7 +1387,7 @@ static errr parse_get_spells(struct parser *p, bitflag *spell_flags)
 	char *s = strtok(flags, " |");
 	while (s) {
 		if (grab_flag(spell_flags, RSF_SIZE, r_info_spell_flags, s)) {
-			quit_fmt("bad spell flag: %s", s);
+			quit_fmt_p(p, "bad spell flag: %s", s);
 			ret = PARSE_ERROR_INVALID_FLAG;
 			break;
 		}
@@ -1954,7 +1954,7 @@ static errr finish_parse_monster(struct parser *p) {
 			 */
 			if (rsf_has(race->spell_flags, RSF_SPIT) || rsf_has(race->spell_flags, RSF_WHIP) || rsf_has(race->spell_flags, RSF_STING)) {
 				if ((attacks < 1) || (!race->blow[0].effect->lash_type)) {
-					fprintf(stderr,"Monster %s has SPIT/WHIP/STING spell, but the last blow's effect doesn't have a lash type defined", race->name);
+					fprintf(stderr,"Monster %s has SPIT/WHIP/STING spell, but the last blow's effect doesn't have a lash type defined<n", race->name);
 				}
 			}
 		}

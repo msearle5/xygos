@@ -191,6 +191,16 @@ effect-type:flag
 resist:PROT_CONF
 lash-type:CHAOS
 
+name:SLOW
+power:20
+eval:20
+desc:slow
+lore-color-base:Orange
+lore-color-resist:Light Green
+effect-type:flag
+resist:FREE_ACTION
+lash-type:INERTIA
+
 name:TERRIFY
 power:0
 eval:10
