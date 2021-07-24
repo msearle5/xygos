@@ -1250,12 +1250,18 @@ void drop_near(struct chunk *c, struct object **dropped, int chance,
 		return;
 	}
 
-	/* Find the best grid and drop the item, destroying if there's no space */
-	drop_find_grid(*dropped, prefer_pile, &best);
-	if (floor_carry(c, best, *dropped, &dont_ignore)) {
-		sound(MSG_DROP);
-		if (dont_ignore && (square(c, best)->mon < 0)) {
-			msg("You feel something roll beneath your feet.");
+	/* Find the best grid and drop the item, destroying if there's no space
+	 * or the level doesn't exist yet
+	 **/
+	if (c) {
+		drop_find_grid(*dropped, prefer_pile, &best);
+		if (floor_carry(c, best, *dropped, &dont_ignore)) {
+			sound(MSG_DROP);
+			if (dont_ignore && (square(c, best)->mon < 0)) {
+				msg("You feel something roll beneath your feet.");
+			}
+		} else {
+			floor_carry_fail(*dropped, false, false);
 		}
 	} else {
 		floor_carry_fail(*dropped, false, false);

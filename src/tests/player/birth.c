@@ -25,9 +25,11 @@ int teardown_tests(void *state) {
 	struct player *p = state;
 	player_quests_free((struct player *)state);
 	mem_free(z_info);
-	mem_free(p->upkeep->inven);
-	mem_free(p->upkeep->quiver);
-	mem_free(p->upkeep);
+	if (p->upkeep) {
+		mem_free(p->upkeep->inven);
+		mem_free(p->upkeep->quiver);
+		mem_free(p->upkeep);
+	}
 	mem_free(p->timed);
 	mem_free(p->obj_k->brands);
 	mem_free(p->obj_k->slays);

@@ -637,6 +637,7 @@ void wipe_mon_list(struct chunk *c, struct player *p)
 	for (i = 1; i < z_info->level_monster_max; i++) {
 		if (c->monster_groups[i]) {
 			monster_group_free(c, c->monster_groups[i]);
+			c->monster_groups[i] = NULL;
 		}
 	}
 

@@ -2,6 +2,7 @@
 
 #include "unit-test.h"
 #include "unit-test-data.h"
+#include "test-utils.h"
 
 #include "mon-attack.h"
 #include "mon-lore.h"
@@ -19,8 +20,9 @@ int setup_tests(void **state) {
 	projections = test_projections;
 	m->race = r;
 	r_info = r;
+	l_list = &test_lore;
 	*state = m;
-
+	
 	rand_fix(100);
 	return 0;
 }

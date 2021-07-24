@@ -232,9 +232,8 @@ static struct object_kind TEST_DATA test_torch = {
 		[ELEM_PLASMA] = { 0, 0 },
 		[ELEM_METEOR] = { 0, 0 },
 		[ELEM_MISSILE] = { 0, 0 },
-		[ELEM_MANA] = { 0, 0 },
-		[ELEM_HOLY_ORB] = { 0, 0 },
 		[ELEM_ARROW] = { 0, 0 },
+		[ELEM_HALLU] = { 0, 0 },
 	},
 
 	.brands = NULL,
@@ -359,9 +358,8 @@ static struct object_kind TEST_DATA test_lantern = {
 		[ELEM_PLASMA] = { 0, 0 },
 		[ELEM_METEOR] = { 0, 0 },
 		[ELEM_MISSILE] = { 0, 0 },
-		[ELEM_MANA] = { 0, 0 },
-		[ELEM_HOLY_ORB] = { 0, 0 },
 		[ELEM_ARROW] = { 0, 0 },
+		[ELEM_HALLU] = { 0, 0 },
 	},
 
 	.brands = NULL,
@@ -1084,7 +1082,6 @@ static struct object TEST_DATA test_player_knowledge = {
 
 	.modifiers = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 	.el_info = {
-		{ 0, 0 },
 		{ 0, 0 },
 		{ 0, 0 },
 		{ 0, 0 },

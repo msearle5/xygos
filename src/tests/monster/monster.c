@@ -12,7 +12,8 @@
 #include "mon-util.h"
 
 int setup_tests(void **state) {
-	read_edit_files();
+	set_file_paths();
+	init_angband();
 	*state = 0;
 	return 0;
 }

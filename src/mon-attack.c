@@ -791,6 +791,7 @@ bool make_attack_blow(struct monster *mon, struct player *p, struct monster_blow
 bool make_attack_normal(struct monster *mon, struct player *p)
 {
 	struct monster_lore *lore = get_lore(mon->race);
+	assert(lore);
 	bool blinked = false;
 
 	/* Not allowed to attack */

@@ -13,9 +13,6 @@ int setup_tests(void **state) {
     player->body = test_player_body;
 	player->body.slots = &test_slot_light;
 	z_info = mem_zalloc(sizeof(struct angband_constants));
-	z_info->fuel_torch = 5000;
-	z_info->fuel_lamp = 15000;
-	z_info->default_lamp = 7500;
 
 	quarks_init();
     return 0;

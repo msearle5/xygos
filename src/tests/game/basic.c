@@ -16,6 +16,7 @@
 #include "player-birth.h"
 #include "player-timed.h"
 #include "z-util.h"
+#include "world.h"
 
 static void event_message(game_event_type type, game_event_data *data, void *user) {
 	printf("Message: %s\n", data->message.msg);
@@ -60,6 +61,7 @@ static int test_newgame(void *state) {
 
 	/* Try making a new game */
 	eq(player_make_simple(NULL, NULL, NULL, "Tester"), true);
+	world_init_towns();
 
 	eq(player->is_dead, false);
 	prepare_next_level(&cave, player);
