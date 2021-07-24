@@ -355,6 +355,8 @@ static void melee_effect_elemental(melee_effect_handler_context_t *context,
 				break;
 			case PROJ_COLD: msg("You are covered with frost!");
 				break;
+			case PROJ_LIGHT: msg("There is an intense flash of light!");
+				break;
 		}
 	}
 
@@ -944,11 +946,12 @@ static void melee_effect_handler_COLD(melee_effect_handler_context_t *context)
 }
 
 /**
- * Melee effect handler: Attack the player with light.
+ * Melee effect handler: Attack the player with light (nlinding as a side effect).
  */
 static void melee_effect_handler_LIGHT(melee_effect_handler_context_t *context)
 {
 	melee_effect_elemental(context, PROJ_LIGHT, true);
+	melee_effect_timed(context, TMD_BLIND, 5 + randint1(context->rlev), OF_PROT_BLIND, false, NULL);
 }
 
 /**

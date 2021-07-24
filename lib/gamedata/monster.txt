@@ -621,6 +621,52 @@ friends:90:2d3:Same
 flags:STUPID
 desc:It's six feet long, shiny metallic gold and blowing big bubbles!
 
+name:eel
+base:aquatic
+color:Gray25
+depth:4
+rarity:3
+grow:electric eel
+speed:115
+hit-points:2
+hearing:3
+armor-class:30
+sleepiness:10
+blow:CONSTRICT:HURT:1d3
+flags:EVASIVE | RAND_25 | RAND_50
+friends:90:2d2:Same
+desc:A twisty grabby wriggly fishy.
+
+name:piranha
+base:aquatic
+color:Light Blue
+depth:7
+rarity:1
+hit-points:12
+armor-class:10
+sleepiness:5
+hearing:40 #?? lots
+blow:BITE:HURT:7d1
+friends:95:3d4:Same
+desc:Bloodthirsty fish who can smell your blood from a great distance.
+
+name:steelhead
+base:aquatic
+color:SteelBlue
+grow:electric eel
+depth:9
+rarity:6
+hit-points:5
+hearing:4
+armor-class:40
+sleepiness:10
+blow:BITE:HURT:1d6
+blow:BITE:HURT:1d6
+blow:BITE:HURT:1d6
+flags:RAND_25 | SMART
+friends:60:1d2:Same
+desc:A little robot fish that bites like a steel trap.
+
 name:globefish
 base:aquatic
 color:Slate
@@ -1871,19 +1917,21 @@ desc:A fast-breeding, annoying pest.
 
 name:giant firefly
 plural:giant fireflies
+color:Light Yellow
 base:fly
 speed:120
+depth:26
 hit-points:5
 light:2
 hearing:8
 armor-class:21
 sleepiness:10
-depth:26
 rarity:4
 experience:4
+deathspells:LIGHT
 flags:MULTIPLY | RAND_25 | RAND_50
-blow:BITE:BLIND:1d2
-desc:Clouds of these monsters light up the dungeon - so brightly that you can
+blow:BITE:LIGHT:1d2
+desc:Clouds of these huge, buzzing insects light up the room - so brightly that you can
 desc: barely see through them.
 
 name:chaos butterfly
@@ -2605,14 +2653,12 @@ hearing:30
 armor-class:10
 sleepiness:1
 blow:STING:ELEC:1d10
-flags:MULTIPLY
+flags:MULTIPLY | ORTHOGONAL | EVASIVE | INVISIBLE | SMART | WEIRD_MIND
 deathspells:POP
-flags:ORTHOGONAL | EVASIVE | INVISIBLE
-flags:SMART | WEIRD_MIND
-friends:90:2d3:Same
 spell-freq:5
 spell-power:8
 spells:BLINK | TPORT | GROW
+friends:90:2d3:Same
 desc:Hidden behind the walls, moving fast as lightning, there are few creatures more 
 desc:elusive.
 
@@ -2686,6 +2732,29 @@ blow:STING:CONFUSE:2d2
 flags:MULTIPLY | FLYING | RAND_25 | RAND_50
 flags:MOVE_BODY
 desc:A giant buzzing wasp, its stinger drips venom.
+
+name:matrix bug
+base:insect
+color:Red
+depth:21
+rarity:4
+grow:iridescent beetle
+speed:110
+hit-points:35
+hearing:35
+armor-class:90
+sleepiness:1
+blow:STING:ELEC:1d15
+flags:MULTIPLY | ATTR_FLICKER
+flags:ORTHOGONAL | EVASIVE | EMPTY_MIND
+drop-base:pill:100:1:1
+drop-base:pill:100:1:1
+spell-freq:3
+spell-power:25
+spells:BO_NEXU | BLINK
+color-cycle:fancy:matrix
+desc:A strangely transformed insect, moving fast enough to dodge bullets but tough enough
+desc:that it hardly needs to.
 
 name:lightning bug
 base:insect
@@ -3459,12 +3528,11 @@ blow:BITE:HURT:1d10
 blow:BITE:HURT:1d10
 blow:BITE:HURT:1d10
 flags:ATTR_FLICKER
-flags:UNIQUE
-flags:RAND_25
-flags:IM_COLD | IM_POIS
-flags:HURT_FIRE
+flags:UNIQUE | RAND_25
+flags:IM_COLD | IM_POIS | HURT_FIRE
 flags-off:HURT_COLD
 flags:SMART | WEIRD_MIND
+color-cycle:fancy:serpent
 desc:A snake of extraordinary size, screaming horribly as its great finned head casts about. 
 desc:White, green-barred and inky-fanged, this ancient beast is the last of its kind, 
 desc:a relic of another age. 
@@ -5136,6 +5204,21 @@ flags:NO_CONF | NO_SLEEP
 friends:50:1d1:bandit
 desc:Clothed in black, following the shadows, moving silently yet with blinding speed.
 
+name:sniper
+base:person
+color:White
+depth:32
+rarity:4
+desc:An skilled and experienced sharpshooter, with deadly accuracy.
+hit-points:115
+armor-class:15
+sleepiness:20
+blow:HIT:HURT:1d9
+blow:HIT:HURT:1d9
+flags:MALE | FEMALE | SMART | OPEN_DOOR
+spell-freq:2
+spells:SHOT
+
 name:bandit
 base:person
 color:b
@@ -5181,6 +5264,23 @@ spells:BO_PLAS
 friends:60:1d2:Same
 friends:30:1d1:stormtrooper cadet
 desc:A masked enforcer in awkward-looking white full body armor, and an agent of evil - at least in theory. Between 9 and 5, anyway. Not one that really signed up to it, and in particular not one that paid any attention to target shooting drill.
+
+name:gunman
+base:person
+color:White
+depth:42
+rarity:2
+desc:A dangerous sniper with a high-powered rifle.
+hit-points:170
+armor-class:18
+sleepiness:15
+blow:HIT:HURT:1d8
+blow:HIT:HURT:1d8
+flags:MALE
+flags:FORCE_SLEEP
+spell-freq:1
+spells:SHOT
+flags:SMART | OPEN_DOOR
 
 name:stormtrooper captain
 base:person
@@ -5594,11 +5694,11 @@ speed:100
 hit-points:42
 armor-class:15
 sleepiness:1
-blow:BITE:POISON:1d12
-blow:BITE:POISON:1d12
 blow:CLAW:HURT:1d12
 blow:CLAW:HURT:1d12
-flags:ATTR_MULTI
+blow:BITE:POISON:1d12
+blow:BITE:POISON:1d12
+flags:ATTR_FLICKER
 flags:FORCE_SLEEP
 flags:NO_FEAR | NO_SLEEP
 flags:SMART | WEIRD_MIND
@@ -5985,7 +6085,7 @@ base:spider
 color:Goldenrod
 depth:11
 rarity:1
-grow:pink scorpion
+grow:red scorpion
 hit-points:50
 hearing:12
 armor-class:10
@@ -6030,28 +6130,11 @@ flags:ANIMAL | WEIRD_MIND
 flags:IM_POIS
 desc:A giant, fast-moving spider with hairy black and red legs.
 
-name:yellow scorpion
-base:spider
-color:Goldenrod
-speed:110
-hit-points:54
-hearing:12
-armor-class:45
-sleepiness:20
-depth:17
-rarity:1
-experience:60
-blow:CLAW:HURT:1d8
-blow:CLAW:HURT:1d8
-blow:STING:POISON:2d5
-flags:ANIMAL | WEIRD_MIND
-flags:IM_POIS
-desc:A gigantic dull yellow scorpion with a slim, sharp stinger whipping about.
-
 #radscorpion?
 name:red scorpion
 base:spider
 color:r
+grow:black scorpion
 speed:115
 hit-points:50
 hearing:12
@@ -6070,6 +6153,7 @@ desc:A giant scorpion, fast and deadly poisonous.
 name:black scorpion
 base:spider
 color:s
+grow:grey scorpion
 speed:120
 hit-points:189
 hearing:12
@@ -6082,12 +6166,11 @@ blow:CLAW:HURT:1d11
 blow:CLAW:HURT:1d11
 blow:STING:POISON:3d4
 blow:STING:BLIND:3d4
-flags:ANIMAL | WEIRD_MIND
-flags:IM_POIS
+flags:ANIMAL | WEIRD_MIND | IM_POIS
 desc:A gleaming black scorpion as large as a lion, with a pulsating stinger
 desc: and two great deadly claws.
 
-name:giant grey scorpion
+name:grey scorpion
 base:spider
 color:Slate
 depth:36

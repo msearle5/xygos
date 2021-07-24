@@ -721,16 +721,6 @@ lore-color-base:Light Red
 message-vis:{name} projects an inertia-storm!
 message-invis:You feel a wave of inertia pass through you.
 
-#name:BA_MANA
-#hit:100
-#effect:BALL:MANA:2
-#dice:$B+10d10
-#expr:B:SPELL_POWER:* 5
-#lore:invoke mana storms
-#lore-color-base:Light Red
-#message-vis:{name} invokes a storm of raw magic.
-#message-invis:Something screams loudly.
-
 name:BA_DARK
 hit:100
 effect:BALL:DARK:2
@@ -874,7 +864,7 @@ lore:produce acid bolts
 lore-color-base:Orange
 lore-color-resist:Yellow
 lore-color-immune:Light Green
-message-vis:{name} casts a bolt of acid.
+message-vis:{name} sprays a stream of acid.
 message-invis:Something mumbles.
 
 name:BO_ELEC
@@ -886,7 +876,7 @@ lore:produce lightning bolts
 lore-color-base:Orange
 lore-color-resist:Yellow
 lore-color-immune:Light Green
-message-vis:{name} casts a bolt of lightning.
+message-vis:{name} zaps electricity at {target}.
 message-invis:Something mumbles.
 
 name:BO_FIRE
@@ -898,7 +888,7 @@ lore:produce fire bolts
 lore-color-base:Orange
 lore-color-resist:Yellow
 lore-color-immune:Light Green
-message-vis:{name} casts a bolt of fire.
+message-vis:{name} spews a stream of fire.
 message-invis:Something mumbles.
 
 name:BO_COLD
@@ -910,7 +900,7 @@ lore:produce frost bolts
 lore-color-base:Orange
 lore-color-resist:Yellow
 lore-color-immune:Light Green
-message-vis:{name} casts a bolt of frost.
+message-vis:{name} shoots a frost bolt.
 message-invis:Something mumbles.
 
 name:BO_POIS
@@ -933,7 +923,7 @@ expr:B:SPELL_POWER:* 3 / 2 + 30
 lore:produce radiation bolts
 lore-color-base:Orange
 lore-color-resist:Light Green
-message-vis:{name} casts a bolt of radiation.
+message-vis:{name} fires a radiation bolt.
 message-invis:Something mumbles.
 
 name:BO_WATE
@@ -947,15 +937,15 @@ lore-color-resist:Orange
 message-vis:{name} fires a jet of water.
 message-invis:Something gurgles.
 
-#name:BO_MANA
-#hit:100
-#effect:BOLT:MANA
-#dice:50+1d$S
-#expr:S:SPELL_POWER:* 5 / 2
-#lore:produce mana bolts
-#lore-color-base:Light Red
-#message-vis:{name} casts a bolt of raw magic.
-#message-invis:Something screams.
+name:BO_NEXU
+hit:100
+effect:BOLT:NEXUS
+dice:5+1d$S
+expr:S:SPELL_POWER:* 3 / 2
+lore:produce mana bolts
+lore-color-base:Light Red
+message-vis:{name} fires a nexus bolt.
+message-invis:Something chuckles.
 
 name:BO_PLAS
 hit:100
@@ -965,7 +955,7 @@ expr:B:SPELL_POWER:+ 10
 lore:produce plasma bolts
 lore-color-base:Orange
 lore-color-resist:Yellow
-message-vis:{name} casts a bolt of plasma.
+message-vis:{name} fires a plasma bolt.
 message-invis:Something screams.
 
 name:BO_ICE
@@ -976,7 +966,7 @@ expr:B:SPELL_POWER:+ 0
 lore:produce ice bolts
 lore-color-base:Orange
 lore-color-resist:Yellow
-message-vis:{name} shoots a spear of ice.
+message-vis:{name} shoots an icy spear.
 message-invis:Something mumbles.
 
 name:MISSILE

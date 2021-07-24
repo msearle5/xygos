@@ -750,3 +750,15 @@ cycle-color:I
 cycle-color:i
 cycle-color:P
 cycle-color:P
+
+# Matrix Bug: red / blue
+cycle:fancy:matrix
+cycle-color:r
+cycle-color:b
+
+# Serpent of the Matrix: green / white
+cycle:fancy:serpent
+cycle-color:g
+cycle-color:W
+cycle-color:W
+cycle-color:W
