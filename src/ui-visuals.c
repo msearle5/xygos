@@ -405,7 +405,8 @@ struct {
 
 /**
  * Set a color cycle for a monster race. If a matching color cycle cannot be
- * found, the monster race will not be color cycled.
+ * found, the monster race will not be color cycled and it will return false.
+ * If it is successful it will return true.
  *
  * When this module is set up, we don't know how many monster races there will
  * be, nor is there a maximum permitted number of races. This function will
@@ -417,7 +418,7 @@ struct {
  * \param group_name The group of the preferred color cycle.
  * \param cycle_name The name of the preferred color cycle.
  */
-void visuals_cycler_set_cycle_for_race(struct monster_race const *race,
+bool visuals_cycler_set_cycle_for_race(struct monster_race const *race,
 									   const char *group_name,
 									   const char *cycle_name)
 {
@@ -425,11 +426,11 @@ void visuals_cycler_set_cycle_for_race(struct monster_race const *race,
 	struct visuals_color_cycle *cycle = NULL;
 
 	if (race == NULL || group_name == NULL || cycle_name == NULL) {
-		return;
+		return false;
 	}
 
 	if (visuals_color_cycles_by_race == NULL) {
-		return;
+		return false;
 	}
 
 	while (race->ridx >= visuals_color_cycles_by_race->max_entries) {
@@ -450,10 +451,12 @@ void visuals_cycler_set_cycle_for_race(struct monster_race const *race,
 	cycle = visuals_cycler_cycle_by_name(table, group_name, cycle_name);
 
 	if (cycle == NULL) {
-		return;
+		visuals_color_cycles_by_race->race[race->ridx] = NULL;
+		return false;
 	}
 
 	visuals_color_cycles_by_race->race[race->ridx] = cycle;
+	return true;
 }
 
 /**

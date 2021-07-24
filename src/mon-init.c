@@ -36,6 +36,17 @@
 #include "ui-visuals.h"
 #include "z-rand.h"
 
+struct mon_color_cycle ;
+struct mon_color_cycle {
+	struct monster_race *race;
+	char *group;
+	char *cycle;
+	struct mon_color_cycle *next;
+};
+
+
+static struct mon_color_cycle *mon_cycles;
+
 struct blow_method *blow_methods;
 struct blow_effect *blow_effects;
 struct monster_pain *pain_messages;
@@ -1653,7 +1664,12 @@ static enum parser_error parse_monster_color_cycle(struct parser *p)
 	if (cycle == NULL || strlen(cycle) == 0)
 		return PARSE_ERROR_INVALID_VALUE;
 
-	visuals_cycler_set_cycle_for_race(r, group, cycle);
+	struct mon_color_cycle *prev = mon_cycles;
+	mon_cycles = mem_zalloc(sizeof(*prev));
+	mon_cycles->race = r;
+	mon_cycles->group = string_make(group);
+	mon_cycles->cycle = string_make(cycle);
+	mon_cycles->next = prev;
 
 	return PARSE_ERROR_NONE;
 }
@@ -1874,10 +1890,31 @@ static errr finish_parse_monster(struct parser *p) {
 			}
 		}
 
+		/* Color cycle */
+		struct mon_color_cycle *cycle = mon_cycles;
+		while (cycle) {
+			if (cycle->race == r) {
+				if (!visuals_cycler_set_cycle_for_race(&r_info[ridx], cycle->group, cycle->cycle)) {
+					fprintf(stderr,"Warning: color cycle %s of group %s for race %s is unknown\n",
+						cycle->cycle, cycle->group, r->name);
+				}
+			}
+			cycle = cycle->next;
+		}
+
 		r_info[ridx].passive = b_new;
 		mem_free(r);
 	}
 	z_info->r_max += 1;
+
+	/* Color cycles clean up  */
+	while (mon_cycles) {
+		struct mon_color_cycle *prev = mon_cycles;
+		mon_cycles = mon_cycles->next;
+		string_free(prev->cycle);
+		string_free(prev->group);
+		mem_free(prev);
+	}
 
 	/* Convert friend and shape names into race pointers */
 	for (i = 0; i < z_info->r_max; i++) {
@@ -1937,6 +1974,8 @@ static errr finish_parse_monster(struct parser *p) {
 				fprintf(stderr,"Monster %s has <=0 hitpoints\n", race->name);
 			if (race->ac < 0)
 				fprintf(stderr,"Monster %s has <0 AC\n", race->name);
+			if (race->d_attr == 0)
+				fprintf(stderr,"Monster %s has no color\n", race->name);
 			if (race->grow) {
 				bool ok = false;
 				for (int j = 0; j < z_info->r_max; j++) {
@@ -1953,8 +1992,15 @@ static errr finish_parse_monster(struct parser *p) {
 			 * These all require an elemental attack as the last blow
 			 */
 			if (rsf_has(race->spell_flags, RSF_SPIT) || rsf_has(race->spell_flags, RSF_WHIP) || rsf_has(race->spell_flags, RSF_STING)) {
-				if ((attacks < 1) || (!race->blow[0].effect->lash_type)) {
+				if ((attacks < 1) || (!(projections[race->blow[0].effect->lash_type].lash_desc))) {
 					fprintf(stderr,"Monster %s has SPIT/WHIP/STING spell, but the last blow's effect doesn't have a lash type defined\n", race->name);
+				}
+			}
+			for (size_t j = 0; j < z_info->r_max; j++) {
+				if ((i != j) && (r_info[j].ridx)) {
+					if (streq(race->name, r_info[j].name)) {
+						fprintf(stderr,"Monster %s has a duplicate entry\n", race->name);
+					}
 				}
 			}
 		}
