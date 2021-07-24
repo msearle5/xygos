@@ -47,7 +47,7 @@ bool mon_take_hit(struct monster *mon, int dam, bool *fear, const char *note);
 bool do_mon_take_hit(struct monster *mon, int dam, bool *fear, const char *note, bool funny);
 void kill_arena_monster(struct monster *mon);
 void monster_take_terrain_damage(struct monster *mon);
-bool monster_taking_terrain_damage(struct monster *mon);
+bool monster_taking_terrain_damage(struct chunk *c, struct monster *mon);
 struct monster *get_commanded_monster(void);
 struct object *get_random_monster_object(struct monster *mon);
 void steal_monster_item(struct monster *mon, int midx);
