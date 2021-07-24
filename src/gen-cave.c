@@ -1237,7 +1237,7 @@ struct chunk *classic_gen(struct player *p, int min_height, int min_width)
 	reset_entrance_data(c);
 
 	/* Build the special staircase rooms */
-	if (OPT(player, birth_levels_persist)) {
+	if (OPT(p, birth_levels_persist)) {
 		build_staircase_rooms(c, "Classic Generation");
 	}
 
@@ -1617,7 +1617,7 @@ struct chunk *labyrinth_gen(struct player *p, int min_height, int min_width) {
 
 	/* Notify if we want the player to see the maze layout */
 	if (known) {
-		player->upkeep->light_level = true;
+		p->upkeep->light_level = true;
 	}
 
 	return c;
@@ -4032,7 +4032,7 @@ struct chunk *gauntlet_gen(struct player *p, int min_height, int min_width) {
  */
 struct chunk *arena_gen(struct player *p, int min_height, int min_width) {
 	struct chunk *c;
-	struct monster *mon = player->upkeep->health_who;
+	struct monster *mon = p->upkeep->health_who;
 
 	c = cave_new(min_height, min_width);
 	c->depth = p->depth;
@@ -4057,7 +4057,7 @@ struct chunk *arena_gen(struct player *p, int min_height, int min_width) {
 	c->mon_max = mon->midx + 1;
 	c->mon_cnt = 1;
 	update_mon(mon, c, true);
-	player->upkeep->health_who = mon;
+	p->upkeep->health_who = mon;
 
 	/* Ignore its held objects */
 	mon->held_obj = NULL;
