@@ -1365,10 +1365,10 @@ void lore_append_drop(textblock *tb, const struct monster_race *race,
 					"object%s", PLURAL(n));
 			} else if (!only_item && only_gold) {
 				textblock_append_c(tb, COLOUR_BLUE,
-					"treasure%s", PLURAL(n));
+					"pile%s of cash", PLURAL(n));
 			} else if (!only_item && !only_gold) {
 				textblock_append_c(tb, COLOUR_BLUE,
-					"object%s or treasure%s",
+					"object%s (which may include cash)",
 					PLURAL(n), PLURAL(n));
 			}
 		}

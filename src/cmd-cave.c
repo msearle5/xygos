@@ -1576,13 +1576,12 @@ static const char *obj_feeling_text[] =
 {
 	"Looks like any other level.",
 	"you sense an item of unique power!",
-	"there are superb treasures here.",
-	"there are excellent treasures here.",
-	"there are very good treasures here.",
-	"there are good treasures here.",
-	"there may be something worthwhile here.",
-	"there may not be much interesting here.",
-	"there aren't many treasures here.",
+	"there's a huge haul of loot here!",
+	"there is much valuable loot here.",
+	"there is some valuable loot here.",
+	"there may be some valuables here.",
+	"there may be some worthwhile loot.",
+	"there's nothing very valuable here.",
 	"there are only scraps of junk here.",
 	"there is nothing but cobwebs here."
 };
@@ -1598,7 +1597,7 @@ static const char *mon_feeling_text[] =
 	 * maintain symmetry with obj_feeling.
 	 */
 	"You are still uncertain about this place",
-	"Omens of death haunt this place",
+	"This place seems absolutely lethal",
 	"This place seems murderous",
 	"This place seems terribly dangerous",
 	"You feel anxious about this place",
