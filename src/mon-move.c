@@ -184,25 +184,34 @@ static bool monster_can_move(struct chunk *c, struct monster *mon,
 }
 
 /**
+ * Check if a monster of this race can occupy a grid safely
+ */
+bool mon_race_hates_grid(struct chunk *c, struct monster_race *race,
+							   struct loc grid)
+{
+	/* Some creatures ignore damaging terrain */
+	if (rf_has(race->flags, RF_ALL_TERRAIN))
+		return false;
+
+	/* Aquatic creatures can't leave water */
+	if (rf_has(race->flags, RF_AQUATIC))
+		return !square_iswater(c, grid);
+
+	/* Only some creatures can handle damaging terrain */
+	if (square_isdamaging(c, grid) &&
+		!rf_has(race->flags, square_feat(c, grid)->resist_flag)) {
+		return true;
+	}
+	return false;
+}
+
+/**
  * Check if the monster can occupy a grid safely
  */
 static bool monster_hates_grid(struct chunk *c, struct monster *mon,
 							   struct loc grid)
 {
-	/* Some creatures ignore damaging terrain */
-	if (rf_has(mon->race->flags, RF_ALL_TERRAIN))
-		return false;
-
-	/* Aquatic creatures can't leave water */
-	if (rf_has(mon->race->flags, RF_AQUATIC))
-		return !square_iswater(c, grid);
-
-	/* Only some creatures can handle damaging terrain */
-	if (square_isdamaging(c, grid) &&
-		!rf_has(mon->race->flags, square_feat(c, grid)->resist_flag)) {
-		return true;
-	}
-	return false;
+	return mon_race_hates_grid(c, mon->race, grid);
 }
 
 /**

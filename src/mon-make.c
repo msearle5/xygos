@@ -1125,6 +1125,9 @@ static bool place_new_monster_one(struct chunk *c, struct loc grid,
 	 * other feature types */
 	if (!square_is_monster_walkable(c, grid)) return false;
 
+	/* No fish out of water */
+	if (mon_race_hates_grid(c, race, grid)) return false;
+
 	/* No creation on glyphs */
 	if (square_iswarded(c, grid) || square_isdecoyed(c, grid)) return false;
 

@@ -23,5 +23,7 @@ bool multiply_monster(struct chunk *c, const struct monster *mon);
 void process_monsters(struct chunk *c, int minimum_energy);
 void reset_monsters(void);
 void restore_monsters(void);
+bool mon_race_hates_grid(struct chunk *c, struct monster_race *race,
+							   struct loc grid);
 
 #endif /* !MONSTER_MOVE_H */
