@@ -407,6 +407,20 @@ obvious:1
 wake:1
 color:White
 
+code:HALLU
+name:hallucination
+type:element
+desc:hallucination
+player-desc:hallucination
+blind-desc:something
+lash-desc:psychedelic
+divisor:6
+damage-cap:100
+msgt:GENERIC
+obvious:1
+wake:1
+color:Violet
+
 code:LIGHT_WEAK
 type:environs
 desc:light

@@ -276,6 +276,10 @@ static void project_object_handler_DISEN(project_object_handler_context_t *conte
 {
 }
 
+static void project_object_handler_HALLU(project_object_handler_context_t *context)
+{
+}
+
 static void project_object_handler_WATER(project_object_handler_context_t *context)
 {
 }

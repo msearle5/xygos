@@ -397,7 +397,6 @@ name:black obelisk
 base:fullgrid
 color:Gray25
 depth:60
-desc:A glossy black monolith of an unknown material that seems impossible to even scratch.
 grow:white obelisk
 hit-points:1500
 armor-class:150
@@ -417,12 +416,12 @@ flags:IM_FIRE | IM_COLD | IM_POIS | IM_ELEC
 rarity:10
 spells:HEAL
 flags:STUPID | EMPTY_MIND
+desc:A glossy black monolith of an unknown material that seems impossible to even scratch.
 
 name:white obelisk
 base:fullgrid
 color:White
 depth:77
-desc:A glossy white pillar of an unknown material that seems impossible to even scratch.
 hit-points:1500
 armor-class:200
 rarity:5
@@ -440,6 +439,7 @@ flags:NO_FEAR | NO_CONF | NO_SLEEP
 flags:IM_FIRE | IM_COLD | IM_POIS | IM_ELEC
 spells:HEAL
 flags:STUPID | EMPTY_MIND
+desc:A glossy white pillar of an unknown material that seems impossible to even scratch.
 
 
 ##### $ is for CREEPING CASH #####
@@ -536,6 +536,67 @@ desc:A pile of unobtainium wafers, worth many times their weight in gold and app
 mimic:cash:unobtainium wafers
 
 
+##### * is for ENERGY FORM #####
+# (= visible, but not a well defined form)
+# so includes amorphous holograms, etc.
+
+name:yellow light
+base:energy
+color:Light Yellow
+depth:1
+rarity:1
+grow:black light
+speed:110
+hit-points:6
+hearing:8
+light:3
+armor-class:10
+sleepiness:30
+blow:TOUCH:DESTRUCT
+deathspells:LIGHT
+flags:FLYING | NONLIVING | IM_POIS | RAND_50
+flags:STUPID | EMPTY_MIND
+desc:A fast-moving bright light.
+
+name:hebijebi
+base:energy
+color:White
+depth:3
+rarity:5
+grow:yellow light
+speed:110
+hit-points:1
+hearing:1
+armor-class:1
+sleepiness:1
+blow:HIT:CONFUSE:1d1
+flags:FLYING | EVASIVE | MULTIPLY | STUPID | EMPTY_MIND | PASS_DOOR | IM_LIGHT | IM_POIS
+flags:RAND_25 | RAND_50
+friends:90:2d3:Same
+spell-freq:1
+spell-power:1
+spells:BLINK
+desc:A dancing mote of white light. It's here... there... where is it?
+desc:They are everywhere! Where did they come from? Who knows?
+
+name:black light
+base:energy
+color:Violet
+depth:11
+rarity:5
+grow:ball lightning
+speed:110
+hit-points:9
+hearing:8
+armor-class:10
+sleepiness:30
+blow:TOUCH:DESTRUCT
+deathspells:HALLU
+flags:FLYING | NONLIVING  INVISIBLE | IM_POIS | RAND_50
+flags:STUPID | EMPTY_MIND
+desc:A fast-moving ultraviolet light, invisible to the unaided eye.
+
+
 ##### ; is for FISH #####
 # And lava-beasts.
 # Not all have AQUATIC (meaning that they must stay in the water/lava), but that's the default
@@ -543,12 +604,28 @@ mimic:cash:unobtainium wafers
 # as does a robot fish. But amphibians get L (or maybe A), and AQUATIC creatures that fit another
 # class (a sea monkey, sea snake etc) get that class's character.
 
+name:goldfish
+base:aquatic
+color:Gold
+depth:1
+rarity:4
+grow:steelhead
+speed:105
+hit-points:1
+hearing:1
+armor-class:1
+sleepiness:200
+blow:SUCK:HURT:1d1
+flags:RAND_25 | RAND_50
+friends:90:2d3:Same
+flags:STUPID
+desc:It's six feet long, shiny metallic gold and blowing big bubbles!
+
 name:globefish
 base:aquatic
 color:Slate
 depth:25
 rarity:1
-desc:This cute fish is among the most poisonous creatures there are.
 hit-points:50
 armor-class:15
 sleepiness:30
@@ -560,13 +637,13 @@ spells:BR_POIS
 flags:IM_WATER | NO_STUN
 flags:IM_POIS
 flags:STUPID | EMPTY_MIND
+desc:This cute fish is among the most poisonous creatures there are.
 
 name:electric eel
 base:aquatic
 color:SkyBlue
 depth:33
 rarity:5
-desc:This cute little serpentine creature can create a deadly voltage. 
 desc:Better watch out!
 speed:110
 hit-points:16
@@ -577,14 +654,13 @@ blow:CONSTRICT:ELEC:1d20
 flags:EVASIVE
 flags:RAND_25 | RAND_50
 friends:90:2d3:Same
+desc:This cute little serpentine creature can create a deadly voltage. 
 
 name:great white shark
 base:aquatic
 color:White
 depth:34
 rarity:2
-desc:Fast moving hunter of the depths, when this creature moves, 
-desc:everybody in water is in danger!
 speed:120
 hit-points:225
 armor-class:35
@@ -594,13 +670,14 @@ blow:BITE:HURT:3d6
 blow:BITE:HURT:3d6
 blow:BITE:HURT:3d6
 flags:FORCE_SLEEP
+desc:Fast moving hunter of the depths, when this creature moves, 
+desc:everybody in water is in danger!
 
 name:Jaws
 base:aquatic
 color:White
 depth:42
 rarity:2
-desc:The biggest white shark who has ever lived, it is hunting for you now! 
 speed:120
 hit-points:320
 hearing:10
@@ -615,13 +692,13 @@ flags:ATTR_MULTI
 flags:NO_CONF | NO_SLEEP
 flags:IM_POIS
 flags:WEIRD_MIND
+desc:The biggest white shark who has ever lived, it is hunting for you now! 
 
 name:megalodon
 base:aquatic
 color:Violet
 depth:56
 rarity:2
-desc:/Otodus megalodon/ or Meg to friends. From 22 to 3.6 million BCE and from 2407 to date, thanks to Sirius Genetics - because after all, a gigantic shark big enough to bite a whale in half is just too awesome not to recreate. (What could possibly go wrong?)
 speed:120
 hit-points:750
 hearing:10
@@ -633,6 +710,7 @@ blow:BITE:HURT:22d2
 blow:BITE:HURT:33d1
 flags:NO_CONF | NO_SLEEP
 flags:WEIRD_MIND
+desc:/Otodus megalodon/ or Meg to friends. From 22 to 3.6 million BCE and from 2407 to date, thanks to Sirius Genetics - because after all, a gigantic shark big enough to bite a whale in half is just too awesome not to recreate. (What could possibly go wrong?)
 
 
 ##### , is for MUSHROOM #####
@@ -926,7 +1004,6 @@ spell-freq:5
 spells:BO_FIRE
 spells:S_MONSTER
 spells:BLIND | WOUND | CONF | SCARE
-desc:A trap, capable of doing a variety of nasty things, and baited with a valuable-looking card, 
 mimic:card:extermination
 mimic:card:mass extermination
 mimic:card:vertical teleport
@@ -934,6 +1011,7 @@ mimic:card:portal
 mimic:card:acquisition
 mimic:card:mass acquisition
 mimic:card:disinto
+desc:A trap, capable of doing a variety of nasty things, and baited with a valuable-looking card.
 
 
 ##### A is for AMPHIBIAN #####
@@ -1978,6 +2056,26 @@ spells:GROW
 friends:20:1d2:bogling
 desc:A young Bogon plodding about the galaxy.
 
+name:ewok
+base:humanoid
+color:ForestGreen
+depth:6
+rarity:6
+desc:Humanoids around one meter in height, stocky and strong for their height, and covered entirely in brown and black fur.
+hit-points:14
+hearing:10
+armor-class:15
+sleepiness:10
+light:1
+blow:HIT:HURT:1d6
+blow:HIT:HURT:1d6
+flags:SMART
+flags:OPEN_DOOR
+spell-freq:8
+friends:95:3d4:Same
+spell-power:6
+spells:ARROW
+
 name:bogon
 base:humanoid
 color:LawnGreen
@@ -2685,24 +2783,7 @@ desc:A hornets' nest that reaches from floor to ceiling.
 
 
 ##### j is for JELLIES #####
-# (and oozes, etc.)
-
-name:blue ooze
-base:jelly
-color:b
-speed:110
-hit-points:8
-hearing:8
-armor-class:19
-sleepiness:80
-depth:5
-rarity:1
-experience:7
-blow:CRAWL:COLD:1d4
-flags:DROP_40
-flags:RAND_25 | RAND_50
-flags:IM_COLD | NO_CONF | NO_SLEEP
-desc:It's blue and it's oozing.
+# Jellies drop fruit?
 
 name:white jelly
 plural:white jellies
@@ -2722,23 +2803,6 @@ passive:TOUCH:POISON:2d2
 flags:NEVER_MOVE
 flags:HURT_LIGHT | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
 desc:It's a large pile of white flesh.
-
-name:green ooze
-base:jelly
-color:g
-speed:120
-hit-points:8
-hearing:8
-armor-class:19
-sleepiness:80
-depth:3
-rarity:2
-experience:4
-blow:CRAWL:ACID:1d3
-flags:DROP_60
-flags:RAND_25 | RAND_50
-flags:IM_ACID | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
-desc:It's green and it's oozing.
 
 name:gruesome jelly
 plural:gruesome jellies
@@ -2946,24 +3010,26 @@ desc: as it lines all four walls of the corridors it patrols.  Through its
 desc: transparent jelly structure you can see treasures it has engulfed, and a
 desc: few corpses as well.
 
-name:black ooze
+name:jelly-mold
 base:jelly
-color:D
+color:Mud
+depth:25
+rarity:3
+grow:acidic cytoplasm
 speed:90
-hit-points:27
-hearing:10
-armor-class:7
+hit-points:160
+hearing:12
+armor-class:6
 sleepiness:1
-depth:23
-rarity:4
-experience:7
-blow:TOUCH:ACID:2d6
-flags:MULTIPLY
-flags:DROP_40
-flags:RAND_50 | OPEN_DOOR | BASH_DOOR | KILL_BODY | TAKE_ITEM
-flags:IM_POIS | HURT_COLD
-spell-freq:11
-desc:It is a strangely moving puddle.
+blow:TOUCH:POISON:1d20
+blow:TOUCH:INFECT:1d20
+passive:TOUCH:INFECT:6d15
+flags:COLD_BLOOD | KILL_BODY | TAKE_ITEM
+flags:NO_FEAR | NO_CONF | NO_SLEEP
+flags:IM_COLD | IM_POIS
+flags:STUPID | EMPTY_MIND
+desc:A slimy, moldy jelly thing, taking first one shape then another. For a
+desc:moment it looks almost like a crouching rabbit...
 
 name:electric jelly
 plural:electric jellies
@@ -3869,7 +3935,6 @@ base:lemming
 color:Slate
 depth:19
 rarity:2
-desc:Long-clawed lemmings that went for a plummet, and stopped half way down.
 grow:ice lemming
 hit-points:30
 hearing:4
@@ -3879,6 +3944,7 @@ blow:CLAW:HURT:2d13
 blow:CLAW:HURT:2d13
 flags:RAND_25
 flags:NO_FEAR | WEIRD_MIND
+desc:Long-clawed lemmings that went for a plummet, and stopped half way down.
 
 name:ice lemming
 base:lemming
@@ -4029,7 +4095,6 @@ base:lemming
 color:Gray25
 depth:34
 rarity:8
-desc:Little black rodents with huge bug-eyes, razory claws and surprising tenacity. They hunt as a pack and together can take prey many times ther size.
 grow:rock lemming
 speed:110
 hit-points:125
@@ -4042,14 +4107,13 @@ blow:CLAW:HURT:2d8
 blow:CLAW:HURT:2d8
 friends:95:3d4:Same
 flags:NO_FEAR | HURT_LIGHT | WEIRD_MIND | GROUP_AI
+desc:Little black rodents with huge bug-eyes, razory claws and surprising tenacity. They hunt as a pack and together can take prey many times ther size.
 
 name:rock lemming
 base:lemming
 color:RawUmber
 depth:37
 rarity:5
-desc:A lemming from deep caves, carrying a shovel and pick-axe, leading the 
-desc:way for others.
 grow:infernal lemming
 hit-points:200
 rarity:5
@@ -4067,6 +4131,8 @@ spells:S_KIN
 flags:NO_FEAR
 spells:SHRIEK
 flags:SMART
+desc:A lemming from deep caves, carrying a shovel and pick-axe, leading the 
+desc:way for others.
 
 name:Superlemming
 base:lemming
@@ -4692,6 +4758,62 @@ flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE
 flags:FORCE_SLEEP | ATTR_FLICKER
 flags-off: HURT_FIRE
 desc:A motionless pile of dull black mold. It doesn't look like anything unusual, but it is so extraordinarily poisonous that merely entering the same room as it (or - just maybe - even thinking about entering that room!) can be lethal.
+
+
+##### o is for OOZE #####
+
+name:blue ooze
+base:ooze
+color:b
+speed:110
+hit-points:8
+hearing:8
+armor-class:19
+sleepiness:80
+depth:5
+rarity:1
+experience:7
+blow:CRAWL:COLD:1d4
+flags:DROP_40
+flags:RAND_25 | RAND_50
+flags:IM_COLD | NO_CONF | NO_SLEEP
+desc:It's blue and it's oozing.
+
+name:green ooze
+base:ooze
+color:g
+speed:120
+hit-points:8
+hearing:8
+armor-class:19
+sleepiness:80
+depth:3
+rarity:2
+experience:4
+blow:CRAWL:POISON:1d3
+flags:DROP_60
+flags:RAND_25 | RAND_50
+flags:IM_ACID | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
+desc:It's green and it's oozing.
+
+name:black ooze
+base:ooze
+color:D
+speed:90
+hit-points:27
+hearing:10
+armor-class:7
+sleepiness:1
+depth:23
+rarity:4
+experience:7
+blow:TOUCH:ACID:2d6
+flags:MULTIPLY
+flags:DROP_40
+flags:RAND_50 | OPEN_DOOR | BASH_DOOR | KILL_BODY | TAKE_ITEM
+flags:IM_POIS | HURT_COLD
+spell-freq:11
+desc:It is a strangely moving puddle.
 
 
 ##### P is for GIANT HUMANOID #####
@@ -5522,9 +5644,7 @@ name:jackalope
 base:rodent
 color:BurntUmber
 depth:30
-rarity:5multiply
-desc:This strange creature resembles a rabbit with an antelope's head, complete with
-desc:a set of dangerous-looking antlers.
+rarity:5
 speed:120
 hit-points:55
 armor-class:18
@@ -5535,6 +5655,8 @@ blow:KICK:HURT:1d8
 blow:KICK:HURT:1d8
 flags:FORCE_SLEEP
 flags:SMART
+desc:This strange creature resembles a rabbit with an antelope's head, complete with
+desc:a set of dangerous-looking antlers.
 
 ##### R is for ROBOTS #####
 
@@ -5684,7 +5806,6 @@ name:banana slug
 base:slug
 color:Banana
 depth:1
-desc:A large slug, the size and colour of a banana. The taste is completely different though.
 grow:elephant slug
 speed:100
 hit-points:10
@@ -5697,12 +5818,12 @@ flags:COLD_BLOOD
 flags:RAND_25
 flags:HURT_LIGHT
 flags:STUPID | WEIRD_MIND
+desc:A large slug, the size and colour of a banana. The taste is completely different though.
 
 name:elephant slug
 base:slug
 color:Slate
 depth:9
-desc:A great grey slug the size of a cow!
 grow:dragon slug
 speed:100
 hit-points:70
@@ -5715,13 +5836,13 @@ flags:COLD_BLOOD
 flags:RAND_25
 flags:HURT_LIGHT
 flags:STUPID | WEIRD_MIND
+desc:A great grey slug the size of a cow!
 
 name:dragon slug
 base:slug
 color:BurntUmber
 depth:11
 rarity:1
-desc:It is slowly making its way towards you, eating everything in its path...
 speed:100
 hit-points:80
 hearing:10
@@ -5735,13 +5856,13 @@ spell-freq:10
 spell-power:30
 spells:BR_ACID
 flags:IM_WATER | STUPID | EMPTY_MIND
+desc:It is slowly making its way towards you, eating everything in its path...
 
 name:giant leech
 base:slug
 color:Gray25
 depth:17
 rarity:1
-desc:Slick black pulsing /thing/, three great jaws snap at air...
 hit-points:90
 hearing:1
 armor-class:1
@@ -5752,13 +5873,13 @@ blow:BITE:WOUND:1d6
 flags:COLD_BLOOD
 flags:RAND_25
 flags:HURT_LIGHT | STUPID | WEIRD_MIND
+desc:Slick black pulsing /thing/, three great jaws snap at air...
 
 name:rakonan snail
 base:slug
 color:Magenta-Pink
 depth:22
 rarity:1
-desc:A huge snail, green with an angular, bright pink shell.
 speed:100
 hit-points:120
 hearing:1
@@ -5766,13 +5887,13 @@ armor-class:15
 sleepiness:200
 blow:SUCK:HURT:3d5
 flags:COLD_BLOOD | HURT_LIGHT | STUPID | WEIRD_MIND
+desc:A huge snail, green with an angular, bright pink shell.
 
 name:neptunian slug
 base:slug
 color:LimeGreen
 depth:27
 rarity:8
-desc:A pale green slug-like creature that can inflate itself to a great size.
 speed:100
 hit-points:160
 hearing:1
@@ -5781,6 +5902,7 @@ sleepiness:200
 blow:DROOL:HURT:4d5
 flags:COLD_BLOOD
 flags:RAND_25 | HURT_LIGHT | STUPID | WEIRD_MIND
+desc:A pale green slug-like creature that can inflate itself to a great size.
 
 
 
@@ -5857,6 +5979,21 @@ flags:IM_POIS
 innate-freq:10
 spells:WEAVE
 desc:It is a vast black spider whose bulbous body is bloated with poison.
+
+name:yellow scorpion
+base:spider
+color:Goldenrod
+depth:11
+rarity:1
+grow:pink scorpion
+hit-points:50
+hearing:12
+armor-class:10
+sleepiness:20
+blow:BITE:HURT:1d8
+blow:STING:POISON:2d5
+flags:SMART | WEIRD_MIND
+desc:A giant scorpion with a sharp stinger.
 
 name:redback
 base:spider
@@ -5950,6 +6087,23 @@ flags:IM_POIS
 desc:A gleaming black scorpion as large as a lion, with a pulsating stinger
 desc: and two great deadly claws.
 
+name:giant grey scorpion
+base:spider
+color:Slate
+depth:36
+rarity:4
+speed:115
+hit-points:140
+hearing:12
+armor-class:25
+sleepiness:40
+blow:BITE:HURT:1d16
+blow:CLAW:HURT:1d13
+blow:CLAW:HURT:1d13
+blow:STING:POISON:3d6
+flags:SMART | WEIRD_MIND
+desc:It is a giant grey scorpion.  It looks poisonous.
+
 
 ##### T is for TREE #####
 # and other plants
@@ -5959,8 +6113,6 @@ base:tree
 color:Brick
 depth:6
 rarity:10
-desc:A network of fine reddish tendrils connect leaves shaped to catch the thin
-desc:Martian winds. Poisoned barbs catch onto anything it rolls into.
 grow:martian cabbage
 speed:110
 hit-points:1
@@ -5975,14 +6127,14 @@ flags:RAND_25 | RAND_50
 flags:NO_FEAR | NO_CONF | NO_SLEEP
 spell-power:4
 flags:STUPID | EMPTY_MIND
+desc:A network of fine reddish tendrils connect leaves shaped to catch the thin
+desc:Martian winds. Poisoned barbs catch onto anything it rolls into.
 
 name:martian cabbage
 base:tree
 depth:6
 rarity:2
 color:DarkSandyBrown
-desc:A rough sphere of dense, glossy rust-red vegetation, the size of a beach
-desc:ball. It looks harmless enough...
 hit-points:20
 hearing:1
 armor-class:40
@@ -5996,6 +6148,8 @@ flags:NEVER_MOVE
 #cloud:2:POISON
 flags:NO_FEAR | NO_CONF | NO_SLEEP
 flags:STUPID | EMPTY_MIND
+desc:A rough sphere of dense, glossy rust-red vegetation, the size of a beach
+desc:ball. It looks harmless enough...
 
 #is this really a T?
 #
@@ -6004,8 +6158,6 @@ base:tree
 color:Light Yellow
 depth:12
 rarity:2
-desc:A round silvery flower on a tall stalk. As you approach the flower head slowly
-desc:turns to face you. 
 speed:100
 rarity:10
 hit-points:200
@@ -6022,6 +6174,8 @@ spells:BE_LIGHT
 flags:IM_LIGHT | NO_FEAR | NO_CONF | NO_SLEEP
 flags:IM_FIRE
 flags:STUPID | EMPTY_MIND
+desc:A round silvery flower on a tall stalk. As you approach the flower head slowly
+desc:turns to face you. 
 
 name:triffid
 base:tree
@@ -6400,7 +6554,6 @@ base:alien
 color:Green
 depth:13
 rarity:4
-desc:An ugly screaming little green alien.
 grow:yellow horror
 hit-points:42
 armor-class:25
@@ -6413,13 +6566,13 @@ spell-freq:7
 spell-power:7
 experience:65
 spells:BO_POIS
+desc:An ugly screaming little green alien.
 
 name:blue horror
 base:alien
 color:Blue
 depth:14
 rarity:4
-desc:An ugly screaming little blue alien.
 grow:turquoise horror
 hit-points:45
 armor-class:25
@@ -6432,6 +6585,7 @@ flags:EVIL | NO_FEAR | NO_CONF | IM_ELEC | SMART | WEIRD_MIND | OPEN_DOOR
 spell-freq:6
 spell-power:8
 spells:BO_ELEC
+desc:An ugly screaming little blue alien.
 
 # should these (and others) be P's?
 name:umber hulk
@@ -6543,7 +6697,6 @@ color:Light Teal
 base:alien
 depth:34
 rarity:4
-desc:An ugly screaming blue-green alien.
 grow:white horror
 speed:110
 hit-points:55
@@ -6558,6 +6711,7 @@ flags:EVIL | NO_FEAR | NO_CONF | IM_ELEC | IM_POIS | OPEN_DOOR | SMART | WEIRD_M
 spell-freq:4
 spell-power:22
 spells:BO_PLAS | BA_POIS | BA_ELEC | CONF | SCARE
+desc:An ugly screaming blue-green alien.
 
 name:xorn
 base:alien

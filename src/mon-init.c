@@ -1014,7 +1014,7 @@ static enum parser_error parse_mon_base_flags(struct parser *p) {
 	while (s) {
 		if (grab_flag(rb->flags, RF_SIZE, r_info_flags, s)) {
 			mem_free(flags);
-			quit_fmt("bad f-flag: %s", s);
+			quit_fmt_p(p, "bad f-flag: %s", s);
 			return PARSE_ERROR_INVALID_FLAG;
 		}
 		s = strtok(NULL, " |");
@@ -1302,7 +1302,7 @@ static enum parser_error parse_monster_flags(struct parser *p) {
 	while (s) {
 		if (grab_flag(r->flags, RF_SIZE, r_info_flags, s)) {
 			mem_free(flags);
-			quit_fmt("bad f2-flag: %s", parser_getstr(p, "flags"));
+			quit_fmt_p(p, "bad f2-flag: %s", parser_getstr(p, "flags"));
 			return PARSE_ERROR_INVALID_FLAG;
 		}
 		s = strtok(NULL, " |");
@@ -1326,7 +1326,7 @@ static enum parser_error parse_monster_flags_off(struct parser *p) {
 	while (s) {
 		if (remove_flag(r->flags, RF_SIZE, r_info_flags, s)) {
 			mem_free(flags);
-			quit_fmt("bad mf-flag: %s", s);
+			quit_fmt_p(p, "bad mf-flag: %s", s);
 			return PARSE_ERROR_INVALID_FLAG;
 		}
 		s = strtok(NULL, " |");
@@ -1891,7 +1891,7 @@ static errr finish_parse_monster(struct parser *p) {
 				f->race = lookup_monster(f->name);
 			}
 			if (!f->race) {
-				quit_fmt("Couldn't find friend named '%s' for monster '%s'",
+				quit_fmt_p(p, "Couldn't find friend named '%s' for monster '%s'",
 						 f->name, race->name);
 			}
 			string_free(f->name);
@@ -1900,7 +1900,7 @@ static errr finish_parse_monster(struct parser *p) {
 			if (!s->base) {
 				s->race = lookup_monster(s->name);
 				if (!s->race) {
-					quit_fmt("Couldn't find shape named '%s' for monster '%s'",
+					quit_fmt_p(p, "Couldn't find shape named '%s' for monster '%s'",
 							 s->name, race->name);
 				}
 			}
@@ -1915,7 +1915,7 @@ static errr finish_parse_monster(struct parser *p) {
 		struct monster_race *race = &r_info[i];
 		if (race->ridx) {
 			if (!race->base)
-				quit_fmt("Monster %s has no base\n", race->name);
+				quit_fmt_p(p, "Monster %s has no base\n", race->name);
 			/* Total active attacks */
 			int attacks = 0;
 
@@ -1927,9 +1927,9 @@ static errr finish_parse_monster(struct parser *p) {
 			}
 
 			if ((rf_has(race->flags, RF_NEVER_BLOW)) && (attacks != 0))
-				quit_fmt("Monster %s has %d blows, but NEVER_BLOW is set\n", race->name, attacks);
+				quit_fmt_p(p, "Monster %s has %d blows, but NEVER_BLOW is set\n", race->name, attacks);
 			if ((!(rf_has(race->flags, RF_NEVER_BLOW))) && (attacks == 0))
-				quit_fmt("Monster %s has no blows, but NEVER_BLOW is not set\n", race->name);
+				quit_fmt_p(p, "Monster %s has no blows, but NEVER_BLOW is not set\n", race->name);
 
 			if ((!race->rarity) && (!(rf_has(race->flags, RF_SPECIAL_GEN))))
 				fprintf(stderr,"Monster %s has 0 rarity, but SPECIAL_GEN is not set\n", race->name);

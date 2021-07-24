@@ -43,6 +43,15 @@ pain:11
 flags:EMPTY_MIND
 desc:Monsters that fill the grid
 
+# Energy forms / formless holograms
+name:energy
+glyph:*
+pain:1
+flags:PASS_WALL | HURT_LIGHT
+flags:IM_FIRE | IM_COLD | IM_ELEC | IM_POIS
+flags:NO_CONF | NO_SLEEP
+flags:NONLIVING
+
 # Amphibians
 name:amphibian
 glyph:A
@@ -179,13 +188,6 @@ flags:IM_FIRE | IM_COLD | IM_ELEC | IM_POIS
 flags:NO_CONF | NO_SLEEP
 flags:NONLIVING
 
-# Weird legendary stuff, mostly without spells, sometimes with breath
-name:hybrid
-glyph:H
-pain:1
-flags:CLEAR_WEB
-desc:Hybrid
-
 # Generally smart, will pick up items amd throw
 name:monkey
 glyph:M
@@ -282,6 +284,14 @@ pain:2
 flags:EMPTY_MIND | STUPID
 flags:HURT_FIRE | NO_FEAR | NO_CONF | NO_SLEEP
 desc:Mushroom
+
+# Jelly-like, though usually moving creatures which touch for various effects
+name:ooze
+glyph:o
+pain:2
+flags:EMPTY_MIND | STUPID | CLEAR_WEB
+flags:NO_FEAR
+desc:Ooze
 
 name:person
 glyph:p
@@ -432,8 +442,3 @@ name:player
 glyph:@
 pain:1
 desc:You
-
-name:Morgoth
-glyph:P
-pain:12
-desc:Morgoth

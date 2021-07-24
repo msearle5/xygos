@@ -357,6 +357,15 @@ effect-type:element
 resist:CHAOS
 lash-type:CHAOS
 
+name:DESTRUCT
+power:0
+eval:20
+desc:self-destruct
+lore-color-base:Yellow
+lore-color-resist:Light Green
+effect-type:element
+lash-type:MISSILE
+
 name:BLACK_BREATH
 power:0
 eval:10

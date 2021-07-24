@@ -563,6 +563,13 @@ static void project_monster_handler_SHARD(project_monster_handler_context_t *con
 	project_monster_breath(context, RSF_BR_SHAR, 3);
 }
 
+/* Hallucination */
+static void project_monster_handler_HALLU(project_monster_handler_context_t *context)
+{
+	/* Confuse */
+	context->mon_timed[MON_TMD_CONF] = adjust_radius(context, 10 + randint1(10));
+}
+
 /* Nexus */
 static void project_monster_handler_NEXUS(project_monster_handler_context_t *context)
 {

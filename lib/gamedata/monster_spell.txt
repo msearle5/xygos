@@ -42,6 +42,22 @@ lore-color-base:Orange
 message-vis:{name} makes a high-pitched shriek.
 message-invis:Something makes a high-pitched shriek.
 
+name:LIGHT
+msgt:BR_FIRE
+hit:100
+effect:SPOT:LIGHT:2
+dice:2d6
+message-vis:There is a blinding flash of light!
+message-invis:You hear a soft pop.
+
+name:HALLU
+msgt:BR_FIRE
+hit:100
+effect:SPOT:HALLU:3
+dice:2d6
+message-vis:There is a flash of violet light!
+message-invis:You hear a soft pop.
+
 name:FLAMES
 msgt:BR_FIRE
 hit:100

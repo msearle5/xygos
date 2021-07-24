@@ -1137,6 +1137,14 @@ static void melee_effect_handler_EXP_80(melee_effect_handler_context_t *context)
 }
 
 /**
+ * Melee effect handler: Self-destruct.
+ */
+static void melee_effect_handler_DESTRUCT(melee_effect_handler_context_t *context)
+{
+	monster_death(context->mon, false);
+}
+
+/**
  * Melee effect handler: Make the player hallucinate.
  *
  * Note that we don't use melee_effect_timed(), due to the different monster
@@ -1227,6 +1235,7 @@ melee_effect_handler_f melee_handler_for_blow_effect(const char *name)
 		{ "EXP_40", melee_effect_handler_EXP_40 },
 		{ "EXP_80", melee_effect_handler_EXP_80 },
 		{ "HALLU", melee_effect_handler_HALLU },
+		{ "DESTRUCT", melee_effect_handler_DESTRUCT },
 		{ "BLACK_BREATH", melee_effect_handler_BLACK_BREATH },
 		{ NULL, NULL },
 	};

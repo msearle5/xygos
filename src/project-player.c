@@ -607,6 +607,12 @@ static int project_player_handler_PLASMA(project_player_handler_context_t *conte
 	return 0;
 }
 
+static int project_player_handler_HALLU(project_player_handler_context_t *context)
+{
+	(void)player_inc_timed(player, TMD_IMAGE, 3 + context->dam, true, true);
+	return 0;
+}
+
 static int project_player_handler_METEOR(project_player_handler_context_t *context)
 {
 	return 0;
