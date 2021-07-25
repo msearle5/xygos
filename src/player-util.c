@@ -160,6 +160,31 @@ static const char *random_death_msg(void)
 }
 
 /**
+ * Return the top level of a dungeon, this does not care about whether
+ * you can get there (so is not blocked by quests)
+*/
+int dungeon_top_level(const char *dungeon)
+{
+	/* Get target level */
+	int target_level = 0;
+
+	/* Step 1 level at a time until a valid
+	 * level is found, or the limit is hit.
+	 */
+	do {
+		target_level ++;
+
+		/* Don't allow levels below max */
+		if (target_level > z_info->max_depth - 1) {
+			target_level = z_info->max_depth - 1;
+			break;
+		}
+	} while  (!world_level_exists(dungeon, target_level));
+
+	return target_level;
+}
+
+/**
  * Increment to the next or decrement to the preceding level,
    accounting for the stair skip value in constants.
    Keep in mind to check all intermediate level for unskippable
