@@ -151,13 +151,25 @@ int world_airline_fare(struct town *from, struct town *to)
 	int d = world_between(from, to);
 	int fare = 500 + (d / 200) + ((d / 15000) * (d / 15000));
 
-	/* It gets increasingly expensive to fly as the danger level increases */
+	/* It gets increasingly expensive to fly as the danger level increases.
+	 * Early on (especially, though not limited to when danger_depth has not
+	 * yet started to increase), prices are much less (to encourage players
+	 * to move on quickly from early dungeons)
+	 **/
+	int cap = (((turn * 20) / (10 * z_info->town_easy_turns)) + 1) * 200;
 	int markup = danger_depth(player);
-	markup *= markup;
-	markup /= 10;
-	markup += 100;
-	fare *= markup;
-	fare /= 100;
+	if (markup) {
+		markup *= markup;
+		markup /= 10;
+		markup += 100;
+		fare *= markup;
+		fare /= 100;
+	}
+	if (fare > cap) {
+		fare -= cap;
+		fare /= 10;
+		fare += cap;
+	} 
 
 	return store_roundup(fare);
 }
@@ -309,13 +321,13 @@ char *world_describe_town(struct town *t)
 		", unspoiled town",
 	};
 	static const char *guff_sits[] = {
-		"nestles",
-		"sits",
-		"lies",
-		"is sited",
-		"is situated",
-		"is placed",
-		"is centered",
+		"nestles in",
+		"sits in",
+		"lies in",
+		"is sited in",
+		"is situated in",
+		"is placed in",
+		"is centered in",
 		"completes",
 	};
 	static const char *guff_dramatic[] = {
@@ -368,7 +380,7 @@ char *world_describe_town(struct town *t)
 		"thrill-seeker",
 	};
 
-	sprintf(buf, "This %s %s%s %s in the %s %s of %s and %s %s "
+	sprintf(buf, "This %s %s%s %s the %s %s of %s and %s %s "
 					"%s %s for the %s %s!",
 		GUFF(really), GUFF(pretty), GUFF(town), GUFF(sits), GUFF(dramatic), GUFF(surround), t->geography, GUFF(over), t->underground,
 		GUFF(ideal), GUFF(destination), GUFF(daring), GUFF(tourist));

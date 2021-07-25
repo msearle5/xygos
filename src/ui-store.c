@@ -2182,8 +2182,16 @@ static void store_examine(struct store_context *ctx, int item)
 							}
 						}
 					} else {
-						int difficulty = quest->level;
-						difficulty -= MAX(player->max_depth, player->max_lev / 2);
+						int difficulty = dungeon_top_level(player->town->connect[item]->downto);
+						int power = MAX(player->max_depth, (player->max_lev * 5) / 8);
+						for (int i=0;i<z_info->quest_max;i++) {
+							if (player->quests[i].flags & QF_SUCCEEDED) {
+								power = MAX(player->quests[i].level, power);
+							}
+						}
+
+						difficulty -= power;
+						
 						if (difficulty < 0)
 							desc = "You should have no trouble at all there - really, a relaxing stroll!";
 						else if (difficulty < 5)

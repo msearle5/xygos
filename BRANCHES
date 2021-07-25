@@ -1,4 +1,5 @@
 master
+playtest	active						Save stable branch for playtesting
 timelord	active						Timelord's techniques, etc.
 clowns		active						Clowns' card tricks
 guardians	inactive, merged			The mini-dungeons need an endboss

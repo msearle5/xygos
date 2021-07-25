@@ -446,7 +446,7 @@ cost:20
 pile:10:3
 alloc:6:0 to 14
 flags:EXPLODE
-msg:The {flavor} explodes!
+msg:The {kind} explodes!
 effect:SPOT:FIRE:3
 dice:2d10
 desc:A 'Molotov Cocktail' - a glass beer bottle filled with highly flammable fuel. It's not a sophisticated weapon, but it can still be effective.
@@ -2711,7 +2711,7 @@ alloc:1:55 to 127
 attack:1d1:-1:0
 armor:40:0
 desc:A smoothly swept curve of ultra-rare silver-blue unobtainium. It's capable of stopping almost anything, without weighing you down enough to worry about.
-material:titanium
+material:unobtainium
 
 name:& force wheel~
 type:shield
