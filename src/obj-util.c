@@ -1337,7 +1337,7 @@ char *format_custom_message(const struct object *obj, const char *string, char *
 				break;
 			case MSG_TAG_FLAVOR:
 				if (obj && (obj->kind->flavor) && (obj->kind->flavor->text) && (!object_flavor_is_aware(obj))) {
-					obj_desc_name_format(&buf[end], sizeof(buf) - end, 0, obj->kind->flavor->text, NULL, false);
+					obj_desc_name_format(&buf[end], sizeof(buf) - end, 0, obj_desc_basename(obj, true, true, true), obj->kind->flavor->text, false);
 					end += strlen(&buf[end]);
 					break;
 				}

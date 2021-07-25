@@ -70,19 +70,13 @@ static const char *obj_desc_get_modstr(const struct object_kind *kind)
 }
 
 /**
- * An object's basic name - a generic name for flavored objects (with the
+ * Return an object's basic name - a generic name for flavored objects (with the
  * actual name added later depending on awareness, the name from object.txt
  * for almost everything else, and a bit extra for books. 
  */
-static const char *obj_desc_get_basename(const struct object *obj, bool aware,
-										 bool terse, int mode)
+const char *obj_desc_basename(const struct object *obj, bool aware,
+										 bool terse, bool show_flavor)
 {
-	bool show_flavor = !terse && obj->kind->flavor;
-
-	if (mode & ODESC_STORE)
-		show_flavor = false;
-	if (aware && !OPT(player, show_flavors)) show_flavor = false;
-
 	/* Artifacts are special */
 	if (obj->artifact && (aware || object_is_known_artifact(obj) || terse ||
 						  !obj->kind->flavor))
@@ -126,6 +120,24 @@ static const char *obj_desc_get_basename(const struct object *obj, bool aware,
 	}
 
 	return "(nothing)";
+}
+
+
+/**
+ * An object's basic name - a generic name for flavored objects (with the
+ * actual name added later depending on awareness, the name from object.txt
+ * for almost everything else, and a bit extra for books.
+ */
+static const char *obj_desc_get_basename(const struct object *obj, bool aware,
+										 bool terse, int mode)
+{
+	bool show_flavor = !terse && obj->kind->flavor;
+
+	if (mode & ODESC_STORE)
+		show_flavor = false;
+	if (aware && !OPT(player, show_flavors)) show_flavor = false;
+
+	return obj_desc_basename(obj, aware, terse, mode);
 }
 
 
@@ -227,7 +239,8 @@ size_t obj_desc_name_format(char *buf, size_t max, size_t end,
 			fmt = endmark;
 		} else if (*fmt == '#') {
 			/* Add modstr, with pluralisation if relevant */
-			end = obj_desc_name_format(buf, max, end, modstr, NULL,	pluralise);
+			if (modstr)
+				end = obj_desc_name_format(buf, max, end, modstr, NULL,	pluralise);
 		}
 
 		else
