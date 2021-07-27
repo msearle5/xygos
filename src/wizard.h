@@ -69,6 +69,7 @@ void wiz_cheat_death(void);
 void get_debug_command(void);
 
 /* wiz-stats.c */
+void feel_stats(void);
 bool stats_are_enabled(void);
 void stats_collect(int nsim, int simtype);
 void disconnect_stats(int nsim, bool stop_on_disconnect);

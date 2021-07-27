@@ -1858,6 +1858,11 @@ void pit_stats(int nsim, int pittype, int depth)
 	return;
 }
 
+void feel_stats(void)
+{
+	return;
+}
+
 struct tunnel_instance {
 	int nstep, npierce, ndug, dstart, dend;
 	bool early;

@@ -273,6 +273,7 @@ struct cmd_info cmd_debug_stats[] =
 {
 	{ "Objects and monsters", { 'S' }, CMD_WIZ_COLLECT_OBJ_MON_STATS, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
 	{ "Pits", { 'P' }, CMD_WIZ_COLLECT_PIT_STATS, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
+	{ "Feelings", { '~' }, CMD_WIZ_COLLECT_FEEL_STATS, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
 	{ "Disconnected levels", { 'D' }, CMD_WIZ_COLLECT_DISCONNECT_STATS, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
 	{ "Obj/mon alternate key", { 'f' }, CMD_WIZ_COLLECT_OBJ_MON_STATS, NULL, player_can_debug_prereq, 0, NULL, NULL, NULL, 0 },
 };
