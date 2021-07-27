@@ -51,7 +51,6 @@ R:AAAAAAAAAAARRRRRRRRGGGGHHHHHHH!
 R:ALSOME.
 R:Accidents? What accidents? Mighty were your fallen ancestors.
 R:Ack! Pfft!
-R:Aiya Earendil Elenion Ancalima!
 R:All constants are variables.
 R:All generalisations are dangerous, including this one.
 R:All hail the supreme grand master!
@@ -169,7 +168,6 @@ R:Go outside and get some fresh air.
 R:Go read a goddamn book!
 R:Go Team Ant!
 R:Gone insane from the pain that sure they know: for who the flange sound?
-R:Gu kibum kelkum-ishi, burzum-ishi. Akha - gum-ishi ashi gurum.
 R:Hackers do it with bugs.
 R:Haggling is the only way to get the best prices.
 R:Has anyone been even as decided to use even go want to do look more like?
@@ -228,7 +226,6 @@ R:Increase your pace to catch up with your thoughtlessness?
 R:Information age has not just begun! Hermes, Loki, Prometheus are tradition.
 R:Invulnerability is impenetrable.
 R:Invulnerability may be penetrated by evil creatures.
-R:Iorhael, lasto beth nin, tolo dan nan galad!
 R:Isn't your very head an especially prized one?
 R:It can't be bad to give knowledge to the people, even if by means of rumors.
 R:It can't be bad to give knowledge to the people, even if it's a load of...
@@ -680,7 +677,6 @@ R:Your pantheon.
 R:Your termination is long due.
 R:Z. says: Couldn't we just sit down and talk about it over a couple of beers?
 R:Z. says: Somewhere there must be a gap in the icy blue logic that surrounds us.
-R:Za dashu snaku Zigur, Durbgu nazgshu, Durbgu dashshu!
 R:Zelazny said: "A headlong rush may also result in a broken neck."
 R:Zelazny said: "Sometimes it's damned hard to tell the dancer from the dance."
 R:Zelazny said: "Whenever anything outrageous happens, there's a reason for it."
