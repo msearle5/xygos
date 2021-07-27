@@ -322,7 +322,7 @@ lore:radiation
 lore-color-base:Orange
 lore-color-resist:Light Green
 message-vis:{name} breathes radiation.
-message-invis:You hear an eerie roar.
+message-invis:You hear an resonant roar.
 
 name:BR_LIGHT
 msgt:BR_LIGHT

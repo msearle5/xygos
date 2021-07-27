@@ -5758,6 +5758,7 @@ flags:SMART
 desc:This strange creature resembles a rabbit with an antelope's head, complete with
 desc:a set of dangerous-looking antlers.
 
+
 ##### R is for ROBOTS #####
 
 name:talky toaster
@@ -5777,6 +5778,23 @@ spell-freq:3
 spells:BR_FIRE
 flags:SMART | METAL
 desc:The Talky Toaster has extraordinary intelligence, but is handicapped by a complete obsession with bread and toasting. Unfortunately that has resulted in it wanting to toast you.
+
+name:Bigtrak
+speed:100
+base:robot
+color:Tan
+hit-points:18
+hearing:2
+armor-class:30
+sleepiness:100
+depth:11
+rarity:2
+blow:BUTT:HURT:1d4
+flags:STUPID
+spell-freq:6
+spell-power:4
+spells:SHRIEK | BE_LIGHT
+desc:A not very big tracked robot that trundles about aimlessly. It appears harmless until it stops and zaps twin blue lasers.
 
 name:talky freezer
 base:robot
@@ -5844,6 +5862,26 @@ flags:UNIQUE | QUESTOR | SPECIAL_GEN | SMART | METAL
 flags:DROP_4 | DROP_3 | DROP_2 | DROP_1 | ONLY_GOLD
 flags:KILL_WALL | KILL_BODY
 desc:Miniac, the Mining Intelligent Autonomous Control. A heavy robotic platform for blasting through rock walls, shifting equipment and controlling other robots. And entirely insane, seeing you as just a walking bag of fuel. There's no big red switch in sight - you are going to have to shut it down the old-fashioned way.
+
+name:Bender
+base:robot
+color:SteelBlue
+hit-points:600
+hearing:5
+armor-class:90
+sleepiness:50
+depth:36
+rarity:2
+experience:1200
+speed:115
+blow:CRUSH:HURT:2d40
+blow:CRUSH:HURT:2d40
+blow:TOUCH:EAT_ITEM
+spell-freq:5
+spells:BE_ELEC
+flags:UNIQUE | SMART | METAL | MALE
+flags:DROP_2 | DROP_60
+desc:An industrial metalworking robot, built at Fábrica Robótica De La Madre for bending steel girders. "Kill all humans!" That includes you. 
 
 name:Mecha-Triax
 base:robot
