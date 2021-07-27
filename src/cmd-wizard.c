@@ -666,6 +666,13 @@ void do_cmd_wiz_collect_obj_mon_stats(struct command *cmd)
 }
 
 
+void do_cmd_wiz_collect_feel_stats(struct command *cmd)
+{
+	if (!stats_are_enabled()) return;
+	feel_stats();
+}
+
+
 /**
  * Generate several pits and collect statistics about the types of monsters
  * used (CMD_WIZ_COLLECT_PIT_STATS).  Can take the number of simulations from

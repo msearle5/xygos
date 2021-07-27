@@ -91,6 +91,7 @@ void do_cmd_wiz_change_item_quantity(struct command *cmd);
 void do_cmd_wiz_collect_disconnect_stats(struct command *cmd);
 void do_cmd_wiz_collect_obj_mon_stats(struct command *cmd);
 void do_cmd_wiz_collect_pit_stats(struct command *cmd);
+void do_cmd_wiz_collect_feel_stats(struct command *cmd);
 void do_cmd_wiz_create_all_artifact(struct command *cmd);
 void do_cmd_wiz_create_all_artifact_from_tval(struct command *cmd);
 void do_cmd_wiz_create_all_obj(struct command *cmd);
