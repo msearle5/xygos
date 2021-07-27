@@ -392,7 +392,7 @@ static void use_aux(struct command *cmd, struct object *obj, enum use use,
 	struct trap_kind *rune = lookup_trap("repulsion field");
 
 	/* Get arguments */
-	assert(cmd_get_arg_item(cmd, "item", &obj) == CMD_OK);
+	if (cmd_get_arg_item(cmd, "item", &obj) != CMD_OK) assert(0);
 
 	was_aware = object_flavor_is_aware(obj);
 
