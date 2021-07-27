@@ -544,7 +544,11 @@ static size_t obj_desc_charges(const struct object *obj, char *buf, size_t max,
 			 */
 			const char *charging = "charging";
 			if (tval_is_light(obj)) {
-				if ((obj->timeout < randcalc(obj->kind->pval, 0, AVERAGE)) && (of_has(obj->flags, OF_BURNS_OUT)))
+				/* To be "lit"
+				 * an item must have less than maximum fuel, and be a burnable (candle, glowstick etc).
+				 * Restartable one-use (keyfobs) should not.
+				 */
+				if ((obj->timeout < randcalc(obj->kind->pval, 0, AVERAGE)) && of_has(obj->flags, OF_BURNS_OUT) && (!kf_has(obj->kind->kind_flags, KF_EASY_KNOW)))
 					charging = "lit";
 				else if (!(of_has(obj->flags, OF_NO_FUEL)))
 					return end;
