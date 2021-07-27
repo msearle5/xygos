@@ -137,7 +137,7 @@ static const char *obj_desc_get_basename(const struct object *obj, bool aware,
 		show_flavor = false;
 	if (aware && !OPT(player, show_flavors)) show_flavor = false;
 
-	return obj_desc_basename(obj, aware, terse, mode);
+	return obj_desc_basename(obj, aware, terse, show_flavor);
 }
 
 
