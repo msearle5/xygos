@@ -1570,7 +1570,7 @@ void search(struct player *p)
 	char o_name[80];
 
 	/* Various conditions mean no searching */
-	if (p->timed[TMD_BLIND] || no_light() ||
+	if (p->timed[TMD_BLIND] || no_light(p) ||
 		p->timed[TMD_CONFUSED] || p->timed[TMD_IMAGE])
 		return;
 
