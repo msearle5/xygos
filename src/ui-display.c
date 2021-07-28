@@ -62,6 +62,16 @@
 #include "wizard.h"
 #include "world.h"
 
+struct splash_line;
+struct splash_line {
+	struct splash_line *next;
+	char *text;
+};
+
+struct splash_line *splash_head;
+struct splash_line *splash_tail;
+struct splash_line *splash_position;
+
 /**
  * There are a few functions installed to be triggered by several 
  * of the basic player events.  For convenience, these have been grouped 
@@ -1471,12 +1481,52 @@ static void animate(game_event_type type, game_event_data *data, void *user)
 	do_animation();
 }
 
+/* Update the scrolltext */
+static void scroll_update()
+{
+	static int scroll_count = 0;
+	if (scroll_count) {
+		/* Slow down counter */
+		scroll_count--;
+	} else {
+		scroll_count = 3;
+		/* Scroll one position ahead */
+		if (!splash_position)
+			splash_position = splash_head;
+		/* Clear the scroll window and output lines */
+		int termw, termh;
+		Term_get_size(&termw, &termh);
+		int xbase = (termw / 2) - 30;
+		int width = 62;
+		int ybase = ((termh+2) / 5) + 8;
+		struct splash_line *line = splash_position;
+		const int colour[] = {
+			COLOUR_L_DARK,COLOUR_SLATE,COLOUR_L_WHITE,COLOUR_WHITE
+		};
+		const int height = sizeof(colour) / sizeof(*colour);
+		for(int y=ybase;y<height+ybase;y++) {
+			Term_erase(xbase, y, width);
+			Term_putstr(xbase, y, -1, colour[y-ybase], line->text);
+			line = line->next;
+			if (!line)
+				line = splash_head;
+		}
+		Term_redraw_section(xbase,ybase,xbase+width,ybase+height);
+		splash_position = splash_position->next;
+	}
+}
+
+
 /**
  * This is used when the user is idle to allow for simple animations.
  * Currently the only thing it really does is animate shimmering monsters.
  */
 void idle_update(void)
 {
+	if (splash_head) {
+		scroll_update();
+		return;
+	}
 	if (!animations_allowed) return;
 	if (msg_flag) return;
 	if (!character_dungeon) return;
@@ -2376,6 +2426,18 @@ static void splashscreen_note(game_event_type type, game_event_data *data,
 	Term_fresh();
 }
 
+static void cleanup_splashscreen(void)
+{
+	struct splash_line *splash = splash_head;
+	while (splash) {
+		string_free(splash->text);
+		struct splash_line *next = splash->next;
+		mem_free(splash);
+		splash = next;
+	};
+	splash_head = splash_tail = splash_position = NULL;
+}
+ 
 static void show_splashscreen(game_event_type type, game_event_data *data,
 							  void *user)
 {
@@ -2427,6 +2489,34 @@ static void show_splashscreen(game_event_type type, game_event_data *data,
 
 	/* Flush it */
 	Term_fresh();
+
+	/* Verify the "scroll" file */
+	if (!splash_head) {
+		path_build(buf, sizeof(buf), ANGBAND_DIR_SCREENS, "scroll.txt");
+		if (!file_exists(buf)) {
+			char why[1024];
+
+			/* Crash and burn */
+			strnfmt(why, sizeof(why), "Cannot access the '%s' file!", buf);
+			init_angband_aux(why);
+		}
+		fp = file_open(buf, MODE_READ, FTYPE_TEXT);
+		if (fp) {
+			bool ok = true;
+			do {
+				ok = file_getl(fp, buf, sizeof(buf));
+				if (ok) {
+					struct splash_line *splash = mem_zalloc(sizeof(struct splash_line));
+					if (!splash_head)
+						splash_head = splash_tail = splash;
+					splash->text = string_make(buf);
+					splash_tail->next = splash;
+					splash_tail = splash;
+				}
+			} while (ok);
+			file_close(fp);
+		}
+	}
 }
 
 
@@ -2640,6 +2730,11 @@ static void process_character_pref_files(void)
 }
 
 
+static void splashscreen_cleanup(game_event_type type, game_event_data *data, void *user)
+{
+	cleanup_splashscreen();
+}
+ 
 static void ui_enter_init(game_event_type type, game_event_data *data,
 						  void *user)
 {
@@ -2647,6 +2742,9 @@ static void ui_enter_init(game_event_type type, game_event_data *data,
 
 	/* Set up our splashscreen handlers */
 	event_add_handler(EVENT_INITSTATUS, splashscreen_note, NULL);
+	event_add_handler(EVENT_ENTER_BIRTH, splashscreen_cleanup, NULL);
+	event_add_handler(EVENT_ENTER_GAME, splashscreen_cleanup, NULL);
+	event_add_handler(EVENT_ENTER_WORLD, splashscreen_cleanup, NULL);
 }
 
 static void ui_leave_init(game_event_type type, game_event_data *data,
