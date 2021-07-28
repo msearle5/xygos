@@ -918,12 +918,19 @@ static void mass_produce(struct object *obj)
 		case TV_FOOD:
 		case TV_MUSHROOM:
 		case TV_BATTERY:
+		{
+			if (cost <= 10L) size += mass_roll(3, 5);
+			if (cost <= 30L) size += mass_roll(2, 5);
+			if (cost <= 60L) size += mass_roll(2, 3);
+			if (cost <= 200L) size += mass_roll(1, 2);
+			break;
+		}
+		
 		case TV_LIGHT:
 		{
-			if (cost <= 5L) size += mass_roll(3, 5);
-			if (cost <= 20L) size += mass_roll(2, 5);
-			if (cost <= 50L) size += mass_roll(2, 3);
-			if (cost <= 125L) size += mass_roll(1, 2);
+			if (cost <= 50L) size += mass_roll(3, 5);
+			if (cost <= 200L) size += mass_roll(2, 4);
+			if (cost <= 750L) size += mass_roll(2, 2);
 			break;
 		}
 
@@ -932,6 +939,7 @@ static void mass_produce(struct object *obj)
 		{
 			if (cost <= 60L) size += mass_roll(3, 5);
 			if (cost <= 240L) size += mass_roll(1, 5);
+			if (cost <= 1500L) size += mass_roll(1, 2);
 			break;
 		}
 
@@ -946,7 +954,7 @@ static void mass_produce(struct object *obj)
 			else if (cost > 50 && cost <= 500L)
 				size = randint1(4) * 5;          /* 5-20 in 5s */
 			else
-				size = 1;
+				size = randint1(randint1(15));	/* 1-15, avg 4.5 */
 
 			break;
 		}

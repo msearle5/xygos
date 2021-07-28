@@ -41,8 +41,7 @@ danger:65:80
 always:cloak:0:8000
 always:food:survival ration
 always:light:keyfob light
-normal:digger:Shovel
-normal:digger:Pick
+normal:digger
 normal:6mm ammo:6mm bullet:7500
 normal:9mm ammo:9mm bullet:2500
 normal:12mm ammo:12mm bullet:500
@@ -53,9 +52,9 @@ normal:boots:pair of flip flops
 normal:boots:pair of trainers
 normal:battery:alkaline battery
 normal:battery:0:800
-normal:food:bottle of wine
+normal:food:bottle of wine:3000
 normal:food
-normal:food:bottle of whiskey
+normal:food:bottle of whiskey:5000
 normal:mushroom:stoneskin
 normal:mushroom:purging
 buy:light
