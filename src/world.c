@@ -284,6 +284,16 @@ char *world_describe_town(struct town *t)
 {
 	static char buf[256];
 
+	rng_state state;
+	Rand_extract_state(&state);
+	u32b seed1, seed2 = 0;
+	assert(strlen(t->name) >= 3);
+	memcpy(&seed1, t->name, 4);
+	if (strlen(t->name) > 4)
+		memcpy(&seed2, t->name + strlen(t->name) - 4, 4);
+	u32b seed = seed1 ^ seed2 ^ world_town_seed;
+	Rand_state_init(seed);
+
 	#define GUFF(N) guff_##N[randint0(sizeof(guff_##N) / sizeof(const char *))]
 
 	static const char *guff_really[] = {
@@ -386,6 +396,8 @@ char *world_describe_town(struct town *t)
 		GUFF(ideal), GUFF(destination), GUFF(daring), GUFF(tourist));
 
 	#undef GUFF
+
+	Rand_restore_state(&state);
 
 	return buf;
 }
