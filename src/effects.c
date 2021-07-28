@@ -1702,7 +1702,7 @@ static bool effect_handler_DRAIN_LIGHT(effect_handler_context_t *context)
 static bool do_remove_fault(effect_handler_context_t *context, bool all)
 {
 	const char *prompt = "Repair which item? ";
-	const char *rejmsg = "It has no faults to repair.";
+	const char *rejmsg = "You have no repairable items.";
 	int itemmode = (USE_EQUIP | USE_INVEN | USE_QUIVER | USE_FLOOR);
 	int strength = effect_calculate_value(context, false);
 	struct object *obj = NULL;
