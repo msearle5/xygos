@@ -1211,7 +1211,7 @@ static bool build_room_template(struct chunk *c, struct loc centre, int ymax,
 			case '8': {
 				/* Put something nice in this square
 				 * Object (80%) or Stairs (20%) */
-				if ((randint0(100) < 80) || OPT(player, birth_levels_persist)) {
+				if (randint0(100) < 80 || dun->persist) {
 					place_object(c, grid, c->depth, false, false,
 								 ORIGIN_SPECIAL, 0);
 				} else {
@@ -1484,6 +1484,7 @@ bool build_vault(struct chunk *c, struct loc centre, struct vault *v)
 			}
 				/* Stairs */
 			case '<': {
+				if (dun->persist) break;
 				if (player->active_quest >= 0) {
 					 square_set_feat(c, grid, FEAT_EXIT); break;
 				} else {
@@ -1492,7 +1493,7 @@ bool build_vault(struct chunk *c, struct loc centre, struct vault *v)
 				}
 			}
 			case '>': {
-				if (OPT(player, birth_levels_persist)) break;
+				if (dun->persist) break;
 				/* No down stairs at bottom or on quests */
 				if (is_blocking_quest(c->depth) || c->depth >= z_info->max_depth - 1)
 					square_set_feat(c, grid, FEAT_LESS);
@@ -2482,10 +2483,11 @@ bool build_large(struct chunk *c, struct loc centre, int rating)
 		vault_monsters(c, centre, c->depth + 2, randint1(3) + 2);
 
 		/* Object (80%) or Stairs (20%) */
-		if ((randint0(100) < 80) || OPT(player, birth_levels_persist))
+		if (randint0(100) < 80 || dun->persist) {
 			place_object(c, centre, c->depth, false, false, ORIGIN_SPECIAL, 0);
-		else
+		} else {
 			place_random_stairs(c, centre);
+		}
 
 		/* Traps to protect the treasure */
 		vault_traps(c, centre, 4, 10, 2 + randint1(3));
@@ -2711,7 +2713,7 @@ bool build_nest(struct chunk *c, struct loc centre, int rating)
 	/* Pick some monster types */
 	for (i = 0; i < 64; i++) {
 		/* Get a (hard) monster type */
-		what[i] = get_mon_num(c->depth + 10);
+		what[i] = get_mon_num(c->depth + 10, c->depth);
 
 		/* Notice failure */
 		if (!what[i]) empty = true;
@@ -2837,7 +2839,7 @@ bool build_pit(struct chunk *c, struct loc centre, int rating)
 	/* Pick some monster types */
 	for (i = 0; i < 16; i++) {
 		/* Get a (hard) monster type */
-		what[i] = get_mon_num(c->depth + 10);
+		what[i] = get_mon_num(c->depth + 10, c->depth);
 
 		/* Notice failure */
 		if (!what[i]) empty = true;

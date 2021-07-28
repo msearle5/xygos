@@ -132,11 +132,19 @@ void set_primary_class(void)
 }
 
 /** Return an effective depth for difficulty of monster generation, etc.
+ * based on given depth and additional difficulty over time.
+ */
+int danger_depth_at(struct player *p, int depth)
+{
+	return MIN(z_info->max_depth - 1, depth + p->danger);
+}
+
+/** Return an effective depth for difficulty of monster generation, etc.
  * based on physical depth and additional difficulty over time.
  */
 int danger_depth(struct player *p)
 {
-	return MIN(z_info->max_depth - 1, p->depth + p->danger);
+	return danger_depth_at(p, p->depth);
 }
 
 /** Return the number of 'feeling squares' needed to get an object feeling
@@ -490,6 +498,28 @@ int energy_per_move(struct player *p)
 	int energy = z_info->move_energy;
 	return (energy * (1 + ABS(num) - num)) / (1 + ABS(num));
 }
+
+#ifdef TEST_STAT_CHECK
+bool test_stat_check(void)
+{
+	static int sv[] = {
+		3, 8, 13, 18, 18+10, 18+50, 18+100, 18+150, 18+220
+	};
+	int nsv = sizeof(sv)/sizeof(int);
+	for(int stat=0;stat<nsv;stat++) {
+		int val = sv[stat];
+		player->stat_cur[0] = val;
+		for(int check=0;check<nsv;check++) {
+			int ch = sv[check];
+			int freq = 0;
+			for(int i=0;i<10000;i++)
+				freq += stat_check(0, ch);
+			fprintf(stderr,"Stat %d, check %d, freq %d\n", val, ch, freq);
+		}
+	}
+	return false;
+}
+#endif
 
 /** Randomly return true or false. When the given stat is at the value give, the chance is 50%, when it is higher the chance gets higher
  * following a normal distribution.

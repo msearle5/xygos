@@ -537,7 +537,7 @@ int summon_specific(struct loc grid, struct monster_race *summoner, int lev, int
 	get_mon_num_prep(summon_specific_okay);
 
 	/* Pick a monster, using the level calculation */
-	race = get_mon_num((player->depth + lev) / 2 + 5);
+	race = get_mon_num((player->depth + lev) / 2 + 5, player->depth);
 
 	/* Prepare allocation table */
 	get_mon_num_prep(NULL);
@@ -587,7 +587,7 @@ struct monster_race *select_shape(struct monster *mon, int type)
 	get_mon_num_prep(summon_specific_okay);
 
 	/* Pick a monster */
-	race = get_mon_num(player->depth + 5);
+	race = get_mon_num(player->depth + 5, player->depth);
 
 	/* Prepare allocation table */
 	get_mon_num_prep(NULL);

@@ -66,6 +66,7 @@ int dungeon_top_level(const char *dungeon);
 void player_set_recall_depth(struct player *p);
 bool player_get_recall_depth(struct player *p);
 int danger_depth(struct player *p);
+int danger_depth_at(struct player *p, int depth);
 void dungeon_change_level(struct player *p, int dlev);
 void take_hit(struct player *p, int dam, const char *kb_str);
 void death_knowledge(struct player *p);

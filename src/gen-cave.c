@@ -993,33 +993,24 @@ static void build_staircase_rooms(struct chunk *c, const char *label)
  * Add stairs to a level, taking into account the special treatment needed
  * for persistent levels.
  */
-static void handle_level_stairs(struct chunk *c, struct player *p,
+static void handle_level_stairs(struct chunk *c, bool persistent,
 		int down_count, int up_count)
 {
-	bool persistent;
-	int minsep;
+	/*
+	 * For persistent levels, require that the stairs be at least four
+	 * grids apart (two for surrounding walls; two for a buffer between
+	 * the walls; the buffer space could be one - shared by the
+	 * staircases - but the reservations in the room map don't allow for
+	 * that) so the staircase rooms in the connecting level won't overlap.
+	 * For non-persistent levels, don't constrain the stair placement.
+	 */
+	int minsep = (persistent) ? 4 : 0;
 
-	if (OPT(p, birth_levels_persist)) {
-		persistent = true;
-		/*
-		 * For persistent levels, require that the stairs be at least
-		 * four grids apart (two for surrounding walls; two for a
-		 * buffer between the walls; the buffer space could be one -
-		 * shared by the staircases - but the reservations in the
-		 * room map don't allow for that) so the staircase rooms in
-		 * the connecting level won't overlap.
-		 */
-		minsep = 4;
-	} else {
-		persistent = false;
-		/* Don't contrain the separation between the staircases. */
-		minsep = 0;
-	}
-	if (!persistent || !chunk_find_adjacent(p, false)) {
+	if (!persistent || !chunk_find_adjacent(c->depth, false)) {
 		alloc_stairs(c, FEAT_MORE, down_count, minsep, false,
 			dun->one_off_below);
 	}
-	if (!persistent || !chunk_find_adjacent(p, true)) {
+	if (!persistent || !chunk_find_adjacent(c->depth, true)) {
 		alloc_stairs(c, FEAT_LESS, up_count, minsep, false,
 			dun->one_off_above);
 	}
@@ -1237,7 +1228,7 @@ struct chunk *classic_gen(struct player *p, int min_height, int min_width)
 	reset_entrance_data(c);
 
 	/* Build the special staircase rooms */
-	if (OPT(p, birth_levels_persist)) {
+	if (dun->persist) {
 		build_staircase_rooms(c, "Classic Generation");
 	}
 
@@ -1327,7 +1318,7 @@ struct chunk *classic_gen(struct player *p, int min_height, int min_width)
 		build_streamer(c, FEAT_QUARTZ, dun->profile->str.qc);
 
 	/* Place 3 or 4 down stairs and 1 or 2 up stairs near some walls */
-	handle_level_stairs(c, p, rand_range(3, 4), rand_range(1, 2));
+	handle_level_stairs(c, dun->persist, rand_range(3, 4), rand_range(1, 2));
 
 	/* General amount of rubble, traps and monsters */
 	k = MAX(MIN(c->depth / 3, 10), 2);
@@ -1573,7 +1564,7 @@ struct chunk *labyrinth_gen(struct player *p, int min_height, int min_width) {
     bool soft = randint0(danger_depth(player)) < 35 || randint0(3) < 2;
 
 	/* No persistent levels of this type for now */
-	if (OPT(p, birth_levels_persist)) return NULL;
+	if (dun->persist) return NULL;
 
 	/* Enforce minimum dimensions */
 	h = MAX(h, min_height);
@@ -1582,7 +1573,6 @@ struct chunk *labyrinth_gen(struct player *p, int min_height, int min_width) {
 	/* Generate the actual labyrinth */
 	c = labyrinth_chunk(p->depth, h, w, lit, soft);
 	if (!c) return NULL;
-	c->depth = p->depth;
 
 	/* Determine the character location */
 	if (!new_player_spot(c, p)) {
@@ -2205,13 +2195,12 @@ struct chunk *cavern_gen(struct player *p, int min_height, int min_width) {
 	/* Try to build the cavern, fail gracefully */
 	c = cavern_chunk(p->depth, h, w, dun->join);
 	if (!c) return NULL;
-	c->depth = p->depth;
 
 	/* Surround the level with perma-rock */
 	draw_rectangle(c, 0, 0, h - 1, w - 1, FEAT_PERM, SQUARE_NONE, true);
 
 	/* Place 1-3 down stairs and 1-2 up stairs near some walls */
-	handle_level_stairs(c, p, rand_range(1, 3), rand_range(1, 2));
+	handle_level_stairs(c, dun->persist, rand_range(1, 3), rand_range(1, 2));
 
 	/* General some rubble, traps and monsters */
 	k = MAX(MIN(c->depth / 3, 10), 2);
@@ -2808,7 +2797,8 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 		}
 
 		/* Copy from the chunk list, remove the old one */
-		if (!chunk_copy(c_new, c_old, 0, 0, 0, 0))
+		c_new->depth = c_old->depth;
+		if (!chunk_copy(c_new, p, c_old, 0, 0, 0, 0))
 			quit_fmt("chunk_copy() level bounds failed!");
 
 		/* Find the stairs (lame) */
@@ -2883,11 +2873,11 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 				pick_and_place_distant_monster(c_new, p, 3, true, 0);
 			} else {
 				/* Humanoid - set monster generation restrictions */
-				(void) mon_restrict("Thieves", depth, true);
+				(void) mon_restrict("Thieves", depth, depth, true);
 				pick_and_place_distant_monster(c_new, p, 8, true, depth);
 
 				/* Remove our restrictions. */
-				(void) mon_restrict(NULL, depth, false);
+				(void) mon_restrict(NULL, depth, depth, false);
 			}
 		} else if (depth < z_info->town_equalmons_level) {
 			/* Mid game, mix mid-level humanoids and low-level other monsters */
@@ -2896,11 +2886,11 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 				pick_and_place_distant_monster(c_new, p, 15, true, randint1(depth));
 			} else {
 				/* In level humanoid - set monster generation restrictions */
-				(void) mon_restrict("Thieves", depth, true);
+				(void) mon_restrict("Thieves", depth, depth, true);
 				pick_and_place_distant_monster(c_new, p, 3, true, depth);
 
 				/* Remove our restrictions. */
-				(void) mon_restrict(NULL, depth, false);
+				(void) mon_restrict(NULL, depth, depth, false);
 			}
 		} else {
 			/* Late, allow all monsters */
@@ -3088,7 +3078,6 @@ struct chunk *modified_gen(struct player *p, int min_height, int min_width) {
 	c = modified_chunk(p, p->depth, MIN(z_info->dungeon_hgt, y_size),
 		MIN(z_info->dungeon_wid, x_size), dun->persist);
 	if (!c) return NULL;
-	c->depth = p->depth;
 
 	/* Generate permanent walls around the edge of the generated area */
 	draw_rectangle(c, 0, 0, c->height - 1, c->width - 1,
@@ -3103,7 +3092,7 @@ struct chunk *modified_gen(struct player *p, int min_height, int min_width) {
 		build_streamer(c, FEAT_QUARTZ, dun->profile->str.qc);
 
 	/* Place 3 or 4 down stairs and 1 or 2 up stairs near some walls */
-	handle_level_stairs(c, p, rand_range(3, 4), rand_range(1, 2));
+	handle_level_stairs(c, dun->persist, rand_range(3, 4), rand_range(1, 2));
 
     /* General amount of rubble, traps and monsters */
     k = MAX(MIN(danger_depth(player) / 3, 10), 2);
@@ -3125,7 +3114,7 @@ struct chunk *modified_gen(struct player *p, int min_height, int min_width) {
 	i = z_info->level_monster_min + randint1(8) + k;
 
 	/* Remove all monster restrictions. */
-	mon_restrict(NULL, danger_depth(player), true);
+	mon_restrict(NULL, danger_depth_at(p, c->depth), danger_depth_at(p, c->depth), true);
 
     /* Put some monsters in the dungeon */
     for (; i > 0; i--)
@@ -3315,7 +3304,6 @@ struct chunk *moria_gen(struct player *p, int min_height, int min_width) {
 	c = moria_chunk(p, p->depth, MIN(z_info->dungeon_hgt, y_size),
 		MIN(z_info->dungeon_wid, x_size), dun->persist);
 	if (!c) return NULL;
-	c->depth = p->depth;
 
 	/* Generate permanent walls around the edge of the generated area */
 	draw_rectangle(c, 0, 0, c->height - 1, c->width - 1,
@@ -3330,7 +3318,7 @@ struct chunk *moria_gen(struct player *p, int min_height, int min_width) {
 		build_streamer(c, FEAT_QUARTZ, dun->profile->str.qc);
 
 	/* Place 3 or 4 down stairs and 1 or 2 up stairs near some walls */
-	handle_level_stairs(c, p, rand_range(3, 4), rand_range(1, 2));
+	handle_level_stairs(c, dun->persist, rand_range(3, 4), rand_range(1, 2));
 
 	/* General amount of rubble, traps and monsters */
 	k = MAX(MIN(c->depth / 3, 10), 2);
@@ -3352,14 +3340,14 @@ struct chunk *moria_gen(struct player *p, int min_height, int min_width) {
 	i = z_info->level_monster_min + randint1(8) + k;
 
 	/* Moria levels have a high proportion of cave dwellers. */
-	mon_restrict("Moria dwellers", c->depth, true);
+	mon_restrict("Moria dwellers", c->depth, c->depth, true);
 
     /* Put some monsters in the dungeon */
     for (; i > 0; i--)
 		pick_and_place_distant_monster(c, p, 0, true, danger_depth(player));
 
 	/* Remove our restrictions. */
-	(void) mon_restrict(NULL, danger_depth(player), false);
+	(void) mon_restrict(NULL, danger_depth_at(p, c->depth), danger_depth_at(p, c->depth), false);
 
 	/* Put some objects in rooms */
 	alloc_objects(c, SET_ROOM, TYP_OBJECT,
@@ -3511,7 +3499,7 @@ struct chunk *quest_gen(struct player *p, int min_height, int min_width)
 	int left_cavern_wid = (z_info->dungeon_wid - vault->width) / 2;
 
 	/* Copy it in */
-	chunk_copy(c, vault, centre_cavern_ypos, left_cavern_wid, 0, false);
+	chunk_copy(c, p, vault, centre_cavern_ypos, left_cavern_wid, 0, false);
 
 	/* Find the best possible place - look for a stair */
 	struct loc grid;
@@ -3553,7 +3541,7 @@ struct chunk *hard_centre_gen(struct player *p, int min_height, int min_width)
 	struct loc floor[4];
 
 	/* No persistent levels of this type for now */
-	if (OPT(p, birth_levels_persist)) {
+	if (dun->persist) {
 		wipe_mon_list(centre, p);
 		cave_free(centre);
 		return NULL;
@@ -3646,30 +3634,30 @@ struct chunk *hard_centre_gen(struct player *p, int min_height, int min_width)
 	c->depth = p->depth;
 
 	/* Left */
-	chunk_copy(c, left_cavern, 0, 0, 0, false);
+	chunk_copy(c, p, left_cavern, 0, 0, 0, false);
 	find_empty_range(c, &grid, loc(0, 0),
 					 loc(left_cavern_wid - 1, z_info->dungeon_hgt - 1));
 	floor[0] = grid;
 
 	/* Upper */
-	chunk_copy(c, upper_cavern, 0, left_cavern_wid, 0, false);
+	chunk_copy(c, p, upper_cavern, 0, left_cavern_wid, 0, false);
 	find_empty_range(c, &grid, loc(left_cavern_wid, 0),
 					 loc(left_cavern_wid + centre_cavern_wid - 1,
 						 upper_cavern_hgt - 1));
 	floor[1] = grid;
 
 	/* Centre */
-	chunk_copy(c, centre, centre_cavern_ypos, left_cavern_wid, rotate, false);
+	chunk_copy(c, p, centre, centre_cavern_ypos, left_cavern_wid, rotate, false);
 
 	/* Lower */
-	chunk_copy(c, lower_cavern, lower_cavern_ypos, left_cavern_wid, 0, false);
+	chunk_copy(c, p, lower_cavern, lower_cavern_ypos, left_cavern_wid, 0, false);
 	find_empty_range(c, &grid, loc(left_cavern_wid, lower_cavern_ypos),
 					 loc(left_cavern_wid + centre_cavern_wid - 1,
 						 z_info->dungeon_hgt - 1));
 	floor[3] = grid;
 
 	/* Right */
-	chunk_copy(c, right_cavern, 0, left_cavern_wid + centre_cavern_wid, 0,
+	chunk_copy(c, p, right_cavern, 0, left_cavern_wid + centre_cavern_wid, 0,
 		false);
 	find_empty_range(c, &grid, loc(left_cavern_wid + centre_cavern_wid, 0),
 		loc(z_info->dungeon_wid - 1, z_info->dungeon_hgt - 1));
@@ -3776,7 +3764,7 @@ struct chunk *lair_gen(struct player *p, int min_height, int min_width) {
 
 	cached_join = dun->join;
 	dun->join = NULL;
-	if (OPT(p, birth_levels_persist)) {
+	if (dun->persist) {
 		left_width = 1 + find_joinfree_vertical_seam(cached_join,
 			x_size / 2, MIN(5, x_size / 20), 0, y_size - 1);
 		if (left_width < 4 || x_size - left_width < 4) return NULL;
@@ -3813,7 +3801,6 @@ struct chunk *lair_gen(struct player *p, int min_height, int min_width) {
 	if (!normal) {
 		return NULL;
 	}
-	normal->depth = p->depth;
 
 	/*
 	 * The transformation applied here should match that for chunk_copy()
@@ -3830,7 +3817,6 @@ struct chunk *lair_gen(struct player *p, int min_height, int min_width) {
 		cave_free(normal);
 		return NULL;
 	}
-	lair->depth = p->depth;
 
     /* General amount of rubble, traps and monsters */
     k = MAX(MIN(danger_depth(player) / 3, 10), 2) / 2;
@@ -3867,7 +3853,7 @@ struct chunk *lair_gen(struct player *p, int min_height, int min_width) {
 		set_pit_type(danger_depth(player), 0);
 
 		/* Set monster generation restrictions */
-		if (mon_restrict(dun->pit_type->name, danger_depth(player), true))
+		if (mon_restrict(dun->pit_type->name, danger_depth_at(p, lair->depth), danger_depth_at(p, lair->depth), true))
 			break;
 	}
 
@@ -3879,13 +3865,13 @@ struct chunk *lair_gen(struct player *p, int min_height, int min_width) {
 					ORIGIN_CAVERN);
 
 	/* Remove our restrictions. */
-	(void) mon_restrict(NULL, danger_depth(player), false);
+	(void) mon_restrict(NULL, danger_depth_at(p, lair->depth), danger_depth_at(p, lair->depth), false);
 
 	/* Make the level */
 	c = cave_new(y_size, x_size);
 	c->depth = p->depth;
-	chunk_copy(c, normal, 0, normal_offset, 0, false);
-	chunk_copy(c, lair, 0, lair_offset, 0, false);
+	chunk_copy(c, p, normal, 0, normal_offset, 0, false);
+	chunk_copy(c, p, lair, 0, lair_offset, 0, false);
 
 	/* Free the chunks */
 	cave_free(normal);
@@ -3899,7 +3885,7 @@ struct chunk *lair_gen(struct player *p, int min_height, int min_width) {
 	ensure_connectedness(c, true);
 
 	/* Place 3 or 4 down stairs and 1 or 2 up stairs near some walls */
-	handle_level_stairs(c, p, rand_range(3, 4), rand_range(1, 2));
+	handle_level_stairs(c, dun->persist, rand_range(3, 4), rand_range(1, 2));
 
 	/* Put some rubble in corridors */
 	alloc_objects(c, SET_CORR, TYP_RUBBLE, randint1(k), c->depth, 0);
@@ -3945,19 +3931,17 @@ struct chunk *gauntlet_gen(struct player *p, int min_height, int min_width) {
 	int line1, line2;
 
 	/* No persistent levels of this type for now */
-	if (OPT(p, birth_levels_persist)) return NULL;
+	if (dun->persist) return NULL;
 
 	gauntlet = labyrinth_chunk(p->depth, gauntlet_hgt, gauntlet_wid, false,
 		false);
 	if (!gauntlet) return NULL;
-	gauntlet->depth = p->depth;
 
 	left = cavern_chunk(p->depth, y_size, x_size, NULL);
 	if (!left) {
 		cave_free(gauntlet);
 		return NULL;
 	}
-	left->depth = p->depth;
 
 	right = cavern_chunk(p->depth, y_size, x_size, NULL);
 	if (!right) {
@@ -3965,7 +3949,6 @@ struct chunk *gauntlet_gen(struct player *p, int min_height, int min_width) {
 		cave_free(left);
 		return NULL;
 	}
-	right->depth = p->depth;
 
 	/* Record lines between chunks */
 	line1 = left->width;
@@ -4058,7 +4041,7 @@ struct chunk *gauntlet_gen(struct player *p, int min_height, int min_width) {
 		set_pit_type(danger_depth(player), 0);
 
 		/* Set monster generation restrictions */
-		if (mon_restrict(dun->pit_type->name, danger_depth(player), true))
+		if (mon_restrict(dun->pit_type->name, danger_depth_at(p, gauntlet->depth), danger_depth_at(p, gauntlet->depth), true))
 			break;
 	}
 
@@ -4071,7 +4054,7 @@ struct chunk *gauntlet_gen(struct player *p, int min_height, int min_width) {
 					ORIGIN_LABYRINTH);
 
 	/* Remove our restrictions. */
-	(void) mon_restrict(NULL, danger_depth(player), false);
+	(void) mon_restrict(NULL, danger_depth_at(p, gauntlet->depth), danger_depth_at(p, gauntlet->depth), false);
 
 	/* Make the level */
 	c = cave_new(y_size, left->width + gauntlet->width + right->width);
@@ -4086,9 +4069,9 @@ struct chunk *gauntlet_gen(struct player *p, int min_height, int min_width) {
 		SQUARE_NONE);
 
 	/* Copy in the pieces */
-	chunk_copy(c, left, 0, 0, 0, false);
-	chunk_copy(c, gauntlet, (y_size - gauntlet->height) / 2, line1, 0, false);
-	chunk_copy(c, right, 0, line2, 0, false);
+	chunk_copy(c, p, left, 0, 0, 0, false);
+	chunk_copy(c, p, gauntlet, (y_size - gauntlet->height) / 2, line1, 0, false);
+	chunk_copy(c, p, right, 0, line2, 0, false);
 
 	/* Free the chunks */
 	cave_free(left);

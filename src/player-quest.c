@@ -744,7 +744,7 @@ void quest_enter_level(struct chunk *c)
 			struct monster_race *mon;
 			/* Try hard to find thematic monsters, but give up if there aren't any */
 			do {
-				mon = get_mon_num(q->level);
+				mon = get_mon_num(q->level, q->level);
 				/* Thematic means:
 				 * 	Immune to fire or plasma, or capable of projecting fire or plasma.
 				 */
