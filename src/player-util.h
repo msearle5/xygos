@@ -62,6 +62,7 @@ enum
 
 bool stat_check(int stat, int mid);
 int dungeon_get_next_level(int dlev, int added);
+int dungeon_top_level(const char *dungeon);
 void player_set_recall_depth(struct player *p);
 bool player_get_recall_depth(struct player *p);
 int danger_depth(struct player *p);

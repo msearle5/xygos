@@ -23,6 +23,7 @@
 #include "mon-group.h"
 #include "mon-lore.h"
 #include "mon-make.h"
+#include "mon-move.h"
 #include "mon-mutant.h"
 #include "mon-predicate.h"
 #include "mon-timed.h"
