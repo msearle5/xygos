@@ -707,6 +707,35 @@ void monster_swap(struct loc grid1, struct loc grid2)
 	/* Redraw */
 	square_light_spot(cave, grid1);
 	square_light_spot(cave, grid2);
+
+	/* If the player is Held, and is no longer adjacent to any constrictors,
+	 * then zero Held. (This can happen as a result of either a player or a
+	 * monster move.)
+	 */
+	if (player->timed[TMD_HELD]) {
+		bool constrict = false;
+		for(int y=-1;y<=1;y++) {
+			for(int x=-1; x<=1; x++) {
+				if ((x) || (y)) {
+					struct loc grid = player->grid;
+					grid.x += x;
+					grid.y += y;
+					struct monster *mon = square_monster(cave, grid);
+					if (mon) {
+						 for (int i = 0; i < z_info->mon_blows_max; i++) {
+							 if (streq(mon->race->blow[i].method->name, "CONSTRICT")) {
+								 constrict = true;
+								 x = y = 1;
+								 break;
+							 }
+						 }
+					}
+				}
+			}
+		}
+		if (!constrict)
+			player_clear_timed(player, TMD_HELD, true);
+	}
 }
 
 /**
