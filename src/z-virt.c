@@ -51,10 +51,19 @@ void *mem_alloc(size_t len)
 
 void *mem_zalloc(size_t len)
 {
-	void *mem = mem_alloc(len);
-	if (len) {
-		memset(mem, 0, len);
-	}
+	char *mem;
+
+	/* Allow allocation of "zero bytes" */
+	if (len == 0) return (NULL);
+
+	mem = calloc(1, len + sizeof(size_t));
+	if (!mem)
+		quit("Out of Memory!");
+	mem += sizeof(size_t);
+	if (mem_flags & MEM_POISON_ALLOC)
+		memset(mem, 0xCC, len);
+	SZ(mem) = len;
+
 	return mem;
 }
 
