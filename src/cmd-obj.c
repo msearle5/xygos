@@ -313,13 +313,14 @@ void do_cmd_wield(struct command *cmd)
 	object_desc(o_name, sizeof(o_name), equip_obj, ODESC_PREFIX | ODESC_FULL);
 
 	/* Took off weapon */
-	if (slot_type_is(slot, EQUIP_WEAPON))
+	if (slot_type_is(player, slot, EQUIP_WEAPON))
 		act = "You were wielding";
+
 	/* Took off gun */
-	else if (slot_type_is(slot, EQUIP_GUN))
+	else if (slot_type_is(player, slot, EQUIP_GUN))
 		act = "You were holding";
 	/* Took off light */
-	else if (slot_type_is(slot, EQUIP_LIGHT))
+	else if (slot_type_is(player, slot, EQUIP_LIGHT))
 		act = "You were holding";
 	/* Took off something else */
 	else

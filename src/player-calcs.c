@@ -1831,7 +1831,8 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 			state->ac += effective_ac_of(obj, i);
 			if (!known_only || obj->known->to_a)
 				state->to_a += obj->to_a;
-			if (!slot_type_is(i, EQUIP_WEAPON) && !slot_type_is(i, EQUIP_GUN)) {
+
+			if (!slot_type_is(p, i, EQUIP_WEAPON) && !slot_type_is(p, i, EQUIP_GUN)) {
 				if (!known_only || obj->known->to_h) {
 					state->to_h += obj->to_h;
 				}
