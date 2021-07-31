@@ -244,7 +244,7 @@ static void soldier_building(int store, bool entering, bool *do_default)
 				if (num > 0)
 					obj->number = num;
 				obj->known = object_new();
-				object_set_base_known(obj);
+				object_set_base_known(player, obj);
 				object_flavor_aware(obj);
 				obj->known->pval = obj->pval;
 				obj->known->effect = obj->effect;
