@@ -363,20 +363,26 @@ void flavor_init(void)
 					}
 					if (!one_in_(3))
 						break;
-					// fall through
+					sprintf(suff + strlen(suff), " %d", rn1 % 10);
+					suff[sizeof(suff)-1] = 0;
+					break;
 				case 5:
-					sprintf(suff + strlen(suff), " %d", rn1);
+					snprintf(suff, sizeof(suff), " %d", rn1);
+					suff[sizeof(suff)-1] = 0;
 					break;
 				case 1:
 				case 2:
 				case 3:
-					sprintf(suff, " %d.%d", rn1, rn2);
+					snprintf(suff, sizeof(suff), " %d.%d", rn1, rn2);
+					suff[sizeof(suff)-1] = 0;
 					break;
 				case 4:
-					sprintf(suff, " %d%d", rn1, rn2);
+					snprintf(suff, sizeof(suff), " %d%d", rn1, rn2);
+					suff[sizeof(suff)-1] = 0;
 					break;
 				case 6:
-					sprintf(suff, " %d.%d.%d", rn1, rn2, rn3);
+					snprintf(suff, sizeof(suff), " %d.%d.%d", rn1, rn2, rn3);
+					suff[sizeof(suff)-1] = 0;
 					break;
 			}
 			char buf[64];
