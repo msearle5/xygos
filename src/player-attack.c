@@ -1486,7 +1486,7 @@ static void ranged_helper(struct command *cmd, struct player *p,	struct object *
 	p->upkeep->energy_use = (z_info->move_energy * 10 / shots);
 
 	/* Calculate the path */
-	path_n = project_path(path_g, range, grid, target, 0);
+	path_n = project_path(cave, path_g, range, grid, target, 0);
 
 	/* With reflection */
 	struct monster *mon = square_monster(cave, path_g[path_n-1]);
