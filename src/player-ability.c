@@ -488,7 +488,7 @@ static errr finish_parse_ability(struct parser *p) {
 static void cleanup_ability(void)
 {
 	int idx;
-	for (idx = 0; idx < PF_MAX; idx++) {
+	for (idx = 1; idx < PF_MAX; idx++) {
 		if (ability[idx]) {
 			string_free(ability[idx]->name);
 			cleanup_magic(&(ability[idx]->magic));
@@ -509,7 +509,7 @@ struct file_parser ability_parser = {
 int ability_to_stat(int stat) {
 	assert(stat < STAT_MAX);
 	int bonus = 0;
-	for(int i=0; i<PF_MAX; i++) {
+	for(int i=1; i<PF_MAX; i++) {
 		if (ability[i]) {
 			if (player_has(player, i)) {
 				bonus += ability[i]->a_adj[stat];
@@ -531,7 +531,7 @@ static bool ability_allowed(unsigned a, bool gain) {
 	}
 
 	/* Is it forbidden? */
-	for(int i=0; i<PF_MAX; i++) {
+	for(int i=1; i<PF_MAX; i++) {
 		if (ability[i]) {
 			if (ability[i]->forbid[a]) {
 				if (pf_has(player->state.pflags_base, i)) {
@@ -542,7 +542,7 @@ static bool ability_allowed(unsigned a, bool gain) {
 	}
 
 	/* Does it meet all requirements? */
-	for(int i=0; i<PF_MAX; i++) {
+	for(int i=1; i<PF_MAX; i++) {
 		if (ability[i]) {
 			if (ability[a]->require[i]) {
 				if (!pf_has(player->state.pflags_base, i)) {
@@ -891,7 +891,7 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 
 		navail = 0;
 		/* Scan for abilities */
-		for (int i = 0; i < PF_MAX; i++) {
+		for (int i = 1; i < PF_MAX; i++) {
 			if (ability[i]) {
 				/* Gainable */
 				if (can_gain_talent(i, birth)) {
@@ -900,7 +900,7 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 				}
 			}
 		}
-		for (int i = 0; i < PF_MAX; i++) {
+		for (int i = 1; i < PF_MAX; i++) {
 			if (ability[i]) {
 				if (can_gain_talent(i, birth)) {
 					/* Don't add - it's already been gained */
@@ -947,10 +947,10 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 					if (i == selected) {
 						colour = COLOUR_WHITE;
 					} else {
-						if (pf_has(player->state.pflags_base, avail[i])) {
+						if (avail[i] && pf_has(player->state.pflags_base, avail[i])) {
 							/* Intrinsic */
 							colour = COLOUR_SLATE;
-						} else if (pf_has(player->state.pflags_equip, avail[i])) {
+						} else if (avail[i] && pf_has(player->state.pflags_equip, avail[i])) {
 							/* Equipment */
 							colour = COLOUR_L_BLUE;
 						} else {
@@ -1015,12 +1015,12 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 					textblock_append_c(tb, COLOUR_YELLOW, " (%+d to %s)", ability[avail[selected]]->modifiers[i], name);
 				}
 			}
-			for(int i=0;i<PF_MAX;i++) {
+			for(int i=1;i<PF_MAX;i++) {
 				if (pf_has(ability[avail[selected]]->pflags, i)) {
 					textblock_append_c(tb, COLOUR_YELLOW, " (%s)", player_info_flags[i]);
 				}
 			}
-			for(int i=0;i<OF_MAX;i++) {
+			for(int i=1;i<OF_MAX;i++) {
 				if (of_has(ability[avail[selected]]->oflags, i)) {
 					textblock_append_c(tb, COLOUR_YELLOW, " (%s)", list_obj_flag_names[i]);
 				}
@@ -1226,7 +1226,7 @@ bool ability_levelup(struct player *p, int from, int to)
 	int avail[PF_MAX];
 	int navail = 0;
 
-	for (int i = 0; i < PF_MAX; i++) {
+	for (int i = 1; i < PF_MAX; i++) {
 		if (ability[i]) {
 			if ((ability[i]->flags & AF_TALENT) && (ability[i]->cost <= gains)) {
 				if (ability_allowed(i, true)) {

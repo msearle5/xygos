@@ -2086,7 +2086,7 @@ void do_cmd_buy(struct command *cmd)
 	struct object *obj, *bought, *known_obj;
 
 	char o_name[80];
-	int price;
+	int price = 0;
 
 	struct store *store = store_at(cave, player->grid);
 

@@ -1651,7 +1651,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	 **/
 	bool cancel[PF_MAX];
 	memset(cancel, 0, sizeof(cancel));
-	for (i = 0; i < PF_MAX; i++) {
+	for (i = 1; i < PF_MAX; i++) {
 		if (ability[i]) {
 			if (pf_has(state->pflags_base, i)) {
 				for (j = 0; j < PF_MAX; j++)
@@ -1659,7 +1659,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 			}
 		}
 	}
-	for (i = 0; i < PF_MAX; i++) {
+	for (i = 1; i < PF_MAX; i++) {
 		if (cancel[i])
 			pf_off(state->pflags_base, i);
 	}
@@ -1699,7 +1699,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 
 	/* Extract from timed conditions */
 	pf_wipe(state->pflags_temp);
-	for (i = 0; i < PF_MAX; i++) {
+	for (i = 1; i < PF_MAX; i++) {
 		if (player->timed[TMD_PF + i]) {
 			pf_on(state->pflags_temp, i);
 		}
@@ -1712,7 +1712,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	pf_copy(has_flag, state->pflags_temp);
 	pf_union(has_flag, state->pflags_equip);
 	pf_union(has_flag, state->pflags_base);
-	for (i = 0; i < PF_MAX; i++) {
+	for (i = 1; i < PF_MAX; i++) {
 		if (ability[i]) {
 			if (pf_has(has_flag, i)) {
 				for (j = 0; j < PF_MAX; j++) {
@@ -1727,7 +1727,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	}
 
 	/* Apply forbids to equipment and temporary flags */
-	for (i = 0; i < PF_MAX; i++) {
+	for (i = 1; i < PF_MAX; i++) {
 		if (forbid[i]) {
 			pf_off(state->pflags_equip, i);
 			pf_off(state->pflags_temp, i);
@@ -1743,7 +1743,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 
 	/* Extract from abilities */
 	state->ac = player->race->ac + player->extension->ac + player->personality->ac;
-	for (i = 0; i < PF_MAX; i++) {
+	for (i = 1; i < PF_MAX; i++) {
 		if (ability[i]) {
 			if (player_has(p, i)) {
 				if ((player->flying) || (!(ability[i]->flags & AF_FLYING))) {
@@ -1875,7 +1875,7 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	of_union(state->flags, collect_f);
 
 	/* Remove flags, where abilities have a remove set */
-	for (i = 0; i < PF_MAX; i++) {
+	for (i = 1; i < PF_MAX; i++) {
 		if (ability[i]) {
 			if (player_has(p, i)) {
 				of_diff(state->flags, ability[i]->oflags_off);
