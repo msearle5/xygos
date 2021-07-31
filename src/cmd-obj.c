@@ -329,7 +329,8 @@ void do_cmd_wield(struct command *cmd)
 	inven_wield(obj, slot);
 
 	/* Message */
-	msgt(MSG_WIELD, "%s %s (%c).", act, o_name, gear_to_label(equip_obj));
+	msgt(MSG_WIELD, "%s %s (%c).", act, o_name,
+		gear_to_label(player, equip_obj));
 }
 
 /**
@@ -389,7 +390,8 @@ static void use_aux(struct command *cmd, struct object *obj, enum use use,
 	bool known_aim = false;
 	bool none_left = false;
 	int dir = 5;
-	char label = gear_to_label(obj);
+
+	char label = gear_to_label(player, obj);
 	struct trap_kind *rune = lookup_trap("repulsion field");
 
 	/* Get arguments */

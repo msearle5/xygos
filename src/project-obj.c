@@ -125,7 +125,7 @@ int inven_damage(struct player *p, int type, int cperc)
 				for (amt = j = 0; j < obj->number; ++j)
 					if (randint0(10000) < chance) amt++;
 
-			/* Some casualities */
+			/* Some casualties */
 			if (amt) {
 				struct object *destroyed;
 				bool none_left = false;
@@ -137,7 +137,7 @@ int inven_damage(struct player *p, int type, int cperc)
 							   ((obj->number > 1) ?
 								((amt == obj->number) ? "All of y" :
 								 (amt > 1 ? "Some of y" : "One of y")) : "Y"),
-							   o_name, gear_to_label(obj),
+							   o_name, gear_to_label(p, obj),
 							   ((amt > 1) ? "were" : "was"),
 						   (damage ? "damaged" : "destroyed"));
 
