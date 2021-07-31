@@ -708,7 +708,7 @@ bool project(struct source origin, int rad, struct loc finish,
 				flg |= PROJECT_KILL | PROJECT_PLAY | PROJECT_SELF;
 
 				/* The additional path after bouncing */
-				num_path_grids += project_path(path_grid + num_path_grids, z_info->max_range, finish,
+				num_path_grids += project_path(cave, path_grid + num_path_grids, z_info->max_range, finish,
 										  boing, flg);
 			}
 		}

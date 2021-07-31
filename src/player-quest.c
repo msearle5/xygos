@@ -492,9 +492,9 @@ void player_quests_free(struct player *p)
 /**
  * Creates magical stairs after finishing a quest monster.
  */
-static void build_quest_stairs(struct loc grid)
+static void build_quest_stairs(struct player *p, struct loc grid)
 {
-	struct loc new_grid = player->grid;
+	struct loc new_grid = p->grid;
 
 	/* Stagger around */
 	while (!square_changeable(cave, grid) &&
@@ -517,7 +517,7 @@ static void build_quest_stairs(struct loc grid)
 	square_set_feat(cave, grid, FEAT_MORE);
 
 	/* Update the visuals */
-	player->upkeep->update |= (PU_UPDATE_VIEW | PU_MONSTERS);
+	p->upkeep->update |= (PU_UPDATE_VIEW | PU_MONSTERS);
 }
 
 /**
@@ -1185,7 +1185,8 @@ bool quest_item_check(const struct object *obj) {
 /**
  * Check if this (now dead) monster is a quest monster, and act appropriately
  */
-bool quest_check(const struct monster *m) {
+bool quest_check(struct player *p, const struct monster *m)
+{
 	int i, total = 0;
 
 	/* First check for a quest level */
@@ -1264,11 +1265,11 @@ bool quest_check(const struct monster *m) {
 
 	/* Mark quests as complete */
 	for (i = 0; i < z_info->quest_max; i++) {
-		if (player->quests[i].flags & QF_ESSENTIAL) {
+		if (p->quests[i].flags & QF_ESSENTIAL) {
 			/* Note completed quests */
-			if (player->quests[i].level == m->race->level) {
-				player->quests[i].level = 0;
-				player->quests[i].cur_num++;
+			if (p->quests[i].level == m->race->level) {
+				p->quests[i].level = 0;
+				p->quests[i].cur_num++;
 			}
 
 			/* Count incomplete quests */
@@ -1277,12 +1278,12 @@ bool quest_check(const struct monster *m) {
 	}
 
 	/* Build magical stairs */
-	build_quest_stairs(m->grid);
+	build_quest_stairs(p, m->grid);
 
 	/* Nothing left, game over... */
 	if (total == 0) {
-		player->total_winner = true;
-		player->upkeep->redraw |= (PR_TITLE);
+		p->total_winner = true;
+		p->upkeep->redraw |= (PR_TITLE);
 		msg("*** CONGRATULATIONS ***");
 		msg("You have won the game!");
 		msg("You may retire (Ctrl-C, \"commit suicide\") when you are ready.");

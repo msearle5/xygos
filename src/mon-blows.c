@@ -1144,7 +1144,7 @@ static void melee_effect_handler_EXP_80(melee_effect_handler_context_t *context)
  */
 static void melee_effect_handler_DESTRUCT(melee_effect_handler_context_t *context)
 {
-	monster_death(context->mon, false);
+	monster_death(context->mon, context->p, false);
 }
 
 /**

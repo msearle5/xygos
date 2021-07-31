@@ -5584,7 +5584,7 @@ static bool effect_handler_CURSE(effect_handler_context_t *context)
 	}
 
 	/* Hit it */
-	dead = mon_take_hit(mon, dam, &fear, " dies!");
+	dead = mon_take_hit(mon, player, dam, &fear, " dies!");
 
 	/* Handle fear for surviving monsters */
 	if (!dead && monster_is_visible(mon)) {
@@ -5685,7 +5685,7 @@ static bool effect_handler_JUMP_AND_BITE(effect_handler_context_t *context)
 	} else {
 		msg("You bite %s.", m_name);
 	}
-	dead = mon_take_hit(mon, amount, &fear, " is drained dry!");
+	dead = mon_take_hit(mon, player, amount, &fear, " is drained dry!");
 
 	/* Heal and nourish */
 	effect_simple(EF_HEAL_HP, context->origin, format("%d", drain), 0, 0, 0,
