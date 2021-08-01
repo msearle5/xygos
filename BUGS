@@ -2,10 +2,8 @@ BUGS
 ====
 BUG: "Couldn't find artifact" warning because new char based on previous still had a player-made artifact
 
-BUG: An artifact granting protection from blindness stopped a blindness pill from taking effect even
-		when it was only carried in the pack.
-
-BUG: Armoury and Magic Shop need renaming. And possibly BM.
+BUG: "You fail to the tengu" (+ red worm mass - when you attack it with a pocket knife)
+	- Also seen in the town lake, with an electric eel.
 
 BUG: activate coronet: "You activate it. the Coronet of the Core pulses a soft white" (the should be The)
 
@@ -97,14 +95,19 @@ BUG? Do small dungeons have a bottom at the right place? (You can jump past it)
 BUG: Printers all seem to generate with {ignore}
 	- Can't easily reproduce this
 
-BUG: "You fail to the tengu" (+ red worm mass - when you attack it with a pocket knife)
-	- UTR on dl0/1 outside the quest. Rubble?
-
 BUG: m-techniques top label is wonky (move the level 1 to the right, and the cost-label 2 to the left?)
 	- Unable to reproduce with Spit Acid, Sprint.
 
 Fixed
 =====
+
+BUG: Armoury and Magic Shop need renaming. And possibly BM.
+	Fixed
+
+BUG: An artifact granting protection from blindness stopped a blindness pill from taking effect even
+		when it was only carried in the pack.
+	Fixed e1ca0fcc9731cd7ba205fec040c0ef4c5c4e64e8
+
 BUG: Pilot with Caveracer still displays Cavespeeder as an available to take talent
 	Fixed 4e5082356
 
