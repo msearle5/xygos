@@ -260,8 +260,21 @@ void wr_s32b(s32b v)
 	wr_u32b((u32b)v);
 }
 
+void wr_double(double v)
+{
+	char buf[256];
+	*buf = 0;
+	sprintf(buf, "%la", v);
+	wr_string(buf);
+	fprintf(stderr,"wr: %s <= %lf\n", buf, v);
+}
+
 void wr_string(const char *str)
 {
+	if (!str) {
+		fprintf(stderr,"WARNING: writing null string\n");
+		str = "";
+	}
 	while (*str)
 	{
 		wr_byte(*str);
@@ -302,6 +315,15 @@ void rd_u32b(u32b *ip)
 void rd_s32b(s32b *ip)
 {
 	rd_u32b((u32b*)ip);
+}
+
+void rd_double(double *ip)
+{
+	char buf[256];
+	*buf = 0;
+	rd_string(buf, sizeof buf);
+	sscanf(buf, "%la", ip);
+	fprintf(stderr,"rd: %s => %lf\n", buf, *ip);
 }
 
 void rd_string(char *str, int max)
@@ -376,6 +398,14 @@ void rdwr_s32b(s32b *v)
 		wr_s32b(*v);
 	else
 		rd_s32b(v);
+}
+
+void rdwr_double(double *v)
+{
+	if (saving)
+		wr_double(*v);
+	else
+		rd_double(v);
 }
 
 void rdwr_string(char **str)

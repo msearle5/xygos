@@ -65,6 +65,7 @@ void rdwr_u16b(u16b *v);
 void rdwr_s16b(s16b *v);
 void rdwr_u32b(u32b *v);
 void rdwr_s32b(s32b *v);
+void rdwr_double(double *v);
 void rdwr_string(char **str);
 
 /* Read/Write pointer. Give a pointer to pointer, and the base of the array (it converts it to an offset to this base) */
@@ -78,6 +79,7 @@ void wr_u16b(u16b v);
 void wr_s16b(s16b v);
 void wr_u32b(u32b v);
 void wr_s32b(s32b v);
+void wr_double(double v);
 void wr_string(const char *str);
 void pad_bytes(int n);
 
@@ -88,6 +90,7 @@ void rd_u16b(u16b *ip);
 void rd_s16b(s16b *ip);
 void rd_u32b(u32b *ip);
 void rd_s32b(s32b *ip);
+void rd_double(double *ip);
 void rd_string(char *str, int max);
 void strip_bytes(int n);
 
