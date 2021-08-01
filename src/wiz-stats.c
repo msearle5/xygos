@@ -1581,7 +1581,7 @@ static void ego_stats(void)
 	}
 	strcat(buf, "\n");
 	file_putf(stats_log, buf);
-	for(size_t a=1;a<z_info->e_max - 1;a++) {
+	for(size_t a=1;a<(size_t)(z_info->e_max - 1);a++) {
 		memset(buf, ' ', 32);
 		strcpy(buf + (30 - strlen(e_info[a].name)), e_info[a].name);
 		for(int i=0;i<30;i++)

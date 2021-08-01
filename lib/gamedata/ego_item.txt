@@ -171,19 +171,19 @@ flags:PROT_BLIND
 
 name:(Duramod)
 info:3000:10
-alloc:5:10 to 80
+alloc:20:10 to 80
 type:printer
 flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
 name:(Ecomod)
 info:5000:10
-alloc:10:20 to 90
+alloc:20:20 to 90
 type:printer
 pval:860+M130
 
 name:(Easymod)
 info:2000:10
-alloc:1:1 to 70
+alloc:20:1 to 70
 type:printer
 ## device skill? It's not wielded eq though, so would be awkward.
 #values:
@@ -197,7 +197,7 @@ pval:900+M90
 
 name:(Portamod)
 info:3000:10
-alloc:5:10 to 80
+alloc:10:10 to 80
 type:printer
 weight:47+3d7
 
