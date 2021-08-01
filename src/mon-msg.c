@@ -292,15 +292,20 @@ static void get_message_text(char *buf, size_t buflen,
 
 	/* Find the appropriate message */
 	const char *source = msg_repository[msg_code].msg;
+	int idx = 0;
 	switch (msg_code) {
-		case MON_MSG_95: source = race->base->pain->messages[0]; break;
-		case MON_MSG_75: source = race->base->pain->messages[1]; break;
-		case MON_MSG_50: source = race->base->pain->messages[2]; break;
-		case MON_MSG_35: source = race->base->pain->messages[3]; break;
-		case MON_MSG_20: source = race->base->pain->messages[4]; break;
-		case MON_MSG_10: source = race->base->pain->messages[5]; break;
-		case MON_MSG_0:  source = race->base->pain->messages[6]; break;
+		case MON_MSG_95: idx = 0; break;
+		case MON_MSG_75: idx = 1; break;
+		case MON_MSG_50: idx = 2; break;
+		case MON_MSG_35: idx = 3; break;
+		case MON_MSG_20: idx = 4; break;
+		case MON_MSG_10: idx = 5; break;
+		case MON_MSG_0:  idx = 6; break;
 	}
+	if (race->pain)
+		source = race->pain->messages[idx];
+	else
+		source = race->base->pain->messages[idx];
 
 	int state = MSG_PARSE_NORMAL;
 	size_t maxlen = strlen(source);

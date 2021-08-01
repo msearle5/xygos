@@ -1674,6 +1674,22 @@ static enum parser_error parse_monster_color_cycle(struct parser *p)
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_monster_pain(struct parser *p) {
+	struct monster_race *r = parser_priv(p);
+	int pain_idx;
+
+	if (!r)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
+	pain_idx = parser_getuint(p, "pain");
+	if (pain_idx >= z_info->mp_max)
+		return PARSE_ERROR_OUT_OF_BOUNDS;
+
+	r->pain = &pain_messages[pain_idx];
+
+	return PARSE_ERROR_NONE;
+}
+
 #define IPMLS() \
 	IPML( "plural ?str plural", parse_monster_plural); \
 	IPML( "glyph char glyph", parse_monster_glyph); \
@@ -1697,6 +1713,7 @@ static enum parser_error parse_monster_color_cycle(struct parser *p)
 	IPML( "shape str name", parse_monster_shape); \
 	IPML( "mutate int mutate", parse_monster_mutate); \
 	IPML( "deathspells str spells", parse_monster_deathspells); \
+	IPML( "pain uint pain", parse_monster_pain); \
 	IPML( "color-cycle sym group sym cycle", parse_monster_color_cycle)
 
 struct parser *init_parse_monster(void) {
@@ -2129,7 +2146,7 @@ static enum parser_error parse_monster_mut_level(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-struct parser *init_parse_monster_mut(void) {
+static struct parser *init_parse_monster_mut(void) {
 	struct parser *p = parser_new();
 	parser_setpriv(p, NULL);
 	#define IPML(A, B) parser_reg(p, A, B );

@@ -208,7 +208,7 @@ struct monster_base {
 	
 	wchar_t d_char;					/* Default monster character */
 
-	struct monster_pain *pain;				/* Pain messages */
+	struct monster_pain *pain;		/* Default pain messages */
 };
 
 
@@ -316,6 +316,7 @@ struct monster_race {
 	char *grow;
 
 	struct monster_base *base;
+	struct monster_pain *pain;				/* Pain messages */
 
 	int avg_hp;				/* Average HP for this creature */
 

@@ -2409,6 +2409,7 @@ flags:UNIQUE | SPECIAL_GEN
 desc:A glowing fiery red flame-shape in the air, with a trail of smoke and sparks - you can hear it crackling and feel the heat radiating off it from some way off. Wide white eyes stare at you as if you were a fuel.
 
 name:Holo-Triax
+pain:12
 base:hologram
 color:Violet
 speed:110
@@ -5334,6 +5335,7 @@ desc:What kind of volcano would it be, without an evil overlord in residence? Th
 
 name:Triax, the Emperor
 base:person
+pain:12
 color:D
 speed:140
 hit-points:20000
@@ -5885,6 +5887,7 @@ desc:An industrial metalworking robot, built at Fábrica Robótica De La Madre f
 
 name:Mecha-Triax
 base:robot
+pain:12
 color:Violet
 speed:120
 hit-points:8000
