@@ -163,7 +163,6 @@ flag:super
 forbid:Freeze_Ray
 maxlevel:40
 
-# spell:name:level:fail:exp:stat:hp:cooldown:fail message
 book:[Super]
 spell:Heat Ray:10:10:0:3:2d2:7d2
 seffect:BEAM:FIRE:10:20
@@ -316,6 +315,22 @@ seffect:TIMED_INC:FAST:0:5
 sdice:3
 sdesc:Fold time and space around you, teleporting you to a chosen square.
 
+# and stone skin?
+name:Earthbending
+gain:You feel as if you've got rocks in the head.
+lose:Your special understanding with rock vanishes.
+brief:You can melt away rock with a glance.
+desc:You can glance at solid rock and melt it away into flowing mud.
+desc_future:You would be able to glance at solid rock and melt it away into flowing mud.
+maxlevel:20
+flag:super
+
+# spell:name:level:fail:exp:stat:hp:cooldown:fail message
+book:[Super]
+spell:Earthbend:10:33:2:1d3:0:2d6
+seffect:LINE:KILL_WALL
+sdice:20+1d30
+sdesc:Melt rock away into flowing mud.
 
 
 # TYelepathy, TP-to, Infra, Bane (=Venom)? Wraithform(not easy), Sprint("Flash"), Read Minds, destruction, light, KaBoom, M, Lightning, Glow+lightroom (combine with alser eye?)   ... Charm if pets were a thing
