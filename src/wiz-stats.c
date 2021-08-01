@@ -32,6 +32,7 @@
 #include "obj-util.h"
 #include "object.h"
 #include "ui-command.h"
+#include "ui-term.h"
 #include "wizard.h"
 
 /**
@@ -1858,8 +1859,342 @@ void pit_stats(int nsim, int pittype, int depth)
 	return;
 }
 
+/* Feelings from this iteration only */
+static double depth_obj_feeling[MAX_FEEL_LVL][8];
+static double depth_mon_feeling[MAX_FEEL_LVL][8];
+
+/* Total of all iterations so far */
+static double **obj_feeling_total = NULL;
+static double **mon_feeling_total = NULL;
+
+/* Feelings from this iteration only */
+static double obj_feeling_sum[MAX_FEEL_LVL];
+static double mon_feeling_sum[MAX_FEEL_LVL];
+
+static void stats_collect_feeling(int depth) {
+	obj_feeling_sum[depth] += cave->obj_rating;
+	mon_feeling_sum[depth] += cave->mon_rating;
+}
+
+/* Array per value, to take the median from */
+double *iter_obj_feeling[MAX_FEEL_LVL][8];
+double *iter_mon_feeling[MAX_FEEL_LVL][8];
+
+/* Add to the arrays */
+static void add_feeling_array(int iters)
+{
+	for(int i=1;i<MAX_FEEL_LVL;i++) {
+		for(int j=0; j<8; j++) {
+			iter_obj_feeling[i][j] = mem_realloc(iter_obj_feeling[i][j], sizeof(double) * iters);
+			iter_obj_feeling[i][j][iters-1] = depth_obj_feeling[i][j];
+			iter_mon_feeling[i][j] = mem_realloc(iter_mon_feeling[i][j], sizeof(double) * iters);
+			iter_mon_feeling[i][j][iters-1] = depth_mon_feeling[i][j];
+		}
+	}
+}
+
+static int compar_double(const void *vp1, const void *vp2)
+{
+	const double *dp1 = vp1;
+	const double *dp2 = vp2;
+	return (*dp1 < *dp2);
+}
+
+/* Sort the arrays */
+static void sort_feeling_array(int iters)
+{
+	for(int i=1;i<MAX_FEEL_LVL;i++) {
+		for(int j=0; j<8; j++) {
+			qsort(iter_obj_feeling[i][j], iters, sizeof(double), compar_double);
+			qsort(iter_mon_feeling[i][j], iters, sizeof(double), compar_double);
+		}
+	}
+}
+
+/* Extract the median - only accurate for odd iters */
+static void median_feeling_array(int iters)
+{
+	assert(iters & 1);
+	int mid = iters / 2;
+	for(int i=1;i<MAX_FEEL_LVL;i++) {
+		for(int j=0; j<8; j++) {
+			depth_obj_feeling[i][j] = iter_obj_feeling[i][j][mid];
+			depth_mon_feeling[i][j] = iter_mon_feeling[i][j][mid];
+		}
+	}
+}
+
+/* If 	85% of levels are level 2+,
+ * 		65% level 3+,
+ * 		45% level 4+,
+ * 		30% level 5+,
+ * 		20% level 6+,
+ * 		12% level 7+,
+ * 		7% level 8+
+ * 		2% level 9,
+ * this means keeping more than an average, although it can be obtained from obj_rating/mon_rating only.
+ */
+static void print_feeling_to(FILE *out, int iters)
+{
+	fprintf(out,"Result (iter %d):\n", iters);
+	fprintf(out,"static const int depth_obj_feeling[%d][8] = {\n", MAX_FEEL_LVL);
+	for(int i=0;i<MAX_FEEL_LVL;i++) {
+		fprintf(out,"\t{ ");
+		for(int j=0;j<8;j++)
+			fprintf(out,"%10d, ", (int)depth_obj_feeling[i][j]);
+		fprintf(out,"}, /* %d */\n", i);
+	}
+	fprintf(out,"};\n\n");
+	fprintf(out,"}\n\nstatic const int depth_mon_feeling[%d][8] = {\n", MAX_FEEL_LVL);
+	for(int i=0;i<MAX_FEEL_LVL;i++) {
+		fprintf(out,"\t{ ");
+		for(int j=0;j<8;j++)
+			fprintf(out,"%10d, ", (int)depth_mon_feeling[i][j]);
+		fprintf(out,"}, /* %d */\n", i);
+	}
+	fprintf(out,"};\n\n");
+}
+
+static void stats_print_feeling(int iters) {
+	print_feeling_to(stderr, iters);
+}
+
+static bool stats_complete_feeling(int iters) {
+	/* Extend the array */
+	obj_feeling_total = mem_realloc(obj_feeling_total, sizeof(double *) * iters);
+	obj_feeling_total[iters-1] = mem_zalloc(sizeof(obj_feeling_sum));
+	mon_feeling_total = mem_realloc(mon_feeling_total, sizeof(double *) * iters);
+	mon_feeling_total[iters-1] = mem_zalloc(sizeof(mon_feeling_sum));
+
+	/* Sort each depth */
+	for(int i=1;i<MAX_FEEL_LVL;i++) {
+		int pos = iters-1;
+		for(int j=0; j<iters-1; j++) {
+			if (obj_feeling_total[j][i] > obj_feeling_sum[i]) {
+				pos = j;
+				break;
+			}
+		}
+		if (pos < iters-1) {
+			/* copy up */
+			for(int j=iters-2; j>=pos; j--) {
+				obj_feeling_total[j+1][i] = obj_feeling_total[j][i];
+			}
+		}
+		obj_feeling_total[pos][i] = obj_feeling_sum[i];
+	}
+
+	for(int i=1;i<MAX_FEEL_LVL;i++) {
+		int pos = iters-1;
+		for(int j=0; j<iters-1; j++) {
+			if (mon_feeling_total[j][i] > mon_feeling_sum[i]) {
+				pos = j;
+				break;
+			}
+		}
+		if (pos < iters-1) {
+			/* copy up */
+			for(int j=iters-2; j>=pos; j--) {
+				mon_feeling_total[j+1][i] = mon_feeling_total[j][i];
+			}
+		}
+		mon_feeling_total[pos][i] = mon_feeling_sum[i];
+	}
+
+	static const int point[8] = {
+		15, 35, 55, 70, 80, 88, 93, 98
+	};
+
+	int index[8];
+	for(int i=0;i<8;i++) {
+		index[i] = MIN((point[i] * iters) / 100, iters-1);
+	}
+
+	/* Extract points */
+	for(int i=0;i<MAX_FEEL_LVL;i++) {
+		for(int j=0;j<8;j++) {
+			depth_obj_feeling[i][j] = obj_feeling_total[index[j]][i];
+			depth_mon_feeling[i][j] = mon_feeling_total[index[j]][i];
+
+			/*
+			if (index[j] > 0) {
+				depth_obj_feeling[i][j] = MIN(depth_obj_feeling[i][j], obj_feeling_total[index[j]-1][i]);
+				depth_mon_feeling[i][j] = MIN(depth_mon_feeling[i][j], mon_feeling_total[index[j]-1][i]);
+			}
+			if (index[j] < iters-1) {
+				depth_obj_feeling[i][j] = MIN(depth_obj_feeling[i][j], obj_feeling_total[index[j]+1][i]);
+				depth_mon_feeling[i][j] = MIN(depth_mon_feeling[i][j], mon_feeling_total[index[j]+1][i]);
+			}*/
+			/*if ((index[j] > 0) && (index[j] < iters-1)) {
+				double prevo = obj_feeling_total[index[j]][i] - obj_feeling_total[index[j]-1][i];
+				double nexto = obj_feeling_total[index[j]+1][i] - obj_feeling_total[index[j]][i];
+				double prevm = mon_feeling_total[index[j]][i] - mon_feeling_total[index[j]-1][i];
+				double nextm = mon_feeling_total[index[j]+1][i] - mon_feeling_total[index[j]][i];
+				double mixo, mixm;
+				if (prevo > nexto) {
+					mixo = obj_feeling_total[index[j]+1][i];
+				} else {
+					mixo = obj_feeling_total[index[j]-1][i];
+				}
+				if (prevm > nextm) {
+					mixm = mon_feeling_total[index[j]+1][i];
+				} else {
+					mixm = mon_feeling_total[index[j]-1][i];
+				}
+				depth_obj_feeling[i][j] = (mixo + obj_feeling_total[index[j]][i]) * 0.5;
+				depth_mon_feeling[i][j] = (mixm + mon_feeling_total[index[j]][i]) * 0.5;
+			} else {
+				depth_obj_feeling[i][j] = obj_feeling_total[index[j]][i];
+				depth_mon_feeling[i][j] = mon_feeling_total[index[j]][i];
+			}*/
+		}
+	}
+
+	add_feeling_array(iters);
+	if (iters % 10 == 9) {
+		sort_feeling_array(iters);
+		median_feeling_array(iters);
+
+		/* Display accuracy(?) */
+		int bado = 0;
+		int badm = 0;
+		int bado2 = 0;
+		int badm2 = 0;
+		for(int i=1;i<MAX_FEEL_LVL;i++) {
+			for(int j=0;j<8;j++) {
+				if (depth_obj_feeling[i][j] <= depth_obj_feeling[i-1][j])
+					bado++;
+				if (depth_mon_feeling[i][j] <= depth_mon_feeling[i-1][j])
+					badm++;
+				if (j > 0) {
+					if (depth_obj_feeling[i][j] <= depth_obj_feeling[i][j-1])
+						bado2++;
+					if (depth_mon_feeling[i][j] <= depth_mon_feeling[i][j-1])
+						badm2++;
+				}
+			}
+		}
+
+		fprintf(stderr,"Iter %d: bad obj %d / %d, bad mon %d / %d, sum %d\n", iters, bado, bado2, badm, badm2, bado+bado2+badm+badm2);
+
+		/* Test for a key */
+		ui_event ch;
+		return (!Term_inkey(&ch, false, true));
+	}
+
+	return false;
+}
+
 void feel_stats(void)
 {
+	fprintf(stderr,"Feeling stats\n");
+
+	int depth;
+	int iter = 0;
+	bool complete = false;
+
+	memset(depth_obj_feeling, 0, sizeof(depth_obj_feeling));
+	memset(depth_mon_feeling, 0, sizeof(depth_mon_feeling));
+
+	memset(iter_obj_feeling, 0, sizeof(iter_obj_feeling));
+	memset(iter_mon_feeling, 0, sizeof(iter_mon_feeling));
+
+	/* Ensure quests don't interfere (dungeon guardians and their loot) */
+	u32b *qflags = mem_zalloc(sizeof(u32b) * z_info->quest_max);
+	for(int i=0;i<z_info->quest_max;i++) {
+		qflags[i] = player->quests[i].flags;
+		player->quests[i].flags |= QF_SUCCEEDED;
+		player->quests[i].flags |= QF_UNREWARDED;
+		player->quests[i].flags &= ~QF_ACTIVE;
+		player->quests[i].flags &= ~QF_FAILED;
+	}
+
+	FILE *log = fopen("feel.txt", "w");
+
+	/* Do many iterations of the game */
+	do {
+		memset(obj_feeling_sum, 0, sizeof(obj_feeling_sum));
+		memset(mon_feeling_sum, 0, sizeof(mon_feeling_sum));
+
+		iter++;
+
+		/* Move all artifacts to uncreated */
+		uncreate_artifacts();
+
+		/* Move all uniques to alive */
+		revive_uniques();
+
+		/* Do randart regen */
+		/* Get seed */
+		int seed_randart = randint0(0x10000000);
+
+		/* Restore the standard artifacts */
+		cleanup_parser(&randart_parser);
+		deactivate_randart_file();
+		run_parser(&artifact_parser);
+
+		/* regen randarts */
+		do_randart(seed_randart, false, false);
+
+		/* Do game iterations */
+		for (depth = 1 ; depth < MAX_FEEL_LVL; depth++) {
+			/* Move player to that depth */
+			player->depth = depth;
+
+			/* Make a dungeon */
+			cave->obj_rating = 0;
+			prepare_next_level(&cave, player);
+
+			/* Get stats */
+			stats_collect_feeling(depth);
+		}
+
+		complete = stats_complete_feeling(iter);
+
+		if (log) {
+			if ((iter % 10 == 9)) {
+				print_feeling_to(log, iter);
+				fclose(log);
+				log = fopen("feel.txt", "a");
+			}
+		}
+
+	} while (!complete);
+
+	/* Restore original artifacts */
+	cleanup_parser(&randart_parser);
+	if (OPT(player, birth_randarts)) {
+		activate_randart_file();
+		run_parser(&randart_parser);
+		deactivate_randart_file();
+	} else {
+		run_parser(&artifact_parser);
+	}
+
+	/* Print to file */
+	stats_print_feeling(iter);
+
+	if (log)
+		fclose(log);
+
+	/* Put quests back */
+	for(int i=0;i<z_info->quest_max;i++) {
+		player->quests[i].flags = qflags[i];
+	}
+	mem_free(qflags);
+
+	/* Clean up */
+	for(int i=1;i<MAX_FEEL_LVL;i++) {
+		for(int j=0; j<8; j++) {
+			mem_free(iter_obj_feeling[i][j]);
+			mem_free(iter_mon_feeling[i][j]);
+		}
+	}
+	mem_free(obj_feeling_total);
+	mem_free(mon_feeling_total);
+
+	/* Display the current level */
+	do_cmd_redraw();
 	return;
 }
 

@@ -444,7 +444,7 @@ void spoil_artifact(const char *fname)
 			 */
 			text_out("\nMin Level %u, Max Level %u, Generation chance %u, Power %d, %s\n",
 					 art->alloc_min, art->alloc_max, art->alloc_prob,
-					 object_power(obj, false, NULL), (art->weight / 10),
+					 object_power(obj, false, NULL, false), (art->weight / 10),
 					fmt_weight(art->weight, NULL));
 
 			if (OPT(player, birth_randarts)) text_out("%s.\n", art->text);

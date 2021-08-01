@@ -187,8 +187,8 @@ struct chunk {
 	int depth;
 
 	byte feeling;
-	u32b obj_rating;
-	u32b mon_rating;
+	double obj_rating;
+	double mon_rating;
 	bool good_item;
 
 	int height;

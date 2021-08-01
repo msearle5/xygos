@@ -370,7 +370,11 @@ void new_player_spot(struct chunk *c, struct player *p)
 		grid = p->grid;
 	} else if (!find_start(c, &grid)) {
 		dump_level_simple(NULL, "Player Placement Failure", c);
-		quit("Failed to place player!");
+		{
+			static int xx = 0;
+			xx++;
+			fprintf(stderr, "Failed to place player! %d",xx);
+		}
 	}
 
     /* Create stairs the player came down if allowed and necessary */
@@ -457,6 +461,7 @@ void place_object(struct chunk *c, struct loc grid, int level, bool good,
 
 	/* Make an appropriate object */
 	new_obj = make_object(c, level, good, great, false, &rating, tval);
+	assert (rating >= 0);
 	if (!new_obj) return;
 	new_obj->origin = origin;
 	new_obj->origin_depth = c->depth;
@@ -473,11 +478,12 @@ void place_object(struct chunk *c, struct loc grid, int level, bool good,
 		if (new_obj->artifact) {
 			c->good_item = true;
 		}
-		/* Avoid overflows */
-		if (rating > 2500000) {
-			rating = 2500000;
+		double obj_rating = rating;
+		//obj_rating += (obj_rating * obj_rating) * 0.00001;
+		if (obj_rating > 1e7) {
+			fprintf(stderr,"dodgy object? %p, %d, %lf, %lf\n", (void*) new_obj, rating, obj_rating, c->obj_rating);
 		}
-		c->obj_rating += (rating / 100) * (rating / 100);
+		c->obj_rating += obj_rating;
 	}
 }
 

@@ -15,6 +15,8 @@
 #define ROOM_LOG(...) if (OPT(player, cheat_room)) msg(__VA_ARGS__);
 #endif
 
+#define MAX_FEEL_LVL	128
+
 /**
  * Dungeon allocation places and types, used with alloc_object().
  */

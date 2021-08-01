@@ -1805,8 +1805,8 @@ int rd_chunks(void)
 			rd_u16b(&tmp16u);
 			c->depth = tmp16u;
 			rd_byte(&c->feeling);
-			rd_u32b(&c->obj_rating);
-			rd_u32b(&c->mon_rating);
+			rd_double(&c->obj_rating);
+			rd_double(&c->mon_rating);
 			rd_byte(&tmp8u);
 			c->good_item  = tmp8u ? true : false;
 			rd_u16b(&tmp16u);

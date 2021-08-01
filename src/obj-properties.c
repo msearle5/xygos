@@ -82,7 +82,7 @@ void create_obj_flag_mask(bitflag *f, int id, ...)
 		for (j = 1; j < z_info->property_max; j++) {
 			struct obj_property *prop = &obj_properties[j];
 			if (prop->type != OBJ_PROPERTY_FLAG) continue;
-			if ((id && prop->id_type == i) || (!id && prop->subtype == i)) {
+			if (((id && prop->id_type == i) || (!id && prop->subtype == i)) && (prop->index)) {
 				of_on(f, prop->index);
 			}
 		}

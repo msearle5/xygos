@@ -1141,7 +1141,17 @@ static bool place_new_monster_one(struct chunk *c, struct loc grid,
 		return false;
 
 	/* Add to level feeling, note uniques for cheaters */
-	c->mon_rating += race->level * race->level;
+	double mon_rating = race->level * race->level;
+
+	/* Uniques are worth more */
+	if (rf_has(race->flags, RF_UNIQUE))
+		mon_rating *= 2.0;
+
+	/* Pits can usually be avoided. So can vaults, but there is less reason to. */
+	if (origin == ORIGIN_DROP_PIT)
+		mon_rating *= 0.1;
+	else if (origin == ORIGIN_DROP_VAULT)
+		mon_rating *= 0.25;
 
 	/* Check out-of-depth-ness */
 	if (race->level > c->depth) {
@@ -1152,11 +1162,13 @@ static bool place_new_monster_one(struct chunk *c, struct loc grid,
 			if (OPT(player, cheat_hear))
 				msg("Deep monster (%s).", race->name);
 		}
-		/* Boost rating by power per 10 levels OOD */
-		c->mon_rating += (race->level - c->depth) * race->level * race->level;
+		/* Boost rating by levels OOD */
+		//c->mon_rating *= (c->depth / race->level);
 	} else if (rf_has(race->flags, RF_UNIQUE) && OPT(player, cheat_hear)) {
 		msg("Unique (%s).", race->name);
 	}
+
+	c->mon_rating += mon_rating;
 
 	/* Get local monster */
 	mon = &monster_body;

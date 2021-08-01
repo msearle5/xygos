@@ -364,7 +364,7 @@ static int artifact_power(int a_idx, const char *reason, bool verbose)
 				ODESC_PREFIX | ODESC_FULL | ODESC_SPOIL);
 	file_putf(log_file, "%s\n", buf);
 
-	power = object_power(obj, verbose, log_file);
+	power = object_power(obj, verbose, log_file, true);
 
 	object_delete(&known_obj);
 	object_delete(&obj);

@@ -721,7 +721,13 @@ static void place_feeling(struct chunk *c)
 	c->feeling_squares = 0;
 }
 
-static const u32b depth_obj_feeling[128][8];
+static const int depth_obj_feeling[128][8] = {
+	{          0,          0,          0,          0,          0,          0,          0,          0, }
+};
+
+static const int depth_mon_feeling[128][8] = {
+	{          0,          0,          0,          0,          0,          0,          0,          0, }
+};
 
 /**
  * Calculate the level feeling for objects.
@@ -739,16 +745,20 @@ static int calc_obj_feeling(struct chunk *c, struct player *p)
 	int depth = c->depth;
 	if (depth < 0)
 		depth = 0;
-	if (depth >= 128)
-		depth = 127;
+	if (depth >= MAX_FEEL_LVL)
+		depth = MAX_FEEL_LVL-1;
 
-	int rating = 100;
+	int rating = 9;
 	for(int i=0;i<8;i++) {
-		if (c->obj_rating > depth_obj_feeling[depth][i]) {
-			rating = (i + 2) * 10;
+		if (c->obj_rating < depth_obj_feeling[depth][i]) {
+			rating = (i + 1);
 			break;
 		}
 	}
+
+	/* 20 = best, to 100 = worst */
+	rating = (11-rating) * 10;
+
 	/* Apply a minimum feeling if there's an artifact on the level */
 	if (c->good_item)
 		rating = MAX(60, rating);
@@ -762,23 +772,26 @@ static int calc_obj_feeling(struct chunk *c, struct player *p)
  */
 static int calc_mon_feeling(struct chunk *c)
 {
-	u32b x;
-
 	/* Town gets no feeling */
 	if (c->depth == 0) return 0;
 
 	/* Check the monster power adjusted for depth */
-	x = c->mon_rating / danger_depth(player);
+	int depth = c->depth;
+	if (depth < 0)
+		depth = 0;
+	if (depth >= MAX_FEEL_LVL)
+		depth = MAX_FEEL_LVL-1;
 
-	if (x > 7000) return 1;
-	if (x > 4500) return 2;
-	if (x > 2500) return 3;
-	if (x > 1500) return 4;
-	if (x > 800) return 5;
-	if (x > 400) return 6;
-	if (x > 150) return 7;
-	if (x > 50) return 8;
-	return 9;
+	int rating = 9;
+	for(int i=0;i<8;i++) {
+		if (c->mon_rating < depth_mon_feeling[depth][i]) {
+			rating = (i + 1);
+			break;
+		}
+	}
+
+	/* 1 = highest, to 9 = lowest */
+	return 10-rating;
 }
 
 /**

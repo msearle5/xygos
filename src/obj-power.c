@@ -128,10 +128,10 @@ static struct element_powers {
  * We go up to +24 here - anything higher is inhibited
  * N.B. Not all stats count equally towards this total
  */
-static s16b ability_power[25] =
+static const byte ability_power[25] =
 	{0, 0, 0, 0, 0, 0, 0, 2, 4, 6, 8,
 	12, 16, 20, 24, 30, 36, 42, 48, 56, 64,
-	74, 84, 96, 110};
+	74, 84, 96, 110 };
 
 /* Log file declared here for simplicity */
 static ang_file *object_log;
@@ -284,14 +284,14 @@ static int launcher_ammo_damage_power(const struct object *obj, int p)
 /**
  * Add power for extra blows
  */
-static int extra_blows_power(const struct object *obj, int p)
+static int extra_blows_power(const struct object *obj, int p, bool inhibit)
 {
 	int q = p;
 
 	if (obj->modifiers[OBJ_MOD_BLOWS] == 0)
 		return p;
 
-	if (obj->modifiers[OBJ_MOD_BLOWS] >= z_info->inhibit_blows) {
+	if (inhibit && (obj->modifiers[OBJ_MOD_BLOWS] >= z_info->inhibit_blows)) {
 		p += INHIBIT_POWER;
 		log_obj("INHIBITING - too many extra blows - quitting\n");
 		return p;
@@ -309,12 +309,12 @@ static int extra_blows_power(const struct object *obj, int p)
 /**
  * Add power for extra shots - note that we cannot handle negative shots
  */
-static int extra_shots_power(const struct object *obj, int p)
+static int extra_shots_power(const struct object *obj, int p, bool inhibit)
 {
 	if (obj->modifiers[OBJ_MOD_SHOTS] == 0)
 		return p;
 
-	if (obj->modifiers[OBJ_MOD_SHOTS] >= z_info->inhibit_shots) {
+	if (inhibit && (obj->modifiers[OBJ_MOD_SHOTS] >= z_info->inhibit_shots)) {
 		p += INHIBIT_POWER;
 		log_obj("INHIBITING - too many extra shots - quitting\n");
 		return p;
@@ -333,9 +333,9 @@ static int extra_shots_power(const struct object *obj, int p)
 /**
  * Add power for extra might
  */
-static int extra_might_power(const struct object *obj, int p, int mult)
+static int extra_might_power(const struct object *obj, int p, int mult, bool inhibit)
 {
-	if (obj->modifiers[OBJ_MOD_MIGHT] >= z_info->inhibit_might) {
+	if (inhibit && (obj->modifiers[OBJ_MOD_MIGHT] >= z_info->inhibit_might)) {
 		p += INHIBIT_POWER;
 		log_obj("INHIBITING - too much extra might - quitting\n");
 		return p;
@@ -508,7 +508,7 @@ static int ac_power(const struct object *obj, int p)
 /**
  * Add power for +to_ac
  */
-static int to_ac_power(const struct object *obj, int p)
+static int to_ac_power(const struct object *obj, int p, bool inhibit)
 {
 	int q;
 
@@ -529,7 +529,7 @@ static int to_ac_power(const struct object *obj, int p)
 		p += q;
 		log_obj(format("Add %d power for very high to_ac, total is %d\n",q, p));
 	}
-	if (obj->to_a >= z_info->inhibit_ac) {
+	if (inhibit && (obj->to_a >= z_info->inhibit_ac)) {
 		p += INHIBIT_POWER;
 		log_obj("INHIBITING: AC bonus too high\n");
 	}
@@ -539,9 +539,9 @@ static int to_ac_power(const struct object *obj, int p)
 /**
  * Add power for modifiers
  */
-static int modifier_power(const struct object *obj, int p)
+static int modifier_power(const struct object *obj, int p, bool inhibit)
 {
-	int i, k, extra_stat_bonus = 0, q;
+	int i, k = 0, extra_stat_bonus = 0, q = 0, r = 0;
 
 	for (i = 0; i < OBJ_MOD_MAX; i++) {
 		/* Get the modifier details */
@@ -554,22 +554,31 @@ static int modifier_power(const struct object *obj, int p)
 		if (mod->power) {
 			q = (k * mod->power * mod->type_mult[obj->tval]);
 			p += q;
-			if (q) log_obj(format("Add %d power for %d %s, total is %d\n", 
+			if (q) log_obj(format("Add %d power for %d %s, total is %d\n",
 								  q, k, mod->name, p));
 		}
 	}
 
 	/* Add extra power term if there are a lot of ability bonuses */
-	if (extra_stat_bonus > 249) {
+	if (inhibit && (extra_stat_bonus > 249)) {
 		log_obj(format("Inhibiting - Total ability bonus of %d is too high\n", 
 					   extra_stat_bonus));
 		p += INHIBIT_POWER;
 	} else if (extra_stat_bonus > 0) {
-		q = ability_power[extra_stat_bonus / 10];
-		if (!q) return p;
-		p += q;
+		r = 0;
+		int idx = extra_stat_bonus / 10;
+		int entries = sizeof(ability_power) / sizeof(ability_power[0]);
+		if (idx >= entries) {
+			idx = entries-1;
+			r = extra_stat_bonus - (idx * 10);
+		}
+		r += ability_power[idx];
+		if (!r) {
+			return p;
+		}
+		p += r;
 		log_obj(format("Add %d power for modifier total of %d, total is %d\n", 
-					   q, extra_stat_bonus, p));
+					   r, extra_stat_bonus, p));
 	}
 	return p;
 }
@@ -739,7 +748,7 @@ static int fault_power(const struct object *obj, int p, int verbose,
 				int fault_power;
 				log_obj(format("Calculating %s fault power...\n",
 							   faults[i].name));
-				fault_power = object_power(faults[i].obj, verbose, log_file);
+				fault_power = object_power(faults[i].obj, verbose, log_file, true);
 				fault_power -= obj->faults[i].power / 10;
 				log_obj(format("Adjust for strength of fault, %d for %s fault power\n", fault_power, faults[i].name));
 				q += fault_power;
@@ -759,7 +768,7 @@ static int fault_power(const struct object *obj, int p, int verbose,
 /**
  * Evaluate the object's overall power level.
  */
-s32b object_power(const struct object* obj, bool verbose, ang_file *log_file)
+s32b object_power(const struct object* obj, bool verbose, ang_file *log_file, bool inhibit)
 {
 	s32b p = 0, dice_pwr = 0;
 	int mult;
@@ -776,22 +785,22 @@ s32b object_power(const struct object* obj, bool verbose, ang_file *log_file)
 	p += ammo_damage_power(obj, p);
 	mult = gun_multiplier(obj);
 	p = launcher_ammo_damage_power(obj, p);
-	p = extra_blows_power(obj, p);
-	if (p > INHIBIT_POWER) return p;
-	p = extra_shots_power(obj, p);
-	if (p > INHIBIT_POWER) return p;
-	p = extra_might_power(obj, p, mult);
-	if (p > INHIBIT_POWER) return p;
+	p = extra_blows_power(obj, p, inhibit);
+	if (inhibit && (p > INHIBIT_POWER)) return p;
+	p = extra_shots_power(obj, p, inhibit);
+	if (inhibit && (p > INHIBIT_POWER)) return p;
+	p = extra_might_power(obj, p, mult, inhibit);
+	if (inhibit && (p > INHIBIT_POWER)) return p;
 	p = slay_power(obj, p, verbose, dice_pwr);
 	p = rescale_gun_power(obj, p);
 	p = to_hit_power(obj, p);
 
 	/* Armour class power */
 	p = ac_power(obj, p);
-	p = to_ac_power(obj, p);
+	p = to_ac_power(obj, p, inhibit);
 
 	/* Other object properties */
-	p = modifier_power(obj, p);
+	p = modifier_power(obj, p, inhibit);
 	p = flags_power(obj, p, verbose, object_log);
 	p = element_power(obj, p);
 	p = effects_power(obj, p);
@@ -879,9 +888,9 @@ int object_value_real(const struct object *obj, int qty)
 
 		file_putf(log_file, "object is %s\n", obj->kind->name);
 
-		power = object_power(obj, true, log_file);
+		power = object_power(obj, true, log_file, false);
 #else /* PRICE_DEBUG */
-		power = object_power(obj, false, NULL);
+		power = object_power(obj, false, NULL, false);
 #endif /* PRICE_DEBUG */
 		/* Variation */
 		value = SGN(power) * ((a * power * power) + (b * power));

@@ -1148,8 +1148,8 @@ void wr_chunks(void)
 			wr_s32b(c->turn);
 			wr_u16b(c->depth);
 			wr_byte(c->feeling);
-			wr_u32b(c->obj_rating);
-			wr_u32b(c->mon_rating);
+			wr_double(c->obj_rating);
+			wr_double(c->mon_rating);
 			wr_byte(c->good_item ? 1 : 0);
 			wr_u16b(c->height);
 			wr_u16b(c->width);
