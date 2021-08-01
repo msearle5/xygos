@@ -394,7 +394,7 @@ s32b player_exp_scale(s32b amount)
 	s32b level = 1;
 	while ((exp_to_lev(p->exp + sum) != exp_to_lev(p->exp + sum + remainder)) && (level < PY_MAX_LEVEL)) { 
 		/* Divide the rest by 2, until no longer gaining levels */
-		s32b level = exp_to_lev(p->exp + sum);
+		level = exp_to_lev(p->exp + sum);
 		s32b thislevel = exp_to_gain(level);
 		s32b nextlevel = exp_to_gain(level+1);
 		s32b gain = nextlevel - thislevel;

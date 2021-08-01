@@ -901,9 +901,9 @@ static double py_unarmed_crit_power(struct player *p, struct monster_race *monra
 		mon_ac = mon_lev;
 	}
 	int mon_def = MAX (eff_lev + (mon_ac * 100) + (mon_lev * 40) + 2500, eff_lev * 2);
-	int power = 0;
 	/* Calculate at random, or find the average */
 	if (random == RANDOMISE) {
+		int power = 0;
 		while (randint0(mon_def) < eff_lev)
 			power++;
 		return power;
@@ -923,7 +923,7 @@ static double py_unarmed_crit_power(struct player *p, struct monster_race *monra
  * Convert power to damage
  */
 
-double py_power_damage(double power)
+static double py_power_damage(double power)
 {
 	double dmg = 1.0 + player->known_state.to_d;
 	dmg = ((2.0 + power) * dmg) / 2.0;
@@ -1292,7 +1292,7 @@ int get_extra_attacks(struct attack **list, int length)
  * Attempt a 'extra' attack against the specified monster. Return true if the
  * attack killed the target.
  */
-bool py_attack_extra(struct player *p, struct loc grid, struct monster *mon, struct attack *att, bool *hit)
+static bool py_attack_extra(struct player *p, struct loc grid, struct monster *mon, struct attack *att, bool *hit)
 {
 	char m_name[80];
 
