@@ -556,14 +556,18 @@ static void apply_random_power(struct object *obj)
 {
 	bitflag newf[OF_SIZE];
 	create_obj_flag_mask(newf, false, OFT_PROT, OFT_MISC, OFT_MAX);
-	of_on(obj->flags, get_new_attr(obj->flags, newf));
+	int flag = get_new_attr(obj->flags, newf);
+	if (flag)
+		of_on(obj->flags, flag);
 }
 
 static void apply_random_sustain(struct object *obj)
 {
 	bitflag newf[OF_SIZE];
 	create_obj_flag_mask(newf, false, OFT_SUST, OFT_MAX);
-	of_on(obj->flags, get_new_attr(obj->flags, newf));
+	int flag = get_new_attr(obj->flags, newf);
+	if (flag)
+		of_on(obj->flags, flag);
 }
 
 /**
