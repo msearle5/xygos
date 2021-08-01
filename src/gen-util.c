@@ -358,8 +358,9 @@ static bool find_start(struct chunk *c, struct loc *grid)
  * Place the player at a random starting location.
  * \param c current chunk
  * \param p the player
+ * \return true on success or false on failure
  */
-void new_player_spot(struct chunk *c, struct player *p)
+bool new_player_spot(struct chunk *c, struct player *p)
 {
 	struct loc grid;
 
@@ -369,8 +370,9 @@ void new_player_spot(struct chunk *c, struct player *p)
 			square_isstairs(c, p->grid)) {
 		grid = p->grid;
 	} else if (!find_start(c, &grid)) {
+		msg("Failed to place player; please report.  Restarting generation.");
 		dump_level_simple(NULL, "Player Placement Failure", c);
-		quit("Failed to place player!");
+		return false;
 	}
 
     /* Create stairs the player came down if allowed and necessary */
@@ -389,6 +391,7 @@ void new_player_spot(struct chunk *c, struct player *p)
 	}
 
 	player_place(c, p, grid);
+	return true;
 }
 
 
