@@ -114,7 +114,7 @@ static const grouper group_item[] =
 	{ TV_MUSHROOM,		"Mushrooms" },
 
 	{ TV_GADGET,		"Gadgets" },
-	{ TV_WAND,			"Wands" },
+	{ TV_WAND,			"Zappers" },
 	{ TV_DEVICE,		"Devices" },
 
 	{ TV_CHEST,			"Containers" },

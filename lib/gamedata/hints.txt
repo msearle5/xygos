@@ -54,6 +54,7 @@ H:Buy at least one healing pill before you leave town.
 H:Buy at least one blink card before you leave town.
 H:Can't keep track of all the information on the screen? Add extra windows.
 H:Cave dwellers are accustomed to darkness and rarely enjoy bright light.
+H:Chargable devices sell for a good price even with 0 charges.
 H:Close eXamination of splendid shop-wares will provide precious insights.
 H:Close the door!  You're letting the heat out!
 H:Cold damage can destroy potions in your inventory.
@@ -292,7 +293,6 @@ H:Unique opponents will recover their health faster than other creatures.
 H:Uniques remain mostly impervious to your attempts to confuse them.
 H:Use '=' to check out the options and customize your game.
 H:Walking around with lots of heavy weapons is not necessarily a good idea.
-H:Wands and devices sell for a good price even with 0 charges.
 H:Weak dangers? You may be overwhelmed by sheer numbers.
 H:Wear armor, going naked seems to offend public decency in here.
 H:When a character dies, memories of monsters she has fought are passed on.
