@@ -3099,6 +3099,7 @@ static void cleanup_artifact(void)
 		cleanup_magic(&art->magic);
 	}
 	mem_free(a_info);
+	a_info = NULL;
 }
 
 struct file_parser artifact_parser = {

@@ -392,7 +392,7 @@ static bool rd_monster(struct chunk *c, struct monster *mon)
  */
 static void rd_trap(struct trap *trap)
 {
-	int i;
+	unsigned i;
 	byte tmp8u;
 	char buf[80];
 
@@ -408,8 +408,13 @@ static void rd_trap(struct trap *trap)
 	rd_byte(&trap->power);
 	rd_byte(&trap->timeout);
 
-	for (i = 0; i < (int)(MAX(TRF_SIZE, trf_size)); i++)
-		rd_byte(&trap->flags[i]);
+	for (i = 0; i < TRF_SIZE; i++) {
+		if (i >= trf_size) {
+			trap->flags[i] = 0;
+		} else {
+			rd_byte(&trap->flags[i]);
+		}
+	}
 }
 
 /**

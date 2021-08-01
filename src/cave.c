@@ -469,6 +469,7 @@ void cave_free(struct chunk *c) {
 	mem_free(c->monster_groups);
 	if (c->name)
 		string_free(c->name);
+	memset(c, 0, sizeof(*c));
 	mem_free(c);
 }
 
