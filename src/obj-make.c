@@ -666,8 +666,8 @@ void ego_apply_magic_from(struct object *obj, int level, int j)
 		/* Apply flags */
 		of_union(obj->flags, ego->flags);
 		of_diff(obj->flags, ego->flags_off);
-		of_union(obj->carried_flags, ego->flags);
-		of_diff(obj->carried_flags, ego->flags_off);
+		of_union(obj->carried_flags, ego->carried_flags);
+		of_diff(obj->carried_flags, ego->carried_flags_off);
 		pf_union(obj->pflags, ego->pflags);
 
 		/* Add slays, brands and faults */
@@ -782,7 +782,7 @@ void copy_artifact_data(struct object *obj, const struct artifact *art)
 	obj->timeout = 0;
 
 	of_union(obj->flags, art->flags);
-	of_union(obj->carried_flags, art->flags);
+	of_union(obj->carried_flags, art->carried_flags);
 	pf_union(obj->pflags, art->pflags);
 	copy_slays(&obj->slays, art->slays);
 	copy_brands(&obj->brands, art->brands);
@@ -1417,7 +1417,7 @@ static double ego_prob(double depth, bool good, bool great)
  * This calculates the date of Easter Sunday.
  * The function treats the whole long weekend as Easter, so -2 to +1 day.
  **/
-bool its_easter(void)
+static bool its_easter(void)
 {
 	struct tm *t;
 	time_t now;
@@ -1473,7 +1473,7 @@ bool special_item_can_gen(struct object_kind *kind)
 }
 
 /* Look up a multiego combination in the table, with given maximum value */
-struct multiego_entry *multiego_find(struct multiego_entry *table, double total)
+static struct multiego_entry *multiego_find(struct multiego_entry *table, double total)
 {
 	int i;
 	do {
@@ -1510,7 +1510,7 @@ bool multiego_allow(u16b *ego)
 
 /* Build a table of multiego combinations, given a level and tval.
  **/
-struct multiego_entry *multiego_table(int genlevel, int tval, double *ptotal)
+static struct multiego_entry *multiego_table(int genlevel, int tval, double *ptotal)
 {
 	double total = 0.0;
 	bool match[z_info->e_max][z_info->k_max];

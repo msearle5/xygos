@@ -1494,7 +1494,7 @@ int class_to_stat(int stat)
 	return total / (player->max_lev * 2);
 }
 
-int effective_ac_of(struct object *obj, int slot)
+static int effective_ac_of(struct object *obj, int slot)
 {
 	const int wlev = levels_in_class(get_class_by_name("Wrestler")->cidx);
 	/* No bonus if not a wrestler or using a melee weapon */
@@ -1759,11 +1759,11 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 
 					/* Sum abilities giving speed based on momentum */
 					if ((bool)ability[i]->mom_speed) {
-						for(int j=0;j<MOM_SPEED_MAX;j++)
+						for(j = 0; j < MOM_SPEED_MAX; j++)
 							mom_speed[j] += ability[i]->mom_speed[j];
 					}
 
-					/* Apply element info, noting vulnerabilites for later processing */
+					/* Apply element info, noting vulnerabilities for later processing */
 					for (j = 0; j < ELEM_MAX; j++) {
 						if (ability[i]->el_info[j].res_level) {
 							if (ability[i]->el_info[j].res_level == -1)
