@@ -196,7 +196,7 @@ int world_connections(struct town *t)
 
 /** Return any town matching the town name, or NULL if none do.
  */
-struct town *get_town_by_name(const char *name)
+static struct town *get_town_by_name(const char *name)
 {
 	if (!name)
 		return NULL;
@@ -652,7 +652,7 @@ static void world_town_dungeon(struct town *town, const char *dungeon)
  *
  * Returns true if successful
  */ 
-bool world_locate_quests(void)
+static bool world_locate_quests(void)
 {
 	/* Clear */
 	for (int i = 0; i < z_info->quest_max; i++) {
@@ -786,7 +786,7 @@ bool world_locate_quests(void)
 }
 
 /** Connect all possible pairs of towns */
-void world_connect_complete(void)
+static void world_connect_complete(void)
 {
 	for(int i=0;i<z_info->town_max;i++)
 		for(int j=0; j<i; j++)
@@ -839,29 +839,29 @@ bool world_init_towns(void)
 	shuffle(geog, sizeof(geog) / sizeof(*geog));
 
 	world_town_dungeon(t = world_new_town(), "Fortress");
-	t->underground = "a historic underground fortress, said to extend hundreds of levels down.";
-	t->climb = "You climb through a maze of rusted metal stairways.";
-	t->descend = "You enter a maze of rusted metal stairways.";
+	t->underground = string_make("a historic underground fortress, said to extend hundreds of levels down.");
+	t->climb = string_make("You climb through a maze of rusted metal stairways.");
+	t->descend = string_make("You enter a maze of rusted metal stairways.");
 
 	world_town_dungeon(t = world_new_town(), "Sewers");
-	t->underground = "mysterious catacombs of unknown purpose and extent.";
-	t->climb = "You carefully climb a slimy ladder.";
-	t->descend = "You slither down a slimy access shaft.";
+	t->underground = string_make("mysterious catacombs of unknown purpose and extent.");
+	t->climb = string_make("You carefully climb a slimy ladder.");
+	t->descend = string_make("You slither down a slimy access shaft.");
 
 	world_town_dungeon(t = world_new_town(), "Caverns");
-	t->underground = "lofty caverns and wonderful waterfalls of twisted rock.";
-	t->climb = "You make your way up a bare rock slope.";
-	t->descend = "You pick your way down a bare rock slope.";
+	t->underground = string_make("lofty caverns and wonderful waterfalls of twisted rock.");
+	t->climb = string_make("You make your way up a bare rock slope.");
+	t->descend = string_make("You pick your way down a bare rock slope.");
 
 	world_town_dungeon(t = world_new_town(), "Mine");
-	t->underground = "the famous gold mines - maybe you'll get lucky?";
-	t->climb = "You climb up roughly hewn stone steps.";
-	t->descend = "You descend roughly hewn stone steps.";
+	t->underground = string_make("the famous gold mines - maybe you'll get lucky?");
+	t->climb = string_make("You climb up roughly hewn stone steps.");
+	t->descend = string_make("You descend roughly hewn stone steps.");
 
 	world_town_dungeon(t = world_new_town(), "Stores");
-	t->underground = "an abandoned bunker, once a deadly secret.";
-	t->climb = "You climb through a maze of shaky old staircases.";
-	t->descend = "You enter a maze of shaky old staircases.";
+	t->underground = string_make("an abandoned bunker, once a deadly secret.");
+	t->climb = string_make("You climb through a maze of shaky old staircases.");
+	t->descend = string_make("You enter a maze of shaky old staircases.");
 
 	/* Space Station doesn't have an associated town */
 	world_town_dungeon(NULL, "Spacestation");
@@ -870,34 +870,29 @@ bool world_init_towns(void)
 	 * One has a lake (and no street?)
 	 */
 	t = t_info + geog[0];
-	t->geography = "a placid, bottle-green lake";
+	t->geography = string_make("a placid, bottle-green lake");
 	t->lake = true;
 
 	/* Nothing special for the others? */
 	t = t_info + geog[1];
-	t->geography = "rolling green hills";
+	t->geography = string_make("rolling green hills");
 
 	t = t_info + geog[2];
-	t->geography = "soaring granite cliffs";
+	t->geography = string_make("soaring granite cliffs");
 
 	t = t_info + geog[3];
-	t->geography = "snow-capped mountains";
+	t->geography = string_make("snow-capped mountains");
 
 	t = t_info + geog[4];
-	t->geography = "the distant, smoky mountains";
+	t->geography = string_make("the distant, smoky mountains");
 
 	/* Volcano - fixed geography and dungeon */
 	world_town_dungeon(t = world_new_town(), "Volcano");
-	t->geography = "an awesome active volcano";
-	t->underground = "enticing volcanic caves!";
-	t->climb = "You climb twisted black rock into cooler air.";
-	t->descend = "You descend into a noticeably warmer level.";
+	t->geography = string_make("an awesome active volcano");
+	t->underground = string_make("enticing volcanic caves!");
+	t->climb = string_make("You climb twisted black rock into cooler air.");
+	t->descend = string_make("You descend into a noticeably warmer level.");
 	t->lava_num = 3 + randint0(3);
-
-	for(int i=0; i<z_info->town_max; i++) {
-		t->geography = string_make(t->geography);
-		t->underground = string_make(t->underground);
-	}
 
 	/* Find and enter the player's town (4 = Stores, see world_town_dungeon() calls above) */
 	world_change_town(t_info + 4);
@@ -945,7 +940,7 @@ static enum parser_error parse_town_name_back(struct parser *p) {
 	return parse_town_name(p, &town_back_name, &town_back_names);
 }
 
-struct parser *init_parse_town_names(void) {
+static struct parser *init_parse_town_names(void) {
 	struct parser *p = parser_new();
 	parser_reg(p, "S str text", parse_town_name_simple);
 	parser_reg(p, "F str text", parse_town_name_front);
@@ -1033,7 +1028,7 @@ static enum parser_error parse_world_dungeon(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
-struct parser *init_parse_world(void) {
+static struct parser *init_parse_world(void) {
 	struct parser *p = parser_new();
 
 	parser_reg(p, "level int depth sym name sym up sym down",
@@ -1069,8 +1064,8 @@ static struct level *dup_levels(struct level *src) {
 	return lev;
 }
 
-static void cleanup_levels(struct level **world) {
-	struct level *level = *world;
+static void cleanup_levels(struct level **worldp) {
+	struct level *level = *worldp;
 	while (level) {
 		struct level *old = level;
 		string_free(level->name);
@@ -1079,7 +1074,7 @@ static void cleanup_levels(struct level **world) {
 		level = level->next;
 		mem_free(old);
 	}
-	*world = NULL;
+	*worldp = NULL;
 }
 
 static void cleanup_world(void)

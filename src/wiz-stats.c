@@ -2982,6 +2982,10 @@ void disconnect_stats(int nsim, bool stop_on_disconnect)
 void pit_stats(int nsim, int pittype, int depth)
 {
 }
+
+void feel_stats(void)
+{
+}
 #endif /* USE_STATS */
 
 /**

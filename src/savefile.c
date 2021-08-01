@@ -264,9 +264,8 @@ void wr_double(double v)
 {
 	char buf[256];
 	*buf = 0;
-	sprintf(buf, "%la", v);
+	sprintf(buf, "%lf", v);
 	wr_string(buf);
-	fprintf(stderr,"wr: %s <= %lf\n", buf, v);
 }
 
 void wr_string(const char *str)
@@ -322,8 +321,7 @@ void rd_double(double *ip)
 	char buf[256];
 	*buf = 0;
 	rd_string(buf, sizeof buf);
-	sscanf(buf, "%la", ip);
-	fprintf(stderr,"rd: %s => %lf\n", buf, *ip);
+	sscanf(buf, "%lf", ip);
 }
 
 void rd_string(char *str, int max)
