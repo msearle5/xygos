@@ -918,8 +918,8 @@ static struct panel *get_panel_farleft(void) {
 		"Public Enemy",
 		"Suspect",
 		"Customer",
+		"Regular",
 		"Associate",
-		"Partner",
 		"Partner",
 		"Partner",
 		"Partner",
@@ -1002,6 +1002,14 @@ static struct panel *get_panel_farleft(void) {
 		int col = danger_colour[danger];
 		panel_line(p, col, "Danger", "%s (%d)", descr, danger);
 		panel_line(p, COLOUR_GREEN, "Postponed", "%d", player->danger_reduction);
+	}
+
+	/* Per-class */
+	s32b allowed, used;
+	bool timelord = get_regens(&allowed, &used);
+	if (timelord) {
+		panel_space(p);
+		panel_line(p, COLOUR_L_BLUE, "Regenerations", "%d/%d", used, allowed);
 	}
 	return p;
 }

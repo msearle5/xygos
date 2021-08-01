@@ -734,5 +734,7 @@ void personality_split_level(int from, int to);
 
 /* r_timelord.c */
 void timelord_force_regen(void);
+bool get_regens(s32b *allowed, s32b *used);
+void timelord_change_regenerations(int change);
 
 #endif /* !PLAYER_H */
