@@ -323,19 +323,19 @@ Magical Object Commands
 =======================
 
 Activate an object (``A``)
-  You have heard rumors of special weapons and armor deep in the Pits,
+  You have heard rumors of special weapons and armor deep in the fortress,
   items that can let you breathe fire like a dragon or light rooms with
   just a thought. Should you ever be lucky enough to find such an item,
   this command will let you activate its special ability. Special abilities
   can only be used if you are wearing or wielding the item. This command
   takes some energy.
 
-Aim a wand (``a``) or Zap a wand (``z``)
-  Wands must be aimed in a direction to be used. Wands are magical devices,
+Aim a zapper (``a``) or Zap a zapper (``z``)
+  Zappers must be aimed in a direction to be used. They are complex devices,
   and therefore there is a chance you will not be able to figure out how to
-  use them if you aren't good with magical devices. They will fire a shot
-  that affects the first object or creature encountered or fire a beam that
-  affects anything in a given direction, depending on the wand. An
+  use them if you aren't good with devices. They will fire a shot that
+  affects the first object or creature encountered or fire a beam that
+  affects anything in a given direction, depending on the type. An
   obstruction such as a door or wall will generally stop the effects from
   traveling any farther. This command requires a direction and can use a
   target. This command takes some energy.
@@ -346,14 +346,14 @@ Use a device (``u``) or Zap a device (``Z``)
   specific object. There is a chance you will not be able to figure out
   how to use them. This command takes some energy.
  
-Zap a rod (``z``) or Activate a rod (``a``)
-  Rods are extremely powerful magical items, which cannot be burnt or
-  shattered, and which can have either device-like or wand-like effects, but
-  unlike devices and wands, they don't have charges. Instead, they draw on
-  the ambient magical energy to recharge themselves, and therefore can only
+Zap a gadget (``z``) or Activate a gadget (``a``)
+  Gadgets are extremely powerful items, which cannot be burnt or shattered,
+  and which can have either zapper-like or device-like effects, but
+  unlike devices and zappers, they don't have charges. Instead, they draw on
+  ambient sources of energy to recharge themselves, and therefore can only
   be activated once every few turns. The recharging time varies depending
-  on the type of rod. This command may require a direction (depending on
-  the type of rod, and whether you are aware of its type) and can use a
+  on the type of gadget. This command may require a direction (depending on
+  the type of gadget, and whether you are aware of its type) and can use a
   target. This command takes some energy.
 
 Throwing and Missile Weapons

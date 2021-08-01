@@ -118,16 +118,13 @@ are in town it will be daytime, but note that the sun rises and falls
 Townspeople
 ===========
 
-The town contains many different kinds of people. There are the street
-urchins, young children who will mob an adventurer for money, and seem to
-come out of the woodwork when excited. Blubbering idiots are a constant
-annoyance, but not harmful. Public drunks wander about the town singing,
-and are of no threat to anyone. Sneaky rogues hang about watching for a
-likely victim to mug. And finally, no town would be complete without a swarm
-of half drunk warriors, who take offense or become annoyed just for the fun
-of it. (There are assumed to be other people in the town, but they are not
-represented on the screen as they do not interact with the player in any
-way.)
+The town contains many different kinds of people. There are the vault
+dwellers - only here to shop, but easily panicked into attacking you. There
+are Space Marines and amateur bug hunters - both armed and best avoided.
+There's always thieves to watch out for. And there are some more-or-less
+harmless cyber-enthusiasts and wobbly old robots. (There are assumed to be
+other people in the town, but they are not represented on the screen as they
+do not interact with the player in any way.)
 
 Most of the townspeople should be avoided by the largest possible distance
 when you wander from store to store. Fights will break out, though, so be
@@ -311,7 +308,7 @@ bound on how much you can carry. Your weight "limit" is determined by your
 strength. Being slow is dangerous! Try to avoid it as much as possible.
 
 Many objects found within the dungeon have special commands for their use.
-Wands must be aimed, devices must be used, cards must be run, and pills
+Zap guns must be aimed, devices must be used, cards must be run, and pills
 must be taken (or eaten). You may, in general, not only use items in your
 pack, but also items on the ground, if you are standing on top of them. At
 the beginning of the game all items are assigned a random 'flavor'. For
@@ -348,8 +345,8 @@ inscriptions containing any text of the form '@#' or '@x#' or '!x' or
 
 The game provides some "fake" inscriptions to help you keep track of your 
 possessions. Weapons, armor and equipment which have properties you don't
-know about yet will get a '{??}' label.  Wands, devices and gadgets can get
-a  '{tried}' label after use, particularly if they have an effect on a
+know about yet will get a '{??}' label.  Zappers, devices and gadgets can
+get a '{tried}' label after use, particularly if they have an effect on a
 monster and were tested in the absence of monsters.
 
 It is rumored that many strange and powerful items not described here may

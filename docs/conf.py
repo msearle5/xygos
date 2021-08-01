@@ -53,10 +53,10 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-from better import better_theme_path
+#from better import better_theme_path
 
-html_theme_path = [better_theme_path]
-html_theme = "better"
+#html_theme_path = [better_theme_path]
+#html_theme = "better"
 
 html_title = "<img> The Xygos Manual"
 html_short_title = "Home"
