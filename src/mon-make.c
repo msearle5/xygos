@@ -617,6 +617,7 @@ void wipe_mon_list(struct chunk *c, struct player *p)
 				 */
 				if (obj->oidx) {
 					c->objects[obj->oidx] = NULL;
+					obj->oidx = 0;
 				}
 				obj = obj->next;
 			}

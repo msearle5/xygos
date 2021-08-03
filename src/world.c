@@ -72,12 +72,16 @@ void world_cleanup_towns(void)
 		mem_free(t->name);
 		mem_free(t->connect);
 		mem_free(t->stores);
-		/* t->underground, t->geography are constants, don't need to be freed */
+		string_free(t->underground);
+		string_free(t->geography);
+		string_free(t->climb);
+		string_free(t->descend);
 		t->connect = NULL;
 	}
 	stores = NULL;
 	mem_free(t_info);
 	t_info = NULL;
+	player->town = NULL;
 	z_info->town_max = 0;
 }
 
@@ -964,6 +968,7 @@ static void cleanup_town_names(void)
 			mem_free(town_full_name[i]);
 		mem_free(town_full_name);
 		town_full_name = NULL;
+		town_full_names = 0;
 	}
 
 	if (town_front_name) {
@@ -971,6 +976,7 @@ static void cleanup_town_names(void)
 			mem_free(town_front_name[i]);
 		mem_free(town_front_name);
 		town_front_name = NULL;
+		town_front_names = 0;
 	}
 
 	if (town_back_name) {
@@ -978,6 +984,7 @@ static void cleanup_town_names(void)
 			mem_free(town_back_name[i]);
 		mem_free(town_back_name);
 		town_back_name = NULL;
+		town_back_names = 0;
 	}
 }
 

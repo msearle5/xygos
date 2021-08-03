@@ -25,6 +25,7 @@ struct carry_num_state {
 	struct object *shot;
 	struct object *flask;
 	struct object *inscribed_flask;
+	struct object *treasure;
 };
 
 int setup_tests(void **state) {

@@ -578,7 +578,7 @@ static int project_player_handler_TIME(project_player_handler_context_t *context
 	if (one_in_(2)) {
 		/* Life draining */
 		int drain = 100 + (player->exp / 100) * z_info->life_drain_percent;
-		msg("You feel your life force draining away!");
+		msg("You feel your memories draining away!");
 		player_exp_lose(player, drain, false);
 	} else if (!one_in_(5)) {
 		/* Drain some stats */

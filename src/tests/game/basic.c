@@ -28,7 +28,6 @@ static void println(const char *str) {
 
 static void reset_before_load(void) {
 	play_again = true;
-	wipe_mon_list(cave, player);
 	cleanup_angband();
 	chunk_list_max = 0;
 	init_angband();
@@ -52,7 +51,6 @@ int setup_tests(void **state) {
 
 int teardown_tests(void *state) {
 	file_delete("Test1");
-	wipe_mon_list(cave, player);
 	cleanup_angband();
 	return 0;
 }

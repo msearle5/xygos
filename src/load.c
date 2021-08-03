@@ -364,6 +364,7 @@ static bool rd_monster(struct chunk *c, struct monster *mon)
 
 		pile_insert(&mon->held_obj, obj);
 		assert(obj->oidx);
+		assert(obj->oidx < c->obj_max);
 		assert(c->objects[obj->oidx] == NULL);
 		c->objects[obj->oidx] = obj;
 	}
