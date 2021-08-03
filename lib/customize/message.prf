@@ -142,6 +142,9 @@ message:MON_CLAW:w
 # MSG_MON_BITE
 message:MON_BITE:w
 
+# MSG_MON_PECK
+message:MON_PECK:w
+
 # MSG_MON_STING
 message:MON_STING:w
 

@@ -65,6 +65,15 @@ msg:MON_BITE
 act:bites {target}
 desc:bite
 
+name:PECK
+cut:1
+stun:0
+miss:1
+phys:1
+msg:MON_PECK
+act:pecks {target}
+desc:peck
+
 name:STING
 cut:0
 stun:0

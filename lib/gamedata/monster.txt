@@ -667,6 +667,22 @@ flags:RAND_25 | SMART
 friends:60:1d2:Same
 desc:A little robot fish that bites like a steel trap.
 
+# drop kelp, ramen, etc.?
+name:instant pool noodle
+base:aquatic
+color:Light Yellow
+depth:15
+rarity:8
+hit-points:25
+hearing:4
+armor-class:0
+sleepiness:100
+blow:SUCK:EAT_FOOD
+blow:CONSTRICT:HURT:1d10
+flags:RAND_50 | STUPID | MULTIPLY
+friends:40:1d3:Same
+desc:A long thin floating foamy creature. It reaches out noodly appendages to grab whatever ventures into the water - and mere moments later the prey has been converted into more lengths of noodle.
+
 name:globefish
 base:aquatic
 color:Slate
@@ -690,7 +706,6 @@ base:aquatic
 color:SkyBlue
 depth:33
 rarity:5
-desc:Better watch out!
 speed:110
 hit-points:16
 hearing:15
@@ -700,7 +715,7 @@ blow:CONSTRICT:ELEC:1d20
 flags:EVASIVE
 flags:RAND_25 | RAND_50
 friends:90:2d3:Same
-desc:This cute little serpentine creature can create a deadly voltage. 
+desc:Better watch out! This cute little serpentine creature can create a deadly voltage. 
 
 name:great white shark
 base:aquatic
@@ -1062,8 +1077,24 @@ desc:A trap, capable of doing a variety of nasty things, and baited with a valua
 
 ##### A is for AMPHIBIAN #####
 
+name:newt
+base:amphibian
+color:Tan
+depth:1
+rarity:1
+grow:great red frog
+hit-points:1
+hearing:4
+armor-class:5
+sleepiness:100
+rarity:10
+blow:BITE:HURT:1d2
+flags:RAND_25 | HURT_COLD | EMPTY_MIND
+desc:Shoot the newt!
+
 name:hopping frog
 base:amphibian
+grow:great red frog
 color:g
 speed:110
 hit-points:9
@@ -1132,6 +1163,23 @@ desc:A muscular toad that stands upright on slim legs. It has somehow obtained s
 desc:of leather around its wrists and across its body and in general seems smarter than the 
 desc:average amphibian. 
 
+name:slimedrooler
+base:amphibian
+color:LimeGreen
+depth:38
+rarity:6
+desc:Something like an oversized toad, drooling acid that sizzles as it burns the floor away.
+hit-points:15
+hearing:12
+armor-class:26
+sleepiness:30
+blow:DROOL:ACID:2d10
+blow:KICK:HURT:1d10
+flags:COLD_BLOOD
+flags:RAND_25
+flags:IM_WATER
+flags:WEIRD_MIND
+
 name:Hypnotoad
 base:amphibian
 color:Violet
@@ -1157,7 +1205,7 @@ friends-base:80:1d2:person:servant
 friends-base:80:1d2:person:servant
 friends-base:80:1d2:person:servant
 friends-base:80:1d2:person:servant
-spells:BRAIN_SMASH | MIND_BLAST
+spells:BRAIN_SMASH | MIND_BLAST | TELE_TO
 desc:All glory to the Hypnotoad! All glory to the Hypnotoad! All glory to the Hypnotoad!
 
 
@@ -1360,9 +1408,70 @@ sleepiness:0
 depth:2
 rarity:2
 experience:8
-blow:BITE:HURT:1d3
-blow:BITE:HURT:1d3
+blow:PECK:HURT:1d3
+blow:PECK:HURT:1d3
 desc:It is a hooded crow, gray except for the black wings and head.
+
+name:budgie
+base:bird
+color:Tomato
+depth:4
+rarity:10
+grow:parrot
+speed:115
+hit-points:8
+armor-class:70
+sleepiness:1
+blow:PECK:HURT:1d2
+flags:FLYING | EVASIVE
+flags:TAKE_ITEM | DROP_RANDOM
+spell-freq:10
+flags:RAND_50
+spell-power:2
+spells:SHRIEK
+flags:WEIRD_MIND
+desc:A small, colourful bird.
+
+name:golden bird of Berabus
+base:bird
+color:Yellow
+depth:7
+rarity:5
+grow:silver bird of Berabus
+speed:110
+hit-points:40
+armor-class:60
+sleepiness:150
+blow:PECK:FORCE:1d2
+flags:FLYING | EVASIVE
+flags:TAKE_ITEM | DEATH_SPECIAL | DROP_RANDOM
+flags:RAND_25 | RAND_50
+flags:NO_FEAR | NO_SLEEP
+spell-freq:15
+spell-power:8
+spells:TPORT | GROW
+flags:EMPTY_MIND
+desc:An inquisitive, acquisitive golden yellow bird.
+
+name:parrot
+base:bird
+color:Blue
+depth:16
+rarity:10
+grow:magpie
+speed:115
+hit-points:30
+armor-class:10
+rarity:10
+sleepiness:1
+blow:PECK:HURT:1d5
+flags:FLYING | EVASIVE | WEIRD_MIND | NONLIVING
+#flags:PRESERVE
+flags:TAKE_ITEM | RAND_25 | DROP_RANDOM
+spell-freq:10
+spell-power:2
+spells:SHRIEK
+desc:The Norwegian Blue parrot. Wonderful plumage!
 
 name:blood falcon
 base:bird
@@ -2016,6 +2125,26 @@ flags:BASH_DOOR
 desc:One of the largest of its species, a sleek orange and black shape creeps
 desc: towards you, ready to pounce.
 
+name:Hobbes the Tiger
+base:feline
+color:Yellow
+depth:18
+rarity:2
+speed:110
+hit-points:45
+hearing:40
+armor-class:15
+sleepiness:0
+blow:CLAW:HURT:1d11
+blow:CLAW:HURT:1d11
+blow:BITE:HURT:1d4
+flags:UNIQUE
+flags:MALE
+#flags:SPEAK
+flags:NO_CONF | NO_SLEEP
+flags:SMART | ATTR_FLICKER
+desc:Fast-moving, with a taste for tuna sandwiches.
+
 name:sabre-tooth tiger
 base:feline
 color:Goldenrod
@@ -2314,6 +2443,22 @@ desc:Max maxes. Everything. Max always has the First and Final Word. Run!
 
 
 ##### H is for HOLOGRAM #####
+name:voice
+base:hologram
+color:White
+depth:2
+rarity:3
+grow:hologram
+hit-points:1
+hearing:5
+armor-class:150
+sleepiness:30
+blow:GAZE:SOUND:2d3
+flags:ATTR_CLEAR | CHAR_CLEAR | INVISIBLE
+flags:COLD_BLOOD | FLYING
+flags:EVASIVE | PASS_WALL
+flags:SMART
+desc:A voice cries out from an empty room...
 
 name:hologram
 base:hologram
@@ -2734,6 +2879,24 @@ flags:MULTIPLY | FLYING | RAND_25 | RAND_50
 flags:MOVE_BODY
 desc:A giant buzzing wasp, its stinger drips venom.
 
+# Origin in "Desrick on the Yandro" (Manly Wade Wellman, F&SF June 1952)
+# A culverin is also an antique firearm and there is a bug (Curculio nucum) with a long straight snout of that name.
+name:culverin
+base:insect
+color:Beige
+depth:19
+rarity:2
+hit-points:18
+armor-class:7
+sleepiness:40
+blow:CLAW:HURT:1d4
+spell-freq:1
+flags:RAND_25
+spell-power:46
+spells:SLING
+flags:SMART
+desc:A many legged scuttling thing, it spits pebbles with deadly force.
+
 name:matrix bug
 base:insect
 color:Red
@@ -3022,7 +3185,7 @@ sleepiness:99
 blow:TOUCH:ACID:2d6
 blow:TOUCH:ACID:2d6
 blow:TOUCH:ACID:2d6
-passive:TOUCH:ACID:5d8:passive
+passive:TOUCH:ACID:5d8
 flags:COLD_BLOOD
 flags:NEVER_MOVE
 flags:NO_FEAR | NO_CONF | NO_SLEEP
@@ -3058,7 +3221,7 @@ name:gelatinous cube
 base:jelly
 color:LimeGreen
 speed:110
-hit-points:316
+hit-points:130
 hearing:12
 armor-class:21
 sleepiness:1
@@ -3100,6 +3263,28 @@ flags:IM_COLD | IM_POIS
 flags:STUPID | EMPTY_MIND
 desc:A slimy, moldy jelly thing, taking first one shape then another. For a
 desc:moment it looks almost like a crouching rabbit...
+
+name:black pudding
+base:jelly
+color:Gray25
+speed:115
+depth:29
+rarity:4
+grow:electric jelly
+hit-points:190
+hearing:12
+armor-class:12
+sleepiness:6
+blow:TOUCH:ACID:1d12
+blow:TOUCH:ACID:1d12
+blow:TOUCH:ACID:1d12
+passive:TOUCH:ACID:3d19
+flags:COLD_BLOOD
+flags:TAKE_ITEM | NO_FEAR | NO_CONF | NO_SLEEP
+flags:IM_FIRE | IM_COLD | IM_POIS | IM_ELEC | IM_ACID
+flags:STUPID | EMPTY_MIND | BASH_DOOR
+friends:95:3d4:Same
+desc:A lump of rotting black flesh that slurrrrrrrps across the floor.
 
 name:electric jelly
 plural:electric jellies
@@ -3741,7 +3926,7 @@ blow:BITE:HURT:1d2
 flags:MALE | FEMALE | COLD_BLOOD | WEIRD_MIND
 flags:RAND_25
 flags:NO_FEAR
-desc:It looks something like an oversized hamster, white with bouncing green hair.
+desc:It looks something like an oversized hamster, though it easily walks upright. It's mostly white but has a shock of long green hair that bounces as it moves.
 
 name:blue lemming
 base:lemming
@@ -3759,7 +3944,7 @@ blow:BITE:HURT:1d4
 flags:MALE | FEMALE | COLD_BLOOD | WEIRD_MIND
 flags:RAND_50
 flags:NO_FEAR
-desc:It looks something like an oversized hamster, white with bouncing blue hair.
+desc:It looks something like an oversized hamster, though it easily walks upright. It's mostly white but has a shock of long blue hair that bounces as it moves.
 
 name:gully lemming
 base:lemming
@@ -4733,7 +4918,7 @@ depth:10
 rarity:1
 experience:32
 blow:SPORE:POISON:1d3
-passive:TOUCH:POISON:1d3:passive
+passive:TOUCH:POISON:1d3
 flags:EMPTY_MIND | STUPID
 desc:It is a strange hairy growth on the ground.
 
@@ -4834,7 +5019,7 @@ desc:A motionless pile of dull black mold. It doesn't look like anything unusual
 name:blue ooze
 base:ooze
 color:b
-speed:110
+speed:105
 hit-points:8
 hearing:8
 armor-class:19
@@ -4843,15 +5028,16 @@ depth:5
 rarity:1
 experience:7
 blow:CRAWL:COLD:1d4
+passive:TOUCH:COLD:1d6
 flags:DROP_40
 flags:RAND_25 | RAND_50
 flags:IM_COLD | NO_CONF | NO_SLEEP
-desc:It's blue and it's oozing.
+desc:It's blue and it's oozing - a creeping puddle of lurid blue goo.
 
 name:green ooze
 base:ooze
 color:g
-speed:120
+speed:117
 hit-points:8
 hearing:8
 armor-class:19
@@ -4863,7 +5049,7 @@ blow:CRAWL:POISON:1d3
 flags:DROP_60
 flags:RAND_25 | RAND_50
 flags:IM_ACID | IM_POIS | HURT_COLD | NO_CONF | NO_SLEEP
-desc:It's green and it's oozing.
+desc:It's green and it's oozing - a blob of fast-moving green gunk.
 
 name:black ooze
 base:ooze
@@ -4879,10 +5065,9 @@ experience:7
 blow:TOUCH:ACID:2d6
 flags:MULTIPLY
 flags:DROP_40
-flags:RAND_50 | OPEN_DOOR | BASH_DOOR | KILL_BODY | TAKE_ITEM
+flags:RAND_50 | OPEN_DOOR | BASH_DOOR | KILL_BODY | TAKE_ITEM | DROP_RANDOM
 flags:IM_POIS | HURT_COLD
-spell-freq:11
-desc:It is a strangely moving puddle.
+desc:It is a strangely moving puddle of inky slime.
 
 
 ##### P is for GIANT HUMANOID #####
@@ -5332,6 +5517,28 @@ spell-freq:3
 spells:BO_PLAS
 spells:BLINK | S_FRIENDS
 desc:What kind of volcano would it be, without an evil overlord in residence? The Dark Helmet's no Triax, though - much as he would like to think he is. He does go through all the motions - his stupid goons are really stupid, his white cat is really fluffy, and of course his helmet is really big and shiny - but somehow it never comes together into the world domination he dreams of. Still, he is dangerous enough to harass the town above him, and needs to be taken down a hat size or two.
+
+# drop 'Crazy Axe'?
+name:Axcrazy
+base:person
+pain:13
+color:Orange
+depth:57
+rarity:7
+speed:120
+hit-points:595
+armor-class:35
+sleepiness:50
+blow:HIT:HURT:9d1
+blow:HIT:HURT:6d5
+blow:HIT:WOUND:20d1
+blow:HIT:WOUND:20d1
+flags:UNIQUE | MALE
+#flags:SPEAK
+flags:IM_COLD | IM_POIS
+flags:STUPID | WEIRD_MIND
+flags:BASH_DOOR | MOVE_BODY
+desc:A guy with a ripped shirt, the unnaturally blocky arms that indicate high-powered cyber-enhancement, and a wide, happy smile. Oh, and an implausibly big axe. You wouldn't have considered it to be a practical weapon, but he's twirling it about like a toy - this isn't just another average cyberpsycho.
 
 name:Triax, the Emperor
 base:person
@@ -6045,6 +6252,95 @@ flags:COLD_BLOOD
 flags:RAND_25 | HURT_LIGHT | STUPID | WEIRD_MIND
 desc:A pale green slug-like creature that can inflate itself to a great size.
 
+
+# Cannot be generated randomly - only summoned by other sunslugs
+name:lesser sunslug
+base:slug
+color:Light Slate
+depth:39
+rarity:0
+grow:sunslug
+speed:90
+hit-points:100
+rarity:10
+hearing:1
+armor-class:1
+sleepiness:200
+blow:SUCK:ELEC:1d16
+flags:RAND_25
+flags:IM_LIGHT | STUPID | WEIRD_MIND
+desc:A dimly glowing slug, silently sliding toward you.
+
+name:sunslug
+base:slug
+color:Light Yellow
+depth:40
+rarity:4
+speed:100
+rarity:10
+hit-points:240
+hearing:1
+armor-class:1
+sleepiness:200
+blow:SUCK:ELEC:1d33
+spell-freq:4
+spell-power:20
+spells:S_KIN
+flags:RAND_25
+spells:BO_ELEC
+flags:IM_LIGHT | STUPID | WEIRD_MIND
+friends:16:1d3:Same
+friends:8:1d20:Same
+friends:12:1d2:lesser sunslug
+friends:6:1d20:lesser sunslug
+desc:A brilliantly shining slug, sliding toward you with an odd whining sound.
+
+name:slug-lion
+base:slug
+color:Blue
+depth:48
+rarity:6
+speed:110
+hit-points:330
+hearing:1
+armor-class:1
+sleepiness:200
+blow:SUCK:FIRE:8d6
+spell-freq:8
+spell-power:25
+flags:RAND_25
+spells:BO_FIRE
+flags:IM_LIGHT
+flags:SMART
+friends:30:1d2:sunslug
+friends:12:1d2:lesser sunslug
+desc:A natural predator of sunslugs, the slug-lion takes its name from markings resembling a mane around its face (in as much as a slug can really be said to have a face), and from its prominent pair of fangs. It moves like greased lightning... compared to most slugs anyway.
+
+name:great ancient sunslug
+base:slug
+color:Violet
+depth:59
+rarity:8
+speed:100
+rarity:10
+hit-points:900
+hearing:1
+armor-class:1
+sleepiness:200
+blow:SUCK:ELEC:1d25
+blow:SUCK:ELEC:1d25
+blow:SUCK:ELEC:1d25
+blow:SUCK:ELEC:1d25
+flags:ATTR_FLICKER
+flags:RAND_25
+friends:90:2d6:sunslug
+friends:50:1d6:lesser sunslug
+spell-freq:2
+spell-power:20
+spells:S_KIN | BO_ELEC | BE_LIGHT
+flags:IM_LIGHT | STUPID | WEIRD_MIND
+desc:An immense, wrinkled slug form shining like the sun. Sluggish but powerful, 
+desc:and almost always attended by a slimeball of sunslugs.
 
 
 #### S is for SPIDER ####

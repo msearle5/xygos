@@ -171,6 +171,15 @@ lore-color-resist:Yellow
 lore-color-immune:Light Green
 lash-type:SOUND
 
+name:FORCE
+power:40
+eval:10
+desc:knock back
+lore-color-base:Orange
+lore-color-resist:Yellow
+lore-color-immune:Light Green
+lash-type:FORCE
+
 name:BLIND
 power:0
 eval:20

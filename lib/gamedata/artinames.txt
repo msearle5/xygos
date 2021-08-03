@@ -2454,6 +2454,9 @@ T:ARMS
 T:LEGS
 T:CHIP
 
+N:Silvertongue
+T:SWORD
+
 N:Neutron
 T:SWORD
 T:HAFTED
@@ -2819,6 +2822,9 @@ T:POLEARM
 T:DIGGING
 T:GUN
 T:LIGHT
+
+N:Platitude
+T:SWORD
 
 N:Ginsu
 T:SWORD

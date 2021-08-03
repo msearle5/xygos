@@ -357,6 +357,8 @@ static void melee_effect_elemental(melee_effect_handler_context_t *context,
 				break;
 			case PROJ_LIGHT: msg("There is an intense flash of light!");
 				break;
+			case PROJ_FORCE: msg("You are knocked back!");
+				break;
 		}
 	}
 
@@ -946,12 +948,27 @@ static void melee_effect_handler_COLD(melee_effect_handler_context_t *context)
 }
 
 /**
- * Melee effect handler: Attack the player with light (nlinding as a side effect).
+ * Melee effect handler: Attack the player with light (blinding as a side effect).
  */
 static void melee_effect_handler_LIGHT(melee_effect_handler_context_t *context)
 {
 	melee_effect_elemental(context, PROJ_LIGHT, true);
 	melee_effect_timed(context, TMD_BLIND, 5 + randint1(context->rlev), OF_PROT_BLIND, false, NULL);
+}
+
+/**
+ * Melee effect handler: Attack the player with force (knock back).
+ */
+static void melee_effect_handler_FORCE(melee_effect_handler_context_t *context)
+{
+	melee_effect_elemental(context, PROJ_FORCE, true);
+
+	/* Stun */
+	if (randint0(20) < context->damage)
+		(void)player_inc_timed(context->p, TMD_STUN, 2 + randint1(MAX(40, context->damage)), true, true);
+
+	/* Thrust player away. */
+	thrust_away(context->mon->grid, context->p->grid, 3 + context->damage / 20);
 }
 
 /**
@@ -1218,7 +1235,8 @@ melee_effect_handler_f melee_handler_for_blow_effect(const char *name)
 		{ "ELEC", melee_effect_handler_ELEC },
 		{ "FIRE", melee_effect_handler_FIRE },
 		{ "COLD", melee_effect_handler_COLD },
-		{ "LIGHt", melee_effect_handler_LIGHT },
+		{ "LIGHT", melee_effect_handler_LIGHT },
+		{ "FORCE", melee_effect_handler_FORCE },
 		{ "BLIND", melee_effect_handler_BLIND },
 		{ "CONFUSE", melee_effect_handler_CONFUSE },
 		{ "SLOW", melee_effect_handler_SLOW },

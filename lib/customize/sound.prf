@@ -343,6 +343,9 @@ sound:MON_CLAW:mco_ceramic_trill mco_scurry_dry
 # Attack - bite
 sound:MON_BITE:mco_snarl_short mco_bite_soft mco_bite_munch mco_bite_long mco_bite_short mco_bite_gnash mco_bite_chomp mco_bite_regular mco_bite_small mco_bite_dainty mco_bite_hard mco_bite_chew
 
+# Attack - peck
+sound:MON_PECK:mco_bite_dainty
+
 # Attack - sting
 sound:MON_STING:mco_castanet_trill mco_tube_hit
 

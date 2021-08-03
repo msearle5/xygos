@@ -125,3 +125,12 @@ message:bellow[s] in rage.
 message:scream[s] in fury.
 message:grunt[s].
 message:wince[s].
+
+type:13
+message:giggles.
+message:chortles.
+message:sniggers.
+message:laughs.
+message:whoops.
+message:yells out.
+message:groans.
