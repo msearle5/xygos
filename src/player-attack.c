@@ -483,7 +483,7 @@ static int melee_damage(const struct monster *mon, struct object *obj, int b, in
 		slaymul = slays[s].multiplier;
 	int brandmul = 1;
 	if (b)
-		brandmul = get_monster_brand_multiplier(mon, &brands[b]);
+		brandmul = get_monster_brand_multiplier(mon, &brands[b], false);
 	dmg *= MAX(slaymul, brandmul);
 
 	dmg -= base_dmg;
@@ -516,12 +516,7 @@ static int o_melee_average_damage(struct player *p, const struct monster *mon,
 		die_average *= slays[s].o_multiplier;
 		add = slays[s].o_multiplier - 10;
 	} else if (b) {
-		int bmult = get_monster_brand_multiplier(mon, &brands[b]);
-
-		die_average *= bmult;
-		add = bmult - 10;
-	} else {
-		die_average *= 10;
+		die_average *= get_monster_brand_multiplier(mon, &brands[b], false);
 	}
 
 	/* Apply deadliness to average. (100x inflation) */
@@ -580,7 +575,7 @@ static int o_melee_damage(struct player *p, const struct monster *mon,
 		die_average *= slays[s].o_multiplier;
 		add = slays[s].o_multiplier - 10;
 	} else if (b) {
-		int bmult = get_monster_brand_multiplier(mon, &brands[b]);
+		int bmult = get_monster_brand_multiplier(mon, &brands[b], true);
 
 		die_average *= bmult;
 		add = bmult - 10;
@@ -628,7 +623,7 @@ static int ranged_damage(struct player *p, const struct monster *mon,
 
 	/* If we have a slay or brand, modify the multiplier appropriately */
 	if (b && mon) {
-		mult += get_monster_brand_multiplier(mon, &brands[b]);
+		mult += get_monster_brand_multiplier(mon, &brands[b], false);
 	} else if (s) {
 		mult += slays[s].multiplier;
 	}
@@ -672,7 +667,7 @@ static int o_ranged_damage(struct player *p, const struct monster *mon,
 
 	/* Adjust the average for slays and brands. (10x inflation) */
 	if (b) {
-		int bmult = get_monster_brand_multiplier(mon, &brands[b]);
+		int bmult = get_monster_brand_multiplier(mon, &brands[b], true);
 
 		die_average *= bmult;
 		add = bmult - 10;
@@ -1039,12 +1034,13 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear, bool *hit)
 		for (j = 2; j < p->body.count; j++) {
 			struct object *obj_local = slot_object(p, j);
 			if (obj_local)
-				improve_attack_modifier(obj_local, mon, &b, &s, verb, false);
+				improve_attack_modifier(p, obj_local, mon,
+					&b, &s, verb, false);
 		}
 
 		/* Get the best attack from all slays or brands - weapon or temporary */
-		improve_attack_modifier(obj, mon, &b, &s, verb, false);
-		improve_attack_modifier(NULL, mon, &b, &s, verb, false);
+		improve_attack_modifier(p, obj, mon, &b, &s, verb, false);
+		improve_attack_modifier(p, NULL, mon, &b, &s, verb, false);
 
 		/* Handle resistance to edged / blunt weapons.
 		 * All objects are either pointy or blunt, and anything that isn't TV_BLUNT
@@ -1083,6 +1079,51 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear, bool *hit)
 			do_quake = true;
 			equip_learn_flag(p, OF_IMPACT);
 		}
+
+		/* Learn by use */
+		equip_learn_on_melee_attack(p);
+		learn_brand_slay_from_melee(p, obj, mon);
+
+		/* Apply the player damage bonuses */
+		if (!OPT(p, birth_percent_damage)) {
+			dmg += player_damage_bonus(&p->state);
+		}
+
+		/* Substitute shape-specific blows for shapechanged players */
+		if (player_is_shapechanged(p)) {
+			int choice = randint0(p->shape->num_blows);
+			struct player_blow *blow = p->shape->blows;
+			while (choice--) {
+				blow = blow->next;
+			}
+			my_strcpy(verb, blow->name, sizeof(verb));
+		}
+
+		/* No negative damage; change verb if no damage done */
+		if (dmg <= 0) {
+			dmg = 0;
+			msg_type = MSG_MISS;
+			my_strcpy(verb, "fail to harm", sizeof(verb));
+		}
+
+		for (unsigned i = 0; i < N_ELEMENTS(melee_hit_types); i++) {
+			const char *dmg_text = "";
+
+			if (msg_type != melee_hit_types[i].msg_type)
+				continue;
+
+			if (OPT(p, show_damage))
+				dmg_text = format(" (%d)", dmg);
+
+			if (melee_hit_types[i].text)
+				msgt(msg_type, "You %s %s%s. %s", verb, m_name, dmg_text,
+						melee_hit_types[i].text);
+			else
+				msgt(msg_type, "You %s %s%s.", verb, m_name, dmg_text);
+		}
+
+		/* Pre-damage side effects */
+		blow_side_effects(p, mon);
 
 	} else {
 		/* Handle unarmed melee.
@@ -1444,8 +1485,6 @@ static void ranged_helper(struct command *cmd, struct player *p,	struct object *
 {
 	int i, j;
 
-	char o_name[80];
-
 	int path_n;
 	struct loc path_g[256];
 
@@ -1478,9 +1517,6 @@ static void ranged_helper(struct command *cmd, struct player *p,	struct object *
 
 	/* Sound */
 	sound(MSG_SHOOT);
-
-	/* Describe the object */
-	object_desc(o_name, sizeof(o_name), obj, ODESC_FULL | ODESC_SINGULAR);
 
 	/* Actually "fire" the object -- Take a partial turn */
 	p->upkeep->energy_use = (z_info->move_energy * 10 / shots);
@@ -1546,12 +1582,21 @@ static void ranged_helper(struct command *cmd, struct player *p,	struct object *
 			mem_free(result.hit_verb);
 
 			if (result.success) {
+				char o_name[80];
+
 				hit_target = true;
 
 				missile_learn_on_ranged_attack(p, obj);
 
 				/* Learn by use for other equipped items */
 				equip_learn_on_ranged_attack(p);
+
+				/*
+				 * Describe the object (have most up-to-date
+				 * knowledge now).
+				 */
+				object_desc(o_name, sizeof(o_name), obj,
+					ODESC_FULL | ODESC_SINGULAR);
 
 				/* No negative damage; change verb if no damage done */
 				if ((dmg <= 0) && (mon->race)) {
@@ -1606,9 +1651,25 @@ static void ranged_helper(struct command *cmd, struct player *p,	struct object *
 			if (pierce) continue;
 			else break;
 		} else if (mon) {
+			char o_name[80];
+			/*
+			 * Describe the object (have most up-to-date
+			 * knowledge now).
+			 */
+			object_desc(o_name, sizeof(o_name), obj,
+				ODESC_FULL | ODESC_SINGULAR);
+
 			/* Reflection */
 			msgt(MSG_SHOOT_HIT, "The %s bounces!", o_name);
 		} else if (loc_eq(grid, player->grid)) {
+			char o_name[80];
+			/*
+			 * Describe the object (have most up-to-date
+			 * knowledge now).
+			 */
+			object_desc(o_name, sizeof(o_name), obj,
+				ODESC_FULL | ODESC_SINGULAR);
+
 			/* Oops */
 			msgt(MSG_SHOOT_HIT, "The %s hits you!", o_name);
 			struct attack_result result = attack(cmd, p, obj, grid);
@@ -1648,9 +1709,9 @@ static struct attack_result make_ranged_shot(struct command *cmd, struct player 
 {
 	char *hit_verb = mem_alloc(20 * sizeof(char));
 	struct attack_result result = {false, true, 0, 0, hit_verb};
-	struct object *gun = equipped_item_by_slot_name(p, "shooting");
+	struct object *bow = equipped_item_by_slot_name(p, "shooting");
 	struct monster *mon = square_monster(cave, grid);
-	int chance = chance_of_missile_hit(p, ammo, gun, mon);
+	int chance = chance_of_missile_hit(p, ammo, bow, mon);
 	int b = 0, s = 0;
 
 	my_strcpy(hit_verb, "hits", 20);
@@ -1661,18 +1722,19 @@ static struct attack_result make_ranged_shot(struct command *cmd, struct player 
 
 	result.success = true;
 
-	improve_attack_modifier(ammo, mon, &b, &s, result.hit_verb, true);
-	improve_attack_modifier(gun, mon, &b, &s, result.hit_verb, true);
+	improve_attack_modifier(p, ammo, mon, &b, &s, result.hit_verb, true);
+	improve_attack_modifier(p, bow, mon, &b, &s, result.hit_verb, true);
 
 	if (!OPT(p, birth_percent_damage)) {
-		result.dmg = ranged_damage(p, mon, ammo, gun, b, s);
+		result.dmg = ranged_damage(p, mon, ammo, bow, b, s);
 		result.dmg = critical_shot(p, mon, ammo->weight, ammo->to_h,
 								   result.dmg, &result.msg_type);
 	} else {
-		result.dmg = o_ranged_damage(p, mon, ammo, gun, b, s, &result.msg_type);
+		result.dmg = o_ranged_damage(p, mon, ammo, bow, b, s, &result.msg_type);
 	}
 
-	missile_learn_on_ranged_attack(p, gun);
+	missile_learn_on_ranged_attack(p, bow);
+	learn_brand_slay_from_launch(p, ammo, bow, mon);
 
 	return result;
 }
@@ -1730,7 +1792,7 @@ static struct attack_result make_ranged_throw(struct command *cmd, struct player
 
 	result.success = true;
 
-	improve_attack_modifier(obj, mon, &b, &s, result.hit_verb, true);
+	improve_attack_modifier(p, obj, mon, &b, &s, result.hit_verb, true);
 
 	if (!OPT(p, birth_percent_damage)) {
 		result.dmg = ranged_damage(p, mon, obj, NULL, b, s);
@@ -1740,7 +1802,9 @@ static struct attack_result make_ranged_throw(struct command *cmd, struct player
 		result.dmg = o_ranged_damage(p, mon, obj, NULL, b, s, &result.msg_type);
 	}
 
-	return result; 
+	learn_brand_slay_from_throw(p, obj, mon);
+
+	return result;
 }
 
 
