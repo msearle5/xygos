@@ -223,23 +223,21 @@ static int project_player_handler_FIRE(project_player_handler_context_t *context
 	inven_damage(player, PROJ_FIRE, MIN(context->dam * 5, 300));
 
 	/* Occasional side-effects for powerful fire attacks */
-	if (context->power >= 80) {
-		if (randint0(context->dam) > 500) {
-			msg("The intense heat saps you.");
-			effect_simple(EF_DRAIN_STAT, source_none(), "0", STAT_STR, 0, 0, 0,
-						  0, &context->obvious);
+	if (randint0(context->dam) > 500) {
+		msg("The intense heat saps you.");
+		effect_simple(EF_DRAIN_STAT, source_none(), "0", STAT_STR, 0, 0, 0,
+					  0, &context->obvious);
+	}
+	else if (randint0(context->dam) > 200) {
+		if (player_inc_timed(player, TMD_BLIND,
+							 randint1(context->dam / 100), true, true)) {
+			msg("Your eyes fill with smoke!");
 		}
-		if (randint0(context->dam) > 500) {
-			if (player_inc_timed(player, TMD_BLIND,
-								 randint1(context->dam / 100), true, true)) {
-				msg("Your eyes fill with smoke!");
-			}
-		}
-		if (randint0(context->dam) > 500) {
-			if (player_inc_timed(player, TMD_POISONED,
-								 randint1(context->dam / 10), true, true)) {
-				msg("You are assailed by poisonous fumes!");
-			}
+	}
+	else if (randint0(context->dam) > 300) {
+		if (player_inc_timed(player, TMD_POISONED,
+							 randint1(context->dam / 10), true, true)) {
+			msg("You are assailed by poisonous fumes!");
 		}
 	}
 	return 0;
@@ -251,21 +249,15 @@ static int project_player_handler_COLD(project_player_handler_context_t *context
 	inven_damage(player, PROJ_COLD, MIN(context->dam * 5, 300));
 
 	/* Occasional side-effects for powerful cold attacks */
-	if (context->power >= 80) {
-		if (randint0(context->dam) > 500) {
-			msg("The cold seeps into your bones.");
-			effect_simple(EF_DRAIN_STAT, source_none(), "0", STAT_DEX, 0, 0, 0,
-						  0, &context->obvious);
-		}
-		if (randint0(context->dam) > 500) {
-			if (player_of_has(player, OF_HOLD_LIFE)) {
-				equip_learn_flag(player, OF_HOLD_LIFE);
-			} else {
-				int drain = context->dam;
-				msg("The cold withers your life force!");
-				player_exp_lose(player, drain, false);
-			}
-		}
+	if (randint0(context->dam) > 500) {
+		msg("The cold seeps into your bones.");
+		effect_simple(EF_DRAIN_STAT, source_none(), "0", STAT_DEX, 0, 0, 0,
+					  0, &context->obvious);
+	}
+	else if (randint0(context->dam) > 500) {
+		msg("You aren't thinking as clearly in this cold!");
+		effect_simple(EF_DRAIN_STAT, source_none(), "0", STAT_INT, 0, 0, 0,
+					0, &context->obvious);
 	}
 	return 0;
 }
@@ -279,22 +271,20 @@ static int project_player_handler_POIS(project_player_handler_context_t *context
 		msg("You resist the effect!");
 
 	/* Occasional side-effects for powerful poison attacks */
-	if (context->power >= 60) {
-		if (randint0(context->dam) > 200) {
-			if (!player_is_immune(player, ELEM_ACID)) {
-				int dam = context->dam / 5;
-				msg("The venom stings your skin!");
-				inven_damage(player, PROJ_ACID, dam);
-				xtra += adjust_dam(player, PROJ_ACID, dam, RANDOMISE,
-								 player->state.el_info[PROJ_ACID].res_level,
-								 true);
-			}
+	if (randint0(context->dam) > 200) {
+		if (!player_is_immune(player, ELEM_ACID)) {
+			int dam = context->dam / 5;
+			msg("The venom stings your skin!");
+			inven_damage(player, PROJ_ACID, dam);
+			xtra += adjust_dam(player, PROJ_ACID, dam, RANDOMISE,
+							 player->state.el_info[PROJ_ACID].res_level,
+							 true);
 		}
-		if (randint0(context->dam) > 200) {
-			msg("The stench sickens you.");
-			effect_simple(EF_DRAIN_STAT, source_none(), "0", STAT_CON, 0, 0, 0,
-						  0, &context->obvious);
-		}
+	}
+	else if (randint0(context->dam) > 200) {
+		msg("The stench sickens you.");
+		effect_simple(EF_DRAIN_STAT, source_none(), "0", STAT_CON, 0, 0, 0,
+					  0, &context->obvious);
 	}
 	return xtra;
 }
@@ -309,7 +299,7 @@ static int project_player_handler_LIGHT(project_player_handler_context_t *contex
 	(void)player_inc_timed(player, TMD_BLIND, 2 + randint1(5), true, true);
 
 	/* Confusion for strong unresisted light */
-	if (context->dam > 300) {
+	if (context->dam - 25 > randint0(300)) {
 		msg("You are dazzled!");
 		(void)player_inc_timed(player, TMD_CONFUSED,
 							   2 + randint1(context->dam / 100), true, true);
@@ -327,32 +317,32 @@ static int project_player_handler_DARK(project_player_handler_context_t *context
 	(void)player_inc_timed(player, TMD_BLIND, 2 + randint1(5), true, true);
 
 	/* Unresisted dark from powerful monsters is bad news */
-	if (context->power >= 70) {
-		/* Life draining */
-		if (randint0(context->dam) > 100) {
-			if (player_of_has(player, OF_HOLD_LIFE)) {
-				equip_learn_flag(player, OF_HOLD_LIFE);
-			} else {
-				int drain = context->dam;
-				msg("The darkness steals your life force!");
-				player_exp_lose(player, drain, false);
-			}
-		}
 
-		/* Slowing */
-		if (randint0(context->dam) > 200) {
-			msg("You feel unsure of yourself in the darkness.");
-			(void)player_inc_timed(player, TMD_SLOW, context->dam / 100, true,
-								   false);
-		}
-
-		/* Amnesia */
-		if (randint0(context->dam) > 300) {
-			msg("Darkness penetrates your mind!");
-			(void)player_inc_timed(player, TMD_AMNESIA, context->dam / 100,
-								   true, false);
+	/* Life draining */
+	if (randint0(context->dam) > 100) {
+		if (player_of_has(player, OF_HOLD_LIFE)) {
+			equip_learn_flag(player, OF_HOLD_LIFE);
+		} else {
+			int drain = context->dam;
+			msg("You feel uncertain of yourself in the darkness.");
+			player_exp_lose(player, drain, false);
 		}
 	}
+
+	/* Slowing */
+	else if (randint0(context->dam) > 200) {
+		msg("You feel unsure of yourself in the darkness.");
+		(void)player_inc_timed(player, TMD_SLOW, context->dam / 100, true,
+							   false);
+	}
+
+	/* Amnesia */
+	else if (randint0(context->dam) > 300) {
+		msg("You feel unsure of yourself in the darkness.");
+		(void)player_inc_timed(player, TMD_AMNESIA, context->dam / 100,
+							   true, false);
+	}
+
 	return 0;
 }
 
@@ -373,7 +363,7 @@ static int project_player_handler_SOUND(project_player_handler_context_t *contex
 	}
 
 	/* Confusion for strong unresisted sound */
-	if (context->dam > 300) {
+	if (context->dam > 50 + randint0(300)) {
 		msg("The noise disorients you.");
 		(void)player_inc_timed(player, TMD_CONFUSED,
 							   2 + randint1(context->dam / 100), true, true);
@@ -447,7 +437,6 @@ static int project_player_handler_RADIATION(project_player_handler_context_t *co
 			power /= 4;
 			break;
 		default:
-			
 			msg("You resist the effects very well.");
 			power /= 8;
 			break;
@@ -478,7 +467,7 @@ static int project_player_handler_CHAOS(project_player_handler_context_t *contex
 	/* Life draining */
 	if (!player_of_has(player, OF_HOLD_LIFE)) {
 		int drain = ((player->exp * 3)/ (100 * 2)) * z_info->life_drain_percent;
-		msg("You feel your life force draining away!");
+		msg("You feel your memories draining away!");
 		player_exp_lose(player, drain, false);
 	} else {
 		equip_learn_flag(player, OF_HOLD_LIFE);
