@@ -77,6 +77,7 @@ S:Pothole
 S:Poundcake
 S:Power Cable
 S:Pumpkins
+S:Quicksand
 S:Scorching
 S:Sentinel
 S:Skid Mark
@@ -138,6 +139,7 @@ F:Glass
 F:Gloomy
 F:Glowing
 F:Gravel
+F:Grody
 F:Hot
 F:Icky
 F:Jet
@@ -155,6 +157,7 @@ F:No Man's
 F:Oil
 F:Pepper
 F:Poison
+F:Pongy
 F:Quicksand
 F:Rainbow
 F:Rainy

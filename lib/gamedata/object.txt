@@ -452,6 +452,20 @@ dice:2d10
 desc:A 'Molotov Cocktail' - a glass beer bottle filled with highly flammable fuel. It's not a sophisticated weapon, but it can still be effective.
 material:glass
 
+name:& Happy Fun Ball~
+type:bomb
+graphics:*:Magenta-Pink
+level:28
+weight:70g
+cost:500
+alloc:3:10 to 55
+flags:EXPLODE
+msg:The {kind} bursts!
+effect:SPOT:POIS:6
+dice:8d10
+desc:An inoffensive looking childrens' toy created by Sirius Corporation in contravention of various galactic treaties against chemical weapons.
+
+
 ##### Lights #####
 
 name:& wax candle~
@@ -2317,7 +2331,7 @@ material:plastic
 
 name:& G-suit~
 type:soft armor
-graphics:[:Red
+graphics:(:Red
 level:35
 alloc:2:30 to 127
 weight:2850g
@@ -2327,6 +2341,20 @@ armor:6:0
 values:RES_GRAVITY[1] | RES_INERTIA[1]
 desc:A flight suit built to protect you from the extremes of acceleration produced by caveracers and other high-performance aircraft.
 material:plastic
+
+name:& flexoskeleton~
+type:soft armor
+graphics:(:Light Slate
+level:44
+alloc:3:40 to 127
+weight:5420g
+cost:9500
+attack:0d0:0:0
+armor:18:0
+values:STR[1+M2] | DEX[1+M4]
+desc:A simple form of powered armor - lightweight, flexible and conforming to any shape. Unlike most power armor, this allows it to be combined with any cybergear.
+material:plastic
+
 
 ### Body armours (Hard) ###
 
@@ -2388,6 +2416,7 @@ cost:5500
 attack:0d0:-2:0
 armor:25:0
 desc:A semi-flexible mesh of titanium chunks with gleaming, polished outer facets that really stands out, whether you want it to or not. It's a similar idea to plastic bulletproof vests, but will stop more serious projectiles that would go straight through kevlar - if you don't mind the weight.
+material:titanium
 
 name:& force harness~
 type:hard armor
