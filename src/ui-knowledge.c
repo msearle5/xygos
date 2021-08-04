@@ -1485,7 +1485,7 @@ bool remove_object(struct object *target)
 	/* Player objects */
 	for (obj = player->gear; obj; obj = obj->next) {
 		if (obj == target) {
-			rm = gear_object_for_use(obj, obj->number, false, &dummy);
+			rm = gear_object_for_use(player, obj, obj->number, false, &dummy);
 			do_remove_object(&rm);
 			return true;
 		}

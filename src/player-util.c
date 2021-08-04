@@ -699,7 +699,7 @@ void light_timeout(struct object *obj, bool delete)
 			burnt = obj;
 		} else {
 			if (object_is_carried(player, obj))
-				burnt = gear_object_for_use(obj, 1, true, &dummy);
+				burnt = gear_object_for_use(player, obj, 1, true, &dummy);
 			else if (pile_contains(square_object(cave, obj->grid), obj))
 				burnt = floor_object_for_use(obj, 1, true, &dummy);
 			else

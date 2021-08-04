@@ -150,7 +150,7 @@ int inven_damage(struct player *p, int type, int cperc)
 				}
 
 				/* Destroy "amt" items */
-				destroyed = gear_object_for_use(obj, amt, false, &none_left);
+				destroyed = gear_object_for_use(p, obj, amt, false, &none_left);
 				if (!object_destroyed(obj, player->grid)) {
 					msgt(MSG_DESTROY, buf);
 				}
