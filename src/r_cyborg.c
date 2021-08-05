@@ -104,7 +104,7 @@ static void cyborg_init(void)
 			struct object *known_obj = object_new();
 			obj[i]->known = known_obj;
 			object_set_base_known(player, obj[i]);
-			object_flavor_aware(obj[i]);
+			object_flavor_aware(player, obj[i]);
 			obj[i]->known->pval = obj[i]->pval;
 			obj[i]->known->effect = obj[i]->effect;
 			obj[i]->known->notice |= OBJ_NOTICE_ASSESSED;

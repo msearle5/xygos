@@ -2210,7 +2210,8 @@ void do_cmd_buy(struct command *cmd)
 	bought->known = known_obj;
 
 	/* Learn flavor, any effect and all the icons */
-	object_flavor_aware(bought);
+	object_flavor_aware(player, bought);
+
 	bought->known->effect = bought->effect;
 	while (!object_fully_known(bought)) {
 		object_learn_unknown_icon(player, bought);

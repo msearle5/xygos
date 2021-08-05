@@ -1175,7 +1175,7 @@ void player_know_object(struct player *p, struct object *obj)
 		obj->known->faults = NULL;
 	}
 
-	/* Set ego type, jewellery type if known */
+	/* Set ego type if known */
 	for(int i=0;i<MAX_EGOS;i++) {
 		if (player_knows_ego(p, obj->ego[i], obj)) {
 			seen = obj->ego[i]->everseen;
@@ -1984,7 +1984,7 @@ void object_learn_on_use(struct player *p, struct object *obj)
 	/* Object level */
 	int lev = obj->kind->level;
 
-	object_flavor_aware(obj);
+	object_flavor_aware(p, obj);
 	obj->known->effect = obj->effect;
 	update_player_object_knowledge(p);
 	player_exp_gain(p, (lev + (p->lev / 2)) / p->lev);
@@ -2369,9 +2369,10 @@ bool object_flavor_was_tried(const struct object *obj)
 /**
  * Mark an object's flavour as as one the player is aware of.
  *
+ * \param p is the player becoming aware of the flavor
  * \param obj is the object whose flavour should be marked as aware
  */
-void object_flavor_aware(struct object *obj)
+void object_flavor_aware(struct player *p, struct object *obj)
 {
 	int y, x, i;
 	struct object *obj1;
@@ -2384,11 +2385,11 @@ void object_flavor_aware(struct object *obj)
 	/* Fix ignore/autoinscribe */
 	if (kind_is_ignored_unaware(obj->kind))
 		kind_ignore_when_aware(obj->kind);
-	player->upkeep->notice |= PN_IGNORE;
+	p->upkeep->notice |= PN_IGNORE;
 
 	/* Update player objects */
-	for (obj1 = player->gear; obj1; obj1 = obj1->next)
-		object_set_base_known(player, obj1);
+	for (obj1 = p->gear; obj1; obj1 = obj1->next)
+		object_set_base_known(p, obj1);
 
 	/* Store objects */
 	for (int t=0; t<z_info->town_max; t++) {
@@ -2459,7 +2460,7 @@ void object_know_all(struct object *obj)
 	 */
 	obj->known->notice |= OBJ_NOTICE_ASSESSED;
 
-	object_flavor_aware(obj);
+	object_flavor_aware(player, obj);
 	obj->known->effect = obj->effect;
 
 	while (!object_fully_known(obj)) {

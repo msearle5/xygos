@@ -457,14 +457,14 @@ void death_knowledge(struct player *p)
 
 	player_learn_all_icons(p);
 	for (obj = p->gear; obj; obj = obj->next) {
-		object_flavor_aware(obj);
+		object_flavor_aware(p, obj);
 		obj->known->effect = obj->effect;
 		obj->known->activation = obj->activation;
 	}
 
 	if (home) {
 		for (obj = home->stock; obj; obj = obj->next) {
-			object_flavor_aware(obj);
+			object_flavor_aware(p, obj);
 			obj->known->effect = obj->effect;
 			obj->known->activation = obj->activation;
 		}
@@ -666,7 +666,7 @@ void light_special_activation(struct object *obj)
 	int dir = randint1(8);
 	if (obj->kind->effect_msg)
 		print_custom_message(obj, obj->kind->effect_msg, MSG_GENERIC);
-	object_flavor_aware(obj);
+	object_flavor_aware(player, obj);
 	if ((!was_aware) && (object_is_carried(player, obj)))
 		print_custom_message(obj, "You realize you were carrying a {kind}!", MSG_GENERIC);
 	struct effect effect;
