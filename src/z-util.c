@@ -699,7 +699,7 @@ void strunescape(char *s) {
 				*out++ = '\\';
 				break;
 			case 'e':
-				*out++ = '\e';
+				*out++ = '\x1B';
 				break;
 			default:
 				/* Add back the unmodified sequence */
