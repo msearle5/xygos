@@ -197,7 +197,7 @@ void predict_score(bool allow_scrolling)
 
 	/* Read scores, place current score */
 	highscore_read(scores, N_ELEMENTS(scores));
-	build_score(&the_score, "nobody (yet!)", NULL, true);
+	build_score(&the_score, player, "nobody (yet!)", NULL, true);
 
 	if (player->is_dead)
 		j = highscore_where(&the_score, scores, N_ELEMENTS(scores));
