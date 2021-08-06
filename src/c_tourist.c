@@ -60,6 +60,13 @@ static void tourist_init(void)
 	if (items)
 		add_start_items(player, &item, (!OPT(player, birth_start_kit)), false, ORIGIN_BIRTH);
 
+	item.tval = TV_SOFT_ARMOR;
+	if (one_in_(3))
+		item.sval = lookup_sval(TV_SOFT_ARMOR, "swimsuit");
+	else
+		item.sval = lookup_sval(TV_SOFT_ARMOR, "loud shirt");
+	add_start_items(player, &item, (!OPT(player, birth_start_kit)), false, ORIGIN_BIRTH);
+
 	player->au_birth = player->au;
 }
 

@@ -352,13 +352,18 @@ talents:-3:0
 exp:60:0
 desc:You will begin with one or more cybernetic implants. These are varied and generally powerful, but having become used to your new abilities you have had less time for learning other things. So you have less talents available, and more experience is needed to advance - especially early on.
 
+ext:Super
+stats:1:0:0:1:3:1:0
+hitdie:20
+exp:100:50
+desc:So you want to be a superhero - or a supervillain? You'll get the uniform, which has some abilities of its own. And as your powers manifest you'll gain some suitably thematic abilities - flight, X-ray vision, teleportation, laser eyes and torching your opponents may all be at your command. Dramatic tension unfortunately does require that superheroes have a hidden weakness, so watch out for that elfstone!
 
 
 
 ##### Races #####
 
 name:Human
-exts:Mutant,Cyborg,None
+exts:Mutant,Cyborg,Super,None
 stats:0:0:0:0:0:0:0
 talents:3:5
 skill-disarm-phys:0
@@ -384,7 +389,7 @@ desc:The race with average abilities, from a human perspective at least. While y
 
 name:Android
 body:HumanoidNoImplants
-exts:None
+exts:Super
 stats:3:-2:-4:2:2:-3:2
 talents:0:0
 skill-disarm-phys:0
@@ -414,7 +419,7 @@ values:RES_ELEC[-1]
 desc:Sentient robots have been constructed for a variety of purposes and while artificial intelligence still isn't as good as the real thing, they have many advantages: a tough, fast metal body, precise aiming, rapid regeneration and IR vision. However, you can't easily gain talents, can't eat normal food and must avoid electric shocks.
 
 name:Time-Lord
-exts:Mutant,Cyborg,None
+exts:Mutant,Cyborg,Super,None
 stats:0:2:2:0:3:2:0
 talents:0:3
 skill-disarm-phys:10

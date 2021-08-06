@@ -61,6 +61,7 @@ struct ability {
 #define AF_TALENT		0x00000004		/* can be bought as a talent */
 #define AF_MUTATION		0x00000008		/* can be gained as a mutation */
 #define AF_FLYING		0x00000010		/* flags and speed take effect only when in flight. Books are ground/flight/both. */
+#define AF_SUPER		0x00000020		/* can be gained through level up as a Super */
 
 /* The ability array */
 extern struct ability *ability[];

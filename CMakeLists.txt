@@ -126,6 +126,7 @@ ADD_LIBRARY(OurCoreLib OBJECT
         src/r_android.c
         src/r_cyborg.c
         src/r_mutant.c
+        src/r_super.c
         src/r_timelord.c
         src/randname.c
         src/save.c

@@ -4,7 +4,7 @@ playtest	active						Save stable branch for playtesting
 timelord	active						Timelord's techniques, etc.
 clowns		active						Clowns' card tricks
 guardians	inactive, merged			The mini-dungeons need an endboss
-supers		active						Superhero/villains as an extension
+supers		merged						Superhero/villains as an extension
 personality	inactive, merged			Personalities
 multiego	inactive, merged			Multiple ego items
 winquest	inactive, merged			The replacement for Morgoth

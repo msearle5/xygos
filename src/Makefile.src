@@ -150,6 +150,7 @@ ANGFILES = \
 	r_android.o \
 	r_cyborg.o \
 	r_mutant.o \
+	r_super.o \
 	r_timelord.o \
 	randname.o \
 	player-ability.o \

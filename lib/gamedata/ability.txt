@@ -56,6 +56,285 @@
 # player-flags:player flags	- add one or more player flags
 # values:					values is for object modifiers which take a value
 
+######### Super Skill Abilities ##############
+# These are available only to the Super extension
+#
+
+name:Flight
+gain:You now have the power of flight - no airplane needed!
+lose:You come back to earth with a bump.
+brief:You are able to fly.
+desc:You are able to fly, which allows you to move quickly and fly above obstacles.
+desc_future:You would be able to fly, allowing you to move quickly and fly above obstacles.
+flag:flying
+flag:super
+obj-flags:FEATHER
+minlevel:3
+mom-speed:0:1:2:3:3:4:4:4:4:5
+cost:0
+
+book:[Super]
+spell:Take off:1:2:3:3:0:0
+seffect:TAKEOFF
+sdesc:Jump into the air and fly away.
+
+book:[Super]
+spell:Land:1:2:3:3:0:0
+seffect:LAND
+sdesc:Even a super-hero has to land sometimes.
+
+
+name:Torch
+gain:Your throat burns.
+lose:Your mouth feels freezing cold for a moment.
+brief:You can breathe fire.
+desc:You are able to flame your enemies, leaving nothing but a pile of ash (and a pair of boots, of course).
+desc_future:you would be able to flame your enemies, leaving nothing but a pile of ash (and a pair of boots, of course).
+flag:super
+minlevel:20
+
+# spell:name:level:fail:exp:stat:hp:cooldown:fail message
+book:[Super]
+spell:Torch:20:10:0:4:2d3:15d2
+seffect:BREATH:FIRE:20:20
+sdice:$Dd6
+sexpr:D:PLAYER_LEVEL:- 1 / 2 + 3
+sdesc:Breathe a cone of deadly fire.
+
+
+name:Super_Strength
+gain:You flex your muscles and realise that you are a great deal stronger now!
+lose:You tremble and realise that you are a great deal weaker now!
+brief:You have super strength.
+desc:You have super strength.
+desc_future:you would be much stronger.
+stats:5:0:0:0:0:0:0
+obj-flags:SUST_STR
+flag:super
+maxlevel:20
+
+
+name:Super_Speed
+gain:You suddenly speed up... way up!
+lose:You slow to a snail's pace!
+brief:You have super speed.
+desc:You have super speed - you move faster, run faster and can sprint.
+desc_future:you would be much stronger.
+stats:0:0:0:0:0:0:3
+values:MOVES[1]
+obj-flags:SUST_SPD
+flag:super
+maxlevel:40
+
+book:[Super]
+spell:Sprint:1:12:4:4:0:3d30
+seffect:TIMED_INC:FAST:0:5
+sdice:$D+2d5
+sexpr:D:PLAYER_LEVEL:/ 5 + 3
+sdesc:Sprints - rapid movement for a few moments. It's never for that long, but it will be longer as you advance.
+
+
+name:Freeze_Ray
+gain:Your hands feel freezing cold for a moment.
+lose:Your hands feel uncomfortably hot for a moment.
+brief:You can shoot beams of intense cold.
+desc:You are able to shoot beams of intense cold from your fingertips.
+desc_future:you would be able to shoot beams of intense cold from your fingertips.
+flag:super
+forbid:Heat_Ray
+maxlevel:40
+
+# spell:name:level:fail:exp:stat:hp:cooldown:fail message
+book:[Super]
+spell:Freeze Ray:10:10:0:3:2d2:7d2
+seffect:BEAM:COLD:10:20
+sdice:$Dd5
+sexpr:D:PLAYER_LEVEL:- 1 / 4 + 5
+sdesc:Shoot a beam of intense cold from your fingertips.
+
+
+name:Heat_Ray
+gain:Your hands feel uncomfortably hot for a moment.
+lose:Your hands feel freezing cold for a moment.
+brief:You can shoot beams of intense heat.
+desc:You are able to shoot beams of intense heat from your fingertips.
+desc_future:you would be able to shoot beams of intense heat from your fingertips.
+flag:super
+forbid:Freeze_Ray
+maxlevel:40
+
+book:[Super]
+spell:Heat Ray:10:10:0:3:2d2:7d2
+seffect:BEAM:FIRE:10:20
+sdice:$Dd5
+sexpr:D:PLAYER_LEVEL:- 1 / 4 + 5
+sdesc:Shoot a beam of intense cold from your fingertips.
+
+
+name:Laser_Eye
+gain:You see a brilliant green flash.
+lose:Your vision dims momentarily.
+brief:You can zap laser beams from your eyes.
+desc:You are able to zap powerful laser beams out of your eyes.
+desc_future:you would be able to zap powerful laser beams out of your eyes.
+maxlevel:40
+flag:super
+
+# spell:name:level:fail:exp:stat:hp:cooldown:fail message
+book:[Super]
+spell:Laser Eye:10:10:0:4:2d2:6d2
+seffect:BEAM:LIGHT:10:20
+sdice:$Dd5
+sexpr:D:PLAYER_LEVEL:- 1 / 5 + 4
+sdesc:Shoot a powerful laser out of your eyes.
+
+
+name:Radiate
+gain:You hear a distant humming.
+lose:Something almost unheard fades to silence.
+brief:You can emit pulses of radiation.
+desc:You can fire a pulse of radiation at everything within line of sight.
+desc_future:you would be able to fire a pulse of radiation at everything within line of sight.
+minlevel:30
+flag:super
+
+book:[Super]
+spell:Radiate:25:15:0:4:2d10:2d20
+seffect:ARC:RADIATION:20:360
+sdice:$Dd40
+sexpr:D:PLAYER_LEVEL:- 1 / 5 + 2
+sdesc:Emit a blast of radiation against everything in sight.
+
+
+name:Giant
+gain:Your footsteps sound louder.
+lose:Your footsteps sound quieter.
+brief:You can transform into a giant.
+desc:You can transform at will into a giant - strong, tough, a great fighter who heals rapidly and can ignore shards, stunning and anything that might weaken you.
+desc_future:you would be able to transform at will into a giant - strong, tough, a great fighter who heals rapidly and can ignore shards, stunning and anything that might weaken you.
+forbid:Bear
+flag:super
+
+book:[Super]
+spell:Transform:10:30:0:0:1d2:3d50
+seffect:SHAPECHANGE:giant
+sdesc:Transform into an awesome giant! Strong, tough, a great fighter who heals rapidly and can ignore shards, stunning and anything that might weaken you.
+
+
+name:Bear
+gain:Your footsteps sound louder.
+lose:Your footsteps sound quieter.
+brief:You can transform into a bear.
+desc:You can transform at will into a bear - strong, tough and a great fighter who knows no fear and sees well in the dark.
+desc_future:you would be able to transform at will into a bear - strong, tough and a great fighter who knows no fear and sees well in the dark.
+forbid:Giant
+flag:super
+
+book:[Super]
+spell:Transform:10:30:0:0:1d2:3d50
+seffect:SHAPECHANGE:bear
+sdesc:Transform into a ferocious bear! Strong, tough and a great fighter who knows no fear and sees well in the dark.
+
+
+name:X_Ray_Vision
+gain:Your vision takes on a blue tinge.
+lose:Your vision turns red for a moment.
+brief:You can see through walls.
+desc:You have X-ray vision that allows you to see through walls, mapping the nearby area.
+desc_future:you would have X-ray vision that allows you to see through walls, mapping the nearby area.
+maxlevel:20
+flag:super
+
+book:[Super]
+spell:X-Ray Vision:10:8:0:1:0:3d3
+seffect:MAP_AREA:22:40
+sdesc:Use your X-ray vision to see through walls and map the area.
+
+
+name:Mesmerize
+gain:You feel unnaturally charming!
+lose:You feel repulsive!
+brief:You can command opponents to obey.
+desc:You have the ability to command a monster and force it to obey you.
+desc_future:you would have ability to command a monster and force it to obey you.
+stats:0:0:0:0:0:5:0
+minlevel:40
+flag:super
+
+book:[Super]
+spell:Command:35:30:0:5:0:2d30
+seffect:COMMAND:22:40
+sdice:5+1d10
+sdesc:Command a monster and it must obey. Use movement keys, m etc
+
+
+name:Banish
+gain:You feel an awful power rise up in you!
+lose:You feel the terrible power behind you dissipate.
+brief:You can teleport enemies off level.
+desc:You can teleport all non-uniques within 20 grids off the level.
+desc_future:you would have ability to teleport all non-uniques within 20 grids off the level.
+minlevel:40
+flag:super
+
+book:[Super]
+spell:Banish:40:35:0:2:0:2d200
+seffect:MASS_BANISH
+sdesc:Teleport all non-uniques within 20 grids off the level. This power is hazardous, you take 1d3 damage per creature teleported.
+
+
+name:Lasso
+gain:You see something gleaming in your hand.
+lose:You see something falling from your hand.
+brief:You can grab enemies and pull then in.
+desc:You can grab an enemy and pull them back towards you.
+desc_future:you would be able to grab an enemy and pull them back towards you.
+maxlevel:20
+flag:super
+
+book:[Super]
+spell:Lasso:5:40:0:3:0:2d2
+seffect:BOLT_STATUS:AWAY_ALL
+sdice:1
+sdesc:Grab an enemy with your force lasso and pull them back. They cannot evade justice!
+
+# Time res?
+name:Fifth_Dimension
+gain:You gain the ability to fold time and space around you.
+lose:You lose your understanding of spacetime folding.
+brief:You can teleport to a chosen square.
+desc:You can fold time and space around you, teleporting you to a chosen square.
+desc_future:you would be able to fold time and space around you, teleporting you to a chosen square.
+minlevel:30
+flag:super
+
+book:[Super]
+spell:Spacefold:30:40:0:1:0:2d6
+seffect:TELEPORT_TO
+seffect:TIMED_INC:FAST:0:5
+sdice:3
+sdesc:Fold time and space around you, teleporting you to a chosen square.
+
+# and stone skin?
+name:Earthbending
+gain:You feel as if you've got rocks in the head.
+lose:Your special understanding with rock vanishes.
+brief:You can melt away rock with a glance.
+desc:You can glance at solid rock and melt it away into flowing mud.
+desc_future:You would be able to glance at solid rock and melt it away into flowing mud.
+maxlevel:20
+flag:super
+
+# spell:name:level:fail:exp:stat:hp:cooldown:fail message
+book:[Super]
+spell:Earthbend:10:33:2:1d3:0:2d6
+seffect:LINE:KILL_WALL
+sdice:20+1d30
+sdesc:Melt rock away into flowing mud.
+
+
+# TYelepathy, TP-to, Infra, Bane (=Venom)? Wraithform(not easy), Sprint("Flash"), Read Minds, destruction, light, KaBoom, M, Lightning, Glow+lightroom (combine with alser eye?)   ... Charm if pets were a thing
+
 ######### Pilot Skill Abilities ##############
 # These are available only to the Pilot class
 #
