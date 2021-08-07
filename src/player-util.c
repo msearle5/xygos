@@ -1436,7 +1436,6 @@ void player_resting_complete_special(struct player *p)
 			disturb(p);
 	} else if (p->upkeep->resting == REST_COMPLETE) {
 		if ((p->chp == p->mhp) &&
-			(player_has(p, PF_COMBAT_REGEN)) &&
 			!p->timed[TMD_BLIND] && !p->timed[TMD_CONFUSED] &&
 			!p->timed[TMD_POISONED] && !p->timed[TMD_AFRAID] &&
 			!p->timed[TMD_TERROR] && !p->timed[TMD_STUN] &&
