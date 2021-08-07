@@ -186,7 +186,8 @@ enum {
 	QF_UNREWARDED = 	0x08,
 	QF_ESSENTIAL =		0x10,
 	QF_LOCKED =			0x20,
-	QF_GUARDIAN =		0x40
+	QF_GUARDIAN =		0x40,
+	QF_TOWN =			0x80
 };
 
 /**
@@ -319,6 +320,7 @@ struct start_item {
 	int min;	/**< Minimum starting amount */
 	int max;	/**< Maximum starting amount */
 	struct ego_item *ego[MAX_EGOS];		/** Ego(s) to apply, or NULL */
+	struct artifact *artifact;
 	int *eopts;     /**< Indices (zero terminated array) for birth options which can exclude item */
 	struct start_item *next;
 };

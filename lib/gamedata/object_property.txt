@@ -453,9 +453,9 @@ type-mult:shield:2
 type-mult:helm:2
 type-mult:gloves:2
 type-mult:boots:2
-msg:Your {name} warms your spirit.
+msg:Your {name} grips your mind.
 bindui:holdlife_ui_compact_0:0
-desc:Sustains your life force
+desc:Reinforces your memories
 
 name:earthquakes
 type:flag
@@ -567,7 +567,7 @@ id-type:on wield
 code:AFRAID
 power:-20
 bindui:fear_ui_compact_0:0
-desc:Makes you afraid of melee, and worse at shooting and casting spells
+desc:Makes you afraid of melee, and worse at shooting, techniques etc.
 
 name:teleportation ban
 type:flag
@@ -595,7 +595,7 @@ subtype:bad
 id-type:timed
 code:DRAIN_EXP
 power:-5
-msg:You sense your {name} is draining your life.
+msg:You sense your {name} is draining your memories.
 bindui:drainxp_ui_compact_0:0
 desc:Drains experience
 
@@ -876,6 +876,12 @@ type:resistance
 code:INERTIA
 power:16
 bindui:resist_ui_compact_0<INERTIA>:0
+
+name:water resistance
+type:resistance
+code:WATER
+power:7
+bindui:resist_ui_compact_0<WATER>:0
 
 name:disenchantment resistance
 type:resistance

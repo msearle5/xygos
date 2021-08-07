@@ -94,6 +94,29 @@ desc:Hunt the Wumpus
 succeed:The traditional wumpus hunter's prize isn't worth much, but I think you'll like this boomstick!
 failure:Well, I saw you walking boldly into the wumpus's den - so I will admit that although you didn't manage to defeat it, you aren't just a poseur. So I'll reluctantly allow you in to see more stuff, but you can't expect a real reward. You do still get the traditional wumpus hunter's prize, though, for what that's worth.
 
+name:Day of the Triffids
+level:35
+race:triffid
+number:20
+store:Fortress:Weapon Dealer
+flags:town
+intro:The town has been overrun by some seriously invasive species. A venomous shrubbery doesn't sound very plausible, I know. But I've seen it myself - the horrible thing just grabbed Ned in its tongue, pulled him in and bit his head clean off!
+desc:Eliminate all the triffids in town
+succeed:Congratulations. We're all grateful - I'll see if I can arrange better prices for you around town, and I can supply you with some valuable specialized ammunition as a reward.
+failure:Well, it seems that someone has got rid of our weed problem. But while you may have contributed, you didn't stick around and finish the job yourself so you won't be getting the reward.
+
+name:Swimming with Meg
+level:50
+race:megalodon
+number:1
+store:Lake:Armoury
+flags:town
+intro:I keep hearing that there's a huge shark in the pond. People are even taking bets on when it will next show up and who's going to be the next victim. Well, I for one don't believe a word of it - how could it even get in there? They can't fly, after all. But I would have to do something obvious to convince anyone and collect on the bet - so if you could go and splash about a bit, chummer?
+desc:Check out the lake
+succeed:Well, OK, so there *was* a shark in there. But there isn't any more, and I think that's good enough for me to collect my winnings even if it isn't what I was expecting. You'll get your share of the winnings anyway.
+failure:So there *was* a shark in there, but it got away? I'm not arguing, but the trouble is that without any evidence one way or the other the bet is still going to remain open and we aren't going to get anything.
+
+
 ####################################
 # The end-level guardian quests
 #

@@ -94,8 +94,8 @@ desc: resistances.  Specializations below set the label and categories for
 desc: particular screens.
 
 # Specializations for resist_ui_compact_0 to give labels and link to second
-# character screen.  There's no specializations for WATER, ICE, GRAVITY,
-# INERTIA, FORCE, or TIME since they are not shown on that panel.
+# character screen.  There's no specializations for ICE, FORCE, or TIME since
+# they are not shown on that panel.
 name:resist_ui_compact_0<ACID>
 label:Acid
 category:CHAR_SCREEN1
@@ -166,6 +166,11 @@ category:EQUIPCMP_SCREEN
 
 name:resist_ui_compact_0<INERTIA>
 label:Inertia
+category:CHAR_SCREEN1
+category:EQUIPCMP_SCREEN
+
+name:resist_ui_compact_0<WATER>
+label:Water
 category:CHAR_SCREEN1
 category:EQUIPCMP_SCREEN
 

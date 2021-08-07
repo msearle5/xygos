@@ -633,6 +633,11 @@ void add_start_items(struct player *p, const struct start_item *si, bool skip, b
 		do {
 			ok = true;
 
+			if (si->artifact) {
+				kind = lookup_kind(si->artifact->tval, si->artifact->sval);
+				break;
+			}
+
 			if (si->sval > SV_UNKNOWN)
 				kind = lookup_kind(si->tval, si->sval);
 			else
@@ -648,13 +653,6 @@ void add_start_items(struct player *p, const struct start_item *si, bool skip, b
 
 				num = 1;
 			}
-
-			/* If you can't eat food, don't start with it */
-			if (tval_is_food_k(kind))
-				if (player_has(p, PF_NO_FOOD)) {
-					ignore = true;
-					break;
-				}
 
 			/* Exclude if configured to do so based on birth options. */
 			if (si->eopts) {
@@ -676,13 +674,22 @@ void add_start_items(struct player *p, const struct start_item *si, bool skip, b
 				if (!included) continue;
 			}
 
-			/* Discard special cases */
-			if ((kf_has(kind->kind_flags, KF_SPECIAL_GEN)) && (!special_item_can_gen(kind)))
-				ok = false;
+			/* Discard special cases and worthless items, onless asked for specifically */
+			if (si->sval == SV_UNKNOWN) {
+				/* If you can't eat food, don't start with it */
+				if (tval_is_food_k(kind))
+					if (player_has(p, PF_NO_FOOD)) {
+						ignore = true;
+						break;
+					}
 
-			/* Discard worthless items */
-			if (kind->cost == 0)
-				ok = false;
+				if ((kf_has(kind->kind_flags, KF_SPECIAL_GEN)) && (!special_item_can_gen(kind)))
+					ok = false;
+
+				/* Discard worthless items */
+				if (kind->cost == 0)
+					ok = false;
+			}
 		} while (!ok);
 
 		if (ignore)
@@ -690,11 +697,20 @@ void add_start_items(struct player *p, const struct start_item *si, bool skip, b
 
 		/* Prepare a new item */
 		obj = object_new();
-		object_prep(obj, kind, 0, MINIMISE);
-		for(int i=0; i<MAX_EGOS; i++) {
-			if (si->ego[i]) {
-				obj->ego[i] = si->ego[i];
-				ego_apply_magic(obj, 0);
+
+		if (si->artifact) {
+			object_prep(obj, kind, si->artifact->alloc_min, RANDOMISE);
+			obj->artifact = si->artifact;
+			copy_artifact_data(obj, obj->artifact);
+			obj->artifact->created = true;
+		}
+		else {
+			object_prep(obj, kind, player->max_depth, RANDOMISE);
+			for(int i=0; i<MAX_EGOS; i++) {
+				if (si->ego[i]) {
+					obj->ego[i] = si->ego[i];
+					ego_apply_magic(obj, 0);
+				}
 			}
 		}
 		obj->number = num;

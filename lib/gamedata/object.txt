@@ -25,6 +25,7 @@
 # effect-yx: y value for effect : x value for effect
 # dice:dice string
 # expr:substitution code:base value:expression
+# expr:substitution code:base value:expression
 # flags: flag | flag | etc.
 # values: label[value] | label[value] | etc.
 # pval: pval
@@ -464,7 +465,7 @@ msg:The {kind} bursts!
 effect:SPOT:POIS:6
 dice:8d10
 desc:An inoffensive looking childrens' toy created by Sirius Corporation in contravention of various galactic treaties against chemical weapons.
-
+material:plastic
 
 ##### Lights #####
 
@@ -679,7 +680,7 @@ attack:1d4:0:0
 armor:0:0
 pval:15000
 flags:BURNS_OUT | HIDE_ACTIVATION
-desc:A D-size Bendacell battery, based on an alcohol fuel cell. It lasts much longer than any normal battery, and is lighter as well. In more than ways than one - drop it and it's as likely as not to go up in flames.
+desc:A D-size Bendacell battery, based on an alcohol fuel cell. It lasts much longer than any normal battery, and is lighter as well. In more ways than one - drop it and it's as likely as not to go up in flames.
 msg:You drain the cell dry. Hic!
 effect:NOURISH:INC_BY
 dice:100
@@ -2220,6 +2221,16 @@ alloc:0:10 to 100
 desc:x
 flags:QUEST_ART | INSTA_ART
 material:steel
+
+# Base item for the sharkproof artifact
+name:& sharkproof swimsuit~
+type:soft armor
+graphics:(:VioletBlue
+level:50
+alloc:0:10 to 100
+desc:x
+flags:QUEST_ART | INSTA_ART
+material:cloth
 
 name:& iron mask~
 type:helm

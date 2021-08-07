@@ -964,6 +964,7 @@ static bool store_purchase(struct store_context *ctx, int item, bool single, boo
 		}
 
 		/* Check if they are sure */
+		bool light = is_daytime();
 		if (store_get_check(format("Fly to %s? [ESC, any other key to accept]", name))) {
 
 			/* Deduct payment */
@@ -998,6 +999,12 @@ static bool store_purchase(struct store_context *ctx, int item, bool single, boo
 
 			/* Heal */
 			player->chp = player->mhp;
+
+			/* Mention change of light */
+			bool newlight = is_daytime();
+			if (light != newlight) {
+				msg("You step out into the %s.", newlight ? "daylight" : "darkness");
+			}
 
 			/* Signal to move to outside the Airport */
 			player->upkeep->flight_level = true;
@@ -2014,7 +2021,8 @@ static void store_quest(struct store_context *ctx)
 					locate_quest(q);
 
 					/* Create a stairway */
-					square_set_feat(cave, loc(q->x,q->y), FEAT_ENTRY);
+					if (!(q->flags & QF_TOWN))
+						square_set_feat(cave, loc(q->x,q->y), FEAT_ENTRY);
 				}
 				return;
 			} else if (q->flags & QF_UNREWARDED) {
@@ -2759,6 +2767,9 @@ void use_store(game_event_type type, game_event_data *data, void *user)
 
 	/* Load the screen */
 	screen_load();
+
+	/* In case of e.g. triffid quest */
+	quest_changed_level();
 }
 
 void leave_store(game_event_type type, game_event_data *data, void *user)

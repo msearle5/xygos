@@ -279,6 +279,21 @@ obvious:1
 wake:1
 color:Light Slate
 
+code:WATER
+name:water
+type:element
+desc:water
+player-desc:water
+blind-desc:water
+lash-desc:water
+numerator:6
+divisor:6
+damage-cap:0
+msgt:GENERIC
+obvious:1
+wake:1
+color:Slate
+
 code:DISEN
 name:draining
 type:element
@@ -294,20 +309,6 @@ msgt:BR_DISEN
 obvious:1
 wake:1
 color:Violet
-
-code:WATER
-name:water
-type:element
-desc:water
-player-desc:water
-blind-desc:water
-lash-desc:water
-divisor:6
-damage-cap:0
-msgt:GENERIC
-obvious:1
-wake:1
-color:Slate
 
 code:ICE
 name:ice

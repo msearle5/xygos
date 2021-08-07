@@ -193,6 +193,20 @@ desc:Triax, big-headed as ever, maintained a giant golden face of himself - a le
 
 ### Quest artifacts ###
 
+name:!sharkproof swimsuit
+base-object:soft armor:sharkproof swimsuit
+level:50
+attack:0d0:0:0
+cost:20000
+weight:250g
+alloc:0:50 to 50
+armor:12:40
+flags:FEATHER | PROT_FEAR | SLOW_DIGEST | REGEN | SENSE_ANIMAL
+flags:RAND_HI_RES | RAND_SUSTAIN | RAND_POWER | RAND_BASE_RES | RAND_RES_POWER
+values:DAM_RED[3] | RES_WATER[1]
+act:CURE_FULL
+desc:A swimsuit made from almost unslicable rip-stop material, and surrounded by a powerful repulsive field - a combination that is supposed to mean that you have nothing to fear from sharks, even if the activation suggests that this is not quite true.
+
 name:!Dark Helmet
 base-object:helm:dark helmet
 level:50
@@ -225,7 +239,7 @@ base-object:helm:Coronet
 level:100
 weight:320g
 cost:10000000
-alloc:0:100 to 100
+alloc:0:120 to 120
 attack:1d1:0:0
 armor:0:0
 flags:PROT_CONF | SEE_INVIS | TELEPATHY | PROT_FEAR | STICKY

@@ -20,12 +20,15 @@
 #include "generate.h"
 #include "init.h"
 #include "mon-make.h"
+#include "mon-move.h"
 #include "mon-spell.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "obj-desc.h"
+#include "obj-gear.h"
 #include "obj-make.h"
 #include "obj-pile.h"
+#include "obj-tval.h"
 #include "obj-util.h"
 #include "player-birth.h"
 #include "player-calcs.h"
@@ -172,6 +175,8 @@ static enum parser_error parse_quest_flags(struct parser *p) {
 		q->flags |= QF_LOCKED;
 	if (strstr(in, "guardian"))
 		q->flags |= QF_GUARDIAN;
+	if (strstr(in, "town"))
+		q->flags |= QF_TOWN;
 	return PARSE_ERROR_NONE;
 }
 
@@ -393,6 +398,26 @@ bool is_blocking_quest(int level)
 }
 
 /**
+ * Check if there is a town quest in progress.
+ */
+bool in_town_quest(void)
+{
+	/* Must be in town */
+	if (player->depth)
+		return false;
+
+	/* Must be an active town quest granted from this town */
+	for (int i = 0; i < z_info->quest_max; i++) {
+		if ((player->quests[i].flags & (QF_TOWN | QF_ACTIVE)) == (QF_TOWN | QF_ACTIVE)) {
+			if (player->quests[i].town == (player->town - t_info)) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+/**
  * Check if the given level is a quest level.
  */
 bool is_quest(int level)
@@ -403,7 +428,7 @@ bool is_quest(int level)
 	if (!level) return false;
 
 	for (i = 0; i < z_info->quest_max; i++)
-		if (player->quests[i].level == level)
+		if ((player->quests[i].level == level) && (!(player->quests[i].flags & QF_TOWN)))
 			return true;
 
 	return false;
@@ -423,7 +448,7 @@ bool is_active_quest(int level)
 	if (!level) return false;
 
 	for (i = 0; i < z_info->quest_max; i++) {
-		if (player->quests[i].level == level) {
+		if ((player->quests[i].level == level) && (!(player->quests[i].flags & QF_TOWN))) {
 			if (!player->quests[i].race)
 				return true;
 			else if (player->quests[i].race->cur_num)
@@ -552,7 +577,7 @@ struct quest *get_quest_by_name(const char *name)
 	return NULL;
 }
 
-/* Add a start item to a list */
+/** Add a start item to a list */
 static void add_item(struct start_item *si, int tval, const char *name, int min, int max)
 {
 	struct start_item *prev = NULL;
@@ -561,12 +586,33 @@ static void add_item(struct start_item *si, int tval, const char *name, int min,
 		si++;
 	}
 	si->tval = tval;
-	si->sval = lookup_sval(tval, name);
+	si->sval = name ? lookup_sval(tval, name) : SV_UNKNOWN;
 	si->min = min;
 	si->max = max;
+	for(int i=0;i<MAX_EGOS;i++)
+		si->ego[i] = NULL;
+	si->artifact = NULL;
 	si->next = NULL;
 	if (prev)
 		prev->next = si;
+}
+
+/** Add an ego start item */
+static void add_ego_item(struct start_item *si, int tval, const char *name, const char *ego, int min, int max)
+{
+	add_item(si, tval, name, min, max);
+	si->ego[0] = lookup_ego_item(ego, tval, si->sval);
+	if (!si->ego[0])
+		msg("Warning: unable to find ego item '%s'", ego);
+}
+
+/** Add an artifact start item */
+static void add_artifact(struct start_item *si, const char *name)
+{
+	add_item(si, 0, NULL, 1, 1);
+	si->artifact = lookup_artifact_name(name);
+	if (!si->artifact)
+		msg("Warning: unable to find artifact '%s'", name);
 }
 
 /** Drop an item on the floor at the specified place, mark it as a quest item */
@@ -902,7 +948,20 @@ void quest_changed_level(void)
 	for(int i=0;i<z_info->quest_max;i++) {
 		struct quest *q = player->quests + i;
 		if (q->flags & QF_ACTIVE) {
-			if (strstr(q->name, "Pie")) {
+			if ((q->flags & QF_TOWN) && (in_town_quest()) && (!(q->flags & (QF_SUCCEEDED|QF_FAILED|QF_UNREWARDED)))) {
+				if (q->cur_num == 0) {
+					while (q->race->cur_num < q->max_num) {
+						struct loc try_xy = loc(randint1(cave->width - 1), randint1(cave->height - 1));
+						if (!mon_race_hates_grid(cave, q->race, try_xy)) {
+							place_new_monster(cave, try_xy, q->race, false, true, info, ORIGIN_DROP);
+						}
+					}
+				}
+				/* Fail the quest if the target has disappeared */
+				if ((q->race->cur_num == 0) && (!(q->flags & (QF_SUCCEEDED)))) {
+					fail_quest(q);
+				}
+			} else if (strstr(q->name, "Pie")) {
 				if (q->flags & QF_SUCCEEDED) {
 					/* Pie quest: if the card ever disappears unrecoverably, then you have failed */
 					struct object_kind *kind = lookup_kind(TV_CARD, lookup_sval(TV_CARD, "security"));
@@ -1063,7 +1122,7 @@ void quest_reward(struct quest *q, bool success)
 			au = 200 * specials;
 			if (specials >= ((3 * q->min_found) / 2)) {
 				char buf[256];
-				add_item(si, (specials == (q->min_found * 2)) ? TV_HARD_ARMOR : TV_SOFT_ARMOR, "(fireproof)", 1, 1);
+				add_ego_item(si, (specials == (q->min_found * 2)) ? TV_HARD_ARMOR : TV_SOFT_ARMOR, NULL, "(fireproof)", 1, 1);
 				strnfmt(buf, sizeof(buf), "%s Since you went beyond what I was expecting in bringing %d bottles back, I have also found some protective gear that you might like.", q->succeed);
 				char *msg = string_make(buf);
 				string_free(q->succeed);
@@ -1073,10 +1132,37 @@ void quest_reward(struct quest *q, bool success)
 			/* The boom-stick!
 			 * This is a bit wimpy. Maybe it should be a randart?  adding some ammo.
 			 **/
-			add_item(si, TV_GUN, "12mm rifle (automatic)", 1, 1);
-			add_item(si, TV_AMMO_12, "12mm bullet (guided)", 32, 39);
+			add_ego_item(si, TV_GUN, "12mm rifle", "(automatic)", 1, 1);
+			add_ego_item(si, TV_AMMO_12, "12mm bullet", "(guided)", 32, 39);
 			if (player->bm_faction < 0)
 				player->bm_faction = 0;
+		} else if (streq(n, "Day of the Triffids")) {
+			int tval = TV_AMMO_12;
+			struct object *gun = slot_object(player, slot_by_name(player, "shooting"));
+			if (gun)
+				tval = gun->kind->tval;
+			const char *name = NULL;
+			const char *ego = "(rock salt)";
+			int qty = 1;
+			switch(tval) {
+				case TV_AMMO_6:
+					qty = 90;
+					name = "6mm bullet";
+					break;
+				case TV_AMMO_9:
+					qty = 70;
+					name = "9mm bullet";
+					break;
+				default:
+					tval = TV_AMMO_12;
+					/* fall through */
+				case TV_AMMO_12:
+					qty = 55;
+					name = "12mm bullet";
+			}
+			add_ego_item(si, tval, name, ego, qty, qty+5);
+		} else if (streq(n, "Swimming with Meg")) {
+			add_artifact(si, "sharkproof swimsuit");
 		}
 		quest_remove_specials();
 	} else {
@@ -1084,7 +1170,7 @@ void quest_reward(struct quest *q, bool success)
 	}
 	if (streq(n, "Hunter, in Darkness")) {
 		/* The traditional 3 "broken arrows" */
-		add_item(si, TV_AMMO_12, "12mm bullet (damaged)", 3, 3);
+		add_ego_item(si, TV_AMMO_12, "12mm bullet", "(damaged)", 3, 3);
 		player->bm_faction++;
 	}
 
@@ -1182,24 +1268,47 @@ bool quest_item_check(const struct object *obj) {
 	return false;
 }
 
+
+static bool check_quest(struct quest *q, const struct monster *m) {
+	if (m->race == q->race) {
+		if (q->cur_num < q->max_num) {
+			/* You've killed a quest target */
+			q->cur_num++;
+			if (q->cur_num == q->max_num) {
+				/* You've killed the last quest target */
+				succeed_quest(q);
+				if (streq(q->race->name, "triffid")) {
+					msg("That's the last of them. Maybe you should go back and ask for a reward?");
+					player->town_faction++;
+				} else if (streq(q->race->name, "megalodon")) {
+					msg("How did anyone not see that! Maybe you should go back for your share of the winnings?");
+				}
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 /**
  * Check if this (now dead) monster is a quest monster, and act appropriately
  */
 bool quest_check(struct player *p, const struct monster *m)
 {
 	int i, total = 0;
-
 	/* First check for a quest level */
-	if (player->active_quest >= 0) {
-		struct quest *q = &player->quests[player->active_quest];
-		if (m->race == q->race) {
-			if (q->cur_num < q->max_num) {
-				/* You've killed a quest target */
-				q->cur_num++;
-				if (q->cur_num == q->max_num) {
-					/* You've killed the last quest target */
-					quest_succeed();
-					return true;
+	if (player->active_quest >= 0)
+		if (check_quest(&player->quests[player->active_quest], m))
+			return true;
+
+	/* Check for in-town quests */
+	if (in_town_quest()) {
+		for(int i=0;i<z_info->quest_max;i++) {
+			/* Matching this town, active and a town quest */
+			if (player->quests[i].town == player->town - t_info) {
+				if ((player->quests[i].flags & (QF_TOWN | QF_ACTIVE)) == (QF_TOWN | QF_ACTIVE)) {
+					if (check_quest(&player->quests[i], m))
+						return true;
 				}
 			}
 		}

@@ -218,6 +218,15 @@ static struct town *get_town_by_dungeon(const char *name)
 {
 	if (!name)
 		return NULL;
+
+	/* Special case for geography */
+	if (streq(name, "Lake")) {
+		for(int i=0; i<z_info->town_max; i++)
+			if (t_info[i].lake)
+				return t_info + i;
+		return NULL;
+	}
+
 	for(int i=0; i<z_info->town_max; i++) {
 		if (t_info[i].downto && strstr(t_info[i].downto, name)) {
 			return t_info + i;

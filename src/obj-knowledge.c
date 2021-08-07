@@ -2466,4 +2466,7 @@ void object_know_all(struct object *obj)
 		object_learn_unknown_icon(player, obj);
 		player_know_object(player, obj);
 	}
+
+	/* Become aware of artifacts */
+	object_touch(player, obj);
 }
