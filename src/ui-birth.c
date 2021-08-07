@@ -219,7 +219,8 @@ static void birthmenu_display(struct menu *menu, int oid, bool cursor,
 	struct birthmenu_data *data = menu->menu_data;
 
 	byte attr = curs_attrs[CURS_KNOWN][0 != cursor];
-	c_put_str(attr, data->items[oid], row, col);
+	if (data->items[oid])
+		c_put_str(attr, data->items[oid], row, col);
 }
 
 /**
@@ -342,7 +343,7 @@ static void per_help(int i, void *db, const region *l)
 
 static void ext_help(int i, void *db, const region *l)
 {
-	race_ext_help(i, db, l, player_id2ext(i), false);
+	race_ext_help(i, db, l, /*player_id2ext(i)*/ get_race_by_name(((struct birthmenu_data *)(ext_menu.menu_data))->items[i]), false);
 }
 
 static void race_help(int i, void *db, const region *l)
@@ -446,11 +447,11 @@ static void init_birth_menu(struct menu *menu, int n_choices,
 	menu->cursor = initial_choice;
 
 	/* Allocate sufficient space for our own bits of menu information. */
-	menu_data = mem_alloc(sizeof *menu_data);
+	menu_data = mem_zalloc(sizeof *menu_data);
 
 	/* Allocate space for an array of menu item texts and help texts
 	   (where applicable) */
-	menu_data->items = mem_alloc(n_choices * sizeof *menu_data->items);
+	menu_data->items = mem_zalloc(n_choices * sizeof *menu_data->items);
 	menu_data->allow_random = allow_random;
 
 	/* Set private data */
@@ -502,9 +503,11 @@ static void setup_menus(void)
 	                &ext_region, true, ext_help);
 	mdata = ext_menu.menu_data;
 
+	n = 0;
 	for (i = 0, r = extensions; !r->personality; r = r->next, i++)
-		if ((!player->race) || (strstr(player->race->exts, r->name)))
-			mdata->items[r->ridx] = r->name;
+		if ((!player->race) || (strstr(player->race->exts, r->name))) {
+			mdata->items[n++] = r->name;
+		}
 	mdata->hint = "Extensions modify your race's stats, skills, resistances and abilities.";
 
 	/* Count the personalities */

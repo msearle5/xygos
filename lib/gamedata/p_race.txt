@@ -389,7 +389,7 @@ desc:The race with average abilities, from a human perspective at least. While y
 
 name:Android
 body:HumanoidNoImplants
-exts:Super
+exts:Super,None
 stats:3:-2:-4:2:2:-3:2
 talents:0:0
 skill-disarm-phys:0
