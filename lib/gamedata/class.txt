@@ -449,6 +449,7 @@ exp:0
 talents:1:2
 max-attacks:4
 min-weight:40
+player-flags:ZERO_FAIL
 strength-multiplier:2
 equip:sword:pocket knife:1:1:none
 cdesc:Devices are your strength - you'll know most on sight, and know how to get the best out of them too. While you aren't much of a fighter in general, you do know energy weapons (melee and ranged) and can see any machine or cyborg's weak points. You also excel with printers and item related cards, and will gain a few skills to use items in unexpected ways.

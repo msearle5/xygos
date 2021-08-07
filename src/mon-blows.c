@@ -514,15 +514,15 @@ static void melee_effect_experience(melee_effect_handler_context_t *context,
 	}
 
 	if (player_of_has(context->p, OF_HOLD_LIFE) && (randint0(100) < chance)) {
-		msg("You keep hold of your life force!");
+		msg("You keep hold of your memories!");
 	} else {
 		s32b d = drain_amount +
 			(context->p->exp/100) * z_info->life_drain_percent;
 		if (player_of_has(context->p, OF_HOLD_LIFE)) {
-			msg("You feel your life slipping away!");
+			msg("You feel your memories slipping away!");
 			player_exp_lose(context->p, d / 10, false);
 		} else {
-			msg("You feel your life draining away!");
+			msg("You feel your memories draining away!");
 			player_exp_lose(context->p, d, false);
 		}
 	}

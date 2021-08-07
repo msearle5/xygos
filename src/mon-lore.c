@@ -1706,7 +1706,7 @@ void lore_append_spells(textblock *tb, const struct monster_race *race,
 
 		/* Adverb */
 		if (rf_has(known_flags, RF_SMART))
-			textblock_append(tb, " intelligently");
+			textblock_append(tb, "intelligently ");
 
 		/* Verb Phrase */
 		//textblock_append_c(tb, COLOUR_L_RED, "cast spells");

@@ -191,6 +191,7 @@ F:Toad
 F:Toadstool
 F:Turtle
 F:Whiskey
+F:Whistling
 F:Wobble
 F:Wumpus
 
@@ -216,6 +217,7 @@ B:Mesa
 B:Point
 B:Pool
 B:Pond
+B:Puddle
 B:Pump
 B:Rapids
 B:River

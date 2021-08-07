@@ -389,7 +389,7 @@ glyph:#
 pain:9
 flags:CLEAR_WEB | COLD_BLOOD | REGENERATE
 flags:NO_FEAR | NO_CONF | HURT_FIRE | IM_WATER
-desc:Tree/Ent
+desc:Plant
 
 # Always awake, elemental objects which engulf and breathe their element(s)
 name:vortex

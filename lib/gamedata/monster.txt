@@ -6611,8 +6611,7 @@ experience:1200
 blow:STING:POISON:3d6
 blow:CONSTRICT:HURT:3d12
 blow:ENGULF:ACID:3d6
-flags:WEIRD_MIND
-flags:MOVE_BODY
+flags:WEIRD_MIND | MOVE_BODY
 flags:NO_STUN | NO_SLOW | NO_SLEEP
 desc:Caution: Heavy Plant Crossing. The triffid is a muddy, shrub-like clump of vegetation with a flexible stem in yellow shading to red which extends around three meters up. At the end is a bell-shaped speckled pink flower from which protrudes a sticky, coiling, tongue-like stigma. The whole thing can move with alarming speed through means that are unclear beneath the dirt, and it feeds by grabbing its prey with the venomous tongue and plunging it head-first into the smothering petals.
 

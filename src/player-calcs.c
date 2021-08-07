@@ -1084,7 +1084,7 @@ void calc_inventory(struct player_upkeep *upkeep, struct object *gear,
 	if (character_dungeon)
 		for (i = 0; i < z_info->quiver_size; i++)
 			if (old_quiver[i] && (upkeep->quiver[i] != old_quiver[i])) {
-				msg("You re-arrange your quiver.");
+				msg("You re-arrange your ammunition.");
 				break;
 			}
 
