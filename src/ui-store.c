@@ -2190,7 +2190,12 @@ static void store_examine(struct store_context *ctx, int item)
 							}
 						}
 					} else {
-						int difficulty = dungeon_top_level(player->town->connect[item]->downto);
+						char dungeon[80];
+						my_strcpy(dungeon, player->town->connect[item]->downto, sizeof(dungeon));
+						char *s = strchr(dungeon, ' ');
+						if (s)
+							*s = 0;
+						int difficulty = dungeon_top_level(dungeon);
 						int power = MAX(player->max_depth, (player->max_lev * 5) / 8);
 						for (int i=0;i<z_info->quest_max;i++) {
 							if (player->quests[i].flags & QF_SUCCEEDED) {
