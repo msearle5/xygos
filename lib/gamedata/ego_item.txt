@@ -347,6 +347,29 @@ values:WIS[-1+d2]
 slay:EVIL_2
 desc:This weapon is capable of helping your aim, but thinks it knows better than you which targets are worth going for.
 
+# or weed killer, hedge clipper...
+name:(black thumb)
+info:4000:15
+alloc:40:1 to 45
+type:sword
+type:polearm
+type:hafted
+brand:POIS_2
+slay:PLANT_3
+desc:This poisoned {kind} is especially powerful against plants.
+
+# assault shaker?
+name:(slug slayer)
+info:4000:15
+alloc:40:1 to 45
+type:sword
+type:polearm
+type:hafted
+brand:POIS_2
+slay:SLUG_3
+desc:This poisoned {kind} is especially powerful against slugs and snails.
+
+
 # The *Slay* weapons (8)
 # make _3?
 
@@ -479,6 +502,7 @@ desc:Specialized ammunition, especially deadly to animals.
 name:(lawgiver)
 info:20:10
 alloc:10:10 to 100
+combat:d10:d10:0
 type:6mm ammo
 type:9mm ammo
 type:12mm ammo
@@ -488,6 +512,7 @@ desc:Opinionated rounds which strike doubly hard into targets which they conside
 name:(acid attack)
 info:50:10
 alloc:5:10 to 100
+combat:d10:d10:0
 type:6mm ammo
 type:9mm ammo
 type:12mm ammo
@@ -498,6 +523,7 @@ desc:These nasty bullets have a acid-based warhead for armor penetration.
 name:(shocker)
 info:45:10
 alloc:5:10 to 100
+combat:d10:d10:0
 type:6mm ammo
 type:9mm ammo
 type:12mm ammo
@@ -522,6 +548,7 @@ desc:This ammunition delivers a powerful electric shock on top of the bullet's i
 name:(poisoned)
 info:40:10
 alloc:20:10 to 60
+combat:d10:d10:0
 type:6mm ammo
 type:9mm ammo
 type:12mm ammo
@@ -531,6 +558,7 @@ desc:This ammunition shatters into hundreds of poisoned shards on impact - any o
 name:(incendiary)
 info:35:10
 alloc:10:10 to 100
+combat:d10:d10:0
 type:6mm ammo
 type:9mm ammo
 type:12mm ammo
@@ -540,6 +568,7 @@ desc:This ammunition bursts into a tiny but intense fireball on impact, capable 
 name:(cryogen)
 info:30:10
 alloc:10:10 to 100
+combat:d10:d10:0
 type:6mm ammo
 type:9mm ammo
 type:12mm ammo
@@ -578,6 +607,30 @@ type:9mm ammo
 type:12mm ammo
 desc:This ammunition is effective at making a good loud bang, but that's all it does.
 forbid:damaged
+
+# name: ego type
+# info: cost : rating
+# alloc: commonness : min " to " max
+# combat: to-hit : to-dam : to-ac
+# min-combat: min to-hit : min to-dam : min to-ac
+# type: tval
+# item: tval : sval
+# flag: flag | flag | etc.
+# flags-off: flag | flag | etc
+# values: label[value] | label[value] | etc.
+# min-values: label[value] | label[value] | etc.
+# weight: percentage
+
+name:(rock salt)
+info:150:8
+alloc:10:8 to 80
+combat:d10:d10:0
+type:6mm ammo
+type:9mm ammo
+type:12mm ammo
+desc:This ammunition is packed with salt - a specialized load that is especially deadly to certain enemies.
+slay:PLANT_3
+slay:SLUG_3
 
 ### Digging Tools
 

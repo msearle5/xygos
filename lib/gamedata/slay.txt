@@ -31,6 +31,33 @@ power:115
 melee-verb:smite
 range-verb:pierces
 
+code:PLANT_3
+name:plants
+base:tree
+multiplier:3
+o-multiplier:30
+power:102
+melee-verb:smite
+range-verb:pierces
+
+code:SLUG_3
+name:slugs and snails
+base:slug
+multiplier:3
+o-multiplier:30
+power:103
+melee-verb:smite
+range-verb:pierces
+
+code:WORM_3
+name:worms
+base:worm
+multiplier:3
+o-multiplier:30
+power:105
+melee-verb:smite
+range-verb:pierces
+
 code:HOLOGRAM_3
 name:holograms
 race-flag:HOLOGRAM
