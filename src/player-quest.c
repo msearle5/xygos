@@ -922,6 +922,17 @@ void quest_changing_level(void)
 		/* Not generating or in a quest any more */
 		p->active_quest = -1;
 	}
+
+	/* Guardian and win-quests: find the quest and unlock it.
+	 * This is similar to do_cmd_go_down(), without the messages and is to catch cases
+	 * where you enter the quest without descending the stair from the town (such as a
+	 * descent card, or debug options)
+	 **/
+	if (player->depth) {
+		struct quest *quest = quest_guardian();
+		if (quest)
+			quest->flags |= QF_ACTIVE;
+	}
 }
 
 /** Special cases for quests when you change levels
