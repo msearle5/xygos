@@ -3743,10 +3743,10 @@ static enum parser_error parse_flavor_flavor(struct parser *p) {
 
 static enum parser_error parse_flavor_kind(struct parser *p) {
 	flavor_glyph = parser_getchar(p, "glyph");
-	flavor_tval = tval_find_idx(parser_getsym(p, "tval"));
-	if (!flavor_tval)
+	int tval = tval_find_idx(parser_getsym(p, "tval"));
+	if (tval < 0)
 		return PARSE_ERROR_UNRECOGNISED_TVAL;
-
+	flavor_tval = tval;
 	return PARSE_ERROR_NONE;
 }
 
@@ -4135,10 +4135,10 @@ static struct {
 	{ "abilities", &ability_parser },
 	{ "features", &feat_parser },
 	{ "object bases", &object_base_parser },
-	{ "slays", &slay_parser },
 	{ "brands", &brand_parser },
 	{ "monster pain messages", &pain_parser },
 	{ "monster bases", &mon_base_parser },
+	{ "slays", &slay_parser },
 	{ "summons", &summon_parser },
 	{ "faults", &fault_parser },
 	{ "objects", &object_parser },

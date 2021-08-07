@@ -63,9 +63,9 @@ buy:mushroom
 buy:battery
 buy:digger
 buy:cloak
-buy:ammo_6
-buy:ammo_9
-buy:ammo_12
+buy:6mm ammo
+buy:9mm ammo
+buy:12mm ammo
 
 # Armoury - rename? accessories?
 store:2:Armoury
@@ -137,9 +137,9 @@ normal:gun:9mm rifle
 normal:gun:12mm handgun
 normal:gun:12mm rifle
 normal:gun:0:2000
-buy:ammo_6
-buy:ammo_9
-buy:ammo_12
+buy:6mm ammo
+buy:9mm ammo
+buy:12mm ammo
 buy:gun
 buy:digger
 buy:sword
@@ -355,8 +355,8 @@ buy:arms
 buy:legs
 buy:belt
 buy:chip
-buy:force skates
-buy:force bangles
-buy:force harness
-buy:force shield
+buy:boots:force skates
+buy:gloves:force bangles
+buy:hard armor:force harness
+buy:shield:force wheel
 danger:85:95

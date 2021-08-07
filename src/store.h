@@ -47,6 +47,7 @@ enum {
 struct object_buy {
 	struct object_buy *next;
 	size_t tval;
+	size_t sval;
 	size_t flag;
 };
 

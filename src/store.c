@@ -254,6 +254,9 @@ static enum parser_error parse_item_table(struct parser *p, size_t *num, size_t 
 	struct object_kind *kind = NULL;
 	int sval = -1;
 
+	if (tval < 0)
+		return PARSE_ERROR_UNRECOGNISED_TVAL;
+
 	if (parser_hasval(p, "sval")) {
 		const char *sym = parser_getsym(p, "sval");
 		char *end = NULL;
@@ -336,7 +339,20 @@ static enum parser_error parse_buy(struct parser *p) {
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
 	buy = mem_zalloc(sizeof(*buy));
-	buy->tval = tval_find_idx(parser_getstr(p, "base"));
+	int tval = tval_find_idx(parser_getsym(p, "base"));
+	if (tval < 0)
+		return PARSE_ERROR_UNRECOGNISED_TVAL;
+	buy->tval = tval;
+
+	buy->sval = 0;
+	if (parser_hasval(p, "sval")) {
+		int sval = lookup_sval(tval, parser_getsym(p, "sval"));
+		struct object_kind *kind = lookup_kind(tval, sval);
+		if (!kind)
+			return PARSE_ERROR_UNRECOGNISED_SVAL;
+		buy->sval = sval;
+	}
+
 	buy->next = s->buy;
 	s->buy = buy;
 	return PARSE_ERROR_NONE;
@@ -357,7 +373,10 @@ static enum parser_error parse_buy_flag(struct parser *p) {
 		struct object_buy *buy = mem_zalloc(sizeof(*buy));
 
 		buy->flag = flag;
-		buy->tval = tval_find_idx(parser_getstr(p, "base"));
+		int tval = tval_find_idx(parser_getstr(p, "base"));
+		if (tval < 0)
+			return PARSE_ERROR_UNRECOGNISED_TVAL;
+		buy->tval = tval;
 		buy->next = s->buy;
 		s->buy = buy;
 
@@ -376,7 +395,7 @@ struct parser *init_parse_stores(void) {
 	parser_reg(p, "closed", parse_closed);
 	parser_reg(p, "normal sym tval ?sym sval ?rand rarity", parse_normal);
 	parser_reg(p, "always sym tval ?sym sval ?rand rarity", parse_always);
-	parser_reg(p, "buy str base", parse_buy);
+	parser_reg(p, "buy sym base ?sym sval", parse_buy);
 	parser_reg(p, "buy-flag sym flag str base", parse_buy_flag);
 	parser_reg(p, "danger uint low uint high", parse_danger);
 	return p;
@@ -704,6 +723,9 @@ static bool store_will_buy(struct store *store, const struct object *obj)
 	for (buy = store->buy; buy; buy = buy->next) {
 		/* Wrong tval */
 		if (buy->tval != obj->tval) continue;
+
+		/* Wrong sval */
+		if ((buy->sval) && (buy->sval != obj->sval)) continue;
 
 		/* No flag means we're good */
 		if (!buy->flag) return true;
