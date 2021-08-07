@@ -429,9 +429,9 @@ void update_mon(struct monster *mon, struct chunk *c, bool full)
 			if (seen_esp)
 				flags_set(lore->flags, RF_SIZE, RF_EMPTY_MIND, RF_WEIRD_MIND, RF_SMART, RF_STUPID, FLAG_END);
 			else if (seen_animal)
-				flags_set(lore->flags, RF_ANIMAL);
+				flags_set(lore->flags, RF_SIZE, RF_ANIMAL, FLAG_END);
 			else if (seen_metal)
-				flags_set(lore->flags, RF_METAL);
+				flags_set(lore->flags, RF_SIZE, RF_METAL, FLAG_END);
 		}
 
 		/* It was previously unseen */
@@ -1004,13 +1004,25 @@ void death_special(struct monster *mon)
 			switch(mon->race->level) {
 				/* 1st Midboss */
 				case 25:
-					boxtext = "Foo bar";
+					boxtext = "The hovering figure wavers, distorts and comes apart into a brief shower of fading particles. Holo-Triax is destroyed. As the fireworks fizzle, you become aware that you are now able to descend further into the Fortress - and also remember what you heard about the ferocious guardian of fortress level 50.";
+					break;
+				/* 2nd Midboss */
+				case 50:
+					boxtext = "The unnatural beast screams one last time, collapses at your feet and immediately turns to grey ash. That's Triax's self-destruct system. A way to keep his cyborgs out of enemy hands. And it also means he knows you are here and have killed his favorite pet. You had better move on quickly to fortress level 75.";
+					break;
+				/* 3rd Midboss */
+				case 75:
+					boxtext = "The sneering golden idol that is Mecha-Triax shudders, squeals and explodes into fragments of twisted metal. The final barrier is down - nothing's now preventing you from reaching Triax's inner sanctum, 25 levels below.";
 					break;
 				/* Bottom of main dungeon */
 				case 100:
 					boxtext = "Triax lies dead. The scarred planet has been saved from his machinations and can begin the long process of rebuilding. You are undoubtedly a hero - and yet a still greater task now lies before you. Triax's aim was to rule not just Xygos but every inhabited system, and his cloned mind in the orbital station above could still dominate the galaxy if left unchecked. To truly defeat him then you must launch to orbit from the airport, descend to the center of the space station and destroy it!";
 					player->orbitable = true;
 					player->town->stores[STORE_AIR].open = true;
+					break;
+				/* Space station */
+				case 120:
+					boxtext = "The Core warps, as if attempting to teleport, but reconstitutes in place. It begins to shake with growing violence until it abruptly tears itself apart. All that is left is a dump of inert, scattered components - and something golden gleaming incongruously in the middle of the mess. Triax's final form has been defeated, and not only the planet below you but the rest of the galaxy is now safe again - your mission is complete!";
 					break;
 			}
 

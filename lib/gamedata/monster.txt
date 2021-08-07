@@ -2571,7 +2571,7 @@ blow:GAZE:CONFUSE:2d8
 blow:TOUCH:FIRE:3d8
 blow:TOUCH:COLD:3d8
 flags:MALE | QUESTOR | UNIQUE | EVIL | SMART | REGENERATE | WEIRD_MIND | SPECIAL_GEN
-flags:INVISIBLE
+flags:INVISIBLE | DEATH_SPECIAL
 flags:DROP_2 | DROP_20 | DROP_40 | DROP_GOOD | ONLY_ITEM
 flags:OPEN_DOOR
 flags:NO_CONF | NO_SLEEP | NO_FEAR | IM_POIS
@@ -4745,7 +4745,7 @@ blow:CLAW:HURT:1d8
 blow:CLAW:HURT:1d8
 blow:CRUSH:HURT:4d6
 flags:UNIQUE | QUESTOR | SMART | FORCE_DEPTH | SPECIAL_GEN
-flags:POWERFUL | BASH_DOOR
+flags:POWERFUL | BASH_DOOR | DEATH_SPECIAL
 friends:100:2d2:tyrannosaur:servant
 friends:100:1d2:circulasaurus:servant
 desc:An unnaturally large, tough, intelligent, vicious and fast-moving tyrannosaur - Triax's pet and frequent experimental subject for cybernetic treatments. It makes a formidable guard for the lower half of the fortress!
@@ -6114,7 +6114,7 @@ spells:BE_ELEC
 drop:0:of Mecha-Triax:100:1:1
 flags:UNIQUE | QUESTOR | FORCE_DEPTH | REGENERATE | SMART | PREFER_MELEE | METAL
 flags:DROP_4 | DROP_GOOD | DROP_GREAT | ONLY_ITEM | SPECIAL_GEN
-flags:KILL_WALL | KILL_BODY
+flags:KILL_WALL | KILL_BODY | DEATH_SPECIAL
 flags:IM_ACID
 desc:A robot which ego-tastic Triax has had built in the shape of his head. Gold plated and 10 meters tall... so life size, even if not literally. But this is no statue - it's approaching at an alarming rate and if it's capable of smashing its way through solid rock, imagine what it could do to you!
 
@@ -6141,7 +6141,7 @@ spells:S_UNIQUE
 drop:0:of the Core:100:1:1
 flags:UNIQUE | QUESTOR | FORCE_DEPTH | REGENERATE | SMART | SPIRIT | EVIL
 flags:KILL_BODY | ATTR_FLICKER | REGENERATE | METAL | SPECIAL_GEN
-flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS
+flags:IM_ACID | IM_COLD | IM_ELEC | IM_FIRE | IM_POIS | DEATH_SPECIAL
 flags:NO_CONF | NO_SLEEP | NO_HOLD | NO_FEAR
 flags:FORCE_DEPTH | FORCE_SLEEP
 desc:Artificial intelligence, or natural insanity? It's hard to tell where one leaves off and the other begins, when you are facing the demon core: a silicon replica of Triax's brilliant but thoroughly evil mind. Physically, it's simply a vast cuboid of gleaming metal. It has no conventional means of locomotion - it doesn't need any, with its mastery of teleportation. It does however have extensive means of defense...
