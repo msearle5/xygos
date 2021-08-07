@@ -209,7 +209,7 @@ bool add_monster_message(struct monster *mon, int msg_code, bool delay)
 
 	int flags = message_flags(mon);
 
-	/* Try to stack the message on top of older messages if it isn't redunant */
+	/* Try to stack the message on top of older messages if it isn't redundant */
 	/* If not possible, check we have storage space for more messages and add */
 	if (!redundant_monster_message(mon, msg_code) &&
 			!stack_message(mon, msg_code, flags) &&
@@ -292,7 +292,7 @@ static void get_message_text(char *buf, size_t buflen,
 
 	/* Find the appropriate message */
 	const char *source = msg_repository[msg_code].msg;
-	int idx = 0;
+	int idx = -1;
 	switch (msg_code) {
 		case MON_MSG_95: idx = 0; break;
 		case MON_MSG_75: idx = 1; break;
@@ -302,10 +302,12 @@ static void get_message_text(char *buf, size_t buflen,
 		case MON_MSG_10: idx = 5; break;
 		case MON_MSG_0:  idx = 6; break;
 	}
-	if (race->pain)
-		source = race->pain->messages[idx];
-	else
-		source = race->base->pain->messages[idx];
+	if (idx >= 0) {
+		if (race->pain)
+			source = race->pain->messages[idx];
+		else
+			source = race->base->pain->messages[idx];
+	}
 
 	int state = MSG_PARSE_NORMAL;
 	size_t maxlen = strlen(source);
