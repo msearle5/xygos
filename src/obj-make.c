@@ -237,11 +237,12 @@ static int get_new_attr(bitflag flags[OF_SIZE], bitflag newf[OF_SIZE])
 static int random_resist(struct object *obj, int *resist, int from, int to)
 {
 	int i, count = 0;
-	int low = 0;
+	int low = IMMUNITY;
 
 	/* Find the lowest base resist */
 	for (i = from; i < to; i++)
-		if (obj->el_info[i].res_level > low) low = obj->el_info[i].res_level;
+		if (obj->el_info[i].res_level < low)
+			low = obj->el_info[i].res_level;
 
 	/* Count the available base resists */
 	for (i = from; i < to; i++)
