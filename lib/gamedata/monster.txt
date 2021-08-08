@@ -1443,10 +1443,8 @@ hit-points:40
 armor-class:60
 sleepiness:150
 blow:PECK:FORCE:1d2
-flags:FLYING | EVASIVE
-flags:TAKE_ITEM | DEATH_SPECIAL | DROP_RANDOM
-flags:RAND_25 | RAND_50
-flags:NO_FEAR | NO_SLEEP
+deathspells:FLAMES
+flags:FLYING | EVASIVE | TAKE_ITEM | DROP_RANDOM | RAND_25 | RAND_50 | NO_FEAR | NO_SLEEP
 spell-freq:15
 spell-power:8
 spells:TPORT | GROW
@@ -1492,6 +1490,49 @@ flags:NO_FEAR
 desc:A blinding whirlwind of fear and feathers. Its razor sharp beak and talons
 desc: fill its foes with terror as it seeks to rend flesh from bone with
 desc: unbridled ferocity.
+
+name:silver bird of Berabus
+base:bird
+color:White
+depth:23
+rarity:5
+grow:scarlet bird of Berabus
+speed:110
+hit-points:50
+hearing:25
+armor-class:70
+sleepiness:90
+blow:PECK:FORCE:2d8
+deathspells:FLAMES
+flags:FLYING | EVASIVE | TAKE_ITEM | DROP_RANDOM | RAND_25 | RAND_50 | NO_FEAR | NO_SLEEP
+flags:SMART
+spell-freq:10
+spell-power:12
+spells:GROW | BLINK | TPORT
+friends:95:3d4:Same
+desc:A weirdly modified cyber-bird. Once it was the mostly-harmless
+desc: golden variety, now it's a vicious peck hunter.
+
+name:scarlet bird of Berabus
+base:bird
+color:Red
+depth:39
+rarity:5
+speed:110
+hit-points:60
+hearing:30
+armor-class:80
+sleepiness:50
+blow:PECK:FORCE:4d12
+deathspells:FLAMES
+flags:FLYING | EVASIVE | TAKE_ITEM | DROP_RANDOM | RAND_25 | RAND_50 | NO_FEAR | NO_SLEEP
+flags:SMART
+spell-freq:5
+flags:RAND_25 | RAND_50
+friends:90:2d3:Same
+spell-power:20
+spells:BLINK | TPORT
+desc:Another type of cyber-bird. These can easily be lethal, beware!
 
 
 ##### b is for BAT #####
@@ -1922,6 +1963,7 @@ blow:BITE:HURT:1d4
 flags:UNIQUE
 flags:RAND_25 | BASH_DOOR
 flags:NO_CONF | NO_SLEEP
+friends:70:1d1:Fang
 desc:A rather vicious dog belonging to Slick.
 
 name:Fang, Slick's dog
@@ -1940,6 +1982,7 @@ blow:BITE:HURT:1d4
 flags:UNIQUE
 flags:RAND_25 | BASH_DOOR
 flags:NO_CONF | NO_SLEEP
+friends:70:1d1:Grip
 desc:A rather vicious dog belonging to Slick.
 
 name:wolf
@@ -2008,6 +2051,24 @@ desc:be released any time soon...
 
 ##### F is for FLY #####
 
+# Intentionally doesn't MULTIPLY, instead being found in groups
+# otherwise it would be too nasty, given the INFECT blow.
+name:bog fly
+plural:bog flies
+base:fly
+color:BurntUmber
+depth:3
+rarity:5
+grow:budgie
+speed:110
+hit-points:3
+armor-class:12
+sleepiness:30
+blow:BITE:INFECT:1d1
+flags:COLD_BLOOD | FLYING | RAND_25 | RAND_50 | IM_POIS | EMPTY_MIND
+friends:90:2d3:Same
+desc:A humming swamp pest.
+
 name:giant fruit fly
 plural:giant fruit flies
 base:fly
@@ -2020,8 +2081,8 @@ sleepiness:10
 depth:10
 rarity:3
 experience:4
-flags:MULTIPLY | RAND_25 | RAND_50
 blow:BITE:HURT:1d2
+flags:MULTIPLY | RAND_25 | RAND_50
 desc:A fast-breeding, annoying pest.
 
 name:giant firefly
@@ -2038,8 +2099,8 @@ sleepiness:10
 rarity:4
 experience:4
 deathspells:LIGHT
-flags:MULTIPLY | RAND_25 | RAND_50
 blow:BITE:LIGHT:1d2
+flags:MULTIPLY | RAND_25 | RAND_50
 desc:Clouds of these huge, buzzing insects light up the room - so brightly that you can
 desc: barely see through them.
 
@@ -2185,6 +2246,115 @@ desc:The biggest lion you've ever seen. Fast, lithe, hungry and coming your way.
 
 ##### G is for GRUE #####
 
+name:gruespawn
+base:grue
+color:Gray25
+depth:15
+rarity:4
+grow:grue
+speed:120
+hit-points:90
+hearing:2
+armor-class:20
+sleepiness:1
+light:-3
+blow:HIT:EAT_LIGHT:1d3
+blow:HIT:HURT:1d3
+blow:HIT:HURT:1d3
+blow:HIT:HURT:1d3
+flags:ATTR_CLEAR
+flags:CHAR_CLEAR
+flags:INVISIBLE
+flags:COLD_BLOOD
+spells:GROW
+spell-freq:6
+flags:HURT_LIGHT
+#FEAR_LIGHT | 
+spell-power:5
+spells:DARKNESS
+flags:SMART
+desc:A little patch of unnatural darkness.
+
+name:grue
+base:grue
+color:Gray25
+depth:24
+rarity:2
+grow:dread grue
+speed:120
+hit-points:90
+hearing:2
+armor-class:20
+sleepiness:1
+light:-4
+blow:HIT:EAT_LIGHT:1d9
+blow:HIT:HURT:1d9
+blow:HIT:HURT:1d9
+blow:HIT:HURT:1d9
+flags:ATTR_CLEAR
+flags:CHAR_CLEAR
+flags:INVISIBLE
+flags:COLD_BLOOD
+spells:GROW
+spell-freq:3
+flags:SMART | HURT_LIGHT
+#FEAR_LIGHT | 
+spell-power:30
+spells:DARKNESS | BLIND | SCARE | TPORT
+desc:Darkness, animated.
+
+# This is supposed to be visible. It's listed in this section cos the other grues are.
+#
+name:etheric grue
+base:grue
+color:White
+depth:50:83
+grow:dread grue
+speed:100
+rarity:8
+hit-points:90
+hearing:2
+armor-class:20
+sleepiness:1
+light:3
+blow:HIT:HURT:2d9
+blow:HIT:HURT:2d9
+blow:HIT:HURT:2d9
+spell-freq:3
+spell-power:30
+spells:BE_LIGHT
+#cloud:2:light
+#flags:FEAR_DARK
+#flags:HURT_DARK
+flags:SMART
+spells:BLIND | SCARE | TPORT
+desc:Scared of the dark... oh dear...
+
+# Fix same desc as Primordial
+name:dread grue
+base:grue
+color:Gray25
+depth:33
+rarity:2
+speed:130
+hit-points:90
+hearing:2
+armor-class:20
+sleepiness:1
+light:-5
+blow:HIT:EAT_LIGHT:2d9
+blow:HIT:HURT:2d9
+blow:HIT:HURT:2d9
+blow:HIT:HURT:2d9
+flags:ATTR_CLEAR | CHAR_CLEAR | INVISIBLE | COLD_BLOOD | HURT_LIGHT | SMART
+# | FEAR_LIGHT
+#cloud:4:dark
+spell-freq:3
+spell-power:50
+spells:S_KIN | DARKNESS | BLIND | SCARE | TPORT
+desc:The dread grue moves at the speed of dark - faster than light, for wherever there
+desc:is light, /the dark got there first./
+
 name:Primordial Grue
 base:grue
 color:Violet
@@ -2196,6 +2366,7 @@ armor-class:90
 sleepiness:0
 depth:40
 rarity:0
+light:-6
 experience:5500
 blow:TOUCH:BLIND:3d10
 blow:CLAW:HURT:1d24
@@ -2238,7 +2409,6 @@ base:humanoid
 color:ForestGreen
 depth:6
 rarity:6
-desc:Humanoids around one meter in height, stocky and strong for their height, and covered entirely in brown and black fur.
 hit-points:14
 hearing:10
 armor-class:15
@@ -2252,6 +2422,7 @@ spell-freq:8
 friends:95:3d4:Same
 spell-power:6
 spells:ARROW
+desc:Humanoids around one meter in height, stocky and strong for their height, and covered entirely in brown and black fur.
 
 name:bogon
 base:humanoid
@@ -2756,7 +2927,6 @@ base:insect
 color:Orange
 depth:9
 rarity:3
-desc:A crawling insect with a waving stinger.
 grow:arc bug
 speed:115
 hit-points:6
@@ -2768,6 +2938,7 @@ flags:RAND_25 | EMPTY_MIND
 spell-freq:12
 innate-freq:3
 spells:GROW | STING
+desc:A crawling insect with a waving stinger.
 
 name:giant white tick
 base:insect
@@ -4629,7 +4800,7 @@ sleepiness:50
 depth:18
 rarity:4
 experience:80
-blow:BITE:HURT:2d3
+blow:BITE:WOUND:2d3
 blow:CLAW:HURT:1d6
 blow:CLAW:HURT:1d6
 flags:RAND_25 | BASH_DOOR | GROUP_AI
@@ -4647,7 +4818,7 @@ sleepiness:50
 depth:26
 rarity:4
 experience:330
-blow:BITE:HURT:2d6
+blow:BITE:WOUND:2d6
 blow:CLAW:HURT:1d20
 blow:CLAW:HURT:1d20
 flags:RAND_25 | BASH_DOOR
@@ -4673,21 +4844,38 @@ desc:Is it a bird? Is it a plane? No... it's a dinosaur?!
 name:tyrannosaur
 base:reptile
 color:ForestGreen
+depth:37
 speed:110
 hit-points:600
 hearing:20
 armor-class:110
 sleepiness:50
-depth:37
 rarity:4
 experience:700
-blow:BITE:HURT:2d40
+blow:BITE:WOUND:2d40
 blow:CLAW:HURT:1d6
 blow:CLAW:HURT:1d6
 blow:CRUSH:HURT:4d4
 flags:POWERFUL | RAND_25
 flags:BASH_DOOR | KILL_BODY
 desc:King of dinosaurs. Immense muscular legs support a heavy tail, an almost comically tiny pair of clawed arms and a mouth big enough to climb inside. Although I wouldn't recommend it.
+
+name:diplodocus
+base:reptile
+color:Tan
+depth:40
+rarity:2
+experience:900
+hit-points:1400
+hearing:2
+sleepiness:100
+armor-class:140
+blow:BITE:HURT:3d4
+blow:CRUSH:HURT:3d20
+blow:CRUSH:HURT:3d20
+flags:POWERFUL | RAND_25 | RAND_50
+flags:BASH_DOOR | KILL_BODY | STUPID
+desc:Among the largest dinosaurs, with a tiny head on the end of a long flexible neck peering down on you from several meters up, balanced by a tail that narrows into a long whip. Herbivorous, but no less dangerous for that - it's still entirely capable of trampling you into a grease spot.
 
 name:circulasaurus
 base:reptile
@@ -4700,7 +4888,7 @@ armor-class:120
 sleepiness:20
 blow:CLAW:HURT:1d8
 blow:CLAW:HURT:1d8
-blow:BITE:HURT:4d32
+blow:BITE:WOUND:4d32
 flags:FORCE_SLEEP
 flags:SMART
 flags:OPEN_DOOR
@@ -4776,6 +4964,25 @@ desc:Fear its anger, for its devastation is unmatched!
 ##### M is for MONKEY #####
 # and also apes, whatever the Librarian might say.
 
+# If these can be moved onto land, they dehydrate into a spore (DRY_GROW).
+# This, if put in water, produces an (often tame) sea-monkey.
+#
+name:sea monkey
+base:monkey
+color:Blue
+depth:4
+rarity:1
+grow:spider monkey
+hit-points:4
+hearing:3
+armor-class:20
+sleepiness:1
+blow:HIT:HURT:1d4
+flags:MULTIPLY
+friends:95:3d4:Same
+flags:IM_WATER | AQUATIC | WEIRD_MIND
+desc:A swarm of strange finned monkeys.
+
 name:monkey
 base:monkey
 color:BurntUmber
@@ -4816,10 +5023,9 @@ blow:HIT:HURT:1d2
 blow:HIT:HURT:1d2
 blow:TOUCH:EAT_ITEM
 blow:TOUCH:EAT_ITEM
-flags:TAKE_ITEM | DROP_RANDOM
+flags:TAKE_ITEM | DROP_RANDOM | RAND_25
 innate-freq:5
 spell-power:3
-flags:RAND_25
 friends:90:2d3:Same
 spells:BOULDER
 desc:Little red monkeys with eight limbs and a venomous bite. Ick!
@@ -4840,6 +5046,22 @@ flags:FLYING | TAKE_ITEM | DROP_RANDOM | RAND_25
 friends:90:2d3:Same
 desc:A strange monkey with bat-like wings on arms and legs.
 
+name:gorilla
+base:monkey
+color:Gray25
+depth:27
+rarity:2
+hit-points:85
+hearing:15
+armor-class:30
+sleepiness:50
+blow:HIT:HURT:4d10
+blow:HIT:HURT:4d10
+flags:TAKE_ITEM
+flags:DROP_RANDOM
+flags:RAND_25
+flags:SMART
+desc:Take your hands off me, you damn dirty ape!
 
 
 ##### m is for MOLD #####
@@ -5395,7 +5617,6 @@ base:person
 color:White
 depth:32
 rarity:4
-desc:An skilled and experienced sharpshooter, with deadly accuracy.
 hit-points:115
 armor-class:15
 sleepiness:20
@@ -5404,6 +5625,7 @@ blow:HIT:HURT:1d9
 flags:MALE | FEMALE | SMART | OPEN_DOOR
 spell-freq:2
 spells:SHOT
+desc:An skilled and experienced sharpshooter, with deadly accuracy.
 
 name:bandit
 base:person
@@ -5922,7 +6144,6 @@ base:rodent
 color:SandyBrown
 depth:18
 rarity:2
-desc:A dust-coloured desert rabbit, difficult to spot until it moves.
 speed:115
 hit-points:30
 armor-class:5
@@ -5932,13 +6153,13 @@ blow:CLAW:HURT:1d10
 blow:CLAW:HURT:1d10
 flags:FORCE_SLEEP
 flags:SMART
+desc:A dust-coloured desert rabbit, difficult to spot until it moves.
 
 name:jackrabbit
 base:rodent
 color:Tan
 depth:23
 rarity:2
-desc:A large, brown rabbit capable of incredible speeds.
 speed:120
 hit-points:30
 armor-class:15
@@ -5948,6 +6169,7 @@ blow:KICK:HURT:1d6
 blow:KICK:HURT:1d6
 flags:FORCE_SLEEP
 flags:SMART
+desc:A large, brown rabbit capable of incredible speeds.
 
 name:jackalope
 base:rodent
@@ -6954,7 +7176,6 @@ base:alien
 color:Red
 depth:12
 rarity:4
-desc:An ugly screaming little red alien.
 grow:pink horror
 hit-points:39
 armor-class:25
@@ -6967,6 +7188,7 @@ spell-freq:8
 spell-power:6
 experience:55
 spells:BO_FIRE
+desc:An ugly screaming little red alien.
 
 name:green horror
 base:alien
