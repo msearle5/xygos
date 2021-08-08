@@ -506,24 +506,26 @@ static void learn_brand_slay_helper(struct player *p, struct object *obj1,
 		}
 
 		b = &brands[i];
-		if (!rf_has(mon->race->flags, b->resist_flag)) {
-			/* Learn about the equipment. */
-			for (j = 0; j < n; ++j) {
-				object_learn_brand(p, objs[j], i);
-			}
+		if (b->resist_flag) {
+			if (!rf_has(mon->race->flags, b->resist_flag)) {
+				/* Learn about the equipment. */
+				for (j = 0; j < n; ++j) {
+					object_learn_brand(p, objs[j], i);
+				}
 
-			/* Learn about the monster. */
-			lore_learn_flag_if_visible(lore, mon, b->resist_flag);
-			if (b->vuln_flag) {
-				lore_learn_flag_if_visible(lore, mon,
-					b->vuln_flag);
-			}
-		} else if (player_knows_brand(p, i)) {
-			/* Learn about the monster. */
-			lore_learn_flag_if_visible(lore, mon, b->resist_flag);
-			if (b->vuln_flag) {
-				lore_learn_flag_if_visible(lore, mon,
-					b->vuln_flag);
+				/* Learn about the monster. */
+				lore_learn_flag_if_visible(lore, mon, b->resist_flag);
+				if (b->vuln_flag) {
+					lore_learn_flag_if_visible(lore, mon,
+						b->vuln_flag);
+				}
+			} else if (player_knows_brand(p, i)) {
+				/* Learn about the monster. */
+				lore_learn_flag_if_visible(lore, mon, b->resist_flag);
+				if (b->vuln_flag) {
+					lore_learn_flag_if_visible(lore, mon,
+						b->vuln_flag);
+				}
 			}
 		}
 	}
