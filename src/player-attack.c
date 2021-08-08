@@ -475,7 +475,7 @@ static int o_critical_melee(const struct player *p,
  */
 static int melee_damage(const struct monster *mon, struct object *obj, int b, int s, int deflate)
 {
-	int dmg = damroll(obj->dd, obj->ds);
+	int dmg = (obj) ? damroll(obj->dd, obj->ds) : 1;
 	int base_dmg = dmg;
 
 	int slaymul = 1;
@@ -487,7 +487,7 @@ static int melee_damage(const struct monster *mon, struct object *obj, int b, in
 	dmg *= MAX(slaymul, brandmul);
 
 	dmg -= base_dmg;
-	base_dmg += obj->to_d;
+	if (obj) base_dmg += obj->to_d;
 	if (deflate > 1) {
 		base_dmg = (base_dmg + deflate - 1) / deflate;
 	}
@@ -505,11 +505,11 @@ static int melee_damage(const struct monster *mon, struct object *obj, int b, in
 static int o_melee_average_damage(struct player *p, const struct monster *mon,
 		struct object *obj, int b, int s, int deflate)
 {
-	int dice = obj->dd;
+	int dice = (obj) ? obj->dd : 1;
 	int sides, dmg, add = 0;
 
 	/* Get the average value of a single damage die. (x10) */
-	int die_average = (10 * (obj->ds + 1)) / 2;
+	int die_average = (10 * (((obj) ? obj->ds : 1) + 1)) / 2;
 
 	/* Adjust the average for slays and brands. (10x inflation) */
 	if (s) {
@@ -520,14 +520,15 @@ static int o_melee_average_damage(struct player *p, const struct monster *mon,
 	}
 
 	/* Apply deadliness to average. (100x inflation) */
-	apply_deadliness(&die_average, MIN(obj->to_d + p->state.to_d, 150));
+	apply_deadliness(&die_average,
+			MIN(((obj) ? obj->to_d : 0) + p->state.to_d, 150));
 
 	/* Calculate the actual number of sides to each die (x10000). */
 	sides = (2 * die_average) - 10000;
 
 	/* Get number of critical dice */
 	double extra_dice = 0.0;
-	if (deflate <= 1)
+	if ((obj) && (deflate <= 1))
 		extra_dice = o_calculate_melee_crits(p->state, obj) * 0.01;
 
 	/* Average damage. */
@@ -956,14 +957,13 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear, bool *hit)
 	bool do_quake = false;
 	bool success = false;
 
-	/* Default to punching for one damage */
 	char verb[20];
 	char after[64];
 	strcpy(after, ".");
-	int dmg = 1;
 	u32b msg_type = MSG_HIT;
+	int j, b, s, weight, dmg;
 
-	/* Default to punching for one damage */
+	/* Default to punching */
 	my_strcpy(verb, "punch", sizeof(verb));
 
 	/* Extract monster name (or "it") */
@@ -1022,26 +1022,31 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear, bool *hit)
 
 	if (hit) *hit = true;
 
-	/* Handle normal weapon */
 	if (obj) {
-		int j;
-		int b = 0, s = 0;
-		int weight = obj->weight;
+		weight = obj->weight;
 
+		/* Handle normal weapon */
 		my_strcpy(verb, "hit", sizeof(verb));
+	} else {
+		weight = 0;
+	}
 
-		/* Best attack from all slays or brands on all non-launcher equipment */
-		for (j = 2; j < p->body.count; j++) {
-			struct object *obj_local = slot_object(p, j);
-			if (obj_local)
-				improve_attack_modifier(p, obj_local, mon,
-					&b, &s, verb, false);
-		}
+	/* Best attack from all slays or brands on all non-launcher equipment */
+	b = 0;
+	s = 0;
+	for (j = 2; j < p->body.count; j++) {
+		struct object *obj_local = slot_object(p, j);
+		if (obj_local)
+			improve_attack_modifier(p, obj_local, mon,
+				&b, &s, verb, false);
+	}
 
-		/* Get the best attack from all slays or brands - weapon or temporary */
-		improve_attack_modifier(p, obj, mon, &b, &s, verb, false);
-		improve_attack_modifier(p, NULL, mon, &b, &s, verb, false);
+	/* Get the best attack from all slays or brands - weapon or temporary */
+	improve_attack_modifier(p, obj, mon, &b, &s, verb, false);
+	improve_attack_modifier(p, NULL, mon, &b, &s, verb, false);
 
+	int deflate = 0;
+	if (obj) {
 		/* Handle resistance to edged / blunt weapons.
 		 * All objects are either pointy or blunt, and anything that isn't TV_BLUNT
 		 * is considered pointy. (This only makes sense because most items can't be
@@ -1053,7 +1058,6 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear, bool *hit)
 		 * gained from brands and slays or to bonuses from strength, etc.
 		 */
 		bool is_blunt = tval_is_blunt(obj);
-		int deflate = 0;
 		if (((rf_has(mon->race->flags, RF_IM_EDGED) && !is_blunt)) ||
 			((rf_has(mon->race->flags, RF_IM_BLUNT) && is_blunt))) {
 			deflate = 4;
@@ -1063,151 +1067,151 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear, bool *hit)
 			if (rf_has(mon->race->flags, RF_IM_BLUNT))
 				lore_learn_flag_if_visible(lore, mon, RF_IM_BLUNT);
 		}
+	}
 
-		/* Get the damage */
-		if (!OPT(p, birth_percent_damage)) {
-			dmg = melee_damage(mon, obj, b, s, deflate);
-			if (!deflate)
-				dmg = critical_melee(p, mon, obj, weight, obj->to_h, dmg, &msg_type);
-		} else {
-			dmg = o_melee_damage(p, mon, obj, b, s, &msg_type, deflate);
-		}
+	/* Get the damage */
+	if (!OPT(p, birth_percent_damage)) {
+		dmg = melee_damage(mon, obj, b, s, deflate);
+		if (obj && !deflate)
+			dmg = critical_melee(p, mon, obj, weight, obj->to_h, dmg, &msg_type);
+		else {
+			/* Handle unarmed melee.
+			 * Only Wrestlers can get critical hits - the chance depends on armor weight,
+			 * level, the monster's AC.
+			 * A critical means more damage, a more emphatic message and a chance of
+			 * debuffing the monster.
+			 **/
+			const int wlev = levels_in_class(get_class_by_name("Wrestler")->cidx);
+			if (wlev) {
+				int power = py_unarmed_crit_power(p, mon->race, wlev, RANDOMISE);
 
-		/* Splash damage and earthquakes */
-		splash = (weight * dmg) / 100;
-		if (player_of_has(p, OF_IMPACT) && dmg > 50) {
-			do_quake = true;
-			equip_learn_flag(p, OF_IMPACT);
-		}
-
-		/* Learn by use */
-		equip_learn_on_melee_attack(p);
-		learn_brand_slay_from_melee(p, obj, mon);
-
-		/* Apply the player damage bonuses */
-		if (!OPT(p, birth_percent_damage)) {
-			dmg += player_damage_bonus(&p->state);
-		}
-
-		/* Substitute shape-specific blows for shapechanged players */
-		if (player_is_shapechanged(p)) {
-			int choice = randint0(p->shape->num_blows);
-			struct player_blow *blow = p->shape->blows;
-			while (choice--) {
-				blow = blow->next;
-			}
-			my_strcpy(verb, blow->name, sizeof(verb));
-		}
-
-		/* No negative damage; change verb if no damage done */
-		if (dmg <= 0) {
-			dmg = 0;
-			msg_type = MSG_MISS;
-			my_strcpy(verb, "fail to harm", sizeof(verb));
-		}
-
-		for (unsigned i = 0; i < N_ELEMENTS(melee_hit_types); i++) {
-			const char *dmg_text = "";
-
-			if (msg_type != melee_hit_types[i].msg_type)
-				continue;
-
-			if (OPT(p, show_damage))
-				dmg_text = format(" (%d)", dmg);
-
-			if (melee_hit_types[i].text)
-				msgt(msg_type, "You %s %s%s. %s", verb, m_name, dmg_text,
-						melee_hit_types[i].text);
-			else
-				msgt(msg_type, "You %s %s%s.", verb, m_name, dmg_text);
-		}
-
-		/* Pre-damage side effects */
-		blow_side_effects(p, mon);
-
-	} else {
-		/* Handle unarmed melee.
-		 * Only Wrestlers can get critical hits - the chance depends on armor weight,
-		 * level, the monster's AC.
-		 * A critical means more damage, a more emphatic message and a chance of
-		 * debuffing the monster.
-		 **/
-		const int wlev = levels_in_class(get_class_by_name("Wrestler")->cidx);
-		if (wlev) {
-			int power = py_unarmed_crit_power(p, mon->race, wlev, RANDOMISE);
-
-			/* Power is now the type of critical - 0 is not a crit and will stop here, higher levels
-			 * are increasingly rare and powerful crits.
-			 */
-			if (power) {
-				strcpy(after, "!");
-				/* Extract a verb */
-				const char *ouch = "bug";
-				switch(power) {
-					case 1:
-						ouch = one_in_(2) ? "smack" : "whack";
-						break;
-					case 2:
-						ouch = one_in_(2) ? "strike" : "slam";
-						break;
-					case 3:
-						ouch = "slug";
-						break;
-					case 4:
-						ouch = "pound";
-						break;
-					default:
-						ouch = "hammer";
-						break;
-				}
-				/* Produce an increased damage */
-				dmg = ((2 + power) * dmg) / 2;
-				/* Add statuses: stun, etc. on critical unarmed melee hits */
-				if ((wlev) && (!obj)) {
-					if (randint0(power + 4) < power) {
-						if (mon_inc_timed(mon, MON_TMD_HOLD, 2 + randint0(power + 2), MON_TMD_FLG_NOMESSAGE)) {
-							switch(randint0(4)) {
+				/* Power is now the type of critical - 0 is not a crit and will stop here, higher levels
+				 * are increasingly rare and powerful crits.
+				 */
+				if (power) {
+					strcpy(after, "!");
+					/* Extract a verb */
+					const char *ouch = "bug";
+					switch(power) {
+						case 1:
+							ouch = one_in_(2) ? "smack" : "whack";
+							break;
+						case 2:
+							ouch = one_in_(2) ? "strike" : "slam";
+							break;
+						case 3:
+							ouch = "slug";
+							break;
+						case 4:
+							ouch = "pound";
+							break;
+						default:
+							ouch = "hammer";
+							break;
+					}
+					/* Produce an increased damage */
+					dmg = ((2 + power) * dmg) / 2;
+					/* Add statuses: stun, etc. on critical unarmed melee hits */
+					if ((wlev) && (!obj)) {
+						if (randint0(power + 4) < power) {
+							if (mon_inc_timed(mon, MON_TMD_HOLD, 2 + randint0(power + 2), MON_TMD_FLG_NOMESSAGE)) {
+								switch(randint0(4)) {
+									case 0:
+										ouch = "hold down";
+										break;
+									case 1:
+										ouch = "pin down";
+										break;
+									case 2:
+										ouch = "immobilize";
+										break;
+									case 3:
+										ouch = "knock out";
+										break;
+								}
+							}
+						}
+						else if (randint0(power + 3) < power) {
+							if (mon_inc_timed(mon, MON_TMD_SLOW, 2 + randint0(power + 3), MON_TMD_FLG_NOMESSAGE)) {
+								strcpy(after, ". ");
+								bool visible = monster_is_visible(mon);
+								monster_desc(after + 2, sizeof(after) - 2, mon, MDESC_CAPITAL | MDESC_HIDE | (visible ? MDESC_PRO_VIS : MDESC_PRO_HID));
+								strcat(after, " is slowed!");
+							}
+						}
+						else if (randint0(power + 2) < power) {
+							mon_inc_timed(mon, MON_TMD_STUN, 2 + randint0(power + 4), MON_TMD_FLG_NOMESSAGE);
+							switch(randint0(2)) {
 								case 0:
-									ouch = "hold down";
+									ouch = "stun";
 									break;
 								case 1:
-									ouch = "pin down";
-									break;
-								case 2:
-									ouch = "immobilize";
-									break;
-								case 3:
-									ouch = "knock out";
+									strcpy(after, ". ");
+									monster_desc(after + 2, sizeof(after) - 2, mon, MDESC_CAPITAL | MDESC_HIDE);
+									strcat(after, " staggers back!");
 									break;
 							}
 						}
 					}
-					else if (randint0(power + 3) < power) {
-						if (mon_inc_timed(mon, MON_TMD_SLOW, 2 + randint0(power + 3), MON_TMD_FLG_NOMESSAGE)) {
-							strcpy(after, ". ");
-							bool visible = monster_is_visible(mon);
-							monster_desc(after + 2, sizeof(after) - 2, mon, MDESC_CAPITAL | MDESC_HIDE | (visible ? MDESC_PRO_VIS : MDESC_PRO_HID));
-							strcat(after, " is slowed!");
-						}
-					}
-					else if (randint0(power + 2) < power) {
-						mon_inc_timed(mon, MON_TMD_STUN, 2 + randint0(power + 4), MON_TMD_FLG_NOMESSAGE);
-						switch(randint0(2)) {
-							case 0:
-								ouch = "stun";
-								break;
-							case 1:
-								strcpy(after, ". ");
-								monster_desc(after + 2, sizeof(after) - 2, mon, MDESC_CAPITAL | MDESC_HIDE);
-								strcat(after, " staggers back!");
-								break;
-						}
-					}
+					my_strcpy(verb, ouch, sizeof(verb));
 				}
-				my_strcpy(verb, ouch, sizeof(verb));
 			}
 		}
+	} else {
+		dmg = o_melee_damage(p, mon, obj, b, s, &msg_type, deflate);
 	}
+
+	/* Splash damage and earthquakes */
+	splash = (weight * dmg) / 100;
+	if (player_of_has(p, OF_IMPACT) && dmg > 50) {
+		do_quake = true;
+		equip_learn_flag(p, OF_IMPACT);
+	}
+
+	/* Learn by use */
+	equip_learn_on_melee_attack(p);
+	learn_brand_slay_from_melee(p, obj, mon);
+
+	/* Apply the player damage bonuses */
+	if (!OPT(p, birth_percent_damage)) {
+		dmg += player_damage_bonus(&p->state);
+	}
+
+	/* Substitute shape-specific blows for shapechanged players */
+	if (player_is_shapechanged(p)) {
+		int choice = randint0(p->shape->num_blows);
+		struct player_blow *blow = p->shape->blows;
+		while (choice--) {
+			blow = blow->next;
+		}
+		my_strcpy(verb, blow->name, sizeof(verb));
+	}
+
+	/* No negative damage; change verb if no damage done */
+	if (dmg <= 0) {
+		dmg = 0;
+		msg_type = MSG_MISS;
+		my_strcpy(verb, "fail to harm", sizeof(verb));
+	}
+
+	for (unsigned i = 0; i < N_ELEMENTS(melee_hit_types); i++) {
+		const char *dmg_text = "";
+
+		if (msg_type != melee_hit_types[i].msg_type)
+			continue;
+
+		if (OPT(p, show_damage))
+			dmg_text = format(" (%d)", dmg);
+
+		if (melee_hit_types[i].text)
+			msgt(msg_type, "You %s %s%s. %s", verb, m_name, dmg_text,
+					melee_hit_types[i].text);
+		else
+			msgt(msg_type, "You %s %s%s.", verb, m_name, dmg_text);
+	}
+
+	/* Pre-damage side effects */
+	blow_side_effects(p, mon);
 
 	/* Learn by use */
 	equip_learn_on_melee_attack(p);
