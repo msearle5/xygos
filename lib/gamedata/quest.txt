@@ -126,7 +126,6 @@ level:5
 race:Slick
 desc:Slick is a small-time gangster who considers himself to be boss of the Stores. Getting rid of him would make the town a safer place.
 store:Stores
-intro:Foo
 number:1
 flags:guardian
 
@@ -135,7 +134,6 @@ level:15
 race:Icky Sticky Dinosaur
 desc:There's something nasty in the sewer. Besides poop, that is. It's icky, it's sticky and it's got to be stopped!
 store:Sewers
-intro:Foo
 number:1
 flags:guardian
 
@@ -144,7 +142,6 @@ level:30
 race:Miniac, the Crusher
 desc:Miniac, the Mining Intelligent Autonomous Control has turned out to be a maniac and guess who has to stop it.
 store:Mine
-intro:Foo
 number:1
 flags:guardian
 
@@ -153,7 +150,6 @@ level:40
 race:Primordial Grue
 desc:In the darkest corner of the deepest cave, the Primordial Grue waits. Are you scared yet?
 store:Caverns
-intro:Foo
 number:1
 flags:guardian
 
@@ -162,7 +158,6 @@ level:50
 race:The Dark Helmet
 desc:The Dark Helmet's goons harass the town, and he has ambitions of extending his grasp further. Are you up to putting him down?
 store:Volcano
-intro:Foo
 number:1
 flags:guardian
 
@@ -178,7 +173,6 @@ level:25
 race:Holo-Triax
 desc:Triax's hologram stands in the way of your descent.
 store:Fortress
-intro:Foo
 number:1
 flags:essential
 
@@ -187,7 +181,6 @@ level:50
 race:Impy
 desc:Triax has a pet T-Rex. With cybernetically enhanced ferocity, natch. Unfortunately, it's in your way...
 store:Fortress
-intro:Foo
 number:1
 flags:essential
 
@@ -196,7 +189,6 @@ level:75
 race:Mecha-Triax
 desc:Triax has a formidable robot bodyguard which must be destroyed to progress.
 store:Fortress
-intro:Foo
 number:1
 flags:essential
 

@@ -2593,37 +2593,42 @@ static void do_cmd_knowledge_quests(const char *name, int row)
 	int *tasks;
 	int task_max = z_info->quest_max;
 	int count = 0;
-	int i;
+	int i, j;
 
 	tasks = mem_zalloc(task_max * sizeof(int));
 
-	for (i = 0; i < task_max; i++) {
-		/* Ignore inactive quests */
-		if (!quest_is_aware(i))
-			continue;
+	for(j = 3; j >= 0; j--) {
+		for (i = 0; i < task_max; i++) {
+			/* Ignore inactive quests */
+			if (!quest_is_aware(i))
+				continue;
 
-		size_t n_lines, d_lines;
+			if (quest_var(i) != j)
+				continue;
 
-		/* Count lines, and add one entry per line */
-		{
-			size_t *line_starts = NULL, *line_lengths = NULL;
-			n_lines = textblock_calculate_lines(display_quest_name_tb(i), &line_starts, &line_lengths, 17);
-			mem_free(line_starts);
-			mem_free(line_lengths);
+			size_t n_lines, d_lines;
+
+			/* Count lines, and add one entry per line */
+			{
+				size_t *line_starts = NULL, *line_lengths = NULL;
+				n_lines = textblock_calculate_lines(display_quest_name_tb(i), &line_starts, &line_lengths, 17);
+				mem_free(line_starts);
+				mem_free(line_lengths);
+			}
+
+			/* Display one line of the description */
+			int x, y;
+			Term_get_size(&x, &y);
+			{
+				size_t *line_starts = NULL, *line_lengths = NULL;
+				d_lines = textblock_calculate_lines(display_quest_descr_tb(i), &line_starts, &line_lengths, x - 30);
+				mem_free(line_starts);
+				mem_free(line_lengths);
+			}
+
+			for(int j=0; j<(int)(MAX(n_lines, d_lines)); j++)
+				tasks[count++] = i + (j << 16);
 		}
-
-		/* Display one line of the description */
-		int x, y;
-		Term_get_size(&x, &y);
-		{
-			size_t *line_starts = NULL, *line_lengths = NULL;
-			d_lines = textblock_calculate_lines(display_quest_descr_tb(i), &line_starts, &line_lengths, x - 30);
-			mem_free(line_starts);
-			mem_free(line_lengths);
-		}
-
-		for(int j=0; j<(int)(MAX(n_lines, d_lines)); j++)
-			tasks[count++] = i + (j << 16);
 	}
 
 	display_knowledge("Tasks", tasks, count, task_var_f, task_f, "Description");
