@@ -29,6 +29,7 @@
 #include "player-spell.h"
 #include "player-timed.h"
 #include "player-util.h"
+#include "randname.h"
 #include "z-color.h"
 #include "z-util.h"
 
@@ -501,6 +502,25 @@ byte player_hp_attr(struct player *p)
 		attr = COLOUR_RED;
 	
 	return attr;
+}
+
+/**
+ * Construct a random player name appropriate for the setting.
+ *
+ * \param buf is the buffer to contain the name.  Must have space for at
+ * least buflen characters.
+ * \param buflen is the maximum number of character that can be written to
+ * buf.
+ * \return the number of characters, excluding the terminating null, written
+ * to the buffer
+ */
+size_t player_random_name(char *buf, size_t buflen)
+{
+	size_t result = randname_make(RANDNAME_TOLKIEN, 4, 8, buf, buflen,
+		name_sections);
+
+	my_strcap(buf);
+	return result;
 }
 
 /**

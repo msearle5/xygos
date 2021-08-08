@@ -723,6 +723,7 @@ void player_flags(struct player *p, bitflag f[OF_SIZE]);
 void player_flags_timed(struct player *p, bitflag f[OF_SIZE]);
 byte player_hp_attr(struct player *p);
 byte player_sp_attr(struct player *p);
+size_t player_random_name(char *buf, size_t buflen);
 void player_safe_name(char *safe, size_t safelen, const char *name, bool strip_suffix);
 void player_cleanup_members(struct player *p);
 s32b exp_to_gain(s32b level);
