@@ -408,14 +408,15 @@ static void melee_effect_elemental(melee_effect_handler_context_t *context,
  * \param amount is the amount that the timer should be increased by.
  * \param of_flag is the OF_ flag that is passed on to monster learning for
  * this effect.
- * \param attempt_save indicates if a saving throw should be attempted for
+ * \param save indicates if a saving throw should be attempted for
  * this effect.
  * \param save_msg is the message that is displayed if the saving throw is
  * successful.
+ * \param savepass indicates if the saving throw should automatically pass.
  */
 static void melee_effect_timed(melee_effect_handler_context_t *context,
 							   int type, int amount, int of_flag, bool save,
-							   const char *save_msg)
+							   const char *save_msg, bool savepass)
 {
 	/* Take damage */
 	if (monster_damage_target(context, false)) return;
@@ -451,7 +452,7 @@ static void melee_effect_timed(melee_effect_handler_context_t *context,
 			mon_inc_timed(context->t_mon, mon_tmd_effect, amount, 0);
 			context->obvious = true;
 		}
-	} else if (save && randint0(100) < context->p->state.skills[SKILL_SAVE]) {
+	} else if (save && (savepass || (randint0(100) < context->p->state.skills[SKILL_SAVE]))) {
 		/* Attempt a saving throw if desired. */
 		if (save_msg != NULL) {
 			msg("%s", save_msg);
@@ -955,7 +956,7 @@ static void melee_effect_handler_COLD(melee_effect_handler_context_t *context)
 static void melee_effect_handler_LIGHT(melee_effect_handler_context_t *context)
 {
 	melee_effect_elemental(context, PROJ_LIGHT, true);
-	melee_effect_timed(context, TMD_BLIND, 5 + randint1(context->rlev), OF_PROT_BLIND, false, NULL);
+	melee_effect_timed(context, TMD_BLIND, 5 + randint1(context->rlev), OF_PROT_BLIND, false, NULL, false);
 }
 
 /**
@@ -979,7 +980,7 @@ static void melee_effect_handler_FORCE(melee_effect_handler_context_t *context)
 static void melee_effect_handler_BLIND(melee_effect_handler_context_t *context)
 {
 	melee_effect_timed(context, TMD_BLIND, 10 + randint1(context->rlev),
-					   OF_PROT_BLIND, false, NULL);
+					   OF_PROT_BLIND, false, NULL, false);
 }
 
 /**
@@ -988,7 +989,7 @@ static void melee_effect_handler_BLIND(melee_effect_handler_context_t *context)
 static void melee_effect_handler_CONFUSE(melee_effect_handler_context_t *context)
 {
 	melee_effect_timed(context, TMD_CONFUSED, 3 + randint1(context->rlev),
-					   OF_PROT_CONF, false, NULL);
+					   OF_PROT_CONF, false, NULL, false);
 }
 
 /**
@@ -997,7 +998,7 @@ static void melee_effect_handler_CONFUSE(melee_effect_handler_context_t *context
 static void melee_effect_handler_SLOW(melee_effect_handler_context_t *context)
 {
 	melee_effect_timed(context, TMD_SLOW, 3 + randint1(context->rlev),
-					   OF_FREE_ACT, false, NULL);
+					   OF_FREE_ACT, false, NULL, false);
 }
 
 /**
@@ -1006,7 +1007,7 @@ static void melee_effect_handler_SLOW(melee_effect_handler_context_t *context)
 static void melee_effect_handler_TERRIFY(melee_effect_handler_context_t *context)
 {
 	melee_effect_timed(context, TMD_AFRAID, 3 + randint1(context->rlev),
-					   OF_PROT_FEAR, true, "You stand your ground!");
+					   OF_PROT_FEAR, true, "You stand your ground!", stat_check(STAT_CHR, 18));
 }
 
 /**
@@ -1019,7 +1020,7 @@ static void melee_effect_handler_PARALYZE(melee_effect_handler_context_t *contex
 		context->damage = 1;
 
 	melee_effect_timed(context, TMD_PARALYZED, 3 + randint1(context->rlev),
-					   OF_FREE_ACT, true, "You resist the effects!");
+					   OF_FREE_ACT, true, "You resist the effects!", false);
 }
 
 /**
