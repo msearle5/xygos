@@ -301,6 +301,59 @@ static int monster_elemental_damage(melee_effect_handler_context_t *context,
 }
 
 /**
+ * When taking damage in melee (which may or may not be elemental),
+ * this checks for damage to equipment - currently only used for
+ * reactive (absorbing) armor.
+ */
+void melee_equip_damage(struct player *p, int dmg)
+{
+	for (int i = 0; i < player->body.count; i++) {
+		/* Object */
+		struct object *obj = slot_object(p, i);
+		if (obj) {
+			if (of_has(obj->flags, OF_ABSORB_HIT)) {
+				/* Small chance of reducing base AC
+				 * It's dependent on damage taken, but with a small cap
+				 * so that it doesn't become useless later in the game.
+				 **/
+				int effdmg = MIN(dmg, 10);
+				if (randint0(effdmg + (200 + (4 * obj->kind->level))) < effdmg) {
+					char oname[80];
+					char death[128];
+					object_desc(oname, sizeof(oname), obj, ODESC_BASE);
+					if (obj->ac == 0) {
+						/* BOOM */
+						msg("Your %s explodes!", oname);
+
+						/* Remove from gear and delete */
+						bool dummy;
+						struct object *boom = gear_object_for_use(player, obj, 1, true, &dummy);
+						if (boom->known)
+							object_delete(&boom->known);
+						object_delete(&boom);
+
+						/* Explosion effect */
+						effect_simple(EF_SPHERE, source_player(), "4d10", ELEM_SHARD, 4, 0, 0, 0, NULL);
+						snprintf(death, sizeof(death), "an exploding %s", oname);
+						take_hit(player, damroll(4, 10), death);
+					} else {
+						/* Degrade, warn you and identify */
+						obj->ac--;
+						if (obj->ac)
+							msg("Your %s recoils as it absorbs the blow.", oname);
+						else
+							msg("Your %s recoils violently as it absorbs the blow.", oname);
+						object_know_all(obj);
+					}
+					/* Either way, don't hit more than one object at once */
+					return;
+				}
+			}
+		}
+	}
+}
+
+/**
  * Deal the actual melee damage from a monster to a target player or monster
  *
  * This function is used in handlers where there is no further processing of
@@ -313,6 +366,7 @@ static bool monster_damage_target(melee_effect_handler_context_t *context,
 	if (context->p) {
 		take_hit(context->p, context->damage, context->ddesc);
 		if (context->p->is_dead) return true;
+		melee_equip_damage(context->p, context->damage);
 	} else {
 		bool dead = false;
 		dead = mon_take_nonplayer_hit(context->damage, context->t_mon,

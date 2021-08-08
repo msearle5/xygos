@@ -1178,3 +1178,12 @@ flags:SUST_STR | SUST_CON | SUST_DEX | HOLD_LIFE
 flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 flags:RAND_HI_RES
 values:RES_DISEN[1]
+
+name:<reactive
+info:500:7
+alloc:50:1 to 80
+combat:0:0:15+d10M15
+type:shield
+type:hard armor
+flags:ABSORB_HIT
+values:DAM_RED[d3M3]

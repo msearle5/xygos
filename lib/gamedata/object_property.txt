@@ -951,3 +951,12 @@ name:magnetic
 type:flag
 code:MAGNETIC
 power:-8
+
+name:reactive
+type:flag
+subtype:bad
+id-type:on wield
+code:ABSORB_HIT
+power:-4
+bindui:reactive_ui_compact_0:0
+desc:Absorbs damage, damaging and eventually destroyed
