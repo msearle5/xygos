@@ -1879,7 +1879,8 @@ bool obj_cyber_can_takeoff(const struct object *obj)
 /* Can only put on wieldable items */
 bool obj_can_wear(const struct object *obj)
 {
-	return ((wield_slot(obj) >= 0) && (!(of_has(obj->flags, OF_NO_EQUIP))));
+	int slot = wield_slot(obj);
+	return ((slot >= 0) && (slot < player->body.count) && (!(of_has(obj->flags, OF_NO_EQUIP))));
 }
 
 /* Can only fire an item with the right tval */
