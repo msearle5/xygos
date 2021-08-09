@@ -188,23 +188,23 @@ static void icon_add_autoinscription(struct object *obj, int i)
 /**
  * Put a icon autoinscription on all available objects
  */
-void icon_autoinscribe(int i)
+void icon_autoinscribe(struct player *p, int i)
 {
 	struct object *obj;
 
 	/* Check the player knows the icon */
-	if (!player_knows_icon(player, i)) {
+	if (!player_knows_icon(p, i)) {
 		return;
 	}
 
 	/* Autoinscribe each object on the ground */
 	if (cave)
-		for (obj = square_object(cave, player->grid); obj; obj = obj->next)
+		for (obj = square_object(cave, p->grid); obj; obj = obj->next)
 			if (object_has_icon(obj, i))
 				icon_add_autoinscription(obj, i);
 
 	/* Autoinscribe each object in the inventory */
-	for (obj = player->gear; obj; obj = obj->next)
+	for (obj = p->gear; obj; obj = obj->next)
 		if (object_has_icon(obj, i))
 			icon_add_autoinscription(obj, i);
 }
@@ -212,12 +212,12 @@ void icon_autoinscribe(int i)
 /**
  * Put all appropriate icon autoinscriptions on an object
  */
-static void icons_autoinscribe(struct object *obj)
+static void icons_autoinscribe(struct player *p, struct object *obj)
 {
 	int i, icon_max = max_icons();
 
 	for (i = 0; i < icon_max; i++)
-		if (object_has_icon(obj, i) && player_knows_icon(player, i))
+		if (object_has_icon(obj, i) && player_knows_icon(p, i))
 			icon_add_autoinscription(obj, i);
 }
 
@@ -237,7 +237,7 @@ const char *get_autoinscription(struct object_kind *kind, bool aware)
 /**
  * Put an autoinscription on an object
  */
-int apply_autoinscription(struct object *obj)
+int apply_autoinscription(struct player *p, struct object *obj)
 {
 	char o_name[80];
 	bool aware = obj->kind->aware;
@@ -249,7 +249,7 @@ int apply_autoinscription(struct object *obj)
 		obj->note = 0;
 
 	/* Make icon autoinscription go first, for now */
-	icons_autoinscribe(obj);
+	icons_autoinscribe(p, obj);
 
 	/* No note - don't inscribe */
 	if (!note)
@@ -260,7 +260,7 @@ int apply_autoinscription(struct object *obj)
 		return 0;
 
 	/* Don't inscribe unless the player is carrying it */
-	if (!object_is_carried(player, obj))
+	if (!object_is_carried(p, obj))
 		return 0;
 
 	/* Don't inscribe if ignored */
@@ -330,25 +330,25 @@ int add_autoinscription(s16b kind, const char *inscription, bool aware)
 /**
  * Put an autoinscription on all objects on the floor beneath the player
  */
-void autoinscribe_ground(void)
+void autoinscribe_ground(struct player *p)
 {
 	struct object *obj;
 
 	/* Autoinscribe each object in the pile */
-	for (obj = square_object(cave, player->grid); obj; obj = obj->next)
-		apply_autoinscription(obj);
+	for (obj = square_object(cave, p->grid); obj; obj = obj->next)
+		apply_autoinscription(p, obj);
 }
 
 /**
  * Put an autoinscription on all the player's carried objects
  */
-void autoinscribe_pack(void)
+void autoinscribe_pack(struct player *p)
 {
 	struct object *obj;
 
 	/* Autoinscribe each object in the inventory */
-	for (obj = player->gear; obj; obj = obj->next)
-		apply_autoinscription(obj);
+	for (obj = p->gear; obj; obj = obj->next)
+		apply_autoinscription(p, obj);
 }
 
 /**
