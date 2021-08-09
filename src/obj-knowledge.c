@@ -1247,7 +1247,7 @@ void update_player_object_knowledge(struct player *p)
 
 	/* Fault objects */
 	for (i = 1; i < z_info->fault_max; i++) {
-		player_know_object(player, faults[i].obj);
+		player_know_object(p, faults[i].obj);
 	}
 
 	/* Update */
