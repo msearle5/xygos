@@ -13,14 +13,13 @@
 
 # 'chart' lines give the number of the current chart, the number of the chart
 # that will be used next (or 0 if the last chart), and a cutoff for choosing
-# the current line.  If the first field in two chart lines is the same, the
-# second should be as well, to maintain consistent choices and end up with
-# something readable.
+# the current line.
 
 # 'phrase' lines are the actual chart entries which make up the history.
 
 # Chart progression by race:
-#   Human         -->  1 -->  2 -->  3 --> 50 --> 51 --> 52 --> 53
+#   Human         1 .. 3, 50 .. 53
+#   Bogon         8 .. 10, 4 .. 7
 #   Android       28 .. 36
 #   Time-Lord     37 .. 40
 
@@ -30,44 +29,79 @@
 
 
 
-chart:1:2:20
-phrase:You are one of several children 
-chart:1:2:40
-phrase:You are the youngest child 
-chart:1:2:60
-phrase:You are the only child 
-chart:1:2:80
-phrase:You are the second child 
-chart:1:2:100
-phrase:You are the first child 
+################################################
+# BOGON
 
-chart:2:3:50
-phrase:of a Vault Dweller.  
-chart:2:3:60
-phrase:of an Outsider.  
-chart:2:3:70
-phrase:of a Space Marine.  
-chart:2:3:75
-phrase:of a Wrestler.  
-chart:2:3:77
-phrase:of a Spelunker.  
-chart:2:3:78
-phrase:of a Clown.  
-chart:2:3:83
-phrase:of a Pilot.  
-chart:2:3:90
-phrase:of an Engineer.  
-chart:2:3:95
-phrase:of a Jedi.  
-chart:2:3:100
-phrase:of a Dark Jedi.  
+chart:8:9:100
+phrase:You are 
 
-chart:3:50:20
-phrase:You are the black sheep of the family.  
-chart:3:50:80
-phrase:You are a credit to the family.  
-chart:3:50:100
-phrase:You are a well liked child.  
+chart:9:10:25
+phrase:bulky, 
+chart:9:10:50
+phrase:chunky, 
+chart:9:10:75
+phrase:warty, 
+chart:9:10:100
+phrase:goggle-eyed, 
+
+chart:10:4:25
+phrase:green-skinned, 
+chart:10:4:50
+phrase:green-grey, 
+chart:10:4:75
+phrase:greyish green, 
+chart:10:4:100
+phrase:dull grey, 
+
+chart:4:5:60
+phrase:one of a large brood 
+chart:4:5:70
+phrase:among the youngest of a brood 
+chart:4:5:80
+phrase:among the eldest of a brood 
+chart:4:5:95
+phrase:one of a small brood 
+chart:4:5:100
+phrase:the only child 
+
+chart:5:6:50
+phrase:of Bureaucrats
+chart:5:6:80
+phrase:of a Fleet Servant
+chart:5:6:90
+phrase:of a Fleet Officer
+chart:5:6:95
+phrase:of a Fleet Captain
+chart:5:6:100
+phrase:of Poets
+
+chart:6:7:100
+phrase:, and you have left home to 
+
+chart:7:0:10
+phrase:crush things.
+chart:7:0:20
+phrase:kick alien ass.
+chart:7:0:30
+phrase:stomp butts.
+chart:7:0:40
+phrase:punch faces.
+chart:7:0:50
+phrase:go on a Grand Sneer.
+chart:7:0:60
+phrase:crush lesser creatures underfoot.
+chart:7:0:70
+phrase:spread propaganda.
+chart:7:0:80
+phrase:recite poetry.
+chart:7:0:90
+phrase:incite fear, uncertainty and doubt.
+chart:7:0:100
+phrase:look for trouble.
+
+
+################################################
+# ANDROID
 
 chart:27:28:20
 phrase:You were built 
@@ -223,6 +257,10 @@ phrase:but you managed to escape.
 chart:36:30:100
 phrase:but you rebelled!
 
+
+################################################
+# TIMELORD
+
 chart:37:38:33
 phrase:Your father was 
 chart:37:38:66
@@ -262,6 +300,49 @@ chart:40:0:80
 phrase:see the galaxy.
 chart:40:0:100
 phrase:vanquish evil.
+
+
+################################################
+# HUMAN
+
+chart:1:2:20
+phrase:You are one of several children 
+chart:1:2:40
+phrase:You are the youngest child 
+chart:1:2:60
+phrase:You are the only child 
+chart:1:2:80
+phrase:You are the second child 
+chart:1:2:100
+phrase:You are the first child 
+
+chart:2:3:50
+phrase:of a Vault Dweller.  
+chart:2:3:60
+phrase:of an Outsider.  
+chart:2:3:70
+phrase:of a Space Marine.  
+chart:2:3:75
+phrase:of a Wrestler.  
+chart:2:3:77
+phrase:of a Spelunker.  
+chart:2:3:78
+phrase:of a Clown.  
+chart:2:3:83
+phrase:of a Pilot.  
+chart:2:3:90
+phrase:of an Engineer.  
+chart:2:3:95
+phrase:of a Jedi.  
+chart:2:3:100
+phrase:of a Dark Jedi.  
+
+chart:3:50:20
+phrase:You are the black sheep of the family.  
+chart:3:50:80
+phrase:You are a credit to the family.  
+chart:3:50:100
+phrase:You are a well liked child.  
 
 chart:50:51:20
 phrase:You have dark brown eyes, 

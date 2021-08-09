@@ -4,6 +4,20 @@
 
 # Note that each body record must take the form of a body-name line,
 # followed by a sequence of alternating slot-type and slot-name lines.
+# The default (Humanoid) body plan must be last.
+
+body:NoHandsNoFeet
+slot:WEAPON:weapon
+slot:GUN:shooting
+slot:LIGHT:light
+slot:BODY_ARMOR:body
+slot:CLOAK:back
+slot:BELT:belt
+slot:SHIELD:arm
+slot:HAT:head
+slot:LEGS:legs
+slot:ARMS:arms
+slot:CHIP:brain
 
 body:HumanoidNoImplants
 slot:WEAPON:weapon
