@@ -180,7 +180,7 @@ spell:Bore:32:25:100:4:2d6:4d10
 seffect:CREATE_STAIRS
 
 # "Arrogant" would be another word.
-# It may need to be buffed to balance Aggravation. Maybe bigger breaths (dice & sides) at high level?
+# It may need to be buffed to balance Aggravation. Maybe bigger breaths (dice & sides) at high level? Command?
 personality:Shouty
 skill-disarm-phys:-5
 skill-disarm-magic:-5
@@ -455,5 +455,58 @@ seffect:TIME_LOOP
 sdesc:Put history into a strange loop, protected from external influences. This prevents the danger level from increasing for 12 days. This enormous effort comes at the cost of a regeneration, although should you fail to bind the loop you will not lose the regeneration.
 
 # Blink ('warp'), a tp+speed, tp level, gain energy, movement speed, alter-reality?
+
+name:Bogon
+body:NoHandsNoFeet
+exts:Mutant,Cyborg,Super,None
+stats:3:-1:-1:-1:5:-4:-1
+talents:-1:-1
+skill-disarm-phys:10
+skill-disarm-magic:-10
+skill-device:-5
+skill-save:-5
+skill-stealth:-10
+skill-search:0
+skill-melee:30
+skill-martial:30
+skill-shoot:0
+skill-throw:10
+skill-dig:5
+hitdie:350
+exp:130
+infravision:0
+history:8
+age:28:20
+height:85:3
+weight:3100
+weightmod:450
+obj-flags:REGEN | PROT_CONF | SUST_STR | SUST_CON
+desc:Bogons are roughly humanoid aliens (gloves and shoes won't fit, though). They have a reputation for being not that bright, which is not entirely fair (it's more that they don't accept change readily, which is annoying but makes them difficult to trick or confuse), and for being easily angered (which is hard to argue with - a typical bogon engineer has more combat experience than a human soldier).
+
+book:[Bogon]
+spell:Berserk:1:70:1:4:0:3d30
+seffect:CURE:AFRAID
+seffect:TIMED_INC:SHERO
+sdice:$B
+sexpr:B:PLAYER_LEVEL:- 1 * 3 / 10 + 6
+sdesc:Fly into a violent rage. You will be fearless and more effective in melee combat at the cost of opening yourself up more to attack and having trouble doing anything requiring more thinking than "hit it until it stops moving".
+
+spell:Chant:12:30:10:4:0:2d8
+seffect:PROJECT_LOS_AWARE:MON_CONF
+sdice:$B
+sexpr:B:PLAYER_LEVEL:/ 3 - 1
+sdesc:A traditional poetic chant, said to confuse lesser minds.
+
+spell:Recite:22:30:20:4:0:2d10
+seffect:PROJECT_LOS_AWARE:MON_SLOW
+sdice:$B
+sexpr:B:PLAYER_LEVEL:/ 2 - 7
+sdesc:Recite a formula of verses known to slow the disorientated listeners to a crawl.
+
+spell:Declaim:28:30:25:4:0:2d12
+seffect:PROJECT_LOS_AWARE:MON_HOLD
+sdice:$B
+sexpr:B:PLAYER_LEVEL:* 2 / 3 - 12
+sdesc:A formal declamation that few can resist stopping in their tracks, hands over ears, for.
 
 
