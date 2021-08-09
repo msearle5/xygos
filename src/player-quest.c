@@ -1709,7 +1709,7 @@ bool quest_is_rewardable(const struct quest *q)
 		struct object_kind *security = lookup_kind(TV_CARD, lookup_sval(TV_CARD, "security"));
 		int *locs = quest_locate_kind(security);
 		if (locs[LOCATION_PLAYER] != 1) {
-			msg("Great news that you found it, but you'll to need to fetch it back.");
+			msg("Great news that you found it, but you'll need to fetch it back.");
 			return false;
 		} else {
 			quest_remove_kind(security);

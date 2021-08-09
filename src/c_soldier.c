@@ -16,6 +16,8 @@
 #include "obj-knowledge.h"
 #include "obj-make.h"
 #include "obj-pile.h"
+#include "obj-tval.h"
+#include "obj-util.h"
 #include "randname.h"
 #include "savefile.h"
 #include "store.h"
@@ -64,7 +66,7 @@ static void soldier_loadsave(bool complete) {
 	}
 }
 
-/* Start a new character as as Soldier - after talents setup (so not for selection of subclass) */
+/* Start a new character as a Soldier - after talents setup (so not for selection of subclass) */
 static void soldier_init(void)
 {
 	/* Initialise saved state */
@@ -151,7 +153,9 @@ static void soldier_building(int store, bool entering, bool *do_default)
 			int tval = 0;
 			int num = 0;
 			const char *name = NULL;
+			const char *name2 = NULL;
 			struct object *obj = NULL;
+			struct object *obj2 = NULL;
 			s32b value;
 			int bonus = 0;
 
@@ -169,10 +173,12 @@ static void soldier_building(int store, bool entering, bool *do_default)
 					break;
 				case 2:
 					lev = 11; name = "combat boots";								/* Lance-Corporal */
+					name2 = "tactical flashlight";
 					bonus = 250;
 					break;
 				case 3:
 					lev = 18; tval = TV_GLOVES;
+					name2 = "tin hat";
 					bonus = 500;
 					break;
 				case 4:
@@ -228,12 +234,24 @@ static void soldier_building(int store, bool entering, bool *do_default)
 
 			msg("You receive a promotion bonus of $%d.", bonus);
 
-			/* Build it */
-			obj = make_object_named(cave, lev, good, great, extra, &value, tval, name);
-			if (!obj) {
-				message = "Seems we can't find your item.";
-				obj = make_object_named(cave, lev, good, great, extra, &value, 0, NULL);
-			}
+			/* Build it. Avoid faulty objects. */
+			do {
+				if (obj)
+					object_delete(&obj);
+				obj = make_object_named(cave, lev, good, great, extra, &value, tval, name);
+				if (!obj) {
+					message = "Seems we can't find your item.";
+					obj = make_object_named(cave, lev, good, great, extra, &value, 0, NULL);
+				}
+				/* If it's something I can't use, try again */
+				if (obj && (tval_is_armor(obj)) && (!obj_can_wear(obj))) {
+					obj2 = make_object_named(cave, lev, good, great, extra, &value, 0, name2);
+					if (obj2) {
+						object_delete(&obj);
+						obj = obj2;
+					}
+				}
+			} while (obj && obj->faults);
 
 			/* Message */
 			msg(message);
