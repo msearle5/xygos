@@ -800,9 +800,19 @@ void copy_artifact_data(struct object *obj, const struct artifact *art)
 
 static double make_artifact_probs(double *prob, int lev, int tval, bool max)
 {
+	int i;
 	double total = 0.0;
-	for (int i = 0; i < z_info->a_max; i++) {
-		struct artifact *art = &a_info[i];
+
+	/* No artifacts, do nothing */
+	if (OPT(player, birth_no_artifacts)) return 0.0;
+
+	/* No artifacts in the town */
+	if (!player->depth) return 0.0;
+
+	/* Check the special artifacts */
+	for (i = 0; i < z_info->a_max; ++i) {
+		const struct artifact *art = &a_info[i];
+		struct object *new_obj;
 		struct object_kind *kind = lookup_kind(art->tval, art->sval);
 
 		/* No chance by default */
@@ -818,7 +828,7 @@ static double make_artifact_probs(double *prob, int lev, int tval, bool max)
 		if (kf_has(kind->kind_flags, KF_QUEST_ART)) continue;
 
 		/* Cannot make an artifact twice */
-		if (art->created) continue;
+		if (is_artifact_created(art)) continue;
 
 		/* Must have the correct tval, if one is provided */
 		if ((tval != 0) && (art->tval != tval)) continue;
@@ -848,6 +858,19 @@ static double make_artifact_probs(double *prob, int lev, int tval, bool max)
 			prob[i] /= (art->alloc_max + 1) - art->alloc_min;
 		}
 
+		/* Assign the template */
+		new_obj = object_new();
+		object_prep(new_obj, kind, art->alloc_min, RANDOMISE);
+
+		/* Mark the item as an artifact */
+		new_obj->artifact = art;
+
+		/* Copy across all the data from the artifact struct */
+		copy_artifact_data(new_obj, art);
+
+		/* Mark the artifact as "created" */
+		mark_artifact_created(art, true);
+
 		total += prob[i];
 	}
 	return total;
@@ -871,12 +894,6 @@ struct object *make_artifact(int lev, int tval)
 {
 	static double *prob;
 	static double total;
-
-	if (!prob)
-		prob = mem_zalloc(z_info->a_max * sizeof(double));
-
-	wiz_stats_prob = prob;
-
 	struct object *obj = NULL;
 
 	/* Make sure birth no artifacts isn't set */
@@ -884,6 +901,14 @@ struct object *make_artifact(int lev, int tval)
 
 	/* No artifacts in the town */
 	if (!player->depth) return NULL;
+
+	/* Paranoia -- no "plural" artifacts */
+	if (obj->number != 1) return NULL;
+
+	if (!prob) {
+		prob = mem_zalloc(z_info->a_max * sizeof(double));
+		wiz_stats_prob = prob;
+	}
 
 	/* Check the artifact list */
 	total = make_artifact_probs(prob, lev, tval, true);
@@ -913,9 +938,9 @@ struct object *make_artifact(int lev, int tval)
 	assert(a_idx < z_info->a_max);
 
 	/* Generate the base item */
-	struct artifact *art = &a_info[a_idx];
+	const struct artifact *art = &a_info[a_idx];
 	/* The table should not contain any already existing artifacts */ 
-	assert(!(art->created));
+	assert(!(is_artifact_created(art)));
 
 	struct object_kind *kind = lookup_kind(art->tval, art->sval);
 	obj = object_new();
@@ -924,7 +949,7 @@ struct object *make_artifact(int lev, int tval)
 	/* Mark the item as an artifact */
 	obj->artifact = art;
 	copy_artifact_data(obj, obj->artifact);
-	obj->artifact->created = true;
+	mark_artifact_created(obj->artifact, true);
 
 	return obj;
 }
@@ -952,7 +977,7 @@ bool make_fake_artifact(struct object *obj, const struct artifact *artifact)
 
 	/* Create the artifact */
 	object_prep(obj, kind, 0, MAXIMISE);
-	obj->artifact = (struct artifact *)artifact;
+	obj->artifact = artifact;
 	copy_artifact_data(obj, artifact);
 
 	return (true);

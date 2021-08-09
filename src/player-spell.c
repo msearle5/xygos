@@ -198,7 +198,7 @@ void combine_book(const struct class_book *src, int *count, int *spells, int *ma
 /**
  * Collect spells from all books of a class-magic into the spells[] array.
  */
-void combine_class_books(struct class_magic *cmagic, int *count, int *spells, int *maxidx, struct class_spell **spellps)
+void combine_class_books(const struct class_magic *cmagic, int *count, int *spells, int *maxidx, struct class_spell **spellps)
 {
 	for(int i=0;i<cmagic->num_books;i++)
 		combine_book(&cmagic->books[i], count, spells, maxidx, spellps);

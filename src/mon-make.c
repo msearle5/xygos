@@ -390,7 +390,7 @@ void delete_monster_idx(int m_idx)
 		 * monster's drop) - this will cause unintended behaviour in preserve
 		 * off mode if monsters can pick up artifacts */
 		if (obj->artifact && !obj_is_known_artifact(obj)) {
-			obj->artifact->created = false;
+			mark_artifact_created(obj->artifact, false);
 		}
 
 		/* Delete the object.  Since it's in the cave's list do
@@ -606,8 +606,10 @@ void wipe_mon_list(struct chunk *c, struct player *p)
 			/* Go through all held objects and check for artifacts */
 			struct object *obj = held_obj;
 			while (obj) {
-				if (obj->artifact && !(obj->known && obj->known->artifact))
-					obj->artifact->created = false;
+				if (obj->artifact && !obj_is_known_artifact(obj)) {
+					mark_artifact_created(obj->artifact,
+						false);
+				}
 				/*
 				 * Also, remove from the cave's object list.
 				 * That way, the scan for orphaned objects
@@ -826,7 +828,7 @@ static bool mon_create_drop(struct chunk *c, struct monster *mon, byte origin)
 
 		/* Specified by artifact, by tval or by kind */
 		if ((drop->art) && (!drop->kind)) {
-			struct artifact *art = lookup_artifact_name(drop->art);
+			const struct artifact *art = lookup_artifact_name(drop->art);
 			if (art) {
 				struct object_kind *kind = lookup_kind(art->tval, art->sval);
 
@@ -836,7 +838,7 @@ static bool mon_create_drop(struct chunk *c, struct monster *mon, byte origin)
 					object_prep(obj, kind, 100, RANDOMISE);
 					obj->artifact = art;
 					copy_artifact_data(obj, obj->artifact);
-					obj->artifact->created = true;
+					mark_artifact_created(obj->artifact, true);
 
 					/* Set origin details */
 					obj->origin = origin;
@@ -897,7 +899,7 @@ static bool mon_create_drop(struct chunk *c, struct monster *mon, byte origin)
 			any = true;
 		} else {
 			if (obj->artifact) {
-				obj->artifact->created = false;
+				mark_artifact_created(obj->artifact, false);
 			}
 			object_wipe(obj);
 			mem_free(obj);

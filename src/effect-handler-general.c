@@ -4943,7 +4943,7 @@ bool effect_handler_ARTIFACT_CREATION(effect_handler_context_t *context)
 		return false;
 
 	/* Randomize that artifact */
-	struct artifact *art = lookup_artifact_name(player->artifact);
+	struct artifact *art = (struct artifact *)lookup_artifact_name(player->artifact);
 	assert(art);
 	if (!new_random_artifact(obj, art, player->lev * 10)) {
 		msg("It fails to take hold on such an item.");
@@ -4952,7 +4952,7 @@ bool effect_handler_ARTIFACT_CREATION(effect_handler_context_t *context)
 
 	/* The previous item is no longer an artifact */
 	struct location loc;
-	struct object *previous = locate_object(object_is_artifact, art, &loc);
+	struct object *previous = locate_object(object_is_artifact, (void *)art, &loc);
 	if (previous) {
 		char p_name[80];
 		const char *fall = NULL;
@@ -5004,7 +5004,7 @@ bool effect_handler_ARTIFACT_CREATION(effect_handler_context_t *context)
 
 	if (art->name)
 		mem_free(art->name);
-	art->name = string_make(isupper(name[0]) ? quoted : name);
+	((struct artifact *)(art))->name = string_make(isupper(name[0]) ? quoted : name);
 	player->artifact = string_make(art->name);
 
 	/* Something happened */

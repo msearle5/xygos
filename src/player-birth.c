@@ -508,9 +508,8 @@ void player_init(struct player *p)
 
 	/* Start with no artifacts made yet */
 	for (i = 0; z_info && i < z_info->a_max; i++) {
-		struct artifact *art = &a_info[i];
-		art->created = false;
-		art->seen = false;
+		mark_artifact_created(&a_info[i], false);
+		mark_artifact_seen(&a_info[i], false);
 	}
 
 	/* Start with no quests */
@@ -702,7 +701,7 @@ void add_start_items(struct player *p, const struct start_item *si, bool skip, b
 			object_prep(obj, kind, si->artifact->alloc_min, RANDOMISE);
 			obj->artifact = si->artifact;
 			copy_artifact_data(obj, obj->artifact);
-			obj->artifact->created = true;
+			mark_artifact_created(obj->artifact, true);
 		}
 		else {
 			object_prep(obj, kind, player->max_depth, RANDOMISE);

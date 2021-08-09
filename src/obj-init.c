@@ -3056,6 +3056,7 @@ static errr finish_parse_artifact(struct parser *p) {
 
 	/* Allocate the direct access list and copy the data to it */
 	a_info = mem_zalloc((z_info->a_max + 2 + z_info->rand_art) * sizeof(*a));
+	aup_info = mem_zalloc((z_info->a_max + 2 + z_info->rand_art) * sizeof(*aup_info));
 	aidx = z_info->a_max;
 	for (a = parser_priv(p); a; a = n, aidx--) {
 		assert(aidx > 0);
@@ -3063,12 +3064,11 @@ static errr finish_parse_artifact(struct parser *p) {
 		memcpy(&a_info[aidx], a, sizeof(*a));
 		a_info[aidx].aidx = aidx;
 		n = a->next;
-		if (aidx < z_info->a_max)
-			a_info[aidx].next = &a_info[aidx + 1];
-		else
-			a_info[aidx].next = NULL;
-
+		a_info[aidx].next = (aidx < z_info->a_max) ?
+			&a_info[aidx + 1] : NULL;
 		mem_free(a);
+
+		aup_info[aidx].aidx = aidx;
 	}
 	z_info->a_max++;
 	z_info->a_base = z_info->a_max;
@@ -3100,6 +3100,7 @@ static void cleanup_artifact(void)
 	}
 	mem_free(a_info);
 	a_info = NULL;
+	mem_free(aup_info);
 }
 
 struct file_parser artifact_parser = {
@@ -3133,6 +3134,7 @@ static errr finish_parse_randart(struct parser *p) {
 
 	/* Allocate the direct access list and copy the data to it */
 	a_info = mem_zalloc((z_info->a_max + 2 + z_info->rand_art) * sizeof(*a));
+	aup_info = mem_zalloc((z_info->a_max + 2 + z_info->rand_art) * sizeof(*aup_info));
 	aidx = z_info->a_max;
 	for (a = parser_priv(p); a; a = n, aidx--) {
 		assert(aidx > 0);
@@ -3140,12 +3142,11 @@ static errr finish_parse_randart(struct parser *p) {
 		memcpy(&a_info[aidx], a, sizeof(*a));
 		a_info[aidx].aidx = aidx;
 		n = a->next;
-		if (aidx < z_info->a_max)
-			a_info[aidx].next = &a_info[aidx + 1];
-		else
-			a_info[aidx].next = NULL;
-
+		a_info[aidx].next = (aidx < z_info->a_max) ?
+			&a_info[aidx + 1] : NULL;
 		mem_free(a);
+
+		aup_info[aidx].aidx = aidx;
 	}
 	z_info->a_max += 1;
 

@@ -106,7 +106,7 @@ static void get_art_name(char *buf, int max, int a_idx)
 {
 	struct object *obj, *known_obj;
 	struct object_kind *kind;
-	struct artifact *art = &a_info[a_idx];
+	const struct artifact *art = &a_info[a_idx];
 
 	/* Get object */
 	obj = object_new();
@@ -264,7 +264,7 @@ static bool wiz_create_item_action(struct menu *m, const ui_event *e, int oid, b
 	if (choose_artifact) {
 		/* ...We have to search the whole artifact list. */
 		for (num = 0, i = 1; (num < 60) && (i < z_info->a_max); i++) {
-			struct artifact *art = &a_info[i];
+			const struct artifact *art = &a_info[i];
 
 			if (art->tval != oid) continue;
 
@@ -354,7 +354,7 @@ void wiz_create_item(bool art, bool id)
 		if (art) {
 			int j;
 			for (j = 1; j < z_info->a_max; j++) {
-				struct artifact *art_local = &a_info[j];
+				const struct artifact *art_local = &a_info[j];
 				if (art_local->tval == i) break;
 			}
 			if (j == z_info->a_max) continue;
