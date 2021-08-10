@@ -1611,6 +1611,26 @@ static enum parser_error parse_object_graphics(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_object_blocks(struct parser *p) {
+	struct object_kind *k = parser_priv(p);
+	assert(k);
+
+	/* Read slot as a string */
+	const char *slot = parser_getsym(p, "slot");
+	if (slot == NULL)
+		return PARSE_ERROR_MISSING_FIELD;
+
+	/* Extend the block array and add the slot to the end */
+	int length = 0;
+	if (k->block)
+		while (k->block[length]) length++;
+	k->block = mem_realloc(k->block, (length + 2) * sizeof(char *));
+	k->block[length] = string_make(slot);
+	k->block[length+1] = NULL;
+
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_object_type(struct parser *p) {
 	struct object_kind *k = parser_priv(p);
 	int tval;
@@ -2076,6 +2096,7 @@ struct parser *init_parse_object(void) {
 	parser_setpriv(p, NULL);
 	parser_reg(p, "name str name", parse_object_name);
 	parser_reg(p, "type sym tval", parse_object_type);
+	parser_reg(p, "blocks sym slot", parse_object_blocks);
 	parser_reg(p, "graphics char glyph sym color", parse_object_graphics);
 	parser_reg(p, "level int level", parse_object_level);
 	parser_reg(p, "weight str weight", parse_object_weight);

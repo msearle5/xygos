@@ -252,7 +252,7 @@ struct object_kind {
 	bool *brands;
 	bool *slays;
 	int *faults;			/**< Array of fault powers */
-
+	char **block;			/**< Array of slot-block strings */
 	byte d_attr;			/**< Default object attribute */
 	wchar_t d_char;			/**< Default object character */
 
