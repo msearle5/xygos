@@ -2504,6 +2504,19 @@ armor:25:0
 desc:A semi-flexible mesh of titanium chunks with gleaming, polished outer facets that really stands out, whether you want it to or not. It's a similar idea to plastic bulletproof vests, but will stop more serious projectiles that would go straight through kevlar - if you don't mind the weight.
 material:titanium
 
+name:& Turtle Class Powerframe~
+type:hard armor
+blocks:cloak
+graphics:[:ForestGreen
+level:42
+alloc:2:30 to 127
+weight:41kg
+cost:12200
+attack:1d1:0:0
+armor:55:0
+values:STR[1+M3] | DEX[1+M5]
+desc:A powered armor for a hero on the half shell. Like other powered armors, it carries itself and so has no penalties in combat. It also augments your natural strength and agility and is confined to your torso, so the only limitation is that you can't wear outer garments over it.
+
 name:& force harness~
 type:hard armor
 graphics:[:Grey75
