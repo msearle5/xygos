@@ -1369,7 +1369,7 @@ const char *quest_get_intro(const struct quest *q) {
 /** Return true if the item is a target of the quest */
 static bool item_is_target(const struct quest *q, const struct object *obj) {
 	char oname[64];
-	object_desc(oname, sizeof(oname), obj, ODESC_SPOIL | ODESC_BASE);
+	object_desc(oname, sizeof(oname), obj, ODESC_SPOIL | ODESC_BASE, player);
 	if ((!q) || (!obj))
 		return false;
 	if (!q->target_item)

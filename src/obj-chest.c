@@ -803,7 +803,7 @@ bool do_cmd_disarm_chest(struct object *obj)
 
 	/* Get the object name */
 	char o_name[80];
-	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE, player);
 
 	/* Always have a small chance of success */
 	if (diff < 2) diff = 2;

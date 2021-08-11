@@ -695,10 +695,10 @@ void light_special_activation(struct object *obj)
 	bool was_aware = object_flavor_is_aware(obj);
 	int dir = randint1(8);
 	if (obj->kind->effect_msg)
-		print_custom_message(obj, obj->kind->effect_msg, MSG_GENERIC);
+		print_custom_message(obj, obj->kind->effect_msg, MSG_GENERIC, player);
 	object_flavor_aware(player, obj);
 	if ((!was_aware) && (object_is_carried(player, obj)))
-		print_custom_message(obj, "You realize you were carrying a {kind}!", MSG_GENERIC);
+		print_custom_message(obj, "You realize you were carrying a {kind}!", MSG_GENERIC, player);
 	struct effect effect;
 	memcpy(&effect, obj->effect, sizeof(effect));
 	effect.x = obj->grid.x;
@@ -1622,7 +1622,7 @@ void search(struct player *p)
 
 				if (obj->known->pval != obj->pval) {
 					/* Describe the object */
-					object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+					object_desc(o_name, sizeof(o_name), obj, ODESC_BASE, p);
 					msg("You have discovered a trap on the %s!", &o_name);
 					obj->known->pval = obj->pval;
 					disturb(p);

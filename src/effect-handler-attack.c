@@ -510,7 +510,8 @@ bool effect_handler_DAMAGE(effect_handler_context_t *context)
 		case SRC_OBJECT_AT: {
 			/* Must be a faulty weapon */
 			struct object *obj = context->origin.which.object;
-			object_desc(killer, sizeof(killer), obj, ODESC_PREFIX | ODESC_BASE);
+			object_desc(killer, sizeof(killer), obj,
+				ODESC_PREFIX | ODESC_BASE, player);
 			break;
 		}
 

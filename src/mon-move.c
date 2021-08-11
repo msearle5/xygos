@@ -1500,7 +1500,8 @@ static void monster_turn_grab_objects(struct chunk *c, struct monster *mon,
 		}
 
 		/* Get the object name */
-		object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX | ODESC_FULL);
+		object_desc(o_name, sizeof(o_name), obj,
+			ODESC_PREFIX | ODESC_FULL, player);
 
 		/* React to objects that hurt the monster */
 		if (react_to_slay(obj, mon))
@@ -1670,7 +1671,7 @@ static void monster_turn(struct chunk *c, struct monster *mon)
 			struct object *obj = monster_drop_one_item(mon);
 			char o_name[80];
 			if ((obj) && (monster_is_visible(mon))) {
-				object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX);
+				object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX, player);
 				msg("%s drops %s.", m_name, o_name);
 				return;
 			}

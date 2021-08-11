@@ -1929,7 +1929,7 @@ static void describe_flavor_text(textblock *tb, const struct object *obj,
 			if (kf_has(obj->kind->kind_flags, KF_MIMIC_KNOW) && (!object_flavor_is_aware(obj))) {
 				text = obj_mimic_kind(obj)->text;
 			}
-			textblock_append(tb, "%s", format_custom_message(obj, text, buf, sizeof(buf)));
+			textblock_append(tb, "%s", format_custom_message(obj, text, buf, sizeof(buf), player));
 			did_desc = true;
 		}
 
@@ -1938,7 +1938,7 @@ static void describe_flavor_text(textblock *tb, const struct object *obj,
 		for(int i=0;i<MAX_EGOS;i++) {
 			if ((ego || (obj->known->ego[i] != NULL)) && obj->ego[i] && obj->ego[i]->text) {
 				if (did_desc) textblock_append(tb, "  ");
-				textblock_append(tb, "%s\n\n", format_custom_message(obj, obj->ego[i]->text, buf, sizeof(buf)));
+				textblock_append(tb, "%s\n\n", format_custom_message(obj, obj->ego[i]->text, buf, sizeof(buf), player));
 				did_ego = true;
 			}
 		}

@@ -331,7 +331,7 @@ bool minus_ac(struct player *p)
 	/* If we can still damage the item */
 	if (obj && (obj->ac + obj->to_a > 0)) {
 		char o_name[80];
-		object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+		object_desc(o_name, sizeof(o_name), obj, ODESC_BASE, p);
 
 		/* Object resists */
 		if (obj->el_info[ELEM_ACID].flags & EL_INFO_IGNORE) {
@@ -455,16 +455,19 @@ struct object *gear_object_for_use(struct player *p, struct object *obj,
 		p->upkeep->total_weight -= (num * obj->weight);
 
 		if (message) {
-			object_desc(name, sizeof(name), obj, ODESC_PREFIX | ODESC_FULL);
+			object_desc(name, sizeof(name), obj,
+				ODESC_PREFIX | ODESC_FULL, p);
 		}
 	} else {
 		if (message) {
 			if (artifact) {
-				object_desc(name, sizeof(name), obj, ODESC_FULL | ODESC_SINGULAR);
+				object_desc(name, sizeof(name), obj,
+					ODESC_FULL | ODESC_SINGULAR, p);
 			} else {
 				/* Describe zero amount */
 				obj->number = 0;
-				object_desc(name, sizeof(name), obj, ODESC_PREFIX | ODESC_FULL);
+				object_desc(name, sizeof(name), obj,
+					ODESC_PREFIX | ODESC_FULL, p);
 				obj->number = num;
 			}
 		}
@@ -751,7 +754,8 @@ void inven_carry(struct player *p, struct object *obj, bool absorb,
 
 	if (message) {
 		char o_name[80];
-		object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX | ODESC_FULL);
+		object_desc(o_name, sizeof(o_name), obj,
+			ODESC_PREFIX | ODESC_FULL, p);
 		msg("You have %s (%c).", o_name, gear_to_label(p, obj));
 	}
 
@@ -835,7 +839,8 @@ void do_inven_wield(struct object *obj, int slot, bool verbose, bool overflow)
 		fmt = "You are wearing %s (%c).";
 
 	/* Describe the result */
-	object_desc(o_name, sizeof(o_name), wielded, ODESC_PREFIX | ODESC_FULL);
+	object_desc(o_name, sizeof(o_name), wielded,
+		ODESC_PREFIX | ODESC_FULL, player);
 
 	/* Message */
 	if (verbose)
@@ -911,7 +916,8 @@ void do_inven_takeoff(struct object *obj, bool verbose, bool overflow)
 	if (slot == player->body.count) return;
 
 	/* Describe the object */
-	object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX | ODESC_FULL);
+	object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX | ODESC_FULL,
+		player);
 
 	/* Describe removal by slot */
 	if (slot_type_is(player, slot, EQUIP_WEAPON))
@@ -1005,7 +1011,8 @@ void inven_drop(struct object *obj, int amt)
 	dropped = gear_object_for_use(player, obj, amt, false, &none_left);
 
 	/* Describe the dropped object */
-	object_desc(name, sizeof(name), dropped, ODESC_PREFIX | ODESC_FULL);
+	object_desc(name, sizeof(name), dropped, ODESC_PREFIX | ODESC_FULL,
+		player);
 
 	/* Message */
 	msg("You drop %s (%c).", name, label);
@@ -1013,17 +1020,19 @@ void inven_drop(struct object *obj, int amt)
 	/* Describe what's left */
 	if (dropped->artifact) {
 		object_desc(name, sizeof(name), dropped,
-					ODESC_FULL | ODESC_SINGULAR);
+			ODESC_FULL | ODESC_SINGULAR, player);
 		msg("You no longer have the %s (%c).", name, label);
 	} else if (none_left) {
 		/* Play silly games to get the right description */
 		int number = dropped->number;
 		dropped->number = 0;
-		object_desc(name, sizeof(name), dropped, ODESC_PREFIX | ODESC_FULL);
+		object_desc(name, sizeof(name), dropped,
+			ODESC_PREFIX | ODESC_FULL, player);
 		msg("You have %s (%c).", name, label);
 		dropped->number = number;
 	} else {
-		object_desc(name, sizeof(name), obj, ODESC_PREFIX | ODESC_FULL);
+		object_desc(name, sizeof(name), obj,
+			ODESC_PREFIX | ODESC_FULL, player);
 		msg("You have %s (%c).", name, label);
 	}
 
@@ -1220,7 +1229,8 @@ void pack_overflow(struct object *obj)
 	assert(obj != NULL);
 
 	/* Describe */
-	object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX | ODESC_FULL);
+	object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX | ODESC_FULL,
+		player);
 	if (obj->artifact) {
 		artifact = true;
 	}

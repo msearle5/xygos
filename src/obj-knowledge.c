@@ -1196,10 +1196,12 @@ void player_know_object(struct player *p, struct object *obj)
 
 		/* Describe the object if it's available */
 		if (object_is_carried(p, obj)) {
-			object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX | ODESC_FULL);
+			object_desc(o_name, sizeof(o_name), obj,
+				ODESC_PREFIX | ODESC_FULL, p);
 			msg("You have %s (%c).", o_name, gear_to_label(p, obj));
 		} else if (cave && square_holds_object(cave, p->grid, obj)) {
-			object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX | ODESC_FULL);
+			object_desc(o_name, sizeof(o_name), obj,
+				ODESC_PREFIX | ODESC_FULL, p);
 			msg("On the ground: %s.", o_name);
 		}
 	}
@@ -1630,7 +1632,7 @@ static bool object_faults_find_flags(struct player *p, struct object *obj,
 	char o_name[80];
 	bool new = false;
 
-	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE, p);
 	if (obj->faults) {
 		int i;
 		int index;
@@ -1728,7 +1730,7 @@ static bool object_faults_find_element(struct player *p, struct object *obj, int
 	char o_name[80];
 	bool new = false;
 
-	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE, p);
 	if (obj->faults) {
 		int i;
 
@@ -1881,7 +1883,7 @@ void object_learn_on_wield(struct player *p, struct object *obj)
 	char o_name[80];
 
 	assert(obj->known);
-	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE, p);
 
 	/* Check the worn flag */
 	if (obj->known->notice & OBJ_NOTICE_WORN) {
@@ -2215,7 +2217,8 @@ void equip_learn_flag(struct player *p, int flag)
 		if (of_has(obj->flags, flag)) {
 			if (!of_has(p->obj_k->flags, flag)) {
 				char o_name[80];
-				object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+				object_desc(o_name, sizeof(o_name), obj,
+					ODESC_BASE, p);
 				flag_message(flag, o_name);
 				player_learn_icon(p, icon_index(ICON_VAR_FLAG, flag), true);
 			}
@@ -2253,7 +2256,7 @@ void equip_learn_element(struct player *p, int element)
 		/* Does the object affect the player's resistance to the element? */
 		if (obj->el_info[element].res_level != 0) {
 			char o_name[80];
-			object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+			object_desc(o_name, sizeof(o_name), obj, ODESC_BASE, p);
 
 			/* Message */
 			msg("Your %s glows.", o_name);
@@ -2298,7 +2301,7 @@ void equip_learn_after_time(struct player *p)
 
 		if (!obj) continue;
 		assert(obj->known);
-		object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+		object_desc(o_name, sizeof(o_name), obj, ODESC_BASE, p);
 
 		/* Get the unknown timed flags for this object */
 		object_flags(obj, f);

@@ -237,7 +237,7 @@ static bool do_repair_object(struct object *obj, int strength, random_value valu
 		remove = true;
 	} else if (!of_has(obj->flags, OF_FRAGILE)) {
 		/* Failure to remove, object is now fragile */
-		object_desc(o_name, sizeof(o_name), obj, ODESC_FULL);
+		object_desc(o_name, sizeof(o_name), obj, ODESC_FULL, player);
 		msgt(MSG_FAULTY, "The attempt fails; your %s is now fragile.", o_name);
 		of_on(obj->flags, OF_FRAGILE);
 		player_learn_flag(player, OF_FRAGILE);
@@ -592,7 +592,7 @@ static bool enchant_spell(int num_hit, int num_dam, int num_ac, int num_brand, i
 		return false;
 
 	/* Description */
-	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE, player);
 
 	/* Describe */
 	const char *bright = "soft";
@@ -642,7 +642,6 @@ static bool brand_object(struct object *obj, const char *name)
 	int negos = 0;
 
 	if (obj) {
-
 		/* Count egos */
 		while ((obj->ego[negos]) && (negos < MAX_EGOS))
 			negos++;
@@ -663,7 +662,7 @@ static bool brand_object(struct object *obj, const char *name)
 			 */ 
 			if ((negos == 0) || (one_in_(1<<(negos * 2)))) {
 
-				object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+				object_desc(o_name, sizeof(o_name), obj, ODESC_BASE, player);
 
 				/* Sometimes things go wrong! */
 				if (one_in_(25)) {
@@ -794,7 +793,7 @@ static bool mundane_object(struct object *obj, bool silent)
 	if (!silent) {
 		if (success) {
 			char o_name[80];
-			object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+			object_desc(o_name, sizeof(o_name), obj, ODESC_BASE, player);
 			msg("There is a %s moan, and the %s shudders...", moan, o_name);
 		} else {
 			msg("There is a distant moan, but nothing more appears to happen.");
@@ -2383,7 +2382,7 @@ bool effect_handler_DISENCHANT(effect_handler_context_t *context)
 		return true;
 
 	/* Describe the object */
-	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE, player);
 
 	/* Artifacts have a 60% chance to resist */
 	if (obj->artifact && (randint0(100) < 60)) {
@@ -3682,7 +3681,7 @@ bool effect_handler_BLAST_ARMOR(effect_handler_context_t *context)
 	if (!obj) return (true);
 
 	/* Describe */
-	object_desc(o_name, sizeof(o_name), obj, ODESC_FULL);
+	object_desc(o_name, sizeof(o_name), obj, ODESC_FULL, player);
 
 	/* Attempt a saving throw for artifacts */
 	if (obj->artifact && (randint0(100) < 50)) {
@@ -3737,7 +3736,7 @@ bool effect_handler_BLAST_WEAPON(effect_handler_context_t *context)
 	if (!obj) return (true);
 
 	/* Describe */
-	object_desc(o_name, sizeof(o_name), obj, ODESC_FULL);
+	object_desc(o_name, sizeof(o_name), obj, ODESC_FULL, player);
 
 	/* Attempt a saving throw */
 	if (obj->artifact && (randint0(100) < 50)) {
@@ -4598,7 +4597,7 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 			if (!quiet) {
 				int number = chunk[pk->chunk_idx]->number;
 				chunk[pk->chunk_idx]->number = rmblocks;
-				object_desc(o_name, sizeof(o_name), chunk[pk->chunk_idx], ODESC_BASE | ODESC_PREFIX);
+				object_desc(o_name, sizeof(o_name), chunk[pk->chunk_idx], ODESC_BASE | ODESC_PREFIX, player);
 				chunk[pk->chunk_idx]->number = number;
 				msg("The printer shakes, quakes and turns %s into useless swarf.", o_name);
 			}
@@ -4968,7 +4967,7 @@ bool effect_handler_ARTIFACT_CREATION(effect_handler_context_t *context)
 				fall = "on the floor";
 		}
 		if (fall) {
-			object_desc(p_name, sizeof(p_name), previous, ODESC_BASE);
+			object_desc(p_name, sizeof(p_name), previous, ODESC_BASE, player);
 			msg("The %s %s shudders and writhes awfully.", p_name, fall);
 		}
 		mundane_object(previous, true);
@@ -4985,7 +4984,7 @@ bool effect_handler_ARTIFACT_CREATION(effect_handler_context_t *context)
 
 	/* Describe the KABOOM */
 	char o_name[80];
-	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE, player);
 	msg("%s %s radiates a searing blast of white light!", (object_is_carried(player, obj) ? "Your" : "The"), o_name);
 
 	/* Identify it */

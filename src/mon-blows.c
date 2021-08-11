@@ -199,7 +199,7 @@ static void steal_player_item(melee_effect_handler_context_t *context)
         if (obj->artifact) continue;
 
         /* Get a description */
-        object_desc(o_name, sizeof(o_name), obj, ODESC_FULL);
+        object_desc(o_name, sizeof(o_name), obj, ODESC_FULL, context->p);
 
 		/* Is it one of a stack being stolen? */
 		if (obj->number > 1)
@@ -320,7 +320,7 @@ void melee_equip_damage(struct player *p, int dmg)
 				if (randint0(effdmg + (200 + (4 * obj->kind->level))) < effdmg) {
 					char oname[80];
 					char death[128];
-					object_desc(oname, sizeof(oname), obj, ODESC_BASE);
+					object_desc(oname, sizeof(oname), obj, ODESC_BASE, player);
 					if (obj->ac == 0) {
 						/* BOOM */
 						msg("Your %s explodes!", oname);
@@ -912,11 +912,12 @@ static void do_eat_stuff(melee_effect_handler_context_t *context, bool (*edible)
 		if (!edible(obj)) continue;
 
 		if (obj->number == 1) {
-			object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+			object_desc(o_name, sizeof(o_name), obj, ODESC_BASE,
+				context->p);
 			msg("Your %s (%c) was eaten!", o_name, I2A(index));
 		} else {
 			object_desc(o_name, sizeof(o_name), obj,
-						ODESC_PREFIX | ODESC_BASE);
+				ODESC_PREFIX | ODESC_BASE, context->p);
 			msg("One of your %s (%c) was eaten!", o_name,
 				I2A(index));
 		}

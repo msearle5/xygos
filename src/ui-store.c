@@ -433,7 +433,6 @@ static void store_display_entry(struct menu *menu, int oid, bool cursor, int row
 			c_put_str(colour, format("%d", world_airline_fare(player->town, player->town->connect[oid])), row, ctx->scr_places_x[LOC_PRICE] + 4);
 		}
 	} else {
-
 		/* Get the object */
 		obj = ctx->list[oid];
 
@@ -443,7 +442,7 @@ static void store_display_entry(struct menu *menu, int oid, bool cursor, int row
 		} else {
 			desc |= ODESC_FULL | ODESC_STORE;
 		}
-		object_desc(o_name, sizeof(o_name), obj, desc);
+		object_desc(o_name, sizeof(o_name), obj, desc, player);
 
 		/* Display the object */
 		c_put_str(obj->kind->base->attr, o_name, row, col);
@@ -850,7 +849,7 @@ static bool store_sell(struct store_context *ctx)
 	if (!quest_selling_object(obj, ctx)) {
 
 		/* Get a full description */
-		object_desc(o_name, sizeof(o_name), temp_obj, ODESC_PREFIX | ODESC_FULL);
+		object_desc(o_name, sizeof(o_name), temp_obj, ODESC_PREFIX | ODESC_FULL, player);
 
 		/* Real store */
 		if (store->sidx != STORE_HOME) {
@@ -1124,7 +1123,7 @@ static bool store_purchase(struct store_context *ctx, int item, bool single, boo
 
 	/* Describe the object (fully) */
 	object_desc(o_name, sizeof(o_name), dummy, ODESC_PREFIX | ODESC_FULL |
-		ODESC_STORE);
+		ODESC_STORE, player);
 
 	/* Attempt to buy it */
 	if (store->sidx != STORE_HOME) {
@@ -1429,7 +1428,7 @@ static void store_steal(struct store_context *ctx, int item, struct menu *m, boo
 
 	/* Describe the object (fully) */
 	object_desc(o_name, sizeof(o_name), dummy, ODESC_PREFIX | ODESC_FULL |
-		ODESC_STORE);
+		ODESC_STORE, player);
 
 	/* Extract the price for the entire stack */
 	price = price_item(store, dummy, false, dummy->number);
@@ -2239,7 +2238,7 @@ static void store_examine(struct store_context *ctx, int item)
 
 		/* Show full info in most stores, but normal info in player home */
 		tb = object_info(obj, OINFO_NONE);
-		object_desc(header, sizeof(header), obj, odesc_flags);
+		object_desc(header, sizeof(header), obj, odesc_flags, player);
 	}
 
 	textui_textblock_show(tb, area, header);
@@ -2427,7 +2426,7 @@ static void context_menu_store_item(struct store_context *ctx, const int oid, in
 	char header[120];
 
 	object_desc(header, sizeof(header), obj,
-				ODESC_PREFIX | ODESC_FULL | ODESC_STORE);
+		ODESC_PREFIX | ODESC_FULL | ODESC_STORE, player);
 
 	labels = string_make(lower_case);
 	m->selections = labels;

@@ -874,7 +874,7 @@ bool project_p(struct source origin, int r, struct loc grid, int dam, int typ,
 		case SRC_OBJECT_AT:
 		case SRC_OBJECT: {
 			struct object *obj = origin.which.object;
-			object_desc(killer, sizeof(killer), obj, ODESC_PREFIX | ODESC_BASE | ODESC_SINGULAR);
+			object_desc(killer, sizeof(killer), obj, ODESC_PREFIX | ODESC_BASE | ODESC_SINGULAR, player);
 			break;
 		}
 

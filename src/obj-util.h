@@ -73,10 +73,12 @@ bool obj_is_pack_activatable(const struct object *obj);
 void distribute_charges(struct object *source, struct object *dest, int amt);
 int number_charging(const struct object *obj);
 bool recharge_timeout(struct object *obj);
-bool verify_object(const char *prompt, const struct object *obj);
-char *format_custom_message(const struct object *obj, const char *string, char *buf, int len);
-void print_custom_message(struct object *obj, const char *string, int msg_type);
-
+bool verify_object(const char *prompt, const struct object *obj,
+		const struct player *p);
+char *format_custom_message(const struct object *obj, const char *string, char *buf, int len,
+		const struct player *p);
+void print_custom_message(struct object *obj, const char *string, int msg_type,
+		const struct player *p);
 bool is_artifact_created(const struct artifact *art);
 bool is_artifact_seen(const struct artifact *art);
 bool is_artifact_everseen(const struct artifact *art);

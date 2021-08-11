@@ -2111,7 +2111,8 @@ void do_cmd_buy(struct command *cmd)
 	}
 
 	/* Describe the object (fully) */
-	object_desc(o_name, sizeof(o_name), bought, ODESC_PREFIX | ODESC_FULL);
+	object_desc(o_name, sizeof(o_name), bought, ODESC_PREFIX | ODESC_FULL,
+		player);
 
 	if (!steal) {
 		/* Extract the price for the entire stack */
@@ -2134,7 +2135,8 @@ void do_cmd_buy(struct command *cmd)
 	player->upkeep->notice |= (PN_COMBINE | PN_IGNORE);
 
 	/* Describe the object (fully) again for the message */
-	object_desc(o_name, sizeof(o_name), bought, ODESC_PREFIX | ODESC_FULL);
+	object_desc(o_name, sizeof(o_name), bought, ODESC_PREFIX | ODESC_FULL,
+		player);
 
 	/* Message */
 	bool cyber = (store->sidx == STORE_CYBER);
@@ -2496,7 +2498,8 @@ void do_cmd_sell(struct command *cmd)
 	value = object_value_real(sold_item, amt);
 
 	/* Get the description all over again */
-	object_desc(o_name, sizeof(o_name), sold_item, ODESC_PREFIX | ODESC_FULL);
+	object_desc(o_name, sizeof(o_name), sold_item,
+		ODESC_PREFIX | ODESC_FULL, player);
 
 	/* Describe the result (in message buffer) */
 	if (OPT(player, birth_no_selling)) {
@@ -2590,7 +2593,8 @@ void do_cmd_stash(struct command *cmd)
 	dropped = gear_object_for_use(player, obj, amt, false, &none_left);
 
 	/* Describe */
-	object_desc(o_name, sizeof(o_name), dropped, ODESC_PREFIX | ODESC_FULL);
+	object_desc(o_name, sizeof(o_name), dropped,
+		ODESC_PREFIX | ODESC_FULL, player);
 
 	/* Message */
 	msg("You drop %s (%c).", o_name, label);

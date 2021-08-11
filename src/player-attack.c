@@ -1583,7 +1583,7 @@ static void ranged_helper(struct command *cmd, struct player *p,	struct object *
 				 * knowledge now).
 				 */
 				object_desc(o_name, sizeof(o_name), obj,
-					ODESC_FULL | ODESC_SINGULAR);
+					ODESC_FULL | ODESC_SINGULAR, p);
 
 				/* No negative damage; change verb if no damage done */
 				if ((dmg <= 0) && (mon->race)) {
@@ -1644,7 +1644,7 @@ static void ranged_helper(struct command *cmd, struct player *p,	struct object *
 			 * knowledge now).
 			 */
 			object_desc(o_name, sizeof(o_name), obj,
-				ODESC_FULL | ODESC_SINGULAR);
+				ODESC_FULL | ODESC_SINGULAR, p);
 
 			/* Reflection */
 			msgt(MSG_SHOOT_HIT, "The %s bounces!", o_name);
@@ -1655,7 +1655,7 @@ static void ranged_helper(struct command *cmd, struct player *p,	struct object *
 			 * knowledge now).
 			 */
 			object_desc(o_name, sizeof(o_name), obj,
-				ODESC_FULL | ODESC_SINGULAR);
+				ODESC_FULL | ODESC_SINGULAR, p);
 
 			/* Oops */
 			msgt(MSG_SHOOT_HIT, "The %s hits you!", o_name);
@@ -1775,7 +1775,7 @@ static struct attack_result make_ranged_throw(struct command *cmd, struct player
 	}
 
 	/* If we missed then we're done */
-	if (!test_hit(chance_of_missile_hit(p, obj, NULL, mon), (mon ? mon->race->ac : player->state.ac)))
+	if (!test_hit(chance_of_missile_hit(p, obj, NULL, mon), (mon ? mon->race->ac : p->state.ac)))
 		return result;
 
 	result.success = true;

@@ -207,7 +207,7 @@ static void recharged_notice(const struct object *obj, bool all)
 	if (!notify) return;
 
 	/* Describe (briefly) */
-	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE);
+	object_desc(o_name, sizeof(o_name), obj, ODESC_BASE, player);
 
 	/* Disturb the player */
 	disturb(player);
@@ -658,7 +658,7 @@ void process_world(struct chunk *c)
 				if (obj->kind->material == MAT_STEEL) {
 					if (!of_has(obj->flags, OF_STICKY)) {
 						char oname[256];
-						object_desc(oname, sizeof(oname), obj, ODESC_BASE);
+						object_desc(oname, sizeof(oname), obj, ODESC_BASE, player);
 						msg("Your %s jerks.", oname);
 						of_on(obj->flags, OF_STICKY);
 					}
