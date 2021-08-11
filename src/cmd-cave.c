@@ -43,6 +43,7 @@
 #include "player-attack.h"
 #include "player-calcs.h"
 #include "player-path.h"
+#include "player-quest.h"
 #include "player-timed.h"
 #include "player-quest.h"
 #include "player-util.h"
@@ -88,7 +89,7 @@ void do_cmd_go_up(struct command *cmd)
 			maze = player->town->climb;
 	}
 
-	ascend_to = dungeon_get_next_level(player->depth, -1);
+	ascend_to = dungeon_get_next_level(player, player->depth, -1);
 
 	/* Exit a quest */
 	if (exit) {
@@ -132,7 +133,7 @@ void do_cmd_go_up(struct command *cmd)
  */
 void do_cmd_go_down(struct command *cmd)
 {
-	int descend_to = dungeon_get_next_level(player->depth, 1);
+	int descend_to = dungeon_get_next_level(player, player->depth, 1);
 	bool entry = (square(cave, player->grid)->feat == FEAT_ENTRY);
 	struct quest *quest = NULL;
 	const char *maze = "You enter a maze of down staircases.";
@@ -152,8 +153,9 @@ void do_cmd_go_down(struct command *cmd)
 
 	/* Warn a force_descend player if they're going to a quest level */
 	if (OPT(player, birth_force_descend)) {
-		descend_to = dungeon_get_next_level(player->max_depth, 1);
-		if (is_blocking_quest(descend_to) &&
+		descend_to = dungeon_get_next_level(player,
+			player->max_depth, 1);
+		if (is_blocking_quest(player, descend_to) &&
 			!get_check("Are you sure you want to descend? "))
 			return;
 	}
@@ -199,7 +201,7 @@ void do_cmd_go_down(struct command *cmd)
 		if (strchr(dname, ' '))
 			*strchr(dname, ' ') = 0;
 		snprintf(buf, sizeof(buf), "Are you sure you want to enter the %s (level %d)? ",
-			dname, dungeon_get_next_level(0, 1));
+			dname, dungeon_get_next_level(player, 0, 1));
 		buf[sizeof(buf)-1] = 0;
 		if (!get_check(buf))
 			return;
@@ -1611,7 +1613,7 @@ void display_feeling(bool obj_only)
 	}
 
 	/* Or on a quest-monster level */
-	if (is_blocking_quest(player->depth)) {
+	if (is_blocking_quest(player, player->depth)) {
 		msg("You feel a terrible presence here!");
 		return;
 	}

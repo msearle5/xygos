@@ -814,7 +814,7 @@ static bool labyrinth_check(int depth)
 	if (depth < 13) return false;
 
 	/* Don't try this on quest levels, kids... */
-	if (is_active_quest(depth)) return false;
+	if (is_active_quest(player, depth)) return false;
 
 	/* Certain numbers increase the chance of having a labyrinth */
 	if (depth % 3 == 0) chance += 1;
@@ -858,7 +858,7 @@ static const struct cave_profile *choose_profile(struct player *p)
 	/* Make the profile choice */
 	if (p->depth == 0) {
 		profile = find_cave_profile("town");
-	} else if (is_blocking_quest(p->depth) && !OPT(p, birth_levels_persist)) {
+	} else if (is_blocking_quest(p, p->depth) && !OPT(p, birth_levels_persist)) {
 		/* Quest levels must be normal levels */
 		profile = find_cave_profile("classic");
 	} else if (labyrinth_check(p->depth) &&
@@ -1142,6 +1142,7 @@ struct chunk *cave_generate(struct player *p, int height, int width)
 		dun->one_off_below = NULL;
 		dun->curr_join = NULL;
 		dun->nstair_room = 0;
+		dun->quest = is_blocking_quest(p, p->depth);
 
 		/* Get connector info for persistent levels */
 		if (OPT(p, birth_levels_persist)) {
@@ -1150,6 +1151,7 @@ struct chunk *cave_generate(struct player *p, int height, int width)
 		} else {
 			dun->persist = false;
 		}
+
 
 		/* Choose a profile and build the level */
 		if (p->active_quest >= 0) {

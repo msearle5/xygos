@@ -201,7 +201,7 @@ int dungeon_top_level(const char *dungeon)
    direction until it does) - so that town dungeons can start
    at >1.
 */
-int dungeon_get_next_level(int dlev, int added)
+int dungeon_get_next_level(struct player *p, int dlev, int added)
 {
 	int target_level, i;
 
@@ -235,7 +235,7 @@ int dungeon_get_next_level(int dlev, int added)
 
 	/* Check intermediate levels for quests */
 	for (i = dlev; i <= target_level; i++) {
-		if (is_blocking_quest(i)) return i;
+		if (is_blocking_quest(p, i)) return i;
 	}
 
 	return target_level;
@@ -249,13 +249,13 @@ void player_set_recall_depth(struct player *p)
 	/* Account for forced descent */
 	if (OPT(p, birth_force_descend)) {
 		/* Force descent to a lower level if allowed */
-		if ((p->max_depth < z_info->max_depth - 1) && !is_blocking_quest(p->max_depth)) {
-			p->town->recall_depth = dungeon_get_next_level(p->max_depth, 1);
+		if ((p->max_depth < z_info->max_depth - 1) && !is_blocking_quest(p, p->max_depth)) {
+			p->town->recall_depth = dungeon_get_next_level(p, p->max_depth, 1);
 		}
 	}
 
 	/* Players who haven't left town before go to the shallowest level */
-	p->town->recall_depth = MAX(p->town->recall_depth, dungeon_get_next_level(0, 1));
+	p->town->recall_depth = MAX(p->town->recall_depth, dungeon_get_next_level(p, 0, 1));
 	struct quest *quest = quest_guardian();
 	if (quest) {
 		quest->flags |= QF_ACTIVE;

@@ -377,7 +377,7 @@ struct quest *quest_guardian(void)
 /**
  * Check if the given level is an essential (or at least blocking), incomplete quest level.
  */
-bool is_blocking_quest(int level)
+bool is_blocking_quest(struct player *p, int level)
 {
 	size_t i;
 
@@ -388,10 +388,10 @@ bool is_blocking_quest(int level)
 	bool end = ((world_level_exists(NULL, level)) && (!world_level_exists(NULL, level+1)));
 
 	for (i = 0; i < z_info->quest_max; i++)
-		if (((player->quests[i].town == (player->town - t_info)) || (player->quests[i].town < 0)) &&
-			(((player->quests[i].level == level) && (player->quests[i].flags & QF_ESSENTIAL)) ||
-			(end && (player->quests[i].flags & QF_GUARDIAN))) &&
-			(!(player->quests[i].flags & QF_SUCCEEDED)))
+		if (((p->quests[i].town == (player->town - t_info)) || (p->quests[i].town < 0)) &&
+			(((p->quests[i].level == level) && (p->quests[i].flags & QF_ESSENTIAL)) ||
+			(end && (p->quests[i].flags & QF_GUARDIAN))) &&
+			(!(p->quests[i].flags & QF_SUCCEEDED)))
 			return true;
 
 	return false;
@@ -420,7 +420,7 @@ bool in_town_quest(void)
 /**
  * Check if the given level is a quest level.
  */
-bool is_quest(int level)
+bool is_quest(struct player *p, int level)
 {
 	size_t i;
 
@@ -428,7 +428,7 @@ bool is_quest(int level)
 	if (!level) return false;
 
 	for (i = 0; i < z_info->quest_max; i++)
-		if ((player->quests[i].level == level) && (!(player->quests[i].flags & QF_TOWN)))
+		if ((p->quests[i].level == level) && (!(p->quests[i].flags & QF_TOWN)))
 			return true;
 
 	return false;
@@ -440,7 +440,7 @@ bool is_quest(int level)
  * monster is present. For other quests, they are always active if you
  * are on their level.
  */
-bool is_active_quest(int level)
+bool is_active_quest(struct player *p, int level)
 {
 	size_t i;
 
@@ -448,10 +448,10 @@ bool is_active_quest(int level)
 	if (!level) return false;
 
 	for (i = 0; i < z_info->quest_max; i++) {
-		if ((player->quests[i].level == level) && (!(player->quests[i].flags & QF_TOWN))) {
-			if (!player->quests[i].race)
+		if ((p->quests[i].level == level) && (!(p->quests[i].flags & QF_TOWN))) {
+			if (!p->quests[i].race)
 				return true;
-			else if (player->quests[i].race->cur_num)
+			else if (p->quests[i].race->cur_num)
 				return true;
 		}
 	}
