@@ -576,7 +576,7 @@ static size_t obj_desc_charges(const struct object *obj, char *buf, size_t max,
  * Add player-defined inscriptions or game-defined descriptions
  */
 static size_t obj_desc_inscrip(const struct object *obj, char *buf,
-							   size_t max, size_t end)
+		size_t max, size_t end, const struct player *p)
 {
 	const char *u[6] = { 0, 0, 0, 0, 0, 0 };
 	int n = 0;
@@ -598,7 +598,7 @@ static size_t obj_desc_inscrip(const struct object *obj, char *buf,
 		u[n++] = "faulty";
 
 	/* Note ignore */
-	if (ignore_item_ok(obj))
+	if (ignore_item_ok(p, obj))
 		u[n++] = "ignore";
 
 	/* Note quest */
@@ -688,7 +688,7 @@ size_t object_desc(char *buf, size_t max, const struct object *obj, int mode,
 	if (tval_is_money(obj))
 		return strnfmt(buf, max, "$%d worth of %s%s",
 				obj->pval, obj->kind->name,
-				ignore_item_ok(obj) ? " {ignore}" : "");
+				ignore_item_ok(p, obj) ? " {ignore}" : "");
 
 	/* Egos and kinds whose name we know are seen */
 	for(int i=0; i<MAX_EGOS; i++) {
@@ -723,7 +723,7 @@ size_t object_desc(char *buf, size_t max, const struct object *obj, int mode,
 		if (mode & ODESC_STORE)
 			end = obj_desc_aware(obj, buf, max, end);
 		else
-			end = obj_desc_inscrip(obj, buf, max, end);
+			end = obj_desc_inscrip(obj, buf, max, end, p);
 	}
 
 	return end;

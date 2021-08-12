@@ -1511,7 +1511,7 @@ static void monster_turn_grab_objects(struct chunk *c, struct monster *mon,
 		if (safe) {
 			/* Only give a message for "take_item" */
 			if (rf_has(mon->race->flags, RF_TAKE_ITEM) && visible &&
-				square_isview(c, new) && !ignore_item_ok(obj)) {
+				square_isview(cave, new) && !ignore_item_ok(player, obj)) {
 				/* Dump a message */
 				msg("%s tries to pick up %s, but fails.", m_name, o_name);
 			}
@@ -1535,8 +1535,10 @@ static void monster_turn_grab_objects(struct chunk *c, struct monster *mon,
 			/* Try to carry the copy */
 			if (monster_carry(c, mon, taken)) {
 				/* Describe observable situations */
-				if (square_isseen(c, new) && !ignore_item_ok(obj))
+				if (square_isseen(cave, new)
+						&& !ignore_item_ok(player, obj)) {
 					msg("%s picks up %s.", m_name, o_name);
+				}
 
 				/* Delete the object */
 				square_delete_object(c, new, obj, true, true);
@@ -1548,9 +1550,8 @@ static void monster_turn_grab_objects(struct chunk *c, struct monster *mon,
 			}
 		} else {
 			/* Describe observable situations */
-			if (square_isseen(c, new) && !ignore_item_ok(obj))
+			if (square_isseen(c, new) && !ignore_item_ok(player, obj))
 				msgt(MSG_DESTROY, "%s crushes %s.", m_name, o_name);
-
 			/* Delete the object */
 			square_delete_object(c, new, obj, true, true);
 		}

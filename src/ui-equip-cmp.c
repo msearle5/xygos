@@ -1716,7 +1716,9 @@ static bool select_wearable(const struct object *obj, const void *closure)
  */
 static bool select_seen_wearable(const struct object *obj, const void *closure)
 {
-	return tval_is_wearable(obj) && obj->known && !ignore_item_ok(obj);
+	const struct player *p = closure;
+
+	return tval_is_wearable(obj) && obj->known && !ignore_item_ok(p, obj);
 }
 
 
@@ -2284,7 +2286,7 @@ static int initialize_summary(struct player *p,
 	apply_visitor_to_pile(p->gear, &visitor);
 	if (cave) {
 		visitor.selfunc = select_seen_wearable;
-		visitor.selfunc_closure = NULL;
+		visitor.selfunc_closure = p;
 		apply_visitor_to_pile(square_object(cave, p->grid), &visitor);
 	}
 	visitor.selfunc = select_wearable;
@@ -2325,7 +2327,7 @@ static int initialize_summary(struct player *p,
 	if (cave) {
 		add_obj_data.src = EQUIP_SOURCE_FLOOR;
 		visitor.selfunc = select_seen_wearable;
-		visitor.selfunc_closure = NULL;
+		visitor.selfunc_closure = p;
 		apply_visitor_to_pile(square_object(cave, p->grid), &visitor);
 	}
 	add_obj_data.src = EQUIP_SOURCE_HOME;
