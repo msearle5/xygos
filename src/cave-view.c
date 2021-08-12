@@ -892,10 +892,10 @@ static void update_view_one(struct chunk *c, struct loc grid, struct player *p)
 /**
  * Update view for a single square
  */
-static void update_one(struct chunk *c, struct loc grid, int blind)
+static void update_one(struct chunk *c, struct loc grid, struct player *p)
 {
 	/* Remove view if blind, check visible squares for traps */
-	if (blind) {
+	if (p->timed[TMD_BLIND]) {
 		sqinfo_off(square(c, grid)->info, SQUARE_SEEN);
 		sqinfo_off(square(c, grid)->info, SQUARE_CLOSE_PLAYER);
 	} else if (square_isseen(c, grid)) {
@@ -908,11 +908,11 @@ static void update_one(struct chunk *c, struct loc grid, int blind)
 			c->feeling_squares++;
 			sqinfo_off(square(c, grid)->info, SQUARE_FEEL);
 			/* Don't display feeling if it will display for the new level */
-			if ((c->feeling_squares == feeling_need(player)) &&
-				!player->upkeep->only_partial) {
-				if (player->active_quest < 0) {
+			if ((c->feeling_squares == feeling_need(p)) &&
+				!p->upkeep->only_partial) {
+				if (p->active_quest < 0) {
 					display_feeling(true);
-					player->upkeep->redraw |= PR_FEELING;
+					p->upkeep->redraw |= PR_FEELING;
 				}
 			}
 		}
@@ -980,7 +980,7 @@ void update_view(struct chunk *c, struct player *p)
 	/* Update each grid */
 	for (y = 0; y < c->height; y++)
 		for (x = 0; x < c->width; x++)
-			update_one(c, loc(x, y), p->timed[TMD_BLIND]);
+			update_one(c, loc(x, y), p);
 }
 
 
