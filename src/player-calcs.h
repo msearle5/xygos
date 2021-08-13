@@ -107,12 +107,21 @@
 /* Maximum burden */
 #define BURDEN_LIMIT	4
 
-extern const int adj_dex_th[STAT_RANGE];
-extern const int adj_str_td[STAT_RANGE];
+extern byte adj_int_dev[STAT_RANGE];
+extern byte adj_wis_sav[STAT_RANGE];
+extern byte adj_dex_dis[STAT_RANGE];
+extern byte adj_int_dis[STAT_RANGE];
+extern s16b adj_dex_ta[STAT_RANGE];
+extern s16b adj_str_td[STAT_RANGE];
+extern s16b adj_dex_th[STAT_RANGE];
+extern s16b adj_str_th[STAT_RANGE];
 extern const int adj_str_blow[STAT_RANGE];
-extern const int adj_dex_safe[STAT_RANGE];
-extern const int adj_con_fix[STAT_RANGE];
-extern const int adj_str_hold[STAT_RANGE];
+extern byte adj_dex_safe[STAT_RANGE];
+extern byte adj_con_fix[STAT_RANGE];
+extern byte adj_str_hold[STAT_RANGE];
+extern byte adj_str_dig[STAT_RANGE];
+extern s32b adj_str_wgt[STAT_RANGE];
+extern s16b adj_con_mhp[STAT_RANGE];
 
 int weight_limit(struct player_state *state);
 bool earlier_object(struct object *orig, struct object *new, bool store);

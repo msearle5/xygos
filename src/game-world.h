@@ -43,7 +43,8 @@ extern u32b seed_flavor;
 extern s32b turn;
 extern bool character_generated;
 extern bool character_dungeon;
-extern const byte extract_energy[200];
+extern byte *extract_energy;
+extern int n_extract_energy;
 extern struct level *world;
 
 struct level *level_by_name(const char *name);

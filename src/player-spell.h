@@ -16,6 +16,9 @@
  *    are included in all such copies.  Other copyrights may also apply.
  */
 
+extern byte adj_mag_fail[STAT_RANGE];
+extern s16b adj_mag_stat[STAT_RANGE];
+
 void player_spells_init(struct player *p);
 void player_spells_free(struct player *p);
 const struct class_spell *spell_by_index(int index);

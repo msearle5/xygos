@@ -1,0 +1,357 @@
+# File: tables.txt
+
+# This file is used to initialize the "tables" information for Angband.
+
+# Do not modify this file unless you know exactly what you are doing,
+# unless you wish to risk possible system crashes and broken savefiles.
+
+# === Understanding tables.txt ===
+
+# Format:
+# table:name of table
+# n: <value>, <value>, <value> ... [: comment]
+#
+# The number of entries is fixed for each table, often STAT_RANGE (38,
+# one for each stat point between 3 and 18/220).
+#
+# In numeric tables, the number of entries on each line and spacing don't
+# matter, although all stat tables have been formatted with 5 entries per line.
+#
+# String tables must have only one entry per line. Spaces and commas are permitted
+# as part of the string, but colons are not.
+#
+# Acceptable values differ between tables, but it is common to be limited
+# to integers 0..255 (and you will get an error if an invalid value is used)
+
+
+###### player-calcs.c ######
+
+# Stat Table (INT) -- Devices
+table:adj_int_dev
+n:  0, 0, 0, 0, 0: 3
+n:  1, 1, 1, 1, 1: 8
+n:  1, 1, 2, 2, 2: 13
+n:  3, 3, 3, 3, 3: 18
+n:  4, 4, 5, 5, 6: 18/50
+n:  6, 7, 7, 8, 8: 18/100
+n:  9, 9,10,10,11: 18/150
+n: 11,12,13:       18/200
+
+# Stat Table (WIS) -- Saving throw
+table:adj_wis_sav
+n:  0, 0, 0, 0, 0: 3
+n:  1, 1, 1, 1, 1: 8
+n:  1, 1, 2, 2, 2: 13
+n:  3, 3, 3, 3, 3: 18
+n:  4, 4, 5, 5, 6: 18/50
+n:  7, 8, 9,10,11: 18/100
+n: 12,13,14,15,16: 18/150
+n: 17,18,19:       18/200
+
+# Stat Table (DEX) -- disarming
+table:adj_dex_dis
+n:  0, 0, 0, 0, 0: 3
+n:  1, 1, 1, 1, 1: 8
+n:  1, 1, 2, 2, 2: 13
+n:  3, 3, 3, 4, 4: 18
+n:  5, 6, 7, 8, 9: 18/50
+n: 10,10,11,12,13: 18/100
+n: 14,15,16,17,18: 18/150
+n: 19,19,19:       18/200
+
+# Stat Table (INT) -- disarming
+table:adj_int_dis
+n:  0, 0, 0, 0, 0: 3
+n:  1, 1, 1, 1, 1: 8
+n:  1, 1, 2, 2, 2: 13
+n:  3, 3, 3, 4, 4: 18
+n:  5, 6, 7, 8, 9: 18/50
+n: 10,10,11,12,13: 18/100
+n: 14,15,16,17,18: 18/150
+n: 19,19,19:       18/200
+
+# Stat Table (DEX) -- bonus to ac
+table:adj_dex_ta
+n: -4,-3,-2,-1, 0: 3
+n:  0, 0, 0, 0, 0: 8
+n:  0, 0, 1, 1, 1: 13
+n:  2, 2, 2, 2, 2: 18
+n:  3, 3, 3, 4, 5: 18/50
+n:  6, 7, 8, 9, 9: 18/100
+n: 10,11,12,13,14: 18/150
+n: 15,15,15:       18/200
+
+# Stat Table (STR) -- bonus to dam
+table:adj_str_td
+n: -2,-2,-1,-1, 0: 3
+n:  0, 0, 0, 0, 0: 8
+n:  0, 0, 0, 1, 2: 13
+n:  2, 2, 3, 3, 3: 18
+n:  3, 3, 4, 5, 5: 18/50
+n:  6, 7, 8, 9,10: 18/100
+n: 11,12,13,14,15: 18/150
+n: 16,18,20:       18/200
+
+# Stat Table (DEX) -- bonus to hit
+table:adj_dex_th
+n: -3,-2,-2,-1,-1: 3
+n:  0, 0, 0, 0, 0: 8
+n:  0, 0, 0, 1, 2: 13
+n:  3, 3, 3, 3, 3: 18
+n:  4, 4, 4, 4, 5: 18/50
+n:  6, 7, 8, 9, 9: 18/100
+n: 10,11,12,13,14: 18/150
+n: 15,15,15:       18/200
+
+# Stat Table (STR) -- bonus to hit
+table:adj_str_th
+n: -3,-2,-1,-1, 0: 3
+n:  0, 0, 0, 0, 0: 8
+n:  0, 0, 0, 0, 0: 13
+n:  1, 1, 1, 1, 1: 18
+n:  1, 1, 2, 3, 4: 18/50
+n:  5, 6, 7, 8, 9: 18/100
+n: 10,11,12,13,14: 18/150
+n: 15,15,15:       18/200
+
+# Stat Table (STR) -- weight limit (point at which burdening starts) in grams
+table:adj_str_wgt
+n:   7500,11000,14500,17500,20500: 3
+n:  23500,25500,28500,31000,33250: 8
+n:  35500,37500,39500,41500,43250: 13
+n:  45000,48000,52000,57000,61000: 18
+n:  65000,67500,69000,70250,71000: 18/50
+n:  71500,71950,72350,72700,73000: 18/100
+n:  73250,73500,73750,74000,74250: 18/150
+n:  74500,74750,75000:             18/200
+
+# Stat Table (STR) -- weapon weight limit in pounds
+table:adj_str_hold
+n:  4, 5, 6, 7, 8: 3
+n: 10,12,14,16,18: 8
+n: 20,22,24,26,28: 13
+n: 30,32,35,40,45: 18
+n: 50,55,60,65,70: 18/50
+n: 80,82,84,85,86: 18/100
+n: 87,88,89,90,92: 18/150
+n: 94,97,100:      18/200
+
+# Stat Table (STR) -- digging value
+table:adj_str_dig
+n:  0, 0, 1, 2, 3: 3
+n:  4, 4, 5, 5, 6: 8
+n:  6, 7, 7, 8, 8: 13
+n:  9,10,12,15,20: 18
+n: 25,30,35,40,45: 18/50
+n: 50,55,60,65,70: 18/100
+n: 75,80,85,90,95: 18/150
+n:100,100,100:     18/200
+
+# Stat Table (DEX) -- chance of avoiding "theft" and "falling"
+table:adj_dex_safe
+n:  0, 1, 2, 3, 4: 3
+n:  5, 5, 6, 6, 7: 8
+n:  7, 8, 8, 9, 9: 13
+n: 10,10,15,15,20: 18
+n: 25,30,35,40,45: 18/50
+n: 50,60,70,80,90: 18/100
+n: 95,97,98,99,99: 18/150
+n:100,100,100:     18/200
+
+# Stat Table (CON) -- base regeneration rate
+table:adj_con_fix
+n:  0, 0, 0, 0, 0: 3
+n:  0, 0, 0, 0, 0: 8
+n:  0, 1, 1, 1, 1: 13
+n:  2, 2, 2, 2, 2: 18
+n:  3, 3, 3, 3, 3: 18/50
+n:  4, 4, 5, 6, 6: 18/100
+n:  7, 7, 8, 8, 8: 18/150
+n:  9, 9, 9:       18/200
+
+# Stat Table (CON) -- extra 1/100th hitpoints per level
+table:adj_con_mhp
+n: -250, -150, -100, -75, -50: 3
+n:  -25,  -10,   -5,   0,   5: 8
+n:   10,   25,   50,  75, 100: 13
+n:  150,  175,  200, 225, 250: 18
+n:  275,  300,  350, 400, 450: 18/50
+n:  500,  550,  600, 650, 700: 18/100
+n:  750,  800,  900,1000,1100: 18/150
+n: 1200, 1225, 1250:           18/200
+
+
+###### player-spell.c ######
+
+# Stat Table (Casting Stat) -- Minimum failure rate (percentage)
+table:adj_mag_fail
+n: 75,60,50,42,35: 3
+n: 30,25,20,15,12: 8
+n: 11,10, 9, 8, 7: 13
+n:  6, 6, 5, 5, 5: 18
+n:  4, 4, 4, 4, 3: 18/50
+n:  3, 2, 2, 2, 2: 18/100
+n:  1, 1, 1, 1, 1: 18/150
+n:  0, 0, 0:       18/200
+
+# Stat Table (Casting Stat) -- failure rate adjustment
+table:adj_mag_stat
+n: -5,-4,-3,-3,-2: 3
+n: -1, 0, 0, 0, 0: 8
+n:  0, 1, 2, 3, 4: 13
+n:  5, 6, 7, 8, 9: 18
+n: 10,11,12,15,18: 18/50
+n: 21,24,27,30,33: 18/100
+n: 36,39,42,45,48: 18/150
+n: 51,54,57:       18/200
+
+
+###### project-player.c ######
+
+# Resistance: % damage reduction from 1 or more levels of resistance
+table:dam_dec_resist
+n: 0,  50, 66, 72, 75, 77, 78, 79, 80, 81
+n: 82, 83, 84, 85, 86, 87, 88, 89, 89, 90
+n: 90, 91, 91, 91, 92, 92, 92, 92, 92, 93
+n: 93, 93, 93, 93, 93, 93, 93, 93, 93, 93
+n: 94, 94, 94, 94, 94, 94, 94, 94, 94, 94
+n: 94, 94, 94, 94, 94, 94, 94, 94, 94, 94
+n: 94, 94, 94, 94, 94, 94, 94, 94, 94, 94
+n: 94, 94, 94, 94, 94, 94, 94, 94, 94, 95
+
+# Vulnerability: % extra damage from 1 or more levels of vulnerability
+table:dam_inc_vuln
+n: 0, 33, 50, 60, 64, 66
+
+
+###### player.c ######
+
+# Base experience levels, may be adjusted up or down for race, class, etc.
+table:player_exp
+n:      10,      25,      45,      70,     100: 1
+n:     140,     200,     280,     380,     500: 6
+n:     650,     850,    1100,    1400,    1800: 11
+n:    2300,    2900,    3600,    4400,    5400: 16
+n:    6800,    8400,   10200,   12500,   17500: 21
+n:   25000,   35000,   50000,   75000,  100000: 26
+n:  150000,  200000,  275000,  350000,  450000: 31
+n:  550000,  700000,  850000, 1000000, 1250000: 36
+n: 1500000, 1800000, 2100000, 2400000, 2700000: 41
+n: 3000000, 3500000, 4000000, 4500000, 5000000: 46
+
+
+###### player-ability.c #####'
+
+# Conversion of plusses to Deadliness to a percentage added to damage.
+table:deadliness_conversion
+n:  0
+n:  5,  10,  14,  18,  22,  26,  30,  33,  36,  39: 1
+n: 42,  45,  48,  51,  54,  57,  60,  63,  66,  69: 11
+n: 72,  75,  78,  81,  84,  87,  90,  93,  96,  99: 21
+n:102, 104, 107, 109, 112, 114, 117, 119, 122, 124: 31
+n:127, 129, 132, 134, 137, 139, 142, 144, 147, 149: 41
+n:152, 154, 157, 159, 162, 164, 167, 169, 172, 174: 51
+n:176, 178, 180, 182, 184, 186, 188, 190, 192, 194: 61
+n:196, 198, 200, 202, 204, 206, 208, 210, 212, 214: 71
+n:216, 218, 220, 222, 224, 226, 228, 230, 232, 234: 81
+n:236, 238, 240, 242, 244, 246, 248, 250, 251, 253: 91
+n:255
+
+
+###### store.c ######
+
+#Messages for reacting to purchase prices.
+table:comment_worthless
+n:Arrgghh!
+n:You bastard!
+n:You hear someone sobbing...
+n:The shopkeeper howls in agony!
+n:The shopkeeper wails in anguish!
+n:The shopkeeper beats his head against the counter.
+
+table:comment_bad
+n:Damn!
+n:You fiend!
+n:The shopkeeper curses at you.
+n:The shopkeeper glares at you.
+
+table:comment_accept
+n:Okay.
+n:Fine.
+n:Accepted!
+n:Agreed!
+n:Done!
+n:Taken!
+
+table:comment_good
+n:Cool!
+n:You've made my day!
+n:The shopkeeper sniggers.
+n:The shopkeeper giggles.
+n:The shopkeeper laughs loudly.
+
+table:comment_great
+n:Yipee!
+n:I think I'll retire!
+n:The shopkeeper jumps for joy.
+n:The shopkeeper smiles gleefully.
+n:Wow.  I'm going to name my new villa in your honour.
+
+# Convert speed to energy
+table:extract_energy
+n:  1,  1,  1,  1,  1,  1,  1,  1,  1,  1: Slow
+n:  1,  1,  1,  1,  1,  1,  1,  1,  1,  1: Slow
+n:  1,  1,  1,  1,  1,  1,  1,  1,  1,  1: S-90
+n:  1,  1,  1,  1,  1,  1,  1,  1,  1,  1: S-80
+n:  1,  1,  1,  1,  1,  1,  1,  1,  1,  1: S-70
+n:  1,  1,  1,  1,  1,  1,  1,  1,  1,  1: S-60
+n:  1,  1,  1,  1,  1,  1,  1,  1,  1,  1: S-50
+n:  2,  2,  2,  2,  2,  2,  2,  2,  2,  2: S-40
+n:  2,  2,  2,  2,  2,  2,  2,  3,  3,  3: S-30
+n:  3,  3,  3,  3,  3,  4,  4,  4,  4,  4: S-20
+n:  5,  5,  5,  5,  6,  6,  7,  7,  8,  9: S-10
+n: 10, 11, 12, 13, 14, 15, 16, 17, 18, 19: Norm
+n: 20, 21, 22, 23, 24, 25, 26, 27, 28, 29: F+10
+n: 30, 31, 32, 33, 34, 35, 36, 36, 37, 37: F+20
+n: 38, 38, 39, 39, 40, 40, 40, 41, 41, 41: F+30
+n: 42, 42, 42, 43, 43, 43, 44, 44, 44, 44: F+40
+n: 45, 45, 45, 45, 45, 46, 46, 46, 46, 46: F+50
+n: 47, 47, 47, 47, 47, 48, 48, 48, 48, 48: F+60
+n: 49:                                     F+70
+
+
+# effect-handler-general.c
+
+# Used by the enchant() function (chance of failure)
+table:enchant_table
+n:   0,  10,  20,  40,  80,
+n: 160, 280, 400, 550, 700,
+n: 800, 900, 950, 970, 990,
+n:1000
+
+
+# cmd-cave.c
+
+table:obj_feeling_text
+n:Looks like any other level.
+n:you sense an item of unique power!
+n:there's a huge haul of loot here!
+n:there is much valuable loot here.
+n:there is some valuable loot here.
+n:there may be some valuables here.
+n:there may be some worthwhile loot.
+n:there's nothing very valuable here.
+n:there are only scraps of junk here.
+n:there is nothing but cobwebs here.
+
+table:mon_feeling_text
+n:You are still uncertain about this place
+n:This place seems absolutely lethal
+n:This place seems murderous
+n:This place seems terribly dangerous
+n:You feel anxious about this place
+n:You feel nervous about this place
+n:This place does not seem too risky
+n:This place seems reasonably safe
+n:This seems a tame, sheltered place
+n:This seems a quiet, peaceful place

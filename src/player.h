@@ -85,7 +85,6 @@ extern struct player_class **ordered_classes(void);
  * Player constants
  */
 #define PY_MAX_EXP		99999999L	/* Maximum exp */
-#define PY_KNOW_LEVEL	30			/* Level to know all icons */
 #define PY_MAX_LEVEL	50			/* Maximum level */
 
 /**
@@ -703,7 +702,7 @@ extern struct player_shape *shapes;
 extern struct player_class *classes;
 extern struct player_ability *player_abilities;
 
-extern const s32b player_exp[PY_MAX_LEVEL];
+extern s32b player_exp[PY_MAX_LEVEL];
 extern struct player *player;
 
 /* player-class.c */

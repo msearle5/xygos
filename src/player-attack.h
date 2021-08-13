@@ -39,6 +39,9 @@ struct hit_types {
 	const char *text;
 };
 
+extern byte *deadliness_conversion;
+extern int n_deadliness_conversion;
+
 /**
  * ranged_attack is a function pointer, used to execute a kind of attack.
  *

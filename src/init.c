@@ -29,6 +29,7 @@
 #include "cmds.h"
 #include "cmd-core.h"
 #include "datafile.h"
+#include "effect-handler.h"
 #include "effects.h"
 #include "game-event.h"
 #include "game-world.h"
@@ -58,6 +59,7 @@
 #include "option.h"
 #include "player.h"
 #include "player-ability.h"
+#include "player-calcs.h"
 #include "player-history.h"
 #include "player-quest.h"
 #include "player-spell.h"
@@ -992,9 +994,295 @@ static struct file_parser player_property_parser = {
 	cleanup_player_prop
 };
 
+
 /**
  * ------------------------------------------------------------------------
- * Intialize random names
+ * Initialize tables
+ * ------------------------------------------------------------------------ */
+
+enum table_type {
+	table_end = 0,
+	table_u8,
+	table_s16,
+	table_s32,
+	table_double,
+	table_string
+} table_type;
+
+struct table {
+	union {
+		void *data;
+		void **pdata;
+	} t;
+	const char *name;
+	int *length;
+	enum table_type type;
+	int entries;
+	int filled;
+};
+
+#define TABLE(X) 	{ &X }, #X, NULL
+#define DYNTABLE(X)	{ &X }, #X, &n_##X
+
+/* Each table has a field describing the data type, which also acts
+ * as a sentinel for the end of the tables list.
+ *
+ * Statically allocated tables:
+ * 		The pointer is a pointer to the data, 'length' is null.
+ * Dynamically allocated tables:
+ * 		The pointer is a pointer to a pointer. 'length' points to
+ * 		the length.
+ *  	The pointer is filled at init with a newly allocated table.
+ *  	It's freed when tables are cleaned up.
+ */
+static struct table tables[] = {
+	/* player-calcs.c */
+	{ TABLE(adj_int_dev),				table_u8,		STAT_RANGE },
+	{ TABLE(adj_wis_sav),				table_u8, 		STAT_RANGE },
+	{ TABLE(adj_dex_dis),				table_u8, 		STAT_RANGE },
+	{ TABLE(adj_int_dis),				table_u8, 		STAT_RANGE },
+	{ TABLE(adj_dex_ta),				table_s16,		STAT_RANGE },
+	{ TABLE(adj_str_td),				table_s16,		STAT_RANGE },
+	{ TABLE(adj_dex_th),				table_s16,		STAT_RANGE },
+	{ TABLE(adj_str_th),				table_s16,		STAT_RANGE },
+	{ TABLE(adj_str_wgt),				table_s32,		STAT_RANGE },
+	{ TABLE(adj_str_hold),				table_u8, 		STAT_RANGE },
+	{ TABLE(adj_str_dig),				table_u8, 		STAT_RANGE },
+	{ TABLE(adj_dex_safe),				table_u8, 		STAT_RANGE },
+	{ TABLE(adj_con_fix),				table_u8, 		STAT_RANGE },
+	{ TABLE(adj_con_mhp),				table_s16,		STAT_RANGE },
+	/* player-spell.c */
+	{ TABLE(adj_mag_fail),				table_u8, 		STAT_RANGE },
+	{ TABLE(adj_mag_stat),				table_s16,		STAT_RANGE },
+	/* project-player.c */
+	{ DYNTABLE(dam_dec_resist),			table_u8 },
+	{ DYNTABLE(dam_inc_vuln),			table_u8 },
+	/* player.c */
+	{ TABLE(player_exp),				table_s32,		PY_MAX_LEVEL },
+	/* player-attack.c */
+	{ DYNTABLE(deadliness_conversion),	table_u8 },
+	/* store.c */
+	{ DYNTABLE(comment_worthless),		table_string },
+	{ DYNTABLE(comment_bad),			table_string },
+	{ DYNTABLE(comment_accept),			table_string },
+	{ DYNTABLE(comment_good),			table_string },
+	{ DYNTABLE(comment_great),			table_string },
+	/* effect-handler-general.c */
+	{ DYNTABLE(enchant_table),			table_s16 },
+	/* game-world.c */
+	{ DYNTABLE(extract_energy),			table_u8 },
+	/* cmd-cave.c */
+	{ TABLE(obj_feeling_text),			table_string,	10 },
+	{ TABLE(mon_feeling_text),			table_string,	10 },
+	{ { NULL } },
+};
+
+/* Read one value into tab[index], return true if successful.
+ * These can all assume (parse_tables_n() checks) that s and
+ * index are valid.
+ **/
+static bool tables_reader_u8(void *tab, int index, const char *s)
+{
+	char *end = NULL;
+	long value = strtol(s, &end, 10);
+	if (*end)
+		return false;
+	if ((value < 0) || (value > 255))
+		return false;
+	((byte *)tab)[index] = value;
+	return true;
+}
+
+static bool tables_reader_s16(void *tab, int index, const char *s)
+{
+	char *end = NULL;
+	long value = strtol(s, &end, 10);
+	if (*end)
+		return false;
+	if ((value < -32768) || (value > 32767))
+		return false;
+	((s16b *)tab)[index] = value;
+	return true;
+}
+
+static bool tables_reader_s32(void *tab, int index, const char *s)
+{
+	char *end = NULL;
+	long value = strtol(s, &end, 10);
+	if (*end)
+		return false;
+	if ((value < -2147483648L) || (value > 2147483647L))
+		return false;
+	((s32b *)tab)[index] = value;
+	return true;
+}
+
+static bool tables_reader_double(void *tab, int index, const char *s)
+{
+	char *end = NULL;
+	errno = 0;
+	double value = strtod(s, &end);
+	if (errno)
+		return false;
+	if (*end)
+		return false;
+	((double *)tab)[index] = value;
+	return true;
+}
+
+static bool tables_reader_string(void *tab, int index, const char *s)
+{
+	if ((!s) || (strlen(s) == 0))
+		return false;
+	char *value = string_make(s);
+	if (!value)
+		return false;
+	((char **)tab)[index] = value;
+	return true;
+}
+
+static bool (* const tables_reader[])(void *, int, const char *) = {
+	NULL,
+	tables_reader_u8,
+	tables_reader_s16,
+	tables_reader_s32,
+	tables_reader_double,
+	tables_reader_string,
+};
+
+static const byte tables_length[] = {
+	0,
+	sizeof(byte),
+	sizeof(s16b),
+	sizeof(s32b),
+	sizeof(double),
+	sizeof(char *),
+};
+
+static enum parser_error parse_tables_table(struct parser *p) {
+	struct table *t = tables;
+	const char *name = parser_getstr(p, "name");
+	if (!name)
+		return PARSE_ERROR_INVALID_VALUE;
+
+	do {
+		if (streq(t->name, name)) {
+			parser_setpriv(p, t);
+			return PARSE_ERROR_NONE;
+		}
+		t++;
+	} while (t->type);
+	t->filled = 0;
+
+	return PARSE_ERROR_INVALID_VALUE;
+}
+
+static enum parser_error parse_tables_n(struct parser *p) {
+	struct table *t = parser_priv(p);
+	if (!t)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
+	const char *line = parser_getsym(p, "n");
+	if (!line)
+		return PARSE_ERROR_INVALID_VALUE;
+
+	/* Read a line of entries, calling a reader fn for each
+	 * depending on type, exiting if too many are given or
+	 * if any can't be parsed.
+	 */
+    char *tok = string_make(line);
+
+	char *s = tok;
+	if (t->type != table_string)
+		s = strtok(tok, " ,");
+	do {
+		if (s) {
+			void *target;
+			if (t->length) {
+				/* Dynamic */
+				*(t->t.pdata) = mem_realloc(*(t->t.pdata), tables_length[t->type] * (t->filled + 1));
+				target = *(t->t.pdata);
+			} else {
+				/* Static */
+				if (t->filled >= t->entries)
+					return PARSE_ERROR_FIELD_TOO_LONG;
+				target = t->t.data;
+			}
+			if (tables_reader[t->type](target, t->filled, s))
+				t->filled++;
+			else
+				return PARSE_ERROR_INVALID_VALUE;
+		}
+		if (t->type == table_string)
+			break;
+		s = strtok(NULL, " ,");
+	} while (s);
+
+	string_free(tok);
+	return PARSE_ERROR_NONE;
+}
+
+static struct parser *init_tables_prop(void) {
+	struct parser *p = parser_new();
+	parser_setpriv(p, NULL);
+	parser_reg(p, "table str name", parse_tables_table);
+	parser_reg(p, "n sym n", parse_tables_n);
+	return p;
+}
+
+static errr run_tables_prop(struct parser *p) {
+	return parse_file_quit_not_found(p, "tables");
+}
+
+static errr finish_tables_prop(struct parser *p) {
+	/* Detect underfilled tables */
+	struct table *t = tables;
+	do {
+		if (t->filled < t->entries)
+			return PARSE_ERROR_MISSING_FIELD;
+		if (t->length)
+			*(t->length) = t->filled;
+		t++;
+	} while (t->type);
+
+	parser_destroy(p);
+
+	return 0;
+}
+
+static void cleanup_tables_prop(void)
+{
+	/* Free strings and dynamically allocated tables */
+	struct table *t = tables;
+	do {
+		if (t->type == table_string) {
+			for(int i=0;i<t->filled;i++) {
+				if (t->length)
+					string_free(((char **)(*(t->t.pdata)))[i]);
+				else
+					string_free(((char **)(t->t.data))[i]);
+			}
+		}
+		if (t->length) {
+			mem_free(*(t->t.pdata));
+			*(t->t.pdata) = NULL;
+		}
+		t->filled = 0;
+		t++;
+	} while (t->type);
+}
+
+static struct file_parser tables_parser = {
+	"tables",
+	init_tables_prop,
+	run_tables_prop,
+	finish_tables_prop,
+	cleanup_tables_prop
+};
+
+/**
+ * ------------------------------------------------------------------------
+ * Initialize random names
  * ------------------------------------------------------------------------ */
 
 struct name {
@@ -4131,6 +4419,7 @@ static struct {
 	{ "ui renderers", &ui_entry_renderer_parser },
 	{ "ui entries", &ui_entry_parser },
 	{ "player properties", &player_property_parser },
+	{ "tables", &tables_parser },
 	{ "player shapes", &shape_parser },
 	{ "abilities", &ability_parser },
 	{ "features", &feat_parser },

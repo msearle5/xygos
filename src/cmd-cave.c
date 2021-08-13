@@ -1572,41 +1572,17 @@ void do_cmd_sleep(struct command *cmd)
  * Keep strings at 36 or less characters to keep the
  * combined feeling on one row.
  */
-static const char *obj_feeling_text[] =
-{
-	"Looks like any other level.",
-	"you sense an item of unique power!",
-	"there's a huge haul of loot here!",
-	"there is much valuable loot here.",
-	"there is some valuable loot here.",
-	"there may be some valuables here.",
-	"there may be some worthwhile loot.",
-	"there's nothing very valuable here.",
-	"there are only scraps of junk here.",
-	"there is nothing but cobwebs here."
-};
+char *obj_feeling_text[10];
+int n_obj_feeling_text;
 
 /**
  * Array of feeling strings for monster feelings.
  * Keep strings at 36 or less characters to keep the
  * combined feeling on one row.
  */
-static const char *mon_feeling_text[] =
-{
-	/* first string is just a place holder to 
-	 * maintain symmetry with obj_feeling.
-	 */
-	"You are still uncertain about this place",
-	"This place seems absolutely lethal",
-	"This place seems murderous",
-	"This place seems terribly dangerous",
-	"You feel anxious about this place",
-	"You feel nervous about this place",
-	"This place does not seem too risky",
-	"This place seems reasonably safe",
-	"This seems a tame, sheltered place",
-	"This seems a quiet, peaceful place",
-};
+char *mon_feeling_text[10];
+int n_mon_feeling_text;
+
 
 /**
  * Display the feeling.  Players always get a monster feeling.
@@ -1654,11 +1630,11 @@ void display_feeling(bool obj_only)
 	}
 
 	/* Verify the feelings */
-	if (obj_feeling >= N_ELEMENTS(obj_feeling_text))
-		obj_feeling = N_ELEMENTS(obj_feeling_text) - 1;
+	if (obj_feeling >= n_obj_feeling_text)
+		obj_feeling = n_obj_feeling_text - 1;
 
-	if (mon_feeling >= N_ELEMENTS(mon_feeling_text))
-		mon_feeling = N_ELEMENTS(mon_feeling_text) - 1;
+	if (mon_feeling >= n_mon_feeling_text)
+		mon_feeling = n_mon_feeling_text - 1;
 
 	/* Decide the conjunction */
 	if ((mon_feeling <= 5 && obj_feeling > 6) ||

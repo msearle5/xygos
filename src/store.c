@@ -597,7 +597,7 @@ static bool store_sale_should_reduce_stock(struct store *store,
 
 
 /* Randomly select one of the entries in an array */
-#define ONE_OF(x)	x[randint0(N_ELEMENTS(x))]
+#define ONE_OF(x)	x[randint0(n_##x)]
 
 
 /**
@@ -609,54 +609,20 @@ static bool store_sale_should_reduce_stock(struct store *store,
 /**
  * Messages for reacting to purchase prices.
  */
-static const char *comment_worthless[] =
-{
-	"Arrgghh!",
-	"You bastard!",
-	"You hear someone sobbing...",
-	"The shopkeeper howls in agony!",
-	"The shopkeeper wails in anguish!",
-	"The shopkeeper beats his head against the counter."
-};
+const char **comment_worthless;
+int n_comment_worthless;
 
-static const char *comment_bad[] =
-{
-	"Damn!",
-	"You fiend!",
-	"The shopkeeper curses at you.",
-	"The shopkeeper glares at you."
-};
+const char **comment_bad;
+int n_comment_bad;
 
-static const char *comment_accept[] =
-{
-	"Okay.",
-	"Fine.",
-	"Accepted!",
-	"Agreed!",
-	"Done!",
-	"Taken!"
-};
+const char **comment_accept;
+int n_comment_accept;
 
-static const char *comment_good[] =
-{
-	"Cool!",
-	"You've made my day!",
-	"The shopkeeper sniggers.",
-	"The shopkeeper giggles.",
-	"The shopkeeper laughs loudly."
-};
+const char **comment_good;
+int n_comment_good;
 
-static const char *comment_great[] =
-{
-	"Yipee!",
-	"I think I'll retire!",
-	"The shopkeeper jumps for joy.",
-	"The shopkeeper smiles gleefully.",
-	"Wow.  I'm going to name my new villa in your honour."
-};
-
-
-
+const char **comment_great;
+int n_comment_great;
 
 
 

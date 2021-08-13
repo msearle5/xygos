@@ -105,6 +105,11 @@ enum
 extern byte proj_to_attr[PROJ_MAX][BOLT_MAX];
 extern wchar_t proj_to_char[PROJ_MAX][BOLT_MAX];
 
+extern byte *dam_dec_resist;
+extern int n_dam_dec_resist;
+extern byte *dam_inc_vuln;
+extern int n_dam_inc_vuln;
+
 void thrust_away(struct loc centre, struct loc target, int grids_away);
 int inven_damage(struct player *p, int type, int cperc);
 int adjust_dam(struct player *p, int type, int dam, aspect dam_aspect,

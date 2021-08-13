@@ -120,6 +120,23 @@ extern struct hint *firstnames;
  */
 extern struct hint *secondnames;
 
+/**
+ * Responses
+ */
+extern const char **comment_worthless;
+extern int n_comment_worthless;
+
+extern const char **comment_bad;
+extern int n_comment_bad;
+
+extern const char **comment_accept;
+extern int n_comment_accept;
+
+extern const char **comment_good;
+extern int n_comment_good;
+
+extern const char **comment_great;
+extern int n_comment_great;
 
 struct store *get_store_by_idx(int idx);
 struct store *get_store_by_name(const char *name);

@@ -24,6 +24,12 @@
 #include "cmd-core.h"
 
 /* cmd-cave.c */
+extern char *obj_feeling_text[10];
+extern int n_obj_feeling_text;
+
+extern char *mon_feeling_text[10];
+extern int n_mon_feeling_text;
+
 void do_cmd_go_up(struct command *cmd);
 void do_cmd_go_down(struct command *cmd);
 void do_cmd_open(struct command *cmd);

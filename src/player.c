@@ -45,61 +45,9 @@ struct player_class *classes;
 struct player_ability *player_abilities;
 
 /**
- * Base experience levels, may be adjusted up for race and/or class
+ * Base experience levels, may be adjusted up or down for race, class, etc.
  */
-const s32b player_exp[PY_MAX_LEVEL] =
-{
-	10,
-	25,
-	45,
-	70,
-	100,
-	140,
-	200,
-	280,
-	380,
-	500,
-	650,
-	850,
-	1100,
-	1400,
-	1800,
-	2300,
-	2900,
-	3600,
-	4400,
-	5400,
-	6800,
-	8400,
-	10200,
-	12500,
-	17500,
-	25000,
-	35000L,
-	50000L,
-	75000L,
-	100000L,
-	150000L,
-	200000L,
-	275000L,
-	350000L,
-	450000L,
-	550000L,
-	700000L,
-	850000L,
-	1000000L,
-	1250000L,
-	1500000L,
-	1800000L,
-	2100000L,
-	2400000L,
-	2700000L,
-	3000000L,
-	3500000L,
-	4000000L,
-	4500000L,
-	5000000L
-};
+s32b player_exp[PY_MAX_LEVEL];
 
 
 static const char *stat_name_list[] = {

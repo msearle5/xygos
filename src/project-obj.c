@@ -30,7 +30,6 @@
 #include "project.h"
 #include "source.h"
 
-
 /**
  * Destroys a type of item on a given percent chance.
  * The chance 'cperc' is in hundredths of a percent (1-in-10000)

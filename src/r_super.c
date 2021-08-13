@@ -28,7 +28,7 @@ static void super_loadsave(bool complete) {
 	}
 }
 
-/* Start a new character as an super */
+/* Start a new character as a super */
 static void super_init(void)
 {
 	/* Initialise saved state */

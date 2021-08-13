@@ -398,13 +398,8 @@ static bool item_tester_fragile(const struct object *obj)
 /**
  * Used by the enchant() function (chance of failure)
  */
-static const int enchant_table[16] =
-{
-	0, 10,  20, 40, 80,
-	160, 280, 400, 550, 700,
-	800, 900, 950, 970, 990,
-	1000
-};
+s16b *enchant_table;
+int n_enchant_table;
 
 /**
  * Hook to specify "recyclable into blocks"
@@ -469,7 +464,7 @@ static bool enchant_score(s16b *score, bool is_artifact)
 
 	/* Figure out the chance to enchant */
 	if (*score < 0) chance = 0;
-	else if (*score > 15) chance = 1000;
+	else if (*score >= n_enchant_table) chance = 1000;
 	else chance = enchant_table[*score];
 
 	/* If we roll less-than-or-equal to chance, it fails */

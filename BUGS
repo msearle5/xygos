@@ -19,8 +19,6 @@ BUG: A Collective Skate that a cyborg started with was {??}
 
 BUG? Stuff isn't transported when you fly - should it be? Should there just be 1 house?
 
-BUG:"You set off the strange rune" and monster spell SHOT need retheming
-
 BUG: Stores which close lose their entrance but don't become ruins. (Only when more than one would?)
 
 BUG: Bombs (e.g. pineapple) give excess messages - "The X fails to harm the Y." "The X detonates!" "The Y screams!".
@@ -47,13 +45,6 @@ BUG: "no position"
 
 BUG: Gain a talent (e.g. Cavespeeder Pilot) and you (sometimes) end up Starving (0%)
 	UTR easily (for watchpoints), probably bad save files
-
-BUG:/home/msearle/rogl/angband/v-xygos/angband/src/xygos: Error in flag_on(lore->flags, b->resist_flag): FlagID[0] Size[11] FlagOff[4294967295] FlagBV[128]
-	(Hit a lizard with a laser knife)
-	(flagID 0 = illegal, 1 is the first allowed.)
-	- does every brand need a resist-flag?
-	Certainly all previously have
-	UTR
 
 BUG: Lock up at start (occasionally)
 	UTR easily, and is likely the (fixed?) shop filling bug
@@ -100,6 +91,13 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+
+BUG:/home/msearle/rogl/angband/v-xygos/angband/src/xygos: Error in flag_on(lore->flags, b->resist_flag): FlagID[0] Size[11] FlagOff[4294967295] FlagBV[128]
+	(Hit a lizard with a laser knife)
+	(flagID 0 = illegal, 1 is the first allowed.)
+	- does every brand need a resist-flag?
+	Certainly all previously have
+	Fixed
 
 BUG: Armoury and Magic Shop need renaming. And possibly BM.
 	Fixed

@@ -239,25 +239,8 @@ void hit_chance(random_chance *chance, int to_hit, int ac)
  * Much of this table is not intended ever to be used, and is included
  * only to handle possible inflation elsewhere. -LM-
  */
-byte deadliness_conversion[151] =
-  {
-    0,
-    5,  10,  14,  18,  22,  26,  30,  33,  36,  39,
-    42,  45,  48,  51,  54,  57,  60,  63,  66,  69,
-    72,  75,  78,  81,  84,  87,  90,  93,  96,  99,
-    102, 104, 107, 109, 112, 114, 117, 119, 122, 124,
-    127, 129, 132, 134, 137, 139, 142, 144, 147, 149,
-    152, 154, 157, 159, 162, 164, 167, 169, 172, 174,
-    176, 178, 180, 182, 184, 186, 188, 190, 192, 194,
-    196, 198, 200, 202, 204, 206, 208, 210, 212, 214,
-    216, 218, 220, 222, 224, 226, 228, 230, 232, 234,
-    236, 238, 240, 242, 244, 246, 248, 250, 251, 253,
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255
-  };
+byte *deadliness_conversion;
+int n_deadliness_conversion;
 
 /**
  * Deadliness multiplies the damage done by a percentage, which varies 
@@ -274,10 +257,10 @@ void apply_deadliness(int *die_average, int deadliness)
 	int i;
 
 	/* Paranoia - ensure legal table access. */
-	if (deadliness > 150)
-		deadliness = 150;
-	if (deadliness < -150)
-		deadliness = -150;
+	if (deadliness >= n_deadliness_conversion)
+		deadliness = n_deadliness_conversion-1;
+	if (deadliness <= -n_deadliness_conversion)
+		deadliness = (-n_deadliness_conversion) + 1;
 
 	/* Deadliness is positive - damage is increased */
 	if (deadliness >= 0) {

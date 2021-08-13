@@ -35,21 +35,12 @@
 #include "trap.h"
 
 /* Vulnerability: % extra damage from 1 or more levels of vulnerability */
-const byte dam_inc_vuln[] = {
-	0, 33, 50, 60, 64, 66
-};
+byte *dam_inc_vuln;
+int n_dam_inc_vuln;
 
 /* Resistance: % damage reduction from 1 or more levels of resistance */
-const byte dam_dec_resist[] = {
-	0,  50, 66, 72, 75, 77, 78, 79, 80, 81, 
-	82, 83, 84, 85, 86, 87, 88, 89, 89, 90,
-	90, 91, 91, 91, 92, 92, 92, 92, 92, 93,
-	93, 93, 93, 93, 93, 93, 93, 93, 93, 93,
-	94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 
-	94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 
-	94, 94, 94, 94, 94, 94, 94, 94, 94, 94, 
-	94, 94, 94, 94, 94, 94, 94, 94, 94, 95, 
-};
+byte *dam_dec_resist;
+int n_dam_dec_resist;
 
 int resist_to_percent(int resist, int type)
 {
@@ -58,13 +49,13 @@ int resist_to_percent(int resist, int type)
 
 	if (resist < 0) {
 		resist = -resist;
-		if (resist >= (int)sizeof(dam_inc_vuln))
-			resist = sizeof(dam_inc_vuln) - 1;
+		if (resist >= n_dam_inc_vuln)
+			resist = n_dam_inc_vuln - 1;
 		return -dam_inc_vuln[resist];
 	}
 
-	if (resist >= (int)sizeof(dam_dec_resist))
-		resist = sizeof(dam_dec_resist) - 1;
+	if (resist >= n_dam_dec_resist)
+		resist = n_dam_dec_resist - 1;
 	int percent = dam_dec_resist[resist];
 
 	/* This is correct for an element, i.e. a projection with numerator = 1, denominator = 3.
@@ -123,14 +114,14 @@ int adjust_dam(struct player *p, int type, int dam, aspect dam_aspect,
 	 **/
 	if (resist < 0) {
 		resist = -resist;
-		if (resist >= (int)sizeof(dam_inc_vuln))
-			resist = sizeof(dam_inc_vuln) - 1;
+		if (resist >= n_dam_inc_vuln)
+			resist = n_dam_inc_vuln - 1;
 		return (dam * dam_inc_vuln[resist]) / 100;
 	}
 
 	/* Resistant; convert to a percentage (scaled for a 1/3 element) */
-	if (resist >= (int)sizeof(dam_dec_resist))
-		resist = sizeof(dam_dec_resist) - 1;
+	if (resist >= n_dam_dec_resist)
+		resist = n_dam_dec_resist - 1;
 	int percent = dam_dec_resist[resist];
 
 	/* Variable resists vary the denominator, so we need to invert the logic
