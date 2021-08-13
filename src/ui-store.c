@@ -1079,7 +1079,7 @@ static bool store_purchase(struct store_context *ctx, int item, bool single, boo
 			}
 
 			/* Limit to the number that can be carried */
-			amt = MIN(amt, inven_carry_num(obj, false));
+			amt = MIN(amt, inven_carry_num(player, obj, false));
 
 			/* Fail if there is no room.  Don't leak information about
 			 * unknown flavors for a purchase (getting it from home doesn't
@@ -1394,7 +1394,7 @@ static void store_steal(struct store_context *ctx, int item, struct menu *m, boo
 		price = price_item(ctx->store, obj, false, 1);
 
 		/* Limit to the number that can be carried */
-		amt = MIN(obj->number, inven_carry_num(obj, false));
+		amt = MIN(obj->number, inven_carry_num(player, obj, false));
 
 		/* Fail if there is no room */
 		if ((amt <= 0) || (!object_flavor_is_aware(obj) && pack_is_full())) {
@@ -1921,6 +1921,7 @@ static int locate_get(int min, int max, int feature, int xc, int yc, int *xout, 
 					(square(cave, loc(x, y+1))->feat != feature))
 						continue;
 			}
+
 			/* It's OK - increase the count, and return if this is asked for */
 			if (xout) {
 				if (count == total) {

@@ -276,7 +276,8 @@ static bool perform_one_test(struct carry_num_state *cns, struct object *obj,
 	bool success = true;
 
 	obj->number = n_try;
-	if (inven_carry_num(obj, true) != n_expected) {
+
+	if (inven_carry_num(cns->p, obj, true) != n_expected) {
 		success = false;
 	}
 	if (inven_carry_okay(obj)) {

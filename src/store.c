@@ -2104,7 +2104,7 @@ void do_cmd_buy(struct command *cmd)
 	object_copy_amt(bought, obj, amt);
 
 	/* Ensure we have room */
-	if (bought->number > inven_carry_num(bought, true)) {
+	if (bought->number > inven_carry_num(player, bought, true)) {
 		msg("You cannot carry that many items.");
 		object_delete(&bought);
 		return;
@@ -2150,7 +2150,7 @@ void do_cmd_buy(struct command *cmd)
 	if (amt != 1)
 		install = false;
 	else
-		install = ((inven_carry_num(bought, true) <= 0) && (wield_slot(bought) != player->body.count));
+		install = ((inven_carry_num(player, bought, true) <= 0) && (wield_slot(bought) != player->body.count));
 
 	if (!steal) {
 		if (cyber && install) {
@@ -2262,7 +2262,7 @@ void do_cmd_retrieve(struct command *cmd)
 	object_copy_amt(picked_item, obj, amt);
 
 	/* Ensure we have room */
-	if (picked_item->number > inven_carry_num(picked_item, true)) {
+	if (picked_item->number > inven_carry_num(player, picked_item, true)) {
 		msg("You cannot carry that many items.");
 		object_delete(&picked_item);
 		return;

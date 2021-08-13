@@ -614,7 +614,7 @@ bool object_is_ignored(const struct object *obj)
  */
 bool ignore_item_ok(const struct player *p, const struct object *obj)
 {
-	if (p->unignoring)
+	if (p && p->unignoring)
 		return false;
 
 	return object_is_ignored(obj);
