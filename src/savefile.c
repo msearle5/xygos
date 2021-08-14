@@ -418,6 +418,17 @@ void rdwr_string(char **str)
 	}
 }
 
+/* Read or write a string which may be null */
+void rdwr_string_null(char **str)
+{
+	bool null = (*str == NULL);
+	rdwr_bool(&null);
+	if (!null)
+		rdwr_string(str);
+	else
+		*str = NULL;
+}
+
 /**
  * ------------------------------------------------------------------------
  * Savefile saving functions

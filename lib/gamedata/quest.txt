@@ -94,6 +94,13 @@ desc:Hunt the Wumpus
 succeed:The traditional wumpus hunter's prize isn't worth much, but I think you'll like this boomstick!
 failure:Well, I saw you walking boldly into the wumpus's den - so I will admit that although you didn't manage to defeat it, you aren't just a poseur. So I'll reluctantly allow you in to see more stuff, but you can't expect a real reward. You do still get the traditional wumpus hunter's prize, though, for what that's worth.
 
+# The rest is dynamic
+name:Hit List
+store:All:Black Market
+succeed:Congratulations - here's your reward.
+failure:It appears that someone else got there first, so there's no reward. That doesn't stop you from taking another contract though, if one is available.
+desc:The Black Market maintains a list of contract killings. Accept the job, eliminate your target and you'll get increasingly valuable rewards and the option to take a more challenging target. Successful assassins also command respect in the mob and you'll be able to buy higher level stuff at better prices.
+
 name:Day of the Triffids
 level:35
 race:triffid

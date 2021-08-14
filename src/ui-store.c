@@ -1986,7 +1986,7 @@ static void locate_quest(struct quest *q)
 	q->y = yout;
 }
 
-/* asks the owner if there is anything they want doing */
+/* Asks the owner if there is anything they want doing */
 static void store_quest(struct store_context *ctx)
 {
 	struct store *store = ctx->store;
@@ -2009,7 +2009,7 @@ static void store_quest(struct store_context *ctx)
 	for(int i=0;i<z_info->quest_max;i++)
 	{
 		struct quest *q = &player->quests[i];
-		if ((q->town == (player->town - t_info)) && (q->store == (int)store->sidx) && (!(q->flags & QF_LOCKED))) {
+		if (((q->town < 0) || (q->town == (player->town - t_info))) && (q->store == (int)store->sidx) && (!(q->flags & QF_LOCKED))) {
 			if (!(q->flags & (QF_ACTIVE | QF_FAILED | QF_SUCCEEDED | QF_UNREWARDED))) {
 				/* Take new quest - ask first */
 				screen_save();
@@ -2021,7 +2021,7 @@ static void store_quest(struct store_context *ctx)
 					locate_quest(q);
 
 					/* Create a stairway */
-					if (!(q->flags & QF_TOWN))
+					if ((!(q->flags & QF_TOWN)) && (!(streq(q->name, "Hit List"))))
 						square_set_feat(cave, loc(q->x,q->y), FEAT_ENTRY);
 				}
 				return;
@@ -2033,7 +2033,7 @@ static void store_quest(struct store_context *ctx)
 					 **/
 					if (quest_is_rewardable(q)) {
 						msg(q->succeed);
-						quest_reward(q, true);
+						quest_reward(q, true, ctx);
 						/* Unlock quests depending on this */
 						if (q->unlock) {
 							for(int j=0;j<z_info->quest_max;j++)
@@ -2042,14 +2042,14 @@ static void store_quest(struct store_context *ctx)
 									player->quests[j].flags &= ~QF_LOCKED;
 							}
 						}
+						ctx->flags |= STORE_GOLD_CHANGE;
+						ctx->flags |= STORE_FRAME_CHANGE;
+						event_signal(EVENT_STORECHANGED);
 					}
 				} else {
 					msg(q->failure);
-					quest_reward(q, false);
+					quest_reward(q, false, ctx);
 				}
-				q->flags &= ~(QF_UNREWARDED | QF_ACTIVE);
-				if (!(q->flags & QF_SUCCEEDED))
-					q->flags |= QF_FAILED;
 				return;
 			} else if (q->flags & QF_ACTIVE) {
 				/* Still in progress */
@@ -2068,7 +2068,7 @@ static void store_quest(struct store_context *ctx)
 
 /* Select an item from a store's stock.
  * Returns -1 if cancelled or a non-negative index into the store's stock array if an item is selected.
- * Items available are filterd through the predicate if this is non-NULL.
+ * Items available are filtered through the predicate if this is non-NULL.
  */
 static int store_select_item(bool (*pred)(struct store *, struct object *))
 {

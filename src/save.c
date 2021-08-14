@@ -438,6 +438,8 @@ void rdwr_quests(void)
 		rdwr_u16b(&player->quests[i].y);
 		rdwr_s32b(&player->quests[i].town);
 		rdwr_s32b(&player->quests[i].store);
+		rdwr_string_null(&player->quests[i].intro);
+		RDWR_PTR(&player->quests[i].race, r_info);
 	}
 }
 
@@ -499,6 +501,7 @@ void rdwr_player(void)
 	rdwr_s32b(&player->town_faction);
 	rdwr_s32b(&player->cyber_faction);
 	rdwr_s32b(&player->last_faction_loss);
+	rdwr_s32b(&player->hitlist_wins);
 	rdwr_string(&player->artifact);
 }
 

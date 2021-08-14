@@ -931,8 +931,8 @@ static struct panel *get_panel_farleft(void) {
 		"Outsider",
 		"Initiate",
 		"Mobster",
-		"Mob Boss",
-		"Mob Boss",
+		"Assassin",
+		"Assassin",
 		"Mob Boss",
 		"Mob Boss",
 	};

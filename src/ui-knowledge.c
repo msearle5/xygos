@@ -2446,7 +2446,7 @@ static textblock *display_quest_name_tb(int oid)
 		textblock_free(tb);
 
 	/* Format the name */
-	snprintf(buf, sizeof(buf), "%s (%d)", quests[oid].name, quests[oid].level);
+	snprintf(buf, sizeof(buf), "%s (%d)", player->quests[oid].name, player->quests[oid].level);
 	buf[sizeof(buf)-1] = 0;
 
 	/* Add one line of the name */
@@ -2489,15 +2489,6 @@ static textblock *display_quest_descr_tb(int oid)
 
 static void display_quest(int col, int row, bool cursor, int oid )
 {
-	////static int lastoid;
-	//static int line;
-
-	/* Count lines */
-	/*if (oid == lastoid) {
-		line++;
-	} else {
-		line = 0;
-	}*/
 	/* Extract line */
 	int line = oid >> 16;
 	oid = oid & 0xffff;
@@ -2511,9 +2502,6 @@ static void display_quest(int col, int row, bool cursor, int oid )
 	Term_get_size(&x, &y);
 	const region descr_region = { 30, row, x - 30, y };
 	textui_textblock_line(display_quest_descr_tb(oid), line, descr_region);
-
-	/* Keep this OID to count lines */
-	//lastoid = oid;
 }
 
 static void quest_lore(int oid)
@@ -2526,7 +2514,7 @@ static void quest_lore(int oid)
 
 	textblock_append_c(tb, COLOUR_L_BLUE, "%s", q->name);
 	textblock_append(tb, "\n");
-	textblock_append_c(tb, COLOUR_GREEN, "A level %d task: %s.\n", q->level, q->desc);
+	textblock_append_c(tb, COLOUR_GREEN, "A level %d task: %s\n", q->level, q->desc);
 
 	// From a store
 	if ((q->store >= 0) && (q->town >= 0)) {

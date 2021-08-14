@@ -689,29 +689,31 @@ static bool world_locate_quests(void)
 		struct quest *q = &player->quests[i];
 
 		for(int l = 0; l < q->quests; l++) {
-			struct town *town = get_town_by_dungeon(q->loc[l].location);
-			struct store *store = get_store_by_name(q->loc[l].storename);
-			if (town) {
-				if (!store) {
-					q->loc[l].town = town - t_info;
-					q->town = q->loc[select[i]].town;
-				} else {
-					q->loc[l].town = town - t_info;
-					q->loc[l].store = store->sidx;
-
-					/* Are all locations of this quest now known?
-					 * If so, fill in town and store
-					 **/
-					bool ok = true;
-					for(int k=0; k<q->quests; k++) {
-						if ((q->loc[l].store < 0) || (q->loc[l].town < 0)) {
-							ok = false;
-							break;
-						}
-					}
-					if (ok) {
+			if (q->loc[l].location) {
+				struct town *town = get_town_by_dungeon(q->loc[l].location);
+				struct store *store = get_store_by_name(q->loc[l].storename);
+				if (town) {
+					if (!store) {
+						q->loc[l].town = town - t_info;
 						q->town = q->loc[select[i]].town;
-						q->store = q->loc[select[i]].store;
+					} else {
+						q->loc[l].town = town - t_info;
+						q->loc[l].store = store->sidx;
+
+						/* Are all locations of this quest now known?
+						 * If so, fill in town and store
+						 **/
+						bool ok = true;
+						for(int k=0; k<q->quests; k++) {
+							if ((q->loc[l].store < 0) || (q->loc[l].town < 0)) {
+								ok = false;
+								break;
+							}
+						}
+						if (ok) {
+							q->town = q->loc[select[i]].town;
+							q->store = q->loc[select[i]].store;
+						}
 					}
 				}
 			}
@@ -730,54 +732,68 @@ static bool world_locate_quests(void)
 		for (int i = 0; i < z_info->quest_max; i++) {
 		struct quest *q = &player->quests[i];
 			for(int l = 0; l < q->quests; l++) {
-				/* Not yet found */
-				if (q->loc[l].town < 0) {
-					struct quest *src = get_quest_by_name(q->loc[l].location);
-					missing = true;
-					if (!(*badname))
-						badname = q->loc[l].location;
+				if (q->loc[l].location) {
+					/* Not yet found */
+					if (q->loc[l].town < 0) {
+						struct quest *src = get_quest_by_name(q->loc[l].location);
+						missing = true;
+						if (!(*badname))
+							badname = q->loc[l].location;
 
-					/* It's a known quest */
-					if (src) {
-						/* It has a known location */
-						if ((src->town >= 0) && (src->store >= 0)) {
-							/* Place this quest there */
-							q->loc[l].town = src->town;
-							found = true;
-							missing = false;
+						/* It's a known quest */
+						if (src) {
+							/* It has a known location */
+							if ((src->town >= 0) && (src->store >= 0)) {
+								/* Place this quest there */
+								q->loc[l].town = src->town;
+								found = true;
+								missing = false;
 
-							/* Assign store if needed */
-							if (q->loc[l].storename) {
-								struct store *store = get_store_by_name(q->loc[l].storename);
-								if (!store) {
-									quit(format("Unable to find quest: town %s has no store %s",
-										q->loc[l].location, q->loc[l].storename));
-									return false;
+								/* Assign store if needed */
+								if (q->loc[l].storename) {
+									struct store *store = get_store_by_name(q->loc[l].storename);
+									if (!store) {
+										quit(format("Unable to find quest: town %s has no store %s",
+											q->loc[l].location, q->loc[l].storename));
+										return false;
+									}
+									q->loc[l].store = store->sidx;
+								} else {
+									q->loc[l].store = src->store;
 								}
-								q->loc[l].store = store->sidx;
-							} else {
-								q->loc[l].store = src->store;
-							}
 
-							/* Are all locations of this quest now known?
-							 * If so, fill in town and store
-							 **/
-							bool ok = true;
-							for(int k=0; k<q->quests; k++) {
-								if ((q->loc[l].store < 0) || (q->loc[l].town < 0)) {
-									ok = false;
-									break;
+								/* Are all locations of this quest now known?
+								 * If so, fill in town and store
+								 **/
+								bool ok = true;
+								for(int k=0; k<q->quests; k++) {
+									if ((q->loc[l].store < 0) || (q->loc[l].town < 0)) {
+										ok = false;
+										break;
+									}
+								}
+								if (ok) {
+									q->town = q->loc[select[i]].town;
+									q->store = q->loc[select[i]].store;
 								}
 							}
-							if (ok) {
-								q->town = q->loc[select[i]].town;
-								q->store = q->loc[select[i]].store;
-							}
+						} else {
+							/* Unrecognized name */
+							unknown = true;
+							badname = q->loc[l].location;
 						}
-					} else {
-						/* Unrecognized name */
-						unknown = true;
-						badname = q->loc[l].location;
+					}
+				} else {
+					/* Assign store if needed */
+					if (q->loc[l].storename) {
+						struct store *store = get_store_by_name(q->loc[l].storename);
+						if (!store) {
+							quit(format("Unable to find quest: town %s has no store %s",
+								q->loc[l].location, q->loc[l].storename));
+							return false;
+						}
+						q->loc[l].store = store->sidx;
+						q->store = store->sidx;
 					}
 				}
 			}

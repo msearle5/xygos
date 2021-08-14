@@ -2670,7 +2670,7 @@ void do_cmd_wiz_summon_named(struct command *cmd)
 
 		/* Pick an empty location. */
 		if (i >= 10 || scatter_ext(cave, &grid, 1, player->grid, 1,
-				true, square_isempty) == 0) {
+				true, (i == 0) ? square_isempty : square_isview) == 0) {
 			msg("Could not place monster.");
 			break;
 		}

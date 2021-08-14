@@ -26,6 +26,7 @@
 #include "monster.h"
 #include "obj-desc.h"
 #include "obj-gear.h"
+#include "obj-knowledge.h"
 #include "obj-make.h"
 #include "obj-pile.h"
 #include "obj-tval.h"
@@ -210,7 +211,10 @@ static enum parser_error parse_quest_store(struct parser *p) {
 	struct quest_location *ql = q->loc + q->quests;
 	q->quests++;
 	ql->town = ql->store = -1;
-	ql->location = string_make(location);
+	if (!streq(location, "All"))
+		ql->location = string_make(location);
+	else
+		ql->location = NULL;
 	ql->storename = string_make(name);
 
 	return PARSE_ERROR_NONE;
@@ -457,6 +461,95 @@ bool is_active_quest(struct player *p, int level)
 	}
 
 	return false;
+}
+
+/**
+ * Advance the Hit List quest.
+ * This is called before asking for a new Hit List quest.
+ * Returns true if a new target was found.
+ */
+static bool get_next_hitlist(struct player *p)
+{
+	char buf[256];
+	struct quest *q = get_quest_by_name("Hit List");
+
+	/* First time? Activate, and skip early levels if you started late  */
+	if (q->level == 0) {
+		q->level = MAX(0, (player->lev - 10));
+		q->flags |= QF_ACTIVE;
+	}
+
+	/* May have already completed all Hit List missions */
+	if (q->level == z_info->max_depth-1)
+		return false;
+
+	/* May still be in progress */
+	if ((q->cur_num == 0) && (q->max_num == 1))
+		return false;
+
+	/* Look for a unique of greater than the quest's current depth
+	 * which is alive and not a questor, special-generation etc.
+	 *
+	 * Some will randomly be skipped: this is more likely to happen
+	 * for levels close to the current one and less likely to happen
+	 * when more missions have already been completed - which are
+	 * supposed to go some way towards getting a similar number of
+	 * hits between games, to not depend too much on how early you
+	 * take the first mission, and to cope with the number of uniques
+	 * increasing.
+	 *
+	 * (Should they become lower level / more likely to spawn?)
+	 */
+	int diff = 0;
+	struct monster_race *r = NULL;
+	do {
+		diff++;
+		q->level++;
+		for (int i = 0; i < z_info->r_max; i++) {
+			if ((r_info[i].level == q->level) &&
+				(rf_has(r_info[i].flags, RF_UNIQUE)) &&
+				(!rf_has(r_info[i].flags, RF_QUESTOR)) &&
+				(!rf_has(r_info[i].flags, RF_SPECIAL_GEN)) &&
+				(r_info[i].rarity > 0) &&
+				(r_info[i].max_num > 0) &&
+				(randint0(diff+1+p->hitlist_wins) > p->hitlist_wins)) {
+					r = &r_info[i];
+					break;
+			}
+		}
+	} while ((!r) && (q->level < z_info->max_depth));
+
+	/* If r is unset, there are no more eligible targets.
+	 * Make the quest inactive.
+	 **/
+	if (!r) {
+		q->flags &= ~(QF_ACTIVE | QF_FAILED | QF_UNREWARDED);
+		q->flags |= QF_SUCCEEDED;
+		if (q->intro)
+			string_free(q->intro);
+		q->level = z_info->max_depth-1;
+		q->intro = string_make("There are no more contracts available.");
+		return false;
+	}
+
+	/* Set up the messages for the new quest */
+	static const char *kill[] = {
+		"Kill", "Exterminate", "Annul", "Inhume", "Obliterate",
+		"Blow away", "Rub out", "Erase", "Put down", "Assassinate",
+		"Execute", "Remove", "Get rid of", "Gank", "Liquidate",
+		"Destroy", "Delete", "Annihilate"
+	};
+	if (q->intro)
+		string_free(q->intro);
+	strnfmt(buf, sizeof(buf), "%s %s and you will be rewarded.", kill[randint0(sizeof(kill)/sizeof(*kill))], r->name);
+	q->intro = string_make(buf);
+
+	/* One target */
+	q->race = r;
+	q->max_num = 1;
+	q->cur_num = 0;
+
+	return true;
 }
 
 /**
@@ -1106,12 +1199,58 @@ bool quest_is_rewardable(const struct quest *q)
 	return true;
 }
 
+/* Return true if successful */
+static bool quest_level_reward(int lev)
+{
+	/* Hit List rewards are based on level. */
+	struct object *obj = NULL;
+	int value;
+	int minvalue = (lev*lev*2)+(lev*20)+200;
+	int maxvalue = ((lev+1)*(lev+1)*2)+((lev+1)*20)+250;
+	int reps = 0;
+
+	/* Iterate until an item of the right value range is found */
+	do {
+		reps++;
+		if (obj)
+			object_delete(&obj);
+		value = 0;
+		obj = make_object_named(cave, lev, true, false, false, &value, 0, NULL);
+		if (reps > 1000)
+			maxvalue++;
+		if ((reps > 2000) && (minvalue > 1))
+			minvalue--;
+	} while ((reps < 10000) && ((!obj) || (value < minvalue) || (value > maxvalue)));
+
+	/* Initialize it and give it to you */
+	if (obj) {
+		obj->origin = ORIGIN_REWARD;
+		obj->known = object_new();
+		object_set_base_known(player, obj);
+		object_flavor_aware(player, obj);
+		obj->known->pval = obj->pval;
+		obj->known->effect = obj->effect;
+		obj->known->notice |= OBJ_NOTICE_ASSESSED;
+		inven_carry(player, obj, true, false);
+		int icon;
+		do {
+			icon = object_find_unknown_icon(player, obj);
+			if (icon >= 0)
+				player_learn_icon(player, icon, false);
+		} while (icon >= 0);
+		update_player_object_knowledge(player);
+		obj->kind->everseen = true;
+		return true;
+	}
+	return false;
+}
+
 /**
  * Generate a reward for completing a quest.
  * Passed true if the quest was completed successfully.
  * Make sure overflowing inventory is handled reasonably.
  */
-void quest_reward(struct quest *q, bool success)
+void quest_reward(struct quest *q, bool success, struct store_context *ctx)
 {
 	const char *n = q->name;
 	int au = 0;
@@ -1174,6 +1313,24 @@ void quest_reward(struct quest *q, bool success)
 			add_ego_item(si, tval, name, ego, qty, qty+5);
 		} else if (streq(n, "Swimming with Meg")) {
 			add_artifact(si, "sharkproof swimsuit");
+		} else if (streq(n, "Hit List")) {
+			if (!quest_level_reward(q->level)) {
+				au = store_roundup((q->level*q->level*2)+(q->level*20)+200);
+				msg("Someone nicked your reward! You'll have to accept cash, $%d.", au);
+			}
+			int old_faction = player->bm_faction;
+			player->hitlist_wins++;
+			player->bm_faction = MIN(player->bm_faction+1, (player->hitlist_wins+1) / 2);
+			if (old_faction != player->bm_faction) {
+				msg("You are now trusted enough to see more stuff at better prices.");
+				for (int j = 0; j < 10; j++)
+					store_maint(ctx->store);
+			}
+			/* Open it again */
+			q->flags &= ~(QF_SUCCEEDED | QF_FAILED | QF_UNREWARDED | QF_ACTIVE);
+			//q->flags |= QF_ACTIVE;
+			player->au += au;
+			return;
 		}
 		quest_remove_specials();
 	} else {
@@ -1188,6 +1345,10 @@ void quest_reward(struct quest *q, bool success)
 	if (si[0].max) {
 		add_start_items(player, si, false, false, ORIGIN_REWARD);
 	}
+
+	q->flags &= ~(QF_UNREWARDED | QF_ACTIVE);
+	if (!(q->flags & QF_SUCCEEDED))
+		q->flags |= QF_FAILED;
 	player->au += au;
 }
 
@@ -1198,6 +1359,8 @@ const char *quest_get_intro(const struct quest *q) {
 	if (streq(q->name, "Hunter, in Darkness")) {
 		if (player->bm_faction > 0)
 			return "No, you still aren't seeing the best stuff. That's not for everyone. Go kill something big to show us you aren't all talk. There's a wumpus in the bat cave. That would do nicely.";
+	} else if (streq(q->name, "Hit List")) {
+		get_next_hitlist(player);
 	}
 	return q->intro;
 }
@@ -1326,7 +1489,7 @@ bool quest_check(struct player *p, const struct monster *m)
 	}
 
 	/* Then check for monsters found outside special levels that affect quests.
-	 * These don't necessarily have the RF_QUESTOR flag (consider a 'random nonunique' quest)
+	 * These don't necessarily have the RF_QUESTOR flag (consider a 'random nonunique' quest, or 'Hit List')
 	 **/
 	bool questor = rf_has(m->race->flags, RF_QUESTOR);
 	if (questor) {
@@ -1378,6 +1541,11 @@ bool quest_check(struct player *p, const struct monster *m)
 				}
 			}
 		}
+	} else if (m->race == get_quest_by_name("Hit List")->race) {
+		succeed_quest(get_quest_by_name("Hit List"));
+		msg("Target eliminated.");
+		get_quest_by_name("Hit List")->cur_num = 1;
+		return true;
 	}
 
 	/* Now dealing only with the win quests - so don't bother with non-questors */

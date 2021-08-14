@@ -67,6 +67,7 @@ void rdwr_u32b(u32b *v);
 void rdwr_s32b(s32b *v);
 void rdwr_double(double *v);
 void rdwr_string(char **str);
+void rdwr_string_null(char **str);
 
 /* Read/Write pointer. Give a pointer to pointer, and the base of the array (it converts it to an offset to this base) */
 #define RDWR_PTR(P, B) if (saving) { if (*(P) == NULL) { wr_s32b(-1); } else { wr_s32b((*(P)) - ((B))); }  } else { s32b offset; rd_s32b(&offset); if (offset < 0) { *(P) = NULL; } else { *(P) = ((B)) + offset; } }
