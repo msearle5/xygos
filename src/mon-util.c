@@ -296,14 +296,15 @@ static void path_analyse(struct chunk *c, struct loc grid)
  * "OPT(player, disturb_near)" (monster which is "easily" viewable moves in some
  * way).  Note that "moves" includes "appears" and "disappears".
  */
-void update_mon(struct monster *mon, struct chunk *c, bool full)
+void update_mon(struct player *p, struct monster *mon, struct chunk *c,
+		bool full)
 {
 	struct monster_lore *lore;
 
 	int d;
 
 	/* If still generating the level, measure distances from the middle */
-	struct loc pgrid = character_dungeon ? player->grid :
+	struct loc pgrid = character_dungeon ? p->grid :
 		loc(c->width / 2, c->height / 2);
 
 	/* Seen at all */
@@ -312,7 +313,7 @@ void update_mon(struct monster *mon, struct chunk *c, bool full)
 	/* Seen by vision */
 	bool easy = false;
 
-	/* ESP permitted */
+	/* ESP, etc. permitted */
 	bool telepathy_ok = player_of_has(player, OF_TELEPATHY);
 	bool sense_animal = player_of_has(player, OF_SENSE_ANIMAL);
 	bool sense_metal = player_of_has(player, OF_SENSE_METAL);
@@ -379,9 +380,9 @@ void update_mon(struct monster *mon, struct chunk *c, bool full)
 		}
 
 		/* Normal line of sight and player is not blind */
-		if (square_isview(c, mon->grid) && !player->timed[TMD_BLIND]) {
+		if (square_isview(c, mon->grid) && !p->timed[TMD_BLIND]) {
 			/* Use "infravision" */
-			if (d <= player->state.see_infra) {
+			if (d <= p->state.see_infra) {
 				/* Learn about warm/cold blood */
 				rf_on(lore->flags, RF_COLD_BLOOD);
 
@@ -400,7 +401,7 @@ void update_mon(struct monster *mon, struct chunk *c, bool full)
 				/* Handle invisibility */
 				if (monster_is_invisible(mon)) {
 					/* See invisible */
-					if (player_of_has(player, OF_SEE_INVIS)) {
+					if (player_of_has(p, OF_SEE_INVIS)) {
 						/* Easy to see */
 						easy = flag = true;
 					}
@@ -418,7 +419,7 @@ void update_mon(struct monster *mon, struct chunk *c, bool full)
 	/* If a mimic looks like an ignored item, it's not seen */
 	if (monster_is_mimicking(mon)) {
 		struct object *obj = mon->mimicked_obj;
-		if (ignore_item_ok(player, obj))
+		if (ignore_item_ok(p, obj))
 			easy = flag = false;
 	}
 
@@ -443,20 +444,20 @@ void update_mon(struct monster *mon, struct chunk *c, bool full)
 			square_light_spot(c, mon->grid);
 
 			/* Update health bar as needed */
-			if (player->upkeep->health_who == mon)
-				player->upkeep->redraw |= (PR_HEALTH);
+			if (p->upkeep->health_who == mon)
+				p->upkeep->redraw |= (PR_HEALTH);
 
 			/* Hack -- Count "fresh" sightings */
 			if (lore->sights < SHRT_MAX)
 				lore->sights++;
 
 			/* Window stuff */
-			player->upkeep->redraw |= PR_MONLIST;
+			p->upkeep->redraw |= PR_MONLIST;
 		}
 	} else if (monster_is_visible(mon)) {
 		/* Not visible but was previously seen - treat mimics differently */
 		if (!mon->mimicked_obj
-				|| ignore_item_ok(player, mon->mimicked_obj)) {
+				|| ignore_item_ok(p, mon->mimicked_obj)) {
 			/* Mark as not visible */
 			mflag_off(mon->mflag, MFLAG_VISIBLE);
 
@@ -464,11 +465,11 @@ void update_mon(struct monster *mon, struct chunk *c, bool full)
 			square_light_spot(c, mon->grid);
 
 			/* Update health bar as needed */
-			if (player->upkeep->health_who == mon)
-				player->upkeep->redraw |= (PR_HEALTH);
+			if (p->upkeep->health_who == mon)
+				p->upkeep->redraw |= (PR_HEALTH);
 
 			/* Window stuff */
-			player->upkeep->redraw |= PR_MONLIST;
+			p->upkeep->redraw |= PR_MONLIST;
 		}
 	}
 
@@ -481,11 +482,11 @@ void update_mon(struct monster *mon, struct chunk *c, bool full)
 			mflag_on(mon->mflag, MFLAG_VIEW);
 
 			/* Disturb on appearance */
-			if (OPT(player, disturb_near))
-				disturb(player);
+			if (OPT(p, disturb_near))
+				disturb(p);
 
 			/* Re-draw monster window */
-			player->upkeep->redraw |= PR_MONLIST;
+			p->upkeep->redraw |= PR_MONLIST;
 		}
 	} else {
 		/* Change */
@@ -494,11 +495,11 @@ void update_mon(struct monster *mon, struct chunk *c, bool full)
 			mflag_off(mon->mflag, MFLAG_VIEW);
 
 			/* Disturb on disappearance */
-			if (OPT(player, disturb_near) && !monster_is_mimicking(mon))
-				disturb(player);
+			if (OPT(p, disturb_near) && !monster_is_mimicking(mon))
+				disturb(p);
 
 			/* Re-draw monster list window */
-			player->upkeep->redraw |= PR_MONLIST;
+			p->upkeep->redraw |= PR_MONLIST;
 		}
 	}
 }
@@ -506,7 +507,7 @@ void update_mon(struct monster *mon, struct chunk *c, bool full)
 /**
  * Updates all the (non-dead) monsters via update_mon().
  */
-void update_monsters(bool full)
+void update_monsters(struct player *p, bool full)
 {
 	int i;
 
@@ -519,7 +520,7 @@ void update_monsters(bool full)
 
 		/* Update the monster if alive */
 		if (mon->race)
-			update_mon(mon, cave, full);
+			update_mon(p, mon, cave, full);
 	}
 }
 
@@ -628,7 +629,7 @@ void monster_swap(struct loc grid1, struct loc grid2)
 			}
 		}
 		mon->grid = grid2;
-		update_mon(mon, cave, true);
+		update_mon(player, mon, cave, true);
 
 		/* Affect light? */
 		if (mon->race->light != 0)
@@ -677,7 +678,7 @@ void monster_swap(struct loc grid1, struct loc grid2)
 			}
 		}
 		mon->grid = grid1;
-		update_mon(mon, cave, true);
+		update_mon(player, mon, cave, true);
 
 		/* Affect light? */
 		if (mon->race->light != 0)
@@ -827,7 +828,7 @@ void become_aware(struct chunk *c, struct monster *mon, struct player *p)
 			square_delete_object(c, obj->grid, obj, false, false);
 
 			/* Since mimicry affects visibility, update that. */
-			update_mon(mon, c, false);
+			update_mon(p, mon, c, false);
 		}
 
 		/* Update monster and item lists */
@@ -1559,14 +1560,14 @@ void kill_arena_monster(struct monster *mon)
 {
 	struct monster *old_mon = cave_monster(cave, mon->midx);
 	assert(old_mon);
-	update_mon(old_mon, cave, true);
+	update_mon(player, old_mon, cave, true);
 	old_mon->hp = -1;
 
 	player_kill_monster(old_mon, player, " is defeated!", false);
 	if (!((cave)->depth)) {
 		delete_monster(old_mon->grid);
 	} else {
-		update_mon(old_mon, cave, true);
+		update_mon(player, old_mon, cave, true);
 		old_mon->hp = -1;
 		player_kill_monster(old_mon, player, " is defeated!", false);
 	}

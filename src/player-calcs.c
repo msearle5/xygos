@@ -1961,12 +1961,12 @@ void update_stuff(struct player *p)
 	if (p->upkeep->update & (PU_DISTANCE)) {
 		p->upkeep->update &= ~(PU_DISTANCE);
 		p->upkeep->update &= ~(PU_MONSTERS);
-		update_monsters(true);
+		update_monsters(p, true);
 	}
 
 	if (p->upkeep->update & (PU_MONSTERS)) {
 		p->upkeep->update &= ~(PU_MONSTERS);
-		update_monsters(false);
+		update_monsters(p, false);
 	}
 
 	if (p->upkeep->update & (PU_PANEL)) {
