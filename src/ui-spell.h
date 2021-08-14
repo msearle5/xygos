@@ -20,11 +20,11 @@
 #define INCLUDED_UI_SPELL_H
 
 void textui_spell_browse(void);
-int textui_get_spell_from_book(const char *verb,
+int textui_get_spell_from_book(struct player *p, const char *verb,
 							   const char *error,
-							   bool (*spell_filter)(int spell_index));
-int textui_get_spell(const char *verb,
+							   bool (*spell_filter)(const struct player *p, int spell_index));
+int textui_get_spell(struct player *p, const char *verb,
 					 cmd_code cmd, const char *error,
-					 bool (*spell_filter)(int spell_index));
+					 bool (*spell_filter)(const struct player *p, int spell_index));
 
 #endif /* INCLUDED_UI_SPELL_H */

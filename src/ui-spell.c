@@ -40,7 +40,7 @@ struct spell_menu_data {
 	int n_spells;
 
 	bool browse;
-	bool (*is_valid)(int spell_index);
+	bool (*is_valid)(const struct player *p, int spell_index);
 	bool show_description;
 
 	int selected_spell;
@@ -55,7 +55,7 @@ static int spell_menu_valid(struct menu *m, int oid)
 	struct spell_menu_data *d = menu_priv(m);
 	int *spells = d->spells;
 
-	return d->is_valid ? d->is_valid(spells[oid]) : true;
+	return d->is_valid ? d->is_valid(player, spells[oid]) : true;
 }
 
 /**
@@ -66,7 +66,7 @@ static void spell_menu_display(struct menu *m, int oid, bool cursor,
 {
 	struct spell_menu_data *d = menu_priv(m);
 	int spell_index = d->spells[oid];
-	const struct class_spell *spell = spell_by_index(spell_index);
+	const struct class_spell *spell = spell_by_index(player, spell_index);
 
 	char help[30];
 	char out[80];
@@ -148,7 +148,7 @@ static void spell_menu_browser(int oid, void *data, const region *loc)
 {
 	struct spell_menu_data *d = data;
 	int spell_index = d->spells[oid];
-	const struct class_spell *spell = spell_by_index(spell_index);
+	const struct class_spell *spell = spell_by_index(player, spell_index);
 
 	if (d->show_description) {
 		/* Redirect output to the screen */
@@ -211,7 +211,7 @@ static const menu_iter spell_menu_iter = {
 /**
  * Create and initialise a spell menu, given a validity hook
  */
-static struct menu *spell_menu_new(bool (*is_valid)(int spell_index), bool show_description)
+static struct menu *spell_menu_new(bool (*is_valid)(const struct player *p, int spell_index), bool show_description)
 {
 	struct menu *m = menu_new(MN_SKIN_SCROLL, &spell_menu_iter);
 	struct spell_menu_data *d = mem_alloc(sizeof *d);
@@ -220,8 +220,8 @@ static struct menu *spell_menu_new(bool (*is_valid)(int spell_index), bool show_
 	region loc = { 0 - width, 1, width, -99 };
 
 	/* collect spells from object */
-	d->n_spells = spell_collect_from_book(&d->spells);
-	if (d->n_spells == 0 || !spell_okay_list(is_valid, d->spells, d->n_spells)){
+	d->n_spells = spell_collect_from_book(player, &d->spells);
+	if (d->n_spells == 0 || !spell_okay_list(player, is_valid, d->spells, d->n_spells)){
 		mem_free(m);
 		mem_free(d->spells);
 		mem_free(d);
@@ -321,14 +321,14 @@ void textui_spell_browse(void)
 /**
  * Get a technique from specified book.
  */
-int textui_get_spell_from_book(const char *verb,
+int textui_get_spell_from_book(struct player *p, const char *verb,
 							   const char *error,
-							   bool (*spell_filter)(int spell_index))
+							   bool (*spell_filter)(const struct player *p, int spell_index))
 {
 	const char *noun = "technique";
 	struct menu *m;
 
-	handle_stuff(player);
+	handle_stuff(p);
 
 	m = spell_menu_new(spell_filter, false);
 	if (m) {
@@ -345,9 +345,9 @@ int textui_get_spell_from_book(const char *verb,
 /**
  * Get a technique from the player.
  */
-int textui_get_spell(const char *verb,
+int textui_get_spell(struct player *p, const char *verb,
 					 cmd_code cmd, const char *error,
-					 bool (*spell_filter)(int spell_index))
+					 bool (*spell_filter)(const struct player *p, int spell_index))
 {
-	return textui_get_spell_from_book(verb, error, spell_filter);
+	return textui_get_spell_from_book(p, verb, error, spell_filter);
 }

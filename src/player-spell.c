@@ -129,16 +129,16 @@ void combine_class_books(const struct class_magic *cmagic, int *count, int *spel
  * This looks at class, race, shapechange, abilities, and equipment.
  * It currently assumes that shapechange prevents everything not derived from the change.
  */
-void combine_books(int *count, int *spells, int *maxidx, struct class_spell **spellps)
+void combine_books(const struct player *p, int *count, int *spells, int *maxidx, struct class_spell **spellps)
 {
 	if (player_is_shapechanged(player)) {
-		combine_class_books(&player->shape->magic, count, spells, maxidx, spellps);
+		combine_class_books(&p->shape->magic, count, spells, maxidx, spellps);
 	} else {
-		combine_class_books(&player->class->magic, count, spells, maxidx, spellps);
-		combine_class_books(&player->race->magic, count, spells, maxidx, spellps);
-		combine_class_books(&player->extension->magic, count, spells, maxidx, spellps);
-		combine_class_books(&player->personality->magic, count, spells, maxidx, spellps);
-		if (player->split_p)
+		combine_class_books(&p->class->magic, count, spells, maxidx, spellps);
+		combine_class_books(&p->race->magic, count, spells, maxidx, spellps);
+		combine_class_books(&p->extension->magic, count, spells, maxidx, spellps);
+		combine_class_books(&p->personality->magic, count, spells, maxidx, spellps);
+		if (p->split_p)
 			combine_class_books(&personalities->magic, count, spells, maxidx, spellps);
 
 		for(int i=0;i<PF_MAX;i++) {
@@ -149,9 +149,9 @@ void combine_books(int *count, int *spells, int *maxidx, struct class_spell **sp
 				 */
 				if (ability[i]->flags & AF_FLYING) {
 					struct class_magic *cmagic = &ability[i]->magic;
-					if ((cmagic->num_books > 0) && (player->flying == false))
+					if ((cmagic->num_books > 0) && (p->flying == false))
 						combine_book(&cmagic->books[0], count, spells, maxidx, spellps);
-					if ((cmagic->num_books > 1) && (player->flying == true))
+					if ((cmagic->num_books > 1) && (p->flying == true))
 						combine_book(&cmagic->books[1], count, spells, maxidx, spellps);
 					for(int i=2;i<cmagic->num_books;i++)
 						combine_book(&cmagic->books[i], count, spells, maxidx, spellps);
@@ -160,8 +160,8 @@ void combine_books(int *count, int *spells, int *maxidx, struct class_spell **sp
 				}
 			}
 		}
-		for (struct object *obj = player->gear; obj; obj = obj->next) {
-			if (object_is_equipped(player->body, obj)) {
+		for (struct object *obj = p->gear; obj; obj = obj->next) {
+			if (object_is_equipped(p->body, obj)) {
 				combine_class_books(&obj->kind->magic, count, spells, maxidx, spellps);
 				for(int i=0;i<MAX_EGOS;i++) {
 					if (obj->ego[i])
@@ -179,7 +179,7 @@ void combine_books(int *count, int *spells, int *maxidx, struct class_spell **sp
  * appropriate memory (by calling combine_books twice, first to
  * get the size then again to fill the newly allocated array).
  */
-static int collect_from_book(int **spells, struct class_spell ***spellps, int *n_i)
+static int collect_from_book(const struct player *p, int **spells, struct class_spell ***spellps, int *n_i)
 {
 	int n_spells = 0;
 
@@ -187,7 +187,7 @@ static int collect_from_book(int **spells, struct class_spell ***spellps, int *n
 		*n_i = 0;
 
 	/* Count the spells */
-	combine_books(&n_spells, NULL, n_i, NULL);
+	combine_books(p, &n_spells, NULL, n_i, NULL);
 	/* Exit early if there are none */
 	if (!n_spells) {
 		if (spells)
@@ -207,17 +207,16 @@ static int collect_from_book(int **spells, struct class_spell ***spellps, int *n
 	n_spells = 0;
 	if (n_i)
 		*n_i = 0;
-	combine_books(&n_spells, spells ? *spells : NULL, n_i, spellps ? *spellps : NULL);
+	combine_books(p, &n_spells, spells ? *spells : NULL, n_i, spellps ? *spellps : NULL);
 
 	return n_spells;
 }
 
-
-const struct class_spell *spell_by_index(int index)
+const struct class_spell *spell_by_index(const struct player *p, int index)
 {
 	struct class_spell **spellps = NULL;
 	int maxidx = 0;
-	collect_from_book(NULL, &spellps, &maxidx);
+	collect_from_book(p, NULL, &spellps, &maxidx);
 
 	/* Check index validity */
 	if (index < 0 || index >= maxidx) {
@@ -231,15 +230,16 @@ const struct class_spell *spell_by_index(int index)
 	return ret;
 }
 
-int spell_collect_from_book(int **spells)
+int spell_collect_from_book(struct player *p, int **spells)
 {
-	return collect_from_book(spells, NULL, NULL);
+	return collect_from_book(p, spells, NULL, NULL);
 }
 
 /**
  * True if at least one spell in spells[] is OK according to spell_test.
  */
-bool spell_okay_list(bool (*spell_test)(int spell),
+bool spell_okay_list(const struct player *p,
+		bool (*spell_test)(const struct player *p, int spell),
 		const int spells[], int n_spells)
 {
 	int i;
@@ -249,7 +249,7 @@ bool spell_okay_list(bool (*spell_test)(int spell),
 		return true;
 
 	for (i = 0; i < n_spells; i++)
-		if (spell_test(spells[i]))
+		if (spell_test(p, spells[i]))
 			okay = true;
 
 	return okay;
@@ -258,19 +258,18 @@ bool spell_okay_list(bool (*spell_test)(int spell),
 /**
  * True if the spell is castable.
  */
-bool spell_okay_to_cast(int spell)
+bool spell_okay_to_cast(const struct player *p, int spell)
 {
-	return (player->spell_flags[spell] & PY_SPELL_LEARNED);
+	return (p->spell_flags[spell] & PY_SPELL_LEARNED);
 }
 
 /**
  * True if the spell is browsable.
  */
-bool spell_okay_to_browse(int spell_index)
+bool spell_okay_to_browse(const struct player *p, int spell_index)
 {
-	const struct class_spell *spell = spell_by_index(spell_index);
-	if (!spell) return false;
-	return (spell->slevel < 99);
+	const struct class_spell *spell = spell_by_index(p, spell_index);
+	return spell && spell->slevel < 99;
 }
 
 /**
@@ -302,7 +301,7 @@ s16b spell_chance(int spell_index)
 	const struct class_spell *spell;
 
 	/* Get the spell */
-	spell = spell_by_index(spell_index);
+	spell = spell_by_index(player, spell_index);
 	if (!spell) return chance;
 
 	/* Extract the base spell failure rate */
@@ -378,7 +377,7 @@ bool spell_cast(int spell_index, int dir, struct command *cmd)
 	int beam  = beam_chance();
 
 	/* Get the spell */
-	const struct class_spell *spell = spell_by_index(spell_index);
+	const struct class_spell *spell = spell_by_index(player, spell_index);
 
 	/* Spell failure chance */
 	chance = spell_chance(spell_index);
@@ -444,7 +443,7 @@ bool spell_cast(int spell_index, int dir, struct command *cmd)
 
 bool spell_needs_aim(int spell_index)
 {
-	const struct class_spell *spell = spell_by_index(spell_index);
+	const struct class_spell *spell = spell_by_index(player, spell_index);
 	assert(spell);
 	return effect_aim(spell->effect);
 }
@@ -557,7 +556,7 @@ static void spell_effect_append_value_info(const struct effect *effect,
 
 void get_spell_info(int spell_index, char *p, size_t len)
 {
-	struct effect *effect = spell_by_index(spell_index)->effect;
+	struct effect *effect = spell_by_index(player, spell_index)->effect;
 
 	p[0] = '\0';
 

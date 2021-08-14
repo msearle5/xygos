@@ -561,17 +561,17 @@ int cmd_get_arg_choice(struct command *cmd, const char *arg, int *choice)
 /**
  * Get a spell from the user, trying the command first but then prompting
  */
-int cmd_get_spell(struct command *cmd, const char *arg, int *spell,
-				  const char *verb, const char *error, bool (*spell_filter)(int spell))
+int cmd_get_spell(struct player *p, struct command *cmd, const char *arg, int *spell,
+				  const char *verb, const char *error, bool (*spell_filter)(const struct player *p, int spell))
 {
 	/* See if we've been provided with this one */
 	if (cmd_get_arg_choice(cmd, arg, spell) == CMD_OK) {
 		/* Ensure it passes the filter */
-		if (!spell_filter || spell_filter(*spell) == true)
+		if (!spell_filter || spell_filter(p, *spell) == true)
 			return CMD_OK;
 	}
 
-	*spell = get_spell(verb, cmd->code, error, spell_filter);
+	*spell = get_spell(p, verb, cmd->code, error, spell_filter);
 
 	if (*spell >= 0) {
 		cmd_set_arg_choice(cmd, arg, *spell);

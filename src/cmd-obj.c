@@ -1074,7 +1074,7 @@ void do_cmd_cast(struct command *cmd)
 	const char *error = "You have no techniques you can use.";
 
 	int n_spells = 0;
-	combine_books(&n_spells, NULL, NULL, NULL);
+	combine_books(player, &n_spells, NULL, NULL, NULL);
 
 	/* Maybe some still work?
 	 * Most should make this check, though.
@@ -1084,7 +1084,7 @@ void do_cmd_cast(struct command *cmd)
 	}
 
 	/* Get arguments */
-	if (cmd_get_spell(cmd, "technique", &spell_index,
+	if (cmd_get_spell(player, cmd, "technique", &spell_index,
 			/* Verb */   "use",
 			/* Error */  error,
 			/* Filter */ NULL) != CMD_OK) {

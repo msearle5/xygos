@@ -26,8 +26,8 @@ bool (*get_check_hook)(const char *prompt);
 bool (*get_com_hook)(const char *prompt, char *command);
 bool (*get_rep_dir_hook)(int *dir, bool allow_none);
 bool (*get_aim_dir_hook)(int *dir);
-int (*get_spell_hook)(const char *verb, cmd_code cmd,
-					  const char *error, bool (*spell_filter)(int spell));
+int (*get_spell_hook)(struct player *p, const char *verb, cmd_code cmd,
+					  const char *error, bool (*spell_filter)(const struct player *p, int spell));
 bool (*get_item_hook)(struct object **choice, const char *pmt, const char *str,
 					  cmd_code cmd, item_tester tester, int mode);
 bool (*get_fault_hook)(int *choice, struct object *obj, random_value value);
@@ -140,12 +140,12 @@ bool get_aim_dir(int *dir)
 /**
  * Get a spell from the player.
  */
-int get_spell(const char *verb, cmd_code cmd, const char *error,
-						bool (*spell_filter)(int spell))
+int get_spell(struct player *p, const char *verb, cmd_code cmd, const char *error,
+						bool (*spell_filter)(const struct player *p, int spell))
 {
 	/* Ask the UI for it */
 	if (get_spell_hook)
-		return get_spell_hook(verb, cmd, error, spell_filter);
+		return get_spell_hook(p, verb, cmd, error, spell_filter);
 	else
 		return -1;
 }

@@ -21,15 +21,15 @@ BUG? Stuff isn't transported when you fly - should it be? Should there just be 1
 
 BUG: Stores which close lose their entrance but don't become ruins. (Only when more than one would?)
 
-BUG: Bombs (e.g. pineapple) give excess messages - "The X fails to harm the Y." "The X detonates!" "The Y screams!".
-	The first should be removed.
-
 BUG: "You knock out the MlM" -> "The MlM flees in terror!" -> "The MlM can move again" (after making a move!)
 
 BUG: After the success/failure message from a quest, ESC is the only way to get back out.
 
 Defer
 =====
+
+BUG: "failed!\n" twice from r_super.c (going lev 1-26, Human Super Engineer)	
+	UTR
 
 BUG: If Triax is killed after all airports are destroyed, the game becomes unwinnable (as you can't go to the station)
 		- Could rebuild if "Orbitable", only offering that destination. 
@@ -91,6 +91,10 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+
+BUG: Bombs (e.g. pineapple) give excess messages - "The X fails to harm the Y." "The X detonates!" "The Y screams!".
+	The first should be removed. 
+	aeb9b254c9a2aae28dab15baa2d31b3aad8bafcd 
 
 BUG:/home/msearle/rogl/angband/v-xygos/angband/src/xygos: Error in flag_on(lore->flags, b->resist_flag): FlagID[0] Size[11] FlagOff[4294967295] FlagBV[128]
 	(Hit a lizard with a laser knife)
