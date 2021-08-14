@@ -925,6 +925,20 @@ friends:60:1d1:Giant fruit fly
 desc:A pile of rotting vegetation that slides towards you with a disgusting
 desc: stench, waking all it nears.
 
+name:walking mushroom
+base:mushroom
+color:BurntUmber
+depth:21
+rarity:3
+hit-points:24
+hearing:40
+armor-class:10
+sleepiness:0
+blow:BITE:HURT:2d10
+blow:SPORE:HALLU:2d6
+flags:NO_SLEEP | STUPID | EMPTY_MIND
+desc:It's primarily red capped, dotted with white on a dirty, whitish stalk. It's also nearly as tall as you are, and the writhing mass of filaments under it seems to be capable of pulling it across the ground at a surprising rate.
+
 name:killer tomato
 base:mushroom
 color:Tomato
@@ -2424,6 +2438,21 @@ spell-power:6
 spells:ARROW
 desc:Humanoids around one meter in height, stocky and strong for their height, and covered entirely in brown and black fur.
 
+# origin: Spaceman Spiff
+name:zog
+base:humanoid
+color:Blue
+depth:7
+rarity:2
+hit-points:25
+armor-class:25
+sleepiness:20
+blow:HIT:HURT:1d8
+blow:HIT:HURT:1d8
+blow:DROOL:HURT:1d2
+flags:EVIL | WEIRD_MIND | OPEN_DOOR
+desc:Drooling, insectoid aliens with disgusting habits.
+
 name:bogon
 base:humanoid
 color:LawnGreen
@@ -2497,6 +2526,30 @@ spells:BLINK | SHAPECHANGE
 desc:'DING! Level 1!!!!' 
 desc:He may be inexperienced but he has the confidence that comes with six 
 desc:consecutive natural 18's.
+
+name:Dippy, the Jeweled Rider
+base:humanoid
+color:Purple
+depth:13
+rarity:2
+speed:100
+rarity:10
+hit-points:33
+hearing:12
+armor-class:30
+sleepiness:35
+blow:HIT:HURT:20d1
+blow:HIT:HURT:20d1
+flags:UNIQUE | ORTHOGONAL
+flags:ATTR_MULTI | DROP_4 | DROP_60 | DROP_40 | ONLY_GOLD
+flags:NO_CONF | NO_SLEEP
+friends:100:3d5:horde bogon
+friends:100:2d2:bogon
+friends:40:1d3:bogon frogrider
+friends:20:1d2:bogon poet
+friends:20:1d2:bogling
+desc:A fat but tough-looking and angry Bogon, wearing enough bling to anchor Mr T. Dippy is too fat to ride a giant frog
+desc: without squashing it instantly - but he sits on them all anyway.
 
 name:horde bogon
 base:humanoid
@@ -6104,7 +6157,7 @@ color:Mud
 depth:12
 rarity:4
 desc:A highly aggressive swarming rodent with greasy flea-bitten fur and outsized
-desc:incisors.
+desc: incisors.
 grow:pack rat
 hit-points:14
 hearing:10
@@ -6187,10 +6240,42 @@ blow:KICK:HURT:1d8
 flags:FORCE_SLEEP
 flags:SMART
 desc:This strange creature resembles a rabbit with an antelope's head, complete with
-desc:a set of dangerous-looking antlers.
+desc: a set of dangerous-looking antlers.
+
+name:plague rat
+base:rodent
+depth:38
+rarity:4
+color:Gray25
+hit-points:40
+hearing:10
+armor-class:8
+sleepiness:20
+blow:BITE:INFECT:2d12
+flags:MULTIPLY
+flags:KILL_BODY
+flags:RAND_50
+flags:FORCE_SLEEP
+flags:SMART | WEIRD_MIND
+desc:A ravenous black rat with tusk-sized incisors, eating and infecting
+desc: everything in its path.
 
 
 ##### R is for ROBOTS #####
+
+name:quadcopter
+base:robot
+color:Tan
+speed:105
+hit-points:3
+hearing:10
+armor-class:5
+sleepiness:30
+depth:2
+rarity:1
+blow:HIT:HURT:1d2
+flags:METAL | STUPID | FLYING
+desc:Four small whirring rotors at the points of a cross-shaped frame hold it level as it slowly floats about. It's not obviously armed, though you still wouldn't want to get in the way of those rotor blades.
 
 name:talky toaster
 base:robot
@@ -6257,7 +6342,7 @@ depth:21
 rarity:1
 blow:CRUSH:ELEC:1d20
 blow:TOUCH:EAT_FOOD
-spell-power:8
+spell-power:10
 spell-freq:3
 spells:BR_RADI
 flags:SMART | METAL
@@ -7114,6 +7199,25 @@ flags:COLD_BLOOD | WEIRD_MIND | MULTIPLY | STUPID
 flags:RAND_25 | RAND_50
 flags:HURT_LIGHT | IM_COLD | NO_FEAR | PASS_DOOR
 desc:It is a large slimy mass of worms.
+
+name:mailworm
+base:worm
+color:Light Slate
+depth:17
+rarity:3
+speed:100
+rarity:10
+hit-points:18
+hearing:10
+armor-class:40
+sleepiness:8
+blow:CRAWL:INFECT:1d8
+flags:MULTIPLY | METAL
+flags:RAND_25 | RAND_50
+flags:NO_FEAR
+flags:IM_POIS
+flags:STUPID | EMPTY_MIND
+desc:An armoured mechanical worm, covered in layers of steel chains.
 
 name:mutant earthworm
 base:worm
