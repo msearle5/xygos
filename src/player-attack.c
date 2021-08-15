@@ -1468,7 +1468,7 @@ static const struct hit_types ranged_hit_types[] = {
  */
 static void ranged_helper(struct command *cmd, struct player *p,	struct object *obj, int dir,
 						  int range, int shots, ranged_attack attack,
-						  const struct hit_types *hit_types, int num_types)
+						  const struct hit_types *hit_types, int num_types, const char *fire)
 {
 	int i, j;
 
@@ -1496,8 +1496,8 @@ static void ranged_helper(struct command *cmd, struct player *p,	struct object *
 		if (taim > range) {
 			char msg[80];
 			strnfmt(msg, sizeof(msg),
-					"Target out of range by %d squares. Fire anyway? ",
-				taim - range);
+					"Target out of range by %d squares. %s anyway? ",
+				taim - range, fire);
 			if (!get_check(msg)) return;
 		}
 	}
@@ -1528,6 +1528,9 @@ static void ranged_helper(struct command *cmd, struct player *p,	struct object *
 	if (p->timed[TMD_POWERSHOT]) {
 		pierce = p->state.ammo_mult;
 	}
+
+	/* Will it explode, or otherwise behave in a way that means there should be no "fails to harm" message? */
+	bool destroyed = object_destroyed(obj, grid, true);
 
 	/* Hack -- Handle stuff */
 	handle_stuff(p);
@@ -1589,7 +1592,7 @@ static void ranged_helper(struct command *cmd, struct player *p,	struct object *
 				if ((dmg <= 0) && (mon->race)) {
 					dmg = 0;
 					msg_type = MSG_MISS;
-					my_strcpy(hit_verb, "fails to harm", sizeof(hit_verb));
+					my_strcpy(hit_verb, destroyed ? "hits the floor by" : "fails to harm", sizeof(hit_verb));
 				}
 
 				if (!visible) {
@@ -1626,7 +1629,8 @@ static void ranged_helper(struct command *cmd, struct player *p,	struct object *
 				/* Hit the monster, check for death */
 				if (mon->race) {
 					if (!mon_take_hit(mon, p, dmg, &fear, note_dies)) {
-						message_pain(mon, dmg);
+						if (!destroyed)
+							message_pain(mon, dmg);
 						if (fear && monster_is_obvious(mon)) {
 							add_monster_message(mon, MON_MSG_FLEE_IN_TERROR, true);
 						}
@@ -1856,7 +1860,7 @@ void do_cmd_fire(struct command *cmd) {
 	}
 
 	ranged_helper(cmd, player, obj, dir, range, shots, attack, ranged_hit_types,
-				  (int) N_ELEMENTS(ranged_hit_types));
+				  (int) N_ELEMENTS(ranged_hit_types), "Fire");
 }
 
 
@@ -1907,7 +1911,7 @@ void do_cmd_throw(struct command *cmd) {
 	range = MIN(((str + 20) * 450) / weight, 10);
 
 	ranged_helper(cmd, player, obj, dir, range, shots, attack, ranged_hit_types,
-				  (int) N_ELEMENTS(ranged_hit_types));
+				  (int) N_ELEMENTS(ranged_hit_types), "Throw it");
 }
 
 /**

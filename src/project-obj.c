@@ -150,7 +150,7 @@ int inven_damage(struct player *p, int type, int cperc)
 
 				/* Destroy "amt" items */
 				destroyed = gear_object_for_use(p, obj, amt, false, &none_left);
-				if (!object_destroyed(obj, player->grid)) {
+				if (!object_destroyed(obj, player->grid, false)) {
 					msgt(MSG_DESTROY, buf);
 				}
 				if (destroyed->known)
@@ -563,7 +563,7 @@ bool project_o(struct source origin, int r, struct loc grid, int dam, int typ,
 			} else {
 				/* Describe if needed */
 				if (obvious && obj->known && note_kill && !ignore_item_ok(obj)) {
-					if (!object_destroyed(obj, grid))
+					if (!object_destroyed(obj, grid, false))
 						msgt(MSG_DESTROY, "The %s %s!", o_name, note_kill);
 				}
 

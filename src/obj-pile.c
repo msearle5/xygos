@@ -992,7 +992,7 @@ bool floor_carry(struct chunk *c, struct loc grid, struct object *drop,
 }
 
 /* Return true if something interesting has happened (and a message printed) */
-bool object_destroyed(struct object *obj, struct loc loc)
+bool object_destroyed(struct object *obj, struct loc loc, bool test)
 {
 	static bool first = true;
 	static int atomic;
@@ -1016,55 +1016,73 @@ bool object_destroyed(struct object *obj, struct loc loc)
 	switch(obj->kind->tval) {
 		case TV_BATTERY: {
 			if (sv == hydrogen) {
-				msg("The hydrogen cell explodes in a ball of fire!");
-				project(source_object(obj), 5, loc, 30 + damroll(1, 30), ELEM_FIRE,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
+				if (!test) {
+					msg("The hydrogen cell explodes in a ball of fire!");
+					project(source_object(obj), 5, loc, 30 + damroll(1, 30), ELEM_FIRE,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
+				}
 				return true;
 			}
 			else if (sv == alcohol) {
-				msg("The alcohol cell explodes into blue flames!");
-				project(source_object(obj), 3, loc, 15 + damroll(1, 15), ELEM_FIRE,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
+				if (!test) {
+					msg("The alcohol cell explodes into blue flames!");
+					project(source_object(obj), 3, loc, 15 + damroll(1, 15), ELEM_FIRE,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
+				}
 				return true;
 			}
 			else if (sv == lithium) {
-				msg("The lithium battery goes up in flames!");
-				project(source_object(obj), 2, loc, 12 + damroll(1, 12), ELEM_FIRE,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
+				if (!test) {
+					msg("The lithium battery goes up in flames!");
+					project(source_object(obj), 2, loc, 12 + damroll(1, 12), ELEM_FIRE,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
+				}
 				return true;
 			}
 			else if (sv == atomic) {
-				msg("The atomic cell breaks open!");
-				project(source_object(obj), 6, loc, 150 + damroll(1, 20), ELEM_RADIATION,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
+				if (!test) {
+					msg("The atomic cell breaks open!");
+					project(source_object(obj), 6, loc, 150 + damroll(1, 20), ELEM_RADIATION,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
+				}
 				return true;
 			}
 			break;
 		}
 		case TV_FOOD: {
 			if (sv == pineapple) {
-				msg("The pineapple detonates!");
-				project(source_object(obj), 5, loc, 10 + damroll(2, 20), ELEM_SHARD,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY | PROJECT_LOL, 0, 20, obj);
+				if (!test) {
+					msg("The pineapple detonates!");
+					project(source_object(obj), 5, loc, 10 + damroll(2, 20), ELEM_SHARD,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY | PROJECT_LOL, 0, 20, obj);
+				}
 				return true;
 			}
 			else if (sv == durian) {
-				msg("The durian splatters!");
-				project(source_object(obj), 3, loc, 8 + damroll(2, 10), ELEM_POIS,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY | PROJECT_LOL, 0, 20, obj);
+				if (!test) {
+					msg("The durian splatters!");
+					project(source_object(obj), 3, loc, 8 + damroll(2, 10), ELEM_POIS,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY | PROJECT_LOL, 0, 20, obj);
+				}
 				return true;
 			}
 			else if (sv == pie) {
-				msg("The pie goes splat!");
-				project(source_object(obj), 1, loc, 15 + damroll(2, 15), PROJ_MON_CONF,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY | PROJECT_LOL, 0, 20, obj);
+				if (!test) {
+					msg("The pie goes splat!");
+					project(source_object(obj), 1, loc, 15 + damroll(2, 15), PROJ_MON_CONF,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY | PROJECT_LOL, 0, 20, obj);
+				}
 				return true;
 			}
 			break;
 		}
 		case TV_LIGHT: {
 			if (obj_has_ego(obj, "(RTG mod)")) {
-				msg("The light's RTG breaks open!");
-				project(source_object(obj), 6, loc, 150 + damroll(1, 20), ELEM_RADIATION,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
+				if (!test) {
+					msg("The light's RTG breaks open!");
+					project(source_object(obj), 6, loc, 150 + damroll(1, 20), ELEM_RADIATION,  PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_PLAY, 0, 20, obj);
+				}
 				return true;
 			}
 			else if (object_effect(obj) && (of_has(obj->flags, OF_NO_ACTIVATION))) {
-				// you may not know what it is, and it should ID as if you were holding it in view?
-				obj->grid = loc;
-				light_timeout(obj, false);
+				if (!test) {
+					// you may not know what it is, and it should ID as if you were holding it in view?
+					obj->grid = loc;
+					light_timeout(obj, false);
+				}
 				return true;
 			}
 		}
@@ -1249,7 +1267,7 @@ void drop_near(struct chunk *c, struct object **dropped, int chance,
 				thrown_explodes(NULL, *dropped, grid);
 			}
 		}
-		floor_carry_fail(c, *dropped, true, object_destroyed(*dropped, grid) || (chance == 100));
+		floor_carry_fail(c, *dropped, true, object_destroyed(*dropped, grid, false) || (chance == 100));
 		return;
 	}
 
