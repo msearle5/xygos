@@ -153,8 +153,8 @@ static void grid_get_attr(struct grid_data *g, int *a)
  * Any lighting effects are also applied to these pairs, clear monsters allow
  * the underlying colour or feature to show through (ATTR_CLEAR and
  * CHAR_CLEAR), multi-hued colour-changing (ATTR_MULTI) is applied, and so on.
- * Technically, the flag "CHAR_MULTI" is supposed to indicate that a monster 
- * looks strange when examined, but this flag is currently ignored.
+ * The flag "CHAR_MULTI" causes the appearance to be randomized in the same
+ * way as when hallucinating.
  *
  * NOTES:
  * This is called pretty frequently, whenever a grid on the map display
@@ -227,12 +227,11 @@ void grid_data_as_text(struct grid_data *g, int *ap, wchar_t *cp, int *tap,
 
 	/* Handle monsters, the player and trap borders */
 	if (g->m_idx > 0) {
-		if (g->hallucinate) {
+		struct monster *mon = cave_monster(cave, g->m_idx);
+		if (g->hallucinate || (rf_has(mon->race->flags, RF_CHAR_MULTI))) {
 			/* Just pick a random monster to display. */
 			hallucinatory_monster(&a, &c);
 		} else if (!monster_is_mimicking(cave_monster(cave, g->m_idx)))	{
-			struct monster *mon = cave_monster(cave, g->m_idx);
-
 			byte da;
 			wchar_t dc;
 

@@ -225,7 +225,7 @@ color:w
 
 ##### Special case: the randomizable race #####
 
-name:Randy, the Random With A Longer Name Than Anyone
+name:Randy, the Random
 base:townsfolk
 color:p
 speed:110
@@ -2573,6 +2573,23 @@ friends:20:1d2:bogling
 desc:The Bogon hordes are countless. The typical patrol contains a few trained soldiers 
 desc:such as these and a swarm of other Bogons - untrained and not well armed, but 
 desc:dangerous through sheer numbers.
+
+name:shapechanger
+base:humanoid
+color:Violet
+depth:15
+rarity:2
+hit-points:70
+hearing:10
+armor-class:10
+sleepiness:12
+blow:HIT:HURT:1d5
+blow:HIT:CONFUSE:1d3
+flags:EVIL | CHAR_MULTI | ATTR_MULTI | SMART | IM_FIRE
+spell-freq:5
+spell-power:20
+spells:STING | BO_ACID | CONF
+desc:A vaguely humanoid form constantly changing its appearance.
 
 name:munchkin
 base:humanoid

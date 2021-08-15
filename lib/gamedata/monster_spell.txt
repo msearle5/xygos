@@ -1010,13 +1010,13 @@ lore:hurl lances of radiation
 lore-color-base:Orange
 lore-color-resist:Light Green
 message-vis:{name} hurls a lance of radiation.
-message-invis:Something murmurs a deadly word.
+message-invis:Something burns you all over.
 power-cutoff:80
 lore:shoot rays of death
 lore-color-base:Light Red
 lore-color-resist:Light Green
 message-vis:{name} unleashes a death ray.
-message-invis:Something intones with deadly menace.
+message-invis:You feel something burning right through you.
 
 name:SCARE
 msgt:CAST_FEAR
@@ -1026,7 +1026,7 @@ dice:3+1d4
 lore:terrify
 lore-color-base:Yellow
 lore-color-resist:Light Green
-message-vis:{name} conjures up scary horrors.
+message-vis:{name} induces horrible fear.
 message-invis:Something makes scary noises.
 message-save:You fight off a sense of dread.
 
@@ -1048,7 +1048,7 @@ dice:3+1d4
 lore:confuse
 lore-color-base:Orange
 lore-color-resist:Light Green
-message-vis:{name} conjures up weird things.
+message-vis:{name} induces mental confusion.
 message-invis:Something messes with your mind.
 message-save:You retain your presence of mind.
 

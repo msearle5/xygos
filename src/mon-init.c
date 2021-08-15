@@ -1312,8 +1312,8 @@ static enum parser_error parse_monster_flags(struct parser *p) {
 	s = strtok(flags, " |");
 	while (s) {
 		if (grab_flag(r->flags, RF_SIZE, r_info_flags, s)) {
+			quit_fmt_p(p, "bad f2-flag: '%s'", s);
 			mem_free(flags);
-			quit_fmt_p(p, "bad f2-flag: %s", parser_getstr(p, "flags"));
 			return PARSE_ERROR_INVALID_FLAG;
 		}
 		s = strtok(NULL, " |");
@@ -1336,8 +1336,8 @@ static enum parser_error parse_monster_flags_off(struct parser *p) {
 	s = strtok(flags, " |");
 	while (s) {
 		if (remove_flag(r->flags, RF_SIZE, r_info_flags, s)) {
-			mem_free(flags);
 			quit_fmt_p(p, "bad mf-flag: %s", s);
+			mem_free(flags);
 			return PARSE_ERROR_INVALID_FLAG;
 		}
 		s = strtok(NULL, " |");
