@@ -1022,7 +1022,7 @@ void death_special(struct monster *mon)
 					break;
 				/* Space station */
 				case 120:
-					boxtext = "The Core warps, as if attempting to teleport, but reconstitutes in place. It begins to shake with growing violence until it abruptly tears itself apart. All that is left is a dump of inert, scattered components - and something golden gleaming incongruously in the middle of the mess. Triax's final form has been defeated, and not only the planet below you but the rest of the galaxy is now safe again - your mission is complete!";
+					boxtext = "The Core warps, as if attempting to teleport, but reconstitutes in place. It begins to shake with growing violence until abruptly it tears itself apart. All that is left is a dump of inert, scattered components - and something golden gleaming incongruously in the middle of the mess. Triax's final form has been defeated, and not only the planet below you but the rest of the galaxy is now safe again. Your mission is complete!";
 					break;
 			}
 
