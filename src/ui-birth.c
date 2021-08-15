@@ -342,9 +342,14 @@ static void per_help(int i, void *db, const region *l)
 	race_ext_help(i, db, l, player_id2personality(i), false);
 }
 
+struct player_race *get_ext_from_menu(int entry)
+{
+	return get_race_by_name(((struct birthmenu_data *)(ext_menu.menu_data))->items[entry]);
+}
+
 static void ext_help(int i, void *db, const region *l)
 {
-	race_ext_help(i, db, l, /*player_id2ext(i)*/ get_race_by_name(((struct birthmenu_data *)(ext_menu.menu_data))->items[i]), false);
+	race_ext_help(i, db, l, get_race_by_name(((struct birthmenu_data *)(ext_menu.menu_data))->items[i]), false);
 }
 
 static void race_help(int i, void *db, const region *l)

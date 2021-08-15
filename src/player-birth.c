@@ -47,6 +47,7 @@
 #include "player-util.h"
 #include "savefile.h"
 #include "store.h"
+#include "ui-birth.h"
 #include "world.h"
 
 /**
@@ -1345,7 +1346,7 @@ void do_cmd_choose_ext(struct command *cmd)
 {
 	int choice;
 	cmd_get_arg_choice(cmd, "choice", &choice);
-	player_generate(player, NULL, player_id2ext(choice), NULL, NULL, false);
+	player_generate(player, NULL, get_ext_from_menu(choice), NULL, NULL, false);
 
 	reset_stats(stats, points_spent, &points_left, false);
 	generate_stats(stats, points_spent, &points_left);
@@ -1660,7 +1661,7 @@ static int int_to_roman(int n, char *roman, size_t bufsize)
 	char roman_symbol_labels[13][3] =
 		{"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX",
 		 "V", "IV", "I"};
-	int  roman_symbol_values[13] =
+	const int  roman_symbol_values[13] =
 		{1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
 
 	/* Clear the roman numeral buffer */
@@ -1723,7 +1724,7 @@ static int roman_to_int(const char *roman)
 	char roman_token_chr1[] = "MDCLXVI";
 	const char *roman_token_chr2[] = {0, 0, "DM", 0, "LC", 0, "VX"};
 
-	int roman_token_vals[7][3] = {{1000},
+	const int roman_token_vals[7][3] = {{1000},
 	                              {500},
 	                              {100, 400, 900},
 	                              {50},

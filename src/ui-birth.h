@@ -22,6 +22,8 @@
 void ui_init_birthstate_handlers(void);
 int textui_do_birth(void);
 
+struct player_race *get_ext_from_menu(int entry);
+
 //phantom
 extern bool arg_force_name;
 
