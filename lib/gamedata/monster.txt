@@ -6151,7 +6151,25 @@ flags:RAND_25
 desc:A rodent the size of a dog with sleek grey fur and a pink nose.  Ignore the
 desc:teeth, and it might actually look cute.
 
-#rock mole?
+name:fluff
+base:rodent
+color:Violet
+depth:9
+rarity:1
+pain:14
+grow:gremlin
+hit-points:15
+hearing:4
+armor-class:15
+sleepiness:100
+rarity:10
+blow:CLAW:HURT:1d5
+spell-freq:10
+flags:ALL_TERRAIN | STUPID | WEIRD_MIND | DEATH_SPECIAL
+spell-power:5
+spells:SHRIEK
+desc:A fluffy pink fuzzball. Don't let it get wet.
+
 name:golden mouse
 base:rodent
 color:Light Yellow
@@ -6164,7 +6182,7 @@ armor-class:7
 sleepiness:25
 blow:BITE:HURT:3d5
 flags:FORCE_SLEEP
-flags:KILL_WALL
+flags:KILL_WALL | KILL_ITEM
 flags:SMART | WEIRD_MIND
 desc:A bright yellow mouse of unusual size, capable of chewing through solid rock.
 
@@ -6173,8 +6191,6 @@ base:rodent
 color:Mud
 depth:12
 rarity:4
-desc:A highly aggressive swarming rodent with greasy flea-bitten fur and outsized
-desc: incisors.
 grow:pack rat
 hit-points:14
 hearing:10
@@ -6185,6 +6201,28 @@ blow:BITE:POISON:1d4
 flags:FORCE_SLEEP
 friends:95:3d4:Same
 flags:SMART | WEIRD_MIND
+desc:A highly aggressive swarming rodent with greasy flea-bitten fur and outsized
+desc: incisors.
+
+name:gremlin
+base:rodent
+color:ForestGreen
+depth:14
+grow:fluff
+rarity:20
+speed:110
+hit-points:15
+hearing:4
+armor-class:15
+sleepiness:1
+blow:CLAW:HURT:1d6
+blow:CLAW:HURT:1d6
+blow:BITE:HURT:1d8
+flags:MULTIPLY
+flags:NO_FEAR | NO_SLEEP | SMART | WEIRD_MIND | MULTIPLY | IM_WATER
+spell-freq:8
+spells:MULTIPLY_GROW
+desc:A small green wrinkly thing with big pointed ears, like Yoda's evil twin.
 
 name:vorpal rabbit
 base:rodent

@@ -1048,6 +1048,13 @@ void death_special(struct monster *mon)
 		newmon[nnewmon++] = "yellow horror";
 	}
 
+	/* Fluffs become gremlins */
+	if (streq(name, "fluff")) {
+		if (square_iswater(cave, mon->grid)) {
+			newmon[nnewmon++] = "gremlin";
+		}
+	}
+
 	/* New monsters */
 	if (nnewmon) {
 		int summoned = 0;

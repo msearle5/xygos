@@ -134,3 +134,12 @@ message:laughs.
 message:whoops.
 message:yells out.
 message:groans.
+
+type:14
+message:squeaks softly.
+message:squeal[s] shrilly.
+message:squeaks[s] with pain.
+message:squeal[s] in pain.
+message:shriek[s] in pain.
+message:shriek[s] in agony.
+message:cr[ies|y] out feebly.

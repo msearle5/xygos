@@ -135,7 +135,7 @@ hit:100
 effect:LASH:MISSILE:3
 lore:sting you from a distance
 lore-color-base:Orange
-message-vis:{name} flicks a {type} stinger at you.
+message-vis:{name} flicks a stinger at you.
 message-invis:You hear a snap.
 
 name:SLING
