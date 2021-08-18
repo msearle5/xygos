@@ -598,7 +598,7 @@ static size_t obj_desc_inscrip(const struct object *obj, char *buf,
 		u[n++] = "faulty";
 
 	/* Note ignore */
-	if (ignore_item_ok(p, obj))
+	if (p && ignore_item_ok(p, obj))
 		u[n++] = "ignore";
 
 	/* Note quest */
