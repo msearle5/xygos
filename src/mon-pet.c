@@ -63,7 +63,6 @@ static enum parser_error parse_interact_vs(struct parser *p) {
 	 * "<Monster Base>"	- All monsters of that base
 	 * "<String>"		- All monsters containing that string
 	 * "!<Base or Mon>" - Except that base or monster
-	 *
 	 * These are parsed in order, so that you could for example use:
 	 * vs:ant:!
 	 * vs:ant:!ant
