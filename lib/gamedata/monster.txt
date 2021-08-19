@@ -4905,6 +4905,21 @@ flags:RAND_25 | BASH_DOOR | GROUP_AI
 friends:80:1d4:Same
 desc:A small dinosaur - no bigger than a large turkey. It is still an effective predator even alone, with viciously clawed feet and a nasty bite - and is especially dangerous when hunting as a pack.
 
+name:crocodile
+base:reptile
+color:Olive
+depth:21
+rarity:2
+speed:110
+hit-points:120
+hearing:4
+armor-class:48
+sleepiness:100
+flags:IM_WATER
+blow:BITE:HURT:2d20
+flags:WEIRD_MIND
+desc:A large crocodile, several meters of drab scales and several hundred sharp teeth yawning at you.
+
 name:deinonychus
 base:reptile
 color:LimeGreen
@@ -7208,7 +7223,7 @@ rarity:2
 experience:0
 blow:HIT:HURT:2d6
 flags:MALE | FEMALE
-flags:DROP_40
+flags:DROP_40 | FRIENDLY
 flags:RAND_50 | OPEN_DOOR | BASH_DOOR | TAKE_ITEM
 desc:Off duty and looking for a fight.
 

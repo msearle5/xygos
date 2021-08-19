@@ -41,6 +41,7 @@
 #include "mon-lore.h"
 #include "mon-make.h"
 #include "mon-msg.h"
+#include "mon-pet.h"
 #include "mon-summon.h"
 #include "mon-util.h"
 #include "monster.h"
@@ -4593,6 +4594,7 @@ static struct {
 	{ "monsters", &monster_parser },
 	{ "monster pits" , &pit_parser },
 	{ "monster lore" , &lore_parser },
+	{ "monster interaction", &interact_parser },
 	{ "traps", &trap_parser },
 	{ "chest_traps", &chest_trap_parser },
 	{ "flavours", &flavor_parser },

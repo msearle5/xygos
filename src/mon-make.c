@@ -392,6 +392,21 @@ void delete_monster_idx(int m_idx)
 	if (target_get_monster() == mon)
 		target_set_monster(NULL);
 
+	/* Stop any other monsters targeting it */
+	s16b me = mon->midx;
+	for (int m_idx = 1; m_idx < cave_monster_max(cave); m_idx++) {
+		struct monster *mon = cave_monster(cave, m_idx);
+
+		/* Skip "dead" monsters */
+		if (!mon->race) continue;
+
+		/* Only monsters targeting this monster */
+		if (mon->target.midx == me) {
+			mon->target.midx = 0;
+			mon->target.grid.x = mon->target.grid.y = 0;
+		}
+	}
+
 	/* Hack -- remove tracked monster */
 	health_untrack(player->upkeep, mon);
 
@@ -495,6 +510,19 @@ void monster_index_move(int i1, int i2)
 	if (!monster_group_change_index(cave, i2, i1)) {
 		quit("Bad monster group info!") ;
 		monster_groups_verify(cave);
+	}
+
+	/* Move any other monsters' targets */
+	for (int m_idx = 1; m_idx < cave_monster_max(cave); m_idx++) {
+		struct monster *mon = cave_monster(cave, m_idx);
+
+		/* Skip "dead" monsters */
+		if (!mon->race) continue;
+
+		/* Only monsters targeting this monster */
+		if (mon->target.midx == i1) {
+			mon->target.midx = i2;
+		}
 	}
 
 	/* Repair objects being carried by monster */
@@ -1245,6 +1273,12 @@ static bool place_new_monster_one(struct chunk *c, struct loc grid,
 		mflag_on(mon->mflag, MFLAG_CAMOUFLAGE);
 	else
 		mflag_off(mon->mflag, MFLAG_CAMOUFLAGE);
+
+	/* Is this friendly or neutral by default? */
+	if (rf_has(race->flags, RF_FRIENDLY))
+		mflag_on(mon->mflag, MFLAG_FRIENDLY);
+	if (rf_has(race->flags, RF_NEUTRAL))
+		mflag_on(mon->mflag, MFLAG_NEUTRAL);
 
 	/* Set the color if necessary */
 	if (rf_has(race->flags, RF_ATTR_RAND))
