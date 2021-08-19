@@ -429,8 +429,10 @@ static void target_closest_hated(struct chunk *c, struct monster *mon)
 	if (best) {
 		mon->target.midx = best->midx;
 		mon->target.grid = best->grid;
+
 		fprintf(stderr,"target_closest_hated: found %s at %d,%d\n", cave_monster(c, best->midx)->race->name, 
 			best->grid.x, best->grid.y);
+
 	} else {
 		mon->target.midx = 0;
 		mon->target.grid.x = mon->target.grid.y = 0;

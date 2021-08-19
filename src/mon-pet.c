@@ -63,22 +63,23 @@ static enum parser_error parse_interact_vs(struct parser *p) {
 	 * "<Monster Base>"	- All monsters of that base
 	 * "<String>"		- All monsters containing that string
 	 * "!<Base or Mon>" - Except that base or monster
-	 *
+	 * 
 	 * These are parsed in order, so that you could for example use:
 	 * vs:ant:!
 	 * vs:ant:!ant
 	 * vs:black ant:red ant
 	 * vs:red ant:black ant
+	 * 
 	 * to mean "ants attack everything except other ants, with the exception
 	 * that black and red ants will attack each other."
-	 *
+	 * 
 	 * Limits are added for attacking much more dangerous monsters.
 	 * SMART monsters don't go for anything more than 9/7 their level, while
 	 * non-STUPID ones don't go for anything more than 9/5 their level.
 	 * 
 	 * UNIQUE monsters are more aggressive, because they are typically more
 	 * powerful than others of their level (SMART = 11/7, non-STUPID 11/5).
-	 *
+	 * 
 	 * Other monsters will never intentionally attack a UNIQUE, QUESTOR, 
 	 * SPECIAL_GEN or rarity-0 (all defined here). Ideally they would not
 	 * attack other monsters that are found normally but are special to a

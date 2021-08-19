@@ -634,3 +634,4 @@ desc:attempts to make a monster friendly
 blind-desc:something
 obvious:1
 color:White
+
