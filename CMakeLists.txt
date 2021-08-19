@@ -83,6 +83,7 @@ ADD_LIBRARY(OurCoreLib OBJECT
         src/mon-move.c
         src/mon-msg.c
         src/mon-mutant.c
+        src/mon-pet.c
         src/mon-predicate.c
         src/mon-spell.c
         src/mon-summon.c

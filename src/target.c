@@ -92,6 +92,16 @@ void look_mon_desc(char *buf, size_t max, int m_idx)
 	if (mon->m_timed[MON_TMD_STUN]) my_strcat(buf, ", stunned", max);
 	if (mon->m_timed[MON_TMD_SLOW]) my_strcat(buf, ", slowed", max);
 	if (mon->m_timed[MON_TMD_FAST]) my_strcat(buf, ", hasted", max);
+
+	/* Friendly? */
+	if (mflag_has(mon->mflag, MFLAG_FRIENDLY)) {
+		if (rf_has(mon->race->flags, RF_ANIMAL))
+			my_strcat(buf, ", tame", max);
+		else
+			my_strcat(buf, ", ally", max);
+	} else if (mflag_has(mon->mflag, MFLAG_NEUTRAL)) {
+		my_strcat(buf, ", neutral", max);
+	}
 }
 
 
