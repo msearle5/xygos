@@ -449,7 +449,7 @@ static void target_closest_hated(struct chunk *c, struct monster *mon)
  * If neutral or friendly and there is no previous target /monster/:
  *  	This will be the nearest visible hated monster to itself,
  * 		or nothing (0,0) if there is no visible hated monster.
- *
+ * 
  * TODO: attacks on hated even while targeting other
  * TODO: this should not set target! get_move_advance should. And that should know player from position.
  */
