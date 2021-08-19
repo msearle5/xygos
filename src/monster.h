@@ -375,8 +375,6 @@ struct monster_mutation {
 /**
  * Monster information, for a specific monster.
  *
- * Note: fy, fx constrain dungeon size to 256x256
- *
  * The "held_obj" field points to the first object of a stack
  * of objects (if any) being carried by the monster (see above).
  */
