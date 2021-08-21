@@ -474,7 +474,8 @@ static void use_aux(struct command *cmd, struct object *obj, enum use use,
 					false, &none_left);
 				from_floor = false;
 			} else {
-				work_obj = floor_object_for_use(obj, 1, false, &none_left);
+				work_obj = floor_object_for_use(player, obj, 1,
+					false, &none_left);
 				from_floor = true;
 			}
 			/* Record number for messages after use */
@@ -997,7 +998,7 @@ static void refill_lamp(struct object *lamp, struct object *obj)
 			if (object_is_carried(player, obj))
 				used = gear_object_for_use(player, obj, 1, true, &none_left);
 			else
-				used = floor_object_for_use(obj, 1, true, &none_left);
+				used = floor_object_for_use(player, obj, 1, true, &none_left);
 			if (used->known)
 				object_delete(&used->known);
 			object_delete(&used);

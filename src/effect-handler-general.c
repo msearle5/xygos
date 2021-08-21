@@ -2507,7 +2507,8 @@ bool effect_handler_RECHARGE(effect_handler_context_t *context)
 			destroyed = gear_object_for_use(player, obj, 1, true,
 				&none_left);
 		} else {
-			destroyed = floor_object_for_use(obj, 1, true, &none_left);
+			destroyed = floor_object_for_use(player, obj, 1, true,
+				&none_left);
 		}
 		if (destroyed->known)
 			object_delete(&destroyed->known);
@@ -2566,7 +2567,7 @@ bool effect_handler_LOCAL_ACQUIRE(effect_handler_context_t *context)
 
 	/* Remove it */
 	bool dummy;
-	struct object *removed = floor_object_for_use(best, best->number, false, &dummy);
+	struct object *removed = floor_object_for_use(player, best, best->number, false, &dummy);
 
 	/* And replace it */
 	drop_near(cave, &removed, 0, player->grid, true, true);
@@ -3884,7 +3885,7 @@ bool effect_handler_CREATE_ARROWS(effect_handler_context_t *context)
 	if (object_is_carried(player, obj)) {
 		device = gear_object_for_use(player, obj, 1, true, &none_left);
 	} else {
-		device = floor_object_for_use(obj, 1, true, &none_left);
+		device = floor_object_for_use(player, obj, 1, true, &none_left);
 	}
 
 	if (device->known) {
