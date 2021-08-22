@@ -28,7 +28,7 @@ int setup_tests(void **state)
 	ts->slays = mem_zalloc(z_info->slay_max * sizeof(*ts->slays));
 	ts->brands = mem_zalloc(z_info->brand_max * sizeof(*ts->brands));
 	/* Set up the player. */
-	if (!player_make_simple(NULL, NULL, "Tester")) {
+	if (!player_make_simple(NULL, NULL, NULL, "Tester")) {
 		mem_free(ts->brands);
 		mem_free(ts->slays);
 		mem_free(ts);
@@ -183,7 +183,7 @@ static void fill_in_object_kind(struct object_kind *kind,
 	kf_wipe(kind->kind_flags);
 	kind->brands = NULL;
 	kind->slays = NULL;
-	kind->curses = NULL;
+	kind->faults = NULL;
 	kind->d_attr = COLOUR_WHITE;
 	kind->d_char = L'/';
 	kind->alloc_prob = 20;
@@ -220,7 +220,7 @@ static void fill_in_object_kind(struct object_kind *kind,
 static void fill_in_object(struct object *obj, struct object_kind *kind)
 {
 	obj->kind = kind;
-	obj->ego = NULL;
+	memset(obj->ego, 0, sizeof(obj->ego));
 	obj->artifact = NULL;
 	obj->prev = NULL;
 	obj->next = NULL;
@@ -242,7 +242,7 @@ static void fill_in_object(struct object *obj, struct object_kind *kind)
 	memset(obj->el_info, 0, ELEM_MAX * sizeof(obj->el_info[0]));
 	obj->brands = kind->brands;
 	obj->slays = kind->slays;
-	obj->curses = NULL;
+	obj->faults = NULL;
 	obj->effect = kind->effect;
 	obj->effect_msg = kind->effect_msg;
 	obj->activation = kind->activation;
