@@ -390,7 +390,7 @@ struct ego_item *select_ego_base(int level, struct object *obj)
 /**
  * Select a base item for an ego.
  */
-static struct object_kind *select_ego_kind(struct ego_item *ego, int level, int tval)
+struct object_kind *select_ego_kind(const struct ego_item *ego, int level, int tval)
 {
 	struct poss_item *poss;
 	double *prob = mem_zalloc(sizeof(*prob) * z_info->k_max);

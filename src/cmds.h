@@ -139,6 +139,7 @@ void do_cmd_wiz_teleport_random(struct command *cmd);
 void do_cmd_wiz_teleport_to(struct command *cmd);
 void do_cmd_wiz_tweak_item(struct command *cmd);
 void do_cmd_wiz_wipe_recall(struct command *cmd);
+void do_cmd_wiz_wish(struct command *cmd);
 void do_cmd_wiz_wizard_light(struct command *cmd);
 
 #endif

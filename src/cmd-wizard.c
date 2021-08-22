@@ -1680,6 +1680,12 @@ void do_cmd_wiz_help(struct command *cmd)
 	screen_load();
 }
 
+/** Wish for an object.
+ */
+void do_cmd_wiz_wish(struct command *cmd)
+{
+	make_wish("Wish for: ", player->depth);
+}
 
 /**
  * Play with an item (CMD_WIZ_PLAY_ITEM).  Can take the item to play with

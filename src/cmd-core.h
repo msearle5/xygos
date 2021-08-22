@@ -162,6 +162,7 @@ typedef enum cmd_code {
 	CMD_WIZ_TELEPORT_TO,
 	CMD_WIZ_TWEAK_ITEM,
 	CMD_WIZ_WIPE_RECALL,
+	CMD_WIZ_WISH,
 	CMD_WIZ_WIZARD_LIGHT,
 
 	/* Hors categorie Commands */

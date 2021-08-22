@@ -84,6 +84,279 @@ static void flavor_assign_fixed(void)
 	}
 }
 
+#define WISH_WORDS 256
+
+/**
+ * Make a wish.
+ *
+ * Takes a string resembling an item description and builds an item to fit,
+ * given certain restrictions (which vary depending on whether this is used
+ * as a debug option, generic item creation routine or item activation effect.
+ *
+ * This has the grammar:
+ * {count} [{prefixes}] {base} [{suffixes}] [{dice}] [{melee}] {armor}] [{pval}]
+ * 
+ * count:	[<number> | a | an | the]
+ * prefix:	Any artifact name, or set of ego names, with a leading <
+ * base:	Any object name (or something kinda like)
+ * suffix:	"of " + any artifact name, or
+ * 			' <artifact name> ', or
+ * 			( <any set of ego names> )
+ * dice:	(<x>d<y> or x<n>)
+ * melee:	(<+hit>,<+dam>)
+ * armor:	[<base-ac>,<to-ac>]
+ * pval:	< <+pval>,+ >
+ * 
+ * However, not all of this is useful information - and for a user given string it
+ * might contain different bracketing or ordering.
+ * 
+ * What needs to be extracted is:
+ * Count (although this may get reduced later)
+ * 		from any entry which is a number, otherwise 1
+ * Artifact or Egos (independent of position)
+ * Base item
+ * 
+ * This is done with fuzzy matching to 
+ **/
+struct object *wish(const char *in, int level)
+{
+	char buf[256];
+	strncpy(buf, in, sizeof(buf));
+	buf[sizeof(buf)-1] = 0;
+
+	int count = 1;
+
+	const struct artifact *art = NULL;
+	const struct ego_item *ego[MAX_EGOS] = { NULL };
+	int negos = 0;
+	const struct object_kind *kind = NULL;
+
+	const char *name[WISH_WORDS] = { NULL };
+	int fuzz[WISH_WORDS] = { 0 };
+	const struct object_kind *kinds[WISH_WORDS] = { NULL };
+	int names = 0;
+	bool valid = false;
+
+	const char *word[WISH_WORDS] = { NULL };
+	int words = 0;
+
+	/* Pass over all space separated fields */
+	char *tok = strtok(buf, " ");
+	while (tok) {
+		char *end;
+		errno = 0;
+		long num = strtol(tok, &end, 10);
+
+		/* If it's a number *only*, set the count */
+		if ((num > 1) && (num <= 99) && (errno == 0) && (*end == 0))
+			count = num;
+		else {
+			/* Strip out anything non-alphabetic */
+			char *c = tok;
+			while (*c) {
+				if (!isalpha(*c)) {
+					*c = 0;
+					if (c == tok) {
+						tok++;
+					}
+				}
+				c++;
+			}
+
+			/* Ignore anything entirely nonalpha, or only one alpha character
+			 * This includes (+0,+0), [0,+1], <+4> (0-alpha) and 3d4, x4 (1-alpha) */
+			if ((*tok) && (*(tok+1))) {
+				/* Remove leading "of " */
+				if (!strncmp(tok, "of ", 3)) {
+					tok += 3;
+				}
+				if ((*tok) && (words < WISH_WORDS)) {
+					valid = true;
+					word[words++] = tok;
+				}
+			}
+		}
+		tok = strtok(NULL, " ");
+	};
+
+	/* If there's nothing that looks at all like an object (empty input, or
+	 * just some non-alphabetic fragments) don't go any further.
+	 */
+	if (!valid)
+		return NULL;
+
+	/* Make pairs */
+	int pairs = words;
+	for(int i=0;i<words-1;i++) {
+		char pair[256];
+		strnfmt(pair, sizeof(pair), "%s %s", word[i], word[i+1]);
+		word[pairs++] = string_make(pair);
+		if (pairs == WISH_WORDS) {
+			break;
+		}
+	}
+
+	/* Search words and combinations */
+	for(int i=0;i<pairs;i++) {
+		/* Search for base item */
+		int distance = strlen(word[i]);
+		const struct object_kind *k = lookup_kind_name_fuzzy(word[i], &distance);
+		if (k) {
+			kinds[names] = k;
+			fuzz[names] = distance;
+		}
+		/* Defer search for artifacts, egos */
+		name[names] = word[i];
+		names++;
+	}
+
+	/* Extract a base item - the least fuzzy match */
+	int best_fuzz = sizeof(buf);
+	//int best_idx = -1;
+	for(int i=0;i<names;i++) {
+		if ((kinds[i]) && (fuzz[i] < best_fuzz)) {
+			best_fuzz = fuzz[i];
+			kind = kinds[i];
+			//best_idx = i;
+		}
+	}
+	/* Don't use the name picked for the base item again for artifacts / ego items */
+	//if (best_idx >= 0) {
+		//name[best_idx] = NULL;
+	//}
+
+	/* Now that the base item is known (if possible), look for artifacts or egos */
+	for(int i=0;i<names;i++) {
+		const char *n = name[i];
+		if (n) {
+			//if (!art) {
+				int distance = strlen(word[i]);
+				const struct artifact *a = lookup_artifact_name_fuzzy(n, &distance);
+				if ((a) && (distance < best_fuzz)) {
+					best_fuzz = distance;
+					art = a;
+				}
+			//	if (art)
+			//		continue;
+			//}
+			if (negos < MAX_EGOS) {
+				/* Look up an ego item in the possible list of the kind */
+				if (kind) {
+					ego[negos] = lookup_ego_item(n, kind->tval, kind->sval);
+					if (ego[negos])
+						negos++;
+				} else {
+					/* An ego is specified, but no kind.
+					 * Select one at random.
+					 */
+					const struct ego_item *e = lookup_ego_name(n);
+					if (e) {
+						kind = select_ego_kind(e, level, 0);
+						if (kind) {
+							ego[negos++] = e;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/* Do we have an item?
+	 * Artifact (whether other stuff is present or not) => try to make that. It may fail, though.
+	 * 		If so, fall through as if it wasn't present.
+	 * Base and ego(s): => make that item with that ego(s). That may not be possible.
+	 * 		If so, behave as if the egos weren't present.
+	 * Base item only => make a random item of that type.
+	 * Ego(s) only => make a random item with that ego(s).
+	 * Nothing: => make a random item.
+	 * 
+	 * Count is honored if the item is not an artifact.
+	 */
+	struct object *obj = NULL;
+	if (art) {
+		/* Generate the base item */
+		kind = lookup_kind(art->tval, art->sval);
+
+		if (!(is_artifact_created(art))) {
+			obj = object_new();
+			object_prep(obj, (struct object_kind *)kind, art->alloc_min, RANDOMISE);
+
+			/* Mark the item as an artifact */
+			obj->artifact = art;
+			copy_artifact_data(obj, obj->artifact);
+			mark_artifact_created(obj->artifact, true);
+		}
+	}
+
+	/* Artifact creation failed, or an artifact wasn't called for */
+	if (!obj) {
+		if (kind) {
+			/* Base item was mentioned */
+			char buf[256];
+			obj_desc_name_format(buf, sizeof(buf), 0, kind->name, NULL, false);
+			obj = make_object_named(cave, level, false, false, false, NULL, kind->tval, buf);
+		}
+		/* Base item creation failed, or none was called for. */
+		if (!obj) {
+			/* Should not get here if there is an ego.
+			 * Random good item, or random item if that fails, or random level 1 item if that fails.
+			 **/
+			kind = get_obj_num(level, true, 0);
+			if (!kind)
+				kind = get_obj_num(level, false, 0);
+			if (!kind)
+				kind = get_obj_num(1, false, 0);
+			/* Create the object from the kind (or NULL = any kind) */
+			obj = make_object_named(cave, level, false, false, false, NULL, 0, kind ? kind->name : NULL);
+		}
+	}
+
+	/* Make it an ego or multiego, set the count */
+	if (obj) {
+		if (!obj->artifact) {
+			for(int i=0;i<negos;i++) {
+				obj->ego[i] = (struct ego_item *)(ego[i]);
+				ego_apply_magic_from(obj, 0, i);
+			}
+
+			if (obj->number < count)
+				obj->number = count;
+			if (obj->number > obj->kind->base->max_stack)
+				obj->number = obj->kind->base->max_stack;
+		}
+
+		/* Make it known */
+		obj->origin = ORIGIN_DROP_WIZARD;
+		object_know_all(obj);
+	}
+
+	/* Clean up */
+	for(int i=words; i<pairs; i++) {
+		string_free((char *)word[i]);
+	}
+
+	/* Return the item.
+	 * This may be NULL if nothing can be produced.
+	 */
+	return obj;
+}
+
+/* Ask for an object name.
+ * Try to create it and add it to inventory.
+ * Takes level, returns true if successful.
+ */
+bool make_wish(const char *prompt, int level)
+{
+	char buf[256] = { 0 };
+	if (!get_string_hook(prompt, buf, sizeof(buf)))
+		return false;
+	struct object *obj = wish(buf, level);
+	if (obj) {
+		inven_carry(player, obj, true, true);
+		return true;
+	}
+	return false;
+}
 
 static void flavor_assign_random(byte tval)
 {
@@ -636,8 +909,166 @@ struct object_kind *objkind_byid(int kidx) {
 
 /*** Textual<->numeric conversion ***/
 
+/* Levenshtein distance (number of edits needed to transform one string into the other)
+ * Source: https://rosettacode.org/wiki/Levenshtein_distance#C
+ */
+int levenshtein(const char *s, const char *t)
+{
+	int ls = strlen(s), lt = strlen(t);
+	int d[ls + 1][lt + 1];
+ 
+	for (int i = 0; i <= ls; i++)
+		for (int j = 0; j <= lt; j++)
+			d[i][j] = -1;
+ 
+	int dist(int i, int j) {
+		if (d[i][j] >= 0) return d[i][j];
+ 
+		int x;
+		if (i == ls)
+			x = lt - j;
+		else if (j == lt)
+			x = ls - i;
+		else if (s[i] == t[j])
+			x = dist(i + 1, j + 1);
+		else {
+			x = dist(i + 1, j + 1);
+ 
+			int y;
+			if ((y = dist(i, j + 1)) < x) x = y;
+			if ((y = dist(i + 1, j)) < x) x = y;
+			x++;
+		}
+		return d[i][j] = x;
+	}
+	return dist(0, 0);
+}
+
+const struct object_kind *lookup_kind_name_fuzzy(const char *name, int *fuzz)
+{
+	char buf[64];
+	int k;
+	int k_idx = -1;
+	int distance = fuzz ? *fuzz : (int)(strlen(name));
+
+	if (!z_info)
+		return NULL;
+
+	/* Look for it */
+	for (k = 0; k < z_info->k_max; k++) {
+		const struct object_kind *kind = &k_info[k];
+
+		/* Test for close matches to the name or its plural */
+		if (kind->name) {
+			for(bool plural = false; plural != true; plural = true) {
+				obj_desc_name_format(buf, sizeof(buf), 0, kind->name, NULL, plural);
+				int ldist = levenshtein(buf, name);
+				if (ldist < distance) {
+					distance = ldist;
+					k_idx = k;
+					if (distance == 0) {
+						k = z_info->k_max;
+					}
+				}
+			}
+		}
+	}
+
+	/* Return our best match */
+	if (fuzz) {
+		*fuzz = distance;
+	}
+	return k_idx > 0 ? &k_info[k_idx] : NULL;
+}
+
+const struct object_kind *lookup_kind_name(const char *name)
+{
+	int k;
+	int k_idx = -1;
+
+	if (!z_info)
+		return NULL;
+
+	/* Look for it */
+	for (k = 0; k < z_info->k_max; k++) {
+		const struct object_kind *kind = &k_info[k];
+		/* Test for equality */
+		if (kind->name && streq(name, kind->name))
+			return kind;
+		
+		/* Test for close matches */
+		if (strlen(name) >= 3 && kind->name && my_stristr(kind->name, name)
+			&& k_idx == -1)
+			k_idx = k;
+	}
+
+	/* Return our best match */
+	return k_idx >= 0 ? &k_info[k_idx] : NULL;
+}
+
+const struct artifact *lookup_artifact_name_fuzzy(const char *name, int *fuzz)
+{
+	char in[64];
+	char buf[64];
+	int a_idx = -1;
+	int distance = fuzz ? *fuzz : (int)(strlen(name));
+
+	if (!z_info)
+		return NULL;
+
+	/* Convert to lower case - assumes there is no punctuation */
+	char *inp = in;
+	if (strlen(name) >= sizeof(in))
+		return NULL;
+	while (*name) {
+		*inp++ = tolower(*name++);
+	}
+	*inp = 0;
+
+	/* Look for it */
+	for (int i = 0; i < z_info->a_max; i++) {
+		const struct artifact *art = &a_info[i];
+
+		/* Test for close matches to the name */
+		if (art->name) {
+			/* Convert to lower case, removing punctuation (but not spaces)
+			 * and leading 'of '
+			 */
+			char *namep = art->name;
+			char *bufp = buf;
+			unsigned len = strlen(art->name);
+			if ((len >= 3) && (len < sizeof(buf))) {
+				if (!strncmp(namep, "of ", 3))
+					namep += 3;
+				while (*namep) {
+					char c = tolower(*namep++);
+					if (!ispunct(c))
+						*bufp++ = c;
+				}
+				*bufp = 0;
+
+				/* Fuzzy match this */
+				int ldist = levenshtein(in, buf);
+				if (ldist < distance) {
+					distance = ldist;
+					a_idx = i;
+					if (distance == 0) {
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	/* Return our best match */
+	if (fuzz) {
+		*fuzz = distance;
+	}
+	return a_idx >= 0 ? &a_info[a_idx] : NULL;
+}
+
 /**
- * Return the a_idx of the artifact with the given name
+ * Return the artifact with the given name
  */
 const struct artifact *lookup_artifact_name(const char *name)
 {
@@ -659,7 +1090,33 @@ const struct artifact *lookup_artifact_name(const char *name)
 	}
 
 	/* Return our best match */
-	return a_idx > 0 ? &a_info[a_idx] : NULL;
+	return a_idx >= 0 ? &a_info[a_idx] : NULL;
+}
+
+/**
+ * Return the ego item with the given name
+ */
+const struct ego_item *lookup_ego_name(const char *name)
+{
+	int i;
+	int e_idx = -1;
+
+	/* Look for it */
+	for (i = 0; i < z_info->e_max; i++) {
+		const struct ego_item *e = &e_info[i];
+
+		/* Test for equality */
+		if (e->name && streq(name, e->name))
+			return e;
+		
+		/* Test for close matches */
+		if (strlen(name) >= 3 && e->name && my_stristr(e->name, name)
+			&& e_idx == -1)
+			e_idx = i;
+	}
+
+	/* Return our best match */
+	return e_idx >= 0 ? &e_info[e_idx] : NULL;
 }
 
 /**
