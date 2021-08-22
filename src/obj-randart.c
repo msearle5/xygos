@@ -3297,6 +3297,9 @@ static void design_artifact(struct artifact_set_data *data, int tv, int *aidx, i
 	mem_free(a_old->faults);
 	mem_free(a_old);
 
+	art->aidx = *aidx;
+	aup_info[*aidx].aidx = *aidx;
+
 	/* Store it for later pass */
 	if (!preserve) {
 		data->power[*aidx] = ap;
