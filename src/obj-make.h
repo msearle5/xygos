@@ -48,5 +48,6 @@ struct object *make_artifact(int lev, int tval);
 bool special_item_can_gen(struct object_kind *kind);
 struct ego_item *select_ego_base(int level, struct object *obj);
 struct object_kind *select_ego_kind(const struct ego_item *ego, int level, int tval);
+bool multiego_allow(u16b *ego);
 
 #endif /* OBJECT_MAKE_H */

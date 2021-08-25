@@ -45,6 +45,7 @@ struct object_kind *lookup_kind(int tval, int sval);
 struct object_kind *objkind_byid(int kidx);
 struct object *wish(const char *in, int level);
 bool make_wish(const char *prompt, int level);
+const struct ego_item *lookup_ego_name_fuzzy(const char *name, const struct object_kind *kind, const struct ego_item **ego, int *fuzz);
 const struct ego_item *lookup_ego_name(const char *name);
 const struct object_kind *lookup_kind_name_fuzzy(const char *name, int *fuzz);
 const struct object_kind *lookup_kind_name(const char *name);

@@ -55,8 +55,8 @@ struct artiname {
 	bool *brands;
 };
 
-static struct artiname *artiname;
-static int n_artinames;
+struct artiname *artiname;
+int n_artinames;
 static int n_good_artinames;
 
 static int first_randart;

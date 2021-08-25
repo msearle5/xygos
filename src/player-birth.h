@@ -52,6 +52,8 @@ void do_cmd_choose_name(struct command *cmd);
 void do_cmd_choose_history(struct command *cmd);
 void do_cmd_accept_character(struct command *cmd);
 
+void player_embody(struct player *p);
+
 char *find_roman_suffix_start(const char *buf);
 
 #endif /* !PLAYER_BIRTH_H */

@@ -70,7 +70,33 @@ extern int teardown_tests(void *data);
 		} \
 	} while (0)
 
+#define vrequire(x, s) \
+	do { \
+		if (!(x)) { \
+			if (verbose) { \
+				showfail(); \
+				printf("    %s:%d: requirement '%s' failed\n", \
+			           suite_name, __LINE__, #x); \
+				printf("    %s\n", s ? s : "(null)"); \
+			} \
+			return 1; \
+		} \
+	} while (0)
+
 #if __WORDSIZE == 64
+#define vptreq(x,y,s) \
+	if ((x) != (y)) { \
+		if (verbose) { \
+			showfail(); \
+			printf("    %s:%d: requirement '%s' == '%s' failed\n", suite_name, \
+		           __LINE__, #x, #y); \
+		    printf("      %s\n", s ? s : "(null)"); \
+			printf("      %s: %llu\n", #x, (unsigned long long)(x)); \
+			printf("      %s: %llu\n", #y, (unsigned long long)(y)); \
+		} \
+		return 1; \
+	}
+
 #define ptreq(x,y) \
 	if ((x) != (y)) { \
 		if (verbose) { \
@@ -79,6 +105,18 @@ extern int teardown_tests(void *data);
 		           __LINE__, #x, #y); \
 			printf("      %s: %llu\n", #x, (unsigned long long)(x)); \
 			printf("      %s: %llu\n", #y, (unsigned long long)(y)); \
+		} \
+		return 1; \
+	}
+
+#define vnull(x,s) \
+	if ((x) != 0) { \
+		if (verbose) { \
+			showfail(); \
+			printf("    %s:%d: requirement '%s' == NULL failed\n", suite_name, \
+		           __LINE__, #x); \
+		    printf("      %s\n", s ? s : "(null)"); \
+			printf("      %s: %llu\n", #x, (unsigned long long)(x)); \
 		} \
 		return 1; \
 	}
@@ -106,6 +144,19 @@ extern int teardown_tests(void *data);
 	}
 
 #else
+#define vptreq(x,y,s) \
+	if ((x) != (y)) { \
+		if (verbose) { \
+			showfail(); \
+			printf("    %s:%d: requirement '%s' == '%s' failed\n", suite_name, \
+		           __LINE__, #x, #y); \
+		    printf("      %s\n", s ? s : "(null)"); \
+			printf("      %s: %p\n", #x, (void *)(x)); \
+			printf("      %s: %p\n", #y, (void *)(y)); \
+		} \
+		return 1; \
+	}
+
 #define ptreq(x,y) \
 	if ((x) != (y)) { \
 		if (verbose) { \
@@ -114,6 +165,18 @@ extern int teardown_tests(void *data);
 		           __LINE__, #x, #y); \
 			printf("      %s: %p\n", #x, (void *)(x)); \
 			printf("      %s: %p\n", #y, (void *)(y)); \
+		} \
+		return 1; \
+	}
+
+#define vnull(x) \
+	if ((x) != 0) { \
+		if (verbose) { \
+			showfail(); \
+			printf("    %s:%d: requirement '%s' == NULL failed\n", suite_name, \
+		           __LINE__, #x); \
+		    printf("      %s\n", s ? s : "(null)"); \
+			printf("      %s: %p\n", #x, (void *)(x)); \
 		} \
 		return 1; \
 	}

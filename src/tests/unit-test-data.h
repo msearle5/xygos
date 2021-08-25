@@ -1011,7 +1011,7 @@ static struct angband_constants TEST_DATA test_z_info = {
 };
 
 static struct equip_slot TEST_DATA test_slot_light = {
-	.type = 5,
+	.type = 3,
 	.name = "light",
 	.obj = NULL,
 };
@@ -1026,10 +1026,80 @@ static struct quest TEST_DATA test_quest = {
 	.max_num = 4,
 };
 
+
+static struct equip_slot TEST_DATA test_player_body_slots[13] = {
+	{
+		.next = &test_player_body_slots[1],
+		.name = "weapon",
+		.type = 1
+	},
+	{
+		.next = &test_player_body_slots[2],
+		.name = "shooting",
+		.type = 2
+	},
+	{
+		.next = &test_player_body_slots[3],
+		.name = "light",
+		.type = 3
+	},
+	{
+		.next = &test_player_body_slots[4],
+		.name = "body",
+		.type = 4
+	},
+	{
+		.next = &test_player_body_slots[5],
+		.name = "back",
+		.type = 5
+	},
+	{
+		.next = &test_player_body_slots[6],
+		.name = "belt",
+		.type = 6
+	},
+	{
+		.next = &test_player_body_slots[7],
+		.name = "arm",
+		.type = 7
+	},
+	{
+		.next = &test_player_body_slots[8],
+		.name = "head",
+		.type = 8
+	},
+	{
+		.next = &test_player_body_slots[9],
+		.name = "hands",
+		.type = 9
+	},
+	{
+		.next = &test_player_body_slots[10],
+		.name = "feet",
+		.type = 10
+	},
+	{
+		.next = &test_player_body_slots[11],
+		.name = "legs",
+		.type = 11
+	},
+	{
+		.next = &test_player_body_slots[12],
+		.name = "arms",
+		.type = 12
+	},
+	{
+		.next = NULL,
+		.name = "brain",
+		.type = 13
+	},
+};
+
 static struct player_body TEST_DATA test_player_body = {
 	.next    = NULL,
 	.name    = "Humanoid",
-	.count   = 12,
+	.count   = 13,
+	.slots   = test_player_body_slots
 };
 
 static struct player_upkeep TEST_DATA test_player_upkeep = {

@@ -151,13 +151,16 @@ struct object *wish(const char *in, int level)
 		if ((num > 1) && (num <= 99) && (errno == 0) && (*end == 0))
 			count = num;
 		else {
-			/* Strip out anything non-alphabetic */
+			/* Strip out anything that's not alphanumeric or -,*,internal ' */
 			char *c = tok;
 			while (*c) {
-				if (!isalpha(*c)) {
-					*c = 0;
-					if (c == tok) {
-						tok++;
+				if ((!isalnum(*c)) && (*c != '-') && (*c != '*')) {
+					if ((*c == '\'') && (c != tok) && (*(c+1))) {
+					} else {
+						*c = 0;
+						if (c == tok) {
+							tok++;
+						}
 					}
 				}
 				c++;
@@ -196,67 +199,160 @@ struct object *wish(const char *in, int level)
 		}
 	}
 
+	/* and threes */
+	for(int i=0;i<words-2;i++) {
+		char pair[256];
+		strnfmt(pair, sizeof(pair), "%s %s %s", word[i], word[i+1], word[i+2]);
+		word[pairs++] = string_make(pair);
+		if (pairs == WISH_WORDS) {
+			break;
+		}
+	}
+
+	/* and fours */
+	for(int i=0;i<words-3;i++) {
+		char pair[256];
+		strnfmt(pair, sizeof(pair), "%s %s %s %s", word[i], word[i+1], word[i+2], word[i+3]);
+		word[pairs++] = string_make(pair);
+		if (pairs == WISH_WORDS) {
+			break;
+		}
+	}
+
 	/* Search words and combinations */
 	for(int i=0;i<pairs;i++) {
 		/* Search for base item */
 		int distance = strlen(word[i]);
 		const struct object_kind *k = lookup_kind_name_fuzzy(word[i], &distance);
 		if (k) {
-			kinds[names] = k;
-			fuzz[names] = distance;
+			/* Even as a debug option, as it will otherwise produce the artifact instead of the base item
+			 * for INSTA_ART, while SPECIAL_GEN items may fail to generate */
+			if ((!kf_has(k->kind_flags, KF_INSTA_ART)) && (!kf_has(k->kind_flags, KF_SPECIAL_GEN))) {
+				kinds[names] = k;
+				fuzz[names] = distance;
+			}
 		}
 		/* Defer search for artifacts, egos */
 		name[names] = word[i];
 		names++;
 	}
 
-	/* Extract a base item - the least fuzzy match */
+	/* Extract a base item or artifact - the least fuzzy match */
 	int best_fuzz = sizeof(buf);
-	//int best_idx = -1;
-	for(int i=0;i<names;i++) {
-		if ((kinds[i]) && (fuzz[i] < best_fuzz)) {
+	int best_idx = -1;
+	for(int i=names-1;i>=0;i--) {
+		int distance = sizeof(buf);
+		const struct artifact *a = lookup_artifact_name_fuzzy(name[i], &distance);
+if (a) fprintf(stderr,"From %s, found %s, dist %d\n", name[i], a->name, distance);
+		if ((a) && (distance < best_fuzz)) {
+			fprintf(stderr,"   -- using\n");
+			best_fuzz = distance;
+			best_idx = i;
+			art = a;
+		}
+		if ((kinds[i]) && ((fuzz[i] < best_fuzz) /*|| (art && (fuzz[i] == best_fuzz) && ((islower(name[i][0])) && (!strstr(name[best_idx], name[i]))))*/)) {
+			fprintf(stderr,"From %s, using %s in place of %s, dist %d\n", name[i], name[best_idx], kinds[i]->name, fuzz[i]);
 			best_fuzz = fuzz[i];
 			kind = kinds[i];
-			//best_idx = i;
+			best_idx = i;
+			art = NULL;
 		}
 	}
-	/* Don't use the name picked for the base item again for artifacts / ego items */
-	//if (best_idx >= 0) {
-		//name[best_idx] = NULL;
-	//}
 
-	/* Now that the base item is known (if possible), look for artifacts or egos */
-	for(int i=0;i<names;i++) {
-		const char *n = name[i];
-		if (n) {
-			//if (!art) {
-				int distance = strlen(word[i]);
-				const struct artifact *a = lookup_artifact_name_fuzzy(n, &distance);
-				if ((a) && (distance < best_fuzz)) {
-					best_fuzz = distance;
-					art = a;
-				}
-			//	if (art)
-			//		continue;
-			//}
-			if (negos < MAX_EGOS) {
-				/* Look up an ego item in the possible list of the kind */
-				if (kind) {
-					ego[negos] = lookup_ego_item(n, kind->tval, kind->sval);
-					if (ego[negos])
-						negos++;
-				} else {
-					/* An ego is specified, but no kind.
-					 * Select one at random.
-					 */
-					const struct ego_item *e = lookup_ego_name(n);
-					if (e) {
-						kind = select_ego_kind(e, level, 0);
+	/* Don't use the name picked for the base item again for ego items.
+	 * Avoid components also.
+	 **/
+	bool reject[WISH_WORDS];
+	memset(reject, 0, sizeof(WISH_WORDS));
+	if (best_idx >= 0) {
+		for(int i=0;i<best_idx;i++) {
+			if (strstr(name[best_idx], name[i])) {
+				fprintf(stderr,"Rejecting %s as a substring of %s\n", name[i], name[best_idx]);
+//				name[i] = NULL;
+				reject[i] = true;
+			} else {
+				fprintf(stderr,"Accepting %s as NOT a substring of %s\n", name[i], name[best_idx]);
+			}
+		}
+//		name[best_idx] = NULL;
+			
+		reject[best_idx] = true;
+	}
+
+	/* Now that the base item is known (if possible), look for egos.
+	 * Find single egos first - the name which has lowest distance.
+	 * Only if there are two names which both have a lower distance to compatible egos should it fall back
+	 * to a multiego.
+	 **/
+	int ego_fuzz = sizeof(buf);
+	if ((!art) || (best_fuzz > 0)) {
+		for(int i=names-1;i>=0;i--) {
+			const char *n = name[i];
+			if (n) {
+				//if (kind) {
+					/* Best single ego */
+					int distance = sizeof(buf);
+					if (reject[i]) {
+						distance *= 2;
+						distance += names;
+						distance -= i;
+					}
+					const struct ego_item *e = lookup_ego_name_fuzzy(n, NULL, NULL, &distance);
+					if ((e) && (distance <= ego_fuzz) && ((!art) || (distance < best_fuzz))) {
+						fprintf(stderr,"From %s, ego %s, dist %d - using\n", name[i], e->name, distance);
+						ego[0] = e;
+						best_fuzz = ego_fuzz = distance;
+						art = NULL;
 						if (kind) {
-							ego[negos++] = e;
+							bool match = false;
+							for (struct poss_item *poss = e->poss_items; poss; poss = poss->next) {
+								if (poss->kidx == kind-k_info) {
+									match = true;
+									break;
+								}
+							}
+							if (!match) {
+								kind = NULL;
+							}
+						}
+						if (!kind) {
+							kind = select_ego_kind(e, level, 0);
+						}
+					} else {
+						fprintf(stderr,"From %s, ego %s, dist %d - NOT using\n", name[i], e ? e->name : "(NULL)", distance);
+					}
+				//}
+				if (!kind) {
+					
+				}
+#ifdef undef
+				if (negos < MAX_EGOS) {
+					/* Look up an ego item in the possible list of the kind */
+					if (kind) {
+						int distance = sizeof(buf);
+						const struct ego_item *e = lookup_ego_name_fuzzy(n, kind, ego, &distance);
+						/* If art is not set, best_fuzz refers to the base object and so is irrelevant. */
+						if ((e) && (distance <= ego_fuzz) && ((!art) || (distance < best_fuzz))) {
+							fprintf(stderr,"From %s, ego %s, dist %d\n", name[i], e->name, distance);
+							ego[negos] = e;
+							best_fuzz = ego_fuzz = distance;
+							negos++;
+							art = NULL;
+						}
+					} else {
+						/* An ego is specified, but no kind.
+						 * Select one at random.
+						 */
+						const struct ego_item *e = lookup_ego_name(n);
+						if (e) {
+							kind = select_ego_kind(e, level, 0);
+							if (kind) {
+								ego[negos++] = e;
+							}
 						}
 					}
 				}
+#endif
 			}
 		}
 	}
@@ -314,9 +410,11 @@ struct object *wish(const char *in, int level)
 	/* Make it an ego or multiego, set the count */
 	if (obj) {
 		if (!obj->artifact) {
-			for(int i=0;i<negos;i++) {
-				obj->ego[i] = (struct ego_item *)(ego[i]);
-				ego_apply_magic_from(obj, 0, i);
+			for(int i=0;i<MAX_EGOS;i++) {
+				if (ego[i]) {
+					obj->ego[i] = (struct ego_item *)(ego[i]);
+					ego_apply_magic_from(obj, 0, i);
+				}
 			}
 
 			if (obj->number < count)
@@ -953,7 +1051,7 @@ const struct object_kind *lookup_kind_name_fuzzy(const char *name, int *fuzz)
 
 	if (!z_info)
 		return NULL;
-
+fprintf(stderr,"knf: name %s\n", name);
 	/* Look for it */
 	for (k = 0; k < z_info->k_max; k++) {
 		const struct object_kind *kind = &k_info[k];
@@ -962,8 +1060,9 @@ const struct object_kind *lookup_kind_name_fuzzy(const char *name, int *fuzz)
 		if (kind->name) {
 			for(bool plural = false; plural != true; plural = true) {
 				obj_desc_name_format(buf, sizeof(buf), 0, kind->name, NULL, plural);
-				int ldist = levenshtein(buf, name);
+				int ldist = (levenshtein(buf, name) * 3) + 1;
 				if (ldist < distance) {
+fprintf(stderr,"knf: name %s, match %s, dist %d\n", name, buf, ldist);
 					distance = ldist;
 					k_idx = k;
 					if (distance == 0) {
@@ -1020,6 +1119,8 @@ const struct artifact *lookup_artifact_name_fuzzy(const char *name, int *fuzz)
 	char *inp = in;
 	if (strlen(name) >= sizeof(in))
 		return NULL;
+	int in_lower = (islower(*name));
+//fprintf(stderr,"name %s, in_lower %d\n", name, in_lower);
 	while (*name) {
 		*inp++ = tolower(*name++);
 	}
@@ -1028,6 +1129,10 @@ const struct artifact *lookup_artifact_name_fuzzy(const char *name, int *fuzz)
 	/* Look for it */
 	for (int i = 0; i < z_info->a_max; i++) {
 		const struct artifact *art = &a_info[i];
+
+		/* Skip existing artifacts */
+		if (is_artifact_created(art))
+			continue;
 
 		/* Test for close matches to the name */
 		if (art->name) {
@@ -1040,15 +1145,21 @@ const struct artifact *lookup_artifact_name_fuzzy(const char *name, int *fuzz)
 			if ((len >= 3) && (len < sizeof(buf))) {
 				if (!strncmp(namep, "of ", 3))
 					namep += 3;
+				int name_lower = -1;
 				while (*namep) {
-					char c = tolower(*namep++);
-					if (!ispunct(c))
-						*bufp++ = c;
+					char c = *namep++;
+					if (!ispunct(c)) {
+						if (name_lower < 0)
+							name_lower = (islower(c));
+						*bufp++ = tolower(c);
+					}
 				}
 				*bufp = 0;
 
 				/* Fuzzy match this */
-				int ldist = levenshtein(in, buf);
+				int ldist = (levenshtein(in, buf) * 3);
+				if (in_lower != name_lower)
+					ldist+=2;
 				if (ldist < distance) {
 					distance = ldist;
 					a_idx = i;
@@ -1091,6 +1202,115 @@ const struct artifact *lookup_artifact_name(const char *name)
 
 	/* Return our best match */
 	return a_idx >= 0 ? &a_info[a_idx] : NULL;
+}
+
+const struct ego_item *lookup_ego_name_fuzzy(const char *name, const struct object_kind *kind, const struct ego_item **ego, int *fuzz)
+{
+	char in[64];
+	char buf[64];
+	int e_idx = -1;
+	int distance = fuzz ? *fuzz : (int)(strlen(name));
+
+	if (!z_info)
+		return NULL;
+
+	/* Convert to lower case - assumes there is no punctuation */
+	char *inp = in;
+	if (strlen(name) >= sizeof(in))
+		return NULL;
+	while (*name) {
+		*inp++ = tolower(*name++);
+	}
+	*inp = 0;
+
+	u16b mego[MAX_EGOS] = { 0 };
+	bool megocheck = false;
+	int negos = 0;
+	if (kind && ego && *ego) {
+		megocheck = true;
+		for(int i=0;i<MAX_EGOS;i++) {
+			if (!ego[i]) {
+				negos = i;
+				break;
+			}
+			mego[i] = ego[i]->eidx;
+		}
+	}
+
+	/* Look for it */
+	for (int i = 0; i < z_info->e_max; i++) {
+		const struct ego_item *e = &e_info[i];
+
+		/* If 'kind' is available, avoid inapplicable egos */
+		if (kind) {
+			bool match = false;
+			for (struct poss_item *poss = e->poss_items; poss; poss = poss->next) {
+				if (poss->kidx == kind->kidx) {
+					match = true;
+					break;
+				}
+			}
+			if (!match)
+				continue;
+		}
+
+		/* Also avoid multi-egos that don't match, if there is at least one ego already */
+fprintf(stderr,"egofuzz A: %s/%s\n", in, e->name);
+		bool ok = true;
+		if (megocheck) {
+			mego[negos] = i;
+			if (!multiego_allow(mego)) 
+			{
+fprintf(stderr,"egofuzz B\n");
+				continue;
+			}
+			for(int i=0;i<negos;i++) {
+				if (ego[i] == e)
+					ok = false;
+			}
+		}
+		if (!ok) {
+fprintf(stderr,"egofuzz C\n");
+			continue;
+		}
+
+		/* Test for close matches to the name */
+		if (e->name) {
+			/* Convert to lower case, removing punctuation (but not spaces)
+			 * and leading 'of '
+			 */
+			char *namep = e->name;
+			char *bufp = buf;
+			unsigned len = strlen(e->name);
+			if ((len >= 3) && (len < sizeof(buf))) {
+				if (!strncmp(namep, "of ", 3))
+					namep += 3;
+				while (*namep) {
+					char c = tolower(*namep++);
+					if ((!ispunct(c)) || (c == '*') || (c == '-'))
+						*bufp++ = c;
+				}
+				*bufp = 0;
+
+				/* Fuzzy match this */
+				int ldist = levenshtein(in, buf) * 3;
+fprintf(stderr,"egofuzz: %s/%s = %d\n", in, buf, ldist);
+				if (ldist < distance) {
+					distance = ldist;
+					e_idx = i;
+					if (distance == 0) {
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	/* Return our best match */
+	if (fuzz) {
+		*fuzz = distance;
+	}
+	return e_idx >= 0 ? &e_info[e_idx] : NULL;
 }
 
 /**

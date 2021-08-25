@@ -81,7 +81,6 @@ struct multiego_entry
 static struct money *money_type;
 static int num_money_types;
 
-bool multiego_allow(u16b *ego);
 static bool kind_is_good(const struct object_kind *kind, int level);
 
 /*

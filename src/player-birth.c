@@ -459,7 +459,7 @@ static void get_ahw(struct player *p)
 /**
  * Creates the player's body
  */
-static void player_embody(struct player *p)
+void player_embody(struct player *p)
 {
 	char buf[80];
 	int i;
