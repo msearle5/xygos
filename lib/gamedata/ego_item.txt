@@ -119,8 +119,42 @@ type:legs
 type:arms
 flags-off:NO_EQUIP
 weight:105
-desc:It can be fitted and removed yourself, rather than having to visit the Cyber Salon.
+desc:It can be fitted and removed yourself, without having to visit the Cyber Salon.
 
+#clawed, finned, jet (FF)
+
+name:(razor)
+info:5200:12
+alloc:60:8 to 127
+type:legs
+type:arms
+combat:0:d2M6:0
+weight:107
+desc:A gleaming razor-edged strip runs down it. A simple but useful combat mod, and one that adds no encumbrance and minimal weight.
+forbid:spiked | tentaculated
+
+name:(spiked)
+info:8000:20
+alloc:40:15 to 127
+type:legs
+type:arms
+combat:-2:3d2M8:0
+weight:115
+desc:It has a line of slim, mean-looking spines along the side, with more substantial ones attached to each joint. It's an effective combat mod despite being a little clumsy.
+forbid:razor | tentaculated
+
+name:(tentaculated)
+info:9500:35
+alloc:25:30 to 127
+type:legs
+type:arms
+combat:-4:4d2M10:4d2M20
+weight:121
+desc:Eight seamless tentacles in dull, grayish metal spring out and writhe in an unsettling manner. They are not true limbs and can't grasp, but their barbed tips can rapidly turn your opponents into mincemeat - while effectively deflecting incoming blows.
+forbid:razor | spiked
+
+#name:(bionic)
+#incompat: spiked, etc
 
 ### Lights
 # Candle-likes and glowsticks shouldn't get any egos.
