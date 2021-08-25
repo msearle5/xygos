@@ -135,7 +135,7 @@ static void wr_item(const struct object *obj)
 	else
 		wr_s16b(0);
 
-	wr_s16b(obj->timeout);
+	wr_s32b(obj->timeout);
 
 	wr_s16b(obj->to_h);
 	wr_s16b(obj->to_d);

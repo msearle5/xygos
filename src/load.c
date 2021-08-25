@@ -167,7 +167,7 @@ static struct object *rd_item(void)
 	}
 	rd_s16b(&effect);
 
-	rd_s16b(&obj->timeout);
+	rd_s32b(&obj->timeout);
 
 	rd_s16b(&obj->to_h);
 	rd_s16b(&obj->to_d);

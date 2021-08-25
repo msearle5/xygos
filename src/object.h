@@ -518,7 +518,7 @@ struct object {
 	char *effect_msg;		/**< Message on use */
 	struct activation *activation;	/**< Artifact activation, if applicable */
 	random_value time;		/**< Recharge time (rods/activation) */
-	s16b timeout;			/**< Timeout Counter */
+	s32b timeout;			/**< Timeout Counter */
 
 	byte number;			/**< Number of items */
 	bitflag notice;			/**< Attention paid to the object */
