@@ -20,6 +20,8 @@
 #include "game-world.h"
 #include "init.h"
 #include "player-quest.h"
+#include "mon-lore.h"
+#include "monster.h"
 #include "score.h"
 #include "world.h"
 
@@ -36,6 +38,30 @@ static long total_points(const struct player *p)
 	double max_exp_score = exp_to_gain(PY_MAX_LEVEL);
 	double comp_exp = MIN(p->max_exp, max_exp_score) / max_exp_score;
 
+	/* Reward killing a variety of monsters.
+	 */
+	double max_race = 0.0;
+	double killed_race = 0.0;
+	double max_unique = 0.0;
+	double killed_unique = 0.0;
+	for(int i=0; i<z_info->r_max; i++) {
+		struct monster_race *race = &r_info[i];
+		struct monster_lore *lore = &l_list[i];
+		if (rf_has(race->flags, RF_UNIQUE)) {
+			max_unique++;
+			if (race->max_num == 0) {
+				killed_unique++;
+			}
+		} else {
+			max_race++;
+			if (lore->pkills) {
+				killed_race++;
+			}
+		}
+	}
+	double comp_race = killed_race / max_race;
+	double comp_unique = killed_unique / max_unique;
+
 	/* Reward completing quests.
 	 * Win-track quests are more important than guardian quests, which
 	 * are more important than others. Higher level quests are more
@@ -48,7 +74,7 @@ static long total_points(const struct player *p)
 	double done_win = 0.0;
 	double done_guard = 0.0;
 	double done_other = 0.0;
-	for(int i=0;i<z_info->quest_max;i++) {
+	for(int i=0; i<z_info->quest_max; i++) {
 		struct quest *q = &p->quests[i];
 		int level = q->level * q->level;
 		bool done = q->flags & QF_SUCCEEDED;
@@ -70,6 +96,7 @@ static long total_points(const struct player *p)
 				done_other += level;
 		}
 	}
+
 	/* Find proportion complete in each of win, guardian, other, experience and depth categories,
 	 * multiply them by weights.
 	 */
@@ -86,13 +113,14 @@ static long total_points(const struct player *p)
 	comp_depth = (comp_depth * comp_depth * comp_depth);
 
 	/* Individual weights for each component, should sum to 1.0 */
-	double completion = (0.45 * comp_win) + (0.2 * comp_exp) + (0.15 * comp_guard) + (0.1 * comp_other) + (0.1 * comp_depth);
+	double completion = (0.375 * comp_win) + (0.18 * comp_exp) + (0.12 * comp_guard) + (0.075 * comp_other) + (0.1 * comp_depth) + (0.05 * comp_race) + (0.1 * comp_unique);
 
 	/* Scale to a score for standard race/extension/personality */
 	double score = (completion * 1e7);
 
 	/* Scale by race/extension/personality */
 	double scale = 100 + p->race->score + p->extension->score;
+
 	/* Split personality => the current personality can change, and the score
 	 * shouldn't be affected by temporarily being a Scrub or Munchkin.
 	 */
