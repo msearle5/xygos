@@ -19,7 +19,9 @@
 #include "buildid.h"
 #include "game-world.h"
 #include "init.h"
+#include "player-quest.h"
 #include "score.h"
+#include "world.h"
 
 #include <math.h>
 
@@ -28,7 +30,68 @@
  */
 static long total_points(const struct player *p)
 {
-	double score = (p->max_exp + (100 * p->max_depth));
+	/* Reward experience, but not once maximum level has been gained
+	 * as 0..1
+	 **/
+	double max_exp_score = exp_to_gain(PY_MAX_LEVEL);
+	double comp_exp = MIN(p->max_exp, max_exp_score) / max_exp_score;
+
+	/* Reward completing quests.
+	 * Win-track quests are more important than guardian quests, which
+	 * are more important than others. Higher level quests are more
+	 * valuable.
+	 */
+	double max_depth = 0.0;
+	double max_win = 0.0;
+	double max_guard = 0.0;
+	double max_other = 0.0;
+	double done_win = 0.0;
+	double done_guard = 0.0;
+	double done_other = 0.0;
+	for(int i=0;i<z_info->quest_max;i++) {
+		struct quest *q = &p->quests[i];
+		int level = q->level * q->level;
+		bool done = q->flags & QF_SUCCEEDED;
+		bool win = q->flags & QF_ESSENTIAL;
+		bool guard = q->flags & QF_GUARDIAN;
+		if (win) {
+			if ((q->level - 1) > max_depth)
+				max_depth = (q->level - 1);
+			max_win += level;
+			if (done)
+				done_win += level;
+		} else if (guard) {
+			max_guard += level;
+			if (done)
+				done_guard += level;
+		} else {
+			max_other += level;
+			if (done)
+				done_other += level;
+		}
+	}
+	/* Find proportion complete in each of win, guardian, other, experience and depth categories,
+	 * multiply them by weights.
+	 */
+	double comp_win = done_win / max_win;
+	double comp_guard = done_guard / max_guard;
+	double comp_other = done_other / max_other;
+	/* Depth: maximum is the maximum win quest's depth */
+	double done_depth = 0.0;
+	if (p->depth > 0)
+		done_depth = p->depth - 1;
+	if (done_depth > max_depth)
+		done_depth = max_depth;
+	double comp_depth = done_depth / max_depth;
+	comp_depth = (comp_depth * comp_depth * comp_depth);
+
+	/* Individual weights for each component, should sum to 1.0 */
+	double completion = (0.45 * comp_win) + (0.2 * comp_exp) + (0.15 * comp_guard) + (0.1 * comp_other) + (0.1 * comp_depth);
+
+	/* Scale to a score for standard race/extension/personality */
+	double score = (completion * 1e7);
+
+	/* Scale by race/extension/personality */
 	double scale = 100 + p->race->score + p->extension->score;
 	/* Split personality => the current personality can change, and the score
 	 * shouldn't be affected by temporarily being a Scrub or Munchkin.
@@ -259,10 +322,28 @@ void build_score(struct high_score *entry, const struct player *p,
 	strnfmt(entry->max_dun, sizeof(entry->max_dun), "%3d", p->max_depth);
 
 	/* Save the dungeon */
-	if (player->active_quest >= 0) {
-		strnfmt(entry->dungeon, sizeof(entry->dungeon), "in the '%s' task", player->quests[player->active_quest].name);
+	if (p->active_quest >= 0) {
+		strnfmt(entry->dungeon, sizeof(entry->dungeon), "in the '%s' task", p->quests[p->active_quest].name);
 	} else {
-		strnfmt(entry->dungeon, sizeof(entry->dungeon), "on level %d of the fortress", player->depth);
+		char where[256];
+		if (p->town) {
+			if (p->depth == 0) {
+				strnfmt(where, sizeof(where), "in %s", p->town->name);
+			} else {
+				char buf[256];
+				strncpy(buf, p->town->downto, sizeof(buf));
+				*strchr(buf, ' ') = 0;
+				strnfmt(where, sizeof(where), "on level %d of the %s", p->depth, buf);
+			}
+		} else {
+			if (p->depth == 0) {
+				strcpy(where, "on the surface");
+			} else {
+				strnfmt(where, sizeof(where), "on level %d of the Orbital Station", p->depth);
+			}
+		}
+
+		strnfmt(entry->dungeon, sizeof(entry->dungeon), "%s", where);
 	}
 
 	/* Cause of death */

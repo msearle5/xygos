@@ -87,11 +87,7 @@ static void display_score_page(const struct high_score scores[], int start,
 		if (strstr(score->how, "Saved")) {
 			strnfmt(out_val, sizeof(out_val), "%s", score->how);
 		} else {
-			if (!cdun)
-				strnfmt(out_val, sizeof(out_val), "%s in the town",
-						score->how);
-			else
-				strnfmt(out_val, sizeof(out_val),
+			strnfmt(out_val, sizeof(out_val),
 						"%s %s", score->how, score->dungeon);
 
 			/* Append a "maximum level" */
