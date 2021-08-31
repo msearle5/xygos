@@ -401,7 +401,7 @@ struct chunk *cave_generate(struct player *p, int height, int width);
 
 
 /* gen-util.c */
-extern byte get_angle_to_grid[41][41];
+extern const byte get_angle_to_grid[41][41];
 
 int grid_to_i(struct loc grid, int w);
 void i_to_grid(int i, int w, struct loc *grid);

@@ -1072,8 +1072,8 @@ static struct table tables[] = {
 	/* game-world.c */
 	{ DYNTABLE(extract_energy),			table_u8 },
 	/* cmd-cave.c */
-	{ TABLE(obj_feeling_text),			table_string,	10 },
-	{ TABLE(mon_feeling_text),			table_string,	10 },
+	{ DYNTABLE(obj_feeling_text),		table_string },
+	{ DYNTABLE(mon_feeling_text),		table_string },
 	{ { NULL } },
 };
 

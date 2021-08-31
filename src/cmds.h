@@ -24,10 +24,10 @@
 #include "cmd-core.h"
 
 /* cmd-cave.c */
-extern char *obj_feeling_text[10];
+extern const char **obj_feeling_text;
 extern int n_obj_feeling_text;
 
-extern char *mon_feeling_text[10];
+extern const char **mon_feeling_text;
 extern int n_mon_feeling_text;
 
 void do_cmd_go_up(struct command *cmd);

@@ -1010,7 +1010,7 @@ struct object_kind *objkind_byid(int kidx) {
 /* Levenshtein distance (number of edits needed to transform one string into the other)
  * Source: https://rosettacode.org/wiki/Levenshtein_distance#C
  */
-int levenshtein(const char *s, const char *t)
+static int levenshtein(const char *s, const char *t)
 {
 	int ls = strlen(s), lt = strlen(t);
 	int d[ls + 1][lt + 1];

@@ -1576,7 +1576,7 @@ void do_cmd_sleep(struct command *cmd)
  * Keep strings at 36 or less characters to keep the
  * combined feeling on one row.
  */
-char *obj_feeling_text[10];
+const char **obj_feeling_text;
 int n_obj_feeling_text;
 
 /**
@@ -1584,7 +1584,7 @@ int n_obj_feeling_text;
  * Keep strings at 36 or less characters to keep the
  * combined feeling on one row.
  */
-char *mon_feeling_text[10];
+const char **mon_feeling_text;
 int n_mon_feeling_text;
 
 
