@@ -1009,37 +1009,52 @@ struct object_kind *objkind_byid(int kidx) {
 
 /* Levenshtein distance (number of edits needed to transform one string into the other)
  * Source: https://rosettacode.org/wiki/Levenshtein_distance#C
+ * Modified to avoid nesting functions
  */
+ 
+static int leven_ls, leven_lt;
+static const char *leven_s;
+static const char *leven_t;
+static int *leven_d;
+
+static int leven_dist(int i, int j) {
+	if (leven_d[(i * (leven_lt + 1)) + j] >= 0)
+		return leven_d[(i * (leven_lt + 1)) + j];
+
+	int x;
+	if (i == leven_ls)
+		x = leven_lt - j;
+	else if (j == leven_lt)
+		x = leven_ls - i;
+	else if (leven_s[i] == leven_t[j])
+		x = leven_dist(i + 1, j + 1);
+	else {
+		x = leven_dist(i + 1, j + 1);
+
+		int y;
+		if ((y = leven_dist(i, j + 1)) < x) x = y;
+		if ((y = leven_dist(i + 1, j)) < x) x = y;
+		x++;
+	}
+	leven_d[(i * (leven_lt + 1)) + j] = x;
+	return x;
+}
+
 static int levenshtein(const char *s, const char *t)
 {
-	int ls = strlen(s), lt = strlen(t);
-	int d[ls + 1][lt + 1];
+	leven_ls = strlen(s);
+	leven_lt = strlen(t);
+	leven_s = s;
+	leven_t = t;
+	leven_d = mem_alloc((leven_ls + 1) * (leven_lt + 1) * sizeof(int));
  
-	for (int i = 0; i <= ls; i++)
-		for (int j = 0; j <= lt; j++)
-			d[i][j] = -1;
+	for (int i = 0; i < (leven_ls + 1) * (leven_lt + 1); i++)
+		leven_d[i] = -1;
  
-	int dist(int i, int j) {
-		if (d[i][j] >= 0) return d[i][j];
- 
-		int x;
-		if (i == ls)
-			x = lt - j;
-		else if (j == lt)
-			x = ls - i;
-		else if (s[i] == t[j])
-			x = dist(i + 1, j + 1);
-		else {
-			x = dist(i + 1, j + 1);
- 
-			int y;
-			if ((y = dist(i, j + 1)) < x) x = y;
-			if ((y = dist(i + 1, j)) < x) x = y;
-			x++;
-		}
-		return d[i][j] = x;
-	}
-	return dist(0, 0);
+	int d = leven_dist(0, 0);
+	mem_free(leven_d);
+	leven_d = NULL;
+	return d;
 }
 
 const struct object_kind *lookup_kind_name_fuzzy(const char *name, int *fuzz)
