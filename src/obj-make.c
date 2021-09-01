@@ -901,9 +901,6 @@ struct object *make_artifact(int lev, int tval)
 	/* No artifacts in the town */
 	if (!player->depth) return NULL;
 
-	/* Paranoia -- no "plural" artifacts */
-	if (obj->number != 1) return NULL;
-
 	if (!prob) {
 		prob = mem_zalloc(z_info->a_max * sizeof(double));
 		wiz_stats_prob = prob;
@@ -938,6 +935,7 @@ struct object *make_artifact(int lev, int tval)
 
 	/* Generate the base item */
 	const struct artifact *art = &a_info[a_idx];
+
 	/* The table should not contain any already existing artifacts */ 
 	assert(!(is_artifact_created(art)));
 
@@ -948,6 +946,10 @@ struct object *make_artifact(int lev, int tval)
 	/* Mark the item as an artifact */
 	obj->artifact = art;
 	copy_artifact_data(obj, obj->artifact);
+
+	/* Paranoia -- no "plural" artifacts */
+	if (obj->number != 1) return NULL;
+
 	mark_artifact_created(obj->artifact, true);
 
 	return obj;
