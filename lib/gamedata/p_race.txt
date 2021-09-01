@@ -128,7 +128,7 @@ skill-martial:3
 skill-shoot:0
 skill-throw:10
 skill-dig:-5
-desc:You're a sneaky sneak. A creepy creep. Stealth is your strong point, and you can usually manage to bypass a lock, avoid a trap, find hidden goodies and jump out of the way in the nick of time - eventually becoming so aware of your surroundings as to be entirely immune to traps. You're not a bad fighter but are best with lightweight melee and improvised thrown weapons. You're also smart enough to be able to back that up with devices.
+desc:You're a sneaky sneak. A creepy creep. Stealth is your strength, and you can usually manage to bypass locks, avoid traps, discover loot and escape in the nick of time - eventually becoming so aware of your surroundings as to be entirely immune to traps. You're not a bad fighter but prefer lightweight melee and improvised thrown weapons, also being smart enough to be able to back that up with devices.
 stats:-1:2:2:3:-1:-2:1
 level-from:15
 obj-flags:TRAP_IMMUNE
@@ -146,7 +146,7 @@ skill-martial:-5
 skill-shoot:-5
 skill-throw:-5
 skill-dig:-5
-desc:You're a reluctant hero - "What, me? Run around all day in some slimy underground passages? Sounds awful." You would much rather take the load off in front of VaulTV. But the galaxy won't save itself, so here you are... You are sub-par in most respects but your lack of experience translates to an improved experience modifier and an extra talent point. You will also find that you can take as long as you like to advance.
+desc:You're a reluctant hero - "What, me? Run around all day in some slimy underground passages? Sounds awful." You would much rather take the load off in front of VaulTV. But the galaxy won't save itself, so here you are... You are sub-par in most ways but your inexperience gives you an improved experience modifier and an extra talent point. You will also find that you can take as long as you like to advance.
 stats:-1:-1:-1:-1:-1:-2:-1
 player-flags:NO_TIME_LIMIT
 exp:-10

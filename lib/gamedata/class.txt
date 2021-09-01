@@ -212,7 +212,7 @@ strength-multiplier:3
 equip:food:random:1:3:none
 equip:gun:6mm handgun:1:1:none
 equip:6mm ammo:6mm bullet:30:40:none
-cdesc:A civilian weapon expert, reasonably skilled with all ranged weapons and the best of any role with your chosen specialty. Being used to firing at paper targets which rarely fire back though, your melee combat and stealth are not so hot. You'll start being able to recognize all weapon mods.
+cdesc:A civilian weapon expert, reasonably skilled with all ranged weapons and the best of any role with your chosen specialty. Being used to firing at paper targets which rarely fire back though, your melee combat and stealth are not so hot. You'll recognize guns and ammo up to your level in Marksman.
 
 ############### WRESTLER ##############
 name:Wrestler
