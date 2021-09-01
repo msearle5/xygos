@@ -1,3 +1,4 @@
+#include "effect-handler.h"
 #include "game-input.h"
 #include "message.h"
 #include "player.h"
@@ -69,7 +70,7 @@ static void timelord_regen_status(void)
 
 bool get_regens(s32b *allowed, s32b *used)
 {
-	if (player && player->race && player->race->name && streq(player->race->name, "Time-Lord")) {
+	if (player && player->race && player->race->name && player->race->state && streq(player->race->name, "Time-Lord")) {
 		*allowed = regens[player->max_lev];
 		*used = ((struct timelord_state *)player->race->state)->regenerations;
 		return true;
@@ -95,35 +96,38 @@ void timelord_change_regenerations(int change)
 static void timelord_do_regen(bool *success, bool *tried)
 {
 	struct timelord_state *state = (struct timelord_state *)player->race->state;
-	*success = false;
-	*tried = false;
 
+	*tried = false;
 	s32b allowed_regens = regens[player->max_lev];
 	if (state->regenerations >= allowed_regens) {
 		// explain
 		if (allowed_regens == 0)
-			msg("Only Time Lords of level 10 or above may regenerate into a new form.");
+			msgt(MSG_DEATH, "Only Time Lords of level 10 or above may regenerate into a new form.");
 		else
-			msg("Time Lords of your level may regenerate %s; you have used all your regenerations.", once);
+			msgt(MSG_DEATH, "Time Lords of your level may regenerate %s; you have used all your regenerations.", once);
+		*success = false;
 		return;
 	}
 
-	/* 10% chance of success at level 10, 85% at level 50.
-	 * Even if you used no regens before level 50, this is still only a 14.2% chance of surviving all
-	 * 12 regenerations (pow(0.85, 12)).
-	 * This is a chance per 10000 of success.
-	 */
-	s32b chance = ((player->max_lev * 9375) / PY_MAX_LEVEL) - 875;
 	*tried = true;
-	if (randint0(10000) > chance) {
-		// explain
-		msg("You attempt to regenerate into a new form, but are unsuccessful.");
-		return;
+	if (!*success) {
+		/* 10% chance of success at level 10, 85% at level 50.
+		 * Even if you used no regens before level 50, this is still only a 14.2% chance of surviving all
+		 * 12 regenerations (pow(0.85, 12)).
+		 * This is a chance per 10000 of success.
+		 */
+		s32b chance = ((player->max_lev * 9375) / PY_MAX_LEVEL) - 875;
+		if (randint0(10000) > chance) {
+			// explain
+			msgt(MSG_DEATH, "You attempt to regenerate into a new form, but are unsuccessful.");
+			*success = false;
+			return;
+		}
 	}
 
 	/* Success */
 	state->regenerations++;
-	msg("With no other option remaining, you must regenerate into a new form. You pass out...");
+	msgt(MSG_DEATH, "With no other option remaining, you must regenerate into a new form. You pass out...");
 
 	struct player *p = player;
 
@@ -212,6 +216,48 @@ void timelord_force_regen(void)
 	}
 }
 
+/*
+ * Pre-effect hook.
+ * Return true if the effect should stop before running the effect.
+ */
+bool timelord_effect(effect_handler_context_t *e)
+{
+	struct timelord_state *state = (struct timelord_state *)player->race->state;
+	s32b allowed_regens = regens[player->max_lev];
+	s32b remaining_regens = allowed_regens - state->regenerations;
+
+	if ((e->effect == EF_BANISH) || (e->effect == EF_MASS_BANISH)) {
+		/* Check that you really want to do this */
+		if (!get_check(format("Extermination is anathema to Time-Lords, you risk %s - sure? ",
+			(remaining_regens <= 0) ? "death" : "regeneration"))) {
+			return true;
+		}
+
+		/* Maybe you got lucky */
+		int luck = randint0(player->state.stat_ind[STAT_WIS] + player->max_lev); /* 1 to 87 */
+		if (randint0((e->effect == EF_BANISH) ? 120 : 180) < luck) {
+			msgt(MSG_DEATH, "With a great effort you repel the extermination field washing over you.");
+			return false;
+		}
+
+		/* Maybe not. This is a guaranteed successful regeneration if you get this far
+		 * and have regenerations left.
+		 **/
+		if (remaining_regens > 0) {
+			msgt(MSG_DEATH, "The extermination field tears through you, and you begin to disperse...");
+			bool success = true;
+			bool tried = false;
+			timelord_do_regen(&success, &tried);
+		} else {
+			msgt(MSG_DEATH, "The extermination field tears through you, and you disintegrate.");
+			take_hit(player, FATAL_DAMAGE, "self-extermination");
+		}
+		return true;
+	}
+
+	return false;
+}
+
 static void timelord_levelup(int from, int to)
 {
 	struct timelord_state *state = (struct timelord_state *)player->race->state;
@@ -235,4 +281,5 @@ void install_race_TIMELORD(void)
 	r->death = timelord_death;
 	r->levelup = timelord_levelup;
 	r->loadsave = timelord_loadsave;
+	r->effect = timelord_effect;
 }

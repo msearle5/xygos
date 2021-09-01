@@ -401,7 +401,7 @@ void take_hit(struct player *p, int dam, const char *kb_str)
 	if (p->is_dead) return;
 
 	/* Mega-Hack -- Apply "invulnerability" */
-	if (p->timed[TMD_INVULN] && (dam < 9000)) return;
+	if (p->timed[TMD_INVULN] && (dam < FATAL_DAMAGE)) return;
 
 	/* Apply damage reduction */
 	dam -= p->state.dam_red;

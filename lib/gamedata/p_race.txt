@@ -448,7 +448,7 @@ book:[Time-Lord]
 # spell:name:level:fail:exp:stat:hp:cooldown
 spell:Force Regeneration:25:22:40:2:2d4:1
 seffect:FORCE_REGEN
-sdesc:Forces your body into regeneration by an effort of will. This is just as chancy as regeneration at death is, though and failure means losing a regeneration as well as some brief but nasty side-effects.
+sdesc:Forces your body into regeneration by an effort of will. This is just as chancy as regeneration at death is though, and failure means losing a regeneration as well as some brief but nasty side-effects.
 
 spell:Time Loop:30:40:400:2:3d4:3d40
 seffect:TIME_LOOP

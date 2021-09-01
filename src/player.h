@@ -53,6 +53,8 @@ enum
 #include "object.h"
 #include "option.h"
 
+typedef struct effect_handler_context_s effect_handler_context_t;
+
 extern struct player_class **ordered_classes(void);
 
 #define player_hookz(X)			{ struct player_class *c = classes; while (c) { if (c->X) { c->X(); } c=c->next; } } if((player->race) && (player->race->X)) { player->race->X(); } if ((player->extension) && (player->extension->X)) { player->extension->X(); }
@@ -269,6 +271,7 @@ struct player_race {
 	void (*init)(void);			/**< Late-init hook */
 	void (*free)(void);			/**< Finish with character hook */
 	bool (*id)(struct object *obj);			/**< Autoid object hook */
+	bool (*effect)(effect_handler_context_t *effect);			/**< Pre-effect hook */
 	void (*levelup)(int, int);	/**< Levelup hook */
 	void (*building)(int, bool, bool *);/**< Building hook */
 	void (*loadsave)(bool);		/**< Load/save hook */
@@ -393,6 +396,7 @@ struct player_class {
 	void (*init)(void);			/**< Late-init hook */
 	void (*free)(void);			/**< Finish with character hook */
 	bool (*id)(struct object *obj);			/**< Autoid object hook */
+	bool (*effect)(effect_handler_context_t *effect);			/**< Pre-effect hook */
 	void (*levelup)(int, int);	/**< Levelup hook */
 	void (*building)(int, bool, bool *);/**< Building hook */
 	void (*loadsave)(bool);		/**< Load/save hook */

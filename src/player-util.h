@@ -23,6 +23,12 @@
 #include "cmd-core.h"
 #include "player.h"
 
+/* Take this much damage is it should be always instantly lethal, even
+ * through invulnerability, resistance, soft-death etc. - everything
+ * except limited resources (regenerations, one-off potion).
+ */
+#define FATAL_DAMAGE		9000
+
 /* Player regeneration constants */
 #define PY_REGEN_NORMAL		197		/* Regen factor*2^16 when full */
 #define PY_REGEN_WEAK		98		/* Regen factor*2^16 when weak */

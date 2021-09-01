@@ -26,6 +26,7 @@
 #include "obj-desc.h"
 #include "obj-tval.h"
 #include "obj-util.h"
+#include "object.h"
 #include "player-attack.h"
 #include "player-birth.h"
 #include "player-calcs.h"

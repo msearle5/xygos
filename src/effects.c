@@ -455,7 +455,11 @@ bool effect_do(struct effect *effect,
 				true
 			};
 
-			completed = handler(&context) || completed;
+			/* Call the pre-effect hook */
+			bool exit = false;
+			player_hook_or(effect, &exit, &context);
+			if (!exit)
+				completed = handler(&context) || completed;
 			*ident = context.ident;
 			next = context.next;
 		}

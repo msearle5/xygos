@@ -30,7 +30,7 @@
 #define ENCH_TOBOTH  0x03
 #define ENCH_TOAC    0x04
 
-typedef struct effect_handler_context_s {
+struct effect_handler_context_s {
 	const effect_index effect;
 	const struct source origin;
 	const struct object *obj;
@@ -46,7 +46,7 @@ typedef struct effect_handler_context_s {
 	struct command *cmd;
 	bool completed;
 	bool next;
-} effect_handler_context_t;
+};
 
 typedef bool (*effect_handler_f)(effect_handler_context_t *);
 
