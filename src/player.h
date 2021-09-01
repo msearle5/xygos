@@ -57,6 +57,7 @@ extern struct player_class **ordered_classes(void);
 
 #define player_hookz(X)			{ struct player_class *c = classes; while (c) { if (c->X) { c->X(); } c=c->next; } } if((player->race) && (player->race->X)) { player->race->X(); } if ((player->extension) && (player->extension->X)) { player->extension->X(); }
 #define player_hook(X, ...)		{ struct player_class *c = classes; while (c) { if (c->X) { c->X(__VA_ARGS__); } c=c->next; } } if ((player->race) && (player->race->X)) player->race->X(__VA_ARGS__); if ((player->extension) && (player->extension->X)) player->extension->X(__VA_ARGS__);
+#define player_hook_or(X, R, ...)		{ bool ret = false; { struct player_class *c = classes; while (c) { if (c->X) { ret |= c->X(__VA_ARGS__); } c=c->next; } } if ((player->race) && (player->race->X)) ret |= player->race->X(__VA_ARGS__); if ((player->extension) && (player->extension->X)) ret |= player->extension->X(__VA_ARGS__); *(R) = ret; }
 
 #define pf_has(f, flag)        flag_has_dbg(f, PF_SIZE, flag, #f, #flag)
 #define pf_next(f, flag)       flag_next(f, PF_SIZE, flag)
@@ -267,6 +268,7 @@ struct player_race {
 	void *state;				/**< Saved state */
 	void (*init)(void);			/**< Late-init hook */
 	void (*free)(void);			/**< Finish with character hook */
+	bool (*id)(struct object *obj);			/**< Autoid object hook */
 	void (*levelup)(int, int);	/**< Levelup hook */
 	void (*building)(int, bool, bool *);/**< Building hook */
 	void (*loadsave)(bool);		/**< Load/save hook */
@@ -390,6 +392,7 @@ struct player_class {
 	void *state;				/**< Saved state */
 	void (*init)(void);			/**< Late-init hook */
 	void (*free)(void);			/**< Finish with character hook */
+	bool (*id)(struct object *obj);			/**< Autoid object hook */
 	void (*levelup)(int, int);	/**< Levelup hook */
 	void (*building)(int, bool, bool *);/**< Building hook */
 	void (*loadsave)(bool);		/**< Load/save hook */

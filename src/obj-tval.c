@@ -170,9 +170,9 @@ bool tval_is_head_armor(const struct object *obj)
 	return (obj->tval == TV_HELM);
 }
 
-bool tval_is_ammo(const struct object *obj)
+static bool tv_is_ammo(int tval)
 {
-	switch (obj->tval) {
+	switch (tval) {
 		case TV_AMMO_6:
 		case TV_AMMO_9:
 		case TV_AMMO_12:
@@ -180,6 +180,16 @@ bool tval_is_ammo(const struct object *obj)
 		default:
 			return false;
 	}
+}
+
+bool tval_is_ammo(const struct object *obj)
+{
+	return tv_is_ammo(obj->tval);
+}
+
+bool kind_tval_is_ammo(const struct object_kind *kind)
+{
+	return tv_is_ammo(kind->tval);
 }
 
 bool tval_is_launcher(const struct object *obj)

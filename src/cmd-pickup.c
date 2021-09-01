@@ -263,6 +263,7 @@ static void player_pickup_aux(struct player *p, struct object *obj,
 	}*/
 
 	/* Carry the object, prompting for number if necessary */
+	struct object *picked_up = NULL;
 	if (max == obj->number) {
 		if (obj->known) {
 			square_excise_object(p->cave, p->grid, obj->known);
@@ -270,11 +271,10 @@ static void player_pickup_aux(struct player *p, struct object *obj,
 		}
 		square_excise_object(cave, p->grid, obj);
 		delist_object(cave, obj);
-		inven_carry(p, obj, true, domsg);
+		picked_up = obj;
 	} else {
 		int num;
 		bool dummy;
-		struct object *picked_up;
 
 		if (auto_max)
 			num = auto_max;
@@ -282,7 +282,14 @@ static void player_pickup_aux(struct player *p, struct object *obj,
 			num = get_quantity(NULL, max);
 		if (!num) return;
 		picked_up = floor_object_for_use(p, obj, num, false, &dummy);
-		inven_carry(p, picked_up, true, domsg);
+	}
+	inven_carry(p, picked_up, true, domsg);
+
+	/* Auto ID */
+	bool autoid = false;
+	player_hook_or(id, &autoid, picked_up);
+	if (autoid) {
+		object_know_all(picked_up);
 	}
 }
 
