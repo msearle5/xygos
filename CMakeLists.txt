@@ -38,6 +38,7 @@ ENDIF()
 
 ADD_LIBRARY(OurCoreLib OBJECT
         src/buildid.c
+        src/c_marksman.c
         src/c_soldier.c
         src/c_tourist.c
         src/cave-map.c
