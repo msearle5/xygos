@@ -721,7 +721,6 @@ static void place_feeling(struct chunk *c)
 	c->feeling_squares = 0;
 }
 
-static const u32b depth_obj_feeling[128][8];
 
 /**
  * Calculate the level feeling for objects.
@@ -729,6 +728,8 @@ static const u32b depth_obj_feeling[128][8];
  */
 static int calc_obj_feeling(struct chunk *c, struct player *p)
 {
+	u32b x;
+
 	/* Town gets no feeling */
 	if (c->depth == 0) return 0;
 
@@ -736,24 +737,20 @@ static int calc_obj_feeling(struct chunk *c, struct player *p)
 	if (c->good_item && OPT(p, birth_lose_arts)) return 10;
 
 	/* Check the loot adjusted for depth */
-	int depth = c->depth;
-	if (depth < 0)
-		depth = 0;
-	if (depth >= 128)
-		depth = 127;
+	x = c->obj_rating / c->depth;
 
-	int rating = 100;
-	for(int i=0;i<8;i++) {
-		if (c->obj_rating > depth_obj_feeling[depth][i]) {
-			rating = (i + 2) * 10;
-			break;
-		}
-	}
 	/* Apply a minimum feeling if there's an artifact on the level */
-	if (c->good_item)
-		rating = MAX(60, rating);
+	if (c->good_item && x < 641) return 60;
 
-	return rating;
+	if (x > 160000) return 20;
+	if (x > 40000) return 30;
+	if (x > 10000) return 40;
+	if (x > 2500) return 50;
+	if (x > 640) return 60;
+	if (x > 160) return 70;
+	if (x > 40) return 80;
+	if (x > 10) return 90;
+	return 100;
 }
 
 /**
