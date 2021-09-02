@@ -34,7 +34,6 @@
 #define PY_REGEN_WEAK		98		/* Regen factor*2^16 when weak */
 #define PY_REGEN_FAINT		33		/* Regen factor*2^16 when fainting */
 #define PY_REGEN_HPBASE		1442	/* Min amount hp regen*2^16 */
-#define PY_REGEN_MNBASE		524		/* Min amount mana regen*2^16 */
 
 /* Player over-exertion */
 enum {
