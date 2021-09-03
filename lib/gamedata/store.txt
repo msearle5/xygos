@@ -104,6 +104,7 @@ buy:shield
 buy:cloak
 buy:soft armor
 buy:hard armor
+buy:belt
 
 # Weapon Dealer (was Weapon Smith)
 store:3:Weapon Dealer
