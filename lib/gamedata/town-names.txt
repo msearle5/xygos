@@ -18,10 +18,12 @@ S:Bad Smell
 S:Beacon
 S:Bean Hill
 S:Big Smoke
+S:Big Butte
 S:Bit Me
 S:Blackwater
 S:Blandford
 S:Blasted
+S:Blooming
 S:Blown Out
 S:Bottlecaps
 S:Bridgeout
@@ -43,6 +45,7 @@ S:Derrick
 S:Diggings
 S:Dino Lake
 S:Drywall
+S:Dry Well
 S:Doornail
 S:Duck Soup
 S:Duranceville
@@ -63,11 +66,13 @@ S:Landfill
 S:Last Stop
 S:Leadmine
 S:Lousy Point
+S:Lychgate
 S:Marshlight
 S:Millstones
 S:Milton Mill
 S:Moonpond
 S:Mouldering
+S:New City
 S:New Sun
 S:No Name
 S:Old Geyser
@@ -96,6 +101,7 @@ S:Upsy Daisy
 S:Vapour Trail
 S:Whizz
 S:Whizz Bang
+S:Windtraps
 S:Wirefence
 S:Williewaw
 S:Witchford
@@ -128,6 +134,7 @@ F:False
 F:Filthy
 F:Flaming
 F:Flash
+F:Flies
 F:Flint
 F:Foggy
 F:Fool's
@@ -148,6 +155,7 @@ F:Klaxon
 F:Lemming
 F:Lightning
 F:Little
+F:Meteor
 F:Moldy
 F:Mouse
 F:Midge
@@ -170,6 +178,7 @@ F:Rusty
 F:Salt
 F:Sandy
 F:Scary
+F:Screaming
 F:Sewage
 F:Shaky
 F:Smokey
@@ -204,6 +213,7 @@ B:Crag
 B:Creek
 B:Culvert
 B:Dam
+B:Diggings
 B:Falls
 B:Fen
 B:Field
@@ -214,6 +224,7 @@ B:Lake
 B:Locks
 B:Marsh
 B:Mesa
+B:Mine
 B:Point
 B:Pool
 B:Pond
