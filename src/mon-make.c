@@ -1320,7 +1320,7 @@ static bool place_monster_base_okay(struct monster_race *race)
  */
 static bool place_friends(struct chunk *c, struct loc grid, struct monster_race *race,
 					struct monster_race *friends_race, int total, bool sleep,
-					struct monster_group_info group_info, byte origin)
+					struct monster_group_info group_info, byte origin, bool summoned)
 {
 	int extra_chance;
 
@@ -1336,7 +1336,8 @@ static bool place_friends(struct chunk *c, struct loc grid, struct monster_race 
 	}
 
 	/* More than 4 levels OoD, no groups allowed */
-	if (level_difference <= 0 && !is_unique) {
+	/* Exception: summoned: always at least one monster however far OoD. */
+	if (level_difference <= 0 && !is_unique && !summoned) {
 		return false;
 	}
 
@@ -1388,7 +1389,7 @@ static bool place_friends(struct chunk *c, struct loc grid, struct monster_race 
  */
 bool place_race_friends(struct chunk *c, struct loc grid,
 					   struct monster_race *race, bool sleep,
-					   struct monster_group_info group_info, byte origin)
+					   struct monster_group_info group_info, byte origin, bool summoned)
 {
 	bool placed = false;
 	int total;
@@ -1408,7 +1409,7 @@ bool place_race_friends(struct chunk *c, struct loc grid,
 
 		/* Place them */
 		placed |= place_friends(c, grid, race, friends->race, total, sleep, group_info,
-					  origin);
+					  origin, summoned);
 
 	}
 
@@ -1443,7 +1444,7 @@ bool place_race_friends(struct chunk *c, struct loc grid,
 
 		/* Place them */
 		placed |= place_friends(c, grid, race, friends_race, total, sleep, group_info,
-					  origin);
+					  origin, summoned);
 	}
 
 	return placed;
@@ -1486,7 +1487,7 @@ bool place_new_monster(struct chunk *c, struct loc grid,
 
 
 	/* Place friends */
-	place_race_friends(c, grid, race, sleep, group_info, origin);
+	place_race_friends(c, grid, race, sleep, group_info, origin, false);
 
 	/* Success */
 	return (true);

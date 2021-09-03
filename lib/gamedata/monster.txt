@@ -3731,7 +3731,7 @@ base:snake
 color:Deep Light Blue
 depth:7
 rarity:3
-grow:hoop snake
+grow:nine-tailed patchsnake
 speed:120
 hit-points:20
 hearing:8
@@ -3785,6 +3785,35 @@ desc:So they do exist after all. A slender green snake, tail in mouth, rolling
 desc:like a hoop at great speed. It looks dangerous, and maybe dangerous to you 
 desc:as well as to itself.
 grow:boa
+
+name:nine-tailed patchsnake
+base:snake
+color:BlueViolet
+depth:14
+rarity:7
+grow:boa
+speed:120
+hit-points:20
+hearing:8
+armor-class:30
+sleepiness:40
+blow:CONSTRICT:HURT:1d5
+blow:BITE:ELEC:1d3
+blow:STING:ELEC:1d2
+blow:STING:ELEC:1d2
+blow:STING:ELEC:1d2
+blow:STING:ELEC:1d2
+blow:STING:ELEC:1d2
+flags:RAND_25 | RAND_50
+flags:IM_ELEC
+flags:SMART | WEIRD_MIND | PASS_DOOR
+flags-off:HURT_COLD
+friends:40:1d3:patchsnake
+spell-power:1
+spells:WHIP
+desc:A long thin electric-blue snake that weaves across the floor faster than 
+desc:the eye can follow. A colourful array of tails or perhaps stingers waves as if to warn you of its danger, and sparks strike across 
+desc:both tail and jaws.
 
 name:black mamba
 grow:Imperial cobra
@@ -5594,6 +5623,31 @@ friends:50:1d3:guard
 friends:50:1d2:Same
 desc:An experienced member of Triax's forces.
 
+name:Jack of Snakes
+base:person
+color:Deep Light Blue
+speed:120
+hit-points:70
+light:2
+hearing:20
+armor-class:35
+sleepiness:20
+depth:14
+rarity:4
+experience:95
+blow:HIT:ELEC:2d5
+blow:HIT:ELEC:2d5
+blow:HIT:ELEC:2d5
+blow:HIT:ELEC:2d5
+flags:MALE | UNIQUE
+flags:DROP_1 | ONLY_ITEM
+flags:OPEN_DOOR
+innate-freq:3
+spell-freq:10
+spells:WHIP | S_FRIENDS
+friends:100:1d3:patchsnake
+desc:Master of the patchsnakes, dressed in matching electric blue, holding a nine-tailed patchsnake by the head and swinging it as a living whip.
+
 name:pickpocket
 base:person
 color:b
@@ -5748,7 +5802,6 @@ base:person
 color:White
 depth:42
 rarity:2
-desc:A dangerous sniper with a high-powered rifle.
 hit-points:170
 armor-class:18
 sleepiness:15
@@ -5759,6 +5812,7 @@ flags:FORCE_SLEEP
 spell-freq:1
 spells:SHOT
 flags:SMART | OPEN_DOOR
+desc:A dangerous sniper with a high-powered rifle.
 
 name:stormtrooper captain
 base:person

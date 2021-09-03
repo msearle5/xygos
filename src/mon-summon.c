@@ -525,7 +525,7 @@ int summon_specific(struct loc grid, struct monster_race *summoner, int lev, int
 
 	/* Friends are handled separately */
 	if (summoner && summons[type].friends)
-		return (place_race_friends(cave, grid, summoner, false, info, ORIGIN_DROP_SUMMON));
+		return (place_race_friends(cave, grid, summoner, false, info, ORIGIN_DROP_SUMMON, true));
 
 	/* Use the new calling scheme if requested */
 	if (call && (type != summon_name_to_idx("UNIQUE")) &&
