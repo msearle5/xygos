@@ -2436,7 +2436,7 @@ void do_cmd_sell(struct command *cmd)
 			int rank = store_cyber_rank();
 
 			/* Value decreases as you advance ranks */
-			int value = (price / (20 + player->cyber_faction));
+			int value = (price / (20 + abs(player->cyber_faction)));
 
 			/* Never skip a level */
 			if (value > 100)
