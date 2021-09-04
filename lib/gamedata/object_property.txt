@@ -954,7 +954,6 @@ power:-8
 
 name:reactive
 type:flag
-subtype:bad
 id-type:on wield
 code:ABSORB_HIT
 power:-4
