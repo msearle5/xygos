@@ -85,6 +85,10 @@ static void flavor_assign_fixed(void)
 	}
 }
 
+/* Wish parser debug prints */
+//#define WISH_DPF(...) fprintf(stderr,__VA_ARGS__)
+#define WISH_DPF(...) { ; }
+
 #define WISH_WORDS 256
 
 /* Remove nonalphanumeric characters, convert to lower case, in place */
@@ -122,7 +126,8 @@ void strip_punct(char *in)
  * pval:	< <+pval>,+ >
  * 
  * However, not all of this is useful information - and for a user given string it
- * might contain different bracketing or ordering.
+ * might contain different bracketing or ordering. So this wish parser ignores
+ * ordering where possible.
  * 
  * What needs to be extracted is:
  * Count (although this may get reduced later)
@@ -130,7 +135,8 @@ void strip_punct(char *in)
  * Artifact or Egos (independent of position)
  * Base item
  * 
- * This is done with fuzzy matching to names.
+ * This is done with fuzzy matching to names - it should make a good guess at
+ * something that is nearly right.
  **/
 struct object *wish(const char *in, int level)
 {
@@ -142,7 +148,6 @@ struct object *wish(const char *in, int level)
 
 	const struct artifact *art = NULL;
 	const struct ego_item *ego[MAX_EGOS] = { NULL };
-	int negos = 0;
 	const struct object_kind *kind = NULL;
 
 	const char *name[WISH_WORDS] = { NULL };
@@ -257,43 +262,23 @@ struct object *wish(const char *in, int level)
 	for(int i=names-1;i>=0;i--) {
 		int distance = sizeof(buf);
 		const struct artifact *a = lookup_artifact_name_fuzzy(name[i], &distance);
-if (a) fprintf(stderr,"From %s, found %s, dist %d\n", name[i], a->name, distance);
-		if ((a) && (distance < best_fuzz)) {
-			fprintf(stderr,"   -- using\n");
-			best_fuzz = distance;
-			best_idx = i;
-			art = a;
+		if (a) {
+			WISH_DPF("From %s, found %s, dist %d\n", name[i], a->name, distance);
+			if (distance < best_fuzz) {
+				WISH_DPF("   -- using\n");
+				best_fuzz = distance;
+				best_idx = i;
+				art = a;
+			}
 		}
-		if ((kinds[i]) && ((fuzz[i] < best_fuzz) /*|| (art && (fuzz[i] == best_fuzz) && ((islower(name[i][0])) && (!strstr(name[best_idx], name[i]))))*/)) {
-			fprintf(stderr,"From %s, using %s in place of %s, dist %d\n", name[i], name[best_idx], kinds[i]->name, fuzz[i]);
+		if ((kinds[i]) && (fuzz[i] < best_fuzz)) {
+			WISH_DPF("From %s, using %s in place of %s, dist %d\n", name[i], name[best_idx], kinds[i]->name, fuzz[i]);
 			best_fuzz = fuzz[i];
 			kind = kinds[i];
 			best_idx = i;
 			art = NULL;
 		}
 	}
-	/* Don't use the name picked for the base item again for ego items.
-	 * Avoid components also.
-	 **/
-	bool reject[WISH_WORDS];
-	memset(reject, 0, WISH_WORDS);
-#ifdef undef
-	if (best_idx >= 0) {
-		for(int i=0;i<best_idx;i++) {
-			if (strstr(name[best_idx], name[i])) {
-				fprintf(stderr,"Rejecting %d (%s) as a substring of %s\n", i, name[i], name[best_idx]);
-//				name[i] = NULL;
-				reject[i] = true;
-			} else {
-				fprintf(stderr,"Accepting %d (%s) as NOT a substring of %s\n", i, name[i], name[best_idx]);
-			}
-		}
-//		name[best_idx] = NULL;
-		fprintf(stderr,"Rejecting %d as the best match (%s)\n", best_idx, name[best_idx]);
-		reject[best_idx] = true;
-	}
-#endif
-fprintf(stderr,"Rejecting A: "); for(int z=0;z<WISH_WORDS;z++) { if (reject[z]) { fprintf(stderr, "%d, ", z); } } fprintf(stderr,"\n");
 
 	int kind_fuzz = best_fuzz;
 	/* Now that the base item is known (if possible), look for egos.
@@ -302,47 +287,41 @@ fprintf(stderr,"Rejecting A: "); for(int z=0;z<WISH_WORDS;z++) { if (reject[z]) 
 	 * to a multiego.
 	 **/
 	int ego_fuzz = sizeof(buf);
-	if (/*(!art) || */(best_fuzz > 1)) {
+	if (best_fuzz > 1) {
 		for(int i=0; i<names; i++) {
-		//names-1;i>=0;i--) {
 			const char *n = name[i];
-			if (n && (!reject[i])) {
+			if (n) {
 				/* Best single ego */
 				int distance = sizeof(buf);
 				const struct ego_item *e = lookup_ego_name_fuzzy(n, NULL, NULL, &distance);
 				if ((e) && (distance <= ego_fuzz) && ((!art) || (distance < best_fuzz))) {
-					fprintf(stderr,"ph1: From %s, ego %s, dist %d - using\n", name[i], e->name, distance);
+					WISH_DPF("ph1: From %s, ego %s, dist %d - using\n", name[i], e->name, distance);
 					ego[0] = e;
 					ego_fuzz = distance;
 					art = NULL;
 				} else {
-					fprintf(stderr,"ph1: From %s, ego %s, dist %d, egofuzz %d, best fuzz %d - NOT using\n", name[i], e ? e->name : "(NULL)", distance, ego_fuzz, best_fuzz);
+					WISH_DPF("ph1: From %s, ego %s, dist %d, egofuzz %d, best fuzz %d - NOT using\n", name[i], e ? e->name : "(NULL)", distance, ego_fuzz, best_fuzz);
 				}
 			} else {
-				fprintf(stderr,"ph1: Skipping %d (%s)\n", i, n ? n : "none");
+				WISH_DPF("ph1: Skipping %d (%s)\n", i, n ? n : "none");
 			}
 		}
 	}
 
-fprintf(stderr,"Rejecting B: "); for(int z=0;z<WISH_WORDS;z++) { if (reject[z]) { fprintf(stderr, "%d, ", z); } } fprintf(stderr,"\n");
-
 	/* Don't use the name picked for the base item again for ego items.
-	 * Avoid components also.
+	 * Avoid components of it (e.g. "combat" from "combat ready") also.
 	 **/
-	//bool reject[WISH_WORDS];
+	bool reject[WISH_WORDS];
 	memset(reject, 0, WISH_WORDS);
 	if (best_idx >= 0) {
 		for(int i=0;i<best_idx;i++) {
 			if (strstr(name[best_idx], name[i])) {
-				fprintf(stderr,"Rejecting %s as a substring of %s\n", name[i], name[best_idx]);
-				name[i] = NULL;
+				WISH_DPF("Rejecting %s as a substring of %s\n", name[i], name[best_idx]);
 				reject[i] = true;
 			} else {
-				fprintf(stderr,"Accepting %s as NOT a substring of %s\n", name[i], name[best_idx]);
+				WISH_DPF("Accepting %s as NOT a substring of %s\n", name[i], name[best_idx]);
 			}
 		}
-		name[best_idx] = NULL;
-			
 		reject[best_idx] = true;
 	}
 
@@ -351,16 +330,12 @@ fprintf(stderr,"Rejecting B: "); for(int z=0;z<WISH_WORDS;z++) { if (reject[z]) 
 	 * Only if there are two names which both have a lower distance to compatible egos should it fall back
 	 * to a multiego.
 	 **/
-	//ego_fuzz = (best_fuzz / 2) - 1;//sizeof(buf);
 	if (!ego[0]) {
-		
-	ego_fuzz = sizeof(buf);
-	if ((!art) || (best_fuzz > 1)) {
-		//for(int i=names-1;i>=0;i--) {
-		for(int i=0;i<names;i++) {
-			const char *n = name[i];
-			if (n) {
-				//if (kind) {
+		ego_fuzz = sizeof(buf);
+		if ((!art) || (best_fuzz > 1)) {
+			for(int i=0;i<names;i++) {
+				const char *n = name[i];
+				if (n) {
 					/* Best single ego */
 					int distance = sizeof(buf);
 					if (reject[i]) {
@@ -374,103 +349,76 @@ fprintf(stderr,"Rejecting B: "); for(int z=0;z<WISH_WORDS;z++) { if (reject[z]) 
 					const struct ego_item *e = lookup_ego_name_fuzzy(n, NULL, NULL, &distance);
 					if ((e) && (distance <= ego_fuzz) && ((!art) || (distance < best_fuzz))) {
 
-						fprintf(stderr,"ph2: From %s, ego %s, dist %d - using\n", name[i], e->name, distance);
+						WISH_DPF("ph2: From %s, ego %s, dist %d - using\n", name[i], e->name, distance);
 						ego[0] = e;
 						best_fuzz = ego_fuzz = distance;
 						art = NULL;
 					} else {
-						fprintf(stderr,"ph2: From %s, ego %s, dist %d, egofuzz %d, best fuzz %d - NOT using\n", name[i], e ? e->name : "(NULL)", distance, ego_fuzz, best_fuzz);
-					}
-				//}
-				if (!kind) {
-					
-				}
-#ifdef undef
-				if (negos < MAX_EGOS) {
-					/* Look up an ego item in the possible list of the kind */
-					if (kind) {
-						int distance = sizeof(buf);
-						const struct ego_item *e = lookup_ego_name_fuzzy(n, kind, ego, &distance);
-						/* If art is not set, best_fuzz refers to the base object and so is irrelevant. */
-						if ((e) && (distance <= ego_fuzz) && ((!art) || (distance < best_fuzz))) {
-							fprintf(stderr,"From %s, ego %s, dist %d\n", name[i], e->name, distance);
-							ego[negos] = e;
-							best_fuzz = ego_fuzz = distance;
-							negos++;
-							art = NULL;
-						}
-					} else {
-						/* An ego is specified, but no kind.
-						 * Select one at random.
-						 */
-						const struct ego_item *e = lookup_ego_name(n);
-						if (e) {
-							kind = select_ego_kind(e, level, 0);
-							if (kind) {
-								ego[negos++] = e;
-							}
-						}
+						WISH_DPF("ph2: From %s, ego %s, dist %d, egofuzz %d, best fuzz %d - NOT using\n", name[i], e ? e->name : "(NULL)", distance, ego_fuzz, best_fuzz);
 					}
 				}
-#endif
 			}
 		}
 	}
 
-}
-
-					if ((kind) && (ego[0])) {
-						const struct ego_item *e = ego[0];
-						bool match = false;
-						fprintf(stderr,"ph3: existing kind %s\n", kind->name);
-						for (struct poss_item *poss = e->poss_items; poss; poss = poss->next) {
+	/* Check whether the ego matches the kind.
+	 * If not, see if there is another ego with the same name that does apply.
+	 * If not, determine (using which is a less fuzzy match) whether to keep the
+	 * ego or the base item.
+	 * If no base item was given, or if the ego was a closer match, select a new
+	 * base item.
+	 */ 
+	if ((kind) && (ego[0])) {
+		const struct ego_item *e = ego[0];
+		bool match = false;
+		WISH_DPF("ph3: existing kind %s\n", kind->name);
+		for (struct poss_item *poss = e->poss_items; poss; poss = poss->next) {
+			if (poss->kidx == kind-k_info) {
+				WISH_DPF("ph3: existing kind is a match\n");
+				match = true;
+				break;
+			}
+		}
+		if (!match) {
+			/* Is there an ego of the same name that applies? */
+			char ename[256];
+			obj_desc_name_format(ename, sizeof(ename), 0, e->name, NULL, false);
+			strip_punct(ename);
+			WISH_DPF("ph3: searching for duplicate ego names to %s\n", ename);
+			for (int dupi = 0; dupi<z_info->e_max; dupi++) {
+				struct ego_item *dup = e_info+dupi;
+				if ((dup->name) && (dup != e)) {
+					char dupname[256];
+					obj_desc_name_format(dupname, sizeof(dupname), 0, dup->name, NULL, false);
+					strip_punct(dupname);
+					if (streq(dupname, ename)) {
+						for (struct poss_item *poss = dup->poss_items; poss; poss = poss->next) {
 							if (poss->kidx == kind-k_info) {
-								fprintf(stderr,"ph3: existing kind is a match\n");
+								WISH_DPF("ph3: duplicate ego name is a match\n");
 								match = true;
+								e = ego[0] = dup;
 								break;
 							}
 						}
-						if (!match) {
-							/* Is there an ego of the same name that applies? */
-							char ename[256];
-							obj_desc_name_format(ename, sizeof(ename), 0, e->name, NULL, false);
-							strip_punct(ename);
-							fprintf(stderr,"ph3: searching for duplicate ego names to %s\n", ename);
-							for (int dupi = 0; dupi<z_info->e_max; dupi++) {
-								struct ego_item *dup = e_info+dupi;
-								if ((dup->name) && (dup != e)) {
-									char dupname[256];
-									obj_desc_name_format(dupname, sizeof(dupname), 0, dup->name, NULL, false);
-									strip_punct(dupname);
-									if (streq(dupname, ename)) {
-										for (struct poss_item *poss = dup->poss_items; poss; poss = poss->next) {
-											if (poss->kidx == kind-k_info) {
-												fprintf(stderr,"ph3: duplicate ego name is a match\n");
-												match = true;
-												e = ego[0] = dup;
-												break;
-											}
-										}
-									}/* else {
-										fprintf(stderr,"ph3: duplicate ego name %s is NOT a match\n", dupname);
-									}*/
-								}
-							}
-						}
-						if (!match) {
-							if (ego_fuzz < kind_fuzz) {
-								fprintf(stderr,"ph3: existing kind is NOT a match. Choosing ego (%d) over kind (%d)\n", ego_fuzz, kind_fuzz);
-								kind = NULL;
-							} else {
-								fprintf(stderr,"ph3: existing kind is NOT a match. Choosing kind (%d) over ego (%d)\n", kind_fuzz, ego_fuzz);
-								ego[0] = NULL;
-							}
-						}
 					}
+				}
+			}
+		}
+		if (!match) {
+			if (ego_fuzz < kind_fuzz) {
+				WISH_DPF("ph3: existing kind is NOT a match. Choosing ego (%d) over kind (%d)\n", ego_fuzz, kind_fuzz);
+				kind = NULL;
+			} else {
+				WISH_DPF("ph3: existing kind is NOT a match. Choosing kind (%d) over ego (%d)\n", kind_fuzz, ego_fuzz);
+				ego[0] = NULL;
+			}
+		}
+	}
 
-						if ((!kind) && (ego[0])) {
-							kind = select_ego_kind(ego[0], level, 0);
-						}
+	if ((!kind) && (ego[0])) {
+		kind = select_ego_kind(ego[0], level, 0);
+	}
+
 	/* Do we have an item?
 	 * Artifact (whether other stuff is present or not) => try to make that. It may fail, though.
 	 * 		If so, fall through as if it wasn't present.
@@ -521,16 +469,6 @@ fprintf(stderr,"Rejecting B: "); for(int z=0;z<WISH_WORDS;z++) { if (reject[z]) 
 		}
 	}
 
-	/* Update the gear */
-	player->upkeep->update |= (PU_INVEN);
-
-	/* Combine the pack (later) */
-	player->upkeep->notice |= (PN_COMBINE);
-
-	/* Redraw stuff */
-	player->upkeep->redraw |= (PR_INVEN | PR_EQUIP);
-
-	player->upkeep->update |= (PU_BONUS);
 	/* Make it an ego or multiego, set the count */
 	if (obj) {
 		if (!obj->artifact) {
@@ -553,24 +491,12 @@ fprintf(stderr,"Rejecting B: "); for(int z=0;z<WISH_WORDS;z++) { if (reject[z]) 
 		object_know_all(obj);
 		player_know_object(player, obj);
 		obj->kind->everseen = true;
-		fprintf(stderr,"IDENTIFIED new object\n");
-		
-		
-	/* Notice if pack items need to be combined or reordered */
-	notice_stuff(player);
-
-	/* Handle stuff */
-	handle_stuff(player);
-
-	event_signal(EVENT_STORECHANGED);
-	event_signal(EVENT_INVENTORY);
-	event_signal(EVENT_EQUIPMENT);
+		WISH_DPF("IDENTIFIED new object\n");
 	}
 
 	/* Clean up */
-	for(int i=words; i<pairs; i++) {
+	for(int i=words; i<pairs; i++)
 		string_free((char *)word[i]);
-	}
 
 	/* Return the item.
 	 * This may be NULL if nothing can be produced.
@@ -1205,8 +1131,9 @@ const struct object_kind *lookup_kind_name_fuzzy(const char *name, int *fuzz)
 
 	if (!z_info)
 		return NULL;
-fprintf(stderr,"knf: name %s\n", name);
+
 	/* Look for it */
+	WISH_DPF("knf: name %s\n", name);
 	for (k = 0; k < z_info->k_max; k++) {
 		const struct object_kind *kind = &k_info[k];
 
@@ -1216,7 +1143,7 @@ fprintf(stderr,"knf: name %s\n", name);
 				obj_desc_name_format(buf, sizeof(buf), 0, kind->name, NULL, plural);
 				int ldist = (levenshtein(buf, name) * 3) + 1;
 				if (ldist < distance) {
-fprintf(stderr,"knf: name %s, match %s, dist %d\n", name, buf, ldist);
+					WISH_DPF("knf: name %s, match %s, dist %d\n", name, buf, ldist);
 					distance = ldist;
 					k_idx = k;
 					if (distance == 0) {
@@ -1274,7 +1201,7 @@ const struct artifact *lookup_artifact_name_fuzzy(const char *name, int *fuzz)
 	if (strlen(name) >= sizeof(in))
 		return NULL;
 	int in_lower = (islower(*name));
-//fprintf(stderr,"name %s, in_lower %d\n", name, in_lower);
+
 	while (*name) {
 		*inp++ = tolower(*name++);
 	}
@@ -1409,24 +1336,19 @@ const struct ego_item *lookup_ego_name_fuzzy(const char *name, const struct obje
 		}
 
 		/* Also avoid multi-egos that don't match, if there is at least one ego already */
-//fprintf(stderr,"egofuzz A: %s/%s\n", in, e->name);
 		bool ok = true;
 		if (megocheck) {
 			mego[negos] = i;
 			if (!multiego_allow(mego)) 
-			{
-//fprintf(stderr,"egofuzz B\n");
 				continue;
-			}
+
 			for(int i=0;i<negos;i++) {
 				if (ego[i] == e)
 					ok = false;
 			}
 		}
-		if (!ok) {
-//fprintf(stderr,"egofuzz C\n");
+		if (!ok)
 			continue;
-		}
 
 		/* Test for close matches to the name */
 		if (e->name) {
@@ -1448,7 +1370,6 @@ const struct ego_item *lookup_ego_name_fuzzy(const char *name, const struct obje
 
 				/* Fuzzy match this */
 				int ldist = levenshtein(in, buf) * 3;
-//fprintf(stderr,"egofuzz: %s/%s = %d\n", in, buf, ldist);
 				if (ldist < distance) {
 					distance = ldist;
 					e_idx = i;

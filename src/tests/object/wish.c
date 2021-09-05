@@ -97,25 +97,44 @@ static int test_kinds(void *state) {
 	char buf[256];
 	char o_name[256];
 	char fname[256];
+	char ename[256];
 
 	for(int i=0;i<z_info->k_max;i++) {
 		if (k_info[i].name) {
 			char *name = k_info[i].name;
+			/* Avoid special objects and those with duplicate names */
 			if ((*name == '<') && (name[strlen(name)-1] == '>'))
 				continue;
 			if (kf_has(k_info[i].kind_flags, KF_INSTA_ART))
 				continue;
 			if (kf_has(k_info[i].kind_flags, KF_SPECIAL_GEN))
 				continue;
+
+			bool eok = true;
 			obj_desc_name_format(fname, sizeof(fname), 0, k_info[i].name, NULL, false);
-			obj = wish(fname, 1);
-			notnull(obj);
-			object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX | ODESC_FULL | ODESC_SPOIL, player);
-			strnfmt(buf, sizeof(buf), "Asked for base item %s, got %s (%s)", fname, o_name, obj->kind->name);
-			vnull(obj->ego[0], buf);
-			vnull(obj->artifact, buf);
-			vptreq(obj->kind, k_info+i, buf);
-			object_delete(&obj);
+			strip_punct(fname);
+			for(int j=0;j<z_info->k_max;j++) {
+				if (k_info[j].name) {
+					obj_desc_name_format(ename, sizeof(ename), 0, k_info[j].name, NULL, false);
+					strip_punct(ename);
+					if (streq(ename, fname)) {
+						eok = false;
+						break;
+					}
+				}
+			}
+
+			if (eok) {
+				obj_desc_name_format(fname, sizeof(fname), 0, k_info[i].name, NULL, false);
+				obj = wish(fname, 1);
+				notnull(obj);
+				object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX | ODESC_FULL | ODESC_SPOIL, player);
+				strnfmt(buf, sizeof(buf), "Asked for base item %s, got %s (%s)", fname, o_name, obj->kind->name);
+				vnull(obj->ego[0], buf);
+				vnull(obj->artifact, buf);
+				vptreq(obj->kind, k_info+i, buf);
+				object_delete(&obj);
+			}
 		}
 	}
 	ok;
