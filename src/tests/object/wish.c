@@ -11,6 +11,7 @@
 #include "obj-util.h"
 #include "object.h"
 #include "player-birth.h"
+#include "player-util.h"
 
 #include "cave.h"
 #include "z-util.h"
@@ -25,12 +26,17 @@ int setup_tests(void **state) {
 
 	player = &test_player;
 	bodies = &test_player_body;
+	/* HP array */
+	if (!(player->player_hp))
+		player->player_hp = mem_zalloc(sizeof(s16b) * PY_MAX_LEVEL * (1 + classes->cidx));
 	player->obj_k->slays = mem_zalloc(z_info->slay_max * sizeof(*(player->obj_k->slays)));
 	player->obj_k->brands = mem_zalloc(z_info->brand_max * sizeof(*(player->obj_k->brands)));
 	player->obj_k->faults = mem_zalloc(z_info->fault_max * sizeof(*(player->obj_k->faults)));
-	//z_info = &test_z_info;
+	player->upkeep->quiver = mem_zalloc(z_info->quiver_size * sizeof(struct object *));
+	player->upkeep->inven = mem_zalloc((z_info->pack_size + 1) * sizeof(struct object *));
+	player->shape = lookup_player_shape("normal");
 
-	//do_cmd_accept_character(NULL);
+	roll_hp();
 	player_embody(player);
 
 	cave = &test_cave;
@@ -134,7 +140,7 @@ static int test_egos(void *state) {
 					obj = wish(egoname, 1);
 					notnull(obj);
 					object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX | ODESC_FULL | ODESC_SPOIL, player);
-					strnfmt(buf, sizeof(buf), "Asked for %s, got %s (%s)", egoname, o_name);
+					strnfmt(buf, sizeof(buf), "Asked for %s, got %s", egoname, o_name);
 					vptreq(obj->ego[0], e_info+i, buf);
 					vnull(obj->ego[1], buf);
 					vnull(obj->artifact, buf);
@@ -153,19 +159,41 @@ static int test_ego_only(void *state) {
 	struct object *obj;
 	char buf[256];
 	char o_name[256];
+	char ename[256];
 	char fname[256];
 
 	for(int i=0;i<z_info->e_max;i++) {
+		bool eok = true;
 		if (e_info[i].name) {
-			obj = wish(e_info[i].name, 1);
-			notnull(obj);
-			notnull(obj->kind);
-			object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX | ODESC_FULL | ODESC_SPOIL, player);
-			strnfmt(buf, sizeof(buf), "Asked for %s, got %s (%s)", e_info[i].name, o_name);
-			vrequire(((obj->ego[0]) && (obj->ego[0]->name) && (streq(obj->ego[0]->name, e_info[i].name))), buf);
-			vnull(obj->ego[1], buf);
-			vnull(obj->artifact, buf);
-			object_delete(&obj);
+			/* Avoid reasonable ambiguity (e.g. combat pill, vs. combat ego) */
+			obj_desc_name_format(fname, sizeof(fname), 0, e_info[i].name, NULL, false);
+			strip_punct(fname);
+			for(int j=0;j<z_info->k_max;j++) {
+				if (k_info[j].name) {
+					obj_desc_name_format(ename, sizeof(ename), 0, k_info[j].name, NULL, false);
+					strip_punct(ename);
+					if (streq(ename, fname)) {
+						eok = false;
+						break;
+					}
+				}
+			}
+
+			if (eok) {
+				obj = wish(e_info[i].name, 1);
+				notnull(obj);
+				notnull(obj->kind);
+				notnull(obj->ego[0]);
+				object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX | ODESC_FULL | ODESC_SPOIL, player);
+				strnfmt(buf, sizeof(buf), "Asked for %s, got %s (%s)", e_info[i].name, obj->ego[0]->name,  o_name);
+				vrequire((obj->ego[0]->name), buf);
+				obj_desc_name_format(ename, sizeof(ename), 0, obj->ego[0]->name, NULL, false);
+				strip_punct(ename);
+				vrequire((streq(ename, fname)), buf);
+				vnull(obj->ego[1], buf);
+				vnull(obj->artifact, buf);
+				object_delete(&obj);
+			}
 		}
 	}
 	ok;
@@ -174,8 +202,8 @@ static int test_ego_only(void *state) {
 const char *suite_name = "object/wish";
 struct test tests[] = {
 	{ "ego-only", test_ego_only },
-	//{ "artifacts", test_artifacts },
-	//{ "kinds", test_kinds },
-	//{ "egos", test_egos },
+	{ "artifacts", test_artifacts },
+	{ "kinds", test_kinds },
+	{ "egos", test_egos },
 	{ NULL, NULL }
 };

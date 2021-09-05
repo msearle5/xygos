@@ -32,6 +32,7 @@
 void flavor_init(void);
 void flavor_set_all_aware(void);
 bool obj_cyber_can_takeoff(const struct object *obj);
+void strip_punct(char *in);
 void object_flags(const struct object *obj, bitflag flags[OF_SIZE]);
 void object_flags_known(const struct object *obj, bitflag flags[OF_SIZE]);
 void object_carried_flags(const struct object *obj, bitflag flags[OF_SIZE]);
