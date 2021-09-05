@@ -3980,7 +3980,7 @@ power:4
 effect:TIMED_INC:OPP_COLD
 dice:50+1d10
 
-name:antitoxin
+name:toxin barrier
 type:pill
 graphics:!:d
 level:20
@@ -5119,7 +5119,7 @@ effect:PROBE
 time:100
 
 
-### Bolts ###
+### Gadgets ###
 
 name:& auto flame thrower~
 type:gadget

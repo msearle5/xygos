@@ -1304,14 +1304,16 @@ static void store_delete_random(struct store *store)
 /**
  * The HQ only stocks some items.
  * - Melee weapons, ranged weapons, ammo.
- * - Offensive, healing devices (TODO)
- * - Thrown weapons (TODO)
- * - Most armor (avoid items that aren't really armor)
- * - Most lights, food rations
- * - Some pills, cards? (TODO)
+ * - Devices
+ * - Most armor (avoiding items that aren't really armor)
+ * - Most lights, some food rations
+ * - Some pills, cards
  */
 static bool hq_ok(const struct object *obj)
 {
+	/* No cheap items except food and ammo */
+	if ((object_value_real(obj, 1) <= 10) && (!tval_is_ammo(obj)) && (!tval_is_food(obj)))
+		return false;
 	if (tval_is_weapon(obj))	/* includes ammo */
 		return true;
 	if (tval_is_armor(obj)) {
@@ -1336,6 +1338,38 @@ static bool hq_ok(const struct object *obj)
 			if (my_stristr(obj->kind->name, "cheese"))
 				return true;
 			if (my_stristr(obj->kind->name, "grub"))
+				return true;
+			return false;
+		case TV_DEVICE:
+		case TV_GADGET:
+		case TV_WAND:
+			return true;
+		case TV_PILL:
+			if (my_stristr(obj->kind->name, "nutria"))
+				return true;
+			if (my_stristr(obj->kind->name, "curing"))
+				return true;
+			if (my_stristr(obj->kind->name, "healing"))
+				return true;
+			if (my_stristr(obj->kind->name, "whizz"))
+				return true;
+			if (my_stristr(obj->kind->name, "combat"))
+				return true;
+			if (my_stristr(obj->kind->name, "vision"))
+				return true;
+			if (my_stristr(obj->kind->name, "toxin"))
+				return true;
+			return false;
+		case TV_CARD:
+			if (my_stristr(obj->kind->name, "disinto"))
+				return true;
+			if (my_stristr(obj->kind->name, "extermina"))
+				return true;
+			if (my_stristr(obj->kind->name, "enhanc"))
+				return true;
+			if (my_stristr(obj->kind->name, "blink"))
+				return true;
+			if (my_stristr(obj->kind->name, "port"))
 				return true;
 			return false;
 	}
