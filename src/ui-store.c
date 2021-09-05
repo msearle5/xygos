@@ -153,12 +153,6 @@ const char *random_rumor(s32b real)
 	return random_line(h);
 }
 
-/* Return a random hint from the global hints list */
-static const char *random_hint(void)
-{
-	return random_rumor(100);
-}
-
 /* Build a random shopkeeper name */
 void random_shk_name(char *buf, int len)
 {
@@ -250,7 +244,7 @@ static void prt_welcome(struct store *store)
 			else
 				truth = 100;
 		}
-		msg(comment_hint[i], random_rumor(truth));
+		msg(comment_hint[i], random_saying(truth, 20, 75));
 	} else if (player->lev > 5) {
 		const char *player_name;
 		int divi = 10;

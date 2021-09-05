@@ -2662,7 +2662,7 @@ static enum parser_error parse_p_race_obj_flags(struct parser *p) {
 	flags = string_make(parser_getstr(p, "flags"));
 	s = strtok(flags, " |");
 	while (s) {
-		bool flag;
+		bool flag = false;
 		for (int i=grab_flags_from; i<=grab_flags_to; i++)
 			flag = grab_flag(r->flags[i], OF_SIZE, list_obj_flag_names, s);
 		if (flag)
@@ -2685,7 +2685,7 @@ static enum parser_error parse_p_race_play_flags(struct parser *p) {
 	flags = string_make(parser_getstr(p, "flags"));
 	s = strtok(flags, " |");
 	while (s) {
-		bool flag;
+		bool flag = false;
 		for (int i=grab_flags_from; i<=grab_flags_to; i++)
 			flag = grab_flag(r->pflags[i], PF_SIZE, player_info_flags, s);
 		if (flag)
@@ -3582,7 +3582,7 @@ static enum parser_error parse_class_obj_flags(struct parser *p) {
 	flags = string_make(parser_getstr(p, "flags"));
 	s = strtok(flags, " |");
 	while (s) {
-		bool flag;
+		bool flag = false;
 		for (int i=grab_flags_from; i<=grab_flags_to; i++)
 			flag = grab_flag(c->flags[i], OF_SIZE, list_obj_flag_names, s);
 		if (flag)
@@ -3607,7 +3607,7 @@ static enum parser_error parse_class_play_flags(struct parser *p) {
 
 	s = strtok(flags, " |");
 	while (s) {
-		bool flag;
+		bool flag = false;
 		for (int i=grab_flags_from; i<=grab_flags_to; i++)
 			flag = grab_flag(c->pflags[i], PF_SIZE, player_info_flags, s);
 		if (flag)

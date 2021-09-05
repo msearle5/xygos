@@ -126,7 +126,7 @@ bool is_daytime(void)
 static char *do_format_time(int turns, const char *fmt)
 {
 	static char buf[8];
-	int hh, mm;
+	unsigned hh, mm;
 	/* There are 24*60 minutes, and 10L * z_info->day_length turns, in a day
 	 * and the first half of a day is daytime.
 	 */
