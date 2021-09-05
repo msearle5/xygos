@@ -472,7 +472,7 @@ static void init_birth_menu(struct menu *menu, int n_choices,
 
 
 
-static void setup_menus(void)
+void setup_menus(void)
 {
 	int i, n;
 	struct player_class *c;

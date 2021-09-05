@@ -795,6 +795,7 @@ bool player_make_simple(const char *nrace, const char *next, const char *nclass,
 			rc = rc->next;
 			++ie;
 		}
+		--ie;
 	}
 
 	if (nclass) {
@@ -830,6 +831,7 @@ bool player_make_simple(const char *nrace, const char *next, const char *nclass,
 	cmd_set_arg_string(cmdq_peek(), "name",
 		(nplayer == NULL) ? "Simple" : nplayer);
 	cmdq_push(CMD_ACCEPT_CHARACTER);
+	setup_menus();
 	cmdq_execute(CTX_BIRTH);
 
 	return true;

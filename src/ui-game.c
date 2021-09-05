@@ -850,7 +850,7 @@ void close_game(void)
 		/* Save the game */
 		save_game();
 
-		if (Term->mapped_flag) {
+		if (Term && Term->mapped_flag) {
 			struct keypress ch;
 
 			prt("Press Return (or Escape).", 0, 40);

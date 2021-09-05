@@ -21,6 +21,7 @@
 
 #include "cmd-core.h"
 
+extern void setup_menus(void);
 extern void player_init(struct player *p);
 extern void player_generate(struct player *p, struct player_race *r, struct player_race *e,
                             struct player_class *c, struct player_race *per, bool old_history);

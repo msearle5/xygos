@@ -583,20 +583,22 @@ static int test_improve_attack_modifier(void *state)
 		require(b == i1 && s == 0 && prefix(verb, brands[i1].verb)
 			&& suffix(verb, "s"));
 
-		rf_on(dummy.race->flags, brands[i1].resist_flag);
-		b = 0;
-		s = 0;
-		my_strcpy(verb, "hit", sizeof(verb));
-		improve_attack_modifier(player, &weapon, &dummy, &b, &s, verb,
-			false);
-		require(b == 0 && s == 0 && streq(verb, "hit"));
-		b = 0;
-		s = 0;
-		my_strcpy(verb, "hit", sizeof(verb));
-		improve_attack_modifier(player, &weapon, &dummy, &b, &s, verb,
-			true);
-		require(b == 0 && s == 0 && streq(verb, "hit"));
-		rf_off(dummy.race->flags, brands[i1].resist_flag);
+		if (brands[i1].resist_flag) {
+			rf_on(dummy.race->flags, brands[i1].resist_flag);
+			b = 0;
+			s = 0;
+			my_strcpy(verb, "hit", sizeof(verb));
+			improve_attack_modifier(player, &weapon, &dummy, &b, &s, verb,
+				false);
+			require(b == 0 && s == 0 && streq(verb, "hit"));
+			b = 0;
+			s = 0;
+			my_strcpy(verb, "hit", sizeof(verb));
+			improve_attack_modifier(player, &weapon, &dummy, &b, &s, verb,
+				true);
+			require(b == 0 && s == 0 && streq(verb, "hit"));
+			rf_off(dummy.race->flags, brands[i1].resist_flag);
+		}
 
 		weapon.brands[i1] = false;
 		weapon.brands = old_brands;
@@ -692,44 +694,48 @@ static int test_improve_attack_modifier(void *state)
 				&& suffix(verb, "s"));
 
 			/* Only susceptible to the second */
-			rf_on(dummy.race->flags, brands[i1].resist_flag);
-			expected = i2;
-			b = 0;
-			s = 0;
-			my_strcpy(verb, "hit", sizeof(verb));
-			improve_attack_modifier(player, &weapon, &dummy,
-				&b, &s, verb, false);
-			require(b == expected && s == 0
-				&& streq(verb, brands[expected].verb));
-			b = 0;
-			s = 0;
-			my_strcpy(verb, "hit", sizeof(verb));
-			improve_attack_modifier(player, &weapon, &dummy,
-				&b, &s, verb, true);
-			require(b == expected && s == 0
-				&& prefix(verb, brands[expected].verb)
-				&& suffix(verb, "s"));
-			rf_off(dummy.race->flags, brands[i1].resist_flag);
+			if (brands[i1].resist_flag) {
+				rf_on(dummy.race->flags, brands[i1].resist_flag);
+				expected = i2;
+				b = 0;
+				s = 0;
+				my_strcpy(verb, "hit", sizeof(verb));
+				improve_attack_modifier(player, &weapon, &dummy,
+					&b, &s, verb, false);
+				require(b == expected && s == 0
+					&& streq(verb, brands[expected].verb));
+				b = 0;
+				s = 0;
+				my_strcpy(verb, "hit", sizeof(verb));
+				improve_attack_modifier(player, &weapon, &dummy,
+					&b, &s, verb, true);
+				require(b == expected && s == 0
+					&& prefix(verb, brands[expected].verb)
+					&& suffix(verb, "s"));
+				rf_off(dummy.race->flags, brands[i1].resist_flag);
+			}
 
 			/* Only susceptible to the first */
-			rf_on(dummy.race->flags, brands[i2].resist_flag);
-			expected = i1;
-			b = 0;
-			s = 0;
-			my_strcpy(verb, "hit", sizeof(verb));
-			improve_attack_modifier(player, &weapon, &dummy,
-				&b, &s, verb, false);
-			require(b == expected && s == 0
-				&& streq(verb, brands[expected].verb));
-			b = 0;
-			s = 0;
-			my_strcpy(verb, "hit", sizeof(verb));
-			improve_attack_modifier(player, &weapon, &dummy,
-				&b, &s, verb, true);
-			require(b == expected && s == 0
-				&& prefix(verb, brands[expected].verb)
-				&& suffix(verb, "s"));
-			rf_off(dummy.race->flags, brands[i2].resist_flag);
+			if (brands[i2].resist_flag) {
+				rf_on(dummy.race->flags, brands[i2].resist_flag);
+				expected = i1;
+				b = 0;
+				s = 0;
+				my_strcpy(verb, "hit", sizeof(verb));
+				improve_attack_modifier(player, &weapon, &dummy,
+					&b, &s, verb, false);
+				require(b == expected && s == 0
+					&& streq(verb, brands[expected].verb));
+				b = 0;
+				s = 0;
+				my_strcpy(verb, "hit", sizeof(verb));
+				improve_attack_modifier(player, &weapon, &dummy,
+					&b, &s, verb, true);
+				require(b == expected && s == 0
+					&& prefix(verb, brands[expected].verb)
+					&& suffix(verb, "s"));
+				rf_off(dummy.race->flags, brands[i2].resist_flag);
+			}
 
 			if (brands[i1].vuln_flag) {
 				/* Especially vulnerable to the first */
