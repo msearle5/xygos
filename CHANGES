@@ -2,6 +2,92 @@ This is a summary of major changes made to Xygos by release.
 For changes pulled in from Vanilla, see changes.txt.
 For more detail, see the git history.
 
+Xygos 0.1.0
+===========
+
+The win quests. Level 25, 50, 75, 100 in the Fortress and level 120 in the Space Station have
+a quest boss needed to advance. To win you need to kill the final one. Earlier ones have an
+artifact as reward.
+
+Monsters: Removed all the old Angband monsters that don't belong, and added a lot of new ones.
+Including:
+Mutant monsters (variations such as faster, slower, stronger etc.). Radiation can cause
+mutations, growth, splitting and polymorph.
+The pill bug (eats pills, leaves a pill if killed), "horrors" (which split into other 
+coloured horrors), xenomorph/facehugger spawning each other. Mines (which talk). Bats, frogs 
+(which hop), the money spider, town monsters, munchkins, Mr Blobby, Barney the Dinosaur, 
+Hypnotoad, fish, wolves, cats, blobs, snakes, plants, stormtroopers, killer tomatoes,
+cyberdemons (which fire rockets), lights (including one which causes hallucination), a shapechanger (random appearance, as if hallucinatory)...
+DROP_RANDOM: some monsters (such as the super-bat) will pick up and later drop things.
+ORTHOGONAL: some monsters can't move diagonally.
+
+In-town quests - there's a shark or a lot of triffids menacing the town which you need to 
+get rid of, and random assassinations from the Black Market.
+
+Add the IM_EDGED and IM_BLUNT flags to some monsters.
+
+Passive attacks: A monster may have one or more passive attacks, described like normal 
+blows. On any successful melee attack (at least one blow having landed) against the monster, 
+it will "retaliate", triggering these blows.
+
+Items: All unwanted artifacts, ego-items, base items are gone. Added are cybergear (arms, 
+legs, brain chips), new armors, etc. Slays (plant, slug).
+Reactive shields and body armor - start with high AC and damage reduction but degrade and
+when AC reaches zero will explode.
+
+Added are cards: Transformation (add an ego, like branding). Formatting (remove ego, 
+artifact etc. status).
+
+Multiple egos: An item can have 2 egos, rarity and depth is between ego and artifacts.
+
+Levels of resistance: it's not just on or off, but increasing numbers of resists give more 
+resistance. Added gravity, water and inertia resistance.
+
+Personalities: A character may be Athletic, Shouty, Boring, etc. with various advantages and 
+disadvantages in stats, skills, etc. Some also change HP or grant techniques. Special cases 
+are Munchkin (easy mode), Scrub (hard mode) and Split (change every level up. At level 50 
+you can change at will.)
+
+Clown: retain cards after use, sometimes. 
+
+Engineer: Add several item related techniques. They now gain exp from learning icons, and are zero-fail technique users.
+
+Pilot: Add the Caveliner (a third alternative to the Cavefighter and Caveracer advance, capable of immediate flights through the Airport.)
+
+Super: An extension for superheroes with costumes and powers gained as they level. They also have a weakness (a high vulnerability).
+
+Timelord: They can't use exterminate effects (usually, without losing a regeneration)
+
+Portals and the portal card. (Entering a portal jumps to the nearest portal.)
+
+Dungeons: They don't all start at level 1, and the side dungeons (not Fortress) now have 
+guardians. There is now a separate recall depth per town.
+
+Randomly named artifacts, from a file of names picked based on the artifact's power.
+You can have all randarts, all standarts or both (the usual choice: there aren't many
+standarts yet). The names have acceptable tvals, and some other requirements.
+There are also randomized quest artifacts - given as the reward for midbosses or dungeon
+guardians - which are always randomized even in a standart game.
+
+High CHR gives an additional saving throw against melee fear.
+
+Wish parser: a debug command to create any object.
+
+General table parser (make various built-in tables external).
+
+Improved high score table (recording which town or dungeon you were in).
+
+New score calculation method. "Completion" values (0..1) are calculated from the % of level
+50 experience, of maximum quest level and of the quests completed successfully (split into
+win-track, guardian and others). They are then weighted individually and summed, scaled so
+that a "standard scoring" character with 100% completion gets 1e7 points. Finally the 
+score is scaled by race, extension and personality as it was before.
+
+Updated hints, etc.
+Some improvements to the documentation.
+Update from vanilla 4.2.3.
+Many other bug fixes and minor improvements.
+
 Xygos 0.0.3
 ===========
 

@@ -1,0 +1,51 @@
+
+
+
+                      Xygos 0.1
+
+                 a variant of Angband
+
+
+............................................................
+
+Far in the future, a network of civilisations - human and
+otherwise - spans the galaxy. One man wants to seize control
+and rule them all, beginning with this planet Xygos.
+
+Extensively nuked from orbit, life survives in the corners
+which escaped the worst of the bombardment and were lucky
+enough to have somewhere below ground to retreat to.
+
+To avoid the same destruction spread across the galaxy,
+someone needs to infiltrate the fortress and defeat him.
+
+You have taken on that role. The ultimate mission is
+always the same - to descend to level 100 of the Fortress
+and defeat the Emperor.
+
+You can get there in many ways though and your first
+decision is to choose what kind of hero you will be - a
+Space Marine's combat skill, a speedy Pilot or an
+Engineer's techniques? Human, Android or a Cyborg - a bit
+of both? Or even a tourist or a flying superhero?
+
+............................................................
+
+For new players though - especially if you are new to
+Angband as well as to Xygos - a good way to start is with
+a "tank". So select Android, Super, Athletic, Soldier and
+Point-based.
+Accept the default points distribution, and exit talents
+(you can come back to it later).
+Get some lights, curing pills, blinking cards and if you
+have the spare cash some basic armor (check out the Field HQ
+first - it's only available to Marines, and beats the other
+stores).
+And get down that >!
+Oh, and don't forget to visit the HQ again when you return.
+You will get prizes for returning after being promoted.
+
+............................................................
+
+Release notes follow...
+

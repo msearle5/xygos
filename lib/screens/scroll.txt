@@ -1,8 +1,371 @@
-a
-b
-c
-d
-e
-f
-g
-h
+
+
+
+                      Xygos 0.1
+
+                 a variant of Angband
+
+
+............................................................
+
+Far in the future, a network of civilisations - human and
+otherwise - spans the galaxy. One man wants to seize control
+and rule them all, beginning with this planet Xygos.
+
+Extensively nuked from orbit, life survives in the corners
+which escaped the worst of the bombardment and were lucky
+enough to have somewhere below ground to retreat to.
+
+To avoid the same destruction spread across the galaxy,
+someone needs to infiltrate the fortress and defeat him.
+
+You have taken on that role. The ultimate mission is
+always the same - to descend to level 100 of the Fortress
+and defeat the Emperor.
+
+You can get there in many ways though and your first
+decision is to choose what kind of hero you will be - a
+Space Marine's combat skill, a speedy Pilot or an
+Engineer's techniques? Human, Android or a Cyborg - a bit
+of both? Or even a tourist or a flying superhero?
+
+............................................................
+
+For new players though - especially if you are new to
+Angband as well as to Xygos - a good way to start is with
+a "tank". So select Android, Super, Athletic, Soldier and
+Point-based.
+Accept the default points distribution, and exit talents
+(you can come back to it later).
+Get some lights, curing pills, blinking cards and if you
+have the spare cash some basic armor (check out the Field HQ
+first - it's only available to Marines, and beats the other
+stores).
+And get down that >!
+Oh, and don't forget to visit the HQ again when you return.
+You will get prizes for returning after being promoted.
+
+............................................................
+
+Release notes follow...
+
+This is a summary of major changes made to Xygos by release.
+For changes pulled in from Vanilla, see changes.txt.
+For more detail, see the git history.
+
+Xygos 0.1.0 ===========
+
+The win quests. Level 25, 50, 75, 100 in the Fortress and
+level 120 in the Space Station have a quest boss needed
+to advance. To win you need to kill the final one. Earlier
+ones have an artifact as reward.
+
+Monsters: Removed all the old Angband monsters that don't
+belong, and added a lot of new ones.  Including: Mutant
+monsters (variations such as faster, slower, stronger
+etc.). Radiation can cause mutations, growth, splitting
+and polymorph.  The pill bug (eats pills, leaves a pill
+if killed), "horrors" (which split into other coloured
+horrors), xenomorph/facehugger spawning each other. Mines
+(which talk). Bats, frogs (which hop), the money spider,
+town monsters, munchkins, Mr Blobby, Barney the Dinosaur,
+Hypnotoad, fish, wolves, cats, blobs, snakes, plants,
+stormtroopers, killer tomatoes, cyberdemons (which fire
+rockets), lights (including one which causes hallucination),
+a shapechanger (random appearance, as if hallucinatory)...
+DROP_RANDOM: some monsters (such as the super-bat) will
+pick up and later drop things.  ORTHOGONAL: some monsters
+can't move diagonally.
+
+In-town quests - there's a shark or a lot of triffids
+menacing the town which you need to get rid of, and random
+assassinations from the Black Market.
+
+Add the IM_EDGED and IM_BLUNT flags to some monsters.
+
+Passive attacks: A monster may have one or more passive
+attacks, described like normal blows. On any successful
+melee attack (at least one blow having landed) against the
+monster, it will "retaliate", triggering these blows.
+
+Items: All unwanted artifacts, ego-items, base items are
+gone. Added are cybergear (arms, legs, brain chips), new
+armors, etc. Slays (plant, slug).  Reactive shields and
+body armor - start with high AC and damage reduction but
+degrade and when AC reaches zero will explode.
+
+Added are cards: Transformation (add an ego, like
+branding). Formatting (remove ego, artifact etc. status).
+
+Multiple egos: An item can have 2 egos, rarity and depth
+is between ego and artifacts.
+
+Levels of resistance: it's not just on or off, but
+increasing numbers of resists give more resistance. Added
+gravity, water and inertia resistance.
+
+Personalities: A character may be Athletic, Shouty,
+Boring, etc. with various advantages and disadvantages
+in stats, skills, etc. Some also change HP or grant
+techniques. Special cases are Munchkin (easy mode), Scrub
+(hard mode) and Split (change every level up. At level 50
+you can change at will.)
+
+Clown: retain cards after use, sometimes.
+
+Engineer: Add several item related techniques. They now gain
+exp from learning icons, and are zero-fail technique users.
+
+Pilot: Add the Caveliner (a third alternative to the
+Cavefighter and Caveracer advance, capable of immediate
+flights through the Airport.)
+
+Super: An extension for superheroes with costumes and
+powers gained as they level. They also have a weakness
+(a high vulnerability).
+
+Timelord: They can't use exterminate effects (usually,
+without losing a regeneration)
+
+Portals and the portal card. (Entering a portal jumps to
+the nearest portal.)
+
+Dungeons: They don't all start at level 1, and the side
+dungeons (not Fortress) now have guardians. There is now
+a separate recall depth per town.
+
+Randomly named artifacts, from a file of names picked
+based on the artifact's power.  You can have all randarts,
+all standarts or both (the usual choice: there aren't
+many standarts yet). The names have acceptable tvals,
+and some other requirements.  There are also randomized
+quest artifacts - given as the reward for midbosses or
+dungeon guardians - which are always randomized even in a
+standart game.
+
+High CHR gives an additional saving throw against melee
+fear.
+
+Wish parser: a debug command to create any object.
+
+General table parser (make various built-in tables
+external).
+
+Improved high score table (recording which town or dungeon
+you were in).
+
+New score calculation method. "Completion" values (0..1) are
+calculated from the % of level 50 experience, of maximum
+quest level and of the quests completed successfully
+(split into win-track, guardian and others). They are
+then weighted individually and summed, scaled so that a
+"standard scoring" character with 100% completion gets 1e7
+points. Finally the score is scaled by race, extension and
+personality as it was before.
+
+Updated hints, etc.  Some improvements to the documentation.
+Update from vanilla 4.2.3.  Many other bug fixes and minor
+improvements.
+
+Xygos 0.0.3 ===========
+
+Multiclassing: You can select with G which class to gain
+at the next level up. Your abilities will be a mix of the
+classes - averaging stats and skills (etc.), and with class
+specific abilities (techniques, etc) using the number of
+levels you have in that class rather than the overall level.
+
+Object allocation changes. They now fade linearly with
+increasing level as egos do, to reduce the amount of junk -
+while it is now possible (but less likely, by 1/difference)
+to see a higher level object below the minimum level,
+to address low-level consumables becoming rare.
+
+Move the resists about in the second character screen,
+because the slots list was too wide to fit, one list was
+too long to fit, and both problems would end up getting
+worse. This removes the top left and top right areas,
+but that's not a big loss as they are present on the first
+character screen. It will also make use of bigger terminals
+than 80x24 (with less abbreviated labels) if it can.
+
+Cybersalon has its own faction, affecting prices and quality
+and quantity of available items.  There is nothing available
+until you become a member - by selling them an item. The
+more you sell, the more you'll have available to you.
+
+Wrestler, Pilot, Clown, Spelunker. The Wrestler is a melee
+class that fights best unarmed and lightly armored (and
+gains resists, sustains and critical hits to make this more
+reasonable).  The Pilot gets a speed bonus when moving in
+a straight line (and some evolutions at later levels). The
+Clown gets an exp bonus when it uses exploding fruit or
+makes an opponent fall into the water. The Spelunker gets
+a Climb ability (go up a level, if you are adjacent to
+a wall).
+
+Fixes brought in from V 4.2.2.  Some things can go BANG if
+you throw them.  Random names for store owners Some faction
+talents Sense Animals and Metal (which work like telepathy)
+Remove some dragon-related monsters Add lightsabers and
+similar things Removes / replaces old headgear Quests:
+"Hunter, in Darkness" to kill the wumpus
+
+Xygos 0.0.2 ===========
+
+Much bug fixing.  Add "general player flags" (can be present
+on equipment, or as a temporary effect).  Add "carried
+flags" (object flags that take effect when an item is
+carried, not equipped).  Add a body type (as in body.txt)
+per player race.  Adds cyberware: legs and arms, and a
+shop to install it (you can't do it elsewhere, usually).
+Also adds a "Cyborg" extension (where you start with
+random cyberware).  Removes rings and amulets and much
+medieval arms and armor, with a few replacements.  Rods are
+now Gadgets.
+
+Xygos 0.0.1 ===========
+
+Renamed as Xygos 0.0.1 (so it should be able to be installed
+alongside V).  Pulled in most of V 4.2.2.  Add factions
+(visible in shop greetings, affecting quality and amount
+of shop loot).	Sticky curses (for now, only on lamps -
+and the curse lets go when the lamp runs out of power.)
+No more hard-coded limits on the number or length of flavor
+names.	Curses are now described as "faults", remove-curse
+as "repair".  Multiple towns. No wilderness, but airports
+to travel between them. One has a full size dungeon,
+	the others have minidungeons. They each have their
+	own level layout and array of stores.
+Staffs are now Devices.  Soft cap XP gain in a single turn
+(usually by !oExp) - each level past the first gained
+halves the
+	remaining experience. A cl1 !oExp still gives 8
+	levels, and normal monster kills shouldn't care.
+Store items with a rarity (for e.g. rare heal items along
+with the usual CCW) Scrolls are now Cards (and are 'run',
+and can be used in the dark but not while blind, and the
+	Bookseller is renamed)
+Ego and artifact generation has been redone. In both cases,
+the first step is to determine whether
+	an ego or artifact should be generated - and
+	only then to find a suitable base item. This
+	gets rid of dependencies on base item levels
+	that produced unexpected results (e.g. Ringil
+	being more common at lower depth, just because
+	it's based on a longsword). The probabilities are
+	also calculated differently, getting rid of (or
+	at least much reducing) the large steps in ego and
+	artifact probability that were seen as other egos
+	and artifacts went in and out of level.
+More interactions with stores.
+	You can put an item on layaway, pay to turn
+	over stock, pay more to replace the owner, pay
+	more again to buy the store yourself - or try to
+	steal stuff (risking a fight) or just pick a fight
+	yourself. That's the other way to own a store (and
+	so it usually doesn't end well).  Or you can ask if
+	the owner has anything that needs doing - that is,
+	a quest.
+Quests:
+	AKA tasks - ask a store owner what needs doing and
+	you will be pointed to a > into a special
+		level. Optional, but recommended (there's
+		a lot of loot and other rewards).
+	The "Soldier, Sailor, Chef, Pie" quest (Fetch a
+	stolen card - but there's an alternative way to
+	complete this) The "Msing Pills" quest (return the
+	pills from a Pacman-like maze) The "Whiskey Cave"
+	quest (return bottles from the back of a volcanic
+	cave) The "Rats" quest (kill all the (breeding)
+	rats)
+Runes are now Icons. "Some equipment has unusual properties,
+signified by icons. At one time their
+    meaning was supposed to be obvious, but now they might
+    as well be mystic runes for all the sense they make -
+    however, once you have discovered what an icon means
+    you can assume that it has the same meaning wherever
+    else you see it."
+Extensions: Like race/class. You can be for example a Human
+Mutant Soldier - "Mutant" extends
+	Human (or other races), giving mutations at birth,
+	more later etc.
+All old races besides Human removed. Added Time-Lord and
+Android. Time-Lords regenerate on death
+	(sometimes) and at higher level can regen at any
+	time (dropping them healed in town). There's a
+	maximum of 12 regens, but a level limit for each
+	and it's always chancy even if you reach level 50
+	before using your first. Androids can't eat (they
+	use batteries) or take extensions, or mutate.
+Radiation as a damage type, replacing nether. Fallout as
+a terrain type, and water. Both hurt,
+	like lava, although water only does so if you are
+	too heavily loaded to swim (for most @s: Androids
+	can't swim)
+Abilities, Talents, Mutations:
+	These all involve a player flag, but with an
+	additional ability structure attached which
+	can add flags, change stats etc. A talent can
+	be bought (some only at birth, some later) with
+	talent points. Some are class specific (for skill
+	with guns, for example). Mutations are normally
+	acquired randomly (from a pill, or radiation)
+	and may be purely -ve, +ve or (most often) a mixed
+	blessing. All of these are described generically
+	as abilities.
+Techniques:
+	These are the replacement for spells. Books don't
+	exist as physical objects, but are retained as an
+	abstraction describing a set of techniques. Realms
+	have also gone.  These could be derived from
+	class/race, or equipment etc. They have a % fail
+	(much as before), but as SP has been removed,
+	the mana cost has been replaced by HP and/or a
+	timed cooldown.
+Burden speed penalty has changed. You can't pick up more
+than 4x your weight limit (the point at
+	which you get -1), and it increases exponentially
+	(-10 at 2x your limit, -40 at 3x, -160 at 4x).
+Classes replaced with Soldier, Marksman, Tourist etc.
+Bows are now Guns.  Hunger has been tweaked (being hungry is
+harmless, but being weak is worse).  Printers: An item which
+with blocks of metal can be used to create items from it.
+Lamps: replaced with a mix of rechargeable torches, one-time
+glowsticks etc and lightables. There
+	is a plain wax candle, but the main point of this
+	is the dynamite, flare etc. - special effects,
+	hidden by a flavor.
+Hitdie tweaked so that while each level's HP gain is random,
+the sum is (for a given race/class) fixed.
+	This means that "life rating" doesn't exist
+	any more.
+Belts (new slot, armor type) A soft time limit. After a
+few days nastier monsters start to show up in the town,
+and if you really
+	drag your feet stores will start to be
+	destroyed. Dungeon levels get more dangerous,
+	too. This should help make the multi-towns less
+	cheesy (there's plenty of time for even quite a
+	grindy playstyle, but you will quickly see penalties
+	if you always jet about looking for more loot)
+Cash items replaced with more interesting items and should
+always be described as cash, not gold.	Negative HP:
+	This doesn't always kill you immediately (though
+	it can). You don't heal and statuses don't time
+	out, you lose 1 HP per turn and suffer bad effects
+	(XP and stat loss).
+New stats: Charisma and Speed. CHR is much cheaper, speed
+more expensive at birth. Speed works by giving you (stat -
+10) to speed, so a maximum of +30. This makes it easier
+to get early, harder later (but probably needs balancing).
+Added the Zorbus rooms, as a new vault class. (No special
+monsters and items as interesting rooms do - they
+	are just unusual shapes, so they can be used
+	more frequently especially as there are over 1100
+	of them!)
+Some interesting foods
+
+Forked from 4.2.1 tip around Jan 1 2021.
+
+............................................................

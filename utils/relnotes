@@ -1,0 +1,4 @@
+#!/bin/sh
+# -w 61 => 60 characters
+fmt -w 61 < CHANGES > /tmp/scrollmid
+cat scroll1.txt /tmp/scrollmid scroll2.txt > lib/screens/scroll.txt
