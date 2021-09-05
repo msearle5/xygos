@@ -1,4 +1,5 @@
 master
+pets		active						Tame, neutral or monster-monster fights
 youmonster	active						Player race with nonstandard bodyplans
 autofeel	active						Calculating feeling thresholds
 playtest	active						Save stable branch for playtesting
