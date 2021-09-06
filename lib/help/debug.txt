@@ -18,8 +18,9 @@ G: GF demo
 h: Hitpoint rerating
 H: Hit all monsters in LOS for 10K
 j: Jump up or down in the dungeon
+K: Keystroke log (of what the player is typing)
 l: Learn about objects
-L: Log (Work out what the player is typing)
+L: Light the level
 m: Mapping
 M: Dump a map of the current level as HTML.
 n: Summon named monster
@@ -38,7 +39,7 @@ u: Un-hide all monsters
 U: Create any specified object, unidentified
 v: Create very good objects
 V: Create all items of a tval
-w: Wizard light the level
+w: Wish for an object
 W: Wipe recall for a monster
 x: Increase experience
 X: Quit the game, don't save
