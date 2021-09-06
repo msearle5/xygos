@@ -345,13 +345,6 @@ static void quest_succeed(void) {
 	succeed_quest(q);
 }
 
-/** Complete the current quest, unsuccessfully */
-static void quest_fail(void) {
-	assert(player->active_quest >= 0);
-	struct quest *q = &player->quests[player->active_quest];
-	fail_quest(q);
-}
-
 struct quest *quest_guardian_any(struct town *town)
 {
 	for(int i=0;i<z_info->quest_max;i++) {
@@ -887,16 +880,6 @@ static struct object * has_special_flag(struct object *obj, void *data)
 	return (of_has(obj->flags, OF_QUEST_SPECIAL)) ? obj : NULL;
 }
 
-static struct object * kind_has_special_flag(struct object *obj, void *data)
-{
-	if (of_has(obj->flags, OF_QUEST_SPECIAL)) {
-		struct object_kind *k = (struct object_kind *)data;
-		if (obj->kind == k)
-			return obj;
-	}
-	return NULL;
-}
-
 static struct object * obj_of_kind(struct object *obj, void *data)
 {
 	struct object_kind *k = (struct object_kind *)data;
@@ -1045,7 +1028,8 @@ void quest_changed_level(void)
 			break;
 		}
 	}
-	bool guardian = ((player->depth) && (!world_level_exists(NULL, player->depth + 1)));
+	bool guardian = (is_blocking_quest(player, player->depth));
+	//(player->depth) && (!world_level_exists(NULL, player->depth + 1)));
 	bool fortress = (player->town == t_info);
 
 	/* Quest specific checks */
