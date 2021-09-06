@@ -335,6 +335,7 @@ n:1000
 table:obj_feeling_text
 n:Looks like any other level.
 n:you sense an item of unique power!
+n:there's something exceptional here!
 n:there's a huge haul of loot here!
 n:there is much valuable loot here.
 n:there is some valuable loot here.
