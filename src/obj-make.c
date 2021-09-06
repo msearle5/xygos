@@ -808,7 +808,6 @@ static double make_artifact_probs(double *prob, int lev, int tval, bool max)
 	/* No artifacts in the town */
 	if (!player->depth) return 0.0;
 
-	/* Check the special artifacts */
 	for (i = 0; i < z_info->a_max; ++i) {
 		const struct artifact *art = &a_info[i];
 		struct object *new_obj;
@@ -856,19 +855,6 @@ static double make_artifact_probs(double *prob, int lev, int tval, bool max)
 			prob[i] *= (art->alloc_max + 1) - lev;
 			prob[i] /= (art->alloc_max + 1) - art->alloc_min;
 		}
-
-		/* Assign the template */
-		new_obj = object_new();
-		object_prep(new_obj, kind, art->alloc_min, RANDOMISE);
-
-		/* Mark the item as an artifact */
-		new_obj->artifact = art;
-
-		/* Copy across all the data from the artifact struct */
-		copy_artifact_data(new_obj, art);
-
-		/* Mark the artifact as "created" */
-		mark_artifact_created(art, true);
 
 		total += prob[i];
 	}
