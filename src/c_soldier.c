@@ -189,7 +189,7 @@ static void soldier_building(int store, bool entering, bool *do_default)
 					bonus = 4000;
 					break;
 				case 7:
-					lev = 99; tval = TV_PILL; num = 2; name = "augmentation";
+					lev = 99; tval = TV_PILL; num = 2; name = "augmenta nano-";
 					message = "You are going to like this one!";
 					bonus = 6000;
 					break;
