@@ -211,19 +211,19 @@ normal:pill:healing:M2000
 normal:pill:nutria:1500
 normal:pill:mega-healing:-500+M1000
 normal:pill:life:-900+M1000
-normal:wand:healing ray
+normal:zapper:healing ray
 normal:device:first-aid kit:6000
 normal:device:medikit:M5000
 normal:device:medical nanokit:-2500+M4000
 buy:pill
-buy:wand:healing ray
+buy:zapper:healing ray
 buy:device:medikit
 buy:device:first-aid kit
 buy:device:medical nanokit
 
 # Rename
 # Specialist, Alien, Antique, Tech, #GEar
-normal:wand:healing ray, #Supply, Scientific, Engineering/[Hi]Tech[nical] Suply...
+normal:zapper:healing ray, #Supply, Scientific, Engineering/[Hi]Tech[nical] Suply...
 store:6:Specialist Tech
 owner:8:15000:*
 owner:9:15000:*
@@ -243,21 +243,21 @@ owner:0:0:-
 slots:4:14
 turnover:9
 danger:70:90
-normal:wand:beamlight
-normal:wand:molasso ray
-normal:wand:pixilator
-normal:wand:mini-missile launcher
-normal:wand:cloudmaker
-normal:wand:mining rig
+normal:zapper:beamlight
+normal:zapper:molasso ray
+normal:zapper:pixilator
+normal:zapper:mini-missile launcher
+normal:zapper:cloudmaker
+normal:zapper:mining rig
 normal:device:teleporter
 normal:device:floodlight
 normal:device:mapping
 normal:device:anti-stealth radar
-normal:wand
+normal:zapper
 normal:device:0:7000
 normal:gadget:0:4000
 buy:device
-buy:wand
+buy:zapper
 buy:gadget
 
 # Black Market - no stock given but we still need slot/turnover info

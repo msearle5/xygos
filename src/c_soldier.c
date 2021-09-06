@@ -153,7 +153,7 @@ static void soldier_building(int store, bool entering, bool *do_default)
 			const char *name = NULL;
 			struct object *obj = NULL;
 			s32b value;
-			int bonus;
+			int bonus = 0;
 
 			const char *message = "Here's your new equipment.";
 

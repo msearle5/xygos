@@ -860,8 +860,7 @@ static void count_modifiers(const struct artifact *art, struct artifact_set_data
 			num--;
 		}
 	} else if ((art->tval == TV_SOFT_ARMOR ||
-				art->tval == TV_HARD_ARMOR ||
-				art->tval == TV_DRAG_ARMOR) &&
+				art->tval == TV_HARD_ARMOR) &&
 			   art->modifiers[OBJ_MOD_CON] > 0) {
 		/* Handle CON bonus on armor */
 		file_putf(log_file, "Adding 1 for CON bonus on body armor.\n");
@@ -895,8 +894,7 @@ static void count_modifiers(const struct artifact *art, struct artifact_set_data
 		} else if (art->tval == TV_BELT) {
 			file_putf(log_file, "Adding 1 for stealth bonus on cloak.\n");
 			(data->art_probs[ART_IDX_BELT_STEALTH])++;
-		} else if (art->tval == TV_SOFT_ARMOR || art->tval == TV_HARD_ARMOR ||
-				   art->tval == TV_DRAG_ARMOR) {
+		} else if (art->tval == TV_SOFT_ARMOR || art->tval == TV_HARD_ARMOR) {
 			file_putf(log_file, "Adding 1 for stealth bonus on armor.\n");
 			(data->art_probs[ART_IDX_ARMOR_STEALTH])++;
 		} else {
@@ -972,8 +970,7 @@ static void count_low_resists(const struct artifact *art,
 			file_putf(log_file, "Adding %d for low resists on shield.\n",
 					  num);
 			(data->art_probs[ART_IDX_SHIELD_LRES]) += num;
-		} else if (art->tval == TV_SOFT_ARMOR || art->tval == TV_HARD_ARMOR ||
-				   art->tval == TV_DRAG_ARMOR) {
+		} else if (art->tval == TV_SOFT_ARMOR || art->tval == TV_HARD_ARMOR) {
 			/* Armor also treated separately */
 			if (num == 4) {
 				/* Special case: armor has all four low resists */
@@ -1007,8 +1004,7 @@ static void count_high_resists(const struct artifact *art,
 	 * component of body armor so we track probability for them separately.
 	 * The proportions of the high resists will be determined by the
 	 * generic frequencies - this number just tracks the total. */
-	if (art->tval == TV_SOFT_ARMOR || art->tval == TV_HARD_ARMOR ||
-		art->tval == TV_DRAG_ARMOR) {
+	if (art->tval == TV_SOFT_ARMOR || art->tval == TV_HARD_ARMOR) {
 		if (art->el_info[ELEM_POIS].res_level == 1) num++;
 		if (of_has(art->flags, OF_PROT_FEAR)) num++;
 		if (art->el_info[ELEM_LIGHT].res_level == 1) num++;
@@ -1158,8 +1154,7 @@ static void count_abilities(const struct artifact *art, struct artifact_set_data
 	if (of_has(art->flags, OF_HOLD_LIFE)) {
 		/* Hold life - do body armor separately */
 		if( (art->tval == TV_SOFT_ARMOR) ||
-			(art->tval == TV_HARD_ARMOR) ||
-			(art->tval == TV_DRAG_ARMOR)) {
+			(art->tval == TV_HARD_ARMOR)) {
 			file_putf(log_file, "Adding 1 for hold life on armor.\n");
 			(data->art_probs[ART_IDX_ARMOR_HLIFE])++;
 		} else {
@@ -1753,8 +1748,7 @@ static void build_freq_table(struct artifact *art, int *freq,
 	}
 
 	/* Armor abilities */
-	if (art->tval == TV_SOFT_ARMOR || art->tval == TV_HARD_ARMOR ||
-		art->tval == TV_DRAG_ARMOR) {
+	if (art->tval == TV_SOFT_ARMOR || art->tval == TV_HARD_ARMOR) {
 		size_t n = N_ELEMENTS(art_idx_armor);
 		for (j = 0; j < n; j++)
 			f_temp[art_idx_armor[j]] = data->art_probs[art_idx_armor[j]];

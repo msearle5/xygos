@@ -171,7 +171,7 @@ graphics:light umber
 flags:HATES_ACID | HATES_FIRE | EASY_KNOW
 material:plastic
 
-name:wand:zapper~
+name:zapper:zapper~
 graphics:green
 # max-stack:5
 flags:HATES_ELEC | EASY_KNOW

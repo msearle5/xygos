@@ -99,7 +99,6 @@ static const grouper group_item[] =
 
 	{ TV_SOFT_ARMOR,	"Armour (Body)" },
 	{ TV_HARD_ARMOR,	NULL },
-	{ TV_DRAG_ARMOR,	NULL },
 
 	{ TV_CLOAK,			"Armour (Misc)" },
 	{ TV_BELT,			NULL },
@@ -345,7 +344,6 @@ static const grouper group_artifact[] =
 
 	{ TV_SOFT_ARMOR,    "Body Armor" },
 	{ TV_HARD_ARMOR,    NULL },
-	{ TV_DRAG_ARMOR,    NULL },
 
 	{ TV_CLOAK,         "Cloaks" },
 	{ TV_BELT,          "Belts" },

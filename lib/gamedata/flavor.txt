@@ -64,7 +64,7 @@ flavor:90:Light Yellow:rotating
 ##### Wands #####
 # These are finishes, materials, coverings, shapes.
 
-kind:wand:-
+kind:zapper:-
 
 flavor:99:White:shiny
 flavor:100:Blue:sheathed

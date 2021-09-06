@@ -2026,7 +2026,7 @@ static void store_quest(struct store_context *ctx)
 					 * before you can get a reward. This will print messages itself if needed.
 					 **/
 					if (quest_is_rewardable(q)) {
-						msg(q->succeed);
+						ui_text_box(q->succeed);
 						quest_reward(q, true, ctx);
 						/* Unlock quests depending on this */
 						if (q->unlock) {
@@ -2041,7 +2041,7 @@ static void store_quest(struct store_context *ctx)
 						event_signal(EVENT_STORECHANGED);
 					}
 				} else {
-					msg(q->failure);
+					ui_text_box(q->failure);
 					quest_reward(q, false, ctx);
 				}
 				return;

@@ -158,7 +158,6 @@ bool tval_is_body_armor(const struct object *obj)
 	switch (obj->tval) {
 		case TV_SOFT_ARMOR:
 		case TV_HARD_ARMOR:
-		case TV_DRAG_ARMOR:
 			return true;
 		default:
 			return false;
@@ -261,7 +260,6 @@ bool kind_tval_is_weapon(const struct object_kind *kind)
 static bool tv_is_armor(int tv)
 {
 	switch (tv) {
-		case TV_DRAG_ARMOR:
 		case TV_HARD_ARMOR:
 		case TV_SOFT_ARMOR:
 		case TV_SHIELD:

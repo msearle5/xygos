@@ -773,9 +773,12 @@ void flavor_init(void)
 			/* Determine suffix */
 			char suff[8];
 			strcpy(suff, "");
-			int rn1 = randint1(9);
-			int rn2 = randint0(randint0(9));
-			int rn3 = randint0(randint0(randint0(9)));
+			unsigned rn1 = randint1(9);
+			assert(rn1 < 10);
+			unsigned rn2 = randint0(randint0(9));
+			assert(rn2 < 10);
+			unsigned rn3 = randint0(randint0(randint0(9)));
+			assert(rn3 < 10);
 			switch(randint0(12)) {
 				case 0:
 					switch(randint0(7)) {
@@ -2172,6 +2175,7 @@ bool is_artifact_everseen(const struct artifact *art)
 	assert(art->aidx == aup_info[art->aidx].aidx);
 	return aup_info[art->aidx].everseen;
 }
+
 
 /**
  * Set whether the given artifact has been created or not.

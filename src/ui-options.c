@@ -1663,7 +1663,6 @@ static bool sval_menu(int tval, const char *desc)
 	switch (tval)
 	{
 		case TV_LIGHT:
-		case TV_DRAG_ARMOR:
 		case TV_GOLD:
 			/* leave sorted by sval */
 			break;

@@ -628,7 +628,7 @@ min-combat:255:255:0
 type:6mm ammo
 type:9mm ammo
 type:12mm ammo
-desc:These bullets have been... well, trodden on by an elephant perhaps? Whatever happened to them left them distorted enough that can't be aimed with useful accuracy.
+desc:These bullets have been... well, trodden on by an elephant perhaps? Whatever happened to them left them distorted enough that they can't be aimed with useful accuracy.
 forbid:guided
 
 name:(blank)

@@ -395,7 +395,6 @@ void object_list_format_name(const object_list_entry_t *entry,
 				has_singular_prefix = false;
 			break;
 		case TV_HARD_ARMOR:
-		case TV_DRAG_ARMOR:
 			if (object_is_recognized_artifact)
 				has_singular_prefix = true;
 			else

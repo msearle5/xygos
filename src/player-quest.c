@@ -663,8 +663,8 @@ struct quest *get_quest_by_name(const char *name)
 	return NULL;
 }
 
-/** Add a start item to a list */
-static void add_item(struct start_item *si, int tval, const char *name, int min, int max)
+/** Add a start item to a list, returns the item used */
+static struct start_item * add_item(struct start_item *si, int tval, const char *name, int min, int max)
 {
 	struct start_item *prev = NULL;
 	while (si->max != 0) {
@@ -681,15 +681,16 @@ static void add_item(struct start_item *si, int tval, const char *name, int min,
 	si->next = NULL;
 	if (prev)
 		prev->next = si;
+	return si;
 }
 
 /** Add an ego start item */
 static void add_ego_item(struct start_item *si, int tval, const char *name, const char *ego, int min, int max)
 {
-	add_item(si, tval, name, min, max);
+	si = add_item(si, tval, name, min, max);
 	si->ego[0] = lookup_ego_item(ego, tval, si->sval);
 	if (!si->ego[0])
-		msg("Warning: unable to find ego item '%s'", ego);
+		msg("Warning: unable to find ego item '%s', base '%s', tv/sv %d/%d", ego, name, tval, si->sval);
 }
 
 /** Add an artifact start item */
@@ -1029,7 +1030,6 @@ void quest_changed_level(void)
 		}
 	}
 	bool guardian = (is_blocking_quest(player, player->depth));
-	//(player->depth) && (!world_level_exists(NULL, player->depth + 1)));
 	bool fortress = (player->town == t_info);
 
 	/* Quest specific checks */

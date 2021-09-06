@@ -9483,7 +9483,7 @@ rating:3
 rows:11
 columns:27
 doors:2
-tval:wand
+tval:zapper
 flags:FEW_ENTRANCES
 D: #%%%%%#############%%%%%# 
 D:##.....+...........+.....##

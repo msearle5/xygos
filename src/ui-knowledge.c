@@ -2090,7 +2090,6 @@ static int o_cmp_tval(const void *a, const void *b)
 	switch (k_a->tval)
 	{
 		case TV_LIGHT:
-		case TV_DRAG_ARMOR:
 			/* leave sorted by sval */
 			break;
 

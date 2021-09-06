@@ -2806,7 +2806,7 @@ name:& force wheel~
 type:shield
 graphics:):Violet
 level:75
-weight:1200g
+weight:1100g
 cost:14000
 alloc:1:75 to 127
 attack:1d1:-1:0
@@ -4209,7 +4209,7 @@ dice:80
 ### Bolts ###
 
 name:& mini-missile launcher~
-type:wand
+type:zapper
 graphics:-:d
 level:3
 weight:10
@@ -4223,7 +4223,7 @@ effect:BOLT_OR_BEAM:MISSILE
 dice:3d4
 
 name:& beam taser~
-type:wand
+type:zapper
 graphics:-:d
 level:15
 weight:10
@@ -4237,7 +4237,7 @@ effect:BEAM:ELEC
 dice:6d6
 
 name:& icer~
-type:wand
+type:zapper
 graphics:-:d
 level:20
 weight:10
@@ -4251,7 +4251,7 @@ effect:BOLT:COLD
 dice:12d8
 
 name:& flame thrower~
-type:wand
+type:zapper
 graphics:-:d
 level:30
 weight:10
@@ -4265,7 +4265,7 @@ effect:BOLT_OR_BEAM:FIRE
 dice:12d8
 
 name:& squirt gun~
-type:wand
+type:zapper
 graphics:-:d
 level:30
 weight:10
@@ -4282,7 +4282,7 @@ dice:10d8
 ### Balls ###
 
 name:& cloudmaker~
-type:wand
+type:zapper
 graphics:-:d
 level:5
 weight:10
@@ -4296,7 +4296,7 @@ effect:BALL:POIS:3
 dice:12
 
 name:& mass-tazer~
-type:wand
+type:zapper
 graphics:-:d
 level:35
 weight:10
@@ -4311,7 +4311,7 @@ effect:BALL:ELEC:2
 dice:64
 
 name:& cryosplat gun~
-type:wand
+type:zapper
 graphics:-:d
 level:40
 weight:10
@@ -4326,7 +4326,7 @@ effect:BALL:COLD:2
 dice:100
 
 name:& fireballista~
-type:wand
+type:zapper
 graphics:-:d
 level:50
 weight:10
@@ -4341,7 +4341,7 @@ effect:BALL:FIRE:2
 dice:144
 
 name:& super soaker~
-type:wand
+type:zapper
 graphics:-:d
 level:50
 weight:10
@@ -4359,7 +4359,7 @@ dice:120
 ### Monster status changing ###
 
 name:& molasso ray~
-type:wand
+type:zapper
 graphics:-:d
 level:5
 weight:10
@@ -4373,7 +4373,7 @@ effect:BOLT_AWARE:MON_SLOW
 dice:10+1d20
 
 name:& pixilator~
-type:wand
+type:zapper
 graphics:-:d
 level:5
 weight:10
@@ -4387,7 +4387,7 @@ effect:BOLT_AWARE:MON_CONF
 dice:5+1d5
 
 name:& paralator~
-type:wand
+type:zapper
 graphics:-:d
 level:5
 weight:10
@@ -4401,7 +4401,7 @@ effect:BOLT_AWARE:MON_HOLD
 dice:3+1d5
 
 name:& stun gun~
-type:wand
+type:zapper
 graphics:-:d
 level:5
 weight:10
@@ -4415,7 +4415,7 @@ effect:BOLT_AWARE:MON_STUN
 dice:5+1d5
 
 name:& terrorizer~
-type:wand
+type:zapper
 graphics:-:d
 level:10
 weight:10
@@ -4433,7 +4433,7 @@ dice:10
 
 #remove or upgrade to LIGHT?
 name:& beamlight~
-type:wand
+type:zapper
 graphics:-:d
 level:3
 weight:10
@@ -4448,7 +4448,7 @@ effect:LINE:LIGHT_WEAK
 dice:6d8
 
 name:& mining rig~
-type:wand
+type:zapper
 graphics:-:d
 level:10
 weight:10
@@ -4462,7 +4462,7 @@ effect:LINE:KILL_WALL
 dice:20+1d30
 
 name:& transmogrificator~
-type:wand
+type:zapper
 graphics:-:d
 level:20
 weight:10
@@ -4477,7 +4477,7 @@ dice:$B
 expr:B:PLAYER_LEVEL:+ 0
 
 name:& etheric beamlight~
-type:wand
+type:zapper
 graphics:-:d
 level:3
 weight:10
@@ -4491,7 +4491,7 @@ effect:LINE:DARK_WEAK
 dice:6d8
 
 name:& replicator beam~
-type:wand
+type:zapper
 graphics:-:d
 level:15
 weight:10
@@ -4504,7 +4504,7 @@ power:0
 effect:BOLT_STATUS:MON_CLONE
 
 name:& transporter beam~
-type:wand
+type:zapper
 graphics:-:d
 level:20
 weight:10
@@ -4519,7 +4519,7 @@ dice:$B
 expr:B:MAX_SIGHT:* 5
 
 name:& deboobilizer~
-type:wand
+type:zapper
 graphics:-:d
 level:20
 weight:10
@@ -4533,7 +4533,7 @@ effect:ALTER:KILL_TRAP
 desc:Makes traps safe.
 
 name:& omniprojector~
-type:wand
+type:zapper
 graphics:-:d
 level:3
 weight:10
@@ -4553,7 +4553,7 @@ expr:B:PLAYER_LEVEL:/ 5
 ### Dragons' wands ###
 
 name:& melta belta~
-type:wand
+type:zapper
 graphics:-:d
 level:50
 weight:10
@@ -4568,7 +4568,7 @@ effect:ARC:FIRE:0:30
 dice:200
 
 name:& cryonic projector~
-type:wand
+type:zapper
 graphics:-:d
 level:50
 weight:10
@@ -4583,7 +4583,7 @@ effect:ARC:COLD:0:30
 dice:160
 
 name:& multi-thrower~
-type:wand
+type:zapper
 graphics:-:d
 level:60
 weight:10
@@ -4611,7 +4611,7 @@ dice:160
 ### Drain lifes ###
 
 name:& death ray~
-type:wand
+type:zapper
 graphics:-:d
 level:50
 weight:10
@@ -4625,7 +4625,7 @@ effect:BOLT_STATUS_DAM:MON_DRAIN
 dice:150
 
 name:& annihilator~
-type:wand
+type:zapper
 graphics:-:d
 level:60
 weight:10
@@ -4643,7 +4643,7 @@ dice:250
 ### Rubbish ###
 
 name:& healing ray~
-type:wand
+type:zapper
 graphics:-:d
 level:3
 weight:10
@@ -4657,7 +4657,7 @@ effect:BOLT_STATUS:MON_HEAL
 dice:4d6
 
 name:& energy beamer~
-type:wand
+type:zapper
 graphics:-:d
 level:3
 weight:10
