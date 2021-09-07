@@ -55,18 +55,18 @@ static int check_devices(struct object *obj)
 {
 	int fail;
 	const char *action;
-	const char *what = NULL;
 	bool activated = false;
+	bool empty = false;
 
 	/* Get the right string */
 	if (tval_is_rod(obj)) {
-		action = "zap the gadget";
+		action = "zap it";
 	} else if (tval_is_wand(obj)) {
-		action = "use the wand";
-		what = "wand";
+		action = "zap it";
+		empty = true;
 	} else if (tval_is_device(obj)) {
-		action = "use the device";
-		what = "device";
+		action = "use it";
+		empty = true;
 	} else {
 		action = "activate it";
 		activated = true;
@@ -83,9 +83,11 @@ static int check_devices(struct object *obj)
 	}
 
 	/* Notice empty devices */
-	if (what && obj->pval <= 0) {
+	if (empty && obj->pval <= 0) {
+		char buf[80];
+		object_desc(buf, sizeof(buf), obj, ODESC_BASE, player);
 		event_signal(EVENT_INPUT_FLUSH);
-		msg("The %s has no charges left.", what);
+		msg("The %s has no charges left.", buf);
 		return false;
 	}
 
@@ -711,7 +713,9 @@ void do_cmd_use_device(struct command *cmd)
 			USE_INVEN | USE_FLOOR | SHOW_FAIL) != CMD_OK) return;
 
 	if (!obj_has_charges(obj)) {
-		msg("That device has no charges.");
+		char o_name[80];
+		object_desc(o_name, sizeof(o_name), obj, ODESC_BASE, player);
+		msg("That %s has no charges.", o_name);
 		return;
 	}
 
@@ -731,13 +735,15 @@ void do_cmd_aim_wand(struct command *cmd)
 
 	/* Get an item */
 	if (cmd_get_item(cmd, "item", &obj,
-			"Aim which wand? ",
-			"You have no wands to aim.",
+			"Aim which zapper? ",
+			"You have no zappers to aim.",
 			tval_is_wand,
 			USE_INVEN | USE_FLOOR | SHOW_FAIL) != CMD_OK) return;
 
 	if (!obj_has_charges(obj)) {
-		msg("That wand has no charges.");
+		char o_name[80];
+		object_desc(o_name, sizeof(o_name), obj, ODESC_BASE, player);
+		msg("That %s has no charges.", o_name);
 		return;
 	}
 
