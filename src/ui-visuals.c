@@ -440,6 +440,7 @@ bool visuals_cycler_set_cycle_for_race(struct monster_race const *race,
 		size_t new_count = old_count + visuals_color_cycles_by_race->alloc_size;
 		size_t new_size = new_count * sizeof(*(visuals_color_cycles_by_race->race));
 		visuals_color_cycles_by_race->race = mem_realloc(visuals_color_cycles_by_race->race, new_size);
+		memset(visuals_color_cycles_by_race->race + old_count, 0, (new_count - old_count) * sizeof(*(visuals_color_cycles_by_race->race)));
 		visuals_color_cycles_by_race->max_entries = new_count;
 
 		if (new_count >= 10000) {
