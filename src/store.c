@@ -540,7 +540,134 @@ struct init_module store_module = {
 	.cleanup = cleanup_stores
 };
 
+/* It could be you */
+static int spinreels(int *reel, int reels, int fruit)
+{
+	/* Roll */
+	for(int i=0;i<reels;i++)
+		reel[i] = randint0(fruit);
 
+	/* Win.
+	 * This gives 83.1% win back.
+	 * A set of 4 reels can win by being 2 matched, 3 matched, 4 matched, 2 + 2 different pairs matched.
+	 * If any have a lemon, there is no win.
+	 * If the matching reel has a bar (spaceship), there is a super big win.
+	 * All others score 0.
+	 */
+	static const int win_4b 	= 5000;
+	static const int win_22b 	= 250;
+	static const int win_3b 	= 200;
+	static const int win_2b 	= 10;
+
+	static const int win_4 		= 1000;
+	static const int win_22 	= 50;
+	static const int win_3 		= 25;
+	static const int win_2 		= 3;
+
+	static const int lemon 		= 1;
+	static const int bar 		= 0;
+
+	bool match2 = false;
+	bool match22 = false;
+	bool match3 = false;
+	bool match4 = false;
+	bool reel01 =  (reel[0] == reel[1]);
+	bool reel12 =  (reel[1] == reel[2]);
+	bool reel23 =  (reel[2] == reel[3]);
+	bool lemons = false;
+	bool bars = false;
+	for(int i=0;i<reels;i++) {
+		if (reel[i] == lemon) {
+			lemons = true;
+		}
+	}
+	if (reel01 && reel12 && reel23) {
+		match4 = true;
+		bars = (reel[0] == bar);
+	} else if (reel01 && reel12) {
+		match3 = true;
+		bars = (reel[0] == bar);
+	} else if (reel12 && reel23) {
+		match3 = true;
+		bars = (reel[2] == bar);
+	} else if (reel01 && reel23) {
+		match22 = true;
+		bars = ((reel[0] == bar) || (reel[2] == bar));
+	} else if (reel01 || reel12) {
+		match2 = true;
+		bars = (reel[0] == bar);
+	} else if (reel23) {
+		match2 = true;
+		bars = (reel[2] == bar);
+	}
+	int win = 0;
+	if (!lemons) {
+		if (match4) {
+			if (bars) {
+				win = win_4b;
+			} else {
+				win = win_4;
+			}
+		} else if (match3) {
+			if (bars) {
+				win = win_3b;
+			} else {
+				win = win_3;
+			}
+		} else if (match22) {
+			if (bars) {
+				win = win_22b;
+			} else {;
+				win = win_22;
+			}
+		} else if (match2) {
+			if (bars) {
+				win = win_2b;
+			} else {
+				win = win_2;
+			}
+		}
+	}
+	return win;
+}
+
+/**
+ * The bandits
+ */
+static void store_get_bandit(int *reel, int reels, int fruit, int pay)
+{
+	int reel1[reels];
+	int reel2[reels];
+	int value1, value2;
+	int *goodreel, *badreel;
+	int goodvalue, badvalue;
+
+	/* Get two spins */
+	value1 = spinreels(reel1, reels, fruit);
+	value2 = spinreels(reel2, reels, fruit);
+
+	/* Sort */
+	if (value1 > value2) {
+		goodreel = reel1;
+		badreel = reel2;
+		goodvalue = value1;
+		badvalue = value2;
+	} else {
+		goodreel = reel2;
+		badreel = reel1;
+		goodvalue = value2;
+		badvalue = value1;
+	}
+
+	/* Choose depending on how generous it is supposed to be */
+	if (rand_range(-100, 99) < pay) {
+		memcpy(reel, goodreel, sizeof(*reel) * reels);
+		return goodvalue;
+	} else {
+		memcpy(reel, badreel, sizeof(*reel) * reels);
+		return badvalue;
+	}
+}
 
 
 
