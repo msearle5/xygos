@@ -1053,10 +1053,9 @@ bool store_check_num(struct store *store, const struct object *obj)
  * Also note that it may not correctly "adapt" to "knowledge" becoming
  * known: the player may have to pick stuff up and drop it again.
  */
-void home_carry(struct object *obj)
+void home_carry(struct store *store, struct object *obj)
 {
 	struct object *temp_obj;
-	struct store *store = &stores[STORE_HOME];
 
 	/* Check each existing object (try to combine) */
 	for (temp_obj = store->stock; temp_obj; temp_obj = temp_obj->next) {
@@ -2637,7 +2636,7 @@ void do_cmd_stash(struct command *cmd)
 	handle_stuff(player);
 
 	/* Let the home carry it */
-	home_carry(dropped);
+	home_carry(store, dropped);
 
 	event_signal(EVENT_STORECHANGED);
 	event_signal(EVENT_INVENTORY);
