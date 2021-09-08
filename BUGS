@@ -21,13 +21,14 @@ BUG: "You knock out the MlM" -> "The MlM flees in terror!" -> "The MlM can move 
 
 BUG: After the success/failure message from a quest, ESC is the only way to get back out.
 
+BUG: "failed!\n" twice from r_super.c (UTR going lev 1-26, Human Super Engineer) but seen in other circumstances
+
+BUG: Once recalled back into a 1x1 hole in the rock in the top left (X4 Y4)
+
 Defer
 =====
 
 BUG: A Collective Skate that a cyborg started with was {??}
-	UTR
-
-BUG: "failed!\n" twice from r_super.c (going lev 1-26, Human Super Engineer)	
 	UTR
 
 BUG: If Triax is killed after all airports are destroyed, the game becomes unwinnable (as you can't go to the station)
