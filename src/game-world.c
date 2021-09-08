@@ -41,6 +41,7 @@
 #include "store.h"
 #include "target.h"
 #include "trap.h"
+#include "ui-game.h"
 #include "world.h"
 #include "z-queue.h"
 
@@ -1439,6 +1440,22 @@ void run_game_loop(void)
 				event_signal(EVENT_REFRESH);
 				if (player->is_dead || !player->upkeep->playing)
 					return;
+
+				/* Autosave - timed */
+				if (turn >= player->autosave_turn) {
+					if (player->opts.autosave_delay) {
+						player->autosave_turn = turn + player->opts.autosave_delay;
+						player->upkeep->autosave = true;
+					} else {
+						player->autosave_turn = INT_MAX;
+					}
+				}
+
+				/* If autosave is pending, do it now. */
+				if (player->upkeep->autosave) {
+					save_game(true);
+					player->upkeep->autosave = false;
+				}
 			}
 
 			/* Give the player some energy */

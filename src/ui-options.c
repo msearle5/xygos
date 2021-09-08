@@ -20,6 +20,7 @@
 #include "angband.h"
 #include "cmds.h"
 #include "game-input.h"
+#include "game-world.h"
 #include "init.h"
 #include "obj-desc.h"
 #include "obj-ignore.h"
@@ -906,6 +907,35 @@ static bool askfor_aux_numbers(char *buf, size_t buflen, size_t *curs, size_t *l
 	return false;
 }
 
+/**
+ * Set autosave time
+ */
+static void do_cmd_autosave(const char *name, int row)
+{
+	char tmp[16] = "";
+
+	strnfmt(tmp, sizeof(tmp), "%d", player->opts.autosave_delay / 10);
+
+	screen_save();
+
+	/* Prompt */
+	prt("Command: Autosave Delay", 20, 0);
+
+	prt(format("Current save every turns: %d %s",
+			   player->opts.autosave_delay / 10, player->opts.autosave_delay ? "turns" : "(off)"), 22, 0);
+	prt("New autosave delay (or 0 to disable): ", 21, 0);
+
+	/* Ask for a numeric value */
+	if (askfor_aux(tmp, sizeof(tmp), askfor_aux_numbers)) {
+		player->opts.autosave_delay = MAX(0, MIN(strtol(tmp, NULL, 0), (INT_MAX / 10))) * 10;
+	}
+
+	/* Reset the value if needed */
+	player->autosave_turn = MIN(player->autosave_turn, turn + player->opts.autosave_delay);
+
+	screen_load();
+}
+
 
 /**
  * Set base delay factor
@@ -913,7 +943,6 @@ static bool askfor_aux_numbers(char *buf, size_t buflen, size_t *curs, size_t *l
 static void do_cmd_delay(const char *name, int row)
 {
 	char tmp[4] = "";
-	int msec = player->opts.delay_factor;
 
 	strnfmt(tmp, sizeof(tmp), "%i", player->opts.delay_factor);
 
@@ -923,7 +952,7 @@ static void do_cmd_delay(const char *name, int row)
 	prt("Command: Base Delay Factor", 20, 0);
 
 	prt(format("Current base delay factor: %d msec",
-			   player->opts.delay_factor, msec), 22, 0);
+			   player->opts.delay_factor), 22, 0);
 	prt("New base delay factor (0-255): ", 21, 0);
 
 	/* Ask for a numeric value */
@@ -1868,6 +1897,7 @@ static menu_action option_actions[] =
 	{ 0, 'd', "Set base delay factor", do_cmd_delay },
 	{ 0, 'h', "Set hitpoint warning", do_cmd_hp_warn },
 	{ 0, 'm', "Set movement delay", do_cmd_lazymove_delay },
+	{ 0, 'A', "Set autosave delay", do_cmd_autosave },
 	{ 0, 'o', "Set sidebar mode", do_cmd_sidebar_mode },
 	{ 0, 0, NULL, NULL },
 	{ 0, 's', "Save subwindow setup to pref file", do_dump_options },
@@ -1892,7 +1922,6 @@ void do_cmd_options(void)
 				N_ELEMENTS(option_actions));
 
 		option_menu->title = "Options Menu";
-		option_menu->flags = MN_CASELESS_TAGS;
 	}
 
 	screen_save();

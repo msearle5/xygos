@@ -63,10 +63,11 @@ struct player_options {
 	bool opt[OPT_MAX];		/**< Options */
 
 	byte hitpoint_warn;		/**< Hitpoint warning (0 to 9) */
-	u16b lazymove_delay;	/**< Delay in cs before moving to allow another key */
 	byte delay_factor;		/**< Delay factor (0 to 9) */
-
 	byte name_suffix;		/**< Numeric suffix for player name */
+
+	s32b autosave_delay;	/**< Delay in turns between autosaving */
+	u16b lazymove_delay;	/**< Delay in cs before moving to allow another key */
 };
 
 extern int option_page[OPT_PAGE_MAX][OPT_PAGE_PER];

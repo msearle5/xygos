@@ -479,6 +479,9 @@ int rd_options(void)
 	rd_byte(&b);
 	player->opts.lazymove_delay = b;
 
+	/* Read autosave delay */
+	rd_s32b(&player->opts.autosave_delay);
+
 	/* Read sidebar mode (if it's an actual game) */
 	if (angband_term[0]) {
 		rd_byte(&b);

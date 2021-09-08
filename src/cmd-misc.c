@@ -31,6 +31,7 @@
 #include "obj-util.h"
 #include "target.h"
 #include "ui-input.h"
+#include "ui-game.h"
 #include "ui-output.h"
 #include "ui-term.h"
 
@@ -69,6 +70,14 @@ void do_cmd_wizard(void)
 
 	/* Redraw "title" */
 	player->upkeep->redraw |= (PR_TITLE);
+}
+
+/**
+ * Save the game
+ */
+void do_cmd_save_game(void)
+{
+	save_game(false);
 }
 
 /**

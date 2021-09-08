@@ -635,6 +635,7 @@ struct player {
 	s16b energy;				/* Current energy */
 	u32b total_energy;			/* Total energy used (including resting) */
 	u32b resting_turn;			/* Number of player turns spent resting */
+	s32b autosave_turn;			/* Turn to autosave on */
 
 	s16b food;					/* Current nutrition */
 

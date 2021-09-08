@@ -171,7 +171,7 @@ struct cmd_info cmd_util[] =
 	{ "Interact with options", { '=' }, CMD_NULL, do_cmd_xxx_options, NULL },
 
 	{ "Change class", { 'G' }, CMD_NULL, do_cmd_change_class, NULL },
-	{ "Save and don't quit", { KTRL('S') }, CMD_NULL, save_game, NULL },
+	{ "Save and don't quit", { KTRL('S') }, CMD_NULL, do_cmd_save_game, NULL },
 	{ "Save and quit", { KTRL('X') }, CMD_NULL, textui_quit, NULL },
 	{ "Kill character and quit", { 'Q' }, CMD_NULL, textui_cmd_suicide, NULL },
 	{ "Redraw the screen", { KTRL('R') }, CMD_NULL, do_cmd_redraw, NULL },
@@ -732,14 +732,17 @@ void savefile_set_name(const char *fname, bool make_safe, bool strip_suffix)
 }
 
 /**
- * Save the game
+ * Save the game.
+ * If the quiet flag is set then there will be no messages if the save is successful,
+ * and the player will not be disturbed.
  */
-void save_game(void)
+void save_game(bool quiet)
 {
 	char path[1024];
 
 	/* Disturb the player */
-	disturb(player);
+	if (!quiet)
+		disturb(player);
 
 	/* Clear messages */
 	event_signal(EVENT_MESSAGE_FLUSH);
@@ -748,7 +751,8 @@ void save_game(void)
 	handle_stuff(player);
 
 	/* Message */
-	prt("Saving game...", 0, 0);
+	if (!quiet)
+		prt("Saving game...", 0, 0);
 
 	/* Refresh */
 	Term_fresh();
@@ -760,9 +764,10 @@ void save_game(void)
 	signals_ignore_tstp();
 
 	/* Save the player */
-	if (savefile_save(savefile))
-		prt("Saving game... done.", 0, 0);
-	else
+	if (savefile_save(savefile)) {
+		if (!quiet)
+			prt("Saving game... done.", 0, 0);
+	} else
 		prt("Saving game... failed!", 0, 0);
 
 	/* Refresh */
@@ -848,7 +853,7 @@ void close_game(void)
 		}
 	} else {
 		/* Save the game */
-		save_game();
+		save_game(false);
 
 		if (Term && Term->mapped_flag) {
 			struct keypress ch;

@@ -810,7 +810,6 @@ static double make_artifact_probs(double *prob, int lev, int tval, bool max)
 
 	for (i = 0; i < z_info->a_max; ++i) {
 		const struct artifact *art = &a_info[i];
-		struct object *new_obj;
 		struct object_kind *kind = lookup_kind(art->tval, art->sval);
 
 		/* No chance by default */

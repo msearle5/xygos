@@ -344,6 +344,7 @@ void wr_options(void)
 	wr_byte(player->opts.delay_factor);
 	wr_byte(player->opts.hitpoint_warn);
 	wr_byte(player->opts.lazymove_delay);
+	wr_u32b(player->opts.autosave_delay);
 	/* Fix for tests - only write if angband_term exists, ie in a real game */
 	wr_byte(angband_term[0] ? SIDEBAR_MODE : 0);
 
@@ -482,6 +483,8 @@ void rdwr_player(void)
 	rdwr_u32b(&player->total_energy);
 	/* # of turns spent resting */
 	rdwr_u32b(&player->resting_turn);
+	/* Next time to autosave */
+	rdwr_s32b(&player->autosave_turn);
 
 	/* Quest currently active */
 	rdwr_s32b(&player->active_quest);
