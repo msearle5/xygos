@@ -2,8 +2,11 @@ This is a summary of major changes made to Xygos by release.
 For changes pulled in from Vanilla, see changes.txt.
 For more detail, see the git history.
 
-Xygos 0.1.0
-===========
+Xygos 0.1.0 "Zoo Keeper"
+=======================
+
+Autosave. A new option to set the number of turns between autosaves (autosaves when changing
+level still work as before). Recommended as bugs still lurk.
 
 The win quests. Level 25, 50, 75, 100 in the Fortress and level 120 in the Space Station have
 a quest boss needed to advance. To win you need to kill the final one. Earlier ones have an
@@ -17,7 +20,8 @@ The pill bug (eats pills, leaves a pill if killed), "horrors" (which split into 
 coloured horrors), xenomorph/facehugger spawning each other. Mines (which talk). Bats, frogs 
 (which hop), the money spider, town monsters, munchkins, Mr Blobby, Barney the Dinosaur, 
 Hypnotoad, fish, wolves, cats, blobs, snakes, plants, stormtroopers, killer tomatoes,
-cyberdemons (which fire rockets), lights (including one which causes hallucination), a shapechanger (random appearance, as if hallucinatory)...
+cyberdemons (which fire rockets), lights (including one which causes hallucination), a
+shapechanger (with a random appearance, as if hallucinatory)...
 DROP_RANDOM: some monsters (such as the super-bat) will pick up and later drop things.
 ORTHOGONAL: some monsters can't move diagonally.
 
@@ -50,11 +54,14 @@ you can change at will.)
 
 Clown: retain cards after use, sometimes. 
 
-Engineer: Add several item related techniques. They now gain exp from learning icons, and are zero-fail technique users.
+Engineer: Add several item related techniques. They now gain exp from learning icons, and are
+zero-fail technique users.
 
-Pilot: Add the Caveliner (a third alternative to the Cavefighter and Caveracer advance, capable of immediate flights through the Airport.)
+Pilot: Add the Caveliner (a third alternative to the Cavefighter and Caveracer advance, capable
+of immediate flights through the Airport.)
 
-Super: An extension for superheroes with costumes and powers gained as they level. They also have a weakness (a high vulnerability).
+Super: An extension for superheroes with costumes and powers gained as they level. They also
+have a weakness (a high vulnerability).
 
 Timelord: They can't use exterminate effects (usually, without losing a regeneration)
 
@@ -88,8 +95,8 @@ Some improvements to the documentation.
 Update from vanilla 4.2.3.
 Many other bug fixes and minor improvements.
 
-Xygos 0.0.3
-===========
+Xygos 0.0.3 "Hunt the Wumpus"
+=============================
 
 Multiclassing: You can select with G which class to gain at the next level up. Your abilities
 will be a mix of the classes - averaging stats and skills (etc.), and with class specific
@@ -127,8 +134,8 @@ Add lightsabers and similar things
 Removes / replaces old headgear
 Quests: "Hunter, in Darkness" to kill the wumpus
 
-Xygos 0.0.2
-===========
+Xygos 0.0.2 "Chuckie Egg"
+=========================
 
 Much bug fixing.
 Add "general player flags" (can be present on equipment, or as a temporary effect).
