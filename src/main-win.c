@@ -3286,7 +3286,7 @@ static void process_menus(WORD wCmd)
 				msg_flag = false;
 
 				/* Save the game */
-				save_game();
+				save_game(false);
 			} else {
 				/* Paranoia */
 				plog("You may not do that right now.");
@@ -3308,7 +3308,7 @@ static void process_menus(WORD wCmd)
 				msg_flag = false;
 
 				/* Save the game */
-				save_game();
+				save_game(false);
 				close_game();
 			}
 			quit(NULL);
@@ -4322,7 +4322,7 @@ static LRESULT FAR PASCAL AngbandWndProc(HWND hWnd, UINT uMsg,
 				}
 
 				msg_flag = false;
-				save_game();
+				save_game(false);
 				close_game();
 			}
 
@@ -4341,7 +4341,7 @@ static LRESULT FAR PASCAL AngbandWndProc(HWND hWnd, UINT uMsg,
 
 				/* Hack -- Forget messages */
 				msg_flag = false;
-				save_game();
+				save_game(false);
 				close_game();
 			}
 

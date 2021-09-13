@@ -373,7 +373,7 @@ struct object *wish(const char *in, int level)
 		bool match = false;
 		WISH_DPF("ph3: existing kind %s\n", kind->name);
 		for (struct poss_item *poss = e->poss_items; poss; poss = poss->next) {
-			if (poss->kidx == kind-k_info) {
+			if (poss->kidx == (unsigned)(kind-k_info)) {
 				WISH_DPF("ph3: existing kind is a match\n");
 				match = true;
 				break;
@@ -393,7 +393,7 @@ struct object *wish(const char *in, int level)
 					strip_punct(dupname);
 					if (streq(dupname, ename)) {
 						for (struct poss_item *poss = dup->poss_items; poss; poss = poss->next) {
-							if (poss->kidx == kind-k_info) {
+							if (poss->kidx == (unsigned)(kind-k_info)) {
 								WISH_DPF("ph3: duplicate ego name is a match\n");
 								match = true;
 								e = ego[0] = dup;

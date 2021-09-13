@@ -3599,7 +3599,7 @@ static void handle_quit(void)
 	if (character_generated && inkey_flag) {
 		/* no idea what that does :) */
 		msg_flag = false;
-		save_game();
+		save_game(false);
 	}
 
 	quit(NULL);

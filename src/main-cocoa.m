@@ -5925,7 +5925,7 @@ static void cocoa_reinit(void)
     msg_flag = false;
     
     /* Save the game */
-    save_game();
+    save_game(false);
     
     /*
      * Record the current save file so we can select it by default next time.
