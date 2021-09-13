@@ -1238,6 +1238,8 @@ struct chunk *cave_generate(struct player *p, int height, int width)
 	return chunk;
 }
 
+
+
 static void sanitize_player_loc(struct chunk *c, struct player *p)
 {
 	/* TODO potential problem: stairs in vaults? */
