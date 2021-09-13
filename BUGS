@@ -2,14 +2,9 @@ BUGS
 ====
 BUG: "Couldn't find artifact" warning because new char based on previous still had a player-made artifact
 
-BUG: "You fail to the tengu" (+ red worm mass - when you attack it with a pocket knife)
-	- Also seen in the town lake, with an electric eel, and on Fortress 20 with a boa.
-
 BUG: activate coronet: "You activate it. the Coronet of the Core pulses a soft white" (the should be The)
 
 BUG: Badly named: "an universal detector" - there is no way to infer a/an reliably from spelling alone, so would have to add a flag (such as a leading character).
-
-BUG: "level X of the fortress" in hiscores: not the actual dungeon (which was the Caverns)
 
 BUG: Shop owners (store_do_fight()) are always male
 
@@ -24,6 +19,9 @@ BUG: After the success/failure message from a quest, ESC is the only way to get 
 BUG: "failed!\n" twice from r_super.c (UTR going lev 1-26, Human Super Engineer) but seen in other circumstances
 
 BUG: Once recalled back into a 1x1 hole in the rock in the top left (X4 Y4)
+	!!! - this is presumably because sanitize_player_loc doesn't check that the point is connected to the >
+		- could do this, but is there always a <?
+		- Any in the right direction?
 
 Defer
 =====
@@ -91,6 +89,12 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+
+BUG: "level X of the fortress" in hiscores: not the actual dungeon (which was the Caverns)
+
+BUG: "You fail to the tengu" (+ red worm mass - when you attack it with a pocket knife)
+	- Also seen in the town lake, with an electric eel, and on Fortress 20 with a boa.
+	24c6c11b6
 
 BUG: Bombs (e.g. pineapple) give excess messages - "The X fails to harm the Y." "The X detonates!" "The Y screams!".
 	The first should be removed. 
