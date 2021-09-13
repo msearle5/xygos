@@ -759,7 +759,7 @@ static const struct hit_types melee_hit_types[] = {
 	{ MSG_HIT_HI_SUPERB, "It was a *SUPERB* hit!" },
 };
 
-static bool py_attack_hit(struct player *p, struct loc grid, struct monster *mon, int dmg, char *verb, const char *after, u32b msg_type, int splash, bool do_quake, bool *fear)
+static bool py_attack_hit(struct player *p, struct loc grid, struct monster *mon, int dmg, char *verb, int verbsize, const char *after, u32b msg_type, int splash, bool do_quake, bool *fear)
 {
 	int drain = 0;
 	bool stop = false;
@@ -783,14 +783,14 @@ static bool py_attack_hit(struct player *p, struct loc grid, struct monster *mon
 		while (choice--) {
 			blow = blow->next;
 		}
-		my_strcpy(verb, blow->name, sizeof(verb));
+		my_strcpy(verb, blow->name, verbsize);
 	}
 
 	/* No negative damage; change verb if no damage done */
 	if (dmg <= 0) {
 		dmg = 0;
 		msg_type = MSG_MISS;
-		my_strcpy(verb, "fail to harm", sizeof(verb));
+		my_strcpy(verb, "fail to harm", verbsize);
 	}
 
 	for (int i = 0; i < (int)N_ELEMENTS(melee_hit_types); i++) {
@@ -940,7 +940,7 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear, bool *hit)
 	bool do_quake = false;
 	bool success = false;
 
-	char verb[20];
+	char verb[32];
 	char after[64];
 	strcpy(after, ".");
 	u32b msg_type = MSG_HIT;
@@ -1199,7 +1199,7 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear, bool *hit)
 	/* Learn by use */
 	equip_learn_on_melee_attack(p);
 
-	return py_attack_hit(p, grid, mon, dmg, verb, after, msg_type, splash, do_quake, fear);
+	return py_attack_hit(p, grid, mon, dmg, verb, sizeof(verb), after, msg_type, splash, do_quake, fear);
 }
 
 /* Skill for the current weapon */
@@ -1372,7 +1372,10 @@ static bool py_attack_extra(struct player *p, struct loc grid, struct monster *m
 	const char *after = ".";
 	if (dmg >= (randcalc(att->damage, 0, MAXIMISE) * 7) / 8)
 		after = "!";
-	return py_attack_hit(p, grid, mon, dmg, att->msg, after, MSG_HIT, 0, false, NULL);
+	char msg[32];
+	strncpy(msg, att->msg, sizeof(msg));
+	msg[sizeof(msg)-1] = 0;
+	return py_attack_hit(p, grid, mon, dmg, att->msg, sizeof(msg), after, MSG_HIT, 0, false, NULL);
 }
 
 /**
@@ -1567,7 +1570,7 @@ static void ranged_helper(struct command *cmd, struct player *p,	struct object *
 			breaks = result.breaks;
 			int dmg = result.dmg;
 			u32b msg_type = result.msg_type;
-			char hit_verb[20];
+			char hit_verb[32];
 			my_strcpy(hit_verb, result.hit_verb, sizeof(hit_verb));
 			mem_free(result.hit_verb);
 
