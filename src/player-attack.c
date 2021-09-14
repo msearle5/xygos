@@ -69,7 +69,6 @@
  */
 int breakage_chance(const struct object *obj, bool hit_target) {
 	int perc = obj->kind->base->break_perc;
-
 	if (obj->artifact) return 0;
 	if (of_has(obj->flags, OF_THROWING) &&
 		!of_has(obj->flags, OF_EXPLODE) &&
@@ -1471,7 +1470,7 @@ static const struct hit_types ranged_hit_types[] = {
  */
 static void ranged_helper(struct command *cmd, struct player *p,	struct object *obj, int dir,
 						  int range, int shots, ranged_attack attack,
-						  const struct hit_types *hit_types, int num_types, const char *fire)
+						  const struct hit_types *hit_types, int num_types, const char *fire, bool destroy)
 {
 	int i, j;
 
@@ -1691,7 +1690,7 @@ static void ranged_helper(struct command *cmd, struct player *p,	struct object *
 
 	/* Drop (or break) near that location */
 	int breakage = breakage_chance(missile, hit_target);
-	if (breaks) breakage = 100;
+	if (breaks || destroy) breakage = 100;
 	drop_near(cave, &missile, breakage, grid, true, false);
 }
 
@@ -1863,7 +1862,7 @@ void do_cmd_fire(struct command *cmd) {
 	}
 
 	ranged_helper(cmd, player, obj, dir, range, shots, attack, ranged_hit_types,
-				  (int) N_ELEMENTS(ranged_hit_types), "Fire");
+				  (int) N_ELEMENTS(ranged_hit_types), "Fire", true);
 }
 
 
@@ -1914,7 +1913,7 @@ void do_cmd_throw(struct command *cmd) {
 	range = MIN(((str + 20) * 450) / weight, 10);
 
 	ranged_helper(cmd, player, obj, dir, range, shots, attack, ranged_hit_types,
-				  (int) N_ELEMENTS(ranged_hit_types), "Throw it");
+				  (int) N_ELEMENTS(ranged_hit_types), "Throw it", false);
 }
 
 /**
