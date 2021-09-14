@@ -2829,6 +2829,7 @@ cost:10
 alloc:0:1 to 100
 power:0
 desc:It's encrypted, and you have no way to know what's on it.
+msg:It's encrypted. No good to you, but someone else might want it.
 
 
 ### Teleportation ###

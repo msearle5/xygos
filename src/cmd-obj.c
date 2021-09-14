@@ -426,9 +426,6 @@ static void use_aux(struct command *cmd, struct object *obj, enum use use,
 	/* track the object used */
 	track_object(player->upkeep, obj);
 
-	/* Verify effect */
-	assert(effect);
-
 	/* Check for use if necessary */
 	if ((use == USE_CHARGE) || (use == USE_TIMEOUT)) {
 		can_use = check_devices(obj);
@@ -505,16 +502,20 @@ static void use_aux(struct command *cmd, struct object *obj, enum use use,
 		/* Do effect; use original not copy (proj. effect handling) */
 		target_fix();
 
-		used = effect_do(effect,
-							source_player(), //object(obj),
-							obj,
-							&ident,
-							was_aware,
-							dir,
-							beam,
-							boost,
-							cmd,
-							alternate);
+		if (effect) {
+			used = effect_do(effect,
+								source_player(), //object(obj),
+								obj,
+								&ident,
+								was_aware,
+								dir,
+								beam,
+								boost,
+								cmd,
+								alternate);
+		} else {
+			used = false;
+		}
 		target_release();
 
 		if (!used) {

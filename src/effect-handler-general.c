@@ -4744,7 +4744,7 @@ bool effect_handler_HORNS(effect_handler_context_t *context)
 
 bool effect_handler_MESSAGE(effect_handler_context_t *context)
 {
-	msg(context->msg);
+	msg("%s",context->msg);
 	return (true);
 }
 

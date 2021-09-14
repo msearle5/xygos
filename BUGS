@@ -42,10 +42,14 @@ BUG: clouded:  Matrix bugs are imbalanced, too easy to get tons of good potions
 
 BUG: clouded:  Towns having different houses is a bit of an inconvenience when it costs money to travel between towns. Perhaps it's better to just have a single house?
 
-BUG: clouded:  Had a crash reading an unidentified scroll on DL24 of the fortress, I'm guessing this was deep descent trying to take me below the quest level on DL25 but I haven't IDed it yet. 
-
 Defer
 =====
+
+BUG: clouded:  Had a crash reading an unidentified scroll on DL24 of the fortress, I'm guessing this was deep descent trying to take me below the quest level on DL25 but I haven't IDed it yet.
+	- descent may be buggy (26->37), but this may be interaction with debug goto level.
+	- security card gets "xygos: cmd-obj.c:430: use_aux: Assertion `effect' failed"
+		- though this should never be found randomly
+			- fixed.
 
 BUG: A Collective Skate that a cyborg started with was {??}
 	UTR
