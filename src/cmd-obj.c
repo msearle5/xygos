@@ -690,7 +690,7 @@ void do_cmd_run_card(struct command *cmd)
 	 * OK = don't eat the card and signal this.
 	 */
 	if (retain) {
-		msg("...but here is is!");
+		msg("...but here it is!");
 	}
 }
 

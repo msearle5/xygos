@@ -1332,17 +1332,17 @@ bool player_confuse_dir(struct player *p, int *dp, bool too)
 			dir = ddd[randint0(8)];
 		}
 
-	/* Running attempts always fail */
-	if (too) {
-		msg("You are too confused.");
-		return true;
-	}
+		/* Running attempts always fail */
+		if (too) {
+			msg("You are too confused.");
+			return true;
+		}
 
-	if (*dp != dir) {
-		msg("You are confused.");
-		*dp = dir;
-		return true;
-	}
+		if (*dp != dir) {
+			msg("You are confused.");
+			*dp = dir;
+			return true;
+		}
 	}
 
 	return false;

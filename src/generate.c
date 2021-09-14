@@ -1238,8 +1238,159 @@ struct chunk *cave_generate(struct player *p, int height, int width)
 	return chunk;
 }
 
+static void unmark_level(struct chunk *c)
+{
+	/* Clear the work flag */
+	struct loc xy;
+	for(int y=0;y<c->height;y++) {
+		xy.y = y;
+		for(int x=0;x<c->width;x++) {
+			xy.x = x;
+			square_unmark(c, xy);
+		}
+	}
+}
 
+/* Flood fill, 8-connected, using 'through' as a predicate whjich returns true if a grid is acceptable */
+static void fill_location(struct chunk *c, struct loc grid, square_predicate through)
+{
+	struct loc xy;
+	square_mark(c, grid);
+	for(int y=MAX(0, grid.y-1);y<=MIN(c->height-1,grid.y+1);y++) {
+		xy.y = y;
+		for(int x=MAX(0, grid.x-1);x<=MIN(c->width-1, grid.x+1);x++) {
+			xy.x = x;
+			if (square_in_bounds(c, xy) && !square_ismark(c, xy) && through(c, xy)) {
+				fill_location(c, xy, through);
+			}
+		}
+	}
+}
 
+/* Find a location with an unbroken line of moves between it and
+ * the start point (passed in grid, which is also the return).
+ * The location must satisfy the predicate 'ok', while intermediate
+ * locations need only satisfy the predicate 'through' (which must
+ * be true for any grid which is 'ok').
+ * (The use of two predicates allows doors, etc. to be considered
+ * passable but not valid endpoints.)  
+ **/ 
+static bool find_location(struct chunk *c, struct loc *grid, struct loc *stair, int stairs, square_predicate ok, square_predicate through)
+{
+	/* Clear the work flag */
+	unmark_level(c);
+
+	/* Recursively mark out from all stairs */
+	for(int i=0; i<stairs; i++)
+		fill_location(c, stair[i], through);
+
+	/* Scan the level for 'ok' grids */
+	int grids = 0;
+	struct loc xy;
+	for(int y=0;y<c->height;y++) {
+		xy.y = y;
+		for(int x=0;x<c->width;x++) {
+			xy.x = x;
+			if (square_ismark(c, xy) && ok(c, xy))
+				grids++;
+		}
+	}
+
+	/* If there were no grids matching, give up */
+	if (!grids)
+		return false;
+
+	/* Otherwise, select one at random */
+	int index = randint0(grids);
+	for(int y=0;y<c->height;y++) {
+		xy.y = y;
+		for(int x=0;x<c->width;x++) {
+			xy.x = x;
+			if (square_ismark(c, xy) && ok(c, xy)) {
+				if (grids == index) {
+					*grid = xy;
+					return true;
+				}
+				index++;
+			}
+		}
+	}
+	assert("Can't happen");
+	return false;
+}
+
+static bool arrivable_nonvault(struct chunk *c, struct loc grid)
+{
+	return square_in_bounds_fully(c, grid)
+		&& square_isarrivable(c, grid)
+		&& !square_isvault(c, grid);
+}
+
+static bool empty_nonvault(struct chunk *c, struct loc grid)
+{
+	return square_in_bounds_fully(c, grid)
+		&& !square_iswall(c, grid)
+		&& !square_isvault(c, grid);
+}
+
+static void sanitize_player_loc(struct chunk *c, struct player *p)
+{
+	struct loc grid = {0, 0};
+	struct loc *stair = NULL;
+	int stairs = 0;
+	bool up = true; //FIXME
+
+	fprintf(stderr,"sanitize_player_loc(): from %d,%d\n", p->grid.x, p->grid.y);
+
+	/* Scan the level.
+	 * All locations with a stair in the appropriate direction
+	 * are kept.
+	 */
+	struct loc xy;
+	for(int y=0;y<c->height;y++) {
+		xy.y = y;
+		for(int x=0;x<c->width;x++) {
+			xy.x = x;
+			bool ok;
+			if (up)
+				ok = square_isupstairs(c, xy);
+			else
+				ok = square_isdownstairs(c, xy);
+			if (ok) {
+				stair = mem_realloc(stair, sizeof(stair[0]) * (stairs + 1));
+				stair[stairs++] = xy;
+			}
+		}
+	}
+
+	/* If there is no stair, use the other stair */
+	if (!stairs) {
+		for(int y=0;y<c->height;y++) {
+			xy.y = y;
+			for(int x=0;x<c->width;x++) {
+				xy.x = x;
+				if (square_isstairs(c, xy)) {
+					stair = mem_realloc(stair, sizeof(stair[0]) * (stairs + 1));
+					stair[stairs++] = xy;
+				}
+			}
+		}
+	}
+
+	/* If there is no stair, return 0,0 */
+	if (stairs) {
+		/* Use the first stair location if nothing is available */
+		grid = stair[0];
+		find_location(c, &grid, stair, stairs, arrivable_nonvault, empty_nonvault);
+	}
+
+	/* Clear the work flag */
+	unmark_level(c);
+	p->grid = grid;
+	fprintf(stderr,"sanitize_player_loc(): to %d,%d\n", p->grid.x, p->grid.y);
+}
+
+#ifdef undef
 static void sanitize_player_loc(struct chunk *c, struct player *p)
 {
 	/* TODO potential problem: stairs in vaults? */
@@ -1315,6 +1466,7 @@ static void sanitize_player_loc(struct chunk *c, struct player *p)
 	p->grid.x = vx;
 	p->grid.y = vy;
 }
+#endif
 
 /**
  * Prepare the level the player is about to enter, either by generating
@@ -1335,7 +1487,7 @@ void prepare_next_level(struct player *p)
 			/* Arenas don't get stored */
 			if (!cave->name || !streq(cave->name, "arena")) {
 				/* Tidy up */
-				compact_monsters(cave, 0);
+				compact_monsters(cave, 0); 
 				if (!p->upkeep->arena_level) {
 					/* Leave the player marker if going to an arena */
 					square_set_mon(cave, p->grid, 0);
@@ -1524,6 +1676,7 @@ void prepare_next_level(struct player *p)
 		if (persist) {
 			cave_illuminate(cave, is_daytime());
 		}
+		sanitize_player_loc(cave, p);
 	}
 
 	/* The dungeon is ready */
