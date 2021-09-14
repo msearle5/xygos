@@ -494,11 +494,6 @@ xcopy $(MSBuildProjectDirectory)\lib\* $(OutDir)lib\ /DESY /exclude:$(MSBuildPro
     <Image Include="lib\icons\att-256.png" />
     <Image Include="lib\icons\att-32.png" />
     <Image Include="lib\icons\att-512.png" />
-    <Image Include="lib\tiles\adam-bolt\16x16.png" />
-    <Image Include="lib\tiles\gervais\32x32.png" />
-    <Image Include="lib\tiles\nomad\8x16.png" />
-    <Image Include="lib\tiles\old\8x8.png" />
-    <Image Include="lib\tiles\shockbolt\64x64.png" />
     <Image Include="src\win\xygos.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -539,23 +534,6 @@ xcopy $(MSBuildProjectDirectory)\lib\* $(OutDir)lib\ /DESY /exclude:$(MSBuildPro
     <None Include="lib\fonts\9x15x.fon" />
     <None Include="lib\fonts\9x15xb.fon" />
     <None Include="lib\sounds\sound.cfg" />
-    <None Include="lib\tiles\adam-bolt\flvr-new.prf" />
-    <None Include="lib\tiles\adam-bolt\graf-new.prf" />
-    <None Include="lib\tiles\adam-bolt\xtra-new.prf" />
-    <None Include="lib\tiles\gervais\flvr-dvg.prf" />
-    <None Include="lib\tiles\gervais\graf-dvg.prf" />
-    <None Include="lib\tiles\gervais\xtra-dvg.prf" />
-    <None Include="lib\tiles\nomad\flvr-nmd.prf" />
-    <None Include="lib\tiles\nomad\graf-nmd.prf" />
-    <None Include="lib\tiles\nomad\xtra-nmd.prf" />
-    <None Include="lib\tiles\old\flvr-xxx.prf" />
-    <None Include="lib\tiles\old\graf-xxx.prf" />
-    <None Include="lib\tiles\old\xtra-xxx.prf" />
-    <None Include="lib\tiles\shockbolt\flvr-shb.prf" />
-    <None Include="lib\tiles\shockbolt\graf-shb.prf" />
-    <None Include="lib\tiles\shockbolt\graf-shb-dark.prf" />
-    <None Include="lib\tiles\shockbolt\graf-shb-light.prf" />
-    <None Include="lib\tiles\shockbolt\xtra-shb.prf" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="lib\gamedata\activation.txt" />

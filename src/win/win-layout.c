@@ -28,6 +28,9 @@ typedef unsigned int uint;
 #include "win-term.h"
 
 
+#define NO_TILES
+
+
 /**
  * Default window layout function
  *
@@ -160,6 +163,12 @@ int default_layout_win(term_data *data, int maxterms)
 		data[5].maximized = 0;
 
 		/* The rest of the terms were set by the load pref function */
+#ifdef NO_TILES
+		arg_graphics = 0;
+		tile_width = 1;
+		tile_height = 1;
+#endif /* NO_TILES */
+
 		return 0;
 	}
 	if ((sx == 1280) && (sy == 1024)) {
@@ -251,6 +260,12 @@ int default_layout_win(term_data *data, int maxterms)
 		data[5].visible = 1;
 		data[5].maximized = 0;
 
+#ifdef NO_TILES
+		arg_graphics = 0;
+		tile_width = 1;
+		tile_height = 1;
+#endif /* NO_TILES */
+
 		/* The rest of the terms were set by the load pref function */
 		return 0;
 	}
@@ -335,6 +350,12 @@ int default_layout_win(term_data *data, int maxterms)
 		mult_hgt = 2;
 	}
 
+#ifdef NO_TILES
+	mode = 0;
+	mult_wid = 1;
+	mult_hgt = 1;
+#endif /* NO_TILES */
+ 
 	/* Setup main window */
 	arg_graphics = mode;
 	arg_graphics_nice = 0;

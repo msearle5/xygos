@@ -1,7 +1,7 @@
 /* File: xygos.rc */
 #include "win-menu.h"
 
-ANGBAND MENU
+XYGOS MENU
 {
 	POPUP "&File"
 	{
@@ -158,5 +158,5 @@ ANGBAND MENU
 	}
 }
 
-ANGBAND ICON "xygos.ico"
+XYGOS ICON "xygos.ico"
 

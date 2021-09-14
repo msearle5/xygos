@@ -31,21 +31,6 @@
     <Filter Include="Resource Files\tiles">
       <UniqueIdentifier>{bbd5388e-d8be-4c76-be21-2ed6a39a4aa7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\tiles\adam-bolt">
-      <UniqueIdentifier>{02d56a58-137c-46a6-9db2-766f73d55a12}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\tiles\gervais">
-      <UniqueIdentifier>{ffcb2da1-8a10-4aeb-bc47-d4bbdf86c25b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\tiles\shockbolt">
-      <UniqueIdentifier>{17f9ff36-5291-48d6-ab97-aa69c0796699}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\tiles\old">
-      <UniqueIdentifier>{73a57601-68d2-48dc-9767-99ebcc71296b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\tiles\nomad">
-      <UniqueIdentifier>{d9cb6d85-e632-4317-8428-5f916f278f2d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\sounds">
       <UniqueIdentifier>{4b4d88d3-5088-4dc2-81c4-151dbacc7987}</UniqueIdentifier>
     </Filter>
@@ -1039,21 +1024,6 @@
     <Image Include="lib\icons\att-512.png">
       <Filter>Resource Files\icons</Filter>
     </Image>
-    <Image Include="lib\tiles\adam-bolt\16x16.png">
-      <Filter>Resource Files\tiles\adam-bolt</Filter>
-    </Image>
-    <Image Include="lib\tiles\gervais\32x32.png">
-      <Filter>Resource Files\tiles\gervais</Filter>
-    </Image>
-    <Image Include="lib\tiles\nomad\8x16.png">
-      <Filter>Resource Files\tiles\nomad</Filter>
-    </Image>
-    <Image Include="lib\tiles\old\8x8.png">
-      <Filter>Resource Files\tiles\old</Filter>
-    </Image>
-    <Image Include="lib\tiles\shockbolt\64x64.png">
-      <Filter>Resource Files\tiles\shockbolt</Filter>
-    </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\win\xygos.rc">
@@ -1162,57 +1132,6 @@
     </None>
     <None Include="lib\sounds\sound.cfg">
       <Filter>Resource Files\sounds</Filter>
-    </None>
-    <None Include="lib\tiles\adam-bolt\flvr-new.prf">
-      <Filter>Resource Files\tiles\adam-bolt</Filter>
-    </None>
-    <None Include="lib\tiles\adam-bolt\graf-new.prf">
-      <Filter>Resource Files\tiles\adam-bolt</Filter>
-    </None>
-    <None Include="lib\tiles\adam-bolt\xtra-new.prf">
-      <Filter>Resource Files\tiles\adam-bolt</Filter>
-    </None>
-    <None Include="lib\tiles\gervais\flvr-dvg.prf">
-      <Filter>Resource Files\tiles\gervais</Filter>
-    </None>
-    <None Include="lib\tiles\gervais\graf-dvg.prf">
-      <Filter>Resource Files\tiles\gervais</Filter>
-    </None>
-    <None Include="lib\tiles\gervais\xtra-dvg.prf">
-      <Filter>Resource Files\tiles\gervais</Filter>
-    </None>
-    <None Include="lib\tiles\nomad\flvr-nmd.prf">
-      <Filter>Resource Files\tiles\nomad</Filter>
-    </None>
-    <None Include="lib\tiles\nomad\graf-nmd.prf">
-      <Filter>Resource Files\tiles\nomad</Filter>
-    </None>
-    <None Include="lib\tiles\nomad\xtra-nmd.prf">
-      <Filter>Resource Files\tiles\nomad</Filter>
-    </None>
-    <None Include="lib\tiles\old\flvr-xxx.prf">
-      <Filter>Resource Files\tiles\old</Filter>
-    </None>
-    <None Include="lib\tiles\old\graf-xxx.prf">
-      <Filter>Resource Files\tiles\old</Filter>
-    </None>
-    <None Include="lib\tiles\old\xtra-xxx.prf">
-      <Filter>Resource Files\tiles\old</Filter>
-    </None>
-    <None Include="lib\tiles\shockbolt\flvr-shb.prf">
-      <Filter>Resource Files\tiles\shockbolt</Filter>
-    </None>
-    <None Include="lib\tiles\shockbolt\graf-shb.prf">
-      <Filter>Resource Files\tiles\shockbolt</Filter>
-    </None>
-    <None Include="lib\tiles\shockbolt\graf-shb-dark.prf">
-      <Filter>Resource Files\tiles\shockbolt</Filter>
-    </None>
-    <None Include="lib\tiles\shockbolt\graf-shb-light.prf">
-      <Filter>Resource Files\tiles\shockbolt</Filter>
-    </None>
-    <None Include="lib\tiles\shockbolt\xtra-shb.prf">
-      <Filter>Resource Files\tiles\shockbolt</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
