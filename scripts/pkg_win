@@ -44,11 +44,6 @@ mkdir lib/help
 mkdir lib/screens
 mkdir lib/fonts
 mkdir lib/tiles
-mkdir lib/tiles/adam-bolt
-mkdir lib/tiles/gervais
-mkdir lib/tiles/nomad
-mkdir lib/tiles/old
-mkdir lib/tiles/shockbolt
 mkdir lib/sounds
 mkdir lib/icons
 mkdir lib/user
@@ -111,11 +106,6 @@ cp ../lib/icons/*.png lib/icons
 for f in `find ../lib/tiles \( -name '*.txt' -o -name '*.prf' \) -print` ; do
 	cp_unix2dos "$f" `echo "$f" | sed -E -e 's%^\.\./%%'`
 done
-cp ../lib/tiles/adam-bolt/*.png lib/tiles/adam-bolt
-cp ../lib/tiles/gervais/*.png lib/tiles/gervais
-cp ../lib/tiles/nomad/*.png lib/tiles/nomad
-cp ../lib/tiles/old/*.png lib/tiles/old
-cp ../lib/tiles/shockbolt/*.png lib/tiles/shockbolt
 
 cp_unix2dos ../lib/sounds/sound.cfg lib/sounds/sound.cfg
 cp ../lib/sounds/*.mp3 lib/sounds
