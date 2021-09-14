@@ -3142,7 +3142,7 @@ name:matrix bug
 base:insect
 color:Red
 depth:21
-rarity:4
+rarity:6
 grow:iridescent beetle
 speed:110
 hit-points:35
@@ -3152,8 +3152,8 @@ sleepiness:1
 blow:STING:ELEC:1d15
 flags:MULTIPLY | ATTR_FLICKER
 flags:ORTHOGONAL | EVASIVE | EMPTY_MIND
-drop-base:pill:100:1:1
-drop-base:pill:100:1:1
+drop-base:pill:50:1:1
+drop-base:pill:15:1:1
 spell-freq:3
 spell-power:25
 spells:BO_NEXU | BLINK
