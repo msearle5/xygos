@@ -30,15 +30,11 @@ BUG: user.prf needs to be updated with races, classes, persos, extens.
 
 BUG: clouded (Windows):  Random crash when trying to start a character with the unknown talents perk: crash happened after pressing space to select it, doesn't always happen.
 
-BUG: clouded:  When a hologram monster gazes at me there is a message "ERROR: Effect handler not found for SOUND."
-
 BUG: clouded:  Using roguelike keys, when in look mode "k" direction doesn't work
 
 BUG: clouded:  It's easily missable that you can press Q in stores to look for a quest
 
 BUG: clouded:  Failing to use a gadget says "you failed to zap it"
-
-BUG: clouded:  Matrix bugs are imbalanced, too easy to get tons of good potions
 
 BUG: clouded:  Towns having different houses is a bit of an inconvenience when it costs money to travel between towns. Perhaps it's better to just have a single house?
 
@@ -114,6 +110,12 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+
+BUG: clouded:  When a hologram monster gazes at me there is a message "ERROR: Effect handler not found for SOUND."
+	Fixed
+
+BUG: clouded:  Matrix bugs are imbalanced, too easy to get tons of good potions
+	146bc0498
 
 BUG: clouded:  Firing a gun not at a monster results in the bullet falling to the floor and being able to be picked up again - sometimes this results in a crash
 	** - Seen, sometimes with "breaks" and no crash in the town on Linux/X

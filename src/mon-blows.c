@@ -1015,6 +1015,15 @@ static void melee_effect_handler_LIGHT(melee_effect_handler_context_t *context)
 }
 
 /**
+ * Melee effect handler: Attack the player with sound (stunning as a side effect).
+ */
+static void melee_effect_handler_SOUND(melee_effect_handler_context_t *context)
+{
+	melee_effect_elemental(context, PROJ_SOUND, true);
+	melee_effect_timed(context, TMD_STUN, 2 + randint1(MAX(40, context->damage)), OF_PROT_STUN, false, NULL, false);
+}
+
+/**
  * Melee effect handler: Attack the player with force (knock back).
  */
 static void melee_effect_handler_FORCE(melee_effect_handler_context_t *context)
@@ -1294,6 +1303,7 @@ melee_effect_handler_f melee_handler_for_blow_effect(const char *name)
 		{ "FIRE", melee_effect_handler_FIRE },
 		{ "COLD", melee_effect_handler_COLD },
 		{ "LIGHT", melee_effect_handler_LIGHT },
+		{ "SOUND", melee_effect_handler_SOUND },
 		{ "FORCE", melee_effect_handler_FORCE },
 		{ "BLIND", melee_effect_handler_BLIND },
 		{ "CONFUSE", melee_effect_handler_CONFUSE },
