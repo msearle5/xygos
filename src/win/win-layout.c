@@ -335,7 +335,7 @@ int default_layout_win(term_data *data, int maxterms)
 		mult_hgt = 2;
 	}
 
-	arg_graphics = GRAPHICS_NONE;
+	arg_graphics = 0;
 	tile_width = 1;
 	tile_height = 1;
 
