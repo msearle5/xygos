@@ -23,6 +23,14 @@ BUG: Once recalled back into a 1x1 hole in the rock in the top left (X4 Y4)
 		- could do this, but is there always a <?
 		- Any in the right direction?
 
+BUG: On Wine, if no name is given then the character is nameless (in the scores, at least)
+	(This is as V.)
+
+BUG: On Windows, there is no file menu and a "General Store" error - caused by tiles.
+	Should probably just remove tiles - but not the menu. (V can use the menu without tiles.)
+
+BUG: user.prf needs to be updated with races, classes, persos, extens.
+
 Defer
 =====
 
