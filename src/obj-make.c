@@ -1771,7 +1771,8 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
 			return NULL;
 
 		/* Discard special cases */
-		if ((kf_has(kind->kind_flags, KF_SPECIAL_GEN)) && (!special_item_can_gen(kind)))
+		if (((kf_has(kind->kind_flags, KF_SPECIAL_GEN)) && (!special_item_can_gen(kind))) ||
+			(kf_has(kind->kind_flags, KF_QUEST_ART)))
 			return NULL;
 
 		/* Make the object, prep it and apply magic */
