@@ -24,6 +24,7 @@
 #include "init.h"
 #include "mon-make.h"
 #include "monster.h"
+#include "obj-desc.h"
 #include "obj-init.h"
 #include "obj-make.h"
 #include "obj-pile.h"
@@ -334,6 +335,8 @@ static double mon_total[MAX_LVL], mon_ood[MAX_LVL], mon_deadly[MAX_LVL];
 /* unique info */
 static double uniq_total[MAX_LVL], uniq_ood[MAX_LVL], uniq_deadly[MAX_LVL];
 
+/* per kind */
+static double *kind_total[MAX_LVL];
 
 /* set everything to 0.0 to begin */
 static void init_stat_vals(void)
@@ -351,6 +354,13 @@ static void init_stat_vals(void)
 	for (i = 0; i < ST_FF_END; i++)
 		for (j = 0; j < TRIES_SIZE; j++)
 			stat_ff_all[i][j] = 0.0;
+
+	for(i = 0; i < MAX_LVL; i++) {
+		if (kind_total[i])
+			memset(kind_total[i], 0, sizeof(double) * z_info->k_max);
+		else
+			kind_total[i] = mem_zalloc(sizeof(double) * z_info->k_max);
+	}
 }
 
 /*
@@ -377,24 +387,24 @@ static bool first_find(stat_first_find st)
 static void add_stats(stat_code st, bool vault, bool mon, int number)
 {
 	int lvl;
-	
+
 	/* get player level */
 	lvl=player->depth;
 	
 	/* be careful about bounds */
 	if ((lvl > MAX_LVL) || (lvl < 0)) return;
-	
+
 	/* add to the total */
 	stat_all[st][0][lvl] += addval * number;
 	
 	/* add to the total from vaults */
 	if ((!mon) && (vault)) stat_all[st][2][lvl] += addval * number;
-	
+
 	/* add to the total from monsters */
 	if (mon) stat_all[st][1][lvl] += addval * number;
 
-}	
-	
+}
+
 /*
  * This will get data on an object
  * It gets a lot of stuff, pretty much everything that I
@@ -417,6 +427,11 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 
 	/* get player depth */
 	lvl = player->depth;
+
+	/* add it to the kinds array */
+	if ((lvl < MAX_LVL) && (lvl >= 0)) {
+		kind_total[lvl][obj->kind->kidx] += addval * number;
+	}
 
 	/* check for some stuff that we will use regardless of type */
 	/* originally this was armor, but I decided to generalize it */
@@ -1108,12 +1123,28 @@ static void print_stats(int lvl)
 	file_putf(stats_log,"Uniques: %f  Monsters: %f  Vault denizens: %f \n",
 		art_uniq[lvl], art_mon[lvl], art_mon_vault[lvl]);
 
-		
-	for (i=ST_BEGIN; i<ST_END; i++){	
+	for (i=ST_BEGIN; i<ST_END; i++) {
 		file_putf(stats_log, "%s%f From Monsters: %f In Vaults: %f \n",	stat_message[i].name, stat_all[i][0][lvl], stat_all[i][1][lvl], stat_all[i][2][lvl]);
-	}	
+	}
 
-
+	/* Object kinds */
+	file_putf(stats_log,"\n");
+	file_putf(stats_log,"%30.30s: ", "Item Name");
+	for(int j=0;j<MAX_LVL;j+=5) {
+		file_putf(stats_log,"Lev %3d ", (j ? j : 1));
+	}
+	file_putf(stats_log,"\n");
+	for(i=0;i<z_info->k_max;i++) {
+		if (k_info[i].name) {
+			char buf[128];
+			obj_desc_name_format(buf, sizeof(buf), 0, k_info[i].name, NULL, false);
+			file_putf(stats_log,"%30.30s: ", buf);
+			for(int j=0;j<MAX_LVL;j+=5) {
+				file_putf(stats_log,"%7.03lf ", kind_total[(j ? j : 1)][i]);
+			}
+			file_putf(stats_log,"\n");
+		}
+	}
 }
 
 /**
