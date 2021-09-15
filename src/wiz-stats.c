@@ -1637,6 +1637,9 @@ void stats_collect(int nsim, int simtype)
 	if (!((simtype >= 1) && (simtype <= 4)))
 		return; 
 
+	tries = nsim;
+	addval = 1.0 / tries;
+
 	/* Are we in diving or clearing mode */
 	switch(simtype) {
 		case 1:
