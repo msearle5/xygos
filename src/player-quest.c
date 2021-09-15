@@ -598,6 +598,7 @@ void player_quests_free(struct player *p)
 		mem_free(p->quests[i].loc);
 	}
 	mem_free(p->quests);
+	p->quests = NULL;
 }
 
 /**

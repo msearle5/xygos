@@ -1257,9 +1257,10 @@ static enum parser_error parse_monster_experience(struct parser *p) {
 
 static enum parser_error do_parse_monster_blow(struct parser *p, struct monster_race *r, struct monster_blow **blow)
 {
-	struct monster_blow *b = NULL;
 	if (!r)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
+	struct monster_blow *b = *blow;
 
 	/* Go to the last valid blow, then allocate a new one */
 	if (!b) {
@@ -2116,6 +2117,7 @@ static errr finish_parse_monster_mut(struct parser *p) {
 		memcpy(&mm_info[ridx], r, sizeof(*r));
 		mm_info[ridx].race.ridx = ridx;
 		n = (struct monster_mutation *)r->race.next;
+		mem_free(r);
 		if (ridx < z_info->r_max - 1)
 			mm_info[ridx].race.next = (struct monster_race *)&mm_info[ridx + 1];
 		else

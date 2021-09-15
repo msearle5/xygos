@@ -4072,6 +4072,7 @@ static void cleanup_flavor(void)
 		mem_free(f);
 		f = next;
 	}
+	flavors = NULL;
 }
 
 struct file_parser flavor_parser = {
