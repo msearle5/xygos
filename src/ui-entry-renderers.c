@@ -575,7 +575,7 @@ static void renderer_COMPACT_RESIST_RENDERER_WITH_COMBINED_AUX(
 	};
 	struct loc p = details->value_position;
 	int color_offset = (details->alternate_color_first) ? 14 : 0;
-	struct ui_entry_combiner_funcs combiner;
+	struct ui_entry_combiner_funcs combiner = { NULL };
 	int vc, ac;
 	int i;
 
@@ -676,7 +676,7 @@ static void renderer_COMPACT_FLAG_RENDERER_WITH_COMBINED_AUX(
 {
 	struct loc p = details->value_position;
 	int color_offset = (details->alternate_color_first) ? 5 : 0;
-	struct ui_entry_combiner_funcs combiner;
+	struct ui_entry_combiner_funcs combiner = { NULL };
 	int vc, ac;
 	int i;
 
@@ -766,7 +766,7 @@ static void renderer_COMPACT_FLAG_WITH_CANCEL_RENDERER_WITH_COMBINED_AUX(
 {
 	struct loc p = details->value_position;
 	int color_offset = (details->alternate_color_first) ? 11 : 0;
-	struct ui_entry_combiner_funcs combiner;
+	struct ui_entry_combiner_funcs combiner = { NULL };
 	int vc, ac;
 	int i;
 
@@ -891,7 +891,7 @@ static void renderer_NUMERIC_AS_SIGN_RENDERER_WITH_COMBINED_AUX(
 {
 	struct loc p = details->value_position;
 	int color_offset = (details->alternate_color_first) ? 7 : 0;
-	struct ui_entry_combiner_funcs combiner;
+	struct ui_entry_combiner_funcs combiner = { NULL };
 	int vc, ac;
 	int i;
 
@@ -1000,7 +1000,7 @@ static void renderer_NUMERIC_RENDERER_WITH_COMBINED_AUX(
 	int color_offset = (details->alternate_color_first) ? 7 : 0;
 	int nbuf = info->ndigit + ((info->sign == UI_ENTRY_NO_SIGN) ? 0 : 1);
 	wchar_t *buffer = mem_alloc(nbuf * sizeof(*buffer));
-	struct ui_entry_combiner_funcs combiner;
+	struct ui_entry_combiner_funcs combiner = { NULL };
 	int vc, ac;
 	int i;
 
@@ -1165,7 +1165,7 @@ static void renderer_NUMERIC_RENDERER_WITH_BOOL_AUX(
 	int color_offset = (details->alternate_color_first) ? 8 : 0;
 	int nbuf = info->ndigit + ((info->sign == UI_ENTRY_NO_SIGN) ? 0 : 1);
 	wchar_t *buffer = mem_alloc(nbuf * sizeof(*buffer));
-	struct ui_entry_combiner_funcs combiner;
+	struct ui_entry_combiner_funcs combiner = { NULL };
 	int vc, ac;
 	int i;
 
@@ -1309,7 +1309,7 @@ static void renderer_NUMERIC_RENDERER_WITH_TIMED_AUX(
 	int color_offset = (details->alternate_color_first) ? 8 : 0;
 	int nbuf = info->ndigit + ((info->sign == UI_ENTRY_NO_SIGN) ? 0 : 1);
 	wchar_t *buffer = mem_alloc(nbuf * sizeof(*buffer));
-	struct ui_entry_combiner_funcs combiner;
+	struct ui_entry_combiner_funcs combiner = { NULL };
 	int vc, ac;
 	int i;
 

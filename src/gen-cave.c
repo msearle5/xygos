@@ -961,7 +961,7 @@ static void do_traditional_tunneling(struct chunk *c)
 static void build_staircase_rooms(struct chunk *c, const char *label)
 {
 	int num_rooms = dun->profile->n_room_profiles;
-	struct room_profile profile;
+	struct room_profile profile = { 0 };
 	struct connector *join;
 	int i;
 

@@ -1448,7 +1448,7 @@ void do_cmd_run(struct command *cmd)
  */
 void do_cmd_pathfind(struct command *cmd)
 {
-	struct loc grid;
+	struct loc grid = { 0, 0 };
 
 	/* XXX-AS Add better arg checking */
 	cmd_get_arg_point(cmd, "point", &grid);

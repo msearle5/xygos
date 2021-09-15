@@ -2261,7 +2261,7 @@ static void compute_player_and_equipment_values(struct player *p,
 {
 	struct cached_player_data *pcache;
 	struct ui_entry_combiner_state *cstates;
-	struct ui_entry_combiner_funcs cfuncs;
+	struct ui_entry_combiner_funcs cfuncs = { NULL };
 	int i;
 
 	if (! s->p_and_eq_vals) {

@@ -187,7 +187,7 @@ static struct ui_entry **entries = NULL;
 void combine_ui_entry_values(const struct ui_entry *entry, int *vals, int *auxs, int n)
 {
 	struct ui_entry_combiner_state cst = { 0, 0, 0 };
-	struct ui_entry_combiner_funcs combiner;
+	struct ui_entry_combiner_funcs combiner = { NULL };
 	if (ui_entry_combiner_get_funcs(entry->combiner_index, &combiner)) {
 		assert(0);
 	}
@@ -253,7 +253,7 @@ int bind_object_property_to_ui_entry_by_name(const char *name, int type,
 int bind_player_ability_to_ui_entry_by_name(const char *name,
 	struct player_ability *ability, int value, bool have_value, bool isaux)
 {
-	int ind;
+	int ind = 0;
 
 	if (! ui_entry_search(name, &ind)) {
 		return 1;
@@ -295,7 +295,7 @@ int bind_player_ability_to_ui_entry_by_name(const char *name,
  */
 bool ui_entry_has_category(const struct ui_entry *entry, const char *name)
 {
-	int ind;
+	int ind = 0;
 
 	return ui_entry_search_categories(entry, name, &ind) != 0;
 }
@@ -622,7 +622,7 @@ void compute_ui_entry_values_for_object(const struct ui_entry *entry,
 	struct cached_object_data **cache, int *val, int *auxval)
 {
 	struct ui_entry_combiner_state cst = { 0, 0, 0 };
-	struct ui_entry_combiner_funcs combiner;
+	struct ui_entry_combiner_funcs combiner = { NULL };
 	const struct fault_data *fault;
 	struct cached_object_data *cache2;
 	bool first, all_unknown, all_aux_unknown, any_aux, all_aux;
@@ -836,7 +836,7 @@ void compute_ui_entry_values_for_gear(const struct ui_entry *entry,
 	int *auxval)
 {
 	struct ui_entry_combiner_state cst = { 0, 0, 0 };
-	struct ui_entry_combiner_funcs combiner;
+	struct ui_entry_combiner_funcs combiner = { NULL };
 
 	struct cached_object_data *cache2;
 	bool first, all_unknown, all_aux_unknown, any_aux, all_aux;
@@ -1021,7 +1021,7 @@ void compute_ui_entry_values_for_player(const struct ui_entry *entry,
 	int *auxval)
 {
 	struct ui_entry_combiner_state cst = { 0, 0, 0 };
-	struct ui_entry_combiner_funcs combiner;
+	struct ui_entry_combiner_funcs combiner = { NULL };
 	bool first;
 	int i;
 

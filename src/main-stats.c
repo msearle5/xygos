@@ -1162,6 +1162,7 @@ static int stats_level_data_offsetof(const char *member)
 		
 	/* We should not get to this point. */
 	assert(0);
+	return 0;
 }
 
 /**
@@ -1189,6 +1190,7 @@ static int stats_wearables_data_offsetof(const char *member)
 		
 	/* We should not get to this point. */
 	assert(0);
+	return 0;
 }
 
 /**
@@ -1532,7 +1534,7 @@ static errr run_stats(void)
 {
 	u32b run;
 	struct artifact *a_info_save = NULL;
-	struct artifact_upkeep *aup_info_save;
+	struct artifact_upkeep *aup_info_save = NULL;
 	unsigned int i;
 	int err;
 	bool status; 

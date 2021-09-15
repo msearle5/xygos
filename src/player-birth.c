@@ -1335,7 +1335,7 @@ void do_cmd_birth_reset(struct command *cmd)
 
 void do_cmd_choose_race(struct command *cmd)
 {
-	int choice;
+	int choice = 0;
 	cmd_get_arg_choice(cmd, "choice", &choice);
 	player_generate(player, player_id2race(choice), NULL, NULL, NULL, false);
 
@@ -1346,7 +1346,7 @@ void do_cmd_choose_race(struct command *cmd)
 
 void do_cmd_choose_ext(struct command *cmd)
 {
-	int choice;
+	int choice = 0;
 	cmd_get_arg_choice(cmd, "choice", &choice);
 	player_generate(player, NULL, get_ext_from_menu(choice), NULL, NULL, false);
 
@@ -1357,7 +1357,7 @@ void do_cmd_choose_ext(struct command *cmd)
 
 void do_cmd_choose_personality(struct command *cmd)
 {
-	int choice;
+	int choice = 0;
 	cmd_get_arg_choice(cmd, "choice", &choice);
 	player_generate(player, NULL, NULL, NULL, player_id2personality(choice), false);
 
@@ -1368,7 +1368,7 @@ void do_cmd_choose_personality(struct command *cmd)
 
 void do_cmd_choose_class(struct command *cmd)
 {
-	int choice;
+	int choice = 0;
 	cmd_get_arg_choice(cmd, "choice", &choice);
 	player_generate(player, NULL, NULL, player_id2class(choice), NULL, false);
 
@@ -1381,7 +1381,7 @@ void do_cmd_buy_stat(struct command *cmd)
 {
 	/* .choice is the stat to sell */
 	if (!rolled_stats) {
-		int choice;
+		int choice = 0;
 		cmd_get_arg_choice(cmd, "choice", &choice);
 		buy_stat(choice, stats, points_spent, &points_left, true);
 	}
@@ -1391,7 +1391,7 @@ void do_cmd_sell_stat(struct command *cmd)
 {
 	/* .choice is the stat to sell */
 	if (!rolled_stats) {
-		int choice;
+		int choice = 0;
 		cmd_get_arg_choice(cmd, "choice", &choice);
 		sell_stat(choice, stats, points_spent, &points_left, true);
 	}
@@ -1400,7 +1400,7 @@ void do_cmd_sell_stat(struct command *cmd)
 void do_cmd_reset_stats(struct command *cmd)
 {
 	/* .choice is whether to regen stats */
-	int choice;
+	int choice = 0;
 
 	reset_stats(stats, points_spent, &points_left, true);
 
@@ -1469,7 +1469,7 @@ void do_cmd_prev_stats(struct command *cmd)
 
 void do_cmd_choose_name(struct command *cmd)
 {
-	const char *str;
+	const char *str = NULL;
 	cmd_get_arg_string(cmd, "name", &str);
 
 	/* Set player name */
@@ -1480,7 +1480,7 @@ void do_cmd_choose_name(struct command *cmd)
 
 void do_cmd_choose_history(struct command *cmd)
 {
-	const char *str;
+	const char *str = NULL;
 
 	/* Forget the old history */
 	if (player->history)
