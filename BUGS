@@ -26,6 +26,8 @@ BUG: Once recalled back into a 1x1 hole in the rock in the top left (X4 Y4)
 BUG: On Wine, if no name is given then the character is nameless (in the scores, at least)
 	(This is as V.) (Use a random shk first name?)
 
+BUG: Crashed on exp gain as a Super Soldier
+
 BUG: user.prf needs to be updated with races, classes, persos, extens.
 
 BUG: clouded (Windows):  Random crash when trying to start a character with the unknown talents perk: crash happened after pressing space to select it, doesn't always happen.

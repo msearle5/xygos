@@ -491,6 +491,31 @@ void death_knowledge(struct player *p)
 	handle_stuff(p);
 }
 
+/* 0 to maximum moves */
+u16b *energy_move_pos;
+int n_energy_move_pos;
+
+/* -1 to most negative moves */
+u16b *energy_move_neg;
+int n_energy_move_neg;
+
+/* Return the energy scale (x1000) for the given number of levels of movement speed bonus */
+u32b energy_move_scale(int moves)
+{
+	u32b scale;
+	if (moves >= 0) {
+		if (moves >= n_energy_move_pos)
+			moves = n_energy_move_pos-1;
+		scale = energy_move_pos[moves];
+	} else {
+		moves = -1-moves;
+		if (moves >= n_energy_move_neg)
+			moves = n_energy_move_neg-1;
+		scale = energy_move_neg[moves];
+	}
+	return scale;
+}
+
 /**
  * Energy per move, taking extra moves into account
  */
@@ -498,7 +523,7 @@ int energy_per_move(struct player *p)
 {
 	int num = p->state.num_moves;
 	int energy = z_info->move_energy;
-	return (energy * (1 + ABS(num) - num)) / (1 + ABS(num));
+	return (energy * energy_move_scale(num)) / 1000;
 }
 
 #ifdef TEST_STAT_CHECK

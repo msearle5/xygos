@@ -356,3 +356,15 @@ n:This place does not seem too risky
 n:This place seems reasonably safe
 n:This seems a tame, sheltered place
 n:This seems a quiet, peaceful place
+
+
+# player-util.c
+
+# Convert positive movement speed to energy scaling
+# First element is +0, last is used for all higher values than the number of elements
+table:energy_move_pos
+n:1000, 500, 385, 333, 305, 286, 274, 265, 259, 255, 252, 251, 250
+# Negative movement speed
+# First element is -1, last is used for all lower
+table:energy_move_neg
+n:1500,2250,3333,4000,4444,4700,4850,4925,4975,5000

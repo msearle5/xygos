@@ -1004,6 +1004,7 @@ enum table_type {
 	table_end = 0,
 	table_u8,
 	table_s16,
+	table_u16,
 	table_s32,
 	table_double,
 	table_string
@@ -1074,6 +1075,9 @@ static struct table tables[] = {
 	/* cmd-cave.c */
 	{ DYNTABLE(obj_feeling_text),		table_string },
 	{ DYNTABLE(mon_feeling_text),		table_string },
+	/* player-util.c */
+	{ DYNTABLE(energy_move_pos),		table_u16 },
+	{ DYNTABLE(energy_move_neg),		table_u16 },
 	{ { NULL } },
 };
 
@@ -1100,6 +1104,18 @@ static bool tables_reader_s16(void *tab, int index, const char *s)
 	if (*end)
 		return false;
 	if ((value < -32768) || (value > 32767))
+		return false;
+	((s16b *)tab)[index] = value;
+	return true;
+}
+
+static bool tables_reader_u16(void *tab, int index, const char *s)
+{
+	char *end = NULL;
+	long value = strtol(s, &end, 10);
+	if (*end)
+		return false;
+	if ((value < 0) || (value > 65535))
 		return false;
 	((s16b *)tab)[index] = value;
 	return true;
@@ -1145,6 +1161,7 @@ static bool (* const tables_reader[])(void *, int, const char *) = {
 	NULL,
 	tables_reader_u8,
 	tables_reader_s16,
+	tables_reader_u16,
 	tables_reader_s32,
 	tables_reader_double,
 	tables_reader_string,
@@ -1154,6 +1171,7 @@ static const byte tables_length[] = {
 	0,
 	sizeof(byte),
 	sizeof(s16b),
+	sizeof(u16b),
 	sizeof(s32b),
 	sizeof(double),
 	sizeof(char *),
