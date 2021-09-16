@@ -24,7 +24,7 @@ BUG: Once recalled back into a 1x1 hole in the rock in the top left (X4 Y4)
 		- Any in the right direction?
 
 BUG: On Wine, if no name is given then the character is nameless (in the scores, at least)
-	(This is as V.) (Use a random shk first name?)
+	(This is as V.) (Use a random shk first name?) (See existing '* for a random name')
 
 BUG: Crashed on exp gain as a Super Soldier
 

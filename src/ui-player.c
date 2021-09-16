@@ -1149,11 +1149,13 @@ static struct panel *get_panel_misc(void) {
 /**
  * Panels for main character screen
  */
-static const struct {
+struct panel_entry {
 	region bounds;
 	bool align_left;
 	struct panel *(*panel)(void);
-} panels[] =
+};
+
+static const struct panel_entry panels[] =
 {
 	/*   x  y wid rows */
 	{ {  1, 1, 40, 7 }, true,  get_panel_topleft },	/* Name, Class, ... */
@@ -1167,25 +1169,48 @@ static const struct {
 	{ { 21, 9, 22, 9 }, false, get_panel_midleft },	/* Cur Exp, Max Exp, ... */
 	{ { 44, 9, 17, 9 }, false, get_panel_combat },
 	{ { 62, 9, 18, 8 }, false, get_panel_skills },
+	{ { 0 } },
 #endif
 };
 
-void display_player_xtra_info(void)
+static const struct panel_entry panels_drop[] =
 {
-	size_t i;
-	for (i = 0; i < N_ELEMENTS(panels); i++) {
-		struct panel *p = panels[i].panel();
-		display_panel(p, panels[i].align_left, &panels[i].bounds);
+	/*   x  y wid rows */
+	{ {  1, 1, 40, 7 }, true,  get_panel_topleft },	/* Name, Class, ... */
+	{ { 21, 1, 16, 3 }, false, get_panel_misc },	/* Age, ht, wt, ... */
+#ifdef THREE_COLUMN_PANEL
+	{ {  1, 11, 24, 9 }, false, get_panel_midleft },	/* Cur Exp, Max Exp, ... */
+	{ { 29, 11, 19, 9 }, false, get_panel_combat },
+	{ { 52, 11, 20, 8 }, false, get_panel_skills },
+#else
+	{ {  1, 11, 19, 9 }, false, get_panel_farleft },	/* Cur Exp, Max Exp, ... */
+	{ { 21, 11, 22, 9 }, false, get_panel_midleft },	/* Cur Exp, Max Exp, ... */
+	{ { 44, 11, 17, 9 }, false, get_panel_combat },
+	{ { 62, 11, 18, 8 }, false, get_panel_skills },
+	{ { 0 } },
+#endif
+};
+
+void display_player_xtra_info(bool drop)
+{
+	size_t i = 0;
+	const struct panel_entry *pan = drop ? panels_drop : panels;
+	while (pan[i].panel) {
+		struct panel *p = pan[i].panel();
+		display_panel(p, pan[i].align_left, &pan[i].bounds);
 		panel_free(p);
-	}
+		i++;
+	};
 
 	/* Indent output by 1 character, and wrap at column 72 */
 	text_out_wrap = 72;
 	text_out_indent = 1;
 
 	/* History */
-	Term_gotoxy(text_out_indent, 19);
-	text_out_to_screen(COLOUR_WHITE, player->history);
+	if (!drop) {
+		Term_gotoxy(text_out_indent, 19);
+		text_out_to_screen(COLOUR_WHITE, player->history);
+	}
 
 	/* Reset text_out() vars */
 	text_out_wrap = 0;
@@ -1266,7 +1291,7 @@ void display_player(int mode)
 			break;
 		case 0:
 			/* Extra info */
-			display_player_xtra_info();
+			display_player_xtra_info(false);
 
 			/* Stat info */
 			display_player_stat_info(false);
