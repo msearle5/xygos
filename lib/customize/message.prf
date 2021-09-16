@@ -422,8 +422,8 @@ message:SUM_UNIQUE:w
 # MSG_WIELD
 message:WIELD:w
 
-# MSG_CURSED
-message:CURSED:w
+# MSG_FAULTY
+message:FAULTY:w
 
 # MSG_ICON
 message:ICON:w

@@ -426,6 +426,38 @@ bool prefs_save(const char *path, void (*dump)(ang_file *), const char *title)
  * Pref file parser
  * ------------------------------------------------------------------------ */
 
+static const char *parse_variables(const char *b, const char *v, int *length)
+{
+	int dummy;
+	if (!length)
+		length = &dummy;
+	*length = -1;
+	if (*b == '$') {
+		if (!strncmp(b+1, "SYS", strlen("SYS"))) {
+			v = ANGBAND_SYS;
+			*length = strlen("SYS");
+		}
+		else if (!strncmp(b+1, "RACE", strlen("RACE"))) {
+			v = player->race->name;
+			*length = strlen("RACE");
+		}
+		else if (!strncmp(b+1, "CLASS", strlen("CLASS"))) {
+			v = player->class->name;
+			*length = strlen("CLASS");
+		}
+		else if (!strncmp(b+1, "PERSONALITY", strlen("PERSONALITY"))) {
+			v = player->personality->name;
+			*length = strlen("PERSONALITY");
+		}
+		else if (!strncmp(b+1, "EXTENSION", strlen("EXTENSION"))) {
+			v = player->extension->name;
+			*length = strlen("EXTENSION");
+		}
+	}
+	(*length)++;
+	return v;
+}
+
 /**
  * Load another file.
  */
@@ -438,7 +470,32 @@ static enum parser_error parse_prefs_load(struct parser *p)
 	if (d->bypass) return PARSE_ERROR_NONE;
 
 	file = parser_getstr(p, "file");
-	(void)process_pref_file(file, true, d->user);
+
+	/* Parse variable names */
+	char buf[4096];
+	char *out = buf;
+	size_t buflength = 0;
+	while (*file) {
+		int length = 0;
+		const char *v = parse_variables(file, NULL, &length);
+		if (v) {
+			if (buflength < strlen(v)) {
+				strncpy(out, v, sizeof(buf)-buflength);
+				out[strlen(v)] = 0;
+				out += strlen(v);
+				buflength += strlen(v);
+				file += length;
+			}
+		} else {
+			if (buflength < sizeof(buf)) {
+				*out++ = *file++;
+				buflength++;
+			}
+		}
+	}
+	*out = 0;
+
+	(void)process_pref_file(buf, true, d->user);
 
 	return PARSE_ERROR_NONE;
 }
@@ -555,16 +612,7 @@ static const char *process_pref_file_expr(char **sp, char *fp)
 		if ((f = *s) != '\0') *s++ = '\0';
 
 		/* Variables start with $, otherwise it's a constant */
-		if (*b == '$') {
-			if (streq(b+1, "SYS"))
-				v = ANGBAND_SYS;
-			else if (streq(b+1, "RACE"))
-				v = player->race->name;
-			else if (streq(b+1, "CLASS"))
-				v = player->class->name;
-		} else {
-			v = b;
-		}
+		v = parse_variables(b, v, NULL);
 	}
 
 	/* Save */
@@ -1177,9 +1225,12 @@ errr process_pref_file_command(const char *s)
 static void print_error(const char *name, struct parser *p) {
 	struct parser_state s;
 	parser_getstate(p, &s);
-	msg("Parse error in %s line %d column %d: %s: %s", name,
+	char buf[1024];
+	strnfmt(buf, sizeof(buf), "Parse error in %s line %d column %d: %s: %s", name,
 	           s.line, s.col, s.msg, parser_error_str[s.error]);
+	msg("%s", buf);
 	event_signal(EVENT_MESSAGE_FLUSH);
+	plog(buf);
 }
 
 
