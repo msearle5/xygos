@@ -584,7 +584,7 @@ base:energy
 color:Violet
 depth:11
 rarity:5
-grow:ball lightning
+#grow:ball lightning
 speed:110
 hit-points:9
 hearing:8
@@ -1470,7 +1470,7 @@ base:bird
 color:Blue
 depth:16
 rarity:10
-grow:magpie
+grow:blood falcon
 speed:115
 hit-points:30
 armor-class:10
@@ -2583,8 +2583,8 @@ hit-points:70
 hearing:10
 armor-class:10
 sleepiness:12
-blow:HIT:HURT:1d5
 blow:HIT:CONFUSE:1d3
+blow:HIT:HURT:1d5
 flags:EVIL | CHAR_MULTI | ATTR_MULTI | SMART | IM_FIRE
 spell-freq:5
 spell-power:20
@@ -3002,8 +3002,8 @@ speed:115
 hit-points:6
 armor-class:5
 sleepiness:20
-blow:BITE:HURT:1d3
 blow:STING:ELEC:1d6
+blow:BITE:HURT:1d3
 flags:RAND_25 | EMPTY_MIND
 spell-freq:12
 innate-freq:3
@@ -3143,7 +3143,7 @@ base:insect
 color:Red
 depth:21
 rarity:6
-grow:iridescent beetle
+grow:killer iridescent beetle
 speed:110
 hit-points:35
 hearing:35
@@ -3166,7 +3166,7 @@ base:insect
 color:Light Yellow
 depth:25
 rarity:3
-grow:iridescent beetle
+grow:killer iridescent beetle
 speed:115
 hit-points:35
 hearing:30
@@ -3737,8 +3737,8 @@ hit-points:20
 hearing:8
 armor-class:30
 sleepiness:40
-blow:CONSTRICT:HURT:1d5
 blow:BITE:ELEC:1d3
+blow:CONSTRICT:HURT:1d5
 flags:RAND_25 | RAND_50
 flags:IM_ELEC
 flags:SMART | WEIRD_MIND | PASS_DOOR
@@ -3797,13 +3797,13 @@ hit-points:20
 hearing:8
 armor-class:30
 sleepiness:40
-blow:CONSTRICT:HURT:1d5
 blow:BITE:ELEC:1d3
 blow:STING:ELEC:1d2
 blow:STING:ELEC:1d2
 blow:STING:ELEC:1d2
 blow:STING:ELEC:1d2
 blow:STING:ELEC:1d2
+blow:CONSTRICT:HURT:1d5
 flags:RAND_25 | RAND_50
 flags:IM_ELEC
 flags:SMART | WEIRD_MIND | PASS_DOOR
@@ -5985,7 +5985,7 @@ color:Slate
 depth:18
 rarity:4
 speed:110
-grow:white elephant
+grow:mammoth
 hit-points:35
 hearing:10
 armor-class:35
@@ -6245,7 +6245,7 @@ base:rodent
 color:Mud
 depth:12
 rarity:4
-grow:pack rat
+grow:plague rat
 hit-points:14
 hearing:10
 armor-class:7
@@ -6287,10 +6287,10 @@ speed:100
 hit-points:42
 armor-class:15
 sleepiness:1
-blow:CLAW:HURT:1d12
-blow:CLAW:HURT:1d12
 blow:BITE:POISON:1d12
 blow:BITE:POISON:1d12
+blow:CLAW:HURT:1d12
+blow:CLAW:HURT:1d12
 flags:ATTR_FLICKER
 flags:FORCE_SLEEP
 flags:NO_FEAR | NO_SLEEP
@@ -6853,7 +6853,7 @@ base:spider
 color:Red
 depth:12
 rarity:2
-grow:grue-spider
+grow:tarantula
 speed:110
 hit-points:45
 hearing:15

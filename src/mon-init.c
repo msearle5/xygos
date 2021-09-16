@@ -2007,11 +2007,11 @@ static errr finish_parse_monster(struct parser *p) {
 				}
 			}
 			/* WHIP, STING and SPIT.
-			 * These all require an elemental attack as the last blow
+			 * These all require an elemental attack as the first blow
 			 */
 			if (rsf_has(race->spell_flags, RSF_SPIT) || rsf_has(race->spell_flags, RSF_WHIP) || rsf_has(race->spell_flags, RSF_STING)) {
 				if ((attacks < 1) || (!(projections[race->blow[0].effect->lash_type].lash_desc))) {
-					fprintf(stderr,"Monster %s has SPIT/WHIP/STING spell, but the last blow's effect doesn't have a lash type defined\n", race->name);
+					fprintf(stderr,"Monster %s has SPIT/WHIP/STING spell, but the first blow's effect doesn't have a lash type defined\n", race->name);
 				}
 			}
 			for (size_t j = 0; j < z_info->r_max; j++) {
