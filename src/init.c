@@ -603,6 +603,8 @@ static enum parser_error parse_constants_store(struct parser *p) {
 		z->theft_chr = value;
 	else if (streq(label, "turns-faction"))
 		z->faction_turns = value;
+	else if (streq(label, "install-turns"))
+		z->install_turns = value;
 	else
 		return PARSE_ERROR_UNDEFINED_DIRECTIVE;
 

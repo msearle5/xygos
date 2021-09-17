@@ -40,6 +40,7 @@
 #include "player-calcs.h"
 #include "player-history.h"
 #include "player-spell.h"
+#include "player-timed.h"
 #include "player-util.h"
 #include "store.h"
 #include "target.h"
@@ -50,6 +51,7 @@
  * ------------------------------------------------------------------------
  * Constants and definitions
  * ------------------------------------------------------------------------ */
+
 
 
 /**
@@ -2357,6 +2359,36 @@ void do_cmd_install(struct command *cmd)
 	if (wield_slot(obj) == player->body.count)
 		return;
 
+	/* Check if they have statuses (because otherwise they would be expected to wear off)
+	 **/
+	for (int i = 0; i < TMD_MAX; i++) {
+		if ((player->timed[i]) && (timed_effects[i].flag_general & PG_NASTY)) {
+			msg("I am afraid you can't be operated on in that condition!");
+			return;
+		}
+	}
+
+	/* The install charge */
+	int price = store_cyber_install_price(obj);
+
+	/* Spend the money */
+	player->au -= price;
+
+	/* Take time */
+	turn += (z_info->install_turns * 10L);
+
+	/* Change the danger level (for prices, if nothing else) */
+	increase_danger_level();
+
+	/* Feed */
+	player->timed[TMD_FOOD] = PY_FOOD_FULL - 1;
+
+	/* Heal */
+	player->chp = player->mhp;
+
+	/* Mention time taken */
+	msg("Some time later, you step back into the salon.");
+
 	if (object_is_equipped(player->body, obj)) {
 		/* Unequip */
 		do_inven_takeoff(obj, true, true);
@@ -2364,6 +2396,10 @@ void do_cmd_install(struct command *cmd)
 		/* Equip */
 		do_inven_wield(obj, wield_slot(obj), true, true);
 	}
+
+	event_signal(EVENT_STORECHANGED);
+	event_signal(EVENT_INVENTORY);
+	event_signal(EVENT_EQUIPMENT);
 }
 
 /* Returns your rank as a member of the Cyber Salon.
@@ -2380,6 +2416,60 @@ int store_cyber_rank(void)
 	if (rank > 6)
 		return 6;
 	return rank;
+}
+
+/* Round up, to 2 decimals if < 1000, 3 decimals if >= 1000, < 1000000, to 1000 if >= 1000000. */
+int store_roundup(int exact)
+{
+	if (exact < 100) {
+		return exact;
+	} else if (exact < 10000) {
+		exact += 9;
+		exact /= 10;
+		exact *= 10;
+	} else if (exact < 100000) {
+		exact += 99;
+		exact /= 100;
+		exact *= 100;
+	} else {
+		exact += 999;
+		exact /= 1000;
+		exact *= 1000;
+	}
+	return exact;
+}
+
+/* The store will charge this much to install or remove ware */
+int store_cyber_install_price(struct object *obj)
+{
+	struct store *store = store_at(cave, player->grid);
+
+	/* It's based on the item price */
+	u32b price = price_item(store, obj, true, 1);
+
+	/* and your faction */
+	int rank = store_cyber_rank();
+	static const byte scale[8] = {
+		4,	// hater
+		8,	// non-member
+		12,	// member
+		18,
+
+		24,
+		32,
+		40,
+		50
+	};
+	price /= scale[rank];
+
+	/* rounded */
+	price = store_roundup(price);
+
+	/* with a minimum */
+	if (price < 100)
+		price = 100;
+
+	return price;
 }
 
 /**

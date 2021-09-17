@@ -161,6 +161,8 @@ int find_inven(const struct object *obj);
 void stores_copy(struct store *src);
 int store_faction(struct store *store);
 int store_cyber_rank(void);
+int store_cyber_install_price(struct object *obj);
+int store_roundup(int);
 
 extern struct owner *store_ownerbyidx(struct store *s, unsigned int idx);
 

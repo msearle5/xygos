@@ -60,7 +60,6 @@ void use_store(game_event_type type, game_event_data *data, void *user);
 void leave_store(game_event_type type, game_event_data *data, void *user);
 void store_your_name(struct store *store);
 const char *random_rumor(s32b real);
-int store_roundup(int);
 bool store_get_long_check(struct store_context *ctx, const char *prompt);
 void store_long_text(struct store_context *ctx, const char *text);
 void random_shk_name(char *buf, int len);

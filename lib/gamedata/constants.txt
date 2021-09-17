@@ -196,6 +196,9 @@ store:theft-chr:3
 # Time after last theft before one level of -ve faction is forgiven
 store:turns-faction:50000
 
+# Number of turns consumed by installing or removing cyberware at a store
+store:install-turns:3000
+
 #---------------------------------------------------------------------
 # Object generation
 #---------------------------------------------------------------------

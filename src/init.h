@@ -123,6 +123,7 @@ struct angband_constants
 	u16b theft_dex;		/**< Scale for difficulty of stealing, vs. dexterity */
 	u16b theft_chr;		/**< Scale for difficulty of stealing, vs. charisma */
 	u32b faction_turns;		/**< Number of turns before -ve faction starts to increase */
+	u16b install_turns;		/**< Time taken to install or remove cyberware */
 
 	/* Object creation constants, read from constants.txt */
 	u16b max_obj_depth;	/**< Maximum depth used in object allocation */

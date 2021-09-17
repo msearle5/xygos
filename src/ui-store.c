@@ -857,9 +857,14 @@ static bool store_sell(struct store_context *ctx)
 
 			/* Cyber Salon: may want to install it? */
 			bool equipped = (object_is_equipped(player->body, obj));
-			if (cyber && (tval_is_implant(obj)) && store_get_check(format("%s %s? [ESC, any other key to %sinstall]",
+			if (cyber && (tval_is_implant(obj))) {
+				/* Show price */
+				prt(format("Price to %s: %d", equipped ? "remove" : "implant", store_cyber_install_price(obj)), 1, 0);
+
+				if (store_get_check(format("%s %s? [ESC, any other key to %sinstall]",
 					equipped ? "Uninstall" : "Install", o_name, equipped ? "un" : ""))) {
-				cmd = CMD_INSTALL;
+					cmd = CMD_INSTALL;
+				}
 			} else {
 
 				/* Show price */
@@ -1612,27 +1617,6 @@ static int store_price_all(struct store *s)
 		o = o->next;
 	}
 	return cost;
-}
-
-/* Round up, to 2 decimals if < 1000, 3 decimals if >= 1000, < 1000000, to 1000 if >= 1000000. */
-int store_roundup(int exact)
-{
-	if (exact < 100) {
-		return exact;
-	} else if (exact < 10000) {
-		exact += 9;
-		exact /= 10;
-		exact *= 10;
-	} else if (exact < 100000) {
-		exact += 99;
-		exact /= 100;
-		exact *= 100;
-	} else {
-		exact += 999;
-		exact /= 1000;
-		exact *= 1000;
-	}
-	return exact;
 }
 
 /* obtain new stock */
