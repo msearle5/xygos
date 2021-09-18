@@ -843,6 +843,10 @@ bool get_character_name(char *buf, size_t buflen)
 	if (!res)
 		my_strcpy(buf, player->full_name, buflen);
 
+	/* But if there was no old name, go random */
+	if (!*buf)
+		player_random_name(buf, buflen);
+
 	return res;
 }
 
