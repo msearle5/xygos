@@ -2223,6 +2223,7 @@ static void cleanup_monster_race(struct monster_race *r)
 	string_free(r->text);
 	string_free(r->name);
 	mem_free(r->blow);
+	mem_free(r->passive);
 }
 
 struct file_parser monster_mut_parser = {

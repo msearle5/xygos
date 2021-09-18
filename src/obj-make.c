@@ -1767,13 +1767,17 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
 				}
 			}
 		}
-		if (!kind)
+		if (!kind) {
+			mem_free(me_table);
 			return NULL;
+		}
 
 		/* Discard special cases */
 		if (((kf_has(kind->kind_flags, KF_SPECIAL_GEN)) && (!special_item_can_gen(kind))) ||
-			(kf_has(kind->kind_flags, KF_QUEST_ART)))
+			(kf_has(kind->kind_flags, KF_QUEST_ART))) {
+			mem_free(me_table);
 			return NULL;
+		}
 
 		/* Make the object, prep it and apply magic */
 		new_obj = object_new();
@@ -1813,6 +1817,7 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
 		if (value) *value += (kind->alloc_min - c->depth) * (*value / 5);
 	}
 
+	mem_free(me_table);
 	return new_obj;
 }
 

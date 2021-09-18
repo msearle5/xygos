@@ -2344,7 +2344,6 @@ flags:SMART
 spells:BLIND | SCARE | TPORT
 desc:Scared of the dark... oh dear...
 
-# Fix same desc as Primordial
 name:dread grue
 base:grue
 color:Gray25
@@ -2367,18 +2366,18 @@ spell-freq:3
 spell-power:50
 spells:S_KIN | DARKNESS | BLIND | SCARE | TPORT
 desc:The dread grue moves at the speed of dark - faster than light, for wherever there
-desc:is light, /the dark got there first./
+desc: is light, /the dark got there first./
 
 name:Primordial Grue
 base:grue
 color:Violet
+depth:40
 speed:140
 hit-points:600
 hearing:2
 smell:2
 armor-class:90
 sleepiness:0
-depth:40
 rarity:0
 light:-6
 experience:5500

@@ -2891,6 +2891,7 @@ static void cleanup_p_race(void)
 	while (p) {
 		next = p->next;
 		string_free((char *)p->name);
+		string_free((char *)p->desc);
 		cleanup_magic(&p->magic);
 		mem_free(p);
 		p = next;
