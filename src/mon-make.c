@@ -382,8 +382,13 @@ void delete_monster_idx(int m_idx)
 		(void) player_clear_timed(player, TMD_COMMAND, true);
 	}
 
-	/* Monster is gone from square and group */
-	square_set_mon(cave, grid, 0);
+	/* Monster is gone from square and group.
+	 * But don't remove it if something has already replaced it (which
+	 * can happen, if the death special effect includes summoning another
+	 * monster)
+	 **/
+	if (square_monster(cave, grid) == mon)
+		square_set_mon(cave, grid, 0);
 	monster_remove_from_groups(cave, mon);
 
 	/* Delete objects */
