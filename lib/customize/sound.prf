@@ -282,8 +282,8 @@ sound:STAIRS_DOWN:plm_floor_creak
 # You activate an artifact.
 sound:ACT_ARTIFACT:plm_aim_wand
 
-# You use a staff.
-sound:USE_STAFF:plm_use_staff
+# You use a device.
+sound:USE_DEVICE:plm_use_device
 
 # An object is destroyed.
 sound:DESTROY:plm_bang_metal plm_break_canister plm_break_glass plm_break_glass2 plm_break_plates plm_break_shatter plm_break_smash plm_glass_breaking plm_glass_break plm_glass_smashing
@@ -294,8 +294,8 @@ sound:WIELD:plm_metal_sharpen
 # You take something in or out of your quiver.
 sound:QUIVER:plc_miss_swish
 
-# You wield a cursed item.
-sound:CURSED:pls_man_oooh
+# You wield a faulty item.
+sound:FAULTY:pls_man_oooh
 
 # You notice something (generic notice)
 sound:NOTICE:id_bad_hmm

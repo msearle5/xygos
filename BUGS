@@ -9,6 +9,9 @@ BUG: Badly named: "an universal detector" - there is no way to infer a/an reliab
 BUG: Shop owners (store_do_fight()) are always male
 
 BUG? Stuff isn't transported when you fly - should it be? Should there just be 1 house?
+	- see also -
+BUG: clouded:  Towns having different houses is a bit of an inconvenience when it costs money to travel between towns. Perhaps it's better to just have a single house? (Pay?)
+	- Unless inventories are unlimited, that must cope with the possibility of not having enough space
 
 BUG: Stores which close lose their entrance but don't become ruins. (Only when more than one would?)
 
@@ -24,24 +27,25 @@ BUG: Once recalled back into a 1x1 hole in the rock in the top left (X4 Y4)
 		- Any in the right direction?
 		- see "WIP" branch
 
-BUG: On Wine, if no name is given then the character is nameless (in the scores, at least)
-	(This is as V.) (Use a random shk first name?) (See existing '* for a random name')
-
 BUG: Crashed on exp gain as a Super Soldier
 
 BUG: clouded (Windows):  Random crash when trying to start a character with the unknown talents perk: crash happened after pressing space to select it, doesn't always happen.
-	- Not seen on Linux
+	- Not seen on Linux, or wine/winedbg
 
 BUG: clouded:  Failing to use a gadget says "you failed to zap it"
 
-BUG: clouded:  Towns having different houses is a bit of an inconvenience when it costs money to travel between towns. Perhaps it's better to just have a single house? (Pay?)
-	- Unless inventories are unlimited, that must cope with the possibility of not having enough space
-
 BUG: Probably printers should be more restricted in what they can make
 	- UNPRINTABLE flag?
+		- cash, etc.
+		- also special items for quests, artifact bases etc. 
+			- anything with 0 generation or QUEST_SPECIAL or SPECIAL_GEN
+	- also should describe better (cards, etc)?
 
 BUG: clouded:  Dark auras of grues should have some visual effect, it took me a while to notice they were lowering my light and weren't just invisible [ or a message? ]
   - Some but not all negative light monsters also have a dark cloud (commented out). This should look different - always unknown? But don't describe as "unknown grid" - it isn't.
+  - Instead/plus "Everything around you dims/fades out."?
+  - Treat it similarly to a cloud of vision blocking smoke?
+	- although it doesn't block LOS, and so shouldn't replace (except momentarily?)
   
 BUG: clouded:  I'm way too strong early. At CL30 I have 380 HP, 150 AC, 5 BpR (with a dual darksaber so it's really 10), +17 speed and +2 movement speed. This is in part getting good loot and part monsters not being strong enough, I've been killing everything in one or two turns without getting scratched. Not sure how you want the power scaling compared to vanilla but so far monsters need some serious buffing!
 	<This is though with the monsters-have-1-melee-blow problem>
@@ -52,18 +56,11 @@ BUG: clouded:  Monster list feedback: I assume you still have work planned but I
 
 BUG: clouded:  Cyber augments are a cool idea but legs seem way too overpowered. Movement speed is a really strong ability, I think you should reduce the effectiveness of a pval of it if you want it to be common. [[ this has been done ]] I don't think the player should ever get more than +2 permanent move speed (without some downside). Arm implants don't seem too strong. I only upgraded on my plain +3 int brain implant when I found a telepathy one after DL90. Implants in general sell for a ton without costing anything to implant / remove. [ a $ and time cost has been added ]
 
-BUG: backwardsEric (Mac): Xcode's leak checker reported some leaks. Here's the ones from loading an existing character:
-
-    Memory allocated by string_make() in player_quests_reset() is leaked (6 allocations; 2.05 KiB total).
-    Memory allocated by mem_zalloc() in parse_flavor_flavor() is leaked (239 allocations; 48 bytes apiece; 11.2 KiB total).
-    Memory allocated by string_append() in parse_flavor_flavor() is leaked (236 allocations; 6.36 KiB total).
-    Memory allocated by string_make() in insert_string() (called by flavor_init()) is leaked (59 allocations; 16 bytes apiece; 944 bytes total).
-    Memory allocated by mem_realloc() in insert_string() (call by flavor_init()) is leaked (1 allocation; 512 bytes total).
-
 Defer
 =====
 
-BUG: clouded:  Had a crash reading an unidentified scroll on DL24 of the fortress, I'm guessing this was deep descent trying to take me below the quest level on DL25 but I haven't IDed it yet.
+BUG: clouded:  Had a crash reading an unidentified
+		- cash, etc. scroll on DL24 of the fortress, I'm guessing this was deep descent trying to take me below the quest level on DL25 but I haven't IDed it yet.
 	- descent may be buggy (26->37), but this may be interaction with debug goto level.
 	- security card gets "xygos: cmd-obj.c:430: use_aux: Assertion `effect' failed"
 		- though this should never be found randomly
@@ -124,6 +121,7 @@ BUG: Saw climbing the stair into town put me in the middle of the level (not on 
 WontFix
 =======
 
+
 BUG? Do small dungeons have a bottom at the right place? (You can jump past it)
 	Yes. (No endboss, yet though)
 
@@ -135,6 +133,16 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+
+
+BUG: backwardsEric (Mac): Xcode's leak checker reported some leaks. Here's the ones from loading an existing character:
+
+    Memory allocated by string_make() in player_quests_reset() is leaked (6 allocations; 2.05 KiB total).
+    Memory allocated by mem_zalloc() in parse_flavor_flavor() is leaked (239 allocations; 48 bytes apiece; 11.2 KiB total).
+    Memory allocated by string_append() in parse_flavor_flavor() is leaked (236 allocations; 6.36 KiB total).
+    Memory allocated by string_make() in insert_string() (called by flavor_init()) is leaked (59 allocations; 16 bytes apiece; 944 bytes total).
+    Memory allocated by mem_realloc() in insert_string() (call by flavor_init()) is leaked (1 allocation; 512 bytes total).
+		- Probably. Several memory leaks have been fixed, it's not clear whether they are the same ones
 
 BUG: clouded:  It's easily missable that you can press Q in stores to look for a quest
 	- the difference between that and the other store specials is that it varies from one shop to another and
@@ -337,6 +345,9 @@ BUG: Buying a pair of shoes (retro rocket) {??} from a store was locked up in th
 BUG: "When activated, it feeds you for X turns" (on a battery. This isn't really even true for Androids - the 'activated' part)
 	- is there an existing way to hide activation descriptions?
 	Fixed (?)
+
+BUG: On Wine, if no name is given then the character is nameless (in the scores, at least)
+	(This is as V.) (Use a random shk first name?) (See existing '* for a random name')
 
 BUG: Quaffing pills
 	- one way to go would be to remove all references in the text to quaffing, make pills targets for eating, but keep the quaff command around as a shortcut and for finger memory.
