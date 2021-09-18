@@ -1394,6 +1394,7 @@ static int rd_stores_aux(rd_item_t rd_item_version)
 			/* Destroyed flag and danger */
 			rd_bool(&store->destroy);
 			rd_bool(&store->open);
+			rd_byte(&store->quest_status);
 			rd_s32b(&store->max_danger);
 		}
 	}

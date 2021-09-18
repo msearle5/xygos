@@ -877,6 +877,7 @@ void wr_stores(void)
 			/* Destroyed flag and danger */
 			wr_bool(store->destroy);
 			wr_bool(store->open);
+			wr_byte(store->quest_status);
 			wr_s32b(store->max_danger);
 		}
 	}

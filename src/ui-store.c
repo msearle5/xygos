@@ -66,6 +66,7 @@
 #define ORBIT_FARE 90000
 
 
+static int store_quest_status(struct store *store);
 static int store_get_stock(struct menu *m, int oid, bool sel);
 
 /**
@@ -188,6 +189,21 @@ static void collect_from_store(struct store *store)
 	}
 }
 
+/* Is there anything that can be done for an active quest?
+ * Returns 0 if there is not (no msg)
+ * 1 "Your task is still in progress" / no msg
+ * 2 "Your task is complete. Press 'Q' to discuss it." / no msg?
+ * 3 "You can press 'Q' to ask about a task." / "I've got something that needs doing - could you help?" (etc).
+ * 
+ * Of these, 0 means that no quest has anything (so there can be no conflicts)
+ * 1 means that a task is in progress
+ * 2 means that a task is complete (ignoring whether any are in progress)
+ * 3 means that a task is available.
+ * 
+ * This is the same priority as implicitly in store_quest(), and the order of quests
+ * as there takes priority over 1/2/3. The assumption in both places is that having
+ * more than one quest in any of these states at the same time shouldn't happen.
+ */
 /**
  * The greeting a shopkeeper gives the character says a lot about his
  * general attitude.
@@ -204,9 +220,6 @@ static void prt_welcome(struct store *store)
 
 	int j;
 
-	if (one_in_(2))
-		return;
-
 	/* Get the first name of the store owner (stop before the first space) */
 	for (j = 0; owner_name[j] && owner_name[j] != ' '; j++)
 		short_name[j] = owner_name[j];
@@ -220,7 +233,32 @@ static void prt_welcome(struct store *store)
 		if (faction > 0)
 			faction = (faction >= 3) ? 2 : 1;
 	}
-	if (one_in_(3)) {
+
+	/* If a quest is available, and the last time you visited it wasn't available
+	 * (or this is the first time you visited) print a suitable message.
+	 */
+	const char *quest_msg = NULL;
+	byte quest_status = store_quest_status(store);
+	if (quest_status != store->quest_status) {
+		store->quest_status = quest_status;
+		if (quest_status == 3) {
+			if (faction < 0)
+				quest_msg = "%s: Hmph. Maybe I could still use you for something.";
+			else if (faction == 0)
+				quest_msg = "%s: There's something I need doing. Are you interested?";
+			else if (faction == 1)
+				quest_msg = "%s: %s, could you help me with some work that's come up?";
+			else
+				quest_msg = "%s: Do you have a moment to spare to discuss a job, %s?";
+		}
+	}
+
+	if (!quest_msg && one_in_(2))
+		return;
+
+	if (quest_msg) {
+		prt(format(quest_msg, short_name, player->full_name), 0, 0);
+	} else if (one_in_(3)) {
 		size_t i = randint0(N_ELEMENTS(comment_hint));
 
 		/* Most shks will give you 100% hints by default, but mix in some lies if they don't like you.
@@ -668,9 +706,27 @@ static void store_redraw(struct store_context *ctx)
 			store_display_help(ctx);
 		else if (ctx->flags & STORE_SHOW_STEAL)
 			store_display_steal_help(ctx);
-		else
-			prt("Press '?' for help.", ctx->scr_places_y[LOC_HELP_PROMPT], 1);
-
+		else {
+			const char *help = "Press '?' for help.";
+			int helpx = 1;
+			prt(help, ctx->scr_places_y[LOC_HELP_PROMPT], helpx);
+			int quest_status = store_quest_status(ctx->store);
+			const char *quest_msg = NULL; 
+			switch(quest_status) {
+				case 2:
+					quest_msg = "Press 'Q' to finish your task.";
+					break;
+				case 3:
+					quest_msg = "Press 'Q' to ask about a task.";
+					break;
+			}
+			if (quest_msg) {
+				int minx = helpx + strlen(help);
+				int maxx = ctx->scr_places_x[LOC_AU] - 1;
+				int posx = minx + (((maxx - minx) - (strlen(quest_msg))) / 2);
+				c_put_str(COLOUR_ORANGE, quest_msg, ctx->scr_places_y[LOC_HELP_PROMPT], posx);
+			} 
+		}
 		ctx->flags &= ~(STORE_FRAME_CHANGE);
 	}
 
@@ -1962,6 +2018,49 @@ static void locate_quest(struct quest *q)
 	locate_get(min, max, feature, x, y, &xout, &yout, randint0(grids));
 	q->x = xout;
 	q->y = yout;
+}
+
+/* Is there anything that can be done for an active quest?
+ * Returns 0 if there is not (no msg)
+ * 1 "Your task is still in progress" / no msg
+ * 2 "Your task is complete. Press 'Q' to discuss it." / no msg?
+ * 3 "You can press 'Q' to ask about a task." / "I've got something that needs doing - could you help?" (etc).
+ * 
+ * Of these, 0 means that no quest has anything (so there can be no conflicts)
+ * 1 means that a task is in progress
+ * 2 means that a task is complete (ignoring whether any are in progress)
+ * 3 means that a task is available.
+ * 
+ * This is the same priority as implicitly in store_quest(), and the order of quests
+ * as there takes priority over 1/2/3. The assumption in both places is that having
+ * more than one quest in any of these states at the same time shouldn't happen.
+ */
+static int store_quest_status(struct store *store)
+{
+	if ((store->sidx == STORE_HOME) || (you_own(store)))
+		return 0;
+
+	if (store->sidx == STORE_AIR)
+		return 0;
+
+	quest_changed_level();
+	
+	// Scan the quests looking for a quest which is 'available' and based from this store.
+	for(int i=0;i<z_info->quest_max;i++)
+	{
+		struct quest *q = &player->quests[i];
+		if (((q->town < 0) || (q->town == (player->town - t_info))) && (q->store == (int)store->sidx) && (!(q->flags & QF_LOCKED))) {
+			if (!(q->flags & (QF_ACTIVE | QF_FAILED | QF_SUCCEEDED | QF_UNREWARDED))) {
+				return 3;
+			} else if (q->flags & QF_UNREWARDED) {
+				return 2;
+			} else if (q->flags & QF_ACTIVE) {
+				return 1;
+			}
+		}
+	}
+
+	return 0;
 }
 
 /* Asks the owner if there is anything they want doing */
