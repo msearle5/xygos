@@ -1340,7 +1340,8 @@ bool target_set_interactive(int mode, int x, int y)
 			cmd_set_arg_point(cmdq_peek(), "point", loc(x, y));
 			done = true;
 
-		} else if (event_is_key(press, 'k') || event_is_key(press, KTRL('D'))) {
+		} else if ((!OPT(player, rogue_like_commands) && event_is_key(press, 'k')) ||
+				(OPT(player, rogue_like_commands) && event_is_key(press, KTRL('D')))) {
 			/* Ignore the tracked object, set by target_set_interactive_aux() */
 			if (!(mode & TARGET_KILL)
 					&& pile_is_tracked(square_object(cave, loc(x, y)))) {
