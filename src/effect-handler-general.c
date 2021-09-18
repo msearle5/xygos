@@ -4408,6 +4408,8 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 	int columns = w / (longestname + 1);
 	int rows = h - (top + 2);
 	int toprow = 0;
+	int visible = MIN(nprintable, (rows * columns));
+	int screens = ((nprintable - 1) / (rows * columns)) + 1;
 	do 
 	{
 		/* Print a no-go line or the selected item (Move to two lines?) */
@@ -4437,36 +4439,45 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 			case '2':
 			case ARROW_DOWN:
 			selected += columns;
-			if (selected >= nprintable)
-				selected %= columns;
+			if (selected >= visible + (toprow * rows * columns))
+				selected = (selected % columns) + (toprow * rows * columns);
 			break;
 			case '4':
 			case ARROW_LEFT:
 			selected--;
-			if (selected < 0)
-				selected = nprintable - 1;
+			if (selected < (toprow * rows * columns))
+				selected = (toprow * rows * columns) + visible - 1;
 			break;
 			case '6':
 			case ARROW_RIGHT:
 			selected++;
-			if (selected >= nprintable)
-				selected = 0;
+			if (selected >= visible + (toprow * rows * columns))
+				selected = (toprow * rows * columns);
 			break;
 			case '8':
 			case ARROW_UP:
 			selected -= columns;
-			if (selected < 0)
-				selected += nprintable;
+			if (selected < (toprow * rows * columns))
+				selected += visible;
 			break;
 			case KC_PGDOWN:
-			selected += columns * rows;
-			if (selected >= nprintable)
-				selected %= (columns * rows);
+			if (toprow < screens - 1) {
+				toprow += 1;
+				selected += columns * rows;
+			}
+			if (toprow == screens - 1)
+				visible = nprintable - (toprow * rows * columns);
+			else
+				visible = MIN(nprintable, (rows * columns));
+			if (selected >= visible + (toprow * rows * columns))
+				selected = visible + (toprow * rows * columns) - 1;
 			break;
 			case KC_PGUP:
-			selected -= columns * rows;
-			if (selected < 0)
-				selected += nprintable;
+			if (toprow) {
+				toprow -= 1;
+				selected -= columns * rows;
+			}
+			visible = MIN(nprintable, (rows * columns));
 			break;
 
 			/* Select */
