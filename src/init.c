@@ -1054,6 +1054,8 @@ static struct table tables[] = {
 	{ TABLE(adj_dex_safe),				table_u8, 		STAT_RANGE },
 	{ TABLE(adj_con_fix),				table_u8, 		STAT_RANGE },
 	{ TABLE(adj_con_mhp),				table_s16,		STAT_RANGE },
+	{ TABLE(adj_str_blow),				table_u8,		STAT_RANGE },
+	{ TABLE(blows_table),				table_u8,		STAT_RANGE*BLOWS_ROWS },
 	/* player-spell.c */
 	{ TABLE(adj_mag_fail),				table_u8, 		STAT_RANGE },
 	{ TABLE(adj_mag_stat),				table_s16,		STAT_RANGE },
