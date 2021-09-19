@@ -154,17 +154,19 @@ static size_t obj_desc_name_prefix(char *buf, size_t max, size_t end,
 		strnfcat(buf, max, &end, "%d ", obj->number);
 	} else if (object_is_known_artifact(obj)) {
 		strnfcat(buf, max, &end, "the ");
-	} else if (*basename == '&') {
+	} else if (*basename == '&' || *basename == '$') {
 		bool an = false;
 		const char *lookahead = basename + 1;
 
 		while (*lookahead == ' ') lookahead++;
 
-		if (*lookahead == '#') {
-			if (modstr && is_a_vowel(*modstr))
+		if (*basename == '&') {
+			if (*lookahead == '#') {
+				if (modstr && is_a_vowel(*modstr))
+					an = true;
+			} else if (is_a_vowel(*lookahead)) {
 				an = true;
-		} else if (is_a_vowel(*lookahead)) {
-			an = true;
+			}
 		}
 
 		if (!terse) {
@@ -197,8 +199,8 @@ size_t obj_desc_name_format(char *buf, size_t max, size_t end,
 	/* Copy the string */
 	while (*fmt) {
 		/* Skip */
-		if (*fmt == '&') {
-			while (*fmt == ' ' || *fmt == '&')
+		if (*fmt == '&' || *fmt == '$') {
+			while (*fmt == ' ' || *fmt == '&' || *fmt == '$')
 				fmt++;
 			continue;
 		} else if (*fmt == '~') {

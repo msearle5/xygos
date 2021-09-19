@@ -2478,7 +2478,7 @@ flags:IGNORE_ACID
 desc:Close fitting, telescoping titanium chains, which cross over your chest and back between a collar and belt. They don't look as if they could offer much protection, but are in fact the equivalent of the more common belt forcefield generators and can be very effective.
 material:titanium
 
-name:& unimesh vest~
+name:$ unimesh vest~
 type:hard armor
 graphics:[:AliceBlue
 level:64
@@ -2489,7 +2489,7 @@ attack:0d0:-1:0
 armor:55:0
 desc:A mostly flexible mesh of what can only be the real McCoy - unobtainium - that silvery-blue cast can't be anything else. While nearly as lightweight and easy to wear as kevlar, it is hugely more effective.
 
-name:& uniplate suit~
+name:$ uniplate suit~
 type:hard armor
 graphics:[:LightSkyBlue
 level:72
@@ -2790,7 +2790,7 @@ armor:15:0
 desc:A smoothly swept curve of titanium and exotic plastics, capable of stopping most small arms fire. It is heavy, but it's carefully balanced and so doesn't limit your movement as much as you might have thought at first. 
 material:titanium
 
-name:& unishield~
+name:$ unishield~
 type:shield
 graphics:):AliceBlue
 level:55
@@ -5071,7 +5071,7 @@ effect:SENSE_OBJECTS
 effect-yx:22:40
 time:50
 
-name:& universal detector~
+name:$ universal detector~
 type:gadget
 graphics:-:d
 level:30
