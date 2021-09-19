@@ -266,6 +266,7 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 {
 	bool store = mode & ODESC_STORE ? true : false;
 	bool spoil = mode & ODESC_SPOIL ? true : false;
+	bool capital = mode & ODESC_CAPITAL ? true : false;
 	
 	/* Actual name for flavoured objects if aware, or in store, or spoiled */
 	bool aware = object_flavor_is_aware(obj) || store || spoil;
@@ -381,11 +382,11 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 						}
 					}
 				}
-			}/* else if (aware && !obj->artifact &&
-					 (obj->kind->flavor || obj->kind->tval == TV_CARD)) {
-				;
-			}*/
+			}
 		}
+	}
+	if (capital) {
+		*buf = toupper(*buf);
 	}
 	return end;
 }

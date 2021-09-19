@@ -2071,6 +2071,7 @@ char *format_custom_message(const struct object *obj, const char *string, char *
 	const char *next;
 	const char *s;
 	const char *tag;
+	const char *orig = string;
 	size_t end = 0;
 	*buf = 0;
 
@@ -2094,8 +2095,11 @@ char *format_custom_message(const struct object *obj, const char *string, char *
 			switch(msg_tag_lookup(tag)) {
 			case MSG_TAG_NAME:
 				if (obj) {
-					end += object_desc(buf, len, obj,
-									   ODESC_PREFIX | ODESC_BASE, p);
+					u32b flags = ODESC_PREFIX | ODESC_BASE;
+					/* First character of the string, so capitalize */
+					if (next == orig)
+						flags |= ODESC_CAPITAL;
+					end += object_desc(buf, len, obj, flags, p);
 				} else {
 					strnfcat(buf, len, &end, "hands");
 				}

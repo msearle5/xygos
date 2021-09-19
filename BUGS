@@ -4,8 +4,6 @@ BUG: "Couldn't find artifact" warning because new char based on previous still h
 
 BUG: activate coronet: "You activate it. the Coronet of the Core pulses a soft white" (the should be The)
 
-BUG: Badly named: "an universal detector" - there is no way to infer a/an reliably from spelling alone, so would have to add a flag (such as a leading character).
-
 BUG: Shop owners (store_do_fight()) are always male
 
 BUG? Stuff isn't transported when you fly - should it be? Should there just be 1 house?
@@ -29,9 +27,6 @@ BUG: Once recalled back into a 1x1 hole in the rock in the top left (X4 Y4)
 
 BUG: Crashed on exp gain as a Super Soldier
 
-BUG: clouded (Windows):  Random crash when trying to start a character with the unknown talents perk: crash happened after pressing space to select it, doesn't always happen.
-	- Not seen on Linux, or wine/winedbg
-
 BUG: clouded:  Failing to use a gadget says "you failed to zap it"
 
 BUG: Probably printers should be more restricted in what they can make
@@ -50,14 +45,18 @@ BUG: clouded:  Dark auras of grues should have some visual effect, it took me a 
 BUG: clouded:  I'm way too strong early. At CL30 I have 380 HP, 150 AC, 5 BpR (with a dual darksaber so it's really 10), +17 speed and +2 movement speed. This is in part getting good loot and part monsters not being strong enough, I've been killing everything in one or two turns without getting scratched. Not sure how you want the power scaling compared to vanilla but so far monsters need some serious buffing!
 	<This is though with the monsters-have-1-melee-blow problem>
 	- be less generous with BpR?
+	- use incrementing autosave?
+	- tunables for blows? (calc_blowsl748 45 to z or per cl?)
+		adj_str_blow why?
 
 BUG: clouded:  Monster list feedback: I assume you still have work planned but I felt like I was mostly fighting animals (and usually ones from V) which wasn't what I expected. The only dangerous monsters I've seen so far are Mecha-Triax (relatively appropriate in difficulty), shamblers (not too hard though, I killed one OOD around DL50), Cyberdemons (nasty), and Godzilla (nasty, haven't seen rPois at all). The other uniques I've ran into had much too few HPs. <This is also with the monsters-have-1-melee-blow problem>
 	- lack of rPois is a problem. Stats suggest l55. Basically you need to get lucky and find an artifact, there are no other base item sources (there are egos). Add a green cape? (Fume hood, visor, suit etc.) and some egos?
 
-BUG: clouded:  Cyber augments are a cool idea but legs seem way too overpowered. Movement speed is a really strong ability, I think you should reduce the effectiveness of a pval of it if you want it to be common. [[ this has been done ]] I don't think the player should ever get more than +2 permanent move speed (without some downside). Arm implants don't seem too strong. I only upgraded on my plain +3 int brain implant when I found a telepathy one after DL90. Implants in general sell for a ton without costing anything to implant / remove. [ a $ and time cost has been added ]
-
 Defer
 =====
+
+BUG: clouded (Windows):  Random crash when trying to start a character with the unknown talents perk: crash happened after pressing space to select it, doesn't always happen.
+	- Not seen on Linux, or wine/winedbgm or Win10.
 
 BUG: clouded:  Had a crash reading an unidentified
 		- cash, etc. scroll on DL24 of the fortress, I'm guessing this was deep descent trying to take me below the quest level on DL25 but I haven't IDed it yet.
@@ -66,8 +65,7 @@ BUG: clouded:  Had a crash reading an unidentified
 		- though this should never be found randomly
 			- fixed.
 	- The card crash is reading a "local acquisition" card (and the greater variety)
-		- UTR, on Linux or Wine
-
+		- UTR, on Linux or Wine, or Win10
 
 BUG: A Collective Skate that a cyborg started with was {??}
 	UTR
@@ -134,6 +132,11 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 Fixed
 =====
 
+BUG: Badly named: "an universal detector" - there is no way to infer a/an reliably from spelling alone, so would have to add a flag (such as a leading character).
+	Fixed 32413b0f7
+
+BUG: clouded:  Cyber augments are a cool idea but legs seem way too overpowered. Movement speed is a really strong ability, I think you should reduce the effectiveness of a pval of it if you want it to be common. I don't think the player should ever get more than +2 permanent move speed (without some downside). Arm implants don't seem too strong. I only upgraded on my plain +3 int brain implant when I found a telepathy one after DL90. Implants in general sell for a ton without costing anything to implant / remove.
+	Move speed has been put on a curve, in the same way speed is. A $ and time cost has been added to install/remove.
 
 BUG: backwardsEric (Mac): Xcode's leak checker reported some leaks. Here's the ones from loading an existing character:
 
