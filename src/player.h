@@ -189,7 +189,8 @@ enum {
 	QF_ESSENTIAL =		0x10,
 	QF_LOCKED =			0x20,
 	QF_GUARDIAN =		0x40,
-	QF_TOWN =			0x80
+	QF_TOWN =			0x80,
+	QF_HOME =			0x100
 };
 
 /**

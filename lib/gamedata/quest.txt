@@ -125,8 +125,41 @@ failure:So there *was* a shark in there, but it got away? I'm not arguing, but t
 
 
 ####################################
+# The home quests
+# (Could also actually be used for other buildings blocked by a quest)
+#
+name:Wasps
+level:4
+race:wasps' nest
+desc:There's nothing much wrong with the empty house, except the huge wasps' nest in there. And these aren't normal wasps, mind - they're huge great things, and so far everyone has taken one look at them and legged it.
+store:Stores:Home
+number:1
+flags:home
+
+#name:Cyberspace
+#level:8
+#race:cyberpsycho
+#number:1
+#desc:The usual cyber-enthusiasts aren't usually exactly threatening. More annoying. Except when there's a complete nut-job shooting up the town and they are all convinced that the sun shines out of his shiny metal ass. Scrap him and you can use their place yourself.
+# (Oh, and don't worry about what the Salon might think 
+#	- alternate completion? (get a X from the Salon first?)
+#flags:home
+#store:Mine:Home
+#enthusiasts, cyborgs, psycho
+
+#name:Checkpoint Alpha
+#level:20
+#race:(robot?) hologram?
+#number:12?
+#desc:Entry to the Fortress was originally secured by armed guards based at a small fortified building on the surface close to the way in. The entrance hasn't been actively guarded for years, but the checkpoint's automated defences remain. The reports I have heard are pretty sketchy, but you can probably expect to have to deal with landmines, killer robots and holograms.
+#flags:home
+#store:Fortress:Home
+
+
+####################################
 # The end-level guardian quests
 #
+
 
 name:Slick
 level:5

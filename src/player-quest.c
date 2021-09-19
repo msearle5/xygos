@@ -38,6 +38,7 @@
 #include "store.h"
 #include "trap.h"
 #include "ui-knowledge.h"
+#include "ui-input.h"
 #include "ui-store.h"
 #include "world.h"
 
@@ -178,6 +179,8 @@ static enum parser_error parse_quest_flags(struct parser *p) {
 		q->flags |= QF_GUARDIAN;
 	if (strstr(in, "town"))
 		q->flags |= QF_TOWN;
+	if (strstr(in, "home"))
+		q->flags |= QF_HOME;
 	return PARSE_ERROR_NONE;
 }
 
@@ -530,7 +533,7 @@ static bool get_next_hitlist(struct player *p)
 		"Kill", "Exterminate", "Annul", "Inhume", "Obliterate",
 		"Blow away", "Rub out", "Erase", "Put down", "Assassinate",
 		"Execute", "Remove", "Get rid of", "Gank", "Liquidate",
-		"Destroy", "Delete", "Annihilate"
+		"Destroy", "Delete", "Annihilate", "Squish"
 	};
 	if (q->intro)
 		string_free(q->intro);
@@ -665,7 +668,7 @@ struct quest *get_quest_by_name(const char *name)
 }
 
 /** Add a start item to a list, returns the item used */
-static struct start_item * add_item(struct start_item *si, int tval, const char *name, int min, int max)
+static struct start_item *add_item(struct start_item *si, int tval, const char *name, int min, int max)
 {
 	struct start_item *prev = NULL;
 	while (si->max != 0) {
@@ -877,12 +880,12 @@ void quest_enter_level(struct chunk *c)
 	}
 }
 
-static struct object * has_special_flag(struct object *obj, void *data)
+static struct object *has_special_flag(struct object *obj, void *data)
 {
 	return (of_has(obj->flags, OF_QUEST_SPECIAL)) ? obj : NULL;
 }
 
-static struct object * obj_of_kind(struct object *obj, void *data)
+static struct object *obj_of_kind(struct object *obj, void *data)
 {
 	struct object_kind *k = (struct object_kind *)data;
 	if (obj->kind == k)
@@ -1313,7 +1316,6 @@ void quest_reward(struct quest *q, bool success, struct store_context *ctx)
 			}
 			/* Open it again */
 			q->flags &= ~(QF_SUCCEEDED | QF_FAILED | QF_UNREWARDED | QF_ACTIVE);
-			//q->flags |= QF_ACTIVE;
 			player->au += au;
 			return;
 		}
@@ -1427,6 +1429,55 @@ bool quest_item_check(const struct object *obj) {
 	return false;
 }
 
+/* Check if entry to a building should be blocked by a quest.
+ * Returns true if entry should be blocked.
+ * 
+ * This checks by looking for a home-quest (HOME flag set) with matching town and store.
+ * 		If so, and it's inactive and not complete: Make it active, and ask whether to enter.
+ * 			If so, enter a quest (same as other quests entered from the town).
+ * 			If not, go back to the town.
+ * 		Either way, return true as you aren't entering the building.
+ * If there is none, return false and enter the building normally. 
+ */
+bool quest_enter_building(struct store *store) {
+	for(int i=0;i<z_info->quest_max;i++) {
+		if ((player->quests[i].flags & QF_HOME) && (!(player->quests[i].flags & (QF_SUCCEEDED|QF_FAILED|QF_UNREWARDED))) &&
+			(player->quests[i].town == player->town - t_info) && (player->quests[i].store == (int)store->sidx)) {
+			player->quests[i].flags |= QF_ACTIVE;
+			screen_save();
+			Term_clear();
+
+			/* Prepare hooks */
+			text_out_hook = text_out_to_screen;
+			text_out_indent = 1;
+			Term_gotoxy(0, 0);
+
+			/* Print it */
+			text_out(player->quests[i].desc);
+
+			/* Level */
+			text_out_c(COLOUR_YELLOW, " (Level %d)", player->quests[i].level);
+
+			text_out_c(COLOUR_L_BLUE, " [yn]");
+			text_out_indent = 0;
+
+			/* Get an answer */
+			struct keypress ch = inkey();
+
+			bool response = true;
+			if ((ch.code == ESCAPE) || (strchr("Nn", ch.code)))
+				response = false;
+
+			screen_load();
+			if (response) {
+				/* accepted */
+				;
+			}
+			return true;
+		}
+	}
+	return false;
+}
 
 static bool check_quest(struct quest *q, const struct monster *m) {
 	if (m->race == q->race) {

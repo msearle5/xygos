@@ -19,6 +19,8 @@
 #ifndef QUEST_H
 #define QUEST_H
 
+#include "store.h"
+
 /* Quest list */
 extern struct quest *quests;
 struct store_context;
@@ -35,6 +37,7 @@ struct quest *get_quest_by_name(const char *name);
 bool quest_item_check(const struct object *obj);
 void quest_enter_level(struct chunk *c);
 void quest_changed_level(void);
+bool quest_enter_building(struct store *store);
 void quest_changing_level(void);
 bool quest_is_rewardable(const struct quest *q);
 bool quest_special_endings(struct store_context *ctx);

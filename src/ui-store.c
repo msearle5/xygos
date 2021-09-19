@@ -2807,6 +2807,10 @@ void use_store(game_event_type type, game_event_data *data, void *user)
 	if (!do_default)
 		return;
 
+	/* Check whether it's blocked by a quest */
+	if (quest_enter_building(store))
+		return;
+
 	/* Check that we aren't banned */
 	if (store->bandays) {
 		msg("%s", store->banreason);
