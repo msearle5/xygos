@@ -2,14 +2,17 @@ BUGS
 ====
 BUG: "Couldn't find artifact" warning because new char based on previous still had a player-made artifact
 
-BUG: activate coronet: "You activate it. the Coronet of the Core pulses a soft white" (the should be The)
-
 BUG: Shop owners (store_do_fight()) are always male
 
 BUG? Stuff isn't transported when you fly - should it be? Should there just be 1 house?
 	- see also -
 BUG: clouded:  Towns having different houses is a bit of an inconvenience when it costs money to travel between towns. Perhaps it's better to just have a single house? (Pay?)
 	- Unless inventories are unlimited, that must cope with the possibility of not having enough space
+	- Also limits the possibilities of homes/home expansion as a quest reward, though home-unlock quests would
+		work (which could be kill-the-X quests like ToME, but they could be granted for other reasons. It would
+		have to be accessible to most characters at the first approach, though.)
+	- option?
+	- branched, homequests
 
 BUG: Stores which close lose their entrance but don't become ruins. (Only when more than one would?)
 
@@ -27,10 +30,8 @@ BUG: Once recalled back into a 1x1 hole in the rock in the top left (X4 Y4)
 
 BUG: Crashed on exp gain as a Super Soldier
 
-BUG: clouded:  Failing to use a gadget says "you failed to zap it"
-
 BUG: Probably printers should be more restricted in what they can make
-	- UNPRINTABLE flag?
+	- [UN]PRINTABLE flag?
 		- cash, etc.
 		- also special items for quests, artifact bases etc. 
 			- anything with 0 generation or QUEST_SPECIAL or SPECIAL_GEN
@@ -119,6 +120,11 @@ BUG: Saw climbing the stair into town put me in the middle of the level (not on 
 WontFix
 =======
 
+BUG: clouded:  Failing to use a gadget says "you failed to zap it"
+	- cmd-obj.c, check_devices()
+	- BAD. Gadgets=rods="z to zap", always referred to as zapping it. It is though confusing that wands are called 'zappers', and this could be improved by either a new verb for gadgets (used consistently), or a new name
+	for wands (not 'zappers'), or perhaps even combining the two classes (gadgets and wands) - completely, or maybe
+	just in the UI (both are zapped with 'z' but are otheriwse the same - displayed as different categories, etc.) 
 
 BUG? Do small dungeons have a bottom at the right place? (You can jump past it)
 	Yes. (No endboss, yet though)
@@ -131,6 +137,9 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+
+BUG: activate coronet: "You activate it. the Coronet of the Core pulses a soft white" (the should be The)
+	Fixed e70284c0b
 
 BUG: Badly named: "an universal detector" - there is no way to infer a/an reliably from spelling alone, so would have to add a flag (such as a leading character).
 	Fixed 32413b0f7
