@@ -24,11 +24,12 @@ default:max-stack:99
 name:chest:container~
 graphics:slate
 # max-stack:1
-flags:HATES_ACID | HATES_FIRE
+flags:HATES_ACID | HATES_FIRE | UNPRINTABLE
 
 name:block:block~
 graphics:slate
 break:0
+flags:UNPRINTABLE
 # max-stack:1
 
 name:printer:printer~
@@ -220,6 +221,7 @@ material:organic
 
 name:cash
 graphics:light yellow
+flags:UNPRINTABLE
 
 name:legs:leg implant~
 graphics:white

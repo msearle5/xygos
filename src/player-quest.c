@@ -1431,13 +1431,13 @@ bool quest_item_check(const struct object *obj) {
 
 /* Check if entry to a building should be blocked by a quest.
  * Returns true if entry should be blocked.
- * 
+ *
  * This checks by looking for a home-quest (HOME flag set) with matching town and store.
  * 		If so, and it's inactive and not complete: Make it active, and ask whether to enter.
  * 			If so, enter a quest (same as other quests entered from the town).
  * 			If not, go back to the town.
  * 		Either way, return true as you aren't entering the building.
- * If there is none, return false and enter the building normally. 
+ * If there is none, return false and enter the building normally.
  */
 bool quest_enter_building(struct store *store) {
 	for(int i=0;i<z_info->quest_max;i++) {

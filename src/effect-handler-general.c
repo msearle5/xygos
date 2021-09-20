@@ -4083,15 +4083,21 @@ static int difficulty_colour(int diff)
 }
 
 /** Return true if it is possible (in any circumstances) to print an item.
- * (This does not have to check the material)
- * Unprintable items include blocks, special artifacts, etc. There should probably be a flag for
- * more granular control.
+ * (This does not have to check there is enough material)
+ * Unprintable items include blocks, chests, special artifacts, etc.
+ * There is also an UNPRINTABLE flag for more granular control.
  */ 
 static bool kind_is_printable(const struct object_kind *k)
 {
-	if (k->tval == TV_BLOCK)
+	if (k->alloc_prob == 0)
 		return false;
-	if (k->tval == TV_CHEST)
+	if (kf_has(k->kind_flags, KF_QUEST_ART))
+		return false;
+	if (kf_has(k->kind_flags, KF_INSTA_ART))
+		return false;
+	if (kf_has(k->kind_flags, KF_SPECIAL_GEN))
+		return false;
+	if (kf_has(k->kind_flags, KF_UNPRINTABLE))
 		return false;
 	if (!(material + k->material)->printable)
 		return false;
@@ -4370,8 +4376,11 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 				item[nprintable].chunks = chunks;
 				item[nprintable].chunk_idx = material;
 				item[nprintable].kind = k;
-				
+
 				obj_desc_name_format(item[nprintable].name, sizeof item[nprintable].name, 0, k->name, 0, false);
+				if (k->tval == TV_CARD)
+					strncat(item[nprintable].name, " card", sizeof item[nprintable].name);
+
 				int length = strlen(item[nprintable].name);
 				if (length > longestname)
 					longestname = length;
@@ -4557,7 +4566,7 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 			int diff = pk->difficulty;
 			if (chunk[pk->chunk_idx]->pval <= maxmetal) {
 				/* Usually be kind */
-				diff -= 500;
+				diff -= 400;
 				diff /= 10;
 			}
 			if (randint0(10000) < diff) {
