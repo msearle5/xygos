@@ -1427,7 +1427,6 @@ bool quest_item_check(const struct object *obj) {
 	return false;
 }
 
-
 static bool check_quest(struct quest *q, const struct monster *m) {
 	if (m->race == q->race) {
 		if (q->cur_num < q->max_num) {
