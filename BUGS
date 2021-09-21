@@ -30,19 +30,12 @@ BUG: Once recalled back into a 1x1 hole in the rock in the top left (X4 Y4)
 
 BUG: Crashed on exp gain as a Super Soldier
 
-BUG: Probably printers should be more restricted in what they can make
-	- [UN]PRINTABLE flag?
-		- cash, etc.
-		- also special items for quests, artifact bases etc. 
-			- anything with 0 generation or QUEST_SPECIAL or SPECIAL_GEN
-	- also should describe better (cards, etc)?
-
 BUG: clouded:  Dark auras of grues should have some visual effect, it took me a while to notice they were lowering my light and weren't just invisible [ or a message? ]
   - Some but not all negative light monsters also have a dark cloud (commented out). This should look different - always unknown? But don't describe as "unknown grid" - it isn't.
   - Instead/plus "Everything around you dims/fades out."?
   - Treat it similarly to a cloud of vision blocking smoke?
 	- although it doesn't block LOS, and so shouldn't replace (except momentarily?)
-  
+
 BUG: clouded:  I'm way too strong early. At CL30 I have 380 HP, 150 AC, 5 BpR (with a dual darksaber so it's really 10), +17 speed and +2 movement speed. This is in part getting good loot and part monsters not being strong enough, I've been killing everything in one or two turns without getting scratched. Not sure how you want the power scaling compared to vanilla but so far monsters need some serious buffing!
 	<This is though with the monsters-have-1-melee-blow problem>
 	- be less generous with BpR?
@@ -137,6 +130,13 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+
+BUG: Probably printers should be more restricted in what they can make
+	- [UN]PRINTABLE flag?
+		- cash, etc.
+		- also special items for quests, artifact bases etc. 
+			- anything with 0 generation or QUEST_SPECIAL or SPECIAL_GEN
+	- also should describe better (cards, etc)?
 
 BUG: activate coronet: "You activate it. the Coronet of the Core pulses a soft white" (the should be The)
 	Fixed e70284c0b
