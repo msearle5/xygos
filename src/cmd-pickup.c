@@ -245,22 +245,25 @@ static void player_pickup_aux(struct player *p, struct object *obj,
 	/* Set ignore status */
 	p->upkeep->notice |= PN_IGNORE;
 
+	/* Reduce if too heavy */
+	int items = obj->number;
+	int maxweight = weight_limit(&player->state) * BURDEN_LIMIT;
+	while (player->upkeep->total_weight + (items * obj->weight) > maxweight) {
+		items--;
+		if (items == 0)
+			break;
+	}
+	/* Give up if even one is too heavy */
+	if (items == 0)
+		return;
+	/* Split */
+	if (items < obj->number)
+		max = items;
+
 	/* Allow auto-pickup to limit the number if it wants to */
 	if (auto_max && max > auto_max) {
 		max = auto_max;
 	}
-
-	/* Reduce if too heavy */
-	/*int items =  obj->number - MAX(num_left, 0);
-	int maxweight = weight_limit(&player->state) * BURDEN_LIMIT;
-	fprintf(stderr,"%d items, %d max weight\n", items, maxweight);
-	while (player->upkeep->total_weight + (items * obj->weight) > maxweight) {
-		fprintf(stderr,"too heavy (%d + %dx%d)\n", player->upkeep->total_weight, items ,
-			obj->weight);
-		items--;
-		if (items == 0)
-			break;
-	}*/
 
 	/* Carry the object, prompting for number if necessary */
 	struct object *picked_up = NULL;
@@ -276,10 +279,7 @@ static void player_pickup_aux(struct player *p, struct object *obj,
 		int num;
 		bool dummy;
 
-		if (auto_max)
-			num = auto_max;
-		else
-			num = get_quantity(NULL, max);
+		num = get_quantity(NULL, max);
 		if (!num) return;
 		picked_up = floor_object_for_use(p, obj, num, false, &dummy);
 	}
