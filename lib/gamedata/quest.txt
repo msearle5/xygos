@@ -128,7 +128,7 @@ failure:So there *was* a shark in there, but it got away? I'm not arguing, but t
 # The home quests
 # (Could also actually be used for other buildings blocked by a quest)
 #
-name:Rooms & Shrooms
+name:Rooms+Shrooms
 level:4
 race:mushroom
 number:6
@@ -155,7 +155,7 @@ flags:home
 #store:Mine:Home
 #enthusiasts, cyborgs, psycho
 
-#name:Checkpoint Alpha
+#name:Checkpoint X
 #level:20
 #race:(robot?) hologram?
 #number:12?
@@ -163,6 +163,7 @@ flags:home
 #flags:home
 #store:Fortress:Home
 
+# Tiles & Reptiles
 name:Lost World
 level:40
 race:saur

@@ -57423,7 +57423,7 @@ D:%####################################%
 D:%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 #House quests
-name:Rooms & Shrooms
+name:Rooms+Shrooms
 type:Quest
 rows:12
 columns:17
