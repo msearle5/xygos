@@ -1,8 +1,7 @@
 BUGS
 ====
-BUG: "Couldn't find artifact" warning because new char based on previous still had a player-made artifact
-
-BUG: Shop owners (store_do_fight()) are always male
+BUG: Shop owners (store_do_fight()) are always male	
+	- would need to split first into 2/3
 
 BUG? Stuff isn't transported when you fly - should it be? Should there just be 1 house?
 	- see also -
@@ -18,17 +17,11 @@ BUG: Stores which close lose their entrance but don't become ruins. (Only when m
 
 BUG: "You knock out the MlM" -> "The MlM flees in terror!" -> "The MlM can move again" (after making a move!)
 
-BUG: After the success/failure message from a quest, ESC is the only way to get back out.
-
-BUG: "failed!\n" twice from r_super.c (UTR going lev 1-26, Human Super Engineer) but seen in other circumstances
-
 BUG: Once recalled back into a 1x1 hole in the rock in the top left (X4 Y4)
 	!!! - this is presumably because sanitize_player_loc doesn't check that the point is connected to the >
 		- could do this, but is there always a <?
 		- Any in the right direction?
 		- see "WIP" branch
-
-BUG: Crashed on exp gain as a Super Soldier
 
 BUG: clouded:  Dark auras of grues should have some visual effect, it took me a while to notice they were lowering my light and weren't just invisible [ or a message? ]
   - Some but not all negative light monsters also have a dark cloud (commented out). This should look different - always unknown? But don't describe as "unknown grid" - it isn't.
@@ -48,6 +41,15 @@ BUG: clouded:  Monster list feedback: I assume you still have work planned but I
 
 Defer
 =====
+
+BUG: "failed!\n" twice from r_super.c (UTR going lev 1-26, Human Super Engineer) but seen in other circumstances
+	- UTR
+
+BUG: Crashed on exp gain as a Super Soldier
+	- UTR
+
+BUG: "Couldn't find artifact" warning because new char based on previous still had a player-made artifact
+	- UTR
 
 BUG: clouded (Windows):  Random crash when trying to start a character with the unknown talents perk: crash happened after pressing space to select it, doesn't always happen.
 	- Not seen on Linux, or wine/winedbgm or Win10.
@@ -311,6 +313,8 @@ BUG: At dungeon l127 and l0, able to generate a Massive Iron Crown with acquisit
 	- With no generation line (alloc 0) they shouldn't appear... could this have been the old "special artifacts" bug?
 	- No - seen this again (with a Mighty Hammer at l15, using debug option G)
 	- Fixed 8273ffd288aac2cd4382a46c490e3e86720ae060
+
+BUG: After the success/failure message from a quest, ESC is the only way to get back out.
 
 BUG: The "use flavors" option is ignored
 	- Fixed. a2c1a08917e191ad472a54cf161449ac3adf7f0a

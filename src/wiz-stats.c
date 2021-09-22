@@ -1665,7 +1665,7 @@ void stats_collect(int nsim, int simtype)
 	char buf[1024];
 
 	/* Make sure the results are good! */
-	if (!((simtype >= 1) && (simtype <= 4)))
+	if (!((simtype >= 1) && (simtype <= 5)))
 		return; 
 
 	tries = nsim;
