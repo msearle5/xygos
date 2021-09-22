@@ -2461,7 +2461,7 @@ static textblock *display_quest_descr_tb(int oid)
 	if (player->active_quest == oid) {
 		descr_col = COLOUR_RED;
 		if (player->quests[oid].max_num) {
-			snprintf(buf, sizeof(buf), "%s: %d/%d killed",
+			snprintf(buf, sizeof(buf), " (%s: %d/%d killed)",
 				player->quests[oid].race->name,
 				player->quests[oid].cur_num,
 				player->quests[oid].max_num);

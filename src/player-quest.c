@@ -1471,7 +1471,21 @@ bool quest_enter_building(struct store *store) {
 			screen_load();
 			if (response) {
 				/* accepted */
-				;
+				player->active_quest = i;
+
+				/* set pos */
+				player->quests[i].x = player->grid.x;
+				player->quests[i].y = player->grid.y;
+
+				/* Hack -- take a turn */
+				player->upkeep->energy_use = z_info->move_energy;
+
+				/* Create a way back */
+				player->upkeep->create_up_stair = true;
+				player->upkeep->create_down_stair = false;
+
+				/* Change level */
+				dungeon_change_level(player, player->quests[i].level);
 			}
 			return true;
 		}

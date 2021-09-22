@@ -128,12 +128,20 @@ failure:So there *was* a shark in there, but it got away? I'm not arguing, but t
 # The home quests
 # (Could also actually be used for other buildings blocked by a quest)
 #
-name:Wasps
+name:Rooms & Shrooms
 level:4
-race:wasps' nest
-desc:There's nothing much wrong with the empty house, except the huge wasps' nest in there. And these aren't normal wasps, mind - they're huge great things, and so far everyone has taken one look at them and legged it.
+race:mushroom
+number:6
 store:Stores:Home
-number:1
+desc:Well, yes. Nobody's stopping you staying there - if you can deal with all the mushrooms growing through the floor. Me, no thanks.
+flags:home
+
+name:Wasps
+level:7
+race:wasps' nest
+number:5
+store:Sewers:Home
+desc:There's nothing much wrong with the empty house, except the huge wasps' nest in there. And these aren't normal wasps, mind - they're huge great things, and so far everyone has taken one look at them and legged it. I've also heard someone claim that they explode, although that may have just have been an excuse for running away...
 flags:home
 
 #name:Cyberspace
@@ -154,6 +162,12 @@ flags:home
 #desc:Entry to the Fortress was originally secured by armed guards based at a small fortified building on the surface close to the way in. The entrance hasn't been actively guarded for years, but the checkpoint's automated defences remain. The reports I have heard are pretty sketchy, but you can probably expect to have to deal with landmines, killer robots and holograms.
 #flags:home
 #store:Fortress:Home
+
+name:Lost World
+level:40
+race:saur
+number:12
+desc:The previous occupant of Caldera View kept some unusual pets. Then one bit him in two. We'd all be grateful if you could stop them grazing on our customers. You could even use the place yourself.
 
 
 ####################################
