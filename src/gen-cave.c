@@ -2788,13 +2788,17 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 		 * player position
 		 **/
 		for(int i=0; i<z_info->quest_max; i++) {
-			if (!(p->quests[i].flags & QF_ACTIVE)) {
-				if (p->quests[i].x) {
-					grid.x = p->quests[i].x;
-					grid.y = p->quests[i].y;
-					square_set_feat(c_old, grid, FEAT_FLOOR);
-					found = true;
-					break;
+			if (p->quests[i].town == player->town - t_info) {
+				if (!(p->quests[i].flags & QF_ACTIVE)) {
+					if (p->quests[i].x) {
+						grid.x = p->quests[i].x;
+						grid.y = p->quests[i].y;
+						if (!(p->quests[i].flags & QF_HOME)) {
+							square_set_feat(c_old, grid, FEAT_FLOOR);
+						}
+						found = true;
+						break;
+					}
 				}
 			}
 		}

@@ -1009,7 +1009,7 @@ void quest_changing_level(void)
 	 * where you enter the quest without descending the stair from the town (such as a
 	 * descent card, or debug options)
 	 **/
-	if (player->depth) {
+	else if (player->depth) {
 		struct quest *quest = quest_guardian();
 		if (quest)
 			quest->flags |= QF_ACTIVE;
