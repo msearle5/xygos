@@ -848,6 +848,7 @@ void wr_stores(void)
 				own = store->owners;
 				while (own) {
 					wr_string(own->name);
+					wr_bool(own->male);
 					own = own->next;
 				}
 			}

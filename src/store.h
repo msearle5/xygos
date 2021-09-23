@@ -57,6 +57,7 @@ struct owner {
 	unsigned int oidx;
 	s32b max_cost;
 	s32b greed;
+	bool male;
 };
 
 struct store_entry {
@@ -112,9 +113,11 @@ extern struct store *stores;
 extern struct store *stores_init;
 
 /**
- * The first name array
+ * The first name arrays
  */
 extern struct hint *firstnames;
+extern struct hint *firstnames_male;
+extern struct hint *firstnames_female;
 
 /**
  * The second name array
@@ -155,7 +158,6 @@ void store_update(void);
 void store_delete(struct store *s, struct object *obj, int amt);
 int price_item(struct store *store, const struct object *obj,
 			   bool store_buying, int qty);
-void random_shk_name(char *buf, int len);
 bool store_will_buy_tester(const struct object *obj);
 bool store_check_num(struct store *store, const struct object *obj);
 int find_inven(const struct object *obj);

@@ -1339,6 +1339,7 @@ static int rd_stores_aux(rd_item_t rd_item_version)
 						string_free(o->name);
 					}
 					o->name = string_make(buf);
+					rd_bool(&o->male);
 					o = o->next;
 				}
 			}

@@ -1,0 +1,177 @@
+# File: female.txt
+
+#########################################################################
+# This file (and first.txt, male.txt and second.txt) are extracted from
+# ext/descriptions.plist,
+# which is taken unmodified from version 1.0.1 of the OXZ
+# "oolite.oxp.spara.random_player-ship_name" (Random Player/Ship Names)
+# released by Mika Spåra on 26/04/2015 under the CC-BY-NC-SA 4.0 license.
+# and originally part of the Random Hits OXP.
+# Random Hits is by Littlebear and cim, and now also maintained by Spara.
+#
+# As such this file is also under that license.
+#
+# The OXZs can be obtained through Oolite's add-on manager or from
+# http://wiki.alioth.net/index.php/Random_Player/Ship_Name
+# and http://wiki.alioth.net/index.php/Random_Hits_OXP
+#
+# The license is available from:
+# https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+#########################################################################
+
+# This file is used to initialize the female first names for the game.
+
+# Do not modify this file unless you know exactly what you are doing
+# unless you wish to risk possible system crashes and broken savefiles.
+
+# That said, it isn't difficult. Just keep each name on one line, no more
+# than 11 characters, and start each line with N:
+
+# Format:
+# N: Name
+
+N:Abida
+N:Adele
+N:Adrienne
+N:Aileen
+N:Ajanta
+N:Alberta
+N:Alexa
+N:Alexandre
+N:Alice
+N:Amanda
+N:Amber
+N:Anna
+N:Annie
+N:Antonia
+N:Avala
+N:Becky
+N:Betty
+N:Caroline
+N:Catherine
+N:Charity
+N:Charlotte
+N:Cherie
+N:Chetna
+N:Claire
+N:Claudia
+N:Coco
+N:Colleen
+N:Concorde
+N:Cordelia
+N:Cressida
+N:Crystal
+N:Cynthia
+N:Davina
+N:Dawn
+N:Delphine
+N:Diana
+N:Diane
+N:Donna
+N:Dorothy
+N:Edith
+N:Elaine
+N:Eleanor
+N:Eliza
+N:Elly
+N:Emily
+N:Emma
+N:Esei
+N:Eugene
+N:Eve
+N:Faith
+N:Frances
+N:Francesca
+N:Gemma
+N:Gertrude
+N:Gilda
+N:Guinevere
+N:Gwen
+N:Helen
+N:Holly
+N:Imogen
+N:Irina
+N:Jane
+N:Janet
+N:Janice
+N:Jasmine
+N:Jennifer
+N:Jess
+N:Jessica
+N:Joanne
+N:Jodie
+N:Joy
+N:Julia
+N:Justine
+N:Kat
+N:Kim
+N:Kimmy
+N:Kyle
+N:Kylie
+N:Lalla
+N:Laura
+N:Leigh
+N:Liessa
+N:Linsay
+N:Lisa
+N:Lorraine
+N:Louise
+N:Lucy
+N:Madge
+N:Maggie
+N:Mary
+N:Mavis
+N:Maxine
+N:Meena
+N:Melanie
+N:Michelle
+N:Mina
+N:Monica
+N:Nancy
+N:Narita
+N:Natalie
+N:Nikki
+N:Nimi
+N:Nonaya
+N:Olive
+N:Pamela
+N:Pandora
+N:Parosha
+N:Patricia
+N:Pepper
+N:Phoebe
+N:Precious
+N:Priss
+N:Raggi
+N:Ramania
+N:Rebecca
+N:Rita
+N:Robin
+N:Roh'i
+N:Rose
+N:Rosie
+N:Roz
+N:Ruby
+N:Ruth
+N:Sally
+N:Samantha
+N:Sandra
+N:Sara
+N:Sarah
+N:Sharon
+N:Shauna
+N:Sigourney
+N:Sue
+N:Susan
+N:Suzanna
+N:Sylvia
+N:Tahera
+N:Tanya
+N:Tayyiba
+N:Toshiko
+N:Tracey
+N:Usha
+N:Valentine
+N:Victoria
+N:Virginia
+N:Viva

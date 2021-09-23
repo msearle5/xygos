@@ -143,6 +143,20 @@ const char *random_line(struct hint *hints)
 	return r->hint;
 }
 
+/* Return a random hint from the given arrays of hints lists */
+const char *random_line_multi(struct hint **hints_p)
+{
+	struct hint *v, *r = NULL;
+	int n;
+	while (*hints_p) {
+		struct hint *hints = *hints_p++;
+		for (v = hints, n = 1; v; v = v->next, n++)
+			if (one_in_(n))
+				r = v;
+	}
+	return r->hint;
+}
+
 /* Return a random hint from the global hints or lies lists
  * <real>% of ths time, it's a hint.
  **/
@@ -152,12 +166,6 @@ const char *random_rumor(s32b real)
 	if (randint0(100) < real)
 		h = hints;
 	return random_line(h);
-}
-
-/* Build a random shopkeeper name */
-void random_shk_name(char *buf, int len)
-{
-	strnfmt(buf, len, "%s %s", random_line(firstnames), random_line(secondnames));
 }
 
 /* Return a random hint from the global hints or lies list,
@@ -175,6 +183,17 @@ static const char *random_saying(s32b real, s32b min, s32b max)
 		length = strlen(ret);
 	} while (!(isalnum(*ret) && (length >= min) && (length <= max)));
 	return ret;
+}
+
+/* Build a random shopkeeper name */
+bool random_shk_name(char *buf, int len)
+{
+	struct hint *hints[3] = { 0 };
+	hints[0] = firstnames;
+	bool male = one_in_(2);
+	hints[1] = male ? firstnames_male : firstnames_female;
+	strnfmt(buf, len, "%s %s", random_line_multi(hints), random_line(secondnames));
+	return male;
 }
 
 /**
@@ -1271,10 +1290,15 @@ static bool store_do_fight(struct store_context *ctx)
 	race->freq_innate = 12;
 	rf_off(race->flags, RF_IM_ACID);
 	
-	/* Evil (BM) and male/female from description? */
+	/* Evil (BM) from description? */
+
 	rf_off(race->flags, RF_FEMALE);
-	rf_on(race->flags, RF_MALE);
-	
+	rf_off(race->flags, RF_MALE);
+	if (ctx->store->owner->male)
+		rf_on(race->flags, RF_MALE);
+	else
+		rf_on(race->flags, RF_FEMALE);
+
 	int i = level;
 	int spells = 0;
 	int innate = 0;

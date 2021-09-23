@@ -45,6 +45,7 @@
 #include "store.h"
 #include "target.h"
 #include "ui-display.h"
+#include "ui-store.h"
 #include "world.h"
 
 /**
@@ -80,9 +81,11 @@ struct hint *hints;
 struct hint *lies;
 
 /**
- * The first name array
+ * The first name arrays
  */
 struct hint *firstnames;
+struct hint *firstnames_male;
+struct hint *firstnames_female;
 
 /**
  * The second name array
@@ -514,7 +517,7 @@ void store_reset(void) {
 						if (own->name[0] == '*') {
 							char buf[32];
 							string_free(own->name);
-							random_shk_name(buf, sizeof(buf));
+							s->owners->male = random_shk_name(buf, sizeof(buf));
 							own->name = string_make(buf);
 						}
 					}

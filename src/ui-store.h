@@ -62,7 +62,8 @@ void store_your_name(struct store *store);
 const char *random_rumor(s32b real);
 bool store_get_long_check(struct store_context *ctx, const char *prompt);
 void store_long_text(struct store_context *ctx, const char *text);
-void random_shk_name(char *buf, int len);
+bool random_shk_name(char *buf, int len);
+const char *random_line_multi(struct hint **hints_p);
 const char *random_line(struct hint *hints);
 
 #endif /* INCLUDED_UI_STORE_H */

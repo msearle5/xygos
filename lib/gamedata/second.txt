@@ -120,6 +120,7 @@ N:Carr
 N:Carrington
 N:Carson
 N:Carter
+N:Cartman
 N:Casrovalva
 N:Cato
 N:Catsam
@@ -169,6 +170,7 @@ N:Dent
 N:Dentara
 N:Dexter
 N:Dharma
+N:Dibbler
 N:Dilbert
 N:Dima
 N:Dimaer
@@ -262,6 +264,7 @@ N:Hacker
 N:Haddock
 N:Halandriel
 N:Halfrunt
+N:Harrison
 N:Hartley
 N:Haussmann
 N:Hayate
@@ -522,6 +525,7 @@ N:Poidol
 N:Poole
 N:Poovga
 N:Popsch
+N:Prefect
 N:Prophaniti
 N:Prostetnic
 N:Proteron
@@ -566,6 +570,7 @@ N:Rubinstein
 N:Rxke
 N:Ryder
 N:Sahtor
+N:Sankov
 N:Santiago
 N:Sardar
 N:Sarin
@@ -639,11 +644,13 @@ N:Tinker
 N:Tivva
 N:Toconn
 N:Todd
+N:Todhunter
 N:Togneri
 N:Tokugawa
 N:Tomopauk
 N:Tomsk
 N:Tourall
+N:Toy
 N:Traken
 N:Travis
 N:Trexate

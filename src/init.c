@@ -4161,7 +4161,7 @@ static struct file_parser death_parser = {
 
 /**
  * ------------------------------------------------------------------------
- * Initialize first names
+ * Initialize first (unisex) names
  * ------------------------------------------------------------------------ */
 
 static enum parser_error parse_first(struct parser *p) {
@@ -4210,6 +4210,112 @@ static struct file_parser first_parser = {
 	run_parse_first,
 	finish_parse_first,
 	cleanup_first
+};
+
+/**
+ * ------------------------------------------------------------------------
+ * Initialize first (male) names
+ * ------------------------------------------------------------------------ */
+
+static enum parser_error parse_first_m(struct parser *p) {
+	struct hint *h = parser_priv(p);
+	struct hint *new = mem_zalloc(sizeof *new);
+
+	new->hint = string_make(parser_getstr(p, "text"));
+	new->next = h;
+
+	parser_setpriv(p, new);
+	return PARSE_ERROR_NONE;
+}
+
+struct parser *init_parse_first_m(void) {
+	struct parser *p = parser_new();
+	parser_reg(p, "N str text", parse_first_m);
+	return p;
+}
+
+static errr run_parse_first_m(struct parser *p) {
+	return parse_file_quit_not_found(p, "male");
+}
+
+static errr finish_parse_first_m(struct parser *p) {
+	firstnames_male = parser_priv(p);
+	parser_destroy(p);
+	return 0;
+}
+
+static void cleanup_first_m(void)
+{
+	struct hint *h, *next;
+
+	h = firstnames_male;
+	while(h) {
+		next = h->next;
+		string_free(h->hint);
+		mem_free(h);
+		h = next;
+	}
+}
+
+static struct file_parser first_m_parser = {
+	"male",
+	init_parse_first_m,
+	run_parse_first_m,
+	finish_parse_first_m,
+	cleanup_first_m
+};
+
+/**
+ * ------------------------------------------------------------------------
+ * Initialize first (female) names
+ * ------------------------------------------------------------------------ */
+
+static enum parser_error parse_first_f(struct parser *p) {
+	struct hint *h = parser_priv(p);
+	struct hint *new = mem_zalloc(sizeof *new);
+
+	new->hint = string_make(parser_getstr(p, "text"));
+	new->next = h;
+
+	parser_setpriv(p, new);
+	return PARSE_ERROR_NONE;
+}
+
+struct parser *init_parse_first_f(void) {
+	struct parser *p = parser_new();
+	parser_reg(p, "N str text", parse_first_f);
+	return p;
+}
+
+static errr run_parse_first_f(struct parser *p) {
+	return parse_file_quit_not_found(p, "female");
+}
+
+static errr finish_parse_first_f(struct parser *p) {
+	firstnames_female = parser_priv(p);
+	parser_destroy(p);
+	return 0;
+}
+
+static void cleanup_first_f(void)
+{
+	struct hint *h, *next;
+
+	h = firstnames_female;
+	while(h) {
+		next = h->next;
+		string_free(h->hint);
+		mem_free(h);
+		h = next;
+	}
+}
+
+static struct file_parser first_f_parser = {
+	"female",
+	init_parse_first_f,
+	run_parse_first_f,
+	finish_parse_first_f,
+	cleanup_first_f
 };
 
 /**
@@ -4479,6 +4585,8 @@ static struct {
 	{ "lies", &lies_parser },
 	{ "mine", &mine_parser },
 	{ "first", &first_parser },
+	{ "male", &first_m_parser },
+	{ "female", &first_f_parser },
 	{ "second", &second_parser },
 	{ "death", &death_parser },
 	{ "random names", &names_parser }
