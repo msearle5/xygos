@@ -1396,7 +1396,7 @@ void prepare_next_level(struct player *p)
 	}
 
 	/* Prepare the new level */
-	if (persist) {
+	if ((persist) && (level_by_depth(p->depth))) {
 		char *name = level_by_depth(p->depth)->name;
 		struct chunk *old_level = chunk_find_name(name);
 
