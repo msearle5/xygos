@@ -1,8 +1,5 @@
 BUGS
 ====
-BUG: Shop owners (store_do_fight()) are always male	
-	- would need to split first into 2/3
-
 BUG? Stuff isn't transported when you fly - should it be? Should there just be 1 house?
 	- see also -
 BUG: clouded:  Towns having different houses is a bit of an inconvenience when it costs money to travel between towns. Perhaps it's better to just have a single house? (Pay?)
@@ -132,6 +129,10 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+
+BUG: Shop owners (store_do_fight()) are always male
+	- would need to split first into 2/3
+	fIXED
 
 BUG: Probably printers should be more restricted in what they can make
 	- [UN]PRINTABLE flag?
