@@ -320,7 +320,7 @@ bool utf32_isprint(u32b v)
         case 1:
                 /* Is the supplemental multilingual plane. */
         case 2:
-                /* Is the supplmental ideographic plane. */
+                /* Is the supplemental ideographic plane. */
         case 3:
                 /* Is the tertiary ideographic plane. */
                 /* Assume no no special casing for those planes. */

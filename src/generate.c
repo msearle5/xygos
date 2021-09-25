@@ -592,7 +592,7 @@ static enum parser_error parse_vault_flags(struct parser *p) {
 static enum parser_error parse_vault_d(struct parser *p) {
 	struct vault *v = parser_priv(p);
 	const char *desc;
-	static const char *ok_chars = "%#. @*:+^&<>`/;1234567890\\~$]|!?_-,\"=AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwYyZz";
+	static const char *ok_chars = "%#. @*:+^&<>`\'/;1234567890\\~$(){}[]|!?_-,\"=AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwYyZz";
 
 	if (!v)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;

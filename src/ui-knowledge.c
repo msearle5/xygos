@@ -2448,7 +2448,7 @@ static textblock *display_quest_name_tb(int oid)
 static textblock *display_quest_descr_tb(int oid)
 {
 	static textblock *tb;
-	char buf[64];
+	char buf[8192];
 	oid = oid & 0xffff;
 
 	if (tb)
@@ -2461,8 +2461,15 @@ static textblock *display_quest_descr_tb(int oid)
 	if (player->active_quest == oid) {
 		descr_col = COLOUR_RED;
 		if (player->quests[oid].max_num) {
+			char mon[4096];
+			*mon = 0;
+			for(int i=0; i<player->quests[oid].races; i++) {
+				strcat(mon, player->quests[oid].race[i]->name);
+				if (i < player->quests[oid].races-1)
+					strcat(mon, ",");
+			}
 			snprintf(buf, sizeof(buf), " (%s: %d/%d killed)",
-				player->quests[oid].race->name,
+				mon,
 				player->quests[oid].cur_num,
 				player->quests[oid].max_num);
 		}

@@ -440,7 +440,10 @@ void rdwr_quests(void)
 		rdwr_s32b(&player->quests[i].town);
 		rdwr_s32b(&player->quests[i].store);
 		rdwr_string_null(&player->quests[i].intro);
-		RDWR_PTR(&player->quests[i].race, r_info);
+		rdwr_s32b(&player->quests[i].races);
+		player->quests[i].race = mem_realloc(player->quests[i].race, sizeof(player->quests[i].race[0]) * player->quests[i].races);
+		for (int j = 0; j < player->quests[i].races; j++)
+			RDWR_PTR(&player->quests[i].race[j], r_info);
 	}
 }
 

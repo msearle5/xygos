@@ -153,7 +153,8 @@ struct quest
 {
 	struct quest *next;
 	char *name;
-	struct monster_race *race;	/* Monster race */
+	struct monster_race **race;	/* Monster race */
+	s32b races;					/* Number of monster races */
 	byte index;
 	byte level;					/* Dungeon level */
 	u16b x;						/* Position of the entrance */

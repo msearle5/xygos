@@ -32,7 +32,7 @@ name:Rats
 level:6
 race:giant grey rat
 number:12
-store:Volcano:Convenience Store
+store:Stores:Convenience Store
 entrymin:2
 entrymax:5
 entryfeature:permanent wall
@@ -127,49 +127,60 @@ failure:So there *was* a shark in there, but it got away? I'm not arguing, but t
 ####################################
 # The home quests
 # (Could also actually be used for other buildings blocked by a quest)
-#
+
 name:Rooms+Shrooms
 level:4
 race:mushroom
-number:6
 store:Stores:Home
 desc:Well, yes. Nobody's stopping you staying there - if you can deal with all the mushrooms growing through the floor. Me, no thanks.
 flags:home
 
 name:Wasps
-level:7
+level:9
 race:wasps' nest
-number:5
+race:Beraban wasp
 store:Sewers:Home
 desc:There's nothing much wrong with the empty house, except the huge wasps' nest in there. And these aren't normal wasps, mind - they're huge great things, and so far everyone has taken one look at them and legged it. I've also heard someone claim that they explode, although that may have just have been an excuse for running away...
 flags:home
 
-#name:Cyberspace
-#level:8
-#race:cyberpsycho
-#number:1
-#desc:The usual cyber-enthusiasts aren't usually exactly threatening. More annoying. Except when there's a complete nut-job shooting up the town and they are all convinced that the sun shines out of his shiny metal ass. Scrap him and you can use their place yourself.
-# (Oh, and don't worry about what the Salon might think 
-#	- alternate completion? (get a X from the Salon first?)
-#flags:home
-#store:Mine:Home
-#enthusiasts, cyborgs, psycho
+name:Cyberspace
+level:15
+race:cyberpsycho
+race:cyber-enthusiast
+race:cyborg
+store:Mine:Home
+desc:The usual cyber-enthusiasts aren't usually exactly threatening. More annoying. Except when there's a complete nut-job shooting up the town and they are all convinced that the sun shines out of his shiny metal ass. Scrap him and you can use their place yourself.
+flags:home
 
-#name:Checkpoint X
-#level:20
-#race:(robot?) hologram?
-#number:12?
-#desc:Entry to the Fortress was originally secured by armed guards based at a small fortified building on the surface close to the way in. The entrance hasn't been actively guarded for years, but the checkpoint's automated defences remain. The reports I have heard are pretty sketchy, but you can probably expect to have to deal with landmines, killer robots and holograms.
-#flags:home
-#store:Fortress:Home
+name:Checkpoint X
+level:20
+race:Bigtrak
+race:hologram
+race:mailworm
+race:talky
+race:mine
+store:Fortress:Home
+desc:Entry to the Fortress was originally secured by armed guards based at a small fortified building on the surface close to the way in. The entrance hasn't been actively guarded for years, but the checkpoint's automated defences remain. The reports I have heard are pretty sketchy, but you can probably expect to have to deal with landmines, killer robots and holograms.
+flags:home
 
-# Tiles & Reptiles
 name:Lost World
-level:40
-race:saur
-number:12
-desc:The previous occupant of Caldera View kept some unusual pets. Then one bit him in two. We'd all be grateful if you could stop them grazing on our customers. You could even use the place yourself.
+level:30
+race:velociraptor
+race:deinonychus
+race:archaeopteryx
+race:tyrannosaur
+race:diplodocus
+store:Caverns:Home
+desc:The previous occupant of the Cavern Club kept some unusual pets. Then one bit him in two. We'd all be grateful if you could stop them grazing on our customers. You could even use the place yourself.
+flags:home
 
+name:Huggy Bears
+level:38
+race:xenomorph
+race:facehugger
+store:Volcano:Home
+desc:There's something scary in there. A team of Space Marines went in there with plasma rifles blazing and just as quickly made a tactical retreat, carrying one of them back with something ugly hugging his face.
+flags:home
 
 ####################################
 # The end-level guardian quests

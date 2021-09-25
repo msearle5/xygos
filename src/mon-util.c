@@ -149,6 +149,56 @@ struct monster_race *lookup_monster(const char *name)
 }
 
 /**
+ * Returns the monster with the given name.
+ * If no monster has the exact name given, returns all monsters with the given name
+ * as a (case-insensitive) substring.
+ * Returns the number of matches (returned).
+ * Returns the matches in race, limit maxraces, which must be at least 1.
+ */
+int lookup_all_monsters(const char *name, struct monster_race **race, int maxraces)
+{
+	int i;
+	int races = 0;
+
+	/* Look for it */
+	for (i = 0; i < z_info->r_max; i++) {
+		struct monster_race *r = &r_info[i];
+		if (!r->name)
+			continue;
+
+		/* Test for equality */
+		if (my_stricmp(name, r->name) == 0) {
+			*race = r;
+			return 1;
+		}
+	}
+
+	/* Get the number of matches */
+	for (i = 0; i < z_info->r_max; i++) {
+		struct monster_race *r = &r_info[i];
+		if (r->name && my_stristr(r->name, name))
+			races++;
+	}
+
+	if (!races) {
+		return 0;
+	}
+
+	races = 0;
+	for (i = 0; i < z_info->r_max; i++) {
+		struct monster_race *r = &r_info[i];
+		if (r->name && my_stristr(r->name, name)) {
+			if (races < maxraces) {
+				race[races++] = r;
+			}
+		}
+	}
+
+	/* Return our best match */
+	return races;
+}
+
+/**
  * Return the monster base matching the given name.
  */
 struct monster_base *lookup_monster_base(const char *name)

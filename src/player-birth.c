@@ -1513,6 +1513,9 @@ void do_cmd_accept_character(struct command *cmd)
 	/* Give the player some money */
 	get_money();
 
+	/* No quest in progress */
+	player->active_quest = -1;
+
 	/* Make a world: towns */
 	world_init_towns();
 
@@ -1524,9 +1527,6 @@ void do_cmd_accept_character(struct command *cmd)
 	int orig_tp = player->talent_points;
 	cmd_abilities(player, true, player->talent_points, NULL);
 	init_talent(level_tp, orig_tp);
-
-	/* No quest in progress */
-	player->active_quest = -1;
 
 	/* No artifact generated */
 	player->artifact = string_make("of You");

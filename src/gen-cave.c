@@ -2789,7 +2789,7 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 		 **/
 		for(int i=0; i<z_info->quest_max; i++) {
 			if (p->quests[i].town == player->town - t_info) {
-				if (!(p->quests[i].flags & QF_ACTIVE)) {
+				if ((!(p->quests[i].flags & QF_ACTIVE)) || (p->quests[i].flags & QF_HOME)) {
 					if (p->quests[i].x) {
 						grid.x = p->quests[i].x;
 						grid.y = p->quests[i].y;
