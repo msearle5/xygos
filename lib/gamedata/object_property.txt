@@ -550,16 +550,6 @@ msg:You feel your {name} is slowing your recovery.
 bindui:imphp_ui_compact_0:0
 desc:Impairs hitpoint recovery
 
-name:impaired mana recovery
-type:flag
-subtype:bad
-id-type:timed
-code:IMPAIR_MANA
-power:-8
-msg:You feel your {name} is slowing your mana recovery.
-bindui:impsp_ui_compact_0:0
-desc:Impairs mana recovery
-
 name:constant fear
 type:flag
 subtype:bad

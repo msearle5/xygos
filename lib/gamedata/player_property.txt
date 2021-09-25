@@ -291,12 +291,6 @@ name:Slow Regeneration
 desc:Your hitpoint recovery is impaired.
 
 type:object
-code:IMPAIR_MANA
-bindui:impsp_ui_compact_0:0:1
-name:Slow Mana Regeneration
-desc:Your mana recovery is impaired.
-
-type:object
 code:AFRAID
 bindui:fear_ui_compact_0:0:1
 name:Constant Fear
