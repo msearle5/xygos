@@ -1057,7 +1057,7 @@ void quest_changed_level(void)
 			break;
 		}
 	}
-	bool guardian = (is_blocking_quest(player, player->depth));
+	bool guardian = ((is_blocking_quest(player, player->depth)) && (player->active_quest < 0));
 	bool fortress = (player->town == t_info);
 
 	/* Quest specific checks */
