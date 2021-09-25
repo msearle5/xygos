@@ -660,7 +660,8 @@ static void melee_effect_handler_INFECT(melee_effect_handler_context_t *context)
 	int previous = player->timed[TMD_INFECTED];
 	if (!previous)
 		context->obvious = true;
-	int max = MAX(previous, 50 + (3 * damroll(3, context->rlev)));
+	int damage = 50 + (3 * damroll(3, context->rlev));
+	int max = MAX(previous, damage);
 	player_set_timed(context->p, TMD_INFECTED, max, true);
 
 	/* Learn about the player */
