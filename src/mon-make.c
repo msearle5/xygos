@@ -290,6 +290,21 @@ struct monster_race *get_mon_num(int generated_level, int current_level)
 		if (rf_has(race->flags, RF_SPECIAL_GEN) && !special_can_gen(race))
 			continue;
 
+		/* Some quests limit generation */
+		if (player->active_quest >= 0) {
+			struct quest *q = &player->quests[player->active_quest];
+			if (q->flags & QF_HOME) {
+				bool ok = false;
+				for(int i=0;i<q->races;i++) {
+					if (q->race[i] == race) {
+						ok = true;
+						break;
+					}
+				}
+				if (!ok) continue;
+			}
+		}
+
 		/* Accept */
 		table[i].prob3 = table[i].prob2;
 
@@ -303,35 +318,39 @@ struct monster_race *get_mon_num(int generated_level, int current_level)
 	/* Pick a monster */
 	race = get_mon_race_aux(total, table);
 
-	/* Try for a "harder" monster once (50%) or twice (10%) */
-	p = randint0(100);
+	/* Quests are difficult enough already */
+	if (player->active_quest < 0) {
 
-	if (!rf_has(race->flags, RF_IN_LEVEL)) {
-		if (p < 60) {
-			struct monster_race *old = race;
+		/* Try for a "harder" monster once (50%) or twice (10%) */
+		p = randint0(100);
 
-			/* Pick a new monster */
-			race = get_mon_race_aux(total, table);
+		if (!rf_has(race->flags, RF_IN_LEVEL)) {
+			if (p < 60) {
+				struct monster_race *old = race;
 
-			/* Keep the deepest one */
-			if (race->level < old->level) race = old;
+				/* Pick a new monster */
+				race = get_mon_race_aux(total, table);
+
+				/* Keep the deepest one */
+				if (race->level < old->level) race = old;
+			}
+
+			/* Try for a "harder" monster twice (10%) */
+			if (p < 10) {
+				struct monster_race *old = race;
+
+				/* Pick a monster */
+				race = get_mon_race_aux(total, table);
+
+				/* Keep the deepest one */
+				if (race->level < old->level) race = old;
+			}
 		}
 
-		/* Try for a "harder" monster twice (10%) */
-		if (p < 10) {
-			struct monster_race *old = race;
-
-			/* Pick a monster */
-			race = get_mon_race_aux(total, table);
-
-			/* Keep the deepest one */
-			if (race->level < old->level) race = old;
+		/* Occasionally try for a mutant */
+		if ((race->mut_chance) && (one_in_(race->mut_chance))) {
+			mutate_monster(&race, true, generated_level);
 		}
-	}
-
-	/* Occasionally try for a mutant */
-	if ((race->mut_chance) && (one_in_(race->mut_chance))) {
-		mutate_monster(&race, true, generated_level);
 	}
 
 	/* Result */

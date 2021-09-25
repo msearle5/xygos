@@ -73,7 +73,7 @@ void chunk_list_add(struct chunk *c)
 	int newsize = (chunk_list_max + CHUNK_LIST_INCR) *	sizeof(struct chunk *);
 
 	/* Lengthen the list if necessary */
-	if ((chunk_list_max % CHUNK_LIST_INCR) == 0)
+	if (((chunk_list_max % CHUNK_LIST_INCR) == 0) || (!chunk_list))
 		chunk_list = (struct chunk **) mem_realloc(chunk_list, newsize);
 
 	/* Add the new one */

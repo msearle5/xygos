@@ -1387,7 +1387,7 @@ void run_game_loop(void)
 	while (player->energy >= z_info->move_energy) {
 		/* Do any necessary animations */
 		event_signal(EVENT_ANIMATE);
-		
+
 		/* Process monster with even more energy first */
 		process_monsters(cave, player->energy + 1);
 		if (player->is_dead || !player->upkeep->playing ||

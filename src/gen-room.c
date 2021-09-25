@@ -1363,6 +1363,20 @@ static bool build_room_template_type(struct chunk *c, struct loc centre,
 	return true;
 }
 
+static void place_quest_monster(struct chunk *c, struct loc grid, int index)
+{
+	if ((player->active_quest >= 0) && (player->quests[player->active_quest].races > index)) {
+		struct monster_group_info info = { 0, 0 };
+		place_new_monster(c, grid, player->quests[player->active_quest].race[index],
+			true, false, info, ORIGIN_DROP_VAULT);
+	} else {
+		if (player->active_quest >= 0)
+			msg("Quest monster symbol %d, without an active quest?", index);
+		else
+			msg("Quest monster symbol %d, without enough races?", index);
+	}
+}
+
 /**
  * Build a vault from its string representation.
  * \param c the chunk the room is being built in
@@ -1380,8 +1394,19 @@ bool build_vault(struct chunk *c, struct loc centre, struct vault *v)
 	bool icky;
 	int rotate, thgt, twid;
 	bool reflect;
+	bool noloot = false;
 
 	assert(c);
+
+	/* If this is a home quest that hase been visited before, remove
+	 * the loot.
+	 */
+	if (player->active_quest >= 0) {
+		struct quest *q = &player->quests[player->active_quest];
+		if ((q->flags & QF_HOME) && (q->flags & QF_FAILED)) {
+			noloot = true;
+		}
+	}
 
 	/* Find and reserve some space in the dungeon.  Get center of room. */
 	event_signal_string(EVENT_GEN_ROOM_CHOOSE_SUBTYPE, v->name);
@@ -1535,7 +1560,7 @@ bool build_vault(struct chunk *c, struct loc centre, struct vault *v)
 				/* If the symbol is not yet stored, ... */
 				if (!strchr(racial_symbol, *t)) {
 					/* ... store it for later processing. */
-					if (races_local < 30)
+					if (races_local < (int)sizeof(racial_symbol))
 						racial_symbol[races_local++] = *t;
 				}
 			}
@@ -1545,7 +1570,7 @@ bool build_vault(struct chunk *c, struct loc centre, struct vault *v)
 				switch (*t) {
 					/* An ordinary monster, object (sometimes good), or trap. */
 				case '1': {
-					if (one_in_(2)) {
+					if (one_in_(2) || noloot) {
 						pick_and_place_monster(c, grid, c->depth , true, true,
 											   ORIGIN_DROP_VAULT);
 					} else if (one_in_(2)) {
@@ -1562,33 +1587,33 @@ bool build_vault(struct chunk *c, struct loc centre, struct vault *v)
 												 true, ORIGIN_DROP_VAULT);
 					break;
 					/* Slightly out of depth object. */
-				case '3': place_object(c, grid, c->depth + 3, false, false, 
+				case '3': if (!noloot) place_object(c, grid, c->depth + 3, false, false, 
 									   ORIGIN_VAULT, 0); break;
 					/* Monster and/or object */
 				case '4': {
 					if (one_in_(2))
 						pick_and_place_monster(c, grid, c->depth + 3, true, 
 											   true, ORIGIN_DROP_VAULT);
-					if (one_in_(2))
+					if (one_in_(2) && !noloot)
 						place_object(c, grid, c->depth + 7, false, false,
 									 ORIGIN_VAULT, 0);
 					break;
 				}
 					/* Out of depth object. */
-				case '5': place_object(c, grid, c->depth + 7, false, false,
+				case '5': if (!noloot) place_object(c, grid, c->depth + 7, false, false,
 									   ORIGIN_VAULT, 0); break;
 					/* Out of depth monster. */
 				case '6': pick_and_place_monster(c, grid, c->depth + 11, true,
 												 true, ORIGIN_DROP_VAULT);
 					break;
 					/* Very out of depth object. */
-				case '7': place_object(c, grid, c->depth + 15, false, false,
+				case '7': if (!noloot) place_object(c, grid, c->depth + 15, false, false,
 									   ORIGIN_VAULT, 0); break;
 					/* Nasty monster and treasure */
 				case '8': {
 					pick_and_place_monster(c, grid, c->depth + 40, true, true,
 										   ORIGIN_DROP_VAULT);
-					place_object(c, grid, c->depth + 20, true, true,
+					if (!noloot) place_object(c, grid, c->depth + 20, true, true,
 								 ORIGIN_VAULT, 0);
 					break;
 				}
@@ -1596,7 +1621,7 @@ bool build_vault(struct chunk *c, struct loc centre, struct vault *v)
 				case '9': {
 					pick_and_place_monster(c, grid, c->depth + 9, true, true,
 										   ORIGIN_DROP_VAULT);
-					place_object(c, grid, c->depth + 7, true, false,
+					if (!noloot) place_object(c, grid, c->depth + 7, true, false,
 								 ORIGIN_VAULT, 0);
 					break;
 				}
@@ -1606,19 +1631,30 @@ bool build_vault(struct chunk *c, struct loc centre, struct vault *v)
 					break;
 					/* Quest monster */
 				case '\\':
-					if (player->active_quest >= 0) {
-						struct monster_group_info info = { 0, 0 };
-						place_new_monster(c, grid, player->quests[player->active_quest].race,
-							true, false, info, ORIGIN_DROP_VAULT);
-					} else {
-						msg("Quest monster symbol, without an active quest?");
-					}
+					place_quest_monster(c, grid, 0); break;
+				case '\'':
+					place_quest_monster(c, grid, 1); break;
+				case '(':
+					place_quest_monster(c, grid, 2); break;
+				case ')':
+					place_quest_monster(c, grid, 3); break;
+				case '{':
+					place_quest_monster(c, grid, 4); break;
+				case '}':
+					place_quest_monster(c, grid, 5); break;
+				case '[': {
+					int races = player->quests[player->active_quest].races;
+					int index = 6;
+					if (races > 7)
+						index = rand_range(6, races-1);
+					place_quest_monster(c, grid, index);
 					break;
-					/* A chest. */
-				case '~': place_object(c, grid, c->depth + 5, false, false,
+				}
+					/* A container. */
+				case '~': if (!noloot) place_object(c, grid, c->depth + 5, false, false,
 									   ORIGIN_VAULT, TV_CHEST); break;
 					/* Treasure. */
-				case '$': place_gold(c, grid, c->depth, ORIGIN_VAULT);break;
+				case '$': place_gold(c, grid, c->depth, ORIGIN_VAULT); break;
 					/* Armour. */
 				case ']': {
 					int	tval = 0, temp = one_in_(3) ? randint1(11) : randint1(7);
@@ -1635,44 +1671,48 @@ bool build_vault(struct chunk *c, struct loc centre, struct vault *v)
 					case 10: tval = TV_ARMS; break;
 					case 11: tval = TV_CHIP; break;
 					}
-					place_object(c, grid, c->depth + 3, true, false,
+					if (!noloot) place_object(c, grid, c->depth + 3, true, false,
 								 ORIGIN_VAULT, tval);
 					break;
 				}
 					/* Weapon. */
 				case '|': {
-					int	tval = 0, temp = randint1(4);
+					int	tval = 0, temp = one_in_(5) ? randint1(8) : randint1(4);
 					switch (temp) {
 					case 1: tval = TV_SWORD; break;
 					case 2: tval = TV_POLEARM; break;
 					case 3: tval = TV_HAFTED; break;
 					case 4: tval = TV_GUN; break;
+					case 5: tval = TV_BOMB; break;
+					case 6: tval = TV_AMMO_6; break;
+					case 7: tval = TV_AMMO_9; break;
+					case 8: tval = TV_AMMO_12; break;
 					}
-					place_object(c, grid, c->depth + 3, true, false,
+					if (!noloot) place_object(c, grid, c->depth + 3, true, false,
 								 ORIGIN_VAULT, tval);
 					break;
 				}
 					/* Pill. */
-				case '!': place_object(c, grid, c->depth + 3, one_in_(4), false,
+				case '!': if (!noloot) place_object(c, grid, c->depth + 3, one_in_(4), false,
 									   ORIGIN_VAULT, TV_PILL); break;
 					/* Card. */
-				case '?': place_object(c, grid, c->depth + 3, one_in_(4), false,
+				case '?': if (!noloot) place_object(c, grid, c->depth + 3, one_in_(4), false,
 									   ORIGIN_VAULT, TV_CARD); break;
 					/* Device. */
-				case '_': place_object(c, grid, c->depth + 3, one_in_(4), false,
+				case '_': if (!noloot) place_object(c, grid, c->depth + 3, one_in_(4), false,
 									   ORIGIN_VAULT, TV_DEVICE); break;
 					/* Wand or rod. */
-				case '-': place_object(c, grid, c->depth + 3, one_in_(4), false,
+				case '-': if (!noloot) place_object(c, grid, c->depth + 3, one_in_(4), false,
 									   ORIGIN_VAULT,
 									   one_in_(2) ? TV_WAND : TV_GADGET); break;
 					/* Cyberware */
-				case '"': place_object(c, grid, c->depth + 3, one_in_(4), false,
+				case '"': if (!noloot) place_object(c, grid, c->depth + 3, one_in_(4), false,
 									   ORIGIN_VAULT, tval_random_implant()); break;
 					/* Printer or block */
-				case '=': place_object(c, grid, c->depth + 3, one_in_(4), false,
+				case '=': if (!noloot) place_object(c, grid, c->depth + 3, one_in_(4), false,
 									   ORIGIN_VAULT, one_in_(3) ? TV_PRINTER : TV_BLOCK); break;
 					/* Food or mushroom. */
-				case ',': place_object(c, grid, c->depth + 3, one_in_(4), false,
+				case ',': if (!noloot) place_object(c, grid, c->depth + 3, one_in_(4), false,
 									   ORIGIN_VAULT, TV_FOOD); break;
 					/* Inner or non-tunnelable outside granite wall */
 				case '#': {
@@ -1712,7 +1752,7 @@ bool build_vault(struct chunk *c, struct loc centre, struct vault *v)
 					}
 					break;
 				}
-				}
+			}
 		}
 	}
 

@@ -38,6 +38,7 @@
 #include "store.h"
 #include "trap.h"
 #include "ui-knowledge.h"
+#include "ui-input.h"
 #include "ui-store.h"
 #include "world.h"
 
@@ -178,6 +179,8 @@ static enum parser_error parse_quest_flags(struct parser *p) {
 		q->flags |= QF_GUARDIAN;
 	if (strstr(in, "town"))
 		q->flags |= QF_TOWN;
+	if (strstr(in, "home"))
+		q->flags |= QF_HOME;
 	return PARSE_ERROR_NONE;
 }
 
@@ -186,9 +189,16 @@ static enum parser_error parse_quest_race(struct parser *p) {
 	const char *name = parser_getstr(p, "race");
 	assert(q);
 
-	q->race = lookup_monster(name);
-	if (!q->race)
+	struct monster_race *race[256];
+	int races = lookup_all_monsters(name, race, 256);
+	if (!races)
 		return PARSE_ERROR_INVALID_MONSTER;
+	for(int i=0;i<races;i++) {
+		q->race = mem_realloc(q->race, sizeof(q->race[0]) * (1 + q->races));
+		q->race[q->races++] = race[i];
+		if (!race[i])
+			return PARSE_ERROR_INVALID_MONSTER;
+	}
 
 	return PARSE_ERROR_NONE;
 }
@@ -433,8 +443,8 @@ bool is_quest(struct player *p, int level)
 
 /**
  * Check if the given level is an active quest level.
- * For quests involving a monster, that means at least one of the targeted
- * monster is present. For other quests, they are always active if you
+ * For quests involving monsters, that means at least one of the targeted
+ * monsters is present. For other quests, they are always active if you
  * are on their level.
  */
 bool is_active_quest(struct player *p, int level)
@@ -446,10 +456,12 @@ bool is_active_quest(struct player *p, int level)
 
 	for (i = 0; i < z_info->quest_max; i++) {
 		if ((p->quests[i].level == level) && (!(p->quests[i].flags & QF_TOWN))) {
-			if (!p->quests[i].race)
+			if (!p->quests[i].races)
 				return true;
-			else if (p->quests[i].race->cur_num)
-				return true;
+			for(int j = 0; j < p->quests[i].races; j++) {
+				if (p->quests[i].race[j]->cur_num)
+					return true;
+			}
 		}
 	}
 
@@ -530,7 +542,7 @@ static bool get_next_hitlist(struct player *p)
 		"Kill", "Exterminate", "Annul", "Inhume", "Obliterate",
 		"Blow away", "Rub out", "Erase", "Put down", "Assassinate",
 		"Execute", "Remove", "Get rid of", "Gank", "Liquidate",
-		"Destroy", "Delete", "Annihilate"
+		"Destroy", "Delete", "Annihilate", "Squish"
 	};
 	if (q->intro)
 		string_free(q->intro);
@@ -538,7 +550,9 @@ static bool get_next_hitlist(struct player *p)
 	q->intro = string_make(buf);
 
 	/* One target */
-	q->race = r;
+	q->race = mem_realloc(q->race, sizeof(q->race[0]));
+	q->race[0] = r;
+	q->races = 1;
 	q->max_num = 1;
 	q->cur_num = 0;
 
@@ -564,7 +578,6 @@ void player_quests_reset(struct player *p)
 		p->quests[i].desc = string_make(quests[i].desc);
 		p->quests[i].target_item = string_make(quests[i].target_item);
 		p->quests[i].level = quests[i].level;
-		p->quests[i].race = quests[i].race;
 		p->quests[i].max_num = quests[i].max_num;
 		p->quests[i].flags = quests[i].flags;
 		p->quests[i].quests = quests[i].quests;
@@ -578,6 +591,9 @@ void player_quests_reset(struct player *p)
 		p->quests[i].min_found = quests[i].min_found;
 		p->quests[i].max_remaining = quests[i].max_remaining;
 		p->quests[i].entry_feature = quests[i].entry_feature;
+		p->quests[i].races = quests[i].races;
+		p->quests[i].race = mem_alloc(quests[i].races * sizeof(p->quests[i].race[0]));
+		memcpy(p->quests[i].race, quests[i].race, quests[i].races * sizeof(p->quests[i].race[0]));
 	}
 }
 
@@ -596,6 +612,7 @@ void player_quests_free(struct player *p)
 		string_free(p->quests[i].desc);
 		string_free(p->quests[i].target_item);
 		mem_free(p->quests[i].loc);
+		mem_free(p->quests[i].race);
 	}
 	mem_free(p->quests);
 	p->quests = NULL;
@@ -665,7 +682,7 @@ struct quest *get_quest_by_name(const char *name)
 }
 
 /** Add a start item to a list, returns the item used */
-static struct start_item * add_item(struct start_item *si, int tval, const char *name, int min, int max)
+static struct start_item *add_item(struct start_item *si, int tval, const char *name, int min, int max)
 {
 	struct start_item *prev = NULL;
 	while (si->max != 0) {
@@ -877,12 +894,12 @@ void quest_enter_level(struct chunk *c)
 	}
 }
 
-static struct object * has_special_flag(struct object *obj, void *data)
+static struct object *has_special_flag(struct object *obj, void *data)
 {
 	return (of_has(obj->flags, OF_QUEST_SPECIAL)) ? obj : NULL;
 }
 
-static struct object * obj_of_kind(struct object *obj, void *data)
+static struct object *obj_of_kind(struct object *obj, void *data)
 {
 	struct object_kind *k = (struct object_kind *)data;
 	if (obj->kind == k)
@@ -986,17 +1003,27 @@ void quest_changing_level(void)
 	if ((p->active_quest >= 0) && (!player->depth)) {
 		struct quest *quest = &player->quests[player->active_quest];
 
-		/* Fail, or reward */
-		if (!(quest->flags & QF_SUCCEEDED)) {
-			quest->flags |= QF_FAILED;
-			quest->flags |= QF_UNREWARDED;
+		/* Home quests are different - you can't fail them permanently, you can try them again as many times as you want */
+		if (quest->flags & QF_HOME) {
+			if (!(quest->flags & QF_SUCCEEDED)) {
+				quest->flags |= QF_FAILED;
+			} else {
+				quest->flags &= ~QF_ACTIVE;
+			}
 		} else {
-			quest->flags |= QF_UNREWARDED;
+			/* Not a home quest */
+
+			/* Fail, or reward */
+			if (!(quest->flags & QF_SUCCEEDED)) {
+				quest->flags |= QF_FAILED;
+				quest->flags |= QF_UNREWARDED;
+			} else {
+				quest->flags |= QF_UNREWARDED;
+			}
+
+			/* No longer active */
+			quest->flags &= ~QF_ACTIVE;
 		}
-
-		/* No longer active */
-		quest->flags &= ~QF_ACTIVE;
-
 		/* Not generating or in a quest any more */
 		p->active_quest = -1;
 	}
@@ -1006,7 +1033,7 @@ void quest_changing_level(void)
 	 * where you enter the quest without descending the stair from the town (such as a
 	 * descent card, or debug options)
 	 **/
-	if (player->depth) {
+	else if (player->depth) {
 		struct quest *quest = quest_guardian();
 		if (quest)
 			quest->flags |= QF_ACTIVE;
@@ -1030,24 +1057,30 @@ void quest_changed_level(void)
 			break;
 		}
 	}
-	bool guardian = (is_blocking_quest(player, player->depth));
+	bool guardian = ((is_blocking_quest(player, player->depth)) && (player->active_quest < 0));
 	bool fortress = (player->town == t_info);
 
 	/* Quest specific checks */
 	for(int i=0;i<z_info->quest_max;i++) {
 		struct quest *q = player->quests + i;
 		if (q->flags & QF_ACTIVE) {
-			if ((q->flags & QF_TOWN) && (in_town_quest()) && (!(q->flags & (QF_SUCCEEDED|QF_FAILED|QF_UNREWARDED)))) {
-				if (q->cur_num == 0) {
-					while (q->race->cur_num < q->max_num) {
+			if ((q->flags & QF_TOWN) && (in_town_quest()) && (q->races) && (!(q->flags & (QF_SUCCEEDED|QF_FAILED|QF_UNREWARDED)))) {
+				int cur_num = 0;
+				for(int j=0; j<q->races; j++)
+					cur_num += q->race[j]->cur_num;
+				if (cur_num == 0) {
+					int max_num = q->max_num;
+					for(int j=1; j<q->races; j++)
+						max_num -= q->race[j]->cur_num;
+					while (q->race[0]->cur_num < max_num) {
 						struct loc try_xy = loc(randint1(cave->width - 1), randint1(cave->height - 1));
-						if (!mon_race_hates_grid(cave, q->race, try_xy)) {
-							place_new_monster(cave, try_xy, q->race, false, true, info, ORIGIN_DROP);
+						if (!mon_race_hates_grid(cave, q->race[0], try_xy)) {
+							place_new_monster(cave, try_xy, q->race[0], false, true, info, ORIGIN_DROP);
 						}
 					}
 				}
 				/* Fail the quest if the target has disappeared */
-				if ((q->race->cur_num == 0) && (!(q->flags & (QF_SUCCEEDED)))) {
+				if ((cur_num == 0) && (!(q->flags & (QF_SUCCEEDED)))) {
 					fail_quest(q);
 				}
 			} else if (strstr(q->name, "Pie")) {
@@ -1313,7 +1346,6 @@ void quest_reward(struct quest *q, bool success, struct store_context *ctx)
 			}
 			/* Open it again */
 			q->flags &= ~(QF_SUCCEEDED | QF_FAILED | QF_UNREWARDED | QF_ACTIVE);
-			//q->flags |= QF_ACTIVE;
 			player->au += au;
 			return;
 		}
@@ -1427,21 +1459,102 @@ bool quest_item_check(const struct object *obj) {
 	return false;
 }
 
+/* Check if entry to a building should be blocked by a quest.
+ * Returns true if entry should be blocked.
+ *
+ * This checks by looking for a home-quest (HOME flag set) with matching town and store.
+ * 		If so, and it's inactive and not complete: Make it active, and ask whether to enter.
+ * 			If so, enter a quest (same as other quests entered from the town).
+ * 			If not, go back to the town.
+ * 		Either way, return true as you aren't entering the building.
+ * If there is none, return false and enter the building normally.
+ */
+bool quest_enter_building(struct store *store) {
+	for(int i=0;i<z_info->quest_max;i++) {
+		if ((player->quests[i].flags & QF_HOME) && (!(player->quests[i].flags & QF_SUCCEEDED)) &&
+			(player->quests[i].town == player->town - t_info) && (player->quests[i].store == (int)store->sidx)) {
+			player->quests[i].flags |= QF_ACTIVE;
+			screen_save();
+			Term_clear();
+
+			/* Prepare hooks */
+			text_out_hook = text_out_to_screen;
+			text_out_indent = 1;
+			Term_gotoxy(0, 0);
+
+			/* Print it */
+			text_out(player->quests[i].desc);
+
+			/* Level */
+			text_out_c(COLOUR_YELLOW, " (Level %d)", player->quests[i].level);
+
+			text_out_c(COLOUR_L_BLUE, " [yn]");
+			text_out_indent = 0;
+
+			/* Get an answer */
+			struct keypress ch = inkey();
+
+			bool response = true;
+			if ((ch.code == ESCAPE) || (strchr("Nn", ch.code)))
+				response = false;
+
+			screen_load();
+			if (response) {
+				/* accepted */
+				player->active_quest = i;
+
+				/* set pos */
+				player->quests[i].x = player->grid.x;
+				player->quests[i].y = player->grid.y;
+
+				/* Hack -- take a turn */
+				player->upkeep->energy_use = z_info->move_energy;
+
+				/* Create a way back */
+				player->upkeep->create_up_stair = true;
+				player->upkeep->create_down_stair = false;
+
+				/* Change level */
+				dungeon_change_level(player, player->quests[i].level);
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
+/* Check for quest targets killed */
 static bool check_quest(struct quest *q, const struct monster *m) {
-	if (m->race == q->race) {
-		if (q->cur_num < q->max_num) {
-			/* You've killed a quest target */
-			q->cur_num++;
-			if (q->cur_num == q->max_num) {
-				/* You've killed the last quest target */
-				succeed_quest(q);
-				if (streq(q->race->name, "triffid")) {
-					msg("That's the last of them. Maybe you should go back and ask for a reward?");
-					player->town_faction++;
-				} else if (streq(q->race->name, "megalodon")) {
-					msg("How did anyone not see that! Maybe you should go back for your share of the winnings?");
+	if (q->flags & QF_HOME) {
+		/* All home quests require the level to be free of all monsters */
+		if (cave->mon_cnt <= 1) {
+			/* The last one */
+			reward_quest(q);
+		}
+	} else {
+		bool wanted = false;
+		int i=0;
+		for(i=0; i<q->races; i++) {
+			if (m->race == q->race[i]) {
+				wanted = true;
+				break;
+			}
+		}
+		if (wanted) {
+			if (q->cur_num < q->max_num) {
+				/* You've killed a quest target */
+				q->cur_num++;
+				if (q->cur_num == q->max_num) {
+					/* You've killed the last quest target */
+					succeed_quest(q);
+					if (streq(q->race[i]->name, "triffid")) {
+						msg("That's the last of them. Maybe you should go back and ask for a reward?");
+						player->town_faction++;
+					} else if (streq(q->race[i]->name, "megalodon")) {
+						msg("How did anyone not see that! Maybe you should go back for your share of the winnings?");
+					}
+					return true;
 				}
-				return true;
 			}
 		}
 	}
@@ -1525,7 +1638,7 @@ bool quest_check(struct player *p, const struct monster *m)
 				}
 			}
 		}
-	} else if (m->race == get_quest_by_name("Hit List")->race) {
+	} else if ((get_quest_by_name("Hit List")->races) && (m->race == get_quest_by_name("Hit List")->race[0])) {
 		succeed_quest(get_quest_by_name("Hit List"));
 		msg("Target eliminated.");
 		get_quest_by_name("Hit List")->cur_num = 1;

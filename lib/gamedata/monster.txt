@@ -5599,6 +5599,27 @@ flags:OPEN_DOOR | SMART | SPIRIT | TAKE_ITEM
 flags:FEMALE | SPECIAL_GEN | QUESTOR
 desc:She looks like just one more of the Black Market's agents - in other words, a grab-and-blink thief. But she matches the description you were given, so hopefully she's still carrying the stolen recipe.
 
+name:cyborg
+base:person
+color:BlueViolet
+speed:130
+hit-points:60
+light:2
+hearing:20
+armor-class:50
+sleepiness:10
+depth:10
+rarity:2
+experience:35
+blow:HIT:HURT:1d6
+blow:HIT:HURT:1d6
+flags:MALE | FEMALE
+flags:DROP_40
+flags:OPEN_DOOR | BASH_DOOR | TAKE_ITEM
+spell-freq:5
+spells:BLINK | SHOT
+desc:You're in the way, so you'll have to be removed. (At this alarming speed everything's in the way - even the bullets are a bit pokey.)
+
 name:sergeant
 base:person
 color:u
@@ -5646,6 +5667,30 @@ spell-freq:10
 spells:WHIP | S_FRIENDS
 friends:100:1d3:patchsnake
 desc:Master of the patchsnakes, dressed in matching electric blue, holding a nine-tailed patchsnake by the head and swinging it as a living whip.
+
+name:cyberpsycho
+base:person
+color:Violet
+speed:130
+hit-points:60
+light:3
+hearing:10
+armor-class:70
+sleepiness:0
+depth:15
+rarity:4
+experience:70
+blow:BOAST
+blow:HIT:HURT:1d10
+blow:HIT:HURT:1d10
+blow:KICK:HURT:1d6
+blow:KICK:HURT:1d6
+flags:MALE | FEMALE
+flags:DROP_60 | ONLY_ITEM
+flags:OPEN_DOOR | BASH_DOOR | TAKE_ITEM | DROP_RANDOM
+spell-freq:10
+spells:TPORT | BLINK
+desc:A stone-cold nutter with an array of cyber augmentations.
 
 name:pickpocket
 base:person

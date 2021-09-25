@@ -110,9 +110,12 @@ static const char *obj_flags[] = {
  */
 struct store *store_at(struct chunk *c, struct loc grid)
 {
-	if (square_isshop(c, grid))
-		return &stores[square_shopnum(cave, grid)];
-
+	if (square_isshop(c, grid)) {
+		int num = square_shopnum(cave, grid);
+		if ((num == STORE_HOME) && (OPT(player, single_home)))
+			return &t_info[0].stores[num];
+		return &stores[num];
+	}
 	return NULL;
 }
 

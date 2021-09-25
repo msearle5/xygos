@@ -55,5 +55,6 @@ void steal_monster_item(struct monster *mon, int midx);
 bool monster_change_shape(struct monster *mon);
 bool monster_revert_shape(struct monster *mon);
 double mon_exp_value(const struct monster_race *race);
+int lookup_all_monsters(const char *name, struct monster_race **race, int maxraces);
 
 #endif /* MONSTER_UTILITIES_H */

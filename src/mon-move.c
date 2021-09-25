@@ -1110,8 +1110,10 @@ static bool monster_turn_multiply(struct chunk *c, struct monster *mon)
 
 			/* Quest target? If so, increase the number of targets needed */
 			if (player->active_quest >= 0) {
-				if (mon->race == player->quests[player->active_quest].race) {
-					player->quests[player->active_quest].max_num++;
+				for(int i=0; i<player->quests[player->active_quest].races; i++) {
+					if (mon->race == player->quests[player->active_quest].race[i]) {
+						player->quests[player->active_quest].max_num++;
+					}
 				}
 			}
 
