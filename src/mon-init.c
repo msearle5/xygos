@@ -1992,6 +1992,8 @@ static errr finish_parse_monster(struct parser *p) {
 				fprintf(stderr,"Monster %s has <=0 hitpoints\n", race->name);
 			if (race->ac < 0)
 				fprintf(stderr,"Monster %s has <0 AC\n", race->name);
+			if ((race->speed < 60) || (race->speed > 140))
+				fprintf(stderr,"Monster %s has unlikely (%d) speed\n", race->name, race->speed);
 			if (race->d_attr == 0)
 				fprintf(stderr,"Monster %s has no color\n", race->name);
 			if (race->grow) {

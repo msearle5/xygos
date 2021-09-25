@@ -6139,7 +6139,7 @@ color:White
 depth:2
 rarity:8
 grow:vorpal rabbit
-speed:15
+speed:115
 hit-points:8
 hearing:6
 armor-class:10
