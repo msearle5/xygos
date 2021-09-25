@@ -1532,22 +1532,28 @@ static bool check_quest(struct quest *q, const struct monster *m) {
 			reward_quest(q);
 		}
 	} else {
-		for(int i=0; i<q->races; i++) {
+		bool wanted = false;
+		int i=0;
+		for(i=0; i<q->races; i++) {
 			if (m->race == q->race[i]) {
-				if (q->cur_num < q->max_num) {
-					/* You've killed a quest target */
-					q->cur_num++;
-					if (q->cur_num == q->max_num) {
-						/* You've killed the last quest target */
-						succeed_quest(q);
-						if (streq(q->race[i]->name, "triffid")) {
-							msg("That's the last of them. Maybe you should go back and ask for a reward?");
-							player->town_faction++;
-						} else if (streq(q->race[i]->name, "megalodon")) {
-							msg("How did anyone not see that! Maybe you should go back for your share of the winnings?");
-						}
-						return true;
+				wanted = true;
+				break;
+			}
+		}
+		if (wanted) {
+			if (q->cur_num < q->max_num) {
+				/* You've killed a quest target */
+				q->cur_num++;
+				if (q->cur_num == q->max_num) {
+					/* You've killed the last quest target */
+					succeed_quest(q);
+					if (streq(q->race[i]->name, "triffid")) {
+						msg("That's the last of them. Maybe you should go back and ask for a reward?");
+						player->town_faction++;
+					} else if (streq(q->race[i]->name, "megalodon")) {
+						msg("How did anyone not see that! Maybe you should go back for your share of the winnings?");
 					}
+					return true;
 				}
 			}
 		}

@@ -2715,6 +2715,77 @@ bool effect_handler_SUMMON(effect_handler_context_t *context)
 	return true;
 }
 
+/* Is a monster banish-proof?
+ * This is done to avoid quests being too easy or unwinnable
+ */
+static bool monster_is_banproof(struct monster *mon)
+{
+	/* If you are on a quest, at least prevent making the quest unwinnable (immediately,
+	 * without waiting for wandering monsters to show up)
+	 **/
+	if (player->active_quest >= 0) {
+		struct quest *q = &player->quests[player->active_quest];
+		if (q->flags & QF_HOME) {
+			/* Home quest = kill all monsters. So don't take the last one here */
+			if (cave->mon_cnt == 1)
+				return true;
+		}
+	}
+
+	/* Similar in town quests */
+	if (in_town_quest()) {
+		for(int i=0;i<z_info->quest_max;i++) {
+			struct quest *q = &player->quests[i];
+			/* Matching this town, active and a town quest */
+			if (q->town == player->town - t_info) {
+				if ((q->flags & (QF_TOWN | QF_ACTIVE)) == (QF_TOWN | QF_ACTIVE)) {
+					bool wanted = false;
+					/* Is it a race wanted by the quest? */
+					for(int i=0; i<q->races; i++) {
+						if (mon->race == q->race[i]) {
+							wanted = true;
+							break;
+						}
+					}
+					if (wanted) {
+						/* The last one */
+						if (q->cur_num >= q->max_num-1) {
+							return true;
+						}
+						/* Not in line of sight */
+						if (!los(cave, player->grid, mon->grid))
+							return true;
+					}
+				}
+			}
+		}
+	}
+
+	/* Level guardians, wintrack monsters and most other quest targets are
+	 * unique, will come back and the quest won't be failed if you zap it.
+	 * But you'll have to take it down from full health again, so you
+	 * haven't made it any easier either. So they don't need protection.
+	 *
+	 * There are also some quests (such as the wumpus quest) which can't be
+	 * repeated, but in which banishment is just another way to bail out and
+	 * fail the quest. There's no reason not to allow this either.
+	 **/
+	return false;
+}
+
+/* Banish a monster, unless it is banish-proof in which case teleport it away. */
+static void banish_monster(effect_handler_context_t *context, struct monster *mon, int i)
+{
+	if (monster_is_banproof(mon)) {
+		effect_simple(EF_TELEPORT, context->origin, "100", 0, 0, 0,
+					  mon->grid.y, mon->grid.x, NULL);
+
+		/* Wake the monster up, don't notice the player */
+		monster_wake(mon, false, 0);
+	} else
+		delete_monster_idx(i);
+}
+
 /**
  * Delete all non-unique monsters of a given "type" from the level
  * -------
@@ -2754,7 +2825,7 @@ bool effect_handler_BANISH(effect_handler_context_t *context)
 		if ((char) mon->race->d_char != typ) continue;
 
 		/* Delete the monster */
-		delete_monster_idx(i);
+		banish_monster(context, mon, i);
 
 		/* Take some damage */
 		dam += randint1(4);
@@ -2801,8 +2872,7 @@ bool effect_handler_MASS_BANISH(effect_handler_context_t *context)
 		/* Skip distant monsters */
 		if (mon->cdis > radius) continue;
 
-		/* Delete the monster */
-		delete_monster_idx(i);
+		banish_monster(context, mon, i);
 
 		/* Take some damage */
 		dam += randint1(3);

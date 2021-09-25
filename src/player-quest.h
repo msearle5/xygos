@@ -36,6 +36,7 @@ void quest_reward(struct quest *q, bool success, struct store_context *ctx);
 struct quest *get_quest_by_name(const char *name);
 bool quest_item_check(const struct object *obj);
 void quest_enter_level(struct chunk *c);
+bool in_town_quest(void);
 void quest_changed_level(void);
 bool quest_enter_building(struct store *store);
 void quest_changing_level(void);
