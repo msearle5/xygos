@@ -36,9 +36,9 @@ INTERFACE, false)
 OP(hybrid_walls,          "Show walls with shaded background",
 INTERFACE, false)
 OP(view_yellow_light,     "Color: Illuminate torchlight in yellow",
-INTERFACE, false)
+INTERFACE, true)
 OP(animate_flicker,       "Color: Shimmer multi-colored things",
-INTERFACE, false)
+INTERFACE, true)
 OP(center_player,         "Center map continuously",
 INTERFACE, false)
 OP(purple_uniques,        "Color: Show unique monsters in purple",
@@ -48,7 +48,7 @@ INTERFACE, false)
 OP(hp_changes_color,      "Color: Player color indicates % hit points",
 INTERFACE, true)
 OP(mouse_movement,        "Allow mouse clicks to move the player",
-INTERFACE, true)
+INTERFACE, false)
 OP(notify_recharge,       "Notify on object recharge",
 INTERFACE, false)
 OP(effective_speed,       "Show effective speed as multiplier",
@@ -89,6 +89,8 @@ OP(birth_feelings,        "Show level feelings",
 BIRTH, true)
 OP(birth_no_selling,      "Increase cash drops but disable selling",
 BIRTH, false)
+OP(single_home,           "All towns' homes share the same inventory",
+BIRTH, true)
 OP(birth_start_kit,       "Start with a kit of useful gear",
 BIRTH, true)
 OP(birth_ai_learn,        "Monsters learn from their mistakes",
@@ -99,7 +101,7 @@ OP(birth_know_flavors,    "Know all flavors on birth",
 BIRTH, false)
 OP(birth_levels_persist,  "Persistent levels (experimental)",
 BIRTH, false)
-OP(birth_percent_damage,  "To-damage is a percentage of dice (experimental)",
+OP(birth_percent_damage,  "To-dam is a percentage of dice (experimental)",
 BIRTH, false)
 OP(birth_time_limit,      "Difficulty increases over time",
 BIRTH, true)
