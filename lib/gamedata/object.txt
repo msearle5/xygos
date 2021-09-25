@@ -108,8 +108,8 @@
 # (and *not* when worn)
 
 # 'values' is for object modifiers which take a value - stats, slays, brands,
-# resistances and so on.  An example is SLAY_UNDEAD[3], which denotes that
-# the weapon concerned has a basic 3x slay against undead creatures.  Like
+# resistances and so on.  An example is RES_ACID[3], which denotes that
+# the armor concerned adds 1 level of resistance to acid when worn.  Like
 # flags, values are separated by '|' and as many values: lines as needed
 # can be used.
 

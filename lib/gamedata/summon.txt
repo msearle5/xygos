@@ -19,9 +19,8 @@
 # sound played on the summon happening
 
 # 'uniques' is 1 if the summon type allows uniques to be summoned, 0 otherwise.
-# Traditionally UNIQUE and WRAITH will summon uniques, ANY, HI_UNDEAD, HI_DEMON
-# and HI_DRAGON may summon uniques, and none of the other summon codes will ever
-# summon uniques.
+# UNIQUE summons uniques. ANY may summon uniques, and none of the other summon
+# codes will ever summon uniques.
 
 # 'base' indicates a possible monster base for the summon.  If a summon type
 # has no base: line, any monster base can be chosen, otherwise only the given
@@ -32,8 +31,8 @@
 # only monsters with the given flag can be chosen.
 
 # 'fallback' gives the name of another summon type to try if the given type
-# fails to summon any monsters.  Traditionally the only summon types with a
-# fallback are WRAITH and UNIQUE, which both fall back to HI_UNDEAD.
+# fails to summon any monsters.  Currently the only summon type with a
+# fallback is UNIQUE, which falls back to MONSTER.
 
 # 'desc' is the description of the summon type used in messages.
 
@@ -97,7 +96,7 @@ name:UNIQUE
 msgt:SUM_UNIQUE
 uniques:1
 race-flag:UNIQUE
-fallback:HI_UNDEAD
+fallback:MONSTER
 desc:unique monsters
 
 name:GROW

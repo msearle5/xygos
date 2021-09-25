@@ -422,9 +422,6 @@ sound:SUM_MONSTER:sum_chime_jangle
 # Summon angels.
 sound:SUM_AINU:sum_angel_song
 
-# Summon undead.
-sound:SUM_UNDEAD:sum_ghost_oooo
-
 # Summon animals.
 sound:SUM_ANIMAL:sum_lion_growl
 
@@ -442,9 +439,6 @@ sound:SUM_DEMON:sum_ghost_wail sum_laugh_evil2
 
 # Summon dragon.
 sound:SUM_DRAGON:sum_piano_scrape
-
-# Summon greater undead.
-sound:SUM_HI_UNDEAD:sum_ghost_moan
 
 # Summon greater dragons.
 sound:SUM_HI_DRAGON:sum_gong_temple

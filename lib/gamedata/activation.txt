@@ -708,20 +708,12 @@ effect:PROJECT_LOS:DISP_EVIL:0:1
 dice:60
 desc:deals 60 damage to all evil creatures that you can see
 
-name:DISPEL_UNDEAD
-aim:0
-power:9
-effect:PROJECT_LOS:DISP_UNDEAD:0:1
-dice:60
-desc:deals 60 damage to all undead creatures that you can see
-
 name:DISPEL_ALL
 aim:0
 power:11
 effect:PROJECT_LOS:DISP_ALL:0:1
 dice:120
 desc:deals 120 damage to all creatures that you can see
-
 
 name:SLEEPII
 aim:0

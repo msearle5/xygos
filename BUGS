@@ -1,14 +1,26 @@
 BUGS
 ====
-BUG? Stuff isn't transported when you fly - should it be? Should there just be 1 house?
-	- see also -
-BUG: clouded:  Towns having different houses is a bit of an inconvenience when it costs money to travel between towns. Perhaps it's better to just have a single house? (Pay?)
-	- Unless inventories are unlimited, that must cope with the possibility of not having enough space
-	- Also limits the possibilities of homes/home expansion as a quest reward, though home-unlock quests would
-		work (which could be kill-the-X quests like ToME, but they could be granted for other reasons. It would
-		have to be accessible to most characters at the first approach, though.)
-	- option?
-	- branched, homequests
+BUG: Zero object, stack trace:
+#0  0x00005555555f5916 in object_set_base_known (p=0x5555559cacf8, 
+    obj=obj@entry=0x555555c702d8) at obj-knowledge.c:884
+#1  0x00005555555f81a9 in object_know_all (obj=obj@entry=0x555555c702d8)
+    at obj-knowledge.c:2456
+#2  0x000055555558cb42 in player_pickup_aux (p=p@entry=0x5555559cacf8, 
+    obj=obj@entry=0x555555c702d8, auto_max=<optimized out>, domsg=domsg@entry=true)
+    at cmd-pickup.c:292
+#3  0x000055555558cdfa in do_autopickup (p=0x5555559cacf8) at cmd-pickup.c:452
+#4  0x000055555558cecf in do_cmd_autopickup (cmd=<optimized out>) at cmd-pickup.c:494
+#5  0x0000555555588e12 in process_command (ctx=CTX_GAME, 
+    cmd=0x55555571b580 <cmd_queue+3168>) at cmd-core.c:299
+#6  0x0000555555588e97 in cmdq_pop (c=c@entry=CTX_GAME) at cmd-core.c:328
+#7  0x00005555555a5e6a in process_player () at game-world.c:1209
+#8  0x00005555555a652e in run_game_loop () at game-world.c:1506
+#9  0x00005555556517fb in play_game (new_game=<optimized out>) at ui-game.c:685
+#10 0x000055555568cce5 in main (argc=1, argv=0x7fffffffdae8) at main.c:562
+=> The obj structure was entirely 0 (including kind, which was the cause of the crash).
+=> This was in Cyberspace (home quest), not having saved and restored while in that quest.
+=> Suggesting random object generation is producing zeroes? Added an assert for this.
+=> ZeroObj savegame, 2fe6223ccc143d2deddb08819be28b159dc3f2c5
 
 BUG: Stores which close lose their entrance but don't become ruins. (Only when more than one would?)
 
@@ -129,6 +141,17 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+
+BUG? Stuff isn't transported when you fly - should it be? Should there just be 1 house?
+	- see also -
+BUG: clouded:  Towns having different houses is a bit of an inconvenience when it costs money to travel between towns. Perhaps it's better to just have a single house? (Pay?)
+	- Unless inventories are unlimited, that must cope with the possibility of not having enough space
+	- Also limits the possibilities of homes/home expansion as a quest reward, though home-unlock quests would
+		work (which could be kill-the-X quests like ToME, but they could be granted for other reasons. It would
+		have to be accessible to most characters at the first approach, though.)
+	- option?
+	- branched, homequests
+	- Fixed by merge of this branch 782c765b311a226562ee3d2a58c6f438bcaa6f16
 
 BUG: Shop owners (store_do_fight()) are always male
 	- would need to split first into 2/3

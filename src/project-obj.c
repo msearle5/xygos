@@ -371,10 +371,6 @@ static void project_object_handler_MAKE_TRAP(project_object_handler_context_t *c
 {
 }
 
-static void project_object_handler_AWAY_UNDEAD(project_object_handler_context_t *context)
-{
-}
-
 static void project_object_handler_AWAY_EVIL(project_object_handler_context_t *context)
 {
 }
@@ -384,10 +380,6 @@ static void project_object_handler_AWAY_SPIRIT(project_object_handler_context_t 
 }
 
 static void project_object_handler_AWAY_ALL(project_object_handler_context_t *context)
-{
-}
-
-static void project_object_handler_TURN_UNDEAD(project_object_handler_context_t *context)
 {
 }
 
@@ -403,19 +395,11 @@ static void project_object_handler_TURN_ALL(project_object_handler_context_t *co
 {
 }
 
-static void project_object_handler_DISP_UNDEAD(project_object_handler_context_t *context)
-{
-}
-
 static void project_object_handler_DISP_EVIL(project_object_handler_context_t *context)
 {
 }
 
 static void project_object_handler_DISP_ALL(project_object_handler_context_t *context)
-{
-}
-
-static void project_object_handler_SLEEP_UNDEAD(project_object_handler_context_t *context)
 {
 }
 

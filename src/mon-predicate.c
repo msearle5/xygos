@@ -27,20 +27,13 @@
  * ------------------------------------------------------------------------
  * Permanent monster properties
  * ------------------------------------------------------------------------ */
-/**
- * Undead monsters
- */
-bool monster_is_undead(const struct monster *mon)
-{
-	return rf_has(mon->race->flags, RF_UNDEAD);
-}
 
 /**
  * Nonliving monsters are immune to life drain
  */
 bool monster_is_nonliving(const struct monster *mon)
 {
-	return (monster_is_undead(mon) || rf_has(mon->race->flags, RF_NONLIVING));
+	return (rf_has(mon->race->flags, RF_NONLIVING));
 }
 
 /**

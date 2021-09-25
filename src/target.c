@@ -61,7 +61,7 @@ void look_mon_desc(char *buf, size_t max, int m_idx)
 
 	if (!mon) return;
 
-	/* Determine if the monster is "living" (vs "undead") */
+	/* Determine if the monster is "living" */
 	if (monster_is_destroyed(mon)) living = false;
 
 	/* Assess health */

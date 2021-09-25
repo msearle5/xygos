@@ -1817,6 +1817,7 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
 		if (value) *value += (kind->alloc_min - c->depth) * (*value / 5);
 	}
 
+	assert((new_obj) && (new_obj->kind));
 	mem_free(me_table);
 	return new_obj;
 }

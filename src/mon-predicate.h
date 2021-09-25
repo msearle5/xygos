@@ -26,7 +26,6 @@
  */
 typedef bool (*monster_predicate)(const struct monster *mon);
 
-bool monster_is_undead(const struct monster *mon);
 bool monster_is_nonliving(const struct monster *mon);
 bool monster_is_living(const struct monster *mon);
 bool monster_is_destroyed(const struct monster *mon);

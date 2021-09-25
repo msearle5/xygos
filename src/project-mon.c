@@ -799,12 +799,6 @@ static void project_monster_handler_MAKE_TRAP(project_monster_handler_context_t 
 	context->dam = 0;
 }
 
-/* Teleport undead (Use "dam" as "power") */
-static void project_monster_handler_AWAY_UNDEAD(project_monster_handler_context_t *context)
-{
-	project_monster_teleport_away(context, RF_UNDEAD);
-}
-
 /* Teleport evil (Use "dam" as "power") */
 static void project_monster_handler_AWAY_EVIL(project_monster_handler_context_t *context)
 {
@@ -828,12 +822,6 @@ static void project_monster_handler_AWAY_ALL(project_monster_handler_context_t *
 	context->hurt_msg = MON_MSG_DISAPPEAR;
 }
 
-/* Turn undead (Use "dam" as "power") */
-static void project_monster_handler_TURN_UNDEAD(project_monster_handler_context_t *context)
-{
-	project_monster_scare(context, RF_UNDEAD);
-}
-
 /* Turn evil (Use "dam" as "power") */
 static void project_monster_handler_TURN_EVIL(project_monster_handler_context_t *context)
 {
@@ -845,7 +833,6 @@ static void project_monster_handler_TURN_LIVING(project_monster_handler_context_
 {
     if (context->seen) {
 		rf_on(context->lore->flags, RF_NONLIVING);
-		rf_on(context->lore->flags, RF_UNDEAD);
 	}
 
 	if (monster_is_living(context->mon)) {
@@ -865,12 +852,6 @@ static void project_monster_handler_TURN_ALL(project_monster_handler_context_t *
 	context->dam = 0;
 }
 
-/* Dispel undead */
-static void project_monster_handler_DISP_UNDEAD(project_monster_handler_context_t *context)
-{
-	project_monster_dispel(context, RF_UNDEAD);
-}
-
 /* Dispel evil */
 static void project_monster_handler_DISP_EVIL(project_monster_handler_context_t *context)
 {
@@ -882,12 +863,6 @@ static void project_monster_handler_DISP_ALL(project_monster_handler_context_t *
 {
 	context->hurt_msg = MON_MSG_SHUDDER;
 	context->die_msg = MON_MSG_DISSOLVE;
-}
-
-/* Sleep (Use "dam" as "power") */
-static void project_monster_handler_SLEEP_UNDEAD(project_monster_handler_context_t *context)
-{
-	project_monster_sleep(context, RF_UNDEAD);
 }
 
 /* Sleep (Use "dam" as "power") */
@@ -1011,9 +986,6 @@ static void project_monster_handler_MON_STUN(project_monster_handler_context_t *
 static void project_monster_handler_MON_DRAIN(project_monster_handler_context_t *context)
 {
 	if (context->seen) context->obvious = true;
-	if (context->seen) {
-		rf_on(context->lore->flags, RF_UNDEAD);
-	}
 	if (monster_is_nonliving(context->mon)) {
 		context->hurt_msg = MON_MSG_UNAFFECTED;
 		context->obvious = false;

@@ -383,9 +383,6 @@ message:SUM_MONSTER:w
 # MSG_SUM_ANGEL
 message:SUM_AINU:w
 
-# MSG_SUM_UNDEAD
-message:SUM_UNDEAD:w
-
 # MSG_SUM_ANIMAL
 message:SUM_ANIMAL:w
 
@@ -403,9 +400,6 @@ message:SUM_DEMON:w
 
 # MSG_SUM_DRAGON
 message:SUM_DRAGON:w
-
-# MSG_SUM_HI_UNDEAD
-message:SUM_HI_UNDEAD:w
 
 # MSG_SUM_HI_DRAGON
 message:SUM_HI_DRAGON:w

@@ -77,11 +77,6 @@ static bool mon_select(struct monster_race *race)
 			return (false);
 	}
 
-	/* No invisible undead until deep. */
-	if (select_current_level < 40 && rf_has(race->flags, RF_UNDEAD)
-			&& rf_has(race->flags, RF_INVISIBLE))
-		return (false);
-
 	/* Usually decline unique monsters. */
 	if (rf_has(race->flags, RF_UNIQUE)) {
 		if (!allow_unique)

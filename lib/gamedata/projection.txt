@@ -473,13 +473,6 @@ blind-desc:something
 obvious:0
 color:WHITE
 
-code:AWAY_UNDEAD
-type:monster
-desc:teleports undead away
-blind-desc:something
-obvious:0
-color:White
-
 code:AWAY_EVIL
 type:monster
 desc:teleports evil monsters away
@@ -500,13 +493,6 @@ desc:teleports monsters away
 blind-desc:something
 obvious:1
 wake:1
-color:White
-
-code:TURN_UNDEAD
-type:monster
-desc:turns undead
-blind-desc:something
-obvious:0
 color:White
 
 code:TURN_EVIL
@@ -531,13 +517,6 @@ obvious:0
 wake:1
 color:White
 
-code:DISP_UNDEAD
-type:monster
-desc:damages undead
-blind-desc:something
-obvious:0
-color:White
-
 code:DISP_EVIL
 type:monster
 desc:damages evil monsters
@@ -551,13 +530,6 @@ desc:damages all monsters
 blind-desc:something
 obvious:1
 wake:1
-color:White
-
-code:SLEEP_UNDEAD
-type:monster
-desc:attempts to put undead to sleep
-blind-desc:something
-obvious:0
 color:White
 
 code:SLEEP_EVIL
