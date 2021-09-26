@@ -1632,7 +1632,7 @@ graphics:|:Green
 level:40
 alloc:2:35 to 75
 weight:1250g
-attack:2d14:-5:0
+attack:2d14:-12:0
 armor:0:0
 brand:LIGHT_2
 values:LIGHT[1] | RES_LIGHT[1]
@@ -1646,7 +1646,7 @@ graphics:|:Red
 level:43
 alloc:2:38 to 78
 weight:1250g
-attack:2d14:-5:0
+attack:2d14:-12:0
 armor:0:0
 brand:DARK_2
 values:RES_DARK[1]
@@ -1660,7 +1660,7 @@ graphics:|:Yellow
 level:45
 alloc:2:40 to 80
 weight:1250g
-attack:2d14:0:0
+attack:2d14:-12:0
 armor:0:0
 brand:CHAOS_2
 values:RES_CHAOS[1]
@@ -1674,7 +1674,7 @@ graphics:|:Cyan
 level:45
 alloc:2:40 to 80
 weight:1250g
-attack:2d14:0:0
+attack:2d14:-12:0
 armor:0:0
 brand:NEXUS_2
 values:RES_NEXUS[1]
@@ -1688,7 +1688,7 @@ graphics:|:Violet
 level:47
 alloc:2:42 to 82
 weight:1250g
-attack:2d15:0:0
+attack:2d15:-8:0
 armor:0:0
 brand:LIGHT_2
 values:LIGHT[1] | RES_LIGHT[1]

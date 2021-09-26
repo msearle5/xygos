@@ -33,6 +33,7 @@
 #include "randname.h"
 #include "ui-command.h"
 #include "ui-input.h"
+#include "ui-output.h"
 #include "ui-player.h"
 #include "z-color.h"
 #include "z-util.h"
