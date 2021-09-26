@@ -33,6 +33,7 @@
 #include "obj-util.h"
 #include "object.h"
 #include "ui-command.h"
+#include "ui-game.h"
 #include "wizard.h"
 
 /**
@@ -186,7 +187,7 @@ struct stat_data
 	const char *name;
 };
 
-static const struct stat_data stat_message[] =
+static const struct stat_data stat_message[ST_END] =
 {
 	{ST_BEGIN, ""},
 	{ST_EQUIPMENT, "\n ***EQUIPMENT*** \n All:       "},
@@ -267,7 +268,7 @@ static const struct stat_data stat_message[] =
 	{ST_HOLY_AMMO, " Holy might  "},
 };	
 
-double stat_all[ST_END][3][MAX_LVL];
+static double stat_all[ST_END][3][MAX_LVL];
 	
 /* Values for things we want to find the level where it's
  * most likely to be first found */
@@ -276,11 +277,14 @@ typedef enum stat_first_find
 	ST_FF_BEGIN,
 	ST_FF_FA,
 	ST_FF_SI,
+	ST_FF_RBASE1,
+	ST_FF_RBASE,
 	ST_FF_RPOIS,
 	ST_FF_RNEXUS,
 	ST_FF_RCONF,
 	ST_FF_RBLIND,
 	ST_FF_TELEP,
+	ST_FF_SPEED,
 	ST_FF_END
 }	
 stat_first_find;
@@ -292,19 +296,22 @@ struct stat_ff_data
 	const char *name;
 };
 
-static const struct stat_ff_data stat_ff_message[] =
+static const struct stat_ff_data stat_ff_message[ST_FF_END] =
 {
-	{ST_FF_BEGIN,ST_BEGIN,""},
-	{ST_FF_FA,	ST_FA_EQUIPMENT,		"FA     \t"},
-	{ST_FF_SI,	ST_SI_EQUIPMENT,		"SI     \t"},
-	{ST_FF_RPOIS,	ST_RPOIS_EQUIPMENT,	"Rpois  \t"},
-	{ST_FF_RNEXUS,	ST_RNEXUS_EQUIPMENT,  "Rnexus \t"},
-	{ST_FF_RCONF,	ST_RCONF_EQUIPMENT,	"Rconf  \t"},
+	{ST_FF_BEGIN,ST_BEGIN,""}, 
+	{ST_FF_FA,	ST_FA_EQUIPMENT,			"FA     \t"},
+	{ST_FF_SI,	ST_SI_EQUIPMENT,			"SI     \t"},
+	{ST_FF_RBASE1,	ST_RESIST_EQUIPMENT,	"Rbase1 \t"},
+	{ST_FF_RBASE,	ST_RBASE_EQUIPMENT,		"Rall   \t"},
+	{ST_FF_RPOIS,	ST_RPOIS_EQUIPMENT,		"Rpois  \t"},
+	{ST_FF_RNEXUS,	ST_RNEXUS_EQUIPMENT,  	"Rnexus \t"},
+	{ST_FF_RCONF,	ST_RCONF_EQUIPMENT,		"Rconf  \t"},
 	{ST_FF_RBLIND,	ST_RBLIND_EQUIPMENT,	"Rblind \t"},
-	{ST_FF_TELEP,	ST_TELEP_EQUIPMENT,	"Telep  \t"},
+	{ST_FF_SPEED,	ST_SPEED_EQUIPMENT,		"Speed  \t"},
+	{ST_FF_TELEP,	ST_TELEP_EQUIPMENT,		"Telep  \t"},
 };
 
-int stat_ff_all[ST_FF_END][TRIES_SIZE];
+static int stat_ff_all[ST_FF_END][TRIES_SIZE];
 
 
 
@@ -445,13 +452,12 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 		first_find(ST_FF_FA);
 	}
 
-
 	/* has see invis */
 	if (of_has(obj->flags, OF_SEE_INVIS)) {
-
 		add_stats(ST_SI_EQUIPMENT, vault, mon, number);
 		first_find(ST_FF_SI);
 	}
+
 	/* has at least one basic resist */
  	if ((obj->el_info[ELEM_ACID].res_level == 1) ||
 		(obj->el_info[ELEM_ELEC].res_level == 1) ||
@@ -459,28 +465,32 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 		(obj->el_info[ELEM_FIRE].res_level == 1)) {
 
 			add_stats(ST_RESIST_EQUIPMENT, vault, mon, number);
+			first_find(ST_FF_RBASE1);
 	}
 
 	/* has rbase */
 	if ((obj->el_info[ELEM_ACID].res_level == 1) &&
 		(obj->el_info[ELEM_ELEC].res_level == 1) &&
 		(obj->el_info[ELEM_COLD].res_level == 1) &&
-		(obj->el_info[ELEM_FIRE].res_level == 1))
-		add_stats(ST_RBASE_EQUIPMENT, vault, mon, number);
+		(obj->el_info[ELEM_FIRE].res_level == 1)) {
+			add_stats(ST_RBASE_EQUIPMENT, vault, mon, number);
+			first_find(ST_FF_RBASE);
+	}
 
 	/* has resist poison */
 	if (obj->el_info[ELEM_POIS].res_level == 1) {
 
 		add_stats(ST_RPOIS_EQUIPMENT, vault, mon, number);
 		first_find(ST_FF_RPOIS);
-		
 	}
+
 	/* has resist nexus */
 	if (obj->el_info[ELEM_NEXUS].res_level == 1) {
 
 		add_stats(ST_RNEXUS_EQUIPMENT, vault, mon, number);
 		first_find(ST_FF_RNEXUS);
 	}
+
 	/* has resist blind */
 	if (of_has(obj->flags, OF_PROT_BLIND)) {
 
@@ -496,18 +506,18 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 	}
 
 	/* has speed */
-	if (obj->modifiers[OBJ_MOD_SPD] != 0)
+	if (obj->modifiers[OBJ_MOD_SPD] != 0) {
 		add_stats(ST_SPEED_EQUIPMENT, vault, mon, number);
+		first_find(ST_FF_SPEED);
+	}
 
 	/* has telepathy */
 	if (of_has(obj->flags, OF_TELEPATHY)) {
-
 		add_stats(ST_TELEP_EQUIPMENT, vault, mon, number);
 		first_find(ST_FF_TELEP);
 	}
 
 	switch(obj->tval) {
-
 		/* armor */
 		case TV_BOOTS:
 		case TV_GLOVES:
@@ -515,6 +525,9 @@ static void get_obj_data(const struct object *obj, int y, int x, bool mon,
 		case TV_SHIELD:
 		case TV_CLOAK:
 		case TV_BELT:
+		case TV_ARMS:
+		case TV_LEGS:
+		case TV_CHIP:
 		case TV_SOFT_ARMOR:
 		case TV_HARD_ARMOR: {
 
@@ -1134,7 +1147,7 @@ static void print_stats(int lvl)
 		file_putf(stats_log,"Lev %3d ", (j ? j : 1));
 	}
 	file_putf(stats_log,"\n");
-	for(i=0;i<z_info->k_max;i++) {
+	for(i=0;i<z_info->ordinary_kind_max;i++) {
 		if (k_info[i].name) {
 			char buf[128];
 			obj_desc_name_format(buf, sizeof(buf), 0, k_info[i].name, NULL, false);
@@ -1171,7 +1184,6 @@ static void mean_and_stdv(int array[TRIES_SIZE])
 	/* Compute standard dev */
 	stdev = sqrt(temp / tries);
 
-	/* Print to file */
 	file_putf(stats_log," mean: %f  std-dev: %f \n",mean,stdev);
 
 }
@@ -1185,6 +1197,7 @@ static void prob_of_find(double stat[MAX_LVL])
 {
 	static int lvl, tmpcount;
 	double find = 0.0, tmpfind = 0.0;
+	int midlevel = 0;
 
 	/* Skip town level */
 	for (lvl = 1; lvl < MAX_LVL ; lvl++) {
@@ -1210,7 +1223,12 @@ static void prob_of_find(double stat[MAX_LVL])
 			/* reset temp counter */
 			tmpcount=0;
 		}
+		if (find > 0.5)
+			midlevel = lvl;
 	}
+
+	/* print the midlevel */
+	file_putf(stats_log,"%d \t",midlevel);
 
 	/* Put a new line in prep of next entry */
 	file_putf(stats_log,"\n"); 
@@ -1247,12 +1265,12 @@ static void post_process_stats(void)
 	file_putf(stats_log,"Item \t5\t\t\t10\t\t\t15\t\t\t20\t\t\t25\t\t\t");
 	file_putf(stats_log,"30\t\t\t35\t\t\t40\t\t\t45\t\t\t50\t\t\t");
 	file_putf(stats_log,"55\t\t\t60\t\t\t65\t\t\t70\t\t\t75\t\t\t");
-	file_putf(stats_log,"80\t\t\t85\t\t\t90\t\t\t95\t\t\t100\n");
+	file_putf(stats_log,"80\t\t\t85\t\t\t90\t\t\t95\t\t\t100\t\t\tMid\n");
 	
 	for (i = 1; i < ST_FF_END; i++) {
-			file_putf(stats_log, stat_ff_message[i].name);
-			prob_of_find(stat_all[stat_ff_message[i].st][0]);
-			mean_and_stdv(stat_ff_all[i]);
+		file_putf(stats_log, stat_ff_message[i].name);
+		prob_of_find(stat_all[stat_ff_message[i].st][0]);
+		mean_and_stdv(stat_ff_all[i]);
 	}
 
 	/* Print artifact total */

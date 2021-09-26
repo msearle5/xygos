@@ -153,6 +153,13 @@ weight:121
 desc:Eight seamless tentacles in dull, grayish metal spring out and writhe in an unsettling manner. They are not true limbs and can't grasp, but their barbed tips can rapidly turn your opponents into mincemeat - while effectively deflecting incoming blows.
 forbid:razor | spiked
 
+name:(mind-shield)
+info:5600:30
+alloc:30:25 to 127
+type:chip
+flags:PROT_CONF | PROT_FEAR | PROT_STUN
+desc:This chip has a secondary function installed to protect your mind from fear, confusion and stunning. 
+
 #name:(bionic)
 #incompat: spiked, etc
 
@@ -224,6 +231,7 @@ item:light:mobilamp
 values:RES_LIGHT[1]
 flags:PROT_BLIND
 
+
 ### Printers ###
 # Ecomod = improve pval (and so reduce the amount of wasted material)
 # Easymod = improve chance of success (-20 to difficulty: equivalent to 10 character levels,
@@ -271,7 +279,16 @@ alloc:10:10 to 80
 type:printer
 weight:47+3d7
 
+
 ### Weapons ###
+
+name:<grim
+info:6000:20
+alloc:12:18 to 70
+type:sword
+type:polearm
+type:hafted
+flags:PROT_STUN | PROT_CONF | REGEN | RAND_SUSTAIN
 
 name:<defensive
 info:15000:25
@@ -351,11 +368,12 @@ brand:COLD_3
 forbid:flaming
 
 name:<venomous
-info:4000:15
-alloc:60:1 to 40
+info:6000:24
+alloc:20:1 to 40
 type:sword
 type:polearm
 type:hafted
+values:RES_POIS[1]
 brand:POIS_3
 
 # The "Slay" weapons (8)
@@ -742,17 +760,17 @@ forbid:retro
 #brain box?
 name:(brain booster)
 info:500:13
-alloc:100:1 to 40
+alloc:50:1 to 40
 type:helm
-flags:SUST_INT
+flags:SUST_INT | PROT_CONF
 values:INT[d2]
 min-values:INT[1]
 
 name:(iron will)
 info:500:13
-alloc:100:1 to 40
+alloc:50:1 to 40
 type:helm
-flags:SUST_WIS
+flags:SUST_WIS | PROT_FEAR
 values:WIS[d2]
 min-values:WIS[1]
 
@@ -769,7 +787,7 @@ name:(body power)
 info:7500:19
 alloc:10:40 to 127
 type:helm
-flags:SUST_STR | SUST_DEX | SUST_CON | FREE_ACT
+flags:SUST_STR | SUST_DEX | SUST_CON | FREE_ACT | PROT_STUN
 flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 values:STR[d3] | DEX[d3] | CON[d3]
 min-values:STR[1] | DEX[1] | CON[1]
@@ -806,7 +824,7 @@ values:LIGHT[1]
 min-values:LIGHT[1]
 
 name:<sensor
-info:50000:20
+info:50000:45
 alloc:10:40 to 127
 type:helm
 flags:TELEPATHY
@@ -816,6 +834,12 @@ info:1500:10
 alloc:20:1 to 60
 type:helm
 flags:REGEN
+
+name:(speciality)
+info:1800:18
+alloc:15:1 to 70
+type:helm
+flags:RAND_HI_RES | RAND_RES_POWER
 
 name:<mind-control
 info:4000:20
@@ -1069,16 +1093,14 @@ flags:IGNORE_FIRE
 values:RES_FIRE[1] | CHR[d4M2]
 desc:Be cool and look the part with this gear!
 
-#name:of Aman
-#info:4000:20
-#alloc:10:20 to 127
-#combat:0:0:d20
-#type:cloak
-#flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
-#flags:RAND_HI_RES
-#values:STEALTH[d3]
-#min-values:STEALTH[1]
-#forbid:stealth
+name:(speciality)
+info:3500:18
+alloc:10:20 to 127
+combat:0:0:d20
+type:cloak
+flags:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
+flags:RAND_HI_RES
+desc:Almost indestructable and carrying a layer of special-purpose flexible armor.
 
 #name:of the Magi
 #info:2000:15
@@ -1099,7 +1121,7 @@ alloc:100:1 to 60
 type:gloves
 flags:FREE_ACT
 
-name:<combat
+name:(combat)
 info:1500:17
 alloc:20:10 to 75
 combat:d5:d5:0
@@ -1121,7 +1143,7 @@ type:gloves
 values:STR[d5]
 min-values:STR[0]
 
-name:<commando
+name:(commando)
 info:5000:22
 alloc:5:40 to 127
 combat:d8:d3:0
@@ -1130,9 +1152,9 @@ flags:FEATHER | FREE_ACT
 values:DEX[1+M4] | SEARCH[1+d2M3]
 min-values:DEX[1] | SEARCH[2]
 desc:Cyberaugmented gloves built for the Space Marines as a combination of most of the best parts of other types - so long as you are more about sneaking than going full Leeroy Jenkins, at least.
-forbid:battlefield|augmented|combat|freemover
+forbid:battle|augmented|combat|freemover
 
-name:<battlefield
+name:(battle)
 info:7000:22
 alloc:5:50 to 127
 combat:d5:d8:0

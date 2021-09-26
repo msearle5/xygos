@@ -2246,6 +2246,19 @@ armor:4:0
 desc:A full face covering in smooth dark metal - presumably tool steel, as it definitely makes you look like a tool.
 material:steel
 
+name:& gas mask~
+type:helm
+graphics:]:Mud
+level:25
+weight:0.75kg
+cost:1800
+alloc:8:22 to 127
+attack:1d1:-1:0
+armor:2:0
+values:RES_POIS[1]
+desc:A drab, tightly fitting face mask. It's thicker across the nose and mouth area, but there's no obvious way for air to get through it - however, you have no problems breathing in it.
+material:cloth
+
 name:& tiara~
 type:helm
 graphics:]:Gold
@@ -2270,7 +2283,7 @@ attack:1d1:0:0
 armor:0:0
 flags:IGNORE_ACID | QUEST_ART
 desc:An elegant golden circlet, with slender spines thrusting upward.
-desc:  It looks like it should be resting over the brow of a king.
+desc: It looks like it should be resting over the brow of a king.
 material:gold
 
 #combat helmet?
@@ -2500,7 +2513,21 @@ weight:6100g
 cost:39500
 attack:0d0:-2:0
 armor:70:0
-desc:A combination of plates and flexible mesh, entirely made from what you can tell from the silvery-blue appearance can only be genuine unobtainium. Extremely effective and still reasonably lightweight and easy to move in.
+desc:A combination of plates and flexible mesh, entirely made from what - you can tell from the silvery-blue appearance - can only be genuine unobtainium. Extremely effective and still reasonably lightweight and easy to move in.
+
+name:& space suit~
+type:soft armor
+graphics:[:White
+level:48
+alloc:2:36 to 127
+weight:7800g
+cost:11500
+attack:0d0:-3:0
+armor:8:0
+#flags-off:NO_SWIMMING
+values:RES_GRAVITY[1] | RES_INERTIA[1] | RES_POIS[1] | RES_WATER[1]
+desc:Like G-suits, it's built to protect you from extremes of acceleration. But this is also fully sealed and so allows you to survive without air, which also protects you from poison.
+material:plastic
 
 
 ################ forcefield generators (belt armor)
