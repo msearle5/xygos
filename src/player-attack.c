@@ -938,6 +938,7 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear, bool *hit)
 	int splash = 0;
 	bool do_quake = false;
 	bool success = false;
+	bool ko = false;
 
 	char verb[32];
 	char after[64];
@@ -1111,6 +1112,7 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear, bool *hit)
 										ouch = "knock out";
 										break;
 								}
+								ko = true;
 							}
 						}
 						else if (randint0(power + 3) < power) {
@@ -1198,7 +1200,7 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear, bool *hit)
 	/* Learn by use */
 	equip_learn_on_melee_attack(p);
 
-	return py_attack_hit(p, grid, mon, dmg, verb, sizeof(verb), after, msg_type, splash, do_quake, fear);
+	return py_attack_hit(p, grid, mon, dmg, verb, sizeof(verb), after, msg_type, splash, do_quake, fear) || ko;
 }
 
 /* Skill for the current weapon */
