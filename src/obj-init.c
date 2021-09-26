@@ -2751,10 +2751,21 @@ static enum parser_error parse_artifact_base_object(struct parser *p) {
 		return PARSE_ERROR_UNRECOGNISED_TVAL;
 	a->tval = tval;
 
+	/* Get a new object base if needed, if this is the first time
+	 * (normal initialization). Don't if this is reinitialization
+	 * (from stats generation)
+	 */
 	sval_name = parser_getsym(p, "sval");
 	sval = lookup_sval(a->tval, sval_name);
-	if (sval < 0)
-		return write_dummy_object_record(a, sval_name);
+	if (sval < 0) {
+		if (z_info->a_max == 0)
+			return write_dummy_object_record(a, sval_name);
+		else {
+			sval = 1;
+			assert(lookup_kind(tval, sval));
+		}
+	}
+
 	a->sval = sval;
 
 	return PARSE_ERROR_NONE;
@@ -2789,6 +2800,7 @@ static enum parser_error parse_artifact_power(struct parser *p) {
 	k->power = parser_getint(p, "power");
 	return PARSE_ERROR_NONE;
 }
+
 static enum parser_error parse_artifact_level(struct parser *p) {
 	struct artifact *a = parser_priv(p);
 	assert(a);
