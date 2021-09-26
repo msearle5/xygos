@@ -1273,8 +1273,8 @@ static void fill_location(struct chunk *c, struct loc grid, square_predicate thr
  * locations need only satisfy the predicate 'through' (which must
  * be true for any grid which is 'ok').
  * (The use of two predicates allows doors, etc. to be considered
- * passable but not valid endpoints.)  
- **/ 
+ * passable but not valid endpoints.)
+ **/
 static bool find_location(struct chunk *c, struct loc *grid, struct loc *stair, int stairs, square_predicate ok, square_predicate through)
 {
 	/* Clear the work flag */
