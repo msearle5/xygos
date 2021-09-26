@@ -1016,12 +1016,17 @@ static struct equip_slot TEST_DATA test_slot_light = {
 	.obj = NULL,
 };
 
+static struct monster_race * TEST_DATA test_quest_race[1] = {
+	&test_r_human
+};
+
 static struct quest TEST_DATA test_quest = {
 	.next = NULL,
 	.index = 0,
 	.name = "Test",
 	.level = 1,
-	.race = &test_r_human,
+	.race = test_quest_race,
+	.races = 1,
 	.cur_num = 0,
 	.max_num = 4,
 };

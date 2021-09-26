@@ -209,6 +209,10 @@ void auto_char_dump(void)
 		char file_name[256];
 		char player_name[80];
 
+		/* e.g. unit tests */
+		if (!Term)
+			return;
+
 		screen_save();
 
 		/* Get the filesystem-safe name and append .txt */

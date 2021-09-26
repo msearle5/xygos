@@ -307,7 +307,7 @@ static int monster_elemental_damage(melee_effect_handler_context_t *context,
  */
 void melee_equip_damage(struct player *p, int dmg)
 {
-	for (int i = 0; i < player->body.count; i++) {
+	for (int i = 0; i < p->body.count; i++) {
 		/* Object */
 		struct object *obj = slot_object(p, i);
 		if (obj) {
@@ -320,14 +320,14 @@ void melee_equip_damage(struct player *p, int dmg)
 				if (randint0(effdmg + (200 + (4 * obj->kind->level))) < effdmg) {
 					char oname[80];
 					char death[128];
-					object_desc(oname, sizeof(oname), obj, ODESC_BASE, player);
+					object_desc(oname, sizeof(oname), obj, ODESC_BASE, p);
 					if (obj->ac == 0) {
 						/* BOOM */
 						msg("Your %s explodes!", oname);
 
 						/* Remove from gear and delete */
 						bool dummy;
-						struct object *boom = gear_object_for_use(player, obj, 1, true, &dummy);
+						struct object *boom = gear_object_for_use(p, obj, 1, true, &dummy);
 						if (boom->known)
 							object_delete(&boom->known);
 						object_delete(&boom);
@@ -335,7 +335,7 @@ void melee_equip_damage(struct player *p, int dmg)
 						/* Explosion effect */
 						effect_simple(EF_SPHERE, source_player(), "4d10", ELEM_SHARD, 4, 0, 0, 0, NULL);
 						snprintf(death, sizeof(death), "an exploding %s", oname);
-						take_hit(player, damroll(4, 10), death);
+						take_hit(p, damroll(4, 10), death);
 					} else {
 						/* Degrade, warn you and identify */
 						obj->ac--;

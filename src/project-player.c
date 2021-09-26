@@ -119,10 +119,13 @@ int adjust_dam(struct player *p, int type, int dam, aspect dam_aspect,
 		return (dam * dam_inc_vuln[resist]) / 100;
 	}
 
+	int percent = 0;
 	/* Resistant; convert to a percentage (scaled for a 1/3 element) */
-	if (resist >= n_dam_dec_resist)
-		resist = n_dam_dec_resist - 1;
-	int percent = dam_dec_resist[resist];
+	if (n_dam_dec_resist) {
+		if (resist >= n_dam_dec_resist)
+			resist = n_dam_dec_resist - 1;
+		percent = dam_dec_resist[resist];
+	}
 
 	/* Variable resists vary the denominator, so we need to invert the logic
 	 * of dam_aspect. (m_bonus is unused) */
