@@ -1,6 +1,13 @@
 BUGS 
 ====
 
+BUG: Stores which close lose their entrance but don't become ruins. (Only when more than one would?)
+
+BUG: "You knock out the MlM" -> "The MlM flees in terror!" -> "The MlM can move again" (after making a move!)
+
+Defer
+=====
+
 BUG: Zero object, stack trace:
 #0  0x00005555555f5916 in object_set_base_known (p=0x5555559cacf8, 
     obj=obj@entry=0x555555c702d8) at obj-knowledge.c:884
@@ -20,28 +27,22 @@ BUG: Zero object, stack trace:
 #10 0x000055555568cce5 in main (argc=1, argv=0x7fffffffdae8) at main.c:562
 => The obj structure was entirely 0 (including kind, which was the cause of the crash).
 => This was in Cyberspace (home quest), not having saved and restored while in that quest.
-=> Suggesting random object generation is producing zeroes? Added an assert for this.
-=> ZeroObj savegame, 2fe6223ccc143d2deddb08819be28b159dc3f2c5
+=> Suggesting random object generation is producing zeroes?
+	- Added an assert for this.
+	- ZeroObj savegame, 2fe6223ccc143d2deddb08819be28b159dc3f2c5
 
-BUG: Stores which close lose their entrance but don't become ruins. (Only when more than one would?)
-
-BUG: "You knock out the MlM" -> "The MlM flees in terror!" -> "The MlM can move again" (after making a move!)
+BUG: clouded:  I'm way too strong early. At CL30 I have 380 HP, 150 AC, 5 BpR (with a dual darksaber so it's really 10), +17 speed and +2 movement speed. This is in part getting good loot and part monsters not being strong enough, I've been killing everything in one or two turns without getting scratched. Not sure how you want the power scaling compared to vanilla but so far monsters need some serious buffing!
+	<This is though with the monsters-have-1-melee-blow problem>
+	- Use incrementing autosave, to see how power changes with level?
+		- (This has been added)
+	- Be less generous with blows / round?
+		- Calc_blows is now a tunable, and 30. May need more? See how this goes.
 
 BUG: Once recalled back into a 1x1 hole in the rock in the top left (X4 Y4)
 	!!! - this is presumably because sanitize_player_loc doesn't check that the point is connected to the >
 		- could do this, but is there always a <?
 		- Any in the right direction?
-		- see "WIP" branch
-
-BUG: clouded:  I'm way too strong early. At CL30 I have 380 HP, 150 AC, 5 BpR (with a dual darksaber so it's really 10), +17 speed and +2 movement speed. This is in part getting good loot and part monsters not being strong enough, I've been killing everything in one or two turns without getting scratched. Not sure how you want the power scaling compared to vanilla but so far monsters need some serious buffing!
-	<This is though with the monsters-have-1-melee-blow problem>
-	- be less generous with BpR?
-	- use incrementing autosave? (Added)
-	- tunables for blows? (calc_blowsl748 45 to z or per cl?)
-		adj_str_blow why?
-
-Defer
-=====
+		- see "WIP" branch, but this won't work as is, and there's no way to repeat it
 
 BUG: clouded:  Dark auras of grues should have some visual effect, it took me a while to notice they were lowering my light and weren't just invisible [ or a message? ]
   - Some but not all negative light monsters also have a dark cloud (commented out). This should look different - always unknown? But don't describe as "unknown grid" - it isn't.

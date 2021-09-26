@@ -1422,7 +1422,6 @@ static void artifact_stats(void)
 			sum += prob[i][j];
 		for(int j=0;j<z_info->a_max;j++)
 			prob[i][j] = (prob[i][j] * 100.0) / sum;
-		fprintf(stderr,"Level %d, %d arts, %d objs\n", lev, artifacts[i], objects[i]);
 	}
 	char buf[1024];
 	char num[32];
@@ -1528,7 +1527,6 @@ static void ego_stats(void)
 			sum += prob[i][j];
 		for(int j=0;j<z_info->e_max;j++)
 			prob[i][j] = (prob[i][j] * 100.0) / sum;
-		fprintf(stderr,"Level %d, %d egos, %d objs\n", lev, egos[i], objects[i]);
 	}
 	char buf[1024];
 	char num[32];

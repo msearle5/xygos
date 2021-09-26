@@ -1,3 +1,4 @@
+#include "message.h"
 #include "player.h"
 #include "player-ability.h"
 #include "player-calcs.h"
@@ -148,7 +149,7 @@ static void super_levelup(int from, int to)
 
 			player->lev = level;
 			if (!gain_ability(power, false)) {
-				fprintf(stderr,"failed!\n");
+				msg("Unable to gain superpower. Please report this bug.");
 			}
 		}
 	}
