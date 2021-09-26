@@ -18,6 +18,7 @@
 
 #include "effects.h"
 #include "init.h"
+#include "game-world.h"
 #include "obj-knowledge.h"
 #include "obj-pile.h"
 #include "obj-util.h"
@@ -30,6 +31,9 @@
 #include "player-timed.h"
 #include "player-util.h"
 #include "randname.h"
+#include "ui-command.h"
+#include "ui-input.h"
+#include "ui-player.h"
 #include "z-color.h"
 #include "z-util.h"
 
@@ -196,6 +200,28 @@ static s32b exp_to_lev(s32b exp)
 	return lev;
 }
 
+void auto_char_dump(void)
+{
+	if (OPT_birth_auto_char_dump)
+	{
+		char buf[1024];
+		char file_name[256];
+		char player_name[80];
+
+		screen_save();
+
+		/* Get the filesystem-safe name and append .txt */
+		player_safe_name(player_name, sizeof(player_name), player->full_name, false);
+		strnfmt(file_name, sizeof(file_name), "%s_%x_%d.txt", player_name, seed_flavor ^ seed_randart, player->lev);
+
+		path_build(buf, sizeof(buf), ANGBAND_DIR_USER, file_name);
+		if (!dump_save(buf))
+			msg("Automatic character dump failed!");
+
+		screen_load();
+	}
+}
+
 static void adjust_level(struct player *p, bool verbose)
 {
 	char buf[80];
@@ -314,6 +340,9 @@ static void adjust_level(struct player *p, bool verbose)
 	p->upkeep->update |= (PU_BONUS | PU_HP | PU_SPELLS);
 	p->upkeep->redraw |= (PR_LEV | PR_TITLE | PR_EXP | PR_STATS);
 	handle_stuff(p);
+
+	if ((p->max_lev == 1) || (p->max_lev > max_from))
+		auto_char_dump();
 }
 
 /* Cap large experience gains.

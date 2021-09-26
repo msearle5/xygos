@@ -1139,7 +1139,7 @@ void pause_line(struct term *tm)
 	prt("", tm->hgt - 1, 0);
 }
 
-static int dir_transitions[10][10] =
+static byte dir_transitions[10][10] =
 {
 	/* 0-> */ { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
 	/* 1-> */ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },

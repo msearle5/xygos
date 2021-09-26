@@ -721,6 +721,7 @@ struct player_class *player_id2class(guid id);
 struct player_class *get_class_by_name(const char *name);
 
 /* player.c */
+void auto_char_dump(void);
 int stat_name_to_idx(const char *name);
 const char *stat_idx_to_name(int type);
 bool player_stat_inc(struct player *p, int stat);

@@ -1165,7 +1165,7 @@ static const struct panel_entry panels[] =
 	{ { 29, 9, 19, 9 }, false, get_panel_combat },
 	{ { 52, 9, 20, 8 }, false, get_panel_skills },
 #else
-	{ {  1, 9, 19, 9 }, false, get_panel_farleft },	/* Cur Exp, Max Exp, ... */
+	{ {  1, 9, 19, 9 }, false, get_panel_farleft },	/* Faction, Danger */
 	{ { 21, 9, 22, 9 }, false, get_panel_midleft },	/* Cur Exp, Max Exp, ... */
 	{ { 44, 9, 17, 9 }, false, get_panel_combat },
 	{ { 62, 9, 18, 8 }, false, get_panel_skills },
@@ -1183,7 +1183,7 @@ static const struct panel_entry panels_drop[] =
 	{ { 29, 11, 19, 9 }, false, get_panel_combat },
 	{ { 52, 11, 20, 8 }, false, get_panel_skills },
 #else
-	{ {  1, 11, 19, 9 }, false, get_panel_farleft },	/* Cur Exp, Max Exp, ... */
+	{ {  1, 11, 19, 9 }, false, get_panel_farleft },	/* Faction, Danger */
 	{ { 21, 11, 22, 9 }, false, get_panel_midleft },	/* Cur Exp, Max Exp, ... */
 	{ { 44, 11, 17, 9 }, false, get_panel_combat },
 	{ { 62, 11, 18, 8 }, false, get_panel_skills },
@@ -1332,11 +1332,14 @@ void write_character_dump(ang_file *fff)
 	/* Display player basics */
 	display_player(0);
 
+	int width, height;
+	Term_get_size(&width, &height);
+
 	/* Dump part of the screen */
 	for (y = 1; y < 23; y++) {
 		p = buf;
 		/* Dump each row */
-		for (x = 0; x < 89; x++) {
+		for (x = 0; x <= MIN(89, width-1); x++) {
 			/* Get the attr/char */
 			(void)(Term_what(x, y, &a, &c));
 
@@ -1598,7 +1601,7 @@ void do_cmd_change_name(void)
 		/* Query */
 		ke = inkey_ex();
 
-		if ((ke.type == EVT_KBRD)||(ke.type == EVT_BUTTON)) {
+		if ((ke.type == EVT_KBRD) || (ke.type == EVT_BUTTON)) {
 			switch (ke.key.code) {
 				case ESCAPE: more = false; break;
 				case 'c': {

@@ -1613,6 +1613,8 @@ void do_cmd_accept_character(struct command *cmd)
 	string_free(quickstart_prev.history);
 	quickstart_prev.history = NULL;
 
+	auto_char_dump();
+
 	/* Now we're really done.. */
 	event_signal(EVENT_LEAVE_BIRTH);
 }

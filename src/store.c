@@ -112,7 +112,7 @@ struct store *store_at(struct chunk *c, struct loc grid)
 {
 	if (square_isshop(c, grid)) {
 		int num = square_shopnum(cave, grid);
-		if ((num == STORE_HOME) && (OPT(player, single_home)))
+		if ((num == STORE_HOME) && (OPT(player, birth_single_home)))
 			return &t_info[0].stores[num];
 		return &stores[num];
 	}

@@ -89,7 +89,7 @@ OP(birth_feelings,        "Show level feelings",
 BIRTH, true)
 OP(birth_no_selling,      "Increase cash drops but disable selling",
 BIRTH, false)
-OP(single_home,           "All towns' homes share the same inventory",
+OP(birth_single_home,      "All towns' homes share the same inventory",
 BIRTH, true)
 OP(birth_start_kit,       "Start with a kit of useful gear",
 BIRTH, true)
@@ -107,3 +107,5 @@ OP(birth_time_limit,      "Difficulty increases over time",
 BIRTH, true)
 OP(birth_multi_class,     "Allow switching classes at level up",
 BIRTH, true)
+OP(birth_auto_char_dump,  "Save a character dump at every level up",
+BIRTH, false)
