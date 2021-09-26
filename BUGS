@@ -1,5 +1,6 @@
-BUGS
+BUGS 
 ====
+
 BUG: Zero object, stack trace:
 #0  0x00005555555f5916 in object_set_base_known (p=0x5555559cacf8, 
     obj=obj@entry=0x555555c702d8) at obj-knowledge.c:884
@@ -32,12 +33,6 @@ BUG: Once recalled back into a 1x1 hole in the rock in the top left (X4 Y4)
 		- Any in the right direction?
 		- see "WIP" branch
 
-BUG: clouded:  Dark auras of grues should have some visual effect, it took me a while to notice they were lowering my light and weren't just invisible [ or a message? ]
-  - Some but not all negative light monsters also have a dark cloud (commented out). This should look different - always unknown? But don't describe as "unknown grid" - it isn't.
-  - Instead/plus "Everything around you dims/fades out."?
-  - Treat it similarly to a cloud of vision blocking smoke?
-	- although it doesn't block LOS, and so shouldn't replace (except momentarily?)
-
 BUG: clouded:  I'm way too strong early. At CL30 I have 380 HP, 150 AC, 5 BpR (with a dual darksaber so it's really 10), +17 speed and +2 movement speed. This is in part getting good loot and part monsters not being strong enough, I've been killing everything in one or two turns without getting scratched. Not sure how you want the power scaling compared to vanilla but so far monsters need some serious buffing!
 	<This is though with the monsters-have-1-melee-blow problem>
 	- be less generous with BpR?
@@ -45,11 +40,15 @@ BUG: clouded:  I'm way too strong early. At CL30 I have 380 HP, 150 AC, 5 BpR (w
 	- tunables for blows? (calc_blowsl748 45 to z or per cl?)
 		adj_str_blow why?
 
-BUG: clouded:  Monster list feedback: I assume you still have work planned but I felt like I was mostly fighting animals (and usually ones from V) which wasn't what I expected. The only dangerous monsters I've seen so far are Mecha-Triax (relatively appropriate in difficulty), shamblers (not too hard though, I killed one OOD around DL50), Cyberdemons (nasty), and Godzilla (nasty, haven't seen rPois at all). The other uniques I've ran into had much too few HPs. <This is also with the monsters-have-1-melee-blow problem>
-	- lack of rPois is a problem. Stats suggest l55. Basically you need to get lucky and find an artifact, there are no other base item sources (there are egos). Add a green cape? (Fume hood, visor, suit etc.) and some egos?
-
 Defer
 =====
+
+BUG: clouded:  Dark auras of grues should have some visual effect, it took me a while to notice they were lowering my light and weren't just invisible [ or a message? ]
+  - Some but not all negative light monsters also have a dark cloud (commented out). This should look different - always unknown? But don't describe as "unknown grid" - it isn't.
+  - Instead/plus "Everything around you dims/fades out."?
+  - Treat it similarly to a cloud of vision blocking smoke?
+	- although it doesn't block LOS, and so shouldn't replace (except momentarily?)
+  - *** waiting until clouds are supported generally ***
 
 BUG: "failed!\n" twice from r_super.c (UTR going lev 1-26, Human Super Engineer) but seen in other circumstances
 	- UTR
@@ -141,6 +140,15 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+
+BUG: Running 50 simulations, Clearing, Yes to regeneration of Randarts:
+	then immediately saving
+	causes a corrupt savefile (number of kinds)
+	Fixed (mostly) 96cfb9fae
+
+BUG: clouded:  Monster list feedback: I assume you still have work planned but I felt like I was mostly fighting animals (and usually ones from V) which wasn't what I expected. The only dangerous monsters I've seen so far are Mecha-Triax (relatively appropriate in difficulty), shamblers (not too hard though, I killed one OOD around DL50), Cyberdemons (nasty), and Godzilla (nasty, haven't seen rPois at all). The other uniques I've ran into had much too few HPs. <This is also with the monsters-have-1-melee-blow problem>
+	- lack of rPois is a problem. Stats suggest l55. Basically you need to get lucky and find an artifact, there are no other base item sources (there are egos). Add a green cape? (Fume hood, visor, suit etc.) and some egos?
+	- There is now much more rPois.
 
 BUG? Stuff isn't transported when you fly - should it be? Should there just be 1 house?
 	- see also -
