@@ -36,7 +36,7 @@ BUG: Once recalled back into a 1x1 hole in the rock in the top left (X4 Y4)
 BUG: clouded:  I'm way too strong early. At CL30 I have 380 HP, 150 AC, 5 BpR (with a dual darksaber so it's really 10), +17 speed and +2 movement speed. This is in part getting good loot and part monsters not being strong enough, I've been killing everything in one or two turns without getting scratched. Not sure how you want the power scaling compared to vanilla but so far monsters need some serious buffing!
 	<This is though with the monsters-have-1-melee-blow problem>
 	- be less generous with BpR?
-	- use incrementing autosave?
+	- use incrementing autosave? (Added)
 	- tunables for blows? (calc_blowsl748 45 to z or per cl?)
 		adj_str_blow why?
 

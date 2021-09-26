@@ -155,6 +155,7 @@ struct angband_constants
 	u16b start_gold;			/**< Amount of gold the player starts with */
 	u16b start_gold_spread;		/**< Variation in the amount of gold the player starts with */
 	u16b food_value;			/**< Number of turns 1% of food lasts */
+	u16b blow_weight_scale;		/**< Divisor of weapon weight when calculating blows */
 	u32b exp_learn_icon;		/**< Experience gained from learning the last icon */
 };
 

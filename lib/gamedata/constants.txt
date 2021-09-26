@@ -298,3 +298,7 @@ player:food-value:100
 # Preceding icons are scaled geometrically
 player:exp-learn-icon:5000
 
+# Divisor of object weight used to calculate the number of player melee blows.
+# V used 45 (effectively: 45g ~ 1/10 lb).
+# The smaller the divisor, the heavier weapons effectively are and the less blows you get.
+player:blow-weight-scale:30
