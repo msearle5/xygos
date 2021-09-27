@@ -54,7 +54,7 @@ in the vein of
 .I nethack, 
 and 
 .I moria.
-.B Xygos 0.1.0 is alpha.
+.B Xygos 0.1.1 is alpha.
 .PP
 This version of
 .B Xygos

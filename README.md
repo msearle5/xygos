@@ -1,4 +1,4 @@
-# Xygos 0.1.0
+# Xygos 0.1.1
 
 <p align="center">
   <img src="screenshots/title.png" width="425"/>

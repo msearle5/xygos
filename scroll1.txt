@@ -1,7 +1,7 @@
 
 
 
-                      Xygos 0.1
+                     Xygos 0.1.1
 
                  a variant of Angband
 

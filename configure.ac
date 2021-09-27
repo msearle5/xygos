@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(Xygos, 0.1.0, msearle5@btinternet.com)
+AC_INIT(Xygos, 0.1.1, msearle5@btinternet.com)
 
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_MACRO_DIR([m4])

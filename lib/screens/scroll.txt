@@ -1,7 +1,7 @@
 
 
 
-                      Xygos 0.1
+                     Xygos 0.1.1
 
                  a variant of Angband
 
@@ -52,6 +52,64 @@ Release notes follow...
 This is a summary of major changes made to Xygos by release.
 For changes pulled in from Vanilla, see changes.txt.
 For more detail, see the git history.
+
+Xygos 0.1.1 "Centipede" =======================
+
+This is primarily a bug fix release, with some balancing.
+
+The only major new feature are the home quests. Before
+gaining access to a home, you need to get rid of the
+previous occupants. They are supposed to be of moderate
+difficulty when you need them (but you don't need the first
+one until you've got a pack of loot to keep there).
+
+There is also an option for shared homes (that is, all
+homes share the same inventory, you don't need to move
+stuff between them.)
+
+Other features include:
+
+Autodump. Enabled with a birth option, you will
+automatically save a character dump every level up. This
+might involve some screen flicker. Recommended for
+playtesters - a zip of character dumps would tell me
+much more about your character's progress than I would
+otherwise know.
+
+Stores now let you know when there is a quest available.
+
+Game balance improvements include:
+
+Melee blow weight scaling is now a tunable constant. It's
+now harder than V to get lots of blows (as there are a lot
+of powerful but lightweight weapons).  Dual foosabers are
+especially so. Their to-hit penalty has been increased.
+Some added items (poison resistance in particular was too
+difficult to get) Cyberlegs are moved deeper.  Movement
+speed now has a curve, similar to speed (so getting
+lots of + moves has an increasing small effect) Salon
+install/uninstall has a time and cash cost.  Matrix bugs
+(a source of too many pills) are rarer and drop pills
+less often.
+
+Many bugs fixed, notable ones were:
+
+Monsters only got one blow in melee.  Quests in which
+Banishment would make things too easy or unwinnable
+are handled correctly.	Dungeon guardians don't appear
+outside their level.  Printer UI fixed, and some items that
+shouldn't have been printable now aren't.
+	(It still might be too powerful, though.)
+Rogue-like keyset allows look again.  Monsters that
+disappeared (but still existed, and reappeared if you save
+and restore) when a monster summons monsters as it died now
+work.  user.prf can now be used with the new races, classes,
+extensions and personalities.  Items with no effect (such
+as the security card) can be run - this crashed on 0.1.0.
+Firing a gun not at a monster resulted in the bullet falling
+to the floor - fixed.  The Windows build now has a proper
+menu bar, and the surplus tile-related entries were removed.
+
 
 Xygos 0.1.0 "Zoo Keeper" =======================
 
@@ -139,7 +197,7 @@ dungeons (not Fortress) now have guardians. There is now
 a separate recall depth per town.
 
 Randomly named artifacts, from a file of names picked
-based on the artifact's power.  You can have all randarts,
+based on the artifact's power.	You can have all randarts,
 all standarts or both (the usual choice: there aren't
 many standarts yet). The names have acceptable tvals,
 and some other requirements.  There are also randomized
@@ -208,7 +266,7 @@ makes an opponent fall into the water. The Spelunker gets
 a Climb ability (go up a level, if you are adjacent to
 a wall).
 
-Fixes brought in from V 4.2.2.  Some things can go BANG if
+Fixes brought in from V 4.2.2.	Some things can go BANG if
 you throw them.  Random names for store owners Some faction
 talents Sense Animals and Metal (which work like telepathy)
 Remove some dragon-related monsters Add lightsabers and
