@@ -73,10 +73,10 @@ static int test_artifacts(void *state) {
 	for(int i=0;i<z_info->a_max;i++) {
 		if (a_info[i].name) {
 			char *name = a_info[i].name;
-			if (ispunct(*name))
+			if (ispunct(*name) && (*name != '\''))
 				name++;
 			obj = wish(name, 1);
-			notnull(obj);
+			vnotnull(obj, name);
 			object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX | ODESC_FULL | ODESC_SPOIL, player);
 			strnfmt(buf, sizeof(buf), "Asked for artifact %s, got %s", name, o_name);
 			vnull(obj->ego[0], buf);
@@ -106,6 +106,8 @@ static int test_kinds(void *state) {
 			if ((*name == '<') && (name[strlen(name)-1] == '>'))
 				continue;
 			if (kf_has(k_info[i].kind_flags, KF_INSTA_ART))
+				continue;
+			if (kf_has(k_info[i].kind_flags, KF_QUEST_ART))
 				continue;
 			if (kf_has(k_info[i].kind_flags, KF_SPECIAL_GEN))
 				continue;
@@ -153,7 +155,7 @@ static int test_egos(void *state) {
 			struct poss_item *poss = e_info[i].poss_items;
 			while (poss) {
 				struct object_kind *k = k_info + poss->kidx;
-				if (!kf_has(k->kind_flags, KF_INSTA_ART) && (!kf_has(k->kind_flags, KF_SPECIAL_GEN))) {
+				if (!kf_has(k->kind_flags, KF_INSTA_ART) && (!kf_has(k->kind_flags, KF_SPECIAL_GEN)) && (!kf_has(k->kind_flags, KF_QUEST_ART))) {
 					obj_desc_name_format(fname, sizeof(fname), 0, k->name, NULL, false);
 					strnfmt(egoname, sizeof(egoname), "%s %s", e_info[i].name, fname);
 					obj = wish(egoname, 1);

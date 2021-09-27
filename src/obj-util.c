@@ -202,10 +202,16 @@ struct object *wish(const char *in, int level)
 	};
 
 	/* If there's nothing that looks at all like an object (empty input, or
-	 * just some non-alphabetic fragments) don't go any further.
+	 * just some non-alphabetic fragments) try treating the whole input as
+	 * a single word.
 	 */
-	if (!valid)
-		return NULL;
+	if (!valid) {
+		WISH_DPF("Nothing recognizable - treating as a single word\n");
+		strncpy(buf, in, sizeof(buf));
+		buf[sizeof(buf)-1] = 0;
+		word[0] = buf;
+		words = 1;
+	}
 
 	/* Make pairs */
 	int pairs = words;
@@ -434,7 +440,7 @@ struct object *wish(const char *in, int level)
 	if (art) {
 		/* Generate the base item */
 		kind = lookup_kind(art->tval, art->sval);
-
+		WISH_DPF("Attempting to create artifact %s\n", art->name);
 		if (!(is_artifact_created(art))) {
 			obj = object_new();
 			object_prep(obj, (struct object_kind *)kind, art->alloc_min, RANDOMISE);
@@ -443,6 +449,8 @@ struct object *wish(const char *in, int level)
 			obj->artifact = art;
 			copy_artifact_data(obj, obj->artifact);
 			mark_artifact_created(obj->artifact, true);
+		} else {
+			WISH_DPF("Attempt to create artifact failed\n");
 		}
 	}
 
@@ -453,6 +461,7 @@ struct object *wish(const char *in, int level)
 			char buf[256];
 			obj_desc_name_format(buf, sizeof(buf), 0, kind->name, NULL, false);
 			obj = make_object_named(cave, level, false, false, false, NULL, kind->tval, buf);
+			WISH_DPF("Creating named object %s\n", buf);
 		}
 		/* Base item creation failed, or none was called for. */
 		if (!obj) {
@@ -466,16 +475,20 @@ struct object *wish(const char *in, int level)
 				kind = get_obj_num(1, false, 0);
 			/* Create the object from the kind (or NULL = any kind) */
 			obj = make_object_named(cave, level, false, false, false, NULL, 0, kind ? kind->name : NULL);
+			WISH_DPF("Creating random object %s\n", kind ? kind->name : "without specifying kind");
 		}
 	}
 
-	/* Make it an ego or multiego, set the count */
+	/* Make it an ego or multiego, set the count.
+	 * Should check whether this is permissible (because of random items).
+	 **/
 	if (obj) {
 		if (!obj->artifact) {
 			for(int i=0;i<MAX_EGOS;i++) {
 				if (ego[i]) {
 					obj->ego[i] = (struct ego_item *)(ego[i]);
 					ego_apply_magic_from(obj, 0, i);
+					WISH_DPF("Applying ego: %s\n", ego[i]->name);
 				}
 			}
 
@@ -501,6 +514,7 @@ struct object *wish(const char *in, int level)
 	/* Return the item.
 	 * This may be NULL if nothing can be produced.
 	 */
+	WISH_DPF("Wish complete, object %s created", obj ? obj->kind->name : "*NOT*");
 	return obj;
 }
 

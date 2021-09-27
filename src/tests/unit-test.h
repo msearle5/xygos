@@ -121,6 +121,18 @@ extern int teardown_tests(void *data);
 		return 1; \
 	}
 
+#define vnotnull(x,s) \
+	if ((x) == 0) { \
+		if (verbose) { \
+			showfail(); \
+			printf("    %s:%d: requirement '%s' == NULL failed\n", suite_name, \
+		           __LINE__, #x); \
+		    printf("      %s\n", s ? s : "(null)"); \
+			printf("      %s: %llu\n", #x, (unsigned long long)(x)); \
+		} \
+		return 1; \
+	}
+
 #define null(x) \
 	if ((x) != 0) { \
 		if (verbose) { \
@@ -171,6 +183,18 @@ extern int teardown_tests(void *data);
 
 #define vnull(x) \
 	if ((x) != 0) { \
+		if (verbose) { \
+			showfail(); \
+			printf("    %s:%d: requirement '%s' == NULL failed\n", suite_name, \
+		           __LINE__, #x); \
+		    printf("      %s\n", s ? s : "(null)"); \
+			printf("      %s: %p\n", #x, (void *)(x)); \
+		} \
+		return 1; \
+	}
+
+#define vnotnull(x) \
+	if ((x) == 0) { \
 		if (verbose) { \
 			showfail(); \
 			printf("    %s:%d: requirement '%s' == NULL failed\n", suite_name, \
