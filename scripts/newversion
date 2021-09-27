@@ -1,0 +1,5 @@
+#!/bin/sh
+for i in src/buildid.h src/xygos.man src/Makefile.src docs/version.rst CMakeLists.txt README.md configure.ac
+do
+sed -i "s/$1/$2/g" $i
+done
