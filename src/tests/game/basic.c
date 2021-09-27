@@ -29,12 +29,7 @@ static void println(const char *str) {
 
 static void reset_before_load(void) {
 	play_again = true;
-	static bool clean = true;
-	if (!clean) {
-		cleanup_angband();
-	} else {
-		clean = false;
-	}
+	cleanup_angband();
 	chunk_list_max = 0;
 	init_angband();
 	play_again = false;

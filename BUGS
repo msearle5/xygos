@@ -1,12 +1,15 @@
 BUGS 
 ====
 
-BUG: Stores which close lose their entrance but don't become ruins. (Only when more than one would?)
-
-BUG: "You knock out the MlM" -> "The MlM flees in terror!" -> "The MlM can move again" (after making a move!)
-
 Defer
 =====
+
+BUG: cleanup_angband() can't be run twice without running init_angband() between.
+	Symptoms are "double free or corruption (!prev)", valgrind errors.
+	Seen by duplicating the cleanup_angband() line in play_game(), killing a character and selecting "new game",
+		or from the unit tests. If a init_angband() line is put between the two calls to cleanup_angband, the double free error isn't seen but a "Broken savefile - probably from a development version" is. The savefile can however be loaded again OK after restarting. (So something that influences how savefiles are read has not been reset? It's not z_info)
+	Present in V (the memory corruption issue, by duplicating the line as above). Not in issues.
+	Raised as V #5089
 
 BUG: Zero object, stack trace:
 #0  0x00005555555f5916 in object_set_base_known (p=0x5555559cacf8, 
@@ -51,8 +54,12 @@ BUG: clouded:  Dark auras of grues should have some visual effect, it took me a 
 	- although it doesn't block LOS, and so shouldn't replace (except momentarily?)
   - *** waiting until clouds are supported generally ***
 
+BUG: Stores which close lose their entrance but don't become ruins. (Only when more than one would?)
+	- UTR by setting turn directly to 1e8 and switching out and in of the town. It's probably a
+	  symptom of another multitown bug, now fixed.
+
 BUG: "failed!\n" twice from r_super.c (UTR going lev 1-26, Human Super Engineer) but seen in other circumstances
-	- UTR
+	- UTR - but given a more noticeable message
 
 BUG: Crashed on exp gain as a Super Soldier
 	- UTR
@@ -141,6 +148,8 @@ BUG: m-techniques top label is wonky (move the level 1 to the right, and the cos
 
 Fixed
 =====
+
+BUG: "You knock out the MlM" -> "The MlM flees in terror!" -> "The MlM can move again" (after making a move!)
 
 BUG: Running 50 simulations, Clearing, Yes to regeneration of Randarts:
 	then immediately saving

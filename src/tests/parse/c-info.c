@@ -264,7 +264,6 @@ static int test_magic0(void *state) {
 	require(c);
 	eq(c->magic.spell_first, 3);
 	eq(c->magic.spell_weight, 400);
-	noteq(c->magic.books, NULL);
 	ok;
 }
 

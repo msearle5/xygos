@@ -380,7 +380,7 @@ static int test_inven_wield_floor_stack_empty(void *state) {
 
 	require(empty_gear(player));
 	require(empty_floor(cave, player));
-	obj = setup_object(TV_HELM, 1, 1);
+	obj = setup_object(TV_HELM, 1, 4);
 	require(obj != NULL);
 	note = false;
 	require(floor_carry(cave, player->grid, obj, &note));

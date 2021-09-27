@@ -170,20 +170,21 @@ static void cleanup_stores(void)
 		for (i = 0; i < MAX_STORES; i++) {
 			/* Get the store */
 			struct store *store = &t_info[t].stores[i];
-
-			/* Free the store inventory */
-			object_pile_free(store->stock_k);
-			object_pile_free(store->stock);
-			if (store->always_table) {
-				mem_free(store->always_table);
-				store->always_table = NULL;
+			if (store) {
+				/* Free the store inventory */
+				object_pile_free(store->stock_k);
+				object_pile_free(store->stock);
+				if (store->always_table) {
+					mem_free(store->always_table);
+					store->always_table = NULL;
+				}
+				if (store->normal_table) {
+					mem_free(store->normal_table);
+					store->always_table = NULL;
+				}
+				string_free((void *)store->name);
+				store->name = NULL;
 			}
-			if (store->normal_table) {
-				mem_free(store->normal_table);
-				store->always_table = NULL;
-			}
-			string_free((void *)store->name);
-			store->name = NULL;
 		}
 
 		mem_free(t_info[t].stores);
