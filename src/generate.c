@@ -1530,7 +1530,7 @@ void prepare_next_level(struct player *p)
 	character_dungeon = true;
 
 	/* Quest specials - after changing level */
-	quest_changed_level();
+	quest_changed_level(false);
 }
 
 /**

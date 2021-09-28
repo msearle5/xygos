@@ -1044,7 +1044,7 @@ void quest_changing_level(void)
  * Called after level gen is complete (and the old level has been discarded)
  * This is also called after reloading a level.
  */
-void quest_changed_level(void)
+void quest_changed_level(bool store)
 {
 	/* A free position for a monster, if one is generated */
 	struct loc xy = loc(0, 0);
@@ -1079,8 +1079,11 @@ void quest_changed_level(void)
 						}
 					}
 				}
+				cur_num = 0;
+				for(int j=0; j<q->races; j++)
+					cur_num += q->race[j]->cur_num;
 				/* Fail the quest if the target has disappeared */
-				if ((cur_num == 0) && (!(q->flags & (QF_SUCCEEDED)))) {
+				if ((!store) && (cur_num == 0) && (!(q->flags & (QF_SUCCEEDED)))) {
 					fail_quest(q);
 				}
 			} else if (strstr(q->name, "Pie")) {

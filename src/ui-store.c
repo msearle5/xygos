@@ -2067,8 +2067,8 @@ static int store_quest_status(struct store *store)
 	if (store->sidx == STORE_AIR)
 		return 0;
 
-	quest_changed_level();
-	
+	quest_changed_level(true);
+
 	// Scan the quests looking for a quest which is 'available' and based from this store.
 	for(int i=0;i<z_info->quest_max;i++)
 	{
@@ -2104,7 +2104,7 @@ static void store_quest(struct store_context *ctx)
 	}
 
 	// In case of e.g. Pie quest's card
-	quest_changed_level();
+	quest_changed_level(true);
 
 	// Scan the quests looking for a quest which is 'available' and based from this store.
 	for(int i=0;i<z_info->quest_max;i++)
@@ -2887,7 +2887,7 @@ void use_store(game_event_type type, game_event_data *data, void *user)
 	screen_load();
 
 	/* In case of e.g. triffid quest */
-	quest_changed_level();
+	quest_changed_level(true);
 }
 
 void leave_store(game_event_type type, game_event_data *data, void *user)
