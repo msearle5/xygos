@@ -777,14 +777,14 @@ bool player_make_simple(const char *nrace, const char *next, const char *nclass,
 		const struct player_race *ec = extensions;
 		int ne = 0;
 
-		while (1) {
+		while (ec != personalities) {
 			if (!ec) return false;
 			if (streq(ec->name, next)) break;
 			ec = ec->next;
 			++ie;
 			++ne;
 		}
-		while (ec) {
+		while (ec != personalities) {
 			ec = ec->next;
 			++ne;
 		}
