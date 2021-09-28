@@ -174,7 +174,7 @@ const char *random_rumor(s32b real)
  * (The minimum length is for the same reason, while the max is to
  * ensure it fits on screen.)
  **/
-static const char *random_saying(s32b real, s32b min, s32b max)
+const char *random_saying(s32b real, s32b min, s32b max)
 {
 	const char *ret;
 	int length;

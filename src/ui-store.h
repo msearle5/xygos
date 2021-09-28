@@ -54,6 +54,7 @@ struct store_context {
 };
 
 
+const char *random_saying(s32b real, s32b min, s32b max);
 void textui_store_knowledge(int n);
 void enter_store(game_event_type type, game_event_data *data, void *user);
 void use_store(game_event_type type, game_event_data *data, void *user);

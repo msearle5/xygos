@@ -48,6 +48,7 @@
 #include "store.h"
 #include "trap.h"
 #include "ui-player.h"
+#include "ui-store.h"
 #include "world.h"
 #include "z-set.h"
 
@@ -1083,6 +1084,11 @@ void death_special(struct monster *mon)
 		} else {
 			/* Town quest target */
 			;
+		}
+	} else {
+		/* Talky toasters... talk */
+		if (strstr(mon->race->name, "talky")) {
+			msg("It says: %s", random_saying(25, 20, 75));
 		}
 	}
 

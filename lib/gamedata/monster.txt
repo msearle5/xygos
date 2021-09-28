@@ -6439,13 +6439,13 @@ hearing:10
 armor-class:10
 sleepiness:10
 depth:8
-rarity:1
+rarity:3
 blow:HIT:FIRE:1d6
 blow:HIT:ELEC:1d6
 blow:TOUCH:EAT_FOOD
 spell-freq:3
 spells:BR_FIRE
-flags:SMART | METAL
+flags:SMART | METAL | IM_FIRE |  DEATH_SPECIAL
 desc:The Talky Toaster has extraordinary intelligence, but is handicapped by a complete obsession with bread and toasting. Unfortunately that has resulted in it wanting to toast you.
 
 name:Bigtrak
@@ -6474,14 +6474,30 @@ hearing:10
 armor-class:10
 sleepiness:10
 depth:16
-rarity:1
+rarity:3
 blow:CRUSH:COLD:1d6
 blow:TOUCH:EAT_FOOD
 spell-power:8
 spell-freq:3
 spells:BR_COLD
-flags:SMART | METAL
+flags:SMART | METAL | IM_COLD | DEATH_SPECIAL
 desc:The Talky Freezer has extraordinary intelligence, but is handicapped by a complete obsession with ice and freezing. Unfortunately that has resulted in it wanting to turn you into a popsicle.
+
+name:light drone
+base:robot
+color:Slate
+hit-points:500
+hearing:10
+armor-class:50
+depth:18
+light:3
+rarity:2
+experience:900
+speed:110
+blow:TOUCH:HURT:1d8
+spell-freq:5
+spells:SHOT
+desc:A buzzing miniature helicopter. The platform swinging beneath looks like it's not just carrying a camera.
 
 name:talky microwave
 base:robot
@@ -6492,14 +6508,31 @@ hearing:10
 armor-class:10
 sleepiness:10
 depth:21
-rarity:1
+rarity:3
 blow:CRUSH:ELEC:1d20
 blow:TOUCH:EAT_FOOD
 spell-power:10
 spell-freq:3
 spells:BR_RADI
-flags:SMART | METAL
+flags:SMART | METAL | IM_RADIATION | DEATH_SPECIAL
 desc:The Talky Microwave has extraordinary intelligence, but is handicapped by a complete obsession with defrosting and cooking. Unfortunately that has resulted in it wanting to cook you.
+
+name:talky washer
+base:robot
+color:White
+speed:110
+hit-points:90
+hearing:10
+armor-class:10
+sleepiness:10
+depth:25
+rarity:3
+blow:CRUSH:HURT:1d20
+spell-power:12
+spell-freq:2
+spells:BA_WATE
+flags:SMART | METAL | IM_WATER | DEATH_SPECIAL
+desc:The Talky Washer has extraordinary intelligence, but is handicapped by a complete obsession with water and washing. Unfortunately that has resulted in it seeing you as a chunk of dirt that needs wiping away.
 
 name:Miniac, the Crusher
 base:robot
@@ -6532,6 +6565,21 @@ flags:DROP_4 | DROP_3 | DROP_2 | DROP_1 | ONLY_GOLD
 flags:KILL_WALL | KILL_BODY
 desc:Miniac, the Mining Intelligent Autonomous Control. A heavy robotic platform for blasting through rock walls, shifting equipment and controlling other robots. And entirely insane, seeing you as just a walking bag of fuel. There's no big red switch in sight - you are going to have to shut it down the old-fashioned way.
 
+name:combat drone
+base:robot
+color:SkyBlue
+hit-points:500
+hearing:10
+armor-class:50
+depth:32
+rarity:2
+experience:900
+speed:120
+blow:TOUCH:FIRE:2d20
+spell-freq:1
+spells:SHOT
+desc:A triangular flying blue arrowhead carrying a noisy jet engine and a machine gun.
+
 name:Bender
 base:robot
 color:SteelBlue
@@ -6551,6 +6599,37 @@ spells:BE_ELEC
 flags:UNIQUE | SMART | METAL | MALE
 flags:DROP_2 | DROP_60
 desc:An industrial metalworking robot, built at Fábrica Robótica De La Madre for bending steel girders. "Kill all humans!" That includes you. 
+
+name:laser drone
+base:robot
+color:Red
+hit-points:700
+hearing:10
+armor-class:60
+depth:45
+rarity:2
+experience:2000
+speed:120
+blow:TOUCH:FIRE:2d20
+spell-freq:2
+spells:BE_LIGHT
+desc:A triangular flying red arrowhead carrying a noisy jet engine and a laser weapon.
+
+name:missile drone
+base:robot
+color:ForestGreen
+hit-points:900
+hearing:10
+armor-class:70
+depth:62
+rarity:2
+experience:4000
+speed:120
+blow:TOUCH:FIRE:2d20
+spell-freq:8
+spells:ROCKET
+flags:METAL
+desc:A triangular flying arrowhead carrying a noisy jet engine and a rack of missiles.
 
 name:Mecha-Triax
 base:robot
@@ -6577,6 +6656,23 @@ flags:DROP_4 | DROP_GOOD | DROP_GREAT | ONLY_ITEM | SPECIAL_GEN
 flags:KILL_WALL | KILL_BODY | DEATH_SPECIAL
 flags:IM_ACID
 desc:A robot which ego-tastic Triax has had built in the shape of his head. Gold plated and 10 meters tall... so life size, even if not literally. But this is no statue - it's approaching at an alarming rate and if it's capable of smashing its way through solid rock, imagine what it could do to you!
+
+name:defence platform
+base:robot
+color:DarkGreen
+hit-points:4500
+hearing:10
+armor-class:110
+depth:88
+rarity:2
+experience:9000
+speed:130
+blow:TOUCH:ELEC:2d40
+blow:TOUCH:ELEC:2d40
+spell-freq:1
+spells:ROCKET | SHOT | BE_LIGHT | BA_FIRE
+flags:METAL
+desc:A "flying brick" - a squat, blocky form sitting on blasting thrusters and bristling with weaponry. You recognize missile pods and laser coils among many other less familiar attachments.
 
 name:The Core
 base:robot
