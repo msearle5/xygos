@@ -1537,8 +1537,7 @@ static void monster_turn_grab_objects(struct chunk *c, struct monster *mon,
 			/* Try to carry the copy */
 			if (monster_carry(c, mon, taken)) {
 				/* Describe observable situations */
-				if (square_isseen(cave, new)
-						&& !ignore_item_ok(player, obj)) {
+				if (square_isseen(cave, new) && !ignore_item_ok(player, obj)) {
 					msg("%s picks up %s.", m_name, o_name);
 				}
 
@@ -1546,14 +1545,15 @@ static void monster_turn_grab_objects(struct chunk *c, struct monster *mon,
 				square_delete_object(c, new, obj, true, true);
 			} else {
 				if (taken->known) {
-					object_delete(&taken->known);
+					object_delete(player->cave, NULL, &taken->known);
 				}
-				object_delete(&taken);
+				object_delete(cave, player->cave, &taken);
 			}
 		} else {
 			/* Describe observable situations */
 			if (square_isseen(c, new) && !ignore_item_ok(player, obj))
 				msgt(MSG_DESTROY, "%s crushes %s.", m_name, o_name);
+
 			/* Delete the object */
 			square_delete_object(c, new, obj, true, true);
 		}

@@ -256,8 +256,8 @@ static bool do_repair_object(struct object *obj, int strength, random_value valu
 				/* Artifacts are marked as lost */
 				history_lose_artifact(player, destroyed->artifact);
 			}
-			object_delete(&destroyed->known);
-			object_delete(&destroyed);
+			object_delete(player->cave, NULL, &destroyed->known);
+			object_delete(cave, player->cave, &destroyed);
 		} else {
 			square_delete_object(cave, obj->grid, obj, true, true);
 		}
@@ -1875,10 +1875,10 @@ void forget_remembered_objects(struct chunk *c, struct chunk *knownc, struct loc
 		/* Delete objects which no longer exist anywhere */
 		if (obj->notice & OBJ_NOTICE_IMAGINED) {
 			delist_object(knownc, obj);
-			object_delete(&obj);
+			object_delete(player->cave, NULL, &obj);
 			original->known = NULL;
 			delist_object(c, original);
-			object_delete(&original);
+			object_delete(cave, player->cave, &original);
 		}
 		obj = next;
 	}
@@ -2243,8 +2243,8 @@ bool effect_handler_RECYCLE(effect_handler_context_t *context)
 			/* Artifacts are marked as lost */
 			history_lose_artifact(player, destroyed->artifact);
 		}
-		object_delete(&destroyed->known);
-		object_delete(&destroyed);
+		object_delete(player->cave, NULL, &destroyed->known);
+		object_delete(cave, player->cave, &destroyed);
 	}
 
 	/* Return blocks */
@@ -2511,8 +2511,8 @@ bool effect_handler_RECHARGE(effect_handler_context_t *context)
 				&none_left);
 		}
 		if (destroyed->known)
-			object_delete(&destroyed->known);
-		object_delete(&destroyed);
+			object_delete(player->cave, NULL, &destroyed->known);
+		object_delete(cave, player->cave, &destroyed);
 	} else {
 		/* Extract a "power" */
 		int ease_of_recharge = (100 - obj->kind->level) / 10;
@@ -3959,9 +3959,9 @@ bool effect_handler_CREATE_ARROWS(effect_handler_context_t *context)
 	}
 
 	if (device->known) {
-		object_delete(&device->known);
+		object_delete(player->cave, NULL, &device->known);
 	}
-	object_delete(&device);
+	object_delete(cave, player->cave, &device);
 
 	/* Make some arrows */
 	arrows = make_object(cave, player->lev, good, great, false, NULL, TV_AMMO_9);
@@ -4670,8 +4670,8 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 					bool none_left = false;
 					destroyed = gear_object_for_use(player, printer, 1, false, &none_left);
 					if (destroyed->known)
-						object_delete(&destroyed->known);
-					object_delete(&destroyed);
+						object_delete(player->cave, NULL, &destroyed->known);
+					object_delete(cave, player->cave, &destroyed);
 				}
 			} else {
 				/* Sometimes use less, but no credit for using the right material */
@@ -4700,8 +4700,8 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 				/* Destroy the whole stack */
 				destroyed = gear_object_for_use(player, chunk[pk->chunk_idx], rmblocks, false, &none_left);
 				if (destroyed->known)
-					object_delete(&destroyed->known);
-				object_delete(&destroyed);
+					object_delete(player->cave, NULL, &destroyed->known);
+				object_delete(cave, player->cave, &destroyed);
 			} else {
 				/* Reduce the number */
 				destroyed = gear_object_for_use(player, chunk[pk->chunk_idx], rmblocks, false, &none_left);

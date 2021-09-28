@@ -154,8 +154,8 @@ int inven_damage(struct player *p, int type, int cperc)
 					msgt(MSG_DESTROY, buf);
 				}
 				if (destroyed->known)
-					object_delete(&destroyed->known);
-				object_delete(&destroyed);
+					object_delete(NULL, NULL, &destroyed->known);
+				object_delete(NULL, NULL, &destroyed);
 
 				/* Count the casualties */
 				k += amt;

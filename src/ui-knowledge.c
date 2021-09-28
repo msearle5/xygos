@@ -1442,11 +1442,11 @@ struct object *object_is_artifact(struct object *obj, void *av)
 	return (obj->artifact == artifact) ? obj : NULL;
 }
 
-static void do_remove_object(struct object **obj)
+static void do_remove_object(struct chunk *c, struct chunk *c_p, struct object **obj)
 {
 	if ((*obj)->known)
-		object_delete(&((*obj)->known));
-	object_delete(obj);
+		object_delete(c_p, NULL, &((*obj)->known));
+	object_delete(c, c_p, obj);
 }
 
 /**
@@ -1476,7 +1476,7 @@ bool remove_object(struct object *target)
 	for (obj = player->gear; obj; obj = obj->next) {
 		if (obj == target) {
 			rm = gear_object_for_use(player, obj, obj->number, false, &dummy);
-			do_remove_object(&rm);
+			do_remove_object(NULL, NULL, &rm);
 			return true;
 		}
 	}
@@ -1490,7 +1490,7 @@ bool remove_object(struct object *target)
 			if (obj == target) {
 				obj->held_m_idx = 0;
 				pile_excise(&mon->held_obj, obj);
-				do_remove_object(&obj);
+				do_remove_object(cave, player->cave, &obj);
 				return true;
 			}
 			obj = obj->next;
@@ -1538,7 +1538,7 @@ bool remove_object(struct object *target)
 				if (obj == target) {
 					obj->held_m_idx = 0;
 					pile_excise(&mon->held_obj, obj);
-					do_remove_object(&obj);
+					do_remove_object(c, NULL, &obj);
 					return true;
 				}
 				obj = obj->next;
@@ -2057,8 +2057,8 @@ static void desc_obj_fake(int k_idx)
 		ODESC_PREFIX | ODESC_CAPITAL, player);
 
 	textui_textblock_show(tb, area, header);
-	object_delete(&known_obj);
-	object_delete(&obj);
+	object_delete(NULL, NULL, &known_obj);
+	object_delete(NULL, NULL, &obj);
 	textblock_free(tb);
 
 	/* Restore the old trackee */

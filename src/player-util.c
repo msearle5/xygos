@@ -764,8 +764,8 @@ void light_timeout(struct object *obj, bool delete)
 		}
 		if (delete) {
 			if (burnt->known)
-				object_delete(&burnt->known);
-			object_delete(&burnt);
+				object_delete(cave, player->cave, &burnt->known);
+			object_delete(player->cave, NULL, &burnt);
 		}
 	} else if (obj_has_flag(obj, OF_STICKY) && object_is_carried(player, obj)) {
 		/* Remind you that you can take it off now */

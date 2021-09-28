@@ -804,7 +804,7 @@ void quest_enter_level(struct chunk *c)
 						struct object *obj = NULL;
 						do {
 							if (obj)
-								object_delete(&obj);
+								object_delete(cave, player->cave, &obj);
 							obj = make_object_named(c, 1, false, false, false, &value, TV_PILL, NULL);
 						} while ((!obj) || (value <= 5) || (obj->number > 1));	/* not a nasty or sugar */
 						quest_item_at(c, xy, obj);
@@ -1234,7 +1234,7 @@ static bool quest_level_reward(int lev)
 	do {
 		reps++;
 		if (obj)
-			object_delete(&obj);
+			object_delete(cave, player->cave, &obj);
 		value = 0;
 		obj = make_object_named(cave, lev, true, false, false, &value, 0, NULL);
 		if (reps > 1000)

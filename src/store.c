@@ -172,8 +172,8 @@ static void cleanup_stores(void)
 			struct store *store = &t_info[t].stores[i];
 			if (store) {
 				/* Free the store inventory */
-				object_pile_free(store->stock_k);
-				object_pile_free(store->stock);
+				object_pile_free(NULL, store->stock_k);
+				object_pile_free(NULL, store->stock);
 				if (store->always_table) {
 					mem_free(store->always_table);
 					store->always_table = NULL;
@@ -531,7 +531,7 @@ void store_reset(void) {
 
 			s->max_danger = s->low_danger + randint0(1 + s->high_danger - s->low_danger);
 			store_shuffle(s);
-			object_pile_free(s->stock);
+			object_pile_free(NULL, s->stock);
 			s->stock = NULL;
 			if (i == STORE_HOME)
 				continue;
@@ -1017,7 +1017,7 @@ static void store_object_absorb(struct object *old, struct object *new)
 	object_origin_combine(old, new);
 
 	/* Fully absorbed */
-	object_delete(&new);
+	object_delete(NULL, NULL, &new);
 }
 
 
@@ -1200,9 +1200,9 @@ void store_delete(struct store *s, struct object *obj, int amt)
 		known_obj->number -= amt;
 	} else {
 		pile_excise(&s->stock, obj);
-		object_delete(&obj);
+		object_delete(NULL, NULL, &obj);
 		pile_excise(&s->stock_k, known_obj);
-		object_delete(&known_obj);
+		object_delete(NULL, NULL, &known_obj);
 		assert(s->stock_num);
 		s->stock_num--;
 	}
@@ -1575,11 +1575,9 @@ static bool store_create_random(struct store *store, int min_level, int max_leve
 	 * with -ve to hit, and anything actually worthless will be caught later by the value check.
 	 **/
 	if ((store->sidx != STORE_B_MARKET) && (obj->faults)) {
-		object_delete(&obj);
+		object_delete(NULL, NULL, &obj);
 		return false;
 	}
-
-	/*** Post-generation filters ***/
 
 	/* Make a known object */
 	known_obj = object_new();
@@ -1594,33 +1592,33 @@ static bool store_create_random(struct store *store, int min_level, int max_leve
 
 	/* Black markets have expensive tastes */
 	if ((store->sidx == STORE_B_MARKET) && !black_market_ok(obj)) {
-		object_delete(&known_obj);
+		object_delete(NULL, NULL, &known_obj);
 		obj->known = NULL;
-		object_delete(&obj);
+		object_delete(NULL, NULL, &obj);
 		return false;
 	}
 
 	/* Armouries only stock armour */
 	if ((store->sidx == STORE_ARMOR) && !armoury_ok(obj)) {
-		object_delete(&known_obj);
+		object_delete(NULL, NULL, &known_obj);
 		obj->known = NULL;
-		object_delete(&obj);
+		object_delete(NULL, NULL, &obj);
 		return false;
 	}
 
 	/* HQ only stocks some items */
 	if ((store->sidx == STORE_HQ) && !hq_ok(obj)) {
-		object_delete(&known_obj);
+		object_delete(NULL, NULL, &known_obj);
 		obj->known = NULL;
-		object_delete(&obj);
+		object_delete(NULL, NULL, &obj);
 		return false;
 	}
 
 	/* No "worthless" items */
 	if (object_value_real(obj, 1) < 1)  {
-		object_delete(&known_obj);
+		object_delete(NULL, NULL, &known_obj);
 		obj->known = NULL;
-		object_delete(&obj);
+		object_delete(NULL, NULL, &obj);
 		return false;
 	}
 
@@ -1629,9 +1627,9 @@ static bool store_create_random(struct store *store, int min_level, int max_leve
 
 	/* Attempt to carry the object */
 	if (!store_carry(store, obj, true)) {
-		object_delete(&known_obj);
+		object_delete(NULL, NULL, &known_obj);
 		obj->known = NULL;
-		object_delete(&obj);
+		object_delete(NULL, NULL, &obj);
 		return false;
 	}
 
@@ -2148,7 +2146,7 @@ void do_cmd_buy(struct command *cmd)
 	/* Ensure we have room */
 	if (bought->number > inven_carry_num(player, bought, true)) {
 		msg("You cannot carry that many items.");
-		object_delete(&bought);
+		object_delete(NULL, NULL, &bought);
 		return;
 	}
 
@@ -2162,7 +2160,7 @@ void do_cmd_buy(struct command *cmd)
 
 		if (price > player->au) {
 			msg("You cannot afford that purchase.");
-			object_delete(&bought);
+			object_delete(NULL, NULL, &bought);
 			return;
 		}
 
@@ -2306,7 +2304,7 @@ void do_cmd_retrieve(struct command *cmd)
 	/* Ensure we have room */
 	if (picked_item->number > inven_carry_num(player, picked_item, true)) {
 		msg("You cannot carry that many items.");
-		object_delete(&picked_item);
+		object_delete(NULL, NULL, &picked_item);
 		return;
 	}
 
@@ -2658,10 +2656,10 @@ void do_cmd_sell(struct command *cmd)
 	if ((cyber) || (!store_carry(store, sold_item, false))) {
 		/* The store rejected it; delete. */
 		if (sold_item->known) {
-			object_delete(&sold_item->known);
+			object_delete(NULL, NULL, &sold_item->known);
 			sold_item->known = NULL;
 		}
-		object_delete(&sold_item);
+		object_delete(NULL, NULL, &sold_item);
 	}
 
 	event_signal(EVENT_STORECHANGED);

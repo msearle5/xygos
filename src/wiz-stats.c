@@ -982,7 +982,7 @@ static void monster_death_stats(int m_idx)
 
 		/* Delete the object */
 		delist_object(cave, obj);
-		object_delete(&obj);
+		object_delete(cave, player->cave, &obj);
 
 		/* Next */
 		obj = next;
@@ -1411,7 +1411,7 @@ static void artifact_stats(void)
 				artifacts[i]++;
 				int a_idx = obj->artifact - a_info;
 				levcount[a_idx]++;
-				object_delete(&obj);
+				object_delete(NULL, NULL, &obj);
 			}
 		} while (artifacts[i] < tries);
 		prob[i] = mem_alloc(sizeof(double) * z_info->a_max);
@@ -1509,7 +1509,7 @@ static void ego_stats(void)
 				}
 			}
 			if (obj)
-				object_delete(&obj);
+				object_delete(NULL, NULL, &obj);
 		} while (egos[i] < tries);
 		prob[i] = mem_alloc(sizeof(double) * z_info->e_max);
 		

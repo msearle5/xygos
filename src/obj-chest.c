@@ -608,7 +608,7 @@ static void chest_death(struct loc grid, struct object *chest)
 			continue;
 
 		if (tval_is_chest(treasure)) {
-			object_delete(&treasure);
+			object_delete(cave, player->cave, &treasure);
 			continue;
 		}
 
@@ -617,7 +617,7 @@ static void chest_death(struct loc grid, struct object *chest)
 		 * some useful 1-gram objects.
 		 **/
 		if (treasure->weight + totalweight > weight) {
-			object_delete(&treasure);
+			object_delete(cave, player->cave, &treasure);
 			continue;
 		}
 

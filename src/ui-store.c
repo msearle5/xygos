@@ -1191,7 +1191,7 @@ static bool store_purchase(struct store_context *ctx, int item, bool single, boo
 	/* Ensure we have room */
 	if (!inven_carry_okay(dummy)) {
 		msg("You cannot carry that many items.");
-		object_delete(&dummy);
+		object_delete(NULL, NULL, &dummy);
 		return false;
 	}
 
@@ -1231,7 +1231,7 @@ static bool store_purchase(struct store_context *ctx, int item, bool single, boo
 	/* Update the display */
 	ctx->flags |= STORE_GOLD_CHANGE;
 
-	object_delete(&dummy);
+	object_delete(NULL, NULL, &dummy);
 
 	/* Not kicked out */
 	return true;
@@ -1501,7 +1501,7 @@ static void store_steal(struct store_context *ctx, int item, struct menu *m, boo
 	/* Ensure we have room */
 	if (!inven_carry_okay(dummy)) {
 		msg("You cannot carry that many items.");
-		object_delete(&dummy);
+		object_delete(NULL, NULL, &dummy);
 		return;
 	}
 
@@ -1658,7 +1658,7 @@ static void store_steal(struct store_context *ctx, int item, struct menu *m, boo
 		store_do_fight(ctx);
 	}
 
-	object_delete(&dummy);
+	object_delete(NULL, NULL, &dummy);
 }
 
 /* pick a fight with the owner */
@@ -1740,7 +1740,7 @@ static void store_newstock(struct store_context *ctx)
 	/* Remove old stock */
 	struct store *s = ctx->store;
 	s->stock_num = 0;
-	object_pile_free(s->stock);
+	object_pile_free(NULL, s->stock);
 	s->stock = NULL;
 	
 	/* Get new stock */

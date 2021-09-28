@@ -61,7 +61,7 @@ static void cyborg_init(void)
 
 		/* Get rid of anything already in that slot */
 		if (obj[i_obj]) {
-			object_delete(&obj[i_obj]);
+			object_delete(cave, player->cave, &obj[i_obj]);
 			obj[i_obj] = NULL;
 		}
 
@@ -80,7 +80,7 @@ static void cyborg_init(void)
 			if (value > max_price) {
 				int i_obj = randint0(n_tvals);
 				if (obj[i_obj]) {
-					object_delete(&obj[i_obj]);
+					object_delete(cave, player->cave, &obj[i_obj]);
 					obj[i_obj] = NULL;
 				}
 			}

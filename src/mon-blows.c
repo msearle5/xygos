@@ -329,8 +329,8 @@ void melee_equip_damage(struct player *p, int dmg)
 						bool dummy;
 						struct object *boom = gear_object_for_use(p, obj, 1, true, &dummy);
 						if (boom->known)
-							object_delete(&boom->known);
-						object_delete(&boom);
+							object_delete(player->cave, NULL, &boom->known);
+						object_delete(cave, player->cave, &boom);
 
 						/* Explosion effect */
 						effect_simple(EF_SPHERE, source_player(), "4d10", ELEM_SHARD, 4, 0, 0, 0, NULL);
@@ -927,8 +927,8 @@ static void do_eat_stuff(melee_effect_handler_context_t *context, bool (*edible)
 		eaten = gear_object_for_use(context->p, obj, 1, false,
 			&none_left);
 		if (eaten->known)
-			object_delete(&eaten->known);
-		object_delete(&eaten);
+			object_delete(player->cave, NULL, &eaten->known);
+		object_delete(cave, player->cave, &eaten);
 
 		/* Obvious */
 		context->obvious = true;
