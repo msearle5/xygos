@@ -399,7 +399,7 @@ struct object_kind *select_ego_kind(const struct ego_item *ego, int level, int t
 	for (poss = ego->poss_items; poss; poss = poss->next) {
 		if ((tval == 0) || (tval == k_info[poss->kidx].tval)) {
 			assert(poss->kidx);
-			prob[poss->kidx] = obj_alloc[poss->kidx] - obj_alloc[poss->kidx-1];
+			prob[poss->kidx] = obj_alloc[poss->kidx+1] - obj_alloc[poss->kidx];
 			total += prob[poss->kidx];
 		}
 	}

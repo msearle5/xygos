@@ -514,7 +514,7 @@ struct object *wish(const char *in, int level)
 	/* Return the item.
 	 * This may be NULL if nothing can be produced.
 	 */
-	WISH_DPF("Wish complete, object %s created", obj ? obj->kind->name : "*NOT*");
+	WISH_DPF("Wish complete, object %s created\n", obj ? obj->kind->name : "*NOT*");
 	return obj;
 }
 

@@ -202,9 +202,9 @@ static int test_ego_only(void *state) {
 
 			if (eok) {
 				obj = wish(e_info[i].name, 1);
-				notnull(obj);
-				notnull(obj->kind);
-				notnull(obj->ego[0]);
+				vnotnull(obj, e_info[i].name);
+				vnotnull(obj->kind, e_info[i].name);
+				vnotnull(obj->ego[0], e_info[i].name);
 				object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX | ODESC_FULL | ODESC_SPOIL, player);
 				strnfmt(buf, sizeof(buf), "Asked for %s, got %s (%s)", e_info[i].name, obj->ego[0]->name,  o_name);
 				vrequire((obj->ego[0]->name), buf);

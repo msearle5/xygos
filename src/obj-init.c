@@ -2255,6 +2255,9 @@ static enum parser_error parse_ego_type(struct parser *p) {
 	/* Find all the right object kinds */
 	for (i = 0; i < z_info->k_max; i++) {
 		if (k_info[i].tval != tval) continue;
+		if (kf_has(k_info[i].kind_flags, KF_QUEST_ART)) continue;
+		if (kf_has(k_info[i].kind_flags, KF_INSTA_ART)) continue;
+		if (kf_has(k_info[i].kind_flags, KF_SPECIAL_GEN)) continue;
 		poss = mem_zalloc(sizeof(struct poss_item));
 		poss->kidx = i;
 		poss->next = e->poss_items;
