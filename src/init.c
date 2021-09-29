@@ -4607,6 +4607,7 @@ static struct {
 	{ "monster interaction", &interact_parser },
 	{ "traps", &trap_parser },
 	{ "chest_traps", &chest_trap_parser },
+	{ "chest themes", &chest_parser },
 	{ "flavours", &flavor_parser },
 	{ "hints", &hints_parser },
 	{ "lies", &lies_parser },

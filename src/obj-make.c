@@ -313,13 +313,17 @@ static int binary_search_probtable(const double *tbl, int n, double p)
  static int select_random_table(double total, double *prob, int length) {
 	double value = Rand_double(total);
 	int last = -1;
+fprintf(stderr,"select_random_table: total %lf, length %d\n", total, length);
 	for (int i=0;i<length; i++) {
 		if (prob[i] > 0.0) {
+fprintf(stderr,"select_random_table: entry %d has prob %lf, ", i, prob[i]);
 			last = i;
 			if (value < prob[i]) {
+				fprintf(stderr,"returning\n");
 				return i;
 			} else {
 				value -= prob[i];
+				fprintf(stderr,"new value %lf\n", value);
 			}
 		}
 	}
@@ -387,20 +391,21 @@ struct ego_item *select_ego_base(int level, struct object *obj)
 }
 
 /**
- * Select a base item for an ego.
+ * Select a base item from a possible-item table.
  */
-struct object_kind *select_ego_kind(const struct ego_item *ego, int level, int tval)
+struct object_kind *select_poss_kind(struct poss_item *poss, int level, int tval)
 {
-	struct poss_item *poss;
 	double *prob = mem_zalloc(sizeof(*prob) * z_info->k_max);
 	double total = 0.0;
 
 	/* Fill a table of usable base items */
-	for (poss = ego->poss_items; poss; poss = poss->next) {
+	for (; poss; poss = poss->next) {
 		if ((tval == 0) || (tval == k_info[poss->kidx].tval)) {
 			assert(poss->kidx);
-			prob[poss->kidx] = obj_alloc[poss->kidx+1] - obj_alloc[poss->kidx];
-			total += prob[poss->kidx];
+			double newprob = obj_alloc[poss->kidx+1] - obj_alloc[poss->kidx];
+			prob[poss->kidx] += newprob;
+			total += newprob;
+fprintf(stderr,"Item %s: new prob %lf, this prob %lf, total %lf\n",k_info[poss->kidx].name, newprob, prob[poss->kidx], total);
 		}
 	}
 
@@ -414,6 +419,14 @@ struct object_kind *select_ego_kind(const struct ego_item *ego, int level, int t
 	int idx = select_random_table(total, prob, z_info->k_max);
 	mem_free(prob);
 	return k_info + idx;
+}
+
+/**
+ * Select a base item for an ego.
+ */
+struct object_kind *select_ego_kind(const struct ego_item *ego, int level, int tval)
+{
+	return select_poss_kind(ego->poss_items, level, tval);
 }
 
 /**
