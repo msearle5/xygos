@@ -30,6 +30,7 @@ enum chest_query {
 };
 
 extern struct file_parser chest_trap_parser;
+extern struct file_parser chest_parser;
 
 const char *chest_trap_name(const struct object *obj);
 bool is_trapped_chest(const struct object *obj);

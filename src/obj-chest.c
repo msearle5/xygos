@@ -288,6 +288,208 @@ struct file_parser chest_trap_parser = {
     cleanup_chest_trap
 };
 
+/** Chest theme parser */
+
+struct chest_theme {
+	char *name;
+	struct poss_item *poss_items;
+	int rarity;
+	int level;
+	int minlevel;
+	int maxlevel;
+	int change;
+};
+
+static struct chest_theme *chest_theme;
+static int n_chest_themes;
+
+static enum parser_error parse_chest_name(struct parser *p)
+{
+    const char *name = parser_getstr(p, "name");
+    chest_theme = mem_realloc(chest_theme, sizeof(struct chest_theme) * ((n_chest_themes)+1));
+	struct chest_theme *t = chest_theme + n_chest_themes;
+	memset(t, 0, sizeof(struct chest_theme));
+	n_chest_themes++;
+	t->maxlevel = 100;
+    t->name = string_make(name);
+    parser_setpriv(p, t);
+    return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_chest_level(struct parser *p) {
+	struct chest_theme *t = parser_priv(p);
+
+    if (!t)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	t->level = parser_getint(p, "level");
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_chest_minlevel(struct parser *p) {
+	struct chest_theme *t = parser_priv(p);
+
+    if (!t)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	t->minlevel = parser_getint(p, "minlevel");
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_chest_maxlevel(struct parser *p) {
+	struct chest_theme *t = parser_priv(p);
+
+    if (!t)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	t->maxlevel = parser_getint(p, "maxlevel");
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_chest_rarity(struct parser *p) {
+	struct chest_theme *t = parser_priv(p);
+
+    if (!t)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	t->rarity = parser_getint(p, "rarity");
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_chest_switch(struct parser *p) {
+	struct chest_theme *t = parser_priv(p);
+
+    if (!t)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	t->change = parser_getint(p, "switch");
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_chest_type(struct parser *p) {
+	bool found_one_kind = false;
+
+	struct chest_theme *t = parser_priv(p);
+	if (!t)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
+	int tval = tval_find_idx(parser_getsym(p, "tval"));
+	if (tval < 0)
+		return PARSE_ERROR_UNRECOGNISED_TVAL;
+
+	/* Find all the right object kinds */
+	for (int i = 0; i < z_info->k_max; i++) {
+		if (k_info[i].tval != tval) continue;
+		if (kf_has(k_info[i].kind_flags, KF_QUEST_ART)) continue;
+		if (kf_has(k_info[i].kind_flags, KF_INSTA_ART)) continue;
+		if (kf_has(k_info[i].kind_flags, KF_SPECIAL_GEN)) continue;
+		struct poss_item *poss = mem_zalloc(sizeof(struct poss_item));
+		poss->kidx = i;
+		poss->next = t->poss_items;
+		t->poss_items = poss;
+		found_one_kind = true;
+	}
+
+	if (!found_one_kind)
+		return PARSE_ERROR_INVALID_VALUE;
+
+	return PARSE_ERROR_NONE;
+}
+
+static enum parser_error parse_chest_item(struct parser *p) {
+	int tval = tval_find_idx(parser_getsym(p, "tval"));
+	const char *sval_text = parser_getsym(p, "sval");
+	bool negate = false;
+
+	if (*sval_text == '!') {
+		negate = true;
+		sval_text++;
+	}
+	int sval = lookup_sval(tval, sval_text);
+
+	struct chest_theme *t = parser_priv(p);
+	if (!t)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	if (tval < 0)
+		return PARSE_ERROR_UNRECOGNISED_TVAL;
+	if (sval < 0)
+		return PARSE_ERROR_UNRECOGNISED_SVAL;
+
+	if (negate) {
+		/* Remove it */
+		struct poss_item *pi = t->poss_items;
+		int kidx = lookup_kind(tval, sval)->kidx;
+		if (kidx <= 0)
+			return PARSE_ERROR_INVALID_ITEM_NUMBER;
+		struct poss_item *last = NULL;
+		while (pi) {
+			if ((int)pi->kidx == kidx) {
+				if (last)
+					last->next = pi->next;
+				else
+					t->poss_items = pi->next;
+				mem_free(pi);
+				break;
+			}
+			last = pi;
+			pi = pi->next;
+		}
+	} else {
+		struct poss_item *poss = mem_zalloc(sizeof(struct poss_item));
+		poss->kidx = lookup_kind(tval, sval)->kidx;
+		if (poss->kidx <= 0)
+			return PARSE_ERROR_INVALID_ITEM_NUMBER;
+		poss->next = t->poss_items;
+		t->poss_items = poss;
+	}
+
+	return PARSE_ERROR_NONE;
+}
+
+struct parser *init_parse_chest(void) {
+    struct parser *p = parser_new();
+    parser_setpriv(p, NULL);
+    parser_reg(p, "name str name", parse_chest_name);
+    parser_reg(p, "level int level", parse_chest_level);
+    parser_reg(p, "minlevel int minlevel", parse_chest_minlevel);
+    parser_reg(p, "maxlevel int maxlevel", parse_chest_maxlevel);
+	parser_reg(p, "rarity int rarity", parse_chest_rarity);
+	parser_reg(p, "switch int switch", parse_chest_switch);
+	parser_reg(p, "type sym tval", parse_chest_type);
+	parser_reg(p, "item sym tval sym sval", parse_chest_item);
+    return p;
+}
+
+static errr run_parse_chest(struct parser *p) {
+    return parse_file_quit_not_found(p, "chest");
+}
+
+static errr finish_parse_chest(struct parser *p) {
+	parser_destroy(p);
+	return 0;
+}
+
+static void cleanup_chest(void)
+{
+	for(int i=0; i<n_chest_themes; i++) {
+		struct chest_theme *chest = chest_theme+i;
+		string_free(chest->name);
+		struct poss_item *item = chest->poss_items;
+		while (item) {
+			item = chest->poss_items->next;
+			mem_free(chest->poss_items);
+			chest->poss_items = item;
+		};
+	};
+	n_chest_themes = 0;
+	mem_free(chest_theme);
+	chest_theme = NULL;
+}
+
+struct file_parser chest_parser = {
+    "chest",
+    init_parse_chest,
+    run_parse_chest,
+    finish_parse_chest,
+    cleanup_chest
+};
+
+
 /**
  * ------------------------------------------------------------------------
  * Chest trap information
@@ -483,34 +685,18 @@ int count_chests(struct loc *grid, enum chest_query check_type)
 	return count;
 }
 
-/* Theme functions: create an object. Can return NULL, in which case it will be retried. */
-
-/* Lights theme: mostly lights, some batteries. Maybe other light related items */
-static struct object *theme_lights(int depth, bool good, bool great)
+/* Select an object from a chest theme. Can return NULL, in which case it will be retried. */
+static struct object *chest_theme_select(const struct chest_theme *chest, int depth, bool good, bool great)
 {
-	return make_object(cave, depth, good, great, false, NULL, 0); //FIXME
+	if (!chest->poss_items)
+		return NULL;
+	struct object_kind *kind = select_poss_kind(chest->poss_items, depth, 0);
+	if (!kind)
+		return NULL;
+fprintf(stderr,"selected %s\n", kind ? kind->name : "NO KIND");
+	struct object *obj = make_object_named(cave, depth, good, great, false, NULL, kind->tval, kind->name);
+	return obj;
 }
-
-/* Generic theme - random selection */
-static struct object *theme_generic(int depth, bool good, bool great)
-{
-	return make_object(cave, depth, good, great, false, NULL, 0);
-}
-
-struct chest_theme {
-	struct object *(* fn)(int, bool, bool);
-	int rarity;
-	int level;
-	int minlevel;
-	int maxlevel;
-	int change;
-};
-
-/* Move some of this to an ext file? */
-static const struct chest_theme chest_theme[] = {
-	{ theme_lights,		5,	10,	0,	40,		0 },
-	{ theme_generic,	3,	1,	0,	100,	30 },
-};
 
 /* Repeatedly select an entry at random, check rarity/level/min and max level */
 const struct chest_theme *select_theme(int level)
@@ -523,8 +709,10 @@ const struct chest_theme *select_theme(int level)
 	if (level > 99)
 		level = 99;
 
+	assert(n_chest_themes);
+
 	do {
-		theme = chest_theme + randint0(sizeof(chest_theme) / sizeof(*chest_theme));
+		theme = chest_theme + randint0(n_chest_themes);
 		/* Check min, max levels and rarity */
 		if (theme->minlevel > level)
 			continue;
@@ -586,28 +774,34 @@ static void chest_death(struct loc grid, struct object *chest)
 		number = 1 - number;
 	while (one_in_(number+1))
 		number++;
-
 	/* Select the first theme. */
 	const struct chest_theme *theme = select_theme(depth);
 
+fprintf(stderr,"%d items, %s good, %s great, level %d, theme %s\n", number, good ? "is" : "isn't", great ? "is " : "isn't",
+	depth, theme ? theme->name : "NONE");
 	/* Drop some valuable objects (non-chests) */
 	int totalweight = 0;
 	while (number > 0) {
 		int reps = 1e5; /* Paranoia - shouldn't be needed unless the theme fn is ridiculously fussy */
 		struct object *treasure;
 		do {
-			treasure = theme->fn(depth, good, great);
+			treasure = chest_theme_select(theme, depth, good, great);
 			reps--;
 		} while ((!treasure) && (reps > 0));
+		fprintf(stderr,"Build %s object after %d reps\n", treasure ? treasure->kind->name : "NO", 1e5-reps);
 
 		/* Just in case the theme fn can't find an item: make a random object */
-		if (!treasure)
+		if (!treasure) {
 			treasure = make_object(cave, depth, good, great, false, NULL, 0);
-
-		if (!treasure)
+			fprintf(stderr,"Theme failed; random item produced %s\n", treasure ? treasure->kind->name : "NO");
+		}
+		if (!treasure) {
+			fprintf(stderr,"Random item failed- skip\n");
 			continue;
+		}
 
 		if (tval_is_chest(treasure)) {
+			fprintf(stderr,"Produced chest, ignore\n");
 			object_delete(cave, player->cave, &treasure);
 			continue;
 		}
@@ -617,6 +811,7 @@ static void chest_death(struct loc grid, struct object *chest)
 		 * some useful 1-gram objects.
 		 **/
 		if (treasure->weight + totalweight > weight) {
+			fprintf(stderr,"Too heavy, ignore\n");
 			object_delete(cave, player->cave, &treasure);
 			continue;
 		}
@@ -628,8 +823,10 @@ static void chest_death(struct loc grid, struct object *chest)
 		number--;
 		
 		/* Now select another theme, sometimes */
-		if (randint0(100) < theme->change)
+		if (randint0(100) < theme->change) {
 			theme = select_theme(depth);
+			fprintf(stderr,"Changing theme to %s\n", theme->name);
+		}
 	}
 
 	/* Chest is now empty */
