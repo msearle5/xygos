@@ -612,7 +612,7 @@ static const char *process_pref_file_expr(char **sp, char *fp)
 		if ((f = *s) != '\0') *s++ = '\0';
 
 		/* Variables start with $, otherwise it's a constant */
-		v = parse_variables(b, v, NULL);
+		v = parse_variables(b, b, NULL);
 	}
 
 	/* Save */
