@@ -774,7 +774,7 @@ static errr Term_xtra_gcu(int n, int v) {
 		case TERM_XTRA_CLEAR: touchwin(td->win); wclear(td->win); return 0;
 
 		/* Make a noise */
-		case TERM_XTRA_NOISE: /*write(1, "\007", 1);*/ return 0;
+		case TERM_XTRA_NOISE: write(1, "\007", 1); return 0;
 
 		/* Flush the Curses buffer */
 		case TERM_XTRA_FRESH: wrefresh(td->win); return 0;

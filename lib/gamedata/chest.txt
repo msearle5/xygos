@@ -38,7 +38,7 @@
 # items.
 # Cash, etc. Gold block? Anything over a value-by-level?
 
-name:valuables 
+name:valuables
 switch:40
 type:cash:30
 item:block:gold:3
