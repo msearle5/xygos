@@ -16,8 +16,8 @@
 # alloc: commonness : min " to " max
 # combat: to-hit : to-dam : to-ac
 # min-combat: min to-hit : min to-dam : min to-ac
-# type: tval
-# item: tval : sval
+# type: tval [ : scale ]
+# item: tval : sval [ : scale ]
 # flag: flag | flag | etc.
 # flags-off: flag | flag | etc
 # values: label[value] | label[value] | etc.
@@ -67,6 +67,10 @@
 # The sval may be preceded by a '!', in which case the object kind is removed.
 # This is used when all kinds of a type except that one are wanted. In this
 # case, the 'type' line must precede the 'item' line.
+
+# Either of the above may be followed by 'scale', which multiplies all
+# probabilities, biasing selection of a base item for this ego towards these
+# items.
 
 # 'effect' is for the effect when an item is activated.  Fields are the
 # name of the effect (as found in src/list-effects.h) and possibly one or

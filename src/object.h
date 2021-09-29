@@ -368,6 +368,7 @@ extern struct artifact_upkeep *aup_info;
  */
 struct poss_item {
 	u32b kidx;
+	int scale;
 	struct poss_item *next;
 };
 

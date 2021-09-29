@@ -9,29 +9,47 @@
 # 'good' theme (random good items) is used?
 
 # The theme then generates random items from the list of tval or items (if these
-# do not sum to 100, the reset are random items). Containers can never be produced,
+# do not sum to 100, the rest are random items). Containers can never be produced,
 # or anything too heavy, or more than a limited number.
 
 
 # name: name (of a theme)
 # switch:<chance>:	Chance of this theme causing a switch to another theme rather than another item from this one
-# item:<chance>:<tval OR object name>: chance / 100, possible tval for this theme
+# type: tval [ : scale ]
+# item: tval : sval [ : scale ]
 # from:<chance>:<container name>:	This container has this % chance of generating this theme.
-# rarity:<multiplier> Decreasae the change by this factor of being generated
-# level:<level>	Compared to the level it was genrated at, increase or reduce generation
+# rarity:<multiplier> Decrease the change by this factor of being generated
+# level:<level>	Compared to the level it was generated at, increase or reduce generation
 # maxlevel:<level> Never generate below this
 # minlevel:<level> or above this
 
+# 'type' is for possible tvals (object bases).  A 'type' line indicates
+# that any object kind of that type can be used to generate this ego-item.
+
+# 'item' is for possible tval-sval pairs, which correspond to object kinds.
+# One or more 'item' lines are used when we don't want all object kinds of
+# this tval to be possible for this ego-item.
+# The sval may be preceded by a '!', in which case the object kind is removed.
+# This is used when all kinds of a type except that one are wanted. In this
+# case, the 'type' line must precede the 'item' line.
+
+# Either of the above may be followed by 'scale', which multiplies all
+# probabilities, biasing selection of a base item for this ego towards these
+# items.
 # Cash, etc. Gold block? Anything over a value-by-level?
+
 #name:valuables 
 
 name:lighting
 switch:0
 #good:?
-item:80:LIGHT
-item:20:BATTERY
+type:light:4
+#type:light
+#type:light
+#type:light
+type:battery
 #from:100:flight case
 rarity:5
 level:10
 maxlevel:40
-weight:150
+#weight:150
