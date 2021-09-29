@@ -403,6 +403,7 @@ struct object_kind *select_poss_kind(struct poss_item *poss, int level, int tval
 		if ((tval == 0) || (tval == k_info[poss->kidx].tval)) {
 			assert(poss->kidx);
 			double newprob = obj_alloc[poss->kidx+1] - obj_alloc[poss->kidx];
+			newprob *= poss->scale;
 			prob[poss->kidx] += newprob;
 			total += newprob;
 fprintf(stderr,"Item %s: new prob %lf, this prob %lf, total %lf\n",k_info[poss->kidx].name, newprob, prob[poss->kidx], total);

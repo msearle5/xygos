@@ -2252,6 +2252,13 @@ static enum parser_error parse_ego_type(struct parser *p) {
 	if (tval < 0)
 		return PARSE_ERROR_UNRECOGNISED_TVAL;
 
+	int scale = 1;
+	if (parser_hasval(p, "scale")) {
+		scale = parser_getint(p, "scale");
+		if (scale < 1)
+			return PARSE_ERROR_INVALID_VALUE;
+	}
+
 	/* Find all the right object kinds */
 	for (i = 0; i < z_info->k_max; i++) {
 		if (k_info[i].tval != tval) continue;
@@ -2261,6 +2268,7 @@ static enum parser_error parse_ego_type(struct parser *p) {
 		poss = mem_zalloc(sizeof(struct poss_item));
 		poss->kidx = i;
 		poss->next = e->poss_items;
+		poss->scale = scale;
 		e->poss_items = poss;
 		found_one_kind = true;
 	}
@@ -2289,6 +2297,13 @@ static enum parser_error parse_ego_item(struct parser *p) {
 	if (sval < 0)
 		return PARSE_ERROR_UNRECOGNISED_SVAL;
 
+	int scale = 1;
+	if (parser_hasval(p, "scale")) {
+		scale = parser_getint(p, "scale");
+		if (scale < 1)
+			return PARSE_ERROR_INVALID_VALUE;
+	}
+
 	if (negate) {
 		/* Remove it */
 		struct poss_item *pi = e->poss_items;
@@ -2315,6 +2330,7 @@ static enum parser_error parse_ego_item(struct parser *p) {
 			return PARSE_ERROR_INVALID_ITEM_NUMBER;
 		poss->next = e->poss_items;
 		e->poss_items = poss;
+		poss->scale = scale;
 	}
 
 	return PARSE_ERROR_NONE;

@@ -372,6 +372,13 @@ static enum parser_error parse_chest_type(struct parser *p) {
 	if (tval < 0)
 		return PARSE_ERROR_UNRECOGNISED_TVAL;
 
+	int scale = 1;
+	if (parser_hasval(p, "scale")) {
+		scale = parser_getint(p, "scale");
+		if (scale < 1)
+			return PARSE_ERROR_INVALID_VALUE;
+	}
+
 	/* Find all the right object kinds */
 	for (int i = 0; i < z_info->k_max; i++) {
 		if (k_info[i].tval != tval) continue;
@@ -381,6 +388,7 @@ static enum parser_error parse_chest_type(struct parser *p) {
 		struct poss_item *poss = mem_zalloc(sizeof(struct poss_item));
 		poss->kidx = i;
 		poss->next = t->poss_items;
+		poss->scale = scale;
 		t->poss_items = poss;
 		found_one_kind = true;
 	}
@@ -410,6 +418,13 @@ static enum parser_error parse_chest_item(struct parser *p) {
 	if (sval < 0)
 		return PARSE_ERROR_UNRECOGNISED_SVAL;
 
+	int scale = 1;
+	if (parser_hasval(p, "scale")) {
+		scale = parser_getint(p, "scale");
+		if (scale < 1)
+			return PARSE_ERROR_INVALID_VALUE;
+	}
+
 	if (negate) {
 		/* Remove it */
 		struct poss_item *pi = t->poss_items;
@@ -436,6 +451,7 @@ static enum parser_error parse_chest_item(struct parser *p) {
 			return PARSE_ERROR_INVALID_ITEM_NUMBER;
 		poss->next = t->poss_items;
 		t->poss_items = poss;
+		poss->scale = scale;
 	}
 
 	return PARSE_ERROR_NONE;
@@ -450,8 +466,8 @@ struct parser *init_parse_chest(void) {
     parser_reg(p, "maxlevel int maxlevel", parse_chest_maxlevel);
 	parser_reg(p, "rarity int rarity", parse_chest_rarity);
 	parser_reg(p, "switch int switch", parse_chest_switch);
-	parser_reg(p, "type sym tval", parse_chest_type);
-	parser_reg(p, "item sym tval sym sval", parse_chest_item);
+	parser_reg(p, "type sym tval ?int scale", parse_chest_type);
+	parser_reg(p, "item sym tval sym sval ?int scale", parse_chest_item);
     return p;
 }
 
@@ -788,7 +804,7 @@ fprintf(stderr,"%d items, %s good, %s great, level %d, theme %s\n", number, good
 			treasure = chest_theme_select(theme, depth, good, great);
 			reps--;
 		} while ((!treasure) && (reps > 0));
-		fprintf(stderr,"Build %s object after %d reps\n", treasure ? treasure->kind->name : "NO", 1e5-reps);
+		fprintf(stderr,"Build %s object after %d reps\n", treasure ? treasure->kind->name : "NO", (int)(1e5-reps));
 
 		/* Just in case the theme fn can't find an item: make a random object */
 		if (!treasure) {
