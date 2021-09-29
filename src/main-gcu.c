@@ -552,7 +552,7 @@ static errr Term_xtra_gcu_event(int v) {
 	int i, j, k, mods=0;
 
 	if (v) {
-		/* Wait for a keypress; use halfdelay(1) so if the user takes more */
+		/* Wait for a keypress; use halfdelay(2) so if the user takes more */
 		/* than 0.2 seconds we get a chance to do updates. */
 		halfdelay(2);
 		i = getch();
@@ -772,7 +772,7 @@ static errr Term_xtra_gcu(int n, int v) {
 		case TERM_XTRA_CLEAR: touchwin(td->win); wclear(td->win); return 0;
 
 		/* Make a noise */
-		case TERM_XTRA_NOISE: write(1, "\007", 1); return 0;
+		case TERM_XTRA_NOISE: /*write(1, "\007", 1);*/ return 0;
 
 		/* Flush the Curses buffer */
 		case TERM_XTRA_FRESH: wrefresh(td->win); return 0;
