@@ -4459,7 +4459,7 @@ effect:BOLT_AWARE:TURN_ALL
 dice:10
 
 name:& peacemaker~
-type:wand
+type:zapper
 graphics:-:d
 level:15
 weight:10
