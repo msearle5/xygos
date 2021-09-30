@@ -1234,7 +1234,7 @@ static bool monster_turn_can_move(struct chunk *c, struct monster *mon,
 	}
 
 	/* Permanent wall in the way */
-	if (square_iswall(c, new) && square_isperm(c, new)) {
+	if (square_isperm(cave, new)) {
 		if (confused) {
 			*did_something = true;
 			monster_display_confused_move_msg(mon, m_name, c, new);
