@@ -323,7 +323,6 @@ static bool rd_monster(struct chunk *c, struct monster *mon)
 	rd_s16b(&mon->maxhp);
 	rd_byte(&mon->mspeed);
 	rd_byte(&mon->energy);
-
 	rd_byte(&tmp8u);
 
 	for (j = 0; j < tmp8u; j++)
