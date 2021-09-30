@@ -2807,6 +2807,8 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 		c_new->depth = c_old->depth;
 		if (!chunk_copy(c_new, p, c_old, 0, 0, 0, 0))
 			quit_fmt("chunk_copy() level bounds failed!");
+		chunk_list_remove(p->town->name);
+		cave_free(c_old);
 
 		/* Find the stairs (lame) */
 		if (!found) {
