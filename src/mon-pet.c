@@ -63,7 +63,7 @@ static enum parser_error parse_interact_vs(struct parser *p) {
 	 * "<Monster Base>"	- All monsters of that base
 	 * "<String>"		- All monsters containing that string
 	 * "!<Base or Mon>" - Except that base or monster
-	 * 
+	 *
 	 * These are parsed in order, so that you could for example use:
 	 * vs:ant:!
 	 * vs:ant:!ant
@@ -71,14 +71,14 @@ static enum parser_error parse_interact_vs(struct parser *p) {
 	 * vs:red ant:black ant
 	 * to mean "ants attack everything except other ants, with the exception
 	 * that black and red ants will attack each other."
-	 * 
+	 *
 	 * Limits are added for attacking much more dangerous monsters.
 	 * SMART monsters don't go for anything more than 9/7 their level, while
 	 * non-STUPID ones don't go for anything more than 9/5 their level.
 	 * 
 	 * UNIQUE monsters are more aggressive, because they are typically more
 	 * powerful than others of their level (SMART = 11/7, non-STUPID 11/5).
-	 * 
+	 *
 	 * Other monsters will never intentionally attack a UNIQUE, QUESTOR, 
 	 * SPECIAL_GEN or rarity-0 (all defined here). Ideally they would not
 	 * attack other monsters that are found normally but are special to a
@@ -96,7 +96,7 @@ static enum parser_error parse_interact_vs(struct parser *p) {
 	/* Parse both fields, identically.
 	 * They must both have 1+ races, a base, or the all-flag.
 	 * (The combination of all-flag and a race(s) or base is also OK.)
-	 */ 
+	 */
 	int races_att = 0;
 	struct monster_base *base_att = NULL;
 	bool all_att = parse_interact_vs_mon(&races_att, &base_att, att);
@@ -232,5 +232,5 @@ bool mon_hates_you(const struct monster *mon)
  */
 bool mon_hates_mon(const struct monster *attacker, const struct monster *victim)
 {
-	return flag_has(mon_vs_mon[attacker->race - r_info], FLAG_SIZE(z_info->r_max), victim->race - r_info); 
+	return flag_has(mon_vs_mon[attacker->race - r_info], FLAG_SIZE(z_info->r_max), victim->race - r_info);
 }
