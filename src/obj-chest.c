@@ -709,7 +709,6 @@ static struct object *chest_theme_select(const struct chest_theme *chest, int de
 	struct object_kind *kind = select_poss_kind(chest->poss_items, depth, 0);
 	if (!kind)
 		return NULL;
-fprintf(stderr,"selected %s\n", kind ? kind->name : "NO KIND");
 	struct object *obj = make_object_named(cave, depth, good, great, false, NULL, kind->tval, kind->name);
 	return obj;
 }
@@ -793,8 +792,6 @@ static void chest_death(struct loc grid, struct object *chest)
 	/* Select the first theme. */
 	const struct chest_theme *theme = select_theme(depth);
 
-fprintf(stderr,"%d items, %s good, %s great, level %d, theme %s\n", number, good ? "is" : "isn't", great ? "is " : "isn't",
-	depth, theme ? theme->name : "NONE");
 	/* Drop some valuable objects (non-chests) */
 	int totalweight = 0;
 	while (number > 0) {
@@ -804,20 +801,15 @@ fprintf(stderr,"%d items, %s good, %s great, level %d, theme %s\n", number, good
 			treasure = chest_theme_select(theme, depth, good, great);
 			reps--;
 		} while ((!treasure) && (reps > 0));
-		fprintf(stderr,"Build %s object after %d reps\n", treasure ? treasure->kind->name : "NO", (int)(1e5-reps));
-
 		/* Just in case the theme fn can't find an item: make a random object */
 		if (!treasure) {
 			treasure = make_object(cave, depth, good, great, false, NULL, 0);
-			fprintf(stderr,"Theme failed; random item produced %s\n", treasure ? treasure->kind->name : "NO");
 		}
 		if (!treasure) {
-			fprintf(stderr,"Random item failed- skip\n");
 			continue;
 		}
 
 		if (tval_is_chest(treasure)) {
-			fprintf(stderr,"Produced chest, ignore\n");
 			object_delete(cave, player->cave, &treasure);
 			continue;
 		}
@@ -827,7 +819,6 @@ fprintf(stderr,"%d items, %s good, %s great, level %d, theme %s\n", number, good
 		 * some useful 1-gram objects.
 		 **/
 		if (treasure->weight + totalweight > weight) {
-			fprintf(stderr,"Too heavy, ignore\n");
 			object_delete(cave, player->cave, &treasure);
 			continue;
 		}
@@ -841,7 +832,6 @@ fprintf(stderr,"%d items, %s good, %s great, level %d, theme %s\n", number, good
 		/* Now select another theme, sometimes */
 		if (randint0(100) < theme->change) {
 			theme = select_theme(depth);
-			fprintf(stderr,"Changing theme to %s\n", theme->name);
 		}
 	}
 

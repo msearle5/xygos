@@ -315,17 +315,13 @@ static int binary_search_probtable(const double *tbl, int n, double p)
  static int select_random_table(double total, double *prob, int length) {
 	double value = Rand_double(total);
 	int last = -1;
-fprintf(stderr,"select_random_table: total %lf, length %d\n", total, length);
 	for (int i=0;i<length; i++) {
 		if (prob[i] > 0.0) {
-fprintf(stderr,"select_random_table: entry %d has prob %lf, ", i, prob[i]);
 			last = i;
 			if (value < prob[i]) {
-				fprintf(stderr,"returning\n");
 				return i;
 			} else {
 				value -= prob[i];
-				fprintf(stderr,"new value %lf\n", value);
 			}
 		}
 	}
@@ -416,7 +412,6 @@ struct object_kind *select_poss_kind(struct poss_item *poss, int level, int tval
 			newprob *= poss->scale;
 			prob[poss->kidx] += newprob;
 			total += newprob;
-fprintf(stderr,"Item %s: new prob %lf, this prob %lf, total %lf\n",k_info[poss->kidx].name, newprob, prob[poss->kidx], total);
 		}
 	}
 
