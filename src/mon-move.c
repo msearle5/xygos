@@ -401,8 +401,10 @@ static void target_closest_hated(struct chunk *c, struct monster *mon)
 	int distance = 1e9;
 	struct monster *best = NULL;
 
-	for (int m_idx = 1; m_idx < cave_monster_max(cave); m_idx++) {
-		struct monster *target = cave_monster(cave, m_idx);
+	fprintf(stderr,"target_closest_hated(%s at %d,%d)\n", mon->race->name, mon->grid.x, mon->grid.y);
+
+	for (int m_idx = 1; m_idx < cave_monster_max(c); m_idx++) {
+		struct monster *target = cave_monster(c, m_idx);
 
 		/* Skip "dead" monsters */
 		if (!target->race) continue;
@@ -427,6 +429,8 @@ static void target_closest_hated(struct chunk *c, struct monster *mon)
 	if (best) {
 		mon->target.midx = best->midx;
 		mon->target.grid = best->grid;
+		fprintf(stderr,"target_closest_hated: found %s at %d,%d\n", cave_monster(c, best->midx)->race->name, 
+			best->grid.x, best->grid.y);
 	} else {
 		mon->target.midx = 0;
 		mon->target.grid.x = mon->target.grid.y = 0;
@@ -453,7 +457,7 @@ static struct loc get_target(struct chunk *c, struct monster *mon)
 		return monster_is_decoyed(mon) ? cave_find_decoy(c) :
 			player->grid;
 	} else {
-		fprintf(stderr,"mon nonhostile ");
+		fprintf(stderr,"mon nonhostile (%s)\n", mon->race->name);
 		if (!mon->target.midx) {
 			target_closest_hated(c, mon);
 		}
@@ -1025,74 +1029,83 @@ static bool get_move(struct chunk *c, struct monster *mon, int *dir, bool *good,
 		}
 	}
 
-	/* Normal animal packs try to get the player out of corridors. */
-	if (!done && group_ai && !monster_passes_walls(mon)) {
-		int i, open = 0;
+	/* Neutral? */
+	if (loc_is_zero(target)) {
+		//random grid?
+		
+		// loc(0,0) => random wandering, biting you only if you get in the way
+		// but if afraid, doesnt move at all?
+		grid = loc(0, 0);
+		fprintf(stderr,"AI: loc is zero\n");
+	} else {
+		/* Normal animal packs try to get the player out of corridors. */
+		if (!done && group_ai && !monster_passes_walls(mon)) {
+			int i, open = 0;
 
-		/* Count empty grids next to player */
-		for (i = 0; i < 8; i++) {
-			/* Check grid around the player for room interior (room walls count)
-			 * or other empty space */
-			struct loc test = loc_sum(target, ddgrid_ddd[i]);
-			if (square_ispassable(c, test) || square_isroom(c, test)) {
-				/* One more open grid */
-				open++;
-			}
-		}
-
-		/* Not in an empty space and strong player */
-		if ((open < 5) && (player->chp > player->mhp / 2)) {
-			/* Find hiding place for an ambush */
-			if (get_move_find_hiding(c, mon)) {
-				done = true;
-				grid = loc_diff(mon->target.grid, mon->grid);
-
-				/* No longer tracking */
-				mflag_off(mon->mflag, MFLAG_TRACKING);
-			}
-		}
-	}
-
-	/* Not hiding and monster is afraid */
-	if (!done && (mon->min_range == flee_range)) {
-		/* Try to find safe place */
-		if (get_move_find_safety(c, mon)) {
-			/* Set a course for the safe place */
-			get_move_flee(c, mon);
-			grid = loc_diff(mon->target.grid, mon->grid);
-		} else {
-			/* Just leg it away from the player */
-			grid = loc_diff(loc(0, 0), grid);
-		}
-
-		/* No longer tracking */
-		mflag_off(mon->mflag, MFLAG_TRACKING);
-		done = true;
-	}
-
-	/* Monster groups try to surround the player if they're in sight */
-	if (!done && group_ai && square_isview(c, mon->grid)) {
-		int i;
-		struct loc grid1 = mon->target.grid;
-
-		/* If we are not already adjacent */
-		if (mon->cdis > 1) {
-			/* Find an empty square near the player to fill */
-			int tmp = randint0(8);
+			/* Count empty grids next to player */
 			for (i = 0; i < 8; i++) {
-				/* Pick squares near player (pseudo-randomly) */
-				grid1 = loc_sum(target, ddgrid_ddd[(tmp + i) % 8]);
+				/* Check grid around the player for room interior (room walls count)
+				 * or other empty space */
+				struct loc test = loc_sum(target, ddgrid_ddd[i]);
+				if (square_ispassable(c, test) || square_isroom(c, test)) {
+					/* One more open grid */
+					open++;
+				}
+			}
 
-				/* Ignore filled grids */
-				if (!square_isempty(c, grid1)) continue;
+			/* Not in an empty space and strong player */
+			if ((open < 5) && (player->chp > player->mhp / 2)) {
+				/* Find hiding place for an ambush */
+				if (get_move_find_hiding(c, mon)) {
+					done = true;
+					grid = loc_diff(mon->target.grid, mon->grid);
 
-				/* Try to fill this hole */
-				break;
+					/* No longer tracking */
+					mflag_off(mon->mflag, MFLAG_TRACKING);
+				}
 			}
 		}
 
-		/* Head in the direction of the chosen grid */
-		grid = loc_diff(grid1, mon->grid);
+		/* Not hiding and monster is afraid */
+		if (!done && (mon->min_range == flee_range)) {
+			/* Try to find safe place */
+			if (get_move_find_safety(c, mon)) {
+				/* Set a course for the safe place */
+				get_move_flee(c, mon);
+				grid = loc_diff(mon->target.grid, mon->grid);
+			} else {
+				/* Just leg it away from the player */
+				grid = loc_diff(loc(0, 0), grid);
+			}
+
+			/* No longer tracking */
+			mflag_off(mon->mflag, MFLAG_TRACKING);
+			done = true;
+		}
+
+		/* Monster groups try to surround the player if they're in sight */
+		if (!done && group_ai && square_isview(c, mon->grid)) {
+			int i;
+			struct loc grid1 = mon->target.grid;
+
+			/* If we are not already adjacent */
+			if (mon->cdis > 1) {
+				/* Find an empty square near the player to fill */
+				int tmp = randint0(8);
+				for (i = 0; i < 8; i++) {
+					/* Pick squares near player (pseudo-randomly) */
+					grid1 = loc_sum(target, ddgrid_ddd[(tmp + i) % 8]);
+
+					/* Ignore filled grids */
+					if (!square_isempty(c, grid1)) continue;
+
+					/* Try to fill this hole */
+					break;
+				}
+			}
+			/* Head in the direction of the chosen grid */
+			grid = loc_diff(grid1, mon->grid);
+		}
 	}
 
 	/* Check if the monster has already reached its target */
