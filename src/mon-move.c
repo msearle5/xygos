@@ -443,9 +443,9 @@ static void target_closest_hated(struct chunk *c, struct monster *mon)
  * If neutral or friendly and there is no previous target /monster/:
  *  	This will be the nearest visible hated monster to itself,
  * 		or nothing (0,0) if there is no visible hated monster.
- * 
+ *
  * TODO: attacks on hated even while targeting other
- * TODO: this should not set target! get_move_advance should. And that should know player from posistion.
+ * TODO: this should not set target! get_move_advance should. And that should know player from position.
  */
 static struct loc get_target(struct chunk *c, struct monster *mon)
 {
@@ -475,7 +475,7 @@ static struct loc get_target(struct chunk *c, struct monster *mon)
  * not to use it.
  *
  * Tracking by 'scent' means that monsters end up near enough the target to
- * switch to 'sound' (noise), or they end up somewhere the target left via 
+ * switch to 'sound' (noise), or they end up somewhere the target left via
  * teleport.  Teleporting away from a location will cause the monsters who
  * were chasing the player to converge on that location as long as the player
  * is still near enough to "annoy" them without being close enough to chase

@@ -29,8 +29,8 @@
 #
 # UNIQUE monsters are more aggressive, because they are typically more
 # powerful than others of their level (SMART = 11/7, non-STUPID 11/5).
-# 
-# Other monsters will never intentionally attack a UNIQUE, QUESTOR, 
+#
+# Other monsters will never intentionally attack a UNIQUE, QUESTOR,
 # SPECIAL_GEN or rarity-0 monster.
 
 vs:canine:feline
