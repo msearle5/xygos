@@ -82,7 +82,7 @@ static int test_artifacts(void *state) {
 			vnull(obj->ego[0], buf);
 			vptreq(obj->artifact, &a_info[i], buf);
 			vptreq(obj->kind, lookup_kind(obj->artifact->tval, obj->artifact->sval), buf);
-			object_delete(&obj);
+			object_delete(NULL, NULL, &obj);
 
 			// clear artifact use
 			for (int j = 0; z_info && j < z_info->a_max; j++)
@@ -135,7 +135,7 @@ static int test_kinds(void *state) {
 				vnull(obj->ego[0], buf);
 				vnull(obj->artifact, buf);
 				vptreq(obj->kind, k_info+i, buf);
-				object_delete(&obj);
+				object_delete(NULL, NULL, &obj);
 			}
 		}
 	}
@@ -166,7 +166,7 @@ static int test_egos(void *state) {
 					vnull(obj->ego[1], buf);
 					vnull(obj->artifact, buf);
 					vptreq(obj->kind, k, buf);
-					object_delete(&obj);
+					object_delete(NULL, NULL, &obj);
 				}
 				poss = poss->next;
 			};
@@ -213,7 +213,7 @@ static int test_ego_only(void *state) {
 				vrequire((streq(ename, fname)), buf);
 				vnull(obj->ego[1], buf);
 				vnull(obj->artifact, buf);
-				object_delete(&obj);
+				object_delete(NULL, NULL, &obj);
 			}
 		}
 	}
