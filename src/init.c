@@ -4000,6 +4000,7 @@ static void cleanup_class(void)
 		mem_free(c);
 		c = next;
 	}
+	total_spells = 0;
 }
 
 static struct file_parser class_parser = {
