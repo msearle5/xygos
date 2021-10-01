@@ -12,6 +12,7 @@ extern int verbose;
 
 extern int showpass(void);
 extern int showfail(void);
+extern const char *ornull(const char *text);
 
 /* Forward declaration for string provided by the test case but expected by
  * unit-test.c and the macros declared here.
@@ -29,8 +30,8 @@ extern struct test tests[];
  */
 extern int setup_tests(void **data);
 extern int teardown_tests(void *data);
-#define NOSETUP int setup_tests(void **data) { return 0; }
-#define NOTEARDOWN int teardown_tests(void *data) { return 0; }
+#define NOSETUP int setup_tests(void **data) { (void)data; return 0; }
+#define NOTEARDOWN int teardown_tests(void *data) { (void)data; return 0; }
 
 #define ok return showpass();
 
@@ -77,7 +78,7 @@ extern int teardown_tests(void *data);
 				showfail(); \
 				printf("    %s:%d: requirement '%s' failed\n", \
 			           suite_name, __LINE__, #x); \
-				printf("    %s\n", s ? s : "(null)"); \
+				printf("    %s\n", ornull(s)); \
 			} \
 			return 1; \
 		} \
@@ -90,7 +91,7 @@ extern int teardown_tests(void *data);
 			showfail(); \
 			printf("    %s:%d: requirement '%s' == '%s' failed\n", suite_name, \
 		           __LINE__, #x, #y); \
-		    printf("      %s\n", s ? s : "(null)"); \
+		    printf("      %s\n", ornull(s)); \
 			printf("      %s: %llu\n", #x, (unsigned long long)(x)); \
 			printf("      %s: %llu\n", #y, (unsigned long long)(y)); \
 		} \
@@ -115,7 +116,7 @@ extern int teardown_tests(void *data);
 			showfail(); \
 			printf("    %s:%d: requirement '%s' == NULL failed\n", suite_name, \
 		           __LINE__, #x); \
-		    printf("      %s\n", s ? s : "(null)"); \
+		    printf("      %s\n", ornull(s)); \
 			printf("      %s: %llu\n", #x, (unsigned long long)(x)); \
 		} \
 		return 1; \
@@ -127,7 +128,7 @@ extern int teardown_tests(void *data);
 			showfail(); \
 			printf("    %s:%d: requirement '%s' == NULL failed\n", suite_name, \
 		           __LINE__, #x); \
-		    printf("      %s\n", s ? s : "(null)"); \
+		    printf("      %s\n", ornull(s)); \
 			printf("      %s: %llu\n", #x, (unsigned long long)(x)); \
 		} \
 		return 1; \
@@ -162,7 +163,7 @@ extern int teardown_tests(void *data);
 			showfail(); \
 			printf("    %s:%d: requirement '%s' == '%s' failed\n", suite_name, \
 		           __LINE__, #x, #y); \
-		    printf("      %s\n", s ? s : "(null)"); \
+		    printf("      %s\n", ornull(s)); \
 			printf("      %s: %p\n", #x, (void *)(x)); \
 			printf("      %s: %p\n", #y, (void *)(y)); \
 		} \
@@ -187,7 +188,7 @@ extern int teardown_tests(void *data);
 			showfail(); \
 			printf("    %s:%d: requirement '%s' == NULL failed\n", suite_name, \
 		           __LINE__, #x); \
-		    printf("      %s\n", s ? s : "(null)"); \
+		    printf("      %s\n", ornull(s)); \
 			printf("      %s: %p\n", #x, (void *)(x)); \
 		} \
 		return 1; \
@@ -199,7 +200,7 @@ extern int teardown_tests(void *data);
 			showfail(); \
 			printf("    %s:%d: requirement '%s' == NULL failed\n", suite_name, \
 		           __LINE__, #x); \
-		    printf("      %s\n", s ? s : "(null)"); \
+		    printf("      %s\n", ornull(s)); \
 			printf("      %s: %p\n", #x, (void *)(x)); \
 		} \
 		return 1; \

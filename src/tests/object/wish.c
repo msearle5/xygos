@@ -19,7 +19,9 @@
 extern int n_artinames;
 extern struct init_module obj_make_module;
 
-int setup_tests(void **state) {
+int setup_tests(void **state)
+{
+	(void)state;
 	/* Init the game */
 	set_file_paths();
 	init_angband();
@@ -58,14 +60,18 @@ int setup_tests(void **state) {
 }
 
 
-int teardown_tests(void *state) {
+int teardown_tests(void *state)
+{
+	(void)state;
 	(*obj_make_module.cleanup)();
 	mem_free(cave->squares[0]);
 	mem_free(cave->squares);
 	return 0;
 }
 
-static int test_artifacts(void *state) {
+static int test_artifacts(void *state)
+{
+	(void)state;
 	struct object *obj;
 	char buf[256];
 	char o_name[256];
@@ -92,7 +98,9 @@ static int test_artifacts(void *state) {
 	ok;
 }
 
-static int test_kinds(void *state) {
+static int test_kinds(void *state)
+{
+	(void)state;
 	struct object *obj;
 	char buf[256];
 	char o_name[256];
@@ -143,7 +151,9 @@ static int test_kinds(void *state) {
 }
 
 /* Test every single ego / base object combination */  
-static int test_egos(void *state) {
+static int test_egos(void *state)
+{
+	(void)state;
 	struct object *obj;
 	char buf[256];
 	char o_name[256];
@@ -176,7 +186,9 @@ static int test_egos(void *state) {
 }
 
 /* Test all single egos without a base object */
-static int test_ego_only(void *state) {
+static int test_ego_only(void *state)
+{
+	(void)state;
 	struct object *obj;
 	char buf[256];
 	char o_name[256];

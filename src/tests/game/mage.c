@@ -18,7 +18,10 @@
 #include "player-timed.h"
 #include "z-util.h"
 
-static void event_message(game_event_type type, game_event_data *data, void *user) {
+static void event_message(game_event_type type, game_event_data *data, void *user)
+{
+	(void)type;
+	(void)user;
 	printf("Message: %s\n", data->message.msg);
 }
 
@@ -26,7 +29,9 @@ static void println(const char *str) {
 	printf("%s\n", str);
 }
 
-int setup_tests(void **state) {
+int setup_tests(void **state)
+{
+	(void)state;
 	/* Register a basic error handler */
 	plog_aux = println;
 
@@ -41,14 +46,18 @@ int setup_tests(void **state) {
 	return 0;
 }
 
-int teardown_tests(void *state) {
+int teardown_tests(void *state)
+{
+	(void)state;
 	file_delete("Test1");
 	wipe_mon_list(cave, player);
 	cleanup_angband();
 	return 0;
 }
 
-static int test_magic_missile(void *state) {
+static int test_magic_missile(void *state)
+{
+	(void)state;
 
 	/* Try making a new game */
 	eq(player_make_simple("Human", "None", "Engineer", "Tyrion"), true);

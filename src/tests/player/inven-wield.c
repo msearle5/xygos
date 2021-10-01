@@ -184,7 +184,9 @@ static bool check_similar(const struct object* obj1, const struct object *obj2) 
 	return true;
 }
 
-int setup_tests(void **state) {
+int setup_tests(void **state)
+{
+	(void)state;
 	set_file_paths();
 	init_angband();
 
@@ -203,14 +205,18 @@ int setup_tests(void **state) {
 	return 0;
 }
 
-int teardown_tests(void *state) {
+int teardown_tests(void *state)
+{
+	(void)state;
 	wipe_mon_list(cave, player);
 	cleanup_angband();
 
 	return 0;
 }
 
-static int test_inven_wield_pack_single_empty(void *state) {
+static int test_inven_wield_pack_single_empty(void *state)
+{
+	(void)state;
 	struct object *obj;
 	int slot;
 	int old_weight;
@@ -236,7 +242,9 @@ static int test_inven_wield_pack_single_empty(void *state) {
 	ok;
 }
 
-static int test_inven_wield_pack_stack_empty(void *state) {
+static int test_inven_wield_pack_stack_empty(void *state)
+{
+	(void)state;
 	struct object *obj;
 	struct object *split;
 	int slot;
@@ -268,7 +276,9 @@ static int test_inven_wield_pack_stack_empty(void *state) {
 	ok;
 }
 
-static int test_inven_wield_pack_single_filled(void *state) {
+static int test_inven_wield_pack_single_filled(void *state)
+{
+	(void)state;
 	struct object *obj1;
 	struct object *obj2;
 	int slot;
@@ -303,7 +313,9 @@ static int test_inven_wield_pack_single_filled(void *state) {
 	ok;
 }
 
-static int test_inven_wield_pack_stack_filled(void *state) {
+static int test_inven_wield_pack_stack_filled(void *state)
+{
+	(void)state;
 	struct object *obj1;
 	struct object *obj2;
 	struct object *split;
@@ -342,7 +354,9 @@ static int test_inven_wield_pack_stack_filled(void *state) {
 	ok;
 }
 
-static int test_inven_wield_floor_single_empty(void *state) {
+static int test_inven_wield_floor_single_empty(void *state)
+{
+	(void)state;
 	struct object *obj;
 	bool note;
 	int slot;
@@ -370,7 +384,9 @@ static int test_inven_wield_floor_single_empty(void *state) {
 	ok;
 }
 
-static int test_inven_wield_floor_stack_empty(void *state) {
+static int test_inven_wield_floor_stack_empty(void *state)
+{
+	(void)state;
 	struct object *obj;
 	struct object *split;
 	bool note;
@@ -403,7 +419,9 @@ static int test_inven_wield_floor_stack_empty(void *state) {
 	ok;
 }
 
-static int test_inven_wield_floor_single_filled(void *state) {
+static int test_inven_wield_floor_single_filled(void *state)
+{
+	(void)state;
 	struct object *obj1;
 	struct object *obj2;
 	bool note;
@@ -440,7 +458,9 @@ static int test_inven_wield_floor_single_filled(void *state) {
 	ok;
 }
 
-static int test_inven_wield_floor_stack_filled(void *state) {
+static int test_inven_wield_floor_stack_filled(void *state)
+{
+	(void)state;
 	struct object *obj1;
 	struct object *obj2;
 	struct object *split;
@@ -484,7 +504,9 @@ static int test_inven_wield_floor_stack_filled(void *state) {
 	ok;
 }
 
-static int test_inven_wield_pack_full_no_overflow(void *state) {
+static int test_inven_wield_pack_full_no_overflow(void *state)
+{
+	(void)state;
 	struct object *obj1;
 	struct object *obj2;
 	int slot;
@@ -523,7 +545,9 @@ static int test_inven_wield_pack_full_no_overflow(void *state) {
 	ok;
 }
 
-static int test_inven_wield_pack_full_overflow(void *state) {
+static int test_inven_wield_pack_full_overflow(void *state)
+{
+	(void)state;
 	struct object *obj1;
 	struct object *obj2;
 	struct object *split;
@@ -568,7 +592,9 @@ static int test_inven_wield_pack_full_overflow(void *state) {
 	ok;
 }
 
-static int test_inven_wield_floor_full_overflow(void *state) {
+static int test_inven_wield_floor_full_overflow(void *state)
+{
+	(void)state;
 	struct object *obj1;
 	struct object *obj2;
 	bool note;

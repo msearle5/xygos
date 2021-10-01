@@ -27,7 +27,9 @@ int teardown_tests(void *state) {
  * Modified to use the new monster list and so probably
  * not relevant to that bug any more.
  **/
-int test_match_monster_bases(void *state) {
+int test_match_monster_bases(void *state)
+{
+	(void)state;
 	struct monster_base *base;
 
 	/* Green lemming */

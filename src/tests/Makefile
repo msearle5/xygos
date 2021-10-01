@@ -1,6 +1,6 @@
 # Makefile for tests - builds unit-test binaries
 
-CFLAGS+=-I../ -I. -g
+CFLAGS+=-I../ -I. -g -W -Wall -Wextra
 LDFLAGS+=-lm
 -include config
 

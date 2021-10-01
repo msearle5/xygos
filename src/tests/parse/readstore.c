@@ -64,7 +64,9 @@ static int test_owner0(void *state) {
 }
 
 /* Without initialization of the svals, fails with an unrecognised sval. */
-int test_i0(void *state) {
+int test_i0(void *state)
+{
+	(void)state;
 	ok;
 }
 

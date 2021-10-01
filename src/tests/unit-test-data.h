@@ -1143,7 +1143,7 @@ static struct player_upkeep TEST_DATA test_player_upkeep = {
 
 static struct object TEST_DATA test_player_knowledge = {
 	.kind = NULL,
-	.ego = NULL,
+	.ego = { NULL },
 	.artifact = NULL,
 	.prev = NULL,
 	.next = NULL,

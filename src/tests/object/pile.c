@@ -8,14 +8,18 @@
 #include "object.h"
 #include "obj-pile.h"
 
-int setup_tests(void **state) {
+int setup_tests(void **state)
+{
+	(void)state;
 	return 0;
 }
 
 NOTEARDOWN
 
 /* Testing the linked list functions in obj-pile.c */
-static int test_obj_piles(void *state) {
+static int test_obj_piles(void *state)
+{
+	(void)state;
 	struct object *pile = NULL;
 
 	struct object *o1 = object_new();

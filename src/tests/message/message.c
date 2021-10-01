@@ -28,7 +28,9 @@ static void reset_event_counters(struct test_message_event_state *st);
 static void cleanup_event_handlers(struct test_message_event_state *st);
 
 
-int setup_tests(void **state) {
+int setup_tests(void **state)
+{
+	(void)state;
 	player = &test_player;
 	*state = setup_event_handlers();
 	messages_init();
@@ -43,7 +45,9 @@ int teardown_tests(void *state) {
 	return 0;
 }
 
-static int test_empty(void *state) {
+static int test_empty(void *state)
+{
+	(void)state;
 	const char *txt;
 	u16b n, mtype;
 	byte color;
@@ -73,7 +77,9 @@ static int test_empty(void *state) {
 	ok;
 }
 
-static int test_add(void *state) {
+static int test_add(void *state)
+{
+	(void)state;
 	const char *m1 = "msg1";
 	u16b t1 = MSG_GENERIC;
 	const char *m2 = "msg2";
@@ -201,7 +207,9 @@ static int test_add(void *state) {
 	ok;
 }
 
-static int test_fill(void *state) {
+static int test_fill(void *state)
+{
+	(void)state;
 	int i = 0;
 	const char *txt;
 	char buf[16];
@@ -251,6 +259,7 @@ static int test_fill(void *state) {
 
 static int test_many_repeat(void *state)
 {
+	(void)state;
 	int i = 0;
 	const char *txt;
 	u16b n, mtype;
@@ -293,7 +302,9 @@ static int test_many_repeat(void *state)
 	ok;
 }
 
-static int test_color(void *state) {
+static int test_color(void *state)
+{
+	(void)state;
 	byte color;
 
 	messages_free();
@@ -501,6 +512,7 @@ static int test_msgt(void *state)
 
 static int test_lookup(void *state)
 {
+	(void)state;
 	char buffer[16];
 	int i, j;
 
@@ -541,6 +553,7 @@ static int test_lookup(void *state)
 
 static int test_sound_lookup(void *state)
 {
+	(void)state;
 	int i;
 
 	messages_free();

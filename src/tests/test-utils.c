@@ -54,3 +54,8 @@ void read_edit_files(void) {
 	init_game_constants();
 	init_arrays();
 }
+
+const char *ornull(const char *text)
+{
+	return (text ? text : "(null)");
+}

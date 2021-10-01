@@ -8,6 +8,7 @@ NOTEARDOWN
 
 static int test_alloc(void *state)
 {
+	(void)state;
 	expression_t *new = expression_new();
 	expression_t *copy;
 	require(new != NULL);
@@ -23,6 +24,7 @@ static int test_alloc(void *state)
 
 static int test_parse_success(void *state)
 {
+	(void)state;
 	int result = 0;
 	expression_t *new = expression_new()	;
 
@@ -76,6 +78,7 @@ static int test_parse_success(void *state)
 
 static int test_parse_failure(void *state)
 {
+	(void)state;
 	int result = 0;
 	expression_t *new = expression_new();
 
@@ -128,6 +131,7 @@ static s32b base_value_2(void)
 
 static int test_evaluate(void *state)
 {
+	(void)state;
 	expression_t *new = expression_new();
 
 	/* Basic evaluation with base of zero. */

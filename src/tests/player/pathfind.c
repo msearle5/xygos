@@ -7,7 +7,9 @@
 NOSETUP
 NOTEARDOWN
 
-static int test_dir_to(void *state) {
+static int test_dir_to(void *state)
+{
+	(void)state;
 	eq(pathfind_direction_to(loc(0,0), loc(0,1)), DIR_S);
 	eq(pathfind_direction_to(loc(0,0), loc(1,0)), DIR_E);
 	eq(pathfind_direction_to(loc(0,0), loc(1,1)), DIR_SE);

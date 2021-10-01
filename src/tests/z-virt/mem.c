@@ -6,7 +6,9 @@
 NOSETUP
 NOTEARDOWN
 
-static int test_alloc(void *state) {
+static int test_alloc(void *state)
+{
+	(void)state;
 	void *p1 = mem_alloc(16);
 	void *p2 = mem_alloc(16);
 	require(p1 != p2);
@@ -17,7 +19,9 @@ static int test_alloc(void *state) {
 	return 0;
 }
 
-static int test_realloc(void *state) {
+static int test_realloc(void *state)
+{
+	(void)state;
 	void *p1 = mem_realloc(NULL, 32);
 	void *p2 = mem_realloc(p1, 64);
 	memset(p2, 0x3, 64);

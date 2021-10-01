@@ -17,7 +17,9 @@ static struct history_entry eb1;
 static struct history_entry ec0;
 static struct history_entry ec1;
 
-int setup_tests(void **state) {
+int setup_tests(void **state)
+{
+	(void)state;
 	ca.entries = &ea0;
 	cb.entries = &eb0;
 	cc.entries = &ec0;
@@ -55,7 +57,9 @@ int setup_tests(void **state) {
 	return 0;
 }
 
-static int test_0(void *state) {
+static int test_0(void *state)
+{
+	(void)state;
 	int i;
 	for (i = 0; i < 100; i++) {
 		char *h = get_history(&ca);

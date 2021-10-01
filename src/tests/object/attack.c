@@ -10,7 +10,9 @@
 extern struct init_module obj_make_module;
 
 
-int setup_tests(void **state) {
+int setup_tests(void **state)
+{
+	(void)state;
 
 	player = &test_player;
 
@@ -25,7 +27,9 @@ int setup_tests(void **state) {
 }
 
 
-int teardown_tests(void *state) {
+int teardown_tests(void *state)
+{
+	(void)state;
 
 	(*obj_make_module.cleanup)();
 	mem_free(z_info);
@@ -34,7 +38,9 @@ int teardown_tests(void *state) {
 
 
 
-static int test_breakage_chance(void *state) {
+static int test_breakage_chance(void *state)
+{
+	(void)state;
 	struct object obj;
 	int c;
 

@@ -33,7 +33,9 @@ struct simple_test_case {
 	struct out_slot_desc quiv_out[TEST_SLOT_COUNT];
 };
 
-int setup_tests(void **state) {
+int setup_tests(void **state)
+{
+	(void)state;
 	set_file_paths();
 	init_angband();
 
@@ -49,7 +51,9 @@ int setup_tests(void **state) {
 	return 0;
 }
 
-int teardown_tests(void *state) {
+int teardown_tests(void *state)
+{
+	(void)state;
 	wipe_mon_list(cave, player);
 	cleanup_angband();
 
@@ -247,7 +251,9 @@ static bool verify_stability(struct player *p) {
 	return result;
 }
 
-static int test_calc_inventory_empty(void *state) {
+static int test_calc_inventory_empty(void *state)
+{
+	(void)state;
 	struct out_slot_desc empty = { -1, -1, -1 };
 
 	require(flush_gear());
@@ -258,7 +264,9 @@ static int test_calc_inventory_empty(void *state) {
 	ok;
 }
 
-static int test_calc_inventory_only_equipped(void *state) {
+static int test_calc_inventory_only_equipped(void *state)
+{
+	(void)state;
 	struct simple_test_case only_equipped_case = {
 		{
 			{ TV_SWORD, 1, 1, true, true },
@@ -281,7 +289,9 @@ static int test_calc_inventory_only_equipped(void *state) {
 	ok;
 }
 
-static int test_calc_inventory_only_pack(void *state) {
+static int test_calc_inventory_only_pack(void *state)
+{
+	(void)state;
 	struct simple_test_case only_pack_case = {
 		{
 			{ TV_CARD, 5, 3, true, false },
@@ -323,7 +333,9 @@ static int test_calc_inventory_only_pack(void *state) {
 	ok;
 }
 
-static int test_calc_inventory_only_quiver(void *state) {
+static int test_calc_inventory_only_quiver(void *state)
+{
+	(void)state;
 	struct simple_test_case only_quiver_case = {
 		{
 			{ TV_AMMO_12, 1, 20, true, false },
@@ -614,7 +626,9 @@ static int test_calc_inventory_quiver_split_pile(void *state) {
 }
 #endif
 
-static int test_calc_inventory_equipped_throwing_inscribed(void *state) {
+static int test_calc_inventory_equipped_throwing_inscribed(void *state)
+{
+	(void)state;
 	struct simple_test_case this_test_case = {
 		{
 			{ TV_SWORD, 1, 1, true, true },
