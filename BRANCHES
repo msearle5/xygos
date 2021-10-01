@@ -1,17 +1,18 @@
 master
-homequests	inactive, merged			Home quests / shared home
+containers	ready for 0.2				Chests etc
+clowns		active for 0.2				Clowns' card tricks
 pets		active						Tame, neutral or monster-monster fights
 youmonster	active						Player race with nonstandard bodyplans
 autofeel	active						Calculating feeling thresholds
-playtest	active						Save stable branch for playtesting
-timelord	active						Timelord's techniques, etc.
-clowns		active						Clowns' card tricks
+timelord	merged						Timelord's techniques, etc.
+homequests	inactive, merged			Home quests / shared home
 guardians	inactive, merged			The mini-dungeons need an endboss
 supers		merged						Superhero/villains as an extension
+playtest	inactive					Save stable branch for playtesting
 personality	inactive, merged			Personalities
 multiego	inactive, merged			Multiple ego items
 winquest	inactive, merged			The replacement for Morgoth
-borg		active, experimental		Porting the Borg
+borg		inactive, experimental		Porting the Borg
 artifacts	inactive, merged			Randarts / halfarts etc.
 mutants		inactive, merged			Mutated monsters
 resist		inactive, merged			Resistance by steps
