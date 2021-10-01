@@ -831,7 +831,7 @@ desc:You have an animal magnetism. This manifests itself as inexplicable charism
 flag:mutation
 flag:nasty
 stats:0:0:3:0:0:5:0
-obj-flags:MAGNETIC
+obj-flags:MAGNETIC | TAMING
 forbid:Thick_Brain
 
 name:Thick_Brain

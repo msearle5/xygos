@@ -311,7 +311,8 @@ static s16b art_idx_gen[] = {
 	ART_IDX_GEN_PSTUN,
 	ART_IDX_GEN_DAM_RED,
 	ART_IDX_GEN_MOVES,
-	ART_IDX_GEN_TRAP_IMM
+	ART_IDX_GEN_TRAP_IMM,
+	ART_IDX_GEN_TAMING
 };
 static s16b art_idx_high_resist[] =	{
 	ART_IDX_GEN_RPOIS,
@@ -2538,6 +2539,10 @@ static void add_ability_aux(struct artifact *art, int r, s32b target_power,
 		case ART_IDX_GEN_MOVES:
 		case ART_IDX_BOOT_MOVES:
 			add_mod(art, OBJ_MOD_MOVES);
+			break;
+
+		case ART_IDX_GEN_TAMING:
+			add_flag(art, OF_TAMING);
 			break;
 
 		case ART_IDX_GEN_ACTIV:
