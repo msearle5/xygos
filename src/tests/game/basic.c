@@ -8,6 +8,7 @@
 #include "cave.h"
 #include "cmd-core.h"
 #include "game-event.h"
+#include "game-input.h"
 #include "game-world.h"
 #include "generate.h"
 #include "init.h"
@@ -92,8 +93,14 @@ static int test_loadgame(void *state) {
 	ok;
 }
 
+static bool test_check_hook(const char *) {
+	return true;
+}
+
 static int test_stairs1(void *state) {
 	reset_before_load();
+	bool (*orig_get_check_hook)(const char *) = get_check_hook; 
+	get_check_hook = test_check_hook;
 
 	/* Load the saved game */
 	eq(savefile_load("Test1", false), true);
@@ -102,11 +109,14 @@ static int test_stairs1(void *state) {
 	run_game_loop();
 	eq(player->depth, 1);
 
+	get_check_hook = orig_get_check_hook;
 	ok;
 }
 
 static int test_stairs2(void *state) {
 	reset_before_load();
+	bool (*orig_get_check_hook)(const char *) = get_check_hook; 
+	get_check_hook = test_check_hook;
 
 	/* Load the saved game */
 	eq(savefile_load("Test1", false), true);
@@ -121,6 +131,7 @@ static int test_stairs2(void *state) {
 	run_game_loop();
 	eq(player->depth, 1);
 
+	get_check_hook = orig_get_check_hook;
 	ok;
 }
 
