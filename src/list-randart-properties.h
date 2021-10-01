@@ -1,6 +1,8 @@
 /**
  * \file list-randart-properties.h
  * \brief List of properties used in randart generation
+ * 
+ * Also see the lists of acceptable properties in obj-randart.c (art_idx_*), and add_ability_aux.
  */
 /* string		 			supercharge frequency*/
 ART_IDX(GUN_SHOTS,			false,		46)
@@ -89,6 +91,7 @@ ART_IDX(GEN_PSTUN,			false,		3)
 ART_IDX(GEN_DAM_RED,		false,		1)
 ART_IDX(GEN_MOVES,			false,		1)
 ART_IDX(GEN_TRAP_IMM,		false,		1)
+ART_IDX(GEN_TAMING,			false,		1)
 ART_IDX(WEAPON_AGGR,		false,		8)
 ART_IDX(NONWEAPON_AGGR,		false,		2)
 ART_IDX(MELEE_DICE_SUPER,	true,		8)
