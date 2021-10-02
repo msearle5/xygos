@@ -1388,11 +1388,6 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 	if (p->timed[TMD_INVULN]) {
 		state->to_a += 100;
 	}
-	if (p->timed[TMD_BLESSED]) {
-		state->to_a += 5;
-		state->to_h += 10;
-		adjust_skill_scale(&state->skills[SKILL_DEVICE], 1, 20, 0);
-	}
 	if (p->timed[TMD_SHIELD]) {
 		state->to_a += 50;
 	}
@@ -1589,7 +1584,6 @@ void calc_bonuses(struct player *p, struct player_state *state, bool known_only,
 
 	/* Analyze weapon */
 	state->heavy_wield = false;
-	state->bless_wield = false;
 	if (weapon) {
 		/* It is hard to hold a heavy weapon */
 		if (hold < weapon->weight / 454) {
@@ -1709,16 +1703,6 @@ static void update_bonuses(struct player *p)
 				msg("You have no trouble wielding your weapon.");
 			else
 				msg("You feel relieved to put down your heavy weapon.");	
-		}
-
-		/* Take note when "illegal weapon" changes */
-		if (p->state.bless_wield != state.bless_wield) {
-			/* Message */
-			if (state.bless_wield) {
-				msg("You feel attuned to your weapon.");
-			} else if (equipped_item_by_slot_name(p, "weapon")) {
-				msg("You feel less attuned to your weapon.");
-			}
 		}
 
 		/* Take note when "armor state" changes */

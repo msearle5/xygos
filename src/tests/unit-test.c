@@ -11,11 +11,35 @@
 
 int verbose = 0;
 
+#include <signal.h>
+#include <execinfo.h>
+static void segv_handler(int signo)
+{
+	fprintf(stderr,"Hit signal %d - exiting\n", signo);
+	void *trace[32];
+	int frames = backtrace(trace, 32);
+	backtrace_symbols_fd(trace, frames, fileno(stderr));
+	
+	exit(2);
+}
+
+static void debug_init(void)
+{
+	struct sigaction action = { 0 };
+	action.sa_handler = segv_handler;
+	sigemptyset(&action.sa_mask);
+	sigaction(SIGFPE, &action, NULL);
+	sigaction(SIGSEGV, &action, NULL);
+	sigaction(SIGBUS, &action, NULL);
+}
+
 int main(int argc, char *argv[]) {
 	void *state;
 	int i;
 	int passed = 0;
 	int total = 0;
+
+	debug_init();
 
 	char *s = getenv("VERBOSE");
 	if (s && s[0]) {
