@@ -35,6 +35,7 @@
  */
 #define MON_MSG_FLAG_OFFSCREEN	0x01
 #define MON_MSG_FLAG_INVISIBLE	0x02
+#define MON_MSG_FLAG_YOURS		0x04
 
 /**
  * A stacked monster message entry
@@ -149,6 +150,10 @@ static int message_flags(const struct monster *mon)
 		flags |= MON_MSG_FLAG_INVISIBLE;
 	}
 
+	if (mflag_has(mon->mflag, MFLAG_FRIENDLY)) {
+		flags |= MON_MSG_FLAG_YOURS;
+	}
+
 	return flags;
 }
 
@@ -238,7 +243,8 @@ static void get_subject(char *buf, size_t buflen,
 		struct monster_race *race,
 		int count,
 		bool invisible,
-		bool offscreen)
+		bool offscreen,
+		bool yours)
 {
 	if (invisible) {
 		if (count == 1) {
@@ -251,7 +257,10 @@ static void get_subject(char *buf, size_t buflen,
 		if (rf_has(race->flags, RF_UNIQUE)) {
 			my_strcpy(buf, race->name, buflen);
 		} else if (count == 1) {
-			strnfmt(buf, buflen, "The %s", race->name);
+			if (yours)
+				strnfmt(buf, buflen, "Your %s", race->name);
+			else
+				strnfmt(buf, buflen, "The %s", race->name);
 		} else {
 			/* Get the plural of the race name */
 			if (race->plural != NULL) {
@@ -394,7 +403,8 @@ static void show_message(struct monster_race_message *msg)
 				msg->race,
 				msg->count,
 				msg->flags & MON_MSG_FLAG_INVISIBLE,
-				msg->flags & MON_MSG_FLAG_OFFSCREEN);
+				msg->flags & MON_MSG_FLAG_OFFSCREEN,
+				msg->flags & MON_MSG_FLAG_YOURS);
 	}
 
 	/* Get the message proper, corrected for singular/plural etc. */

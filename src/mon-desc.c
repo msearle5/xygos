@@ -104,8 +104,8 @@ void get_mon_name(char *buf, size_t buflen,
  *   0x04 --> Full nominative name ("the kobold") or "something"
  *   0x80 --> Banishment resistance name ("the kobold")
  *   0x88 --> Killing name ("a kobold")
- *   0x22 --> Possessive, genderized if visable ("his") or "its"
- *   0x23 --> Reflexive, genderized if visable ("himself") or "itself"
+ *   0x22 --> Possessive, genderized if visible ("his") or "its"
+ *   0x23 --> Reflexive, genderized if visible ("himself") or "itself"
  */
 void monster_desc(char *desc, size_t max, const struct monster *mon, int mode)
 {
@@ -188,8 +188,12 @@ void monster_desc(char *desc, size_t max, const struct monster *mon, int mode)
 				/* Indefinite monsters need an indefinite article */
 				my_strcpy(desc, is_a_vowel(mon->race->name[0]) ? "an " : "a ", max);
 			} else {
+				/* Pets are yours */
+				if (mflag_has(mon->mflag, MFLAG_FRIENDLY))
+					my_strcpy(desc, "your ", max);
 				/* Definite monsters need a definite article */
-				my_strcpy(desc, "the ", max);
+				else
+					my_strcpy(desc, "the ", max);
 			}
 
 			my_strcat(desc, mon->race->name, max);
