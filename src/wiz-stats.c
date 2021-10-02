@@ -1715,7 +1715,7 @@ void stats_collect(int nsim, int simtype)
 	/* Logging didn't work */
 	if (!stats_log) {
 		msg("Error - can't open stats.log for writing.");
-		exit(1);
+		exit(6);
 	}
 
 	/* Turn on auto-more.  This will clear prompts for items
@@ -1758,7 +1758,7 @@ void stats_collect(int nsim, int simtype)
 	/* Close log file */
 	if (!file_close(stats_log)) {
 		msg("Error - can't close stats.log file.");
-		exit(1);
+		exit(7);
 	}
 }
 

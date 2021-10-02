@@ -3599,7 +3599,7 @@ void do_randart(u32b randart_seed, bool create_file, bool qa_only)
 	log_file = file_open(fname, MODE_WRITE, FTYPE_TEXT);
 	if (!log_file) {
 		msg("Error - can't open randart.log for writing.");
-		exit(1);
+		exit(8);
 	}
 
 	if (qa_only) {
@@ -3610,7 +3610,7 @@ void do_randart(u32b randart_seed, bool create_file, bool qa_only)
 		/* Close the log file */
 		if (!file_close(log_file)) {
 			msg("Error - can't close randart.log file.");
-			exit(1);
+			exit(9);
 		}
 		log_file = NULL;
 		return;
@@ -3644,7 +3644,7 @@ void do_randart(u32b randart_seed, bool create_file, bool qa_only)
 	/* Close the log file */
 	if (!file_close(log_file)) {
 		msg("Error - can't close randart.log file.");
-		exit(1);
+		exit(10);
 	}
 	log_file = NULL;
 

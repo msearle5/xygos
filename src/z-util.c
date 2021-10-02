@@ -838,7 +838,7 @@ void quit(const char *str)
 	plog(str);
 
 	/* Failure */
-	exit(EXIT_FAILURE);
+	exit(11);
 }
 
 /**
