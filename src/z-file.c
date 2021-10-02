@@ -416,6 +416,7 @@ ang_file *file_open(const char *fname, file_mode mode, file_type ftype)
 	}
 
 	if (f->fh == NULL) {
+		fprintf(stderr,"Unable to open %s\n", fname);
 		mem_free(f);
 		return NULL;
 	}
@@ -454,6 +455,7 @@ bool file_close(ang_file *f)
 void file_lock(ang_file *f)
 {
 #if defined(HAVE_FCNTL_H) && defined(UNIX)
+	if ((!f) || (!f->fh)) return;
 	struct flock lock;
 	lock.l_type = (f->mode == MODE_READ ? F_RDLCK : F_WRLCK);
 	lock.l_whence = SEEK_SET;
@@ -470,6 +472,7 @@ void file_lock(ang_file *f)
 void file_unlock(ang_file *f)
 {
 #if defined(HAVE_FCNTL_H) && defined(UNIX)
+	if ((!f) || (!f->fh)) return;
 	struct flock lock;
 	lock.l_type = F_UNLCK;
 	lock.l_whence = SEEK_SET;
@@ -521,6 +524,7 @@ bool file_writec(ang_file *f, byte b)
  */
 int file_read(ang_file *f, char *buf, size_t n)
 {
+	if ((!f) || (!f->fh)) return false;
 	size_t read = fread(buf, 1, n, f->fh);
 
 	if (read == 0 && ferror(f->fh))
