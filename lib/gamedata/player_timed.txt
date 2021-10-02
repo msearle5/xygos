@@ -208,13 +208,6 @@ on-end:Your mystic shield crumbles away.
 on-increase:The mystic shield strengthens.
 msgt:SHIELD
 
-name:BLESSED
-desc:your AC and to-hit bonus
-grade:G:10000:Blssd:You feel righteous!
-on-end:The prayer has expired.
-on-increase:You feel more righteous!
-msgt:BLESSED
-
 name:SINVIS
 desc:see invisible
 grade:G:10000:SInvis:Your eyes feel very sensitive!

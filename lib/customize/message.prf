@@ -232,9 +232,6 @@ message:SLOW:w
 # MSG_SHIELD
 message:SHIELD:w
 
-# MSG_BLESSED
-message:BLESSED:w
-
 # MSG_HERO
 message:HERO:w
 
