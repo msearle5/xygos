@@ -3651,21 +3651,26 @@ void do_randart(u32b randart_seed, bool create_file, bool qa_only)
 		/* Open the file, write a header */
 		path_build(fname, sizeof(fname), ANGBAND_DIR_USER, "randart.txt");
 		log_file = file_open(fname, MODE_WRITE, FTYPE_TEXT);
-		file_putf(log_file,
-				  "# Artifact file for random artifacts with seed %08x\n\n\n",
-				  randart_seed);
+		if (!log_file)
+			msg("Warning - can't open randart.txt");
+		else {
+			file_putf(log_file,
+					  "# Artifact file for random artifacts with seed %08x\n\n\n",
+					  randart_seed);
 
-		/* Write individual entries */
-		for (i = first_randart; i < last_randart; i++) {
-			const struct artifact *art = &a_info[i];
-			write_randart_entry(log_file, art);
-		}
+			/* Write individual entries */
+			for (i = first_randart; i < last_randart; i++) {
+				const struct artifact *art = &a_info[i];
+				write_randart_entry(log_file, art);
+			}
 
-		/* Close the file */
-		if (!file_close(log_file)) {
-			msg("Warning - can't close %s.", fname);
+			/* Close the file */
+			if (!file_close(log_file)) {
+				msg("Warning - can't close %s.", fname);
+			}
+			log_file = NULL;
+			fprintf(stderr,"Finished with randart.txt writing\n"); 
 		}
-		log_file = NULL;
 	}
 
 	/* When done, resume use of the Angband "complex" RNG. */

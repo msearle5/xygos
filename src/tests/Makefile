@@ -18,6 +18,7 @@ TESTOBJS += test-utils.o unit-test.o
 build : $(TESTPROGS)
 
 run : build
+	mkdir -p ~/.angband/Xygos
 	@./run-tests -v
 
 %.o : %.c
