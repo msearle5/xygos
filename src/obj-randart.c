@@ -3599,8 +3599,7 @@ void do_randart(u32b randart_seed, bool create_file, bool qa_only)
 	path_build(fname, sizeof(fname), ANGBAND_DIR_USER, "randart.log");
 	log_file = file_open(fname, MODE_WRITE, FTYPE_TEXT);
 	if (!log_file) {
-		msg("Error - can't open randart.log for writing.");
-		exit(1);
+		msg("Warning - can't open randart.log for writing.");
 	}
 
 	if (qa_only) {
@@ -3609,9 +3608,8 @@ void do_randart(u32b randart_seed, bool create_file, bool qa_only)
 		create_artifact_set(standarts, qa_only);
 		artifact_set_data_free(standarts);
 		/* Close the log file */
-		if (!file_close(log_file)) {
-			msg("Error - can't close randart.log file.");
-			exit(1);
+		if (log_file && !file_close(log_file)) {
+			msg("Warning - can't close randart.log file.");
 		}
 		log_file = NULL;
 		return;
@@ -3643,9 +3641,8 @@ void do_randart(u32b randart_seed, bool create_file, bool qa_only)
 	artifact_set_data_free(randarts);
 
 	/* Close the log file */
-	if (!file_close(log_file)) {
-		msg("Error - can't close randart.log file.");
-		exit(1);
+	if (log_file && !file_close(log_file)) {
+		msg("Warning - can't close randart.log file.");
 	}
 	log_file = NULL;
 
