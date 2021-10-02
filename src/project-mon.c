@@ -1006,7 +1006,12 @@ static void project_monster_handler_MON_CRUSH(project_monster_handler_context_t 
 static void project_monster_handler_MON_CHARM(project_monster_handler_context_t *context)
 {
 	if (context->seen) context->obvious = true;
-	mflag_on(context->mon->mflag, MFLAG_NEUTRAL);
+	if (mflag_has(context->mon->mflag, MFLAG_NEUTRAL)) {
+		mflag_on(context->mon->mflag, MFLAG_FRIENDLY);
+		mflag_off(context->mon->mflag, MFLAG_NEUTRAL);
+	} else {
+		mflag_on(context->mon->mflag, MFLAG_NEUTRAL);
+	}
 	context->dam = 0;
 }
 
