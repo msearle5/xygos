@@ -18,7 +18,7 @@ TESTOBJS += test-utils.o unit-test.o
 build : $(TESTPROGS)
 
 run : build
-	@./run-tests
+	@./run-tests -v
 
 %.o : %.c
 	@$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $^

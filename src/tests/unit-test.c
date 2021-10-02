@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
 
 	if (setup_tests(&state)) {
 		printf("ERROR: %s setup failed\n", suite_name);
-		return 1;
+		return 3;
 	}
 
 	for (i = 0; tests[i].name; i++) {
@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
 
 	if (teardown_tests(state)) {
 		printf("ERROR: %s teardown failed\n", suite_name);
-		return 1;
+		return 4;
 	}
 
 	printf("%s finished: %d/%d passed\n", suite_name, passed, total);
@@ -81,5 +81,5 @@ int showpass(void) {
 }
 int showfail(void) {
 	if (verbose) printf("\033[01;31mFailed\033[00m\n");
-	return 1;
+	return 5;
 }
