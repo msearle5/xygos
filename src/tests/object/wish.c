@@ -81,7 +81,7 @@ static int test_artifacts(void *state)
 			char *name = a_info[i].name;
 			if (ispunct(*name) && (*name != '\''))
 				name++;
-			obj = wish(name, 1);
+			obj = wish(name, 1, false);
 			vnotnull(obj, name);
 			object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX | ODESC_FULL | ODESC_SPOIL, player);
 			strnfmt(buf, sizeof(buf), "Asked for artifact %s, got %s", name, o_name);
@@ -136,7 +136,7 @@ static int test_kinds(void *state)
 
 			if (eok) {
 				obj_desc_name_format(fname, sizeof(fname), 0, k_info[i].name, NULL, false);
-				obj = wish(fname, 1);
+				obj = wish(fname, 1, false);
 				notnull(obj);
 				object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX | ODESC_FULL | ODESC_SPOIL, player);
 				strnfmt(buf, sizeof(buf), "Asked for base item %s, got %s (%s)", fname, o_name, obj->kind->name);
@@ -168,7 +168,7 @@ static int test_egos(void *state)
 				if (!kf_has(k->kind_flags, KF_INSTA_ART) && (!kf_has(k->kind_flags, KF_SPECIAL_GEN)) && (!kf_has(k->kind_flags, KF_QUEST_ART))) {
 					obj_desc_name_format(fname, sizeof(fname), 0, k->name, NULL, false);
 					strnfmt(egoname, sizeof(egoname), "%s %s", e_info[i].name, fname);
-					obj = wish(egoname, 1);
+					obj = wish(egoname, 1, false);
 					notnull(obj);
 					object_desc(o_name, sizeof(o_name), obj, ODESC_PREFIX | ODESC_FULL | ODESC_SPOIL, player);
 					strnfmt(buf, sizeof(buf), "Asked for %s, got %s", egoname, o_name);
@@ -213,7 +213,7 @@ static int test_ego_only(void *state)
 			}
 
 			if (eok) {
-				obj = wish(e_info[i].name, 1);
+				obj = wish(e_info[i].name, 1, false);
 				vnotnull(obj, e_info[i].name);
 				vnotnull(obj->kind, e_info[i].name);
 				vnotnull(obj->ego[0], e_info[i].name);

@@ -144,7 +144,7 @@ struct object *wish(const char *in, int level, bool limited)
 	strncpy(buf, in, sizeof(buf));
 	buf[sizeof(buf)-1] = 0;
 
-	static int count = 1;
+	int count = 1;
 
 	const struct artifact *art = NULL;
 	const struct ego_item *ego[MAX_EGOS] = { NULL };
@@ -158,6 +158,23 @@ struct object *wish(const char *in, int level, bool limited)
 
 	const char *word[WISH_WORDS] = { NULL };
 	int words = 0;
+
+	/* Special case for pills
+	 * Transform yada nano-pill into yada nano pill,
+	 * and yada pill into yada nano pill
+	 **/
+	if ((strlen(buf) > 6) && (strlen(buf) < sizeof(buf)-6)) {
+		char *dash = buf + strlen(buf) - strlen("-pill");
+		if (streq(dash, "-pill")) {
+			*dash = 0;
+		}
+		char *pill = buf + strlen(buf) - strlen("pill");
+		if (streq(pill, "pill")) {
+			if (!strstr(buf, "nano")) {
+				strcpy(pill, "nano pill");
+			}
+		}
+	}
 
 	/* Pass over all space separated fields */
 	char *tok = strtok(buf, " ");
