@@ -67,7 +67,7 @@ sub main {
         my @lines = $verbose ? `$path -v` : `$path`;
 
         if ($? != 0) {
-            print red("$path: Suite died"), "\n";
+            print red("$path: Suite died "), red($?), "\n";
             $exitcode = $?;
 
             # We don't know how many tests the suite had,

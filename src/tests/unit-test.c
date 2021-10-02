@@ -3,6 +3,8 @@
  * Framework for unit/regression testing harness
  */
 
+#define _POSIX_C_SOURCE 1
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -19,8 +21,8 @@ static void segv_handler(int signo)
 	void *trace[32];
 	int frames = backtrace(trace, 32);
 	backtrace_symbols_fd(trace, frames, fileno(stderr));
-	
-	exit(2);
+
+	exit(signo);
 }
 
 static void debug_init(void)
@@ -28,9 +30,8 @@ static void debug_init(void)
 	struct sigaction action = { 0 };
 	action.sa_handler = segv_handler;
 	sigemptyset(&action.sa_mask);
-	sigaction(SIGFPE, &action, NULL);
-	sigaction(SIGSEGV, &action, NULL);
-	sigaction(SIGBUS, &action, NULL);
+	for(int i=0;i<=31;i++)
+		sigaction(i, &action, NULL);
 }
 
 int main(int argc, char *argv[]) {
@@ -40,7 +41,6 @@ int main(int argc, char *argv[]) {
 	int total = 0;
 
 	debug_init();
-
 	char *s = getenv("VERBOSE");
 	if (s && s[0]) {
 		verbose = 1;
