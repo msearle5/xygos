@@ -4,6 +4,7 @@
  */
 
 #define _POSIX_C_SOURCE 1
+#define _DEFAULT_SOURCE 1
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -25,6 +26,18 @@ static void segv_handler(int signo)
 	exit(signo);
 }
 
+static void exit_handler(int code, void *dummy)
+{
+	(void)dummy;
+	fprintf(stderr,"Exiting with code %d\n", code);
+	if (code) {
+		void *trace[32];
+		int frames = backtrace(trace, 32);
+		backtrace_symbols_fd(trace, frames, fileno(stderr));
+	}
+}
+
+
 static void debug_init(void)
 {
 	struct sigaction action = { 0 };
@@ -32,6 +45,7 @@ static void debug_init(void)
 	sigemptyset(&action.sa_mask);
 	for(int i=0;i<=31;i++)
 		sigaction(i, &action, NULL);
+	on_exit(exit_handler, NULL);
 }
 
 int main(int argc, char *argv[]) {
