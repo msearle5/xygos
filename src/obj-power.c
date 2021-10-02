@@ -888,7 +888,7 @@ int object_value_real(const struct object *obj, int qty)
 		log_file = file_open(buf, pricing_mode, FTYPE_TEXT);
 		if (!log_file) {
 			msg("Error - can't open pricing.log for writing.");
-			exit(12);
+			exit(1);
 		}
 		pricing_mode = MODE_APPEND;
 
@@ -922,7 +922,7 @@ int object_value_real(const struct object *obj, int qty)
 
 		if (!file_close(log_file)) {
 			msg("Error - can't close pricing.log file.");
-			exit(13);
+			exit(1);
 		}
 #endif /* PRICE_DEBUG */
 
