@@ -221,7 +221,6 @@ static s16b art_idx_nonweapon[] = {
 	ART_IDX_NONWEAPON_SHOTS
 };
 static s16b art_idx_melee[] = {
-	ART_IDX_MELEE_BLESS,
 	ART_IDX_MELEE_SINV,
 	ART_IDX_MELEE_BRAND,
 	ART_IDX_MELEE_SLAY,

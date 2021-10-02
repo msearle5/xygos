@@ -234,7 +234,7 @@ static int test_title0(void *state) {
 
 
 static int test_flags0(void *state) {
-	enum parser_error r = parser_parse(state, "player-flags:BLESS_WEAPON | CHOOSE_SPELLS");
+	enum parser_error r = parser_parse(state, "player-flags:CHOOSE_SPELLS");
 	struct player_class *c;
 
 	eq(r, PARSE_ERROR_NONE);

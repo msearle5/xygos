@@ -161,9 +161,6 @@ sound:SPEED:pls_bell_sustain
 # You attain a mystic shield.
 sound:SHIELD:pls_bell_bowl
 
-# You become blessed.
-sound:BLESSED:sum_angel_song
-
 # You feel heroic.
 sound:HERO:pls_tone_goblet
 
