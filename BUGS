@@ -1,7 +1,8 @@
 BUGS 
 ====
 
-Fail on take Meg quest (wine/lin)
+BUGS: SDL and SDL2 builds are broken (no text for SDL, font cache error for SDL2: related?)
+	Seen at ac0bc1a0eb729b6425c270a41b3ebade7f312284
 
 Defer
 =====
