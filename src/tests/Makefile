@@ -18,7 +18,8 @@ TESTOBJS += test-utils.o unit-test.o
 build : $(TESTPROGS)
 
 run : build
-	@./run-tests
+	mkdir -p ~/.angband/Xygos
+	@./run-tests -v
 
 %.o : %.c
 	@$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $^
