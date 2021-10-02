@@ -191,3 +191,19 @@ multiplier:3
 o-multiplier:25
 power:161
 resist-flag:IM_SOUND
+
+code:INERTIA_2
+name:inertia
+verb:drag at
+multiplier:2
+o-multiplier:15
+power:130
+resist-flag:IM_INERTIA
+
+code:INERTIA_3
+name:inertia
+verb:slug
+multiplier:3
+o-multiplier:25
+power:161
+resist-flag:IM_INERTIA

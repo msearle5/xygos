@@ -95,6 +95,22 @@ desc:Your own creation.
 
 ### Swords and Daggers ###
 
+name:'Lagspike'
+base-object:sword:machete
+level:28
+cost:5500
+weight:570g
+cost:90
+alloc:20:15 to 100
+attack:2d9:10:12
+armor:0:0
+brand:INERTIA_3
+values:RES_COLD[1] | RES_FIRE[1] | RES_INERTIA[1]
+flags:IGNORE_ACID | DIG_3 | SLOW_DIGEST
+desc:A very long titanium knife, broadening toward the tip. The controls recessed into the hilt indicate that this machete wasn't made for gardening.
+act:LOSSLOW
+#material:titanium
+
 ### Blunt Weapons ###
 
 ### Polearms ###
