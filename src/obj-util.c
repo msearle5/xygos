@@ -138,13 +138,13 @@ void strip_punct(char *in)
  * This is done with fuzzy matching to names - it should make a good guess at
  * something that is nearly right.
  **/
-struct object *wish(const char *in, int level)
+struct object *wish(const char *in, int level, bool limited)
 {
 	char buf[256];
 	strncpy(buf, in, sizeof(buf));
 	buf[sizeof(buf)-1] = 0;
 
-	int count = 1;
+	static int count = 1;
 
 	const struct artifact *art = NULL;
 	const struct ego_item *ego[MAX_EGOS] = { NULL };
@@ -425,6 +425,80 @@ struct object *wish(const char *in, int level)
 		kind = select_ego_kind(ego[0], level, 0);
 	}
 
+	/* Apply limits.
+	 * There are no limits when used as a debug command.
+	 * When used as an effect (e.g. from a card), limits apply:
+	 * 		No quest / randomized artifacts.
+	 * 		No special-generation or zero allocation probability objects.
+	 * At most your slot capacity of anything.
+	 * Nothing that's too heavy to carry, unless it's a single item (not a stack).
+	 * No stacks that are too expensive, but don't reject a single item for price.
+	 * At most one:
+	 * 		Artifact, but that's not checked for because artifact creation does it.
+	 * 		Ego item which is not ammo.
+	 * 		Equippable which is not ammo.
+	 **/
+	if (limited) {
+		const struct object_kind *okind = kind;
+		bool fail = false;
+		if (art)
+			okind = lookup_kind(art->tval, art->sval);
+
+		/* Fail to generate these */
+		if (kf_has(okind->kind_flags, KF_INSTA_ART)) {
+			fail = true;
+			WISH_DPF("INSTA_ART, fail\n");
+		}
+		if (kf_has(okind->kind_flags, KF_QUEST_ART)) {
+			fail = true;
+			WISH_DPF("QUEST_ART, fail\n");
+		}
+		if (kf_has(okind->kind_flags, KF_SPECIAL_GEN)) {
+			fail = true;
+			WISH_DPF("SPECIAL_GEN, fail\n");
+		}
+		if (okind->alloc_prob == 0) {
+			fail = true;
+			WISH_DPF("zero kind prob, fail\n");
+		}
+		if (art && art->alloc_prob == 0) {
+			fail = true;
+			WISH_DPF("zero artifact prob, fail\n");
+		}
+
+		/* Don't generate the item asked for */
+		if (fail) {
+			art = NULL;
+			kind = NULL;
+		} else {
+			/* Limit by stack capacity */
+			count = MIN(count, okind->base->max_stack);
+
+			/* Generate these, but not so many */
+			if (((ego[0]) || (kind_tval_is_wearable(okind->tval))) && (!kind_tval_is_ammo(okind))) {
+				WISH_DPF("ego/wearable + ammo, reduce count to 1\n");
+				count = 1;
+			}
+
+			/* Don't make a stack that's too heavy to carry.
+			 * But allow an overweight item if there is only one of it.
+			 **/
+			int maxweight = weight_limit(&player->state) * BURDEN_LIMIT;
+			int burden = burden_weight(player);
+			while ((count > 1) && (burden + (okind->weight * count) > maxweight)) {
+				count--;
+				WISH_DPF("heavy => reduce count to %d\n", count);
+			}
+
+			/* Similar for price */
+			int price = okind->cost;
+			while ((count > 1) && ((price * count) > 60000)) {
+				count--;
+				WISH_DPF("price => reduce count to %d\n", count);
+			}
+		}
+	}
+
 	/* Do we have an item?
 	 * Artifact (whether other stuff is present or not) => try to make that. It may fail, though.
 	 * 		If so, fall through as if it wasn't present.
@@ -526,12 +600,12 @@ struct object *wish(const char *in, int level)
  * Try to create it and add it to inventory.
  * Takes level, returns true if successful.
  */
-bool make_wish(const char *prompt, int level)
+bool make_wish(const char *prompt, int level, bool limited)
 {
 	char buf[256] = { 0 };
 	if (!get_string_hook(prompt, buf, sizeof(buf)))
 		return false;
-	struct object *obj = wish(buf, level);
+	struct object *obj = wish(buf, level, limited);
 	if (obj) {
 		struct player *p = player;
 		/* Wishing for cash is silly, but it should work.

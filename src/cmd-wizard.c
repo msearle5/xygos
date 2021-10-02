@@ -1684,7 +1684,7 @@ void do_cmd_wiz_help(struct command *cmd)
  */
 void do_cmd_wiz_wish(struct command *cmd)
 {
-	make_wish("Wish for: ", player->depth);
+	make_wish("Wish for: ", player->depth, false);
 }
 
 /**
