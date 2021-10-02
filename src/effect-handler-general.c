@@ -2627,6 +2627,15 @@ bool effect_handler_LOCAL_ACQUIRE(effect_handler_context_t *context)
 	return true;
 }
 
+bool effect_handler_WISH(effect_handler_context_t *context)
+{
+	int num = effect_calculate_value(context, false);
+	bool success = make_wish("Ask for: ", player->depth);
+	if (success)
+		context->ident = true;
+	return success;
+}
+
 /**
  * Wake up all monsters in line of sight
  */

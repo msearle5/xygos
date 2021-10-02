@@ -68,6 +68,7 @@ EFFECT(PROJECT_LOS,					false,	"power",	1,		EFINFO_SEEN,	"%s which are in line o
 EFFECT(PROJECT_LOS_AWARE,			false,	"power",	1,		EFINFO_SEEN,	"%s which are in line of sight",	"%s in line of sight")
 EFFECT(ACQUIRE,						false,	NULL,		0,		EFINFO_NONE,	"teleports in good items from off-level", "teleport in items")
 EFFECT(LOCAL_ACQUIRE,				false,	NULL,		0,		EFINFO_NONE,	"teleports the level's best item to you", "teleport best item")
+EFFECT(WISH,						false,	NULL,		0,		EFINFO_NONE,	"asks for an item", "ask for an item")
 EFFECT(WAKE,						false,	NULL,		0,		EFINFO_NONE,	"awakens all nearby sleeping monsters",	"awaken all")
 EFFECT(SUMMON,						false,	NULL,		1,		EFINFO_SUMM,	"summons %s at the current level",	"summon %s")
 EFFECT(BANISH,						false,	NULL,		0,		EFINFO_NONE,	"removes all of a given creature type from the level",	"banish")

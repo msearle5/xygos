@@ -3261,6 +3261,18 @@ effect:ACQUIRE
 dice:1+1d3
 
 
+name:universal acquisition
+type:card
+graphics:-:Deep Light Blue
+level:110
+weight:5g
+cost:80000
+alloc:1:95 to 127
+power:20000
+effect:WISH
+dice:1
+desc:It's a form of teleportation. You describe an item and if it exists at all (and you don't already own it!) it will be brought to you. There are limits, though. The AI you speak to can be confused by ambiguous requests. There are a few items belonging to Triax and his minions which are protected and can only be obtained by defeating their owner. And while most artifacts can be obtained this way, you need to know their name.
+
 ### Killing cards ###
 
 #name:Dispel Undead
