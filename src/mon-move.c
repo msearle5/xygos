@@ -455,7 +455,8 @@ static void target_closest_hated(struct chunk *c, struct monster *mon)
  */
 static struct loc get_target(struct chunk *c, struct monster *mon)
 {
-	if (mon_hates_you(mon)) {
+	/* Hostile *or* friendly monsters go for you - only neutrals ignore you */
+	if (!mflag_has(mon->mflag, MFLAG_NEUTRAL)) {
 		return monster_is_decoyed(mon) ? cave_find_decoy(c) :
 			player->grid;
 	} else {
@@ -1493,7 +1494,7 @@ static bool monster_turn_attack_glyph(struct chunk *c, struct monster *mon,
 	if (randint1(z_info->glyph_hardness) < mon->race->level) {
 		/* Describe observable breakage */
 		if (square_isseen(c, new)) {
-			msg("The replusion field is broken!");
+			msg("The repulsion field is broken!");
 
 			/* Forget the rune */
 			square_forget(c, new);
@@ -1526,32 +1527,40 @@ static bool monster_turn_try_push(struct chunk *c, struct monster *mon,
 	int move_ok = (monster_can_move(c, mon, new) &&
 				   square_ispassable(c, mon->grid));
 
-	if (kill_ok || move_ok) {
+	/* Melee monsters if hostile to them */
+	int melee_ok = mon_hates_mon(mon, mon1);
+
+	if (melee_ok || kill_ok || move_ok) {
 		/* Get the names of the monsters involved */
 		char n_name[80];
 		monster_desc(n_name, sizeof(n_name), mon1, MDESC_IND_HID);
-
-		/* Learn about pushing and shoving */
-		if (monster_is_visible(mon)) {
-			rf_on(lore->flags, RF_KILL_BODY);
-			rf_on(lore->flags, RF_MOVE_BODY);
-		}
 
 		/* Reveal mimics */
 		if (monster_is_mimicking(mon1))
 			become_aware(c, mon1, player);
 
-		/* Note if visible */
-		if (monster_is_visible(mon) && monster_is_in_view(mon))
-			msg("%s %s %s.", m_name, kill_ok ? "tramples over" : "pushes past",
-				n_name);
+		if (melee_ok) {
+			return monster_attack_monster(mon, mon1);
+			return true;
+		} else {
+			/* Learn about pushing and shoving */
+			if (monster_is_visible(mon)) {
+				rf_on(lore->flags, RF_KILL_BODY);
+				rf_on(lore->flags, RF_MOVE_BODY);
+			}
 
-		/* Monster ate another monster */
-		if (kill_ok)
-			delete_monster(new);
+			/* Note if visible */
+			if (monster_is_visible(mon) && monster_is_in_view(mon))
+				msg("%s %s %s.", m_name, kill_ok ? "tramples over" : "pushes past",
+					n_name);
 
-		monster_swap(mon->grid, new);
-		return true;
+			/* Monster ate another monster */
+			if (kill_ok)
+				delete_monster(new);
+
+			monster_swap(mon->grid, new);
+			return true;
+		}
 	}
 
 	return false;
@@ -1824,6 +1833,10 @@ static void monster_turn(struct chunk *c, struct monster *mon)
 			if (rf_has(mon->race->flags, RF_NEVER_BLOW))
 				continue;
 
+			/* Neutral or tame monsters don't either */
+			if (mflag_has(mon->mflag, MFLAG_NEUTRAL) || mflag_has(mon->mflag, MFLAG_FRIENDLY))
+				continue;
+
 			/* Wait a minute... */
 			square_destroy_decoy(c, new);
 			did_something = true;
@@ -1838,6 +1851,9 @@ static void monster_turn(struct chunk *c, struct monster *mon)
 
 			/* Some monsters never attack */
 			if (rf_has(mon->race->flags, RF_NEVER_BLOW))
+				continue;
+
+			if (mflag_has(mon->mflag, MFLAG_NEUTRAL) || mflag_has(mon->mflag, MFLAG_FRIENDLY))
 				continue;
 
 			/* Otherwise, attack the player */
