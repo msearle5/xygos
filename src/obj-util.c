@@ -511,6 +511,10 @@ struct object *wish(const char *in, int level)
 	for(int i=words; i<pairs; i++)
 		string_free((char *)word[i]);
 
+	/* Set value of money */
+	if (tval_is_money(obj))
+		obj->pval = MAX(5000, 10 * rand_spread(1500, 100)); // average 15K 
+
 	/* Return the item.
 	 * This may be NULL if nothing can be produced.
 	 */
@@ -529,7 +533,28 @@ bool make_wish(const char *prompt, int level)
 		return false;
 	struct object *obj = wish(buf, level);
 	if (obj) {
-		inven_carry(player, obj, true, true);
+		struct player *p = player;
+		/* Wishing for cash is silly, but it should work.
+		 * Cash can't enter the inventory, so do something similar to player_pickup_gold().
+		 */
+		if (tval_is_money(obj)) {
+			/* Print a message */
+			msg("You see $%d worth of %s appear!", obj->pval, obj->kind->name);
+
+			/* Increment total value */
+			p->au += (s32b)obj->pval;
+
+			/* Redraw gold */
+			p->upkeep->redraw |= (PR_GOLD);
+
+			/* Delete the gold */
+			if (obj->known) {
+				object_delete(NULL, NULL, &obj->known);
+			}
+			object_delete(NULL, NULL, &obj);
+		} else {
+			inven_carry(player, obj, true, true);
+		}
 		return true;
 	}
 	return false;
