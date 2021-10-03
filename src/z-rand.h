@@ -178,6 +178,12 @@ double Rand_double(double m);
 s32b Rand_normal(int mean, int stand);
 
 /**
+ * Generate the cumulative normal distribution at point 'value', with the given
+ * mean and s.d.
+ */
+double Rand_cumulative_normal(double value, double mean, double stand);
+
+/**
  * Generate a signed random integer following a normal distribution, where
  * `upper` and `lower` are approximate bounds, and `stand_u and `stand_l` are
  * ten times the number of standard deviations from the mean we are assuming

@@ -1086,6 +1086,8 @@ static struct table tables[] = {
 	/* player-util.c */
 	{ DYNTABLE(energy_move_pos),		table_u16 },
 	{ DYNTABLE(energy_move_neg),		table_u16 },
+	/* project-mon.c */
+	{ TABLE(adj_chr_taming),			table_double,	STAT_RANGE },
 	{ { NULL } },
 };
 

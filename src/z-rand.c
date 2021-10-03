@@ -18,6 +18,7 @@
  *    are included in all such copies.  Other copyrights may also apply.
  */
 #include "z-rand.h"
+#include <math.h>
 
 /**
  * This file provides a pseudo-random number generator.
@@ -373,6 +374,15 @@ s32b Rand_normal(int mean, int stand)
 	return (mean + offset);
 }
 
+/** Cumulative normal distribution.
+ * This is the probability that a variate from the normal distribution with
+ * given mean and s.d. withh be less than th  given 'value'.
+ */
+double Rand_cumulative_normal(double value, double mean, double stand)
+{
+	value = (value - mean) / stand;
+	return 0.5 * erfc(-value * M_SQRT1_2);
+}
 
 /**
  * Choose an integer from a distribution where we know the mean and approximate
