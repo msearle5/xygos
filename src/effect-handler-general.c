@@ -67,7 +67,7 @@
 
 static void shapechange(const char *shapename, bool verbose);
 static int recyclable_blocks(const struct object *obj);
-static bool brand_object(struct object *obj, const char *name);
+static bool brand_object(struct object *obj, const char *name, int enchantment);
 static bool mundane_object(struct object *obj, bool silent);
 
 /**
@@ -611,7 +611,7 @@ static bool enchant_spell(int num_hit, int num_dam, int num_ac, int num_brand, i
 	else if (num_dam && enchant(obj, num_dam, ENCH_TODAM)) okay = true;
 	if (num_ac && enchant(obj, num_ac, ENCH_TOAC)) okay = true;
 	if (num_brand)
-		okay = brand_object(obj, NULL);
+		okay = brand_object(obj, NULL, num_brand);
 	if (num_mundane)
 		okay = mundane_object(obj, false);
 
@@ -635,7 +635,7 @@ static bool enchant_spell(int num_hit, int num_dam, int num_ac, int num_brand, i
  * 
  * Returns true if successful
  */
-static bool brand_object(struct object *obj, const char *name)
+static bool brand_object(struct object *obj, const char *name, int enchantment)
 {
 	struct ego_item *ego = NULL;
 	struct ego_item *ego2 = NULL;
@@ -698,6 +698,12 @@ static bool brand_object(struct object *obj, const char *name)
 					ego_apply_magic_from(obj, 0, negos);
 				}
 
+				/* Enchant */
+				if (kind_tval_is_weapon(obj->kind))
+					enchant(obj, enchantment, ENCH_TOHIT | ENCH_TODAM);
+				else if (kind_tval_is_armor(obj->kind))
+					enchant(obj, enchantment, ENCH_TOAC);
+
 				/* Identify the object */
 				object_know_all(obj);
 				update_player_object_knowledge(player);
@@ -711,11 +717,6 @@ static bool brand_object(struct object *obj, const char *name)
 				/* Window stuff */
 				player->upkeep->redraw |= (PR_INVEN | PR_EQUIP);
 
-				/* Enchant */
-				if (kind_tval_is_weapon(obj->kind))
-					enchant(obj, randint0(3) + 4, ENCH_TOHIT | ENCH_TODAM);
-				else if (kind_tval_is_armor(obj->kind))
-					enchant(obj, randint0(3) + 4, ENCH_TOAC);
 				return true;
 			}
 		}
@@ -1425,7 +1426,11 @@ bool effect_handler_RECALL(effect_handler_context_t *context)
 			}
 		}
 
-		player->word_recall = randint0(20) + 15;
+		int amount = effect_calculate_value(context, false);
+		if (amount <= 0)
+			amount = randint0(20) + 15;
+		player->word_recall = amount;
+
 		msg("The air about you becomes charged...");
 	} else {
 		/* Deactivate recall */
@@ -1451,7 +1456,7 @@ bool effect_handler_DEEP_DESCENT(effect_handler_context_t *context)
 	int target_increment = (4 / z_info->stair_skip) + 1;
 	int target_depth = dungeon_get_next_level(player, player->depth,
 											  target_increment);
-	int levels = 5;
+	int levels = context->subtype ? context->subtype : 5;
 
 	/* Endgame */
 	if (!player->town)
@@ -1465,7 +1470,12 @@ bool effect_handler_DEEP_DESCENT(effect_handler_context_t *context)
 
 	if (target_depth > player->depth) {
 		msgt(MSG_TPLEVEL, "The air around you starts to swirl...");
-		player->deep_descent = 3 + randint1(4);
+
+		int amount = effect_calculate_value(context, false);
+		if (amount <= 0)
+			amount = 3 + randint1(4);
+
+		player->deep_descent = amount;
 
 		/* Redraw status line */
 		player->upkeep->redraw |= PR_STATUS;
@@ -3854,9 +3864,10 @@ bool effect_handler_BLAST_WEAPON(effect_handler_context_t *context)
  */
 bool effect_handler_UNBRAND_ITEM(effect_handler_context_t *context)
 {
-	enchant_spell(0, 0, 0, 0, 1, context->cmd);
-	context->ident = true;
-	return true;
+	bool ok = enchant_spell(0, 0, 0, 0, 1, context->cmd);
+	if (ok)
+		context->ident = true;
+	return ok;
 }
 
 /**
@@ -3864,9 +3875,14 @@ bool effect_handler_UNBRAND_ITEM(effect_handler_context_t *context)
  */
 bool effect_handler_BRAND_ITEM(effect_handler_context_t *context)
 {
-	enchant_spell(0, 0, 0, 1, 0, context->cmd);
-	context->ident = true;
-	return true;
+	int enchantment = effect_calculate_value(context, false);
+	if (enchantment <= 0)
+		enchantment = randint0(3) + 4;
+
+	bool ok = enchant_spell(0, 0, 0, enchantment, 0, context->cmd);
+	if (ok)
+		context->ident = true;
+	return ok;
 }
 
 /**
@@ -3877,7 +3893,7 @@ bool effect_handler_BRAND_WEAPON(effect_handler_context_t *context)
 	struct object *obj = equipped_item_by_slot_name(player, "weapon");
 
 	/* Brand the weapon */
-	brand_object(obj, NULL);
+	brand_object(obj, NULL, randint0(3) + 4);
 
 	context->ident = true;
 	return true;
@@ -3908,7 +3924,7 @@ bool effect_handler_BRAND_AMMO(effect_handler_context_t *context)
 		return used;
 
 	/* Brand the ammo */
-	brand_object(obj, NULL);
+	brand_object(obj, NULL, randint0(3) + 4);
 
 	/* Done */
 	return (true);

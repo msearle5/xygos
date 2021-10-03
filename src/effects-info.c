@@ -579,6 +579,13 @@ textblock *effect_describe(const struct effect *e, const struct object *obj, con
 						projections[e->subtype].desc);
 					break;
 
+				case EFINFO_SUB: {
+					char buf[32];
+					sprintf(buf,"%d", e->subtype ? e->subtype : 5);
+					strnfmt(desc, sizeof(desc), edesc, buf);
+					break;
+				}
+
 				case EFINFO_NONE:
 					strnfmt(desc, sizeof(desc), "%s", edesc);
 					break;
@@ -721,6 +728,13 @@ size_t effect_get_menu_name(char *buf, size_t max, const struct effect *e)
 	case EFINFO_TOUCH:
 		len = strnfmt(buf, max, fmt, projections[e->subtype].desc);
 		break;
+
+	case EFINFO_SUB: {
+		char buf[32];
+		sprintf(buf,"%d", e->subtype ? e->subtype : 5);
+		len = strnfmt(buf, max, fmt, buf);
+		break;
+	}
 
 	case EFINFO_SUMM:
 		len = strnfmt(buf, max, fmt, summon_desc(e->subtype));

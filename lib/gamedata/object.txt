@@ -3046,9 +3046,13 @@ cost:1500
 alloc:6:20 to 100
 pile:25:2
 power:25
+desc:Attempts to make a non-ego into an ego item. On a non-ego base item it will almost always succeed, although the results can't be predicted. Rarely, it will add multiple egos. It can be run against an ego item in order to create a multiple ego, but this doesn't often work and risks destroying it.
 effect:BRAND_ITEM
 dice:4+1d5
-desc:Attempts to make a non-ego into an ego item. On a non-ego base item it will almost always succeed, although the results can't be predicted. Rarely, it will add multiple egos. It can be run against an ego item in order to create a multiple ego, but this doesn't often work and risks destroying it.
+effect:NEXT
+effect:BRAND_ITEM
+dice:10+1d5
+effect:NEXT
 
 #mundanity
 name:formatting
@@ -3060,8 +3064,12 @@ cost:1200
 alloc:2:30 to 100
 pile:25:2
 power:20
-effect:UNBRAND_ITEM
 desc:Attempts to remove all additions, positive and negative, from a piece of equipment - to-hit and -dam, egos, activations, faults and so on. Even artifacts will lose everything which makes them special, with no volcano needed.
+effect:UNBRAND_ITEM
+effect:NEXT
+effect:UNBRAND_ITEM
+effect:BALL:DARK:6
+dice:50+3d10
 
 name:repair
 type:card
@@ -3072,9 +3080,12 @@ cost:100
 alloc:16:10 to 100
 pile:25:2
 power:8
+desc:Attempt to remove a fault from an item. This may fail, which may damage or destroy the item.
 effect:REMOVE_FAULT
 dice:20+d20
-desc:Attempt to remove a fault from an item. This may fail, which may damage or destroy the item.
+effect:NEXT
+effect:REMOVE_FAULT
+dice:35+d35
 
 name:major repair
 type:card
@@ -3085,12 +3096,16 @@ cost:8000
 alloc:16:50 to 100
 pile:25:2
 power:20
+desc:Attempt to remove a fault from an item. While it is not entirely infallible, it's far more likely to succeed on difficult faults than the common repair card.
 effect:REMOVE_FAULT
 dice:50+d50
-desc:Attempt to remove a fault from an item. While it is not entirely infallible, it's far more likely to succeed on difficult faults than the common repair card.
+effect:NEXT
+effect:REMOVE_FAULT
+dice:85+d15
 
 ### Summoning ###
 
+# taming as rare card?
 name:summoning
 type:card
 graphics:-:Deep Light Blue
@@ -3100,9 +3115,15 @@ cost:0
 alloc:10:1 to 100
 pile:70:1d3
 power:0
+desc:It's a form of teleportation. It transports monsters from off the level to your side.
 effect:SUMMON:ANY
 dice:1d3
-desc:It's a form of teleportation. It transports monsters from off the level to your side.
+effect:NEXT
+effect:SUMMON:ANY
+dice:1d3
+effect:CREATE_PORTAL
+dice:50
+
 
 #name:Summon Undead
 #type:card
@@ -3124,9 +3145,12 @@ weight:5g
 cost:2700
 alloc:5:8 to 100
 power:20000
+desc:It's a form of teleportation. It grabs the most valuable item on the level and leaves it at your feet.
 effect:LOCAL_ACQUIRE
 dice:1
-desc:It's a form of teleportation. It grabs the most valuable item on the level and leaves it at your feet.
+effect:NEXT
+effect:LOCAL_ACQUIRE
+dice:1d2
 
 name:remote acquisition
 type:card
@@ -3136,9 +3160,12 @@ weight:5g
 cost:5000
 alloc:10:20 to 100
 power:20000
+desc:It's a form of teleportation. It grabs an item - hopefully a valuable one - from some unknown distant location.
 effect:ACQUIRE
 dice:1
-desc:It's a form of teleportation. It grabs an item - hopefully a valuable one - from some unknown distant location.
+effect:NEXT
+effect:ACQUIRE
+dice:1d2
 
 name:mass acquisition
 type:card
@@ -3148,9 +3175,13 @@ weight:5g
 cost:10000
 alloc:5:60 to 100
 power:20000
+desc:It's a form of teleportation. It grabs a few items - hopefully valuable ones - from some unknown distant location.
 effect:ACQUIRE
 dice:1+1d2
-desc:It's a form of teleportation. It grabs a few items - hopefully valuable ones - from some unknown distant location.
+effect:NEXT
+effect:ACQUIRE
+dice:1+1d3
+
 
 ### Killing cards ###
 
@@ -3175,6 +3206,8 @@ cost:2500
 alloc:25:40 to 100
 power:20
 effect:BANISH
+effect:NEXT
+effect:MASS_BANISH
 
 name:mass extermination
 type:card
@@ -3184,6 +3217,11 @@ weight:5g
 cost:3000
 alloc:20:50 to 100
 power:25
+effect:MASS_BANISH
+effect:NEXT
+effect:MASS_BANISH
+effect:TELEPORT
+dice:M60
 effect:MASS_BANISH
 
 
@@ -3201,6 +3239,10 @@ power:4
 effect:LIGHT_AREA
 effect:SPOT:LIGHT_WEAK:2
 dice:2d8
+effect:NEXT
+effect:LIGHT_AREA
+effect:BALL:LIGHT:6
+dice:2d20
 
 name:recall
 type:card
@@ -3212,6 +3254,10 @@ alloc:50:5 to 100
 pile:35:2d3
 power:15
 effect:RECALL
+dice:15+1d20
+effect:NEXT
+effect:RECALL
+dice:2d2
 
 name:recharging
 type:card
@@ -3224,6 +3270,9 @@ pile:12:2d3
 power:11
 effect:RECHARGE
 dice:6
+effect:NEXT
+effect:RECHARGE
+dice:12
 
 name:battering
 type:card
@@ -3235,6 +3284,9 @@ alloc:40:10 to 60
 pile:25:2d3
 power:6
 effect:TOUCH:KILL_DOOR
+effect:NEXT
+effect:TOUCH:KILL_DOOR
+effect:EARTHQUAKE:NONE:6
 
 name:descent
 type:card
@@ -3246,6 +3298,11 @@ alloc:20:1 to 100
 pile:20:2
 power:19
 effect:DEEP_DESCENT
+effect:NEXT
+# Descent for twice as far, next turn
+effect:DEEP_DESCENT:10
+dice:1
+
 
 
 ### "Holy" spells ###
@@ -3311,9 +3368,12 @@ cost:5
 alloc:16:0 to 60
 pile:75:1d5
 power:1
+desc:An update on the latest buzz - a hint, although not always a useful one.
 effect:RUMOR
 dice:50
-desc:An update on the latest buzz - a hint, although not always a useful one.
+effect:NEXT
+effect:RUMOR
+dice:100
 
 name:confusion
 type:card
@@ -3326,6 +3386,11 @@ pile:25:2
 power:8
 effect:TIMED_INC:ATT_CONF
 dice:10000
+effect:NEXT
+effect:TIMED_INC:ATT_CONF
+dice:10000
+effect:TIMED_INC:HERO
+dice:20+1d30
 
 name:protection
 type:card
@@ -3336,6 +3401,10 @@ cost:500
 alloc:30:70 to 100
 power:20
 effect:GLYPH:WARDING
+effect:NEXT
+effect:GLYPH:WARDING
+effect:TIMED_INC:SHIELD
+dice:30+1d30
 
 name:disinto
 type:card
@@ -3346,6 +3415,10 @@ cost:1000
 alloc:30:40 to 100
 power:12
 effect:DESTRUCTION:LIGHT:15
+effect:NEXT
+effect:DESTRUCTION:LIGHT:20
+effect:BALL:FIRE:18
+dice:2000
 
 ### Bad cards ###
 
@@ -3362,6 +3435,12 @@ msg:There is a high pitched humming noise.
 effect:WAKE
 effect:PROJECT_LOS:MON_SPEED
 dice:25
+effect:NEXT
+effect:WAKE
+effect:PROJECT_LOS:MON_SPEED
+dice:25
+effect:TIMED_INC:FAST
+dice:25
 
 name:blast weapon
 type:card
@@ -3373,6 +3452,10 @@ cost:0
 pile:70:1d3
 power:0
 effect:BLAST_WEAPON
+effect:NEXT
+effect:BLAST_WEAPON
+effect:BALL:SHARD:10
+dice:50+2d50
 
 name:blast armour
 type:card
@@ -3384,6 +3467,10 @@ cost:0
 pile:70:1d3
 power:0
 effect:BLAST_ARMOR
+effect:NEXT
+effect:BLAST_ARMOR
+effect:BALL:SHARD:10
+dice:50+2d50
 
 name:darkness
 type:card
@@ -3397,6 +3484,12 @@ power:0
 effect:DARKEN_AREA
 effect:BALL:DARK_WEAK:3
 dice:10
+effect:NEXT
+effect:DARKEN_AREA
+effect:BALL:DARK:5
+dice:10d3
+effect:TIMED_INC:SINVIS
+dice:10+2d6
 
 name:entrapment
 type:card
@@ -3409,6 +3502,11 @@ pile:70:1d3
 power:0
 msg:You hear a low-pitched whistling sound.
 effect:TOUCH:MAKE_TRAP:3
+effect:NEXT
+effect:TOUCH:MAKE_TRAP:8
+effect:TIMED_INC:TRAPSAFE
+dice:20+2d20
+
 
 
 ##### Pills #####

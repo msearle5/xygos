@@ -468,6 +468,7 @@ color:WHITE
 
 code:MAKE_TRAP
 type:environs
+player-desc:traps
 desc:creates traps
 blind-desc:something
 obvious:0
