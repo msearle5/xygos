@@ -112,7 +112,7 @@ EFFECT(TOUCH_AWARE,					false,	NULL,		1,		EFINFO_TOUCH,	"%s on all adjacent squa
 EFFECT(BLAST_ARMOR,					false,	NULL,		0,		EFINFO_NONE,	"blasts your worn armor", "blast armor")
 EFFECT(BLAST_WEAPON,				false,	NULL,		0,		EFINFO_NONE,	"blasts your wielded melee weapon", "blast weapon")
 EFFECT(UNBRAND_ITEM,				false,	NULL,		0,		EFINFO_NONE,	"removes ego and other powers from an item",	"remove an item's powers")
-EFFECT(BRAND_ITEM,					false,	NULL,		0,		EFINFO_NONE,	"brands an item as an ego",	"brand item")
+EFFECT(BRAND_ITEM,					false,	NULL,		1,		EFINFO_DICE,	"brands an item as an ego, adding %s to combat stats",	"brand item")
 EFFECT(BRAND_WEAPON,				false,	NULL,		0,		EFINFO_NONE,	"brands your wielded melee weapon",	"brand weapon")
 EFFECT(BRAND_AMMO,					false,	NULL,		0,		EFINFO_NONE,	"brands a stack of ammunition",	"brand ammunition")
 EFFECT(CREATE_ARROWS,				false,	NULL,		0,		EFINFO_NONE,	"uses a staff to create a stack of arrows",	"use staff for arrows")
