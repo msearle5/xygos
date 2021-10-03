@@ -452,8 +452,8 @@ static void display_player_header(struct char_sheet_config *config, int region, 
 
 static void display_resistance_panel(int ipart, struct char_sheet_config *config, bool percentmode)
 {
-	int *vals = mem_alloc((player->body.count + 2) * sizeof(*vals));
-	int *auxs = mem_alloc((player->body.count + 2) * sizeof(*auxs));
+	int *vals = mem_zalloc((player->body.count + 2) * sizeof(*vals));
+	int *auxs = mem_zalloc((player->body.count + 2) * sizeof(*auxs));
 	struct object **equipment =
 		mem_alloc(player->body.count * sizeof(*equipment));
 	struct cached_object_data **ocaches =
