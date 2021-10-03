@@ -128,6 +128,9 @@ void lore_description(textblock *tb, const struct monster_race *race,
 	if (!spoilers)
 		lore_append_exp(tb, race, lore, known_flags);
 
+	if (!spoilers)
+		lore_append_taming(tb, race, lore);
+
 	lore_append_drop(tb, race, lore, known_flags);
 
 	/* Describe the special properties of the monster */

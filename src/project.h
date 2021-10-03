@@ -111,8 +111,8 @@ extern int n_dam_dec_resist;
 extern byte *dam_inc_vuln;
 extern int n_dam_inc_vuln;
 
-void do_tame(struct monster *mon);
-double get_taming_resistance(struct monster *mon, struct player *p);
+bool do_tame(struct monster *mon);
+double get_taming_resistance(const struct monster_race *race, struct player *p, bool neutral);
 double get_taming_skill(struct player *p);
 void thrust_away(struct loc centre, struct loc target, int grids_away);
 int inven_damage(struct player *p, int type, int cperc);
