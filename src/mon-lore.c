@@ -829,7 +829,7 @@ static const char *lore_pronoun(monster_sex_t sex)
 		"it",
 		"him",
 		"her",
-		"their",
+		"one",
 	};
 
 	int pronoun_index = MON_SEX_NEUTER;

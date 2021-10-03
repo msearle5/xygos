@@ -1117,14 +1117,25 @@ void move_player(int dir, bool disarm)
 
 	/* Many things can happen on movement */
 	if (m_idx > 0) {
-		/* Attack monsters */
-		if (monster_is_mimicking(mon)) {
-			become_aware(cave, mon, player);
+		/* Attack hostile or neutral monsters */
+		if (!mflag_has(mon->mflag, MFLAG_FRIENDLY)) {
+			if (monster_is_mimicking(mon)) {
+				become_aware(cave, mon, player);
 
-			/* Mimic wakes up and becomes aware*/
-			monster_wake(mon, false, 100);
+				/* Mimic wakes up and becomes aware*/
+				monster_wake(mon, false, 100);
+			} else {
+				py_attack(player, grid);
+			}
 		} else {
-			py_attack(player, grid);
+			char m_name[80];
+			monster_desc(m_name, sizeof(m_name), mon, MDESC_IND_HID);
+
+			/* Friendly monsters can be pushed past */
+			msg("You push past %s.", m_name);
+
+			/* Move player */
+			monster_swap(player->grid, grid);
 		}
 	} else if (player->timed[TMD_HELD]) {
 		/* If held, you can attack monsters but not do anything else */

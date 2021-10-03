@@ -1140,7 +1140,7 @@ bool do_tame(struct monster *mon)
 	double skill = get_taming_skill(player);
 	bool neutral = mflag_has(mon->mflag, MFLAG_NEUTRAL);
 	double difficulty = get_taming_resistance(mon->race, player, neutral);
-	bool success = true;
+	bool success = false;
 	bool critical = false;
 
 	if (!wizard) {
@@ -1154,6 +1154,8 @@ bool do_tame(struct monster *mon)
 		} else {
 			critical = one_in_(2) && (chance > ((double)(Rand_normal(0, 200000))) / 800000.0);
 		}
+	} else {
+		success = true;
 	}
 
 	/* Success: convert neutral to friendly, wild to neutral */
