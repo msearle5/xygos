@@ -813,6 +813,33 @@ static const char *lore_pronoun_possessive(monster_sex_t sex, bool title_case)
 	return lore_pronouns[pronoun_index][case_index];
 }
 
+/**
+ * Return a pronoun for a monster.
+ *
+ * Descriptions are in a table within the function. Table must match
+ * monster_sex_t values.
+ *
+ * \param sex is the gender value (as provided by `lore_monster_sex()`.
+ * \param title_case indicates whether the initial letter should be
+ * capitalized; `true` is capitalized, `false` is not.
+ */
+static const char *lore_pronoun(monster_sex_t sex)
+{
+	static const char *lore_pronouns[MON_SEX_MAX] = {
+		"it",
+		"him",
+		"her",
+		"their",
+	};
+
+	int pronoun_index = MON_SEX_NEUTER;
+
+	if (sex < MON_SEX_MAX)
+		pronoun_index = sex;
+
+	return lore_pronouns[pronoun_index];
+}
+
 /** Return a "s" or empty string attached to the preceding verb.
  * 
  * Descriptions are in a table within the function. Table must match
@@ -1297,6 +1324,47 @@ void lore_append_exp(textblock *tb, const struct monster_race *race,
 	/* Mention the dependance on the player's level */
 	textblock_append(tb, " for %s %u%s level character.  ", article,
 					 level, ordinal);
+}
+
+/**
+ * Append the taming ability description to a textblock.
+ *
+ * Known race flags are passed in for simplicity/efficiency.
+ *
+ * \param tb is the textblock we are adding to.
+ * \param race is the monster race we are describing.
+ * \param lore is the known information about the monster race.
+ * \param known_flags is the preprocessed bitfield of race flags known to the
+ *        player.
+ */
+void lore_append_taming(textblock *tb, const struct monster_race *race,
+					 const struct monster_lore *lore)
+{
+	/* Check legality */
+	assert(tb && race && lore);
+
+	int msex = lore_monster_sex(race);
+	const char *pronoun = lore_pronoun(msex);
+	const char *nom_pronoun = lore_pronoun_nominative(msex, true);
+
+	/* See do_tame() */
+	double skill = get_taming_skill(player);
+	double wild_res = get_taming_resistance(race, player, false);
+	double neutral_res = get_taming_resistance(race, player, true);
+	double wild_p = Rand_cumulative_normal(skill - wild_res, 0.0, 0.25);
+	double neutral_p = Rand_cumulative_normal(skill - neutral_res, 0.0, 0.25);
+	if (wild_p < 0.001) {
+		if (wild_res > 1000) {
+			textblock_append(tb, "%s can never be pacified.  ", nom_pronoun);
+			return;
+		} else {
+			textblock_append(tb, "You cannot pacify %s", pronoun);
+		}
+	} else
+		textblock_append(tb, "You have %.1lf%% chance of pacifying %s", wild_p * 100.0, pronoun);
+	if (neutral_p >= 0.001)
+		textblock_append(tb, ", and %.1lf%% chance of taming %s", neutral_p * 100.0, pronoun);
+	textblock_append(tb, " at this time.  ");
 }
 
 /**
