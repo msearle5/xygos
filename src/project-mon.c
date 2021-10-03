@@ -1147,8 +1147,9 @@ bool do_tame(struct monster *mon)
 		/* Skill vs difficulty */
 		double chance = skill - difficulty;
 
-		double rand = ((double)(Rand_normal(0, 200000))) / 800000.0; // mean 0, s.d. 0.25, min -1, max 1
-		if (chance < rand) {
+		double rand = Rand_cumulative_normal(chance, 0.0, 0.25); // mean 0, s.d. 0.25, min -1, max 1
+
+		if (Rand_double(1.0) < rand) {
 			/* Success */
 			success = true;
 		} else {
