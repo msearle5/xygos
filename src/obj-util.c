@@ -2054,6 +2054,7 @@ bool verify_object(const char *prompt, const struct object *obj,
 typedef enum {
 	MSG_TAG_NONE,
 	MSG_TAG_NAME,
+	MSG_TAG_BRIEFNAME,
 	MSG_TAG_KIND,
 	MSG_TAG_FLAVOR,
 	MSG_TAG_VERB,
@@ -2064,6 +2065,8 @@ static msg_tag_t msg_tag_lookup(const char *tag)
 {
 	if (strncmp(tag, "name", 4) == 0) {
 		return MSG_TAG_NAME;
+	} else if (strncmp(tag, "briefname", 9) == 0) {
+		return MSG_TAG_BRIEFNAME;
 	} else if (strncmp(tag, "kind", 4) == 0) {
 		return MSG_TAG_KIND;
 	} else if (strncmp(tag, "flavor", 6) == 0) {
@@ -2113,7 +2116,18 @@ char *format_custom_message(const struct object *obj, const char *string, char *
 					/* First character of the string, so capitalize */
 					if (next == orig)
 						flags |= ODESC_CAPITAL;
-					end += object_desc(buf, len, obj, flags, p);
+					end += object_desc(buf + strlen(buf), len, obj, flags, p);
+				} else {
+					strnfcat(buf, len, &end, "hands");
+				}
+				break;
+			case MSG_TAG_BRIEFNAME:
+				if (obj) {
+					u32b flags = ODESC_BASE;
+					/* First character of the string, so capitalize */
+					if (next == orig)
+						flags |= ODESC_CAPITAL;
+					end += object_desc(buf + strlen(buf), len, obj, flags, p);
 				} else {
 					strnfcat(buf, len, &end, "hands");
 				}

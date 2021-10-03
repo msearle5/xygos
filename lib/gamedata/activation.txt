@@ -953,10 +953,18 @@ msg:{name} glows intensely black...
 effect:BIZARRE
 desc:does bizarre things
 
+name:SHELL
+aim:1
+power:12
+msg:Boom! Your {briefname} fires a shell!
+effect:BALL:SHARD:1
+dice:3d40
+desc:fires a shell with damage 3d40
+
 name:ARROW
 aim:1
 power:11
-msg:Your {kind} fire{s} a bullet..
+msg:Your {kind} fire{s} a bullet.
 effect:BOLT:ARROW
 dice:150
 desc:fires a bullet with damage 150
