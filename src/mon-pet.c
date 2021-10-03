@@ -18,6 +18,8 @@
 
 #include "datafile.h"
 #include "init.h"
+#include "message.h"
+#include "mon-desc.h"
 #include "mon-pet.h"
 #include "monster.h"
 #include "parser.h"
@@ -215,6 +217,26 @@ struct file_parser interact_parser = {
 	cleanup_interact
 };
 
+/* Make a monster hostile, returning true if something happened */
+bool mon_anger(struct monster *mon)
+{
+	/* If the monster is nonhostile, anger it */
+	if ((mflag_has(mon->mflag, MFLAG_NEUTRAL)) || (mflag_has(mon->mflag, MFLAG_FRIENDLY))) {
+		char m_name[80];
+
+		/* Extract monster name (or "it") */
+		monster_desc(m_name, sizeof(m_name), mon, MDESC_TARG);
+
+		/* Turn off neutral, friendly flags */
+		mflag_off(mon->mflag, MFLAG_NEUTRAL);
+		mflag_off(mon->mflag, MFLAG_FRIENDLY);
+
+		/* Let you know */
+		msg("%s gets angry!", m_name);
+		return true;
+	}
+	return false;
+}
 
 /** If true, the monster will attack you on sight in the traditional way */
 bool mon_hates_you(const struct monster *mon)
