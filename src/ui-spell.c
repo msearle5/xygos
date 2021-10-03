@@ -101,11 +101,17 @@ static void spell_menu_display(struct menu *m, int oid, bool cursor,
 	/* Cooldown in progress? */
 	if (player->cooldown[spell_index] > 0) {
 		attr = COLOUR_RED;
-		snprintf(randval, sizeof(randval), "%d", player->cooldown[spell_index]);
+		if (player->cooldown[spell_index] > 1000000)
+			strcpy(randval, "infinite");
+		else
+			snprintf(randval, sizeof(randval), "%d", player->cooldown[spell_index]);
 	} else {
 		if (randcalc(spell->hp, 0, AVERAGE) == 0) {
 			/* Display cooldown */
-			append_random_value_string(randval, sizeof(randval), &spell->turns);
+			if (player->cooldown[spell_index] > 1000000)
+				strcpy(randval, "infinite");
+			else
+				append_random_value_string(randval, sizeof(randval), &spell->turns);
 		} else if (randcalc(spell->turns, 0, AVERAGE) == 0) {
 			tag = "-";
 		} else {
