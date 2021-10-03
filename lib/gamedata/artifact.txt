@@ -128,7 +128,7 @@ base-object:helm:tin hat
 level:3
 cost:2500
 weight:1.72kg
-alloc:50:5 to 60
+alloc:20:5 to 60
 armor:4:12
 flags:PROT_CONF | PROT_BLIND
 values:INT[-3] | WIS[-3] | RES_SOUND[1]
@@ -136,6 +136,17 @@ values:INT[-3] | WIS[-3] | RES_SOUND[1]
 # | PROT_HALLU
 desc:A helmet with a high pointed plume above each ear. Shielding you from unpleasant truths, this leader's helm also prevents you from getting the point...
 
+# If this is too powerful, add ABSORB_HIT?
+name:!Headcannon
+base-object:helm:combat helmet
+level:36
+cost:3500
+weight:3.8kg
+alloc:20:20 to 75
+armor:8:10
+flags:PROT_STUN | SEE_INVIS
+desc:A combat helmet with a sort of round turret on top, swinging around in response to your thoughts.
+act:SHELL
 
 ### Light Armor ###
 

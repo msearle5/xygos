@@ -2209,30 +2209,10 @@ level:16
 weight:1.45kg
 cost:80
 alloc:20:16 to 100
-attack:0d0:0:0
+attack:0d0:-1:0
 armor:6:0
 desc:A smoothly curved full-face helmet that covers your entire head with tough plastic - including a clear plastic flip-up visor in front.
 material:plastic
-
-# Base item for the Dark Helmet artifact
-name:& dark helmet~
-type:helm
-graphics:]:Slate
-level:50
-alloc:0:10 to 100
-desc:x
-flags:QUEST_ART | INSTA_ART
-material:steel
-
-# Base item for the sharkproof artifact
-name:& sharkproof swimsuit~
-type:soft armor
-graphics:(:VioletBlue
-level:50
-alloc:0:10 to 100
-desc:x
-flags:QUEST_ART | INSTA_ART
-material:cloth
 
 name:& iron mask~
 type:helm
@@ -2259,6 +2239,18 @@ values:RES_POIS[1]
 desc:A drab, tightly fitting face mask. It's thicker across the nose and mouth area, but there's no obvious way for air to get through it - however, you have no problems breathing in it.
 material:cloth
 
+name:& combat helmet~
+type:helm
+graphics:]:White
+level:28
+weight:1.9kg
+cost:350
+alloc:10:25 to 127
+attack:1d1:0:0
+armor:8:0
+desc:A chunky white plastic helmet covering your entire head with tough plastic, including a clear plastic flip-up visor. It's not unlike a motorbike helmet, but as military gear it's more durable and less restrictive.
+material:plastic
+
 name:& tiara~
 type:helm
 graphics:]:Gold
@@ -2270,6 +2262,16 @@ attack:1d1:0:0
 armor:1:0
 desc:A gold band, curving up from slim points each side of your head to a broad central setting for a large round jewel.
 material:gold
+
+# Base item for the Dark Helmet artifact
+name:& dark helmet~
+type:helm
+graphics:]:Slate
+level:50
+alloc:0:10 to 100
+desc:x
+flags:QUEST_ART | INSTA_ART
+material:steel
 
 # This only exists for the artifact (of the Core)
 name:& Coronet~
@@ -2286,7 +2288,6 @@ desc:An elegant golden circlet, with slender spines thrusting upward.
 desc: It looks like it should be resting over the brow of a king.
 material:gold
 
-#combat helmet?
 
 ### Body armours (Soft) ###
 
@@ -2416,6 +2417,16 @@ armor:18:0
 values:STR[1+M2] | DEX[1+M4]
 desc:A simple form of powered armor - lightweight, flexible and conforming to any shape. Unlike most power armor, this allows it to be combined with any cybergear.
 material:plastic
+
+# Base item for the sharkproof artifact
+name:& sharkproof swimsuit~
+type:soft armor
+graphics:(:VioletBlue
+level:50
+alloc:0:10 to 100
+desc:x
+flags:QUEST_ART | INSTA_ART
+material:cloth
 
 
 ### Body armours (Hard) ###
