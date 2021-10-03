@@ -28,6 +28,7 @@
 #include "mon-blows.h"
 #include "mon-desc.h"
 #include "mon-lore.h"
+#include "mon-pet.h"
 #include "mon-predicate.h"
 #include "mon-spell.h"
 #include "mon-timed.h"
@@ -406,6 +407,10 @@ bool make_ranged_attack(struct monster *mon)
 	char m_name[80];
 	bool seen = (player->timed[TMD_BLIND] == 0) && monster_is_visible(mon);
 	bool innate = false;
+
+	/* Friendly monsters shouldn't shoot at you */
+	if (!mon_hates_you(mon))
+		return false;
 
 	/* Check for cast this turn, non-innate and then innate */
 	if (!monster_can_cast(mon, false)) {
