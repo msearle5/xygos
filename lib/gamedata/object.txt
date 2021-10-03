@@ -2872,9 +2872,14 @@ cost:15
 alloc:50:1 to 100
 pile:100:2d3
 power:5
+desc:Instantly transports you a short distance. The location is randomly chosen. It's safe in the sense that it will not drop you inside solid rock or into hostile terrain such as lava or water - although of course, there's nothing to prevent it from being in sight of worse monsters than you are now. It can be used as an escape if you have nothing else, but it's usually better used for tactical positioning.
 effect:TELEPORT
 dice:10
-desc:Instantly transports you a short distance. The location is randomly chosen. It's safe in the sense that it will not drop you inside solid rock or into hostile terrain such as lava or water - although of course, there's nothing to prevent it from being in sight of worse monsters than you are now. It can be used as an escape if you have nothing else, but it's usually better used for tactical positioning.
+effect:NEXT
+effect:TELEPORT
+dice:18
+effect:TIMED_INC:ATT_RUN
+dice:4+d6
 
 name:teleport
 type:card
@@ -2885,9 +2890,14 @@ cost:40
 alloc:40:10 to 100
 pile:25:2
 power:6
+desc:Instantly transports you a long distance. The location is randomly chosen. It's safe in the sense that it will not drop you inside solid rock or into hostile terrain such as lava or water. It's a reliable escape, so long as you can run it and there isn't anything nasty at other other end.
 effect:TELEPORT
 dice:M60
-desc:Instantly transports you a long distance. The location is randomly chosen. It's safe in the sense that it will not drop you inside solid rock or into hostile terrain such as lava or water. It's a reliable escape, so long as you can run it and there isn't anything nasty at other other end.
+effect:NEXT
+effect:TELEPORT
+dice:80
+effect:TIMED_INC:ATT_RUN
+dice:2+d2
 
 name:portal
 type:card
@@ -2898,11 +2908,16 @@ cost:130
 alloc:15:15 to 100
 pile:25:2
 power:9
+desc:Creates a pair of portals, and jumps through. This isn't necessarily going to land you at the one you just created: portals are not locked to their original destination, but always send you to the nearest portal.
 effect:CREATE_PORTAL
 dice:35
 effect:PORTAL
-desc:Creates a pair of portals, and jumps through. This isn't necessarily going to land you at the one you just created: portals are not locked to their original destination, but always send you to the nearest portal.
+effect:NEXT
+effect:CREATE_PORTAL
+dice:70
+effect:PORTAL
 
+# Alter Reality?
 name:vertical teleport
 type:card
 graphics:-:Deep Light Blue
@@ -2929,6 +2944,11 @@ pile:70:1d3
 power:10
 effect:MAP_AREA
 effect-yx:22:40
+effect:NEXT
+effect:MAP_AREA
+effect-yx:22:40
+effect:TIMED_INC:SINFRA
+dice:20+d20
 
 name:detection
 type:card
@@ -2943,6 +2963,13 @@ effect:DETECT_GOLD
 effect-yx:22:40
 effect:SENSE_OBJECTS
 effect-yx:22:40
+effect:NEXT
+effect:DETECT_GOLD
+effect-yx:22:40
+effect:SENSE_OBJECTS
+effect-yx:22:40
+effect:TIMED_INC:TELEPATHY
+dice:2+d4
 
 name:scanning
 type:card
@@ -2955,6 +2982,11 @@ pile:70:1d3
 power:6
 effect:DETECT_INVISIBLE_MONSTERS
 effect-yx:22:40
+effect:NEXT
+effect:DETECT_INVISIBLE_MONSTERS
+effect-yx:22:40
+effect:TIMED_INC:SINVIS
+dice:10+d20
 
 name:identity
 type:card
@@ -2966,6 +2998,13 @@ alloc:50:5 to 100
 pile:70:1d4
 power:6
 effect:IDENTIFY
+effect:NEXT
+effect:IDENTIFY
+effect:IDENTIFY
+effect:RANDOM
+effect:IDENTIFY
+effect:NONE
+
 
 ### Enchantments ###
 
@@ -2979,9 +3018,12 @@ cost:125
 alloc:40:15 to 70
 pile:25:2
 power:15
+desc:Attempts to make weapons or ammunition a little more precise, more likely to hit its target.
 effect:ENCHANT:TOHIT
 dice:1
-desc:Attempts to make weapons or ammunition a little more precise, more likely to hit its target.
+effect:NEXT
+effect:ENCHANT:TOHIT
+dice:1+1d2
 
 #desc?
 name:enhanced power
@@ -2993,9 +3035,12 @@ cost:125
 alloc:40:15 to 70
 pile:25:2
 power:20
+desc:Attempts to make weapons or ammunition a little more powerful, more capable of striking truly.
 effect:ENCHANT:TODAM
 dice:1
-desc:Attempts to make weapons or ammunition a little more powerful, more capable of striking truly.
+effect:NEXT
+effect:ENCHANT:TODAM
+dice:1+1d2
 
 name:enhanced protection
 type:card
@@ -3006,9 +3051,12 @@ cost:125
 alloc:40:15 to 70
 pile:25:2
 power:12
+desc:Attempts to make armour or other worn equipment a little more protective.
 effect:ENCHANT:TOAC
 dice:1
-desc:Attempts to make armour or other worn equipment a little more protective.
+effect:NEXT
+effect:ENCHANT:TOAC
+dice:1+1d2
 
 name:enhanced potency
 type:card
@@ -3019,9 +3067,12 @@ cost:500
 alloc:40:50 to 100
 pile:25:2
 power:22
+desc:Attempts to make weapons or ammunition more precise and powerful, more capable of striking forcefully and accurately.
 effect:ENCHANT:TOBOTH
 dice:1d3
-desc:Attempts to make weapons or ammunition more precise and powerful, more capable of striking forcefully and accurately.
+effect:NEXT
+effect:ENCHANT:TOBOTH
+dice:1+2d3
 
 name:enhanced preservation
 type:card
@@ -3032,9 +3083,12 @@ cost:500
 alloc:40:50 to 100
 pile:25:2
 power:15
+desc:Attempts to make armour or other worn equipment considerably more protective.
 effect:ENCHANT:TOAC
 dice:2+1d3
-desc:Attempts to make armour or other worn equipment considerably more protective.
+effect:NEXT
+effect:ENCHANT:TOAC
+dice:4+2d3
 
 #egotastic[ity al] / branding, transform
 name:transformation
