@@ -1002,16 +1002,183 @@ static void project_monster_handler_MON_CRUSH(project_monster_handler_context_t 
 	}
 }
 
+/**
+ * Stat Table (CHR) -- taming ability
+ */
+double adj_chr_taming[STAT_RANGE];
+
+/* Get your taming skill. This is independent of the target.
+ * This is a combination of factors:
+ * Taming Object Flag	+
+ * Charisma				+/-
+ * Aggravation			-
+ * Magic-Device skill	+ (if a wand is used)
+ * Player level			+
+ *
+ * Skill is mostly in the +/- 1.0 range but may exceed that when there are multiple strong combining factors.
+ * An average player (mid level, ~50% device skill, 10 CHR, no taming or aggravtion) will get close to 0.
+ */
+double get_taming_skill(struct player *p)
+{
+	/* Skill */
+	double t = 0.0;
+
+	/* Taming flag */
+	if (player_of_has(p, OF_TAMING))
+		t += 0.5;
+
+	/* Charisma */
+	t += adj_chr_taming[p->state.stat_ind[STAT_CHR]];
+
+	/* Aggro */
+	if (player_of_has(p, OF_AGGRAVATE))
+		t -= 0.8;
+
+	/* Device skill (scaled 0 to ~140) */
+	t += (((double)(player->state.skills[SKILL_DEVICE])) / 300) - 0.25;
+
+	/* Player level */
+	t += (((double)(player->lev)) / (2 * PY_MAX_LEVEL)) - 0.25;
+
+	return t;
+}
+
+/* Get the resistance to taming of a monster. This is mostly independent of the player.
+ * It is a combination of factors:
+ * Monster level				+
+ * Is the monster an animal?	-
+ * Is it human, humanoid?		+
+ * Is it unique?				++
+ * Is it a guardian/quest		+++
+ * Is it SMART/STUPID			+/-
+ * Is it WEIRD_MIND/EMPTY_MIND	-, but no help from SENSE_ANIMAL
+ * Are you telepathic?			+, SENSE_ANIMAL
+ *
+ * The usual range is -0.6 .. 3.55, though most of that is expected to mean "impossible",
+ * and questors which may never be tamed return 1e9. 
+ */
+double get_taming_resistance(struct monster *mon, struct player *p, bool neutral)
+{
+	double r = 0.0;
+
+	/* Level */
+	r += (((double)mon->race->level) / 100) - 0.25;
+
+	/* Uniques are difficult */
+	if (rf_has(mon->race->flags, RF_UNIQUE))
+		r = (r * 2.0) + 0.75;
+
+	/* Questors are impossible */
+	if ((rf_has(mon->race->flags, RF_SPECIAL_GEN)) || (rf_has(mon->race->flags, RF_QUESTOR)))
+		return 1e9;
+
+	/* Animals are the baseline */
+	if (!rf_has(mon->race->flags, RF_ANIMAL))
+		r += 0.4;
+	else {
+		/* Animals are easier if you have an affinity for them */
+		if (player_of_has(p, OF_SENSE_ANIMAL))
+			r -= 0.15;
+	}
+
+	/* Humans and humanoid aliens are difficult */
+	int ch = mon->race->d_char;
+	if (ch == 'p' || ch == 't' || ch == 'h' || ch == 'P')
+		r += 0.4;
+
+	/* Brains helps */
+	if (rf_has(mon->race->flags, RF_SMART))
+		r += 0.2;
+
+	if (rf_has(mon->race->flags, RF_STUPID))
+		r -= 0.2;
+	else {
+		/* Strange mind but not stupid */
+		if (rf_has(mon->race->flags, RF_WEIRD_MIND))
+			r += 0.15;
+		else if (rf_has(mon->race->flags, RF_EMPTY_MIND))
+			r += 0.3;
+		else if (player_of_has(p, OF_TELEPATHY)) {
+			/* If the monster isn't stupid and doesn't have a strange mind,
+			 * telepathy helps
+			 **/
+			r -= 0.1;
+		}
+	}
+
+	/* More difficult if already neutral */
+	if (neutral)
+		difficulty = (MAX(difficulty, 0.0) * 2.0) + 0.4;
+
+	return r;
+}
+
+/* Taming.
+ *
+ * In wizard mode, this without fail on all monsters switches wild->neutral->tame->wild.
+ * This is far too powerful for normal use but is kept as it's a useful debug tool.
+ *
+ * Otherwise, it does nothing to friendly monsters.
+ * The chance of converting a monster from wild to neutral is based on your taming skill
+ * vs. its ability to resist.
+ * Converting from neutral to tame uses the same principle but is much more difficult,
+ * and failure risks turning it feral again.
+ */
+bool do_tame(struct monster *mon)
+{
+	bool wizard = player->wizard;
+
+	if (mflag_has(mon->mflag, MFLAG_FRIENDLY)) {
+		if (wizard)
+			mflag_off(mon->mflag, MFLAG_FRIENDLY);
+		else
+			return;
+	}
+
+	double skill = get_taming_skill(player);
+	bool neutral = mflag_has(mon->mflag, MFLAG_NEUTRAL);
+	double difficulty = get_taming_resistance(mon, player, neutral);
+	bool success = true;
+	bool critical = false;
+
+	if (!wizard) {
+		/* Skill vs difficulty */
+		double chance = skill - difficulty;
+
+		double rand = ((double)(Rand_normal(0, 200000))) / 800000.0; // mean 0, s.d. 0.25, min -1, max 1
+		if (chance < rand) {
+			/* Success */
+			success = true;
+		} else {
+			critical = one_in_(2) && (chance > ((double)(Rand_normal(0, 200000))) / 800000.0);
+		}
+	}
+
+	/* Success: convert neutral to friendly, wild to neutral */
+	if (success) {
+		if (neutral) {
+			mflag_on(mon->mflag, MFLAG_FRIENDLY);
+			mflag_off(mon->mflag, MFLAG_NEUTRAL);
+			msg("%s looks much more friendly now!", mname);
+		} else {
+			mflag_on(mon->mflag, MFLAG_NEUTRAL);
+			msg("%s calms down.", mname);
+		}
+	} else {
+		if (critical) {
+			mflag_off(mon->mflag, MFLAG_NEUTRAL);
+			msg("%s rebels!");
+		}
+	}
+
+	return success;
+}
+
 /* Charm */
 static void project_monster_handler_MON_CHARM(project_monster_handler_context_t *context)
 {
 	if (context->seen) context->obvious = true;
-	if (mflag_has(context->mon->mflag, MFLAG_NEUTRAL)) {
-		mflag_on(context->mon->mflag, MFLAG_FRIENDLY);
-		mflag_off(context->mon->mflag, MFLAG_NEUTRAL);
-	} else {
-		mflag_on(context->mon->mflag, MFLAG_NEUTRAL);
-	}
+	do_tame(context->mon);
 	context->dam = 0;
 }
 
