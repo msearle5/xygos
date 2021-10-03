@@ -1159,20 +1159,25 @@ bool do_tame(struct monster *mon)
 		success = true;
 	}
 
+	bool sleep = (mon->m_timed[MON_TMD_SLEEP] > 0);
+	monster_wake(mon, false, 100);
+
 	/* Success: convert neutral to friendly, wild to neutral */
 	if (success) {
 		if (neutral) {
 			mflag_on(mon->mflag, MFLAG_FRIENDLY);
 			mflag_off(mon->mflag, MFLAG_NEUTRAL);
-			msg("%s looks much more friendly now!", m_name);
+			msg("%s %s", m_name, sleep ? "wakes and looks friendly!" : "looks much more friendly now!");
 		} else {
 			mflag_on(mon->mflag, MFLAG_NEUTRAL);
-			msg("%s calms down.", m_name);
+			msg("%s %s.", m_name, sleep ? "awakes peacefully" : "calms down");
 		}
 	} else {
 		if (critical) {
 			mflag_off(mon->mflag, MFLAG_NEUTRAL);
-			msg("%s rebels!", m_name);
+			msg("%s %srebels!", m_name, sleep ? "awakes and " : "");
+		} else {
+			msg("%s %s.", m_name, sleep ? "wakes up" : "is unaffected");
 		}
 	}
 
