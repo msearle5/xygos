@@ -91,7 +91,21 @@ flags:QUEST_ART
 power:450
 desc:Your own creation.
 
+
 ### Light Sources ###
+
+name:'Atomic Rock'
+base-object:light:rock
+level:6
+weight:3300g
+cost:1400
+alloc:20:1 to 50
+attack:1d3:0:0
+armor:0:0
+flags:NO_FUEL | PROT_FEAR
+values:RES_RADIATION[-1] | INFRA[4]
+desc:"The world famous Atomic Rock - it really glows!" - an ominous blue. It's mildly radioactive, and while you will not be directly harmed by it you do become more vulnerable to radiation attacks.
+act:MELT_DOWN
 
 ### Swords and Daggers ###
 

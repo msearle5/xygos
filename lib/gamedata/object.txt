@@ -151,7 +151,6 @@
 
 
 
-
 ##### Non-kind (things treated like objects) #####
 
 name:<pile>
@@ -5905,3 +5904,15 @@ msg:That tastes good.
 effect:NOURISH:INC_BY
 dice:50
 desc:A chocolate egg, covered in shiny purple foil.
+
+# Base item for the Atomic Rock artifact
+name:& rock~
+type:light
+graphics:~:VioletBlue
+level:6
+alloc:0:1 to 50
+desc:x
+flags:LIGHT_3
+pval:500
+material:stone
+

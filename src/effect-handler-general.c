@@ -3575,6 +3575,13 @@ bool effect_handler_TELEPORT_LEVEL(effect_handler_context_t *context)
 	return effect_change_level(context, NULL, NULL, true, true, true);
 }
 
+/**
+ * Melt through the floor. Similar to teleport-level, but you can only go one way and it's not considered to be teleportation.
+ */
+bool effect_handler_MELT_DOWN(effect_handler_context_t *context)
+{
+	return effect_change_level(context, NULL, "You melt through the floor.", false, true, false);
+}
 
 /**
  * The rubble effect

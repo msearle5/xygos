@@ -2969,7 +2969,6 @@ static enum parser_error parse_artifact_msg(struct parser *p) {
 static enum parser_error parse_artifact_values(struct parser *p) {
 	struct artifact *a = parser_priv(p);
 	assert(a);
-
 	return parse_values(parser_getstr(p, "values"), NULL, a->el_info, a->modifiers);
 }
 

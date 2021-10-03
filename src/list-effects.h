@@ -78,6 +78,7 @@ EFFECT(CREATE_PORTAL,				false,	"range",	2,		EFINFO_TELE,	"creates a pair of por
 EFFECT(TELEPORT,					false,	"range",	2,		EFINFO_TELE,	"teleports %s randomly %s",	"teleport %s %s")
 EFFECT(TELEPORT_TO,					false,	NULL,		0,		EFINFO_NONE,	"teleports toward a target",	"teleport to target")
 EFFECT(TELEPORT_LEVEL,				false,	NULL,		0,		EFINFO_NONE,	"teleports you one level up or down",	"teleport level")
+EFFECT(MELT_DOWN,					false,	NULL,		0,		EFINFO_NONE,	"melt through the floor",	"melt down")
 EFFECT(RUBBLE,						false,	NULL,		0,		EFINFO_NONE,	"causes rubble to fall around you",	"")
 EFFECT(GRANITE,						false,	NULL,		0,		EFINFO_NONE,	"causes a granite wall to fall behind you",		"")
 EFFECT(DESTRUCTION,					false,	NULL,		1,		EFINFO_QUAKE,	"destroys an area around you in the shape of a circle radius %d, and blinds you for 1d10+10 turns",	"destroy area")
