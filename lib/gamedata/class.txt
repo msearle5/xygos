@@ -299,7 +299,18 @@ sdesc:Runs a card in less time than usual. From 60% of the usual time when you f
 spell:Rare Card:5:20:8:5:1:10d2
 seffect:TIMED_INC:RARE_CARD
 sdice:4d2
-sdesc:Some cards have a hidden mode - using this technique before running the card will allow you to access it, if you are high enough level. The object information for the card will tell you what it does.
+sdesc:Most cards have a hidden mode - using this technique before running the card will allow you to access it, if you are high enough level. The object information for the card will tell you what it does.
+
+spell:Deus ex Asinus:40:0:1000:5:0:1000000000
+sdesc:With this technique you can pull something completely unjustified out of your ass. But you can only get away with something so brazen once! This can be complete healing, massive destruction, mass genocide.
+seffect:SELECT
+sdice:3
+#seffect:WISH
+seffect:HEAL_HP
+sdice:5000
+seffect:DESTRUCTION:LIGHT:20
+seffect:MASS_BANISH
+
 
 ############### MEDIC #################
 
