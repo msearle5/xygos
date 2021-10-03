@@ -419,21 +419,29 @@ static int project_player_handler_RADIATION(project_player_handler_context_t *co
 	int power = context->power;
 
 	/* Radiation is difficult to be resistant to */
-	switch (player->state.el_info[ELEM_RADIATION].res_level) {
-		case 0:
-			break;
-		case 1:
-			msg("You partially resist the effects.");
-			power /= 2;
-			break;
-		case 2:
-			msg("You resist the effects.");
-			power /= 4;
-			break;
-		default:
-			msg("You resist the effects very well.");
-			power /= 8;
-			break;
+	if (player->state.el_info[ELEM_RADIATION].res_level < 0) {
+		power += (power * -(player->state.el_info[ELEM_RADIATION].res_level)) / 2;
+	} else {
+		switch (player->state.el_info[ELEM_RADIATION].res_level) {
+			case 0:
+				break;
+			case 1:
+				msg("You partially resist the effects.");
+				power /= 2;
+				break;
+			case 2:
+				msg("You resist the effects.");
+				power /= 4;
+				break;
+			case IMMUNITY:
+				msg("You are unaffected.");
+				power = 0;
+				break;
+			default:
+				msg("You resist the effects very well.");
+				power /= 8;
+				break;
+		}
 	}
 
 	if (power < 1)

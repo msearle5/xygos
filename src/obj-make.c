@@ -788,9 +788,11 @@ void copy_artifact_data(struct object *obj, const struct artifact *art)
 	copy_brands(&obj->brands, art->brands);
 	copy_faults(obj, art->faults);
 	for (i = 0; i < ELEM_MAX; i++) {
-		/* Take the larger of artifact and base object resist levels */
-		obj->el_info[i].res_level =
-			MAX(art->el_info[i].res_level, obj->el_info[i].res_level);
+		/* Take the (absolutely) larger of artifact and base object resist levels.
+		 * In case of conflicts, the artifact wins.
+		 **/
+		if (ABS(obj->el_info[i].res_level) <= ABS(art->el_info[i].res_level))
+			obj->el_info[i].res_level = art->el_info[i].res_level;
 
 		/* Union of flags so as to know when ignoring is notable */
 		obj->el_info[i].flags |= art->el_info[i].flags;

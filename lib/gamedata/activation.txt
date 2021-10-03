@@ -507,6 +507,15 @@ power:15
 effect:TELEPORT_LEVEL
 desc:teleports you one level up or down
 
+name:MELT_DOWN
+aim:0
+power:8
+msg:Your {briefname} glows brightly and heats up...
+effect:SPOT:RADIATION:2
+dice:2d8
+effect:MELT_DOWN
+desc:melts through the floor
+
 name:CONFUSING
 aim:0
 power:8
