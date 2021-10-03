@@ -29,6 +29,7 @@
 #include "mon-lore.h"
 #include "mon-make.h"
 #include "mon-msg.h"
+#include "mon-pet.h"
 #include "mon-predicate.h"
 #include "mon-timed.h"
 #include "mon-util.h"
@@ -834,6 +835,8 @@ static bool py_attack_hit(struct player *p, struct loc grid, struct monster *mon
 	/* Post-damage effects */
 	if (blow_after_effects(grid, dmg, splash, fear, do_quake))
 		stop = true;
+
+	mon_anger(mon);
 
 	return stop;
 }

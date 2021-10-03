@@ -144,7 +144,7 @@ void lore_description(textblock *tb, const struct monster_race *race,
 
 	/* Do we know everything */
 	if (lore_is_fully_known(race))
-		textblock_append(tb, "You know everything about this monster.");
+		textblock_append(tb, "You know everything about this monster.  ");
 
 	/* Notice "Quest" monsters */
 	if (rf_has(race->flags, RF_QUESTOR))

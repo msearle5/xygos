@@ -20,5 +20,6 @@ struct monster;
 
 extern struct file_parser interact_parser;
 
+bool mon_anger(struct monster *mon);
 bool mon_hates_you(const struct monster *mon);
 bool mon_hates_mon(const struct monster *attacker, const struct monster *victim);
