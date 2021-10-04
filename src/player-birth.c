@@ -461,26 +461,7 @@ static void get_ahw(struct player *p)
  */
 void player_embody(struct player *p)
 {
-	char buf[80];
-	int i;
-
-	assert(p->race);
-	struct player_body *bod = bodies;
-	for (i = 0; i < p->race->body; i++) {
-		bod = bod->next;
-		assert(bod);
-	}
-
-	memcpy(&p->body, bod, sizeof(p->body));
-	my_strcpy(buf, bod->name, sizeof(buf));
-	p->body.name = string_make(buf);
-	p->body.slots = mem_zalloc(p->body.count * sizeof(struct equip_slot));
-
-	for (i = 0; i < p->body.count; i++) {
-		p->body.slots[i].type = bod->slots[i].type;
-		my_strcpy(buf, bod->slots[i].name, sizeof(buf));
-		p->body.slots[i].name = string_make(buf);
-	}
+	player_set_body(p, player_race_body(p));
 }
 
 /**

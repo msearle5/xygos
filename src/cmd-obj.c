@@ -649,7 +649,7 @@ void do_cmd_run_card(struct command *cmd)
 			"Run which card? ",
 			"You have no cards to run.",
 			tval_is_card,
-			USE_INVEN | USE_FLOOR) != CMD_OK) return;
+			USE_INVEN | USE_EQUIP | USE_FLOOR) != CMD_OK) return;
 
 	int alt = 0;
 	int yourlevel = levels_in_class(get_class_by_name("Clown")->cidx);

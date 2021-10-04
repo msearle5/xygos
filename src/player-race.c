@@ -17,6 +17,11 @@
  */
 
 #include "message.h"
+#include "obj-gear.h"
+#include "player-ability.h"
+#include "player-calcs.h"
+#include "player-birth.h"
+#include "player-util.h"
 #include "player.h"
 #include "ui-input.h"
 #include "z-util.h"
@@ -157,4 +162,99 @@ void personality_split_level(int from, int to)
 		}
 		break;
 	}
+}
+
+/* Returns true if the player should keep the given slot.
+ * It's used for optional parts of a body, such as Clown's Sleeves.
+ */
+static bool player_keeps_slot(struct player *p, struct equip_slot *slot)
+{
+	int clown = levels_in_class(get_class_by_name("Clown")->cidx);
+	int sleeves = 0;
+	if (clown >= 15) sleeves = 1;
+	if (clown >= 25) sleeves = 2;
+	if (streq(slot->name, "right sleeve") && (sleeves == 0)) return false;
+	if (streq(slot->name, "left sleeve") && (sleeves <= 1)) return false;
+	return true;
+}
+
+/**
+ * Set the player's body.
+ * This 
+ */
+void player_set_body(struct player *p, struct player_body *bod)
+{
+	char buf[80];
+	int i, j;
+
+	memcpy(&p->body, bod, sizeof(p->body));
+	my_strcpy(buf, bod->name, sizeof(buf));
+	p->body.name = string_make(buf);
+	p->body.slots = mem_zalloc(p->body.count * sizeof(struct equip_slot));
+
+	for (i = 0, j = 0; i < bod->count; i++) {
+		if (player_keeps_slot(p, &bod->slots[i])) {
+			p->body.slots[j].type = bod->slots[i].type;
+			my_strcpy(buf, bod->slots[i].name, sizeof(buf));
+			p->body.slots[j].name = string_make(buf);
+			j++;
+			p->body.count = j;
+		}
+	}
+
+	p->upkeep->equip_cnt = 0;
+}
+
+/* Find the body to use for the current race */
+struct player_body *player_race_body(struct player *p)
+{
+	assert(p->race);
+	struct player_body *bod = bodies;
+	for (int i = 0; i < p->race->body; i++) {
+		bod = bod->next;
+		assert(bod);
+	}
+	return bod;
+}
+
+/**
+ * Change body.
+ * This should keep equipped items where possible (when there are enough
+ * of the right kind of slots for them) - it removes items from the old
+ * body and adds them back to the new one. When this fails items end up
+ * in inventory, or dropped if there's not room.
+ */
+void player_change_body(struct player *p, struct player_body *bod)
+{
+	/* The previous body */
+	struct player_body body;
+	memcpy(&body, &p->body, sizeof(p->body));
+
+	/* The new one */
+	player_set_body(p, bod ? bod : player_race_body(p));
+
+	/* For each old item, remove it and wear it */
+	for (int i = 0; i < body.count; i++) {
+		struct object *obj = body.slots[i].obj;
+		if (obj) {
+			int slot = wield_slot(obj);
+			if (slot >= 0) {
+				p->body.slots[slot].obj = obj;
+				p->upkeep->equip_cnt++;
+			} else {
+				inven_carry(p, obj, true, true);
+				combine_pack(p);
+				pack_overflow(NULL);
+			}
+		}
+	}
+
+	changed_abilities();
+
+	p->upkeep->update |= (PU_BONUS | PU_INVEN);
+	p->upkeep->redraw |= (PR_INVEN | PR_EQUIP);
+	update_stuff(p);
+
+	/* Clean up */
+	player_cleanup_body(&body);
 }
