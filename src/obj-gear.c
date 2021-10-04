@@ -255,7 +255,7 @@ const char *equip_describe(struct player *p, int slot)
  * Determine which equipment slot (if any) an item likes. The slot might (or
  * might not) be open, but it is a slot which the object could be equipped in.
  *
- * For items where multiple slots could work (e.g. rings), the function
+ * For items where multiple slots could work (e.g. cards), the function
  * will try to return an open slot if possible.
  */
 int wield_slot(const struct object *obj)
@@ -276,6 +276,8 @@ int wield_slot(const struct object *obj)
 
 	if (tval_is_melee_weapon(obj))
 		return slot_by_type(player, EQUIP_WEAPON, false);
+	else if (tval_is_card(obj))
+		return slot_by_type(player, EQUIP_CARD, false);
 	else if (tval_is_light(obj))
 		return slot_by_type(player, EQUIP_LIGHT, false);
 	else if (tval_is_body_armor(obj))
@@ -676,7 +678,7 @@ void inven_item_charges(struct object *obj)
  * Note that when the pack is being "over-filled", the new item must be
  * placed into the "overflow" slot, and the "overflow" must take place
  * before the pack is reordered, but (optionally) after the pack is
- * combined.  This may be tricky.  See "dungeon.c" for info.
+ * combined.  This may be tricky.
  *
  * Note that this code removes any location information from the object once
  * it is placed into the inventory, but takes no responsibility for removing

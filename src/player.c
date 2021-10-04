@@ -342,6 +342,16 @@ static void adjust_level(struct player *p, bool verbose)
 	}
 	update_player_object_knowledge(p);
 
+	/* You may have a new body.
+	 * Message if something has changed.
+	 */
+	int slots = p->body.count;
+	player_change_body(p, NULL);
+	if (slots < p->body.count)
+		msg("You feel as if you always have something up your sleeve.");
+	else if (slots > p->body.count)
+		msg("You feel as if you are wearing your heart on your sleeve.");
+
 	p->upkeep->update |= (PU_BONUS | PU_HP | PU_SPELLS);
 	p->upkeep->redraw |= (PR_LEV | PR_TITLE | PR_EXP | PR_STATS);
 	handle_stuff(p);
@@ -547,6 +557,14 @@ void player_safe_name(char *safe, size_t safelen, const char *name, bool strip_s
 		my_strcpy(safe, "PLAYER", safelen);
 }
 
+void player_cleanup_body(struct player_body *body)
+{
+	if (body->slots) {
+		for (int i = 0; i < body->count; i++)
+			string_free(body->slots[i].name);
+		mem_free(body->slots);
+	}
+}
 
 /**
  * Release resources allocated for fields in the player structure.
@@ -579,11 +597,7 @@ void player_cleanup_members(struct player *p)
 		object_pile_free(NULL, p->gear);
 		object_pile_free(NULL, p->gear_k);
 	}
-	if (p->body.slots) {
-		for (int i = 0; i < p->body.count; i++)
-			string_free(p->body.slots[i].name);
-		mem_free(p->body.slots);
-	}
+	player_cleanup_body(&p->body);
 	string_free(p->body.name);
 	string_free(p->history);
 	if (p->cave) {

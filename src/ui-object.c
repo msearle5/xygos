@@ -320,7 +320,7 @@ static void build_obj_list(int last, struct object **list, item_tester tester,
 
 		/* Show full slot labels for equipment (or quiver in subwindow) */
 		if (equip) {
-			strnfmt(buf, sizeof(buf), "%-14s: ", equip_mention(player, i));
+			strnfmt(buf, sizeof(buf), "%-15s: ", equip_mention(player, i));
 			my_strcpy(items[num_obj].equip_label, buf,
 					  sizeof(items[num_obj].equip_label));
 		} else if ((in_term || dead) && quiver) {
@@ -1488,7 +1488,7 @@ bool textui_get_item(struct object **choice, const char *pmt, const char *str,
 			newmenu = false;
 
 			/* Get an item choice */
-			*choice = item_menu(cmd, MAX(pmt ? strlen(pmt) : 0, 15), mode, NULL);
+			*choice = item_menu(cmd, MAX(pmt ? strlen(pmt) : 0, 16), mode, NULL);
 
 			/* Fix the screen */
 			screen_load();

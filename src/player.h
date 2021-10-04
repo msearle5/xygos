@@ -722,6 +722,7 @@ struct player_class *player_id2class(guid id);
 struct player_class *get_class_by_name(const char *name);
 
 /* player.c */
+void player_cleanup_body(struct player_body *body);
 void auto_char_dump(void);
 int stat_name_to_idx(const char *name);
 const char *stat_idx_to_name(int type);
@@ -746,6 +747,9 @@ struct player_race *player_id2ext(guid id);
 struct player_race *player_id2personality(guid id);
 struct player_race *get_race_by_name(const char *name);
 void personality_split_level(int from, int to);
+void player_change_body(struct player *p, struct player_body *bod);
+struct player_body *player_race_body(struct player *p);
+void player_set_body(struct player *p, struct player_body *bod);
 
 /* r_timelord.c */
 void timelord_force_regen(void);
