@@ -86,7 +86,6 @@ static void spell_menu_display(struct menu *m, int oid, bool cursor,
 			get_spell_info(spell_index, help, sizeof(help));
 			comment = help;
 			attr = COLOUR_WHITE;
-
 		} else {
 			comment = " untried";
 			attr = COLOUR_L_GREEN;

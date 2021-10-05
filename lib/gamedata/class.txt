@@ -302,15 +302,17 @@ sdice:4d2
 sdesc:Most cards have a hidden mode - using this technique before running the card will allow you to access it, if you are high enough level. The object information for the card will tell you what it does.
 
 spell:Deus ex Asinus:40:0:1000:5:0:1000000000
-sdesc:With this technique you can pull something completely unjustified out of your ass. But you can only get away with something so brazen once! This can be complete healing, massive destruction, mass genocide.
+sdesc:With this technique you can pull something completely unjustified out of your ass. But you can only get away with something so brazen once! This can be complete healing, massive destruction (radius 20), mass genocide (this has a hitpoint cost), a missile strike (1600 damage, radius 5) or altering reality (replacing the level).
 seffect:SELECT
-sdice:3
+sdice:5
 #seffect:WISH
 seffect:HEAL_HP
 sdice:5000
 seffect:DESTRUCTION:LIGHT:20
 seffect:MASS_BANISH
-
+seffect:BALL:SHARD:5
+sdice:1600
+seffect:ALTER_REALITY
 
 ############### MEDIC #################
 
