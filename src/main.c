@@ -303,7 +303,7 @@ static void list_saves(void)
 
 	my_dclose(d);
 
-	printf("\nUse angband -u<name> to use savefile <name>.\n");
+	printf("\nUse xygos -u<name> to use savefile <name>.\n");
 }
 
 
@@ -451,7 +451,7 @@ int main(int argc, char *argv[])
 
 			default:
 			usage:
-				puts("Usage: angband [options] [-- subopts]");
+				puts("Usage: xygos [options] [-- subopts]");
 				puts("  -n             Start a new character (WARNING: overwrites default savefile without -u)");
 				puts("  -l             Lists all savefiles you can play");
 				puts("  -w             Resurrect dead character (marks savefile)");
@@ -499,7 +499,7 @@ int main(int argc, char *argv[])
 	if (setlocale(LC_CTYPE, "")) {
 		/* Require UTF-8 */
 		if (!streq(nl_langinfo(CODESET), "UTF-8"))
-			quit("Angband requires UTF-8 support");
+			quit("Xygos requires UTF-8 support");
 	}
 #endif
 

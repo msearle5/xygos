@@ -1,9 +1,9 @@
-Angband's command system
+Xygos's command system
 ========================
 
-The command system in Angband is one of the two key ways that the game stays separate from the interface that displays it.  The other is the event system, which is currently underutilised.
+The command system in Xygos is one of the two key ways that the game stays separate from the interface that displays it.  The other is the event system, which is currently underutilised.
 
-The idea beyond the command system is that every action the player can perform in-game is encoded as an atomic command sent to the game.  These commands form the basic dialect of Angband.  
+The idea beyond the command system is that every action the player can perform in-game is encoded as an atomic command sent to the game.  These commands form the basic dialect of Xygos.  
 
 Note that the game command system does not cover 'UI actions', such as adjusting the game panel, looking around, and similar.  Targetting can be accomplished by sending a command ("target monster:'small kobold'") but the UI has to do the work to allow that command to be formed (allow the cursor to scroll around the screen, show what monster is currently highlighted, etc. - these things do not fall within the remit of the game core).
 

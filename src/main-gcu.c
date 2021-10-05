@@ -1032,7 +1032,7 @@ errr init_gcu(int argc, char **argv) {
 
 	/* Require standard size screen */
 	if (LINES < MIN_TERM0_LINES || COLS < MIN_TERM0_COLS) 
-		quit("Angband needs at least an 80x24 'curses' screen");
+		quit("Xygos needs at least an 80x24 'curses' screen");
 
 #ifdef A_COLOR
 	/* Do we have color, and enough color, available? */
@@ -1318,7 +1318,7 @@ errr init_gcu(int argc, char **argv) {
 
         /* Map Terminal */
         if (remaining.cx < MIN_TERM0_COLS || remaining.cy < MIN_TERM0_LINES)
-            quit(format("Failed: angband needs an %dx%d map screen, not %dx%d", MIN_TERM0_COLS, MIN_TERM0_LINES, remaining.cx, remaining.cy));
+            quit(format("Failed: xygos needs an %dx%d map screen, not %dx%d", MIN_TERM0_COLS, MIN_TERM0_LINES, remaining.cx, remaining.cy));
         data[0].r = remaining;
         term_data_init(&data[0]);
         angband_term[0] = Term;
