@@ -4821,7 +4821,6 @@ power:12
 effect:BOLT_STATUS_DAM:MON_DRAIN
 dice:250
 
-
 ### Rubbish ###
 
 name:& healing ray~

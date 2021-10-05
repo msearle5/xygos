@@ -108,7 +108,7 @@ static void spell_menu_display(struct menu *m, int oid, bool cursor,
 	} else {
 		if (randcalc(spell->hp, 0, AVERAGE) == 0) {
 			/* Display cooldown */
-			if (player->cooldown[spell_index] > 1000000)
+			if (randcalc(spell->turns, 0, AVERAGE) > 1000000)
 				strcpy(randval, "infinite");
 			else
 				append_random_value_string(randval, sizeof(randval), &spell->turns);
