@@ -636,3 +636,10 @@ blind-desc:something
 obvious:1
 color:White
 
+code:MON_PAINT
+type:monster
+desc:paints monsters, makes them visible
+blind-desc:something
+obvious:1
+color:White
+

@@ -432,33 +432,40 @@ void update_mon(struct player *p, struct monster *mon, struct chunk *c,
 
 		/* Normal line of sight and player is not blind */
 		if (square_isview(c, mon->grid) && !p->timed[TMD_BLIND]) {
-			/* Use "infravision" */
-			if (d <= p->state.see_infra) {
-				/* Learn about warm/cold blood */
-				rf_on(lore->flags, RF_COLD_BLOOD);
 
-				/* Handle "warm blooded" monsters */
-				if (!rf_has(mon->race->flags, RF_COLD_BLOOD)) {
-					/* Easy to see */
-					easy = flag = true;
-				}
-			}
+			/* Painted? If so, easy to see */
+			if (mflag_has(mon->mflag, MFLAG_PAINTED)) {
+				/* Easy to see */
+				easy = flag = true;
+			} else {
+				/* Use "infravision" */
+				if (d <= p->state.see_infra) {
+					/* Learn about warm/cold blood */
+					rf_on(lore->flags, RF_COLD_BLOOD);
 
-			/* Use illumination */
-			if (square_isseen(c, mon->grid)) {
-				/* Learn about invisibility */
-				rf_on(lore->flags, RF_INVISIBLE);
-
-				/* Handle invisibility */
-				if (monster_is_invisible(mon)) {
-					/* See invisible */
-					if (player_of_has(p, OF_SEE_INVIS)) {
+					/* Handle "warm blooded" monsters */
+					if (!rf_has(mon->race->flags, RF_COLD_BLOOD)) {
 						/* Easy to see */
 						easy = flag = true;
 					}
-				} else {
-					/* Easy to see */
-					easy = flag = true;
+				}
+
+				/* Use illumination */
+				if (square_isseen(c, mon->grid)) {
+					/* Learn about invisibility */
+					rf_on(lore->flags, RF_INVISIBLE);
+
+					/* Handle invisibility */
+					if (monster_is_invisible(mon)) {
+						/* See invisible */
+						if (player_of_has(p, OF_SEE_INVIS)) {
+							/* Easy to see */
+							easy = flag = true;
+						}
+					} else {
+						/* Easy to see */
+						easy = flag = true;
+					}
 				}
 			}
 
