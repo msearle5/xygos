@@ -291,10 +291,24 @@ cdesc:A master of deception, misdirection and custard pies. You can perform impr
 magic:1:300
 book:[Clown]
 # spell:name:level:fail:exp:stat:hp:cooldown:fail message
+spell:Squirt:1:15:1:5:0:2d2
+seffect:ARC:WATER:0:30
+sdice:$Dd$E
+sexpr:D:PLAYER_LEVEL:/ 10 + 1
+sexpr:E:PLAYER_LEVEL:- 1 / 7 + 2
+sdesc:Would you like to take a closer look at my buttonhole?
+
 spell:Quick Draw:3:20:5:5:0:5d2
 spell-time:N * 52 / 49 + 63
 seffect:RUN_CARD
 sdesc:Runs a card in less time than usual. From 60% of the usual time when you first learn this technique down to 10% at maximum level.
+
+spell:Bamboozle:8:15:5:5:0:3d8
+seffect:TIMED_INC:ATT_CONF
+sdice:$Dd$E
+sexpr:D:PLAYER_LEVEL:/ 8 + 3
+sexpr:E:PLAYER_LEVEL:/ 11 + 4
+sdesc:Confuse the next monster you hit.
 
 spell:Rare Card:5:20:8:5:1:10d2
 seffect:TIMED_INC:RARE_CARD

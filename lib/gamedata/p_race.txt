@@ -175,8 +175,10 @@ spell:Monologue:8:10:2:4:1d2:3d4
 seffect:PROJECT_LOS_AWARE:SLEEP_ALL
 sdice:$B
 sexpr:B:PLAYER_LEVEL:* 15 + 300
-sdesc:You bore your way through the floor or ceiling.
+sdesc:You give a speech so stunning as to leave everyone glued to their seats, fast a sleep.
+
 spell:Bore:32:25:100:4:2d6:4d10
+sdesc:You bore your way through the floor or ceiling.
 seffect:CREATE_STAIRS
 
 # "Arrogant" would be another word.

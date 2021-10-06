@@ -880,7 +880,7 @@ static const byte colour_table[] =
 
 
 static struct panel *get_panel_topleft(void) {
-	struct panel *p = panel_allocate(7);
+	struct panel *p = panel_allocate(8);
 
 	panel_line(p, COLOUR_L_BLUE, "Name", "%s", player->full_name);
 	if (!streq(player->extension->name, "None"))
