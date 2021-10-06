@@ -1383,6 +1383,7 @@ int textui_do_birth(void)
 					/* Reset the menus, as the extensions available depend on
 					 * the race selected
 					 **/
+					free_birth_menus();
 					setup_menus();
 					if (ext_menu.count <= 1) {
 						menu_refresh(&ext_menu, false);
