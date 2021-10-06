@@ -631,6 +631,7 @@ color:White
 
 code:MON_PAINT
 type:monster
+player-desc:paint
 desc:paints monsters, makes them visible
 blind-desc:something
 obvious:1
