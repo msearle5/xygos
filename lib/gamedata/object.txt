@@ -4606,6 +4606,20 @@ power:3
 effect:BOLT_AWARE:MON_STUN
 dice:5+1d5
 
+name:& marker~
+type:zapper
+graphics:-:d
+level:5
+weight:10
+cost:500
+alloc:20:5 to 100
+attack:1d1:0:0
+armor:0:0
+charges:2+d6
+power:3
+effect:BOLT_AWARE:MON_PAINT
+dice:1+1d5
+
 name:& terrorizer~
 type:zapper
 graphics:-:d
@@ -5470,6 +5484,20 @@ armor:0:0
 power:3
 effect:BOLT_AWARE:MON_HOLD
 dice:3+1d5
+time:40
+
+name:& permanent marker~
+type:gadget
+graphics:-:d
+level:30
+weight:15
+cost:1500
+alloc:20:30 to 100
+attack:1d1:0:0
+armor:0:0
+power:3
+effect:BALL:MON_PAINT:2
+dice:3+1d8
 time:40
 
 
