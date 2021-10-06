@@ -561,6 +561,7 @@ void player_cleanup_members(struct player *p)
 		object_free(p->obj_k);
 	}
 	mem_free(p->timed);
+	mem_free(p->player_hp);
 	if (p->upkeep) {
 		mem_free(p->upkeep->quiver);
 		mem_free(p->upkeep->inven);
