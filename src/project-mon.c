@@ -1005,6 +1005,17 @@ static void project_monster_handler_MON_CRUSH(project_monster_handler_context_t 
 	}
 }
 
+/* Paint.
+ * This removes CAMOUFLAGE (revealing mimics) and adds PAINTED (making invisibility
+ * and clear have no effect, and the monster always appear white)
+ **/
+static void project_monster_handler_MON_PAINT(project_monster_handler_context_t *context)
+{
+	if (context->seen) context->obvious = true;
+	mflag_off(context->mon->mflag, MFLAG_CAMOUFLAGE);
+	mflag_on(context->mon->mflag, MFLAG_PAINTED);
+}
+
 static const project_monster_handler_f monster_handlers[] = {
 	#define ELEM(a, ...) project_monster_handler_##a,
 	#include "list-elements.h"

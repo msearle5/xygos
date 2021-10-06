@@ -275,6 +275,12 @@ void grid_data_as_text(struct grid_data *g, int *ap, wchar_t *cp, int *tap,
 				a = da;
 			}
 
+			/* Painted = visible and white */
+			if (mflag_has(mon->mflag, MFLAG_PAINTED)) {
+				a = COLOUR_WHITE;
+				c = dc;
+			}
+
 			/* Store the drawing attr so we can use it elsewhere */
 			mon->attr = a;
 		}
