@@ -189,6 +189,10 @@ int setup_tests(void **state)
 	(void)state;
 	set_file_paths();
 	init_angband();
+#ifdef UNIX
+	/* Necessary for creating the randart file. */
+	create_needed_dirs();
+#endif
 
 	/* Set up the player. */
 	if (!player_make_simple(NULL, NULL, NULL, "Tester")) {
