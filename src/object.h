@@ -58,7 +58,6 @@ struct element_info {
 struct class_magic {
 	struct class_book *books;	/**< Details of spellbooks */
 	int spell_first;			/**< Level of first spell */
-	int spell_weight;			/**< Max armor weight to avoid mana penalties */
 	int num_books;				/**< Number of spellbooks */
 	int total_spells;			/**< Number of spells for this class */
 };

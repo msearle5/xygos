@@ -3660,7 +3660,6 @@ static enum parser_error parse_class_magic(struct parser *p) {
 	if (!m)
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 	m->spell_first = parser_getuint(p, "first");
-	m->spell_weight = parser_getuint(p, "weight");
 	m->books = NULL;
 	return PARSE_ERROR_NONE;
 }

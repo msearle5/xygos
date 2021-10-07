@@ -256,14 +256,13 @@ static int test_flags1(void *state) {
 }
 
 static int test_magic0(void *state) {
-	enum parser_error r = parser_parse(state, "magic:3:400:9");
+	enum parser_error r = parser_parse(state, "magic:3:9");
 	struct player_class *c;
 
 	eq(r, PARSE_ERROR_NONE);
 	c = parser_priv(state);
 	require(c);
 	eq(c->magic.spell_first, 3);
-	eq(c->magic.spell_weight, 400);
 	ok;
 }
 

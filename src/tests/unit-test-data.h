@@ -789,7 +789,6 @@ static struct player_class TEST_DATA test_class = {
 	.start_items = &start_longsword,
 	.magic =  {
 		.spell_first = 1,
-		.spell_weight = 300,
 		.num_books = 1,
 		.books = &test_book,
 		.total_spells = 8,

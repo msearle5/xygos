@@ -32,7 +32,7 @@
 # level-from:level
 # obj-flags:object property flags
 # player-flags:player property flags
-# magic:spell_first:spell_weight:num_books
+# magic:spell_first:num_books
 # book:name
 # spell:name:level:fail:exp:stat:hp:cooldown:[fail msg]
 # seffect:seffect:subtype (if needed):radius (if needed):parameter (if needed)
