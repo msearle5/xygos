@@ -36,14 +36,12 @@
  * Spell menu data struct
  */
 struct spell_menu_data {
+	bool (*is_valid)(const struct player *p, int spell_index);
 	int *spells;
 	int n_spells;
-
-	bool browse;
-	bool (*is_valid)(const struct player *p, int spell_index);
-	bool show_description;
-
 	int selected_spell;
+	bool browse;
+	bool show_description;
 };
 
 
@@ -99,9 +97,9 @@ static void spell_menu_display(struct menu *m, int oid, bool cursor,
 	*randval = 0;
 	const char *tag = "";
 	/* Cooldown in progress? */
-	if (player->cooldown[spell_index] > 0) {
+	if (player->spell[spell_index].cooldown > 0) {
 		attr = COLOUR_RED;
-		snprintf(randval, sizeof(randval), "%d", player->cooldown[spell_index]);
+		snprintf(randval, sizeof(randval), "%d", player->spell[spell_index].cooldown);
 	} else {
 		if (randcalc(spell->hp, 0, AVERAGE) == 0) {
 			/* Display cooldown */
@@ -221,7 +219,7 @@ static struct menu *spell_menu_new(bool (*is_valid)(const struct player *p, int 
 
 	/* collect spells from object */
 	d->n_spells = spell_collect_from_book(player, &d->spells);
-	if (d->n_spells == 0 || !spell_okay_list(player, is_valid, d->spells, d->n_spells)){
+	if (d->n_spells == 0 || !spell_okay_list(player, is_valid, d->spells, d->n_spells)) {
 		mem_free(m);
 		mem_free(d->spells);
 		mem_free(d);

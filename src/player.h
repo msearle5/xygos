@@ -570,6 +570,11 @@ struct player_upkeep {
 	int recharge_pow;		/* Power of recharge effect */
 };
 
+/* Modifiable spell state */
+struct spell_state {
+	s32b cooldown;
+};
+
 /**
  * Most of the "player" information goes here.
  *
@@ -679,7 +684,7 @@ struct player {
 
 	byte ability_pflags[PF_MAX];		/* Player flags from abilities */
 
-	s32b *cooldown;						/* Cooldowns, by spell index */
+	struct spell_state *spell;		/* Cooldowns, by spell index */
 
 	struct player_options opts;			/* Player options */
 	struct player_history hist;			/* Player history (see player-history.c) */

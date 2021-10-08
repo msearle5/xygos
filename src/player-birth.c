@@ -1593,9 +1593,9 @@ void do_cmd_accept_character(struct command *cmd)
 	player_outfit(player);
 
 	/* Cooldowns at zero */
-	if (!player->cooldown)
-		player->cooldown = mem_alloc(sizeof(*player->cooldown) * total_spells);
-	memset(player->cooldown, 0, sizeof(*player->cooldown) * total_spells);
+	if (!player->spell)
+		player->spell = mem_alloc(sizeof(*player->spell) * total_spells);
+	memset(player->spell, 0, sizeof(*player->spell) * total_spells);
 
 	/* Stop the player being quite so dead */
 	player->is_dead = false;

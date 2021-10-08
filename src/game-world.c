@@ -412,10 +412,10 @@ static void decrease_timeouts(void)
 	}
 
 	/* Technique cooldowns */
-	if (player->cooldown) {
+	if (player->spell) {
 		for(int i=0;i<total_spells;i++) {
-			if (player->cooldown[i] > 0)
-				player->cooldown[i]--;
+			if (player->spell[i].cooldown > 0)
+				player->spell[i].cooldown--;
 		}
 	}
 

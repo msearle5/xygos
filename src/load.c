@@ -893,10 +893,10 @@ int rd_player(void)
 	rd_s16b(&player->energy);
 	rd_s16b(&player->word_recall);
 
-	if (!player->cooldown)
-		player->cooldown = mem_zalloc(sizeof(*player->cooldown) * total_spells);
+	if (!player->spell)
+		player->spell = mem_zalloc(sizeof(*player->spell) * total_spells);
 	for (i = 0; i < total_spells; i++)
-		rd_s32b(&player->cooldown[i]);
+		rd_s32b(&player->spell[i].cooldown);
 
 	/* Find the number of timed effects */
 	rd_byte(&num);
