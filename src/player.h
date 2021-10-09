@@ -573,6 +573,8 @@ struct player_upkeep {
 /* Modifiable spell state */
 struct spell_state {
 	s32b cooldown;
+	s32b turn;
+	s32b uses;
 };
 
 /**

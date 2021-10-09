@@ -20,6 +20,7 @@
 #include "cave.h"
 #include "cmd-core.h"
 #include "effects.h"
+#include "game-world.h"
 #include "init.h"
 #include "monster.h"
 #include "obj-gear.h"
@@ -434,6 +435,10 @@ bool spell_cast(int spell_index, int dir, struct command *cmd)
 			/* Redraw object recall */
 			player->upkeep->redraw |= (PR_OBJECT);
 		}
+
+		/* Track the number of spells cast, and the most recent time */
+		player->spell[spell_index].uses++;
+		player->spell[spell_index].turn = turn;
 	}
 
 	mem_free(ident);

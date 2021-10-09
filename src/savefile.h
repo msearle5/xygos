@@ -124,6 +124,8 @@ int rd_traps(void);
 int rd_null(void);
 
 /* save.c */
+struct spell_state;
+
 void wr_description(void);
 void wr_randomizer(void);
 void wr_options(void);
@@ -138,6 +140,7 @@ void wr_artifacts(void);
 void wr_player(void);
 void wr_ignore(void);
 void wr_misc(void);
+void rdwr_spell_state(struct spell_state *spell);
 void rdwr_player(void);
 void wr_player_hp(void);
 void wr_player_spells(void);

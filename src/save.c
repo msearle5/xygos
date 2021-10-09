@@ -480,6 +480,13 @@ void wr_world(void)
 	rdwr_world();
 }
 
+void rdwr_spell_state(struct spell_state *spell)
+{
+	rdwr_s32b(&spell->cooldown);
+	rdwr_s32b(&spell->turn);
+	rdwr_s32b(&spell->uses);
+}
+
 void rdwr_player(void)
 {
 	/* Total energy used so far */
@@ -576,7 +583,7 @@ void wr_player(void)
 	wr_s16b(player->word_recall);
 
 	for (i = 0; i < total_spells; i++)
-		wr_s32b(player->spell[i].cooldown);
+		rdwr_spell_state(&player->spell[i]);
 
 	/* Find the number of timed effects */
 	wr_byte(TMD_MAX);

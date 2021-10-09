@@ -896,7 +896,7 @@ int rd_player(void)
 	if (!player->spell)
 		player->spell = mem_zalloc(sizeof(*player->spell) * total_spells);
 	for (i = 0; i < total_spells; i++)
-		rd_s32b(&player->spell[i].cooldown);
+		rdwr_spell_state(&player->spell[i]);
 
 	/* Find the number of timed effects */
 	rd_byte(&num);
