@@ -758,7 +758,7 @@ static const struct hit_types melee_hit_types[] = {
 	{ MSG_HIT_HI_SUPERB, "It was a *SUPERB* hit!" },
 };
 
-static bool py_attack_hit(struct player *p, struct loc grid, struct monster *mon, int dmg, char *verb, int verbsize, const char *after, u32b msg_type, int splash, bool do_quake, bool *fear)
+static bool py_attack_hit(struct player *p, struct loc grid, struct monster *mon, int dmg, char *verb, int verbsize, const char *after, u32b msg_type, int splash, bool do_quake, bool *fear, struct object *obj)
 {
 	int drain = 0;
 	bool stop = false;
@@ -783,6 +783,7 @@ static bool py_attack_hit(struct player *p, struct loc grid, struct monster *mon
 			blow = blow->next;
 		}
 		my_strcpy(verb, blow->name, verbsize);
+		obj = NULL;
 	}
 
 	/* No negative damage; change verb if no damage done */
@@ -813,7 +814,10 @@ static bool py_attack_hit(struct player *p, struct loc grid, struct monster *mon
 
 	/* Damage, check for hp drain, fear and death */
 	drain = MIN(mon->hp, dmg);
-	stop = mon_take_hit(mon, p, dmg, fear, NULL);
+	bool funny = false;
+	if ((obj) && (kf_has(obj->kind->kind_flags, KF_LOL)))
+		funny = true;
+	stop = do_mon_take_hit(mon, p, dmg, fear, NULL, funny);
 
 	/* Small chance of bloodlust side-effects */
 	if (p->timed[TMD_BLOODLUST] && one_in_(50)) {
@@ -1200,7 +1204,7 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear, bool *hit)
 	/* Learn by use */
 	equip_learn_on_melee_attack(p);
 
-	return py_attack_hit(p, grid, mon, dmg, verb, sizeof(verb), after, msg_type, splash, do_quake, fear) || ko;
+	return py_attack_hit(p, grid, mon, dmg, verb, sizeof(verb), after, msg_type, splash, do_quake, fear, obj) || ko;
 }
 
 /* Skill for the current weapon */
@@ -1376,7 +1380,7 @@ static bool py_attack_extra(struct player *p, struct loc grid, struct monster *m
 	char msg[32];
 	strncpy(msg, att->msg, sizeof(msg));
 	msg[sizeof(msg)-1] = 0;
-	return py_attack_hit(p, grid, mon, dmg, att->msg, sizeof(msg), after, MSG_HIT, 0, false, NULL);
+	return py_attack_hit(p, grid, mon, dmg, att->msg, sizeof(msg), after, MSG_HIT, 0, false, NULL, NULL);
 }
 
 /**
