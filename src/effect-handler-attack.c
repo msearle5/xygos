@@ -1903,6 +1903,13 @@ bool effect_handler_SWEEP(effect_handler_context_t *context)
 	return true;
 }
 
+/* Set a flag marking this effect chain as LOL */
+bool effect_handler_LOL(effect_handler_context_t *context)
+{
+	effect_project_flags |= PROJECT_LOL;
+	return true;
+}
+
 /**
  * The "wonder" effect.
  *

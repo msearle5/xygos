@@ -4264,9 +4264,8 @@ static int recyclable_blocks(const struct object *obj)
  *  2 = ", hard metals: steel, titanium
  *  3 = ", unobtainium, exotics
  * 
- * (May want to allow 1 step up, but at risk to the printer)
+ * (Allow 1 step up, but at risk to the printer)
  * 
- * Use item knowledge screen?
  * First step is to select an item - limited by it having a material that the printer can use & having chunks for it
  */
 bool effect_handler_PRINT(effect_handler_context_t *context)

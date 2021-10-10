@@ -41,6 +41,8 @@
  * ------------------------------------------------------------------------
  * Properties of effects
  * ------------------------------------------------------------------------ */
+
+int effect_project_flags;
  
 /**
  * Useful things about effects.
@@ -324,6 +326,9 @@ bool effect_do(struct effect *effect,
 	bool next = false;
 	effect_handler_f handler;
 	random_value value = { 0, 0, 0, 0 };
+
+	/* Reset flags */
+	effect_project_flags = 0;
 
 	/* Move effect forward to the first effect after 'alternate' NEXTs */
 	struct effect *first = effect;
