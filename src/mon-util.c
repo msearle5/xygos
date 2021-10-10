@@ -1253,6 +1253,7 @@ double mon_exp_value(const struct monster_race *race)
 
 double apply_funny_factor(double offset, double new_exp)
 {
+	static s32b msgturn;
 	int lev = levels_in_class(get_class_by_name("Clown")->cidx);
 	if (lev > 0) {
 		/* +50% at level 1, +100% at level 10, +150% at level 50 */
@@ -1263,7 +1264,10 @@ double apply_funny_factor(double offset, double new_exp)
 			funny_factor += ((double)lev - 1.0) / 20;
 		}
 		new_exp *= funny_factor;
-		msg("LOL!");
+		if (msgturn < turn - 100) {
+			msgturn = turn;
+			msg("LOL!");
+		}
 		return new_exp;
 	}
 	return new_exp * offset;

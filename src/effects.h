@@ -66,5 +66,6 @@ void effect_simple(int index,
 int recharge_failure_chance(const struct object *obj, int strength);
 void forget_remembered_objects(struct chunk *c, struct chunk *knownc, struct loc grid);
 bool monster_grow(struct monster *mon);
+extern int effect_project_flags;
 
 #endif /* INCLUDED_EFFECTS_H */

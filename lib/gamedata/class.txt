@@ -292,6 +292,7 @@ magic:1:300
 book:[Clown]
 # spell:name:level:fail:exp:stat:hp:cooldown:fail message
 spell:Squirt:1:15:1:5:0:2d2:Oops! You squirted yourself in the face!
+seffect:LOL
 seffect:ARC:WATER:0:30
 sdice:$Dd$E
 sexpr:D:PLAYER_LEVEL:/ 10 + 1
@@ -316,6 +317,7 @@ sexpr:E:PLAYER_LEVEL:/ 11 + 4
 sdesc:Confuse the next monster you hit.
 
 spell:Whitewash:12:20:15:5:0:3d20:Splat! Whoops.
+seffect:LOL
 seffect:BALL:MON_PAINT:4
 sdice:$Dd$E
 sexpr:D:PLAYER_LEVEL:/ 11 + 1
@@ -330,6 +332,7 @@ sdesc:Attempt to put everything in sight into a trance.
 
 spell:Deus ex Asinus:40:0:1000:5:0:1000000000
 sdesc:With this technique you can pull something completely unjustified out of your ass. But you can only get away with something so brazen once! This can be complete healing, massive destruction (radius 20), mass genocide (this has a hitpoint cost), a missile strike (1600 damage, radius 5) or altering reality (replacing the level).
+seffect:LOL
 seffect:SELECT
 sdice:5
 #seffect:WISH

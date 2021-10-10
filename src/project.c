@@ -20,6 +20,7 @@
 #include "cave.h"
 #include "game-event.h"
 #include "game-input.h"
+#include "effects.h"
 #include "generate.h"
 #include "init.h"
 #include "mon-predicate.h"
@@ -643,6 +644,9 @@ bool project(struct source origin, int rad, struct loc finish,
 
 	/* Flush any pending output */
 	handle_stuff(player);
+
+	/* Combine with any effect chain flags */
+	flg |= effect_project_flags;
 
 	/* No projection path - jump to target */
 	if (flg & PROJECT_JUMP) {
