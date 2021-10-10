@@ -286,6 +286,7 @@ equip:food:durian:1:1:none
 equip:food:pineapple:1:1:none
 equip:food:Hunter's pie:1:1:none
 equip:food:random:2:3:none
+equip:hafted:slapstick:1:1:none
 cdesc:A master of deception, misdirection and custard pies. You can perform impressive card tricks and are a great shot with a thrown knife or more exotic weapons (it's always best to kill your enemies in a humorous way, after all). And when it turns out that you shouldn't have brought a pie to a gun fight, some useful athletic techniques may speed your escape.
 
 magic:1:300

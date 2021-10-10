@@ -1776,6 +1776,19 @@ material:glass
 
 ### Clubs ###
 
+name:& slapstick~
+type:hafted
+graphics:\:Tan
+level:1
+weight:150g
+cost:35
+alloc:1:0 to 35
+attack:1d2:0:0
+armor:0:0
+desc:A slim wooden paddle with a loose stick, intended to slap together and make a loud noise without much force being needed. They are of course not *usually* intended as real weapons, but that doesn't mean that it can't be made to work as such.
+flags:LOL
+material:wood
+
 name:& baseball bat~
 type:hafted
 graphics:\:U
