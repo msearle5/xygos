@@ -37,6 +37,17 @@ typedef enum
 
 /*** Functions ***/
 
+bool do_effect_do(struct effect *effect,
+		struct source origin,
+		struct object *obj,
+		bool *ident,
+		bool aware,
+		int dir,
+		int beam,
+		int boost,
+		struct command *cmd,
+		int alternate,
+		int flags);
 void free_effect(struct effect *source);
 bool effect_valid(const struct effect *effect);
 bool effect_aim(const struct effect *effect);

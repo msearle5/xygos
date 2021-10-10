@@ -322,13 +322,38 @@ bool effect_do(struct effect *effect,
 		struct command *cmd,
 		int alternate)
 {
+	return do_effect_do(effect,
+		origin,
+		obj,
+		ident,
+		aware,
+		dir,
+		beam,
+		boost,
+		cmd,
+		alternate,
+		0);
+}
+
+bool do_effect_do(struct effect *effect,
+		struct source origin,
+		struct object *obj,
+		bool *ident,
+		bool aware,
+		int dir,
+		int beam,
+		int boost,
+		struct command *cmd,
+		int alternate,
+		int flags)
+{
 	bool completed = false;
 	bool next = false;
 	effect_handler_f handler;
 	random_value value = { 0, 0, 0, 0 };
 
 	/* Reset flags */
-	effect_project_flags = 0;
+	effect_project_flags = flags;
 
 	/* Move effect forward to the first effect after 'alternate' NEXTs */
 	struct effect *first = effect;
