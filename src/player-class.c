@@ -37,3 +37,21 @@ struct player_class *get_class_by_name(const char *name)
 			return c;
 	return NULL;
 }
+
+/* Check for approximate match (substring, in either direction,
+ * checking for a n exact match first)
+ **/
+struct player_class *get_class_partial_name(const char *name)
+{
+	struct player_class *c = get_class_by_name(name);
+	if (c) return c;
+
+	for (c = classes; c; c = c->next) {
+		if (strstr(c->name, name))
+			return c;
+		if (strstr(name, c->name))
+			return c;
+	}
+
+	return NULL;
+}

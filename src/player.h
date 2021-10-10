@@ -96,6 +96,7 @@ extern struct player_class **ordered_classes(void);
 #define PY_SPELL_LEARNED    0x01 	/* Spell has been learned */
 #define PY_SPELL_WORKED     0x02 	/* Spell has been successfully tried */
 #define PY_SPELL_FORGOTTEN  0x04 	/* Spell has been forgotten */
+#define PY_SPELL_FOLDED     0x08 	/* Spell should not be displayed */
 
 #define BTH_PLUS_ADJ    	3 		/* Adjust BTH per plus-to-hit */
 
@@ -355,7 +356,7 @@ struct class_spell {
  * A structure to hold class-dependent information on spell books.
  */
 struct class_book {
-	char *name;					/**< Name of this book */
+	char *name;							/**< Name of this book */
 	struct class_spell *spells;			/**< Spells in the book*/
 	int num_spells;						/**< Number of spells in this book */
 };
@@ -686,7 +687,7 @@ struct player {
 
 	byte ability_pflags[PF_MAX];		/* Player flags from abilities */
 
-	struct spell_state *spell;		/* Cooldowns, by spell index */
+	struct spell_state *spell;			/* Modifiable spell state, by spell index */
 
 	struct player_options opts;			/* Player options */
 	struct player_history hist;			/* Player history (see player-history.c) */
@@ -725,6 +726,7 @@ extern struct player *player;
 /* player-class.c */
 struct player_class *player_id2class(guid id);
 struct player_class *get_class_by_name(const char *name);
+struct player_class *get_class_partial_name(const char *name);
 
 /* player.c */
 void auto_char_dump(void);

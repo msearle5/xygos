@@ -1082,7 +1082,7 @@ void do_cmd_cast(struct command *cmd)
 	const char *error = "You have no techniques you can use.";
 
 	int n_spells = 0;
-	combine_books(player, &n_spells, NULL, NULL, NULL);
+	combine_books(player, &n_spells, NULL, NULL, NULL, NULL, NULL);
 
 	/* Maybe some still work?
 	 * Most should make this check, though.

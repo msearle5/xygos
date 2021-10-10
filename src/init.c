@@ -85,6 +85,7 @@ struct class_magic *parsing_magic;
 
 /* Over all books */
 int total_spells;
+int total_books;
 
 /**
  * Structure (not array) of game constants
@@ -3674,6 +3675,7 @@ static enum parser_error parse_class_book(struct parser *p) {
 	memset(&(m->books[m->num_books]), 0, sizeof(struct class_book));
 	m->books[m->num_books].name = string_make(parser_getsym(p, "name"));
 	m->num_books++;
+	total_books++;
 
 	return PARSE_ERROR_NONE;
 }
@@ -3691,7 +3693,7 @@ static enum parser_error parse_class_spell(struct parser *p) {
 	book->spells[book->num_spells].name = string_make(parser_getsym(p, "name"));
 	book->spells[book->num_spells].sidx = total_spells++;
 	m->total_spells++;
-	book->spells[book->num_spells].bidx = m->num_books - 1;
+	book->spells[book->num_spells].bidx = total_books - 1;
 	book->spells[book->num_spells].slevel = parser_getint(p, "level");
 	book->spells[book->num_spells].hp = parser_getrand(p, "hp");
 	book->spells[book->num_spells].turns = parser_getrand(p, "turns");
@@ -4010,6 +4012,7 @@ static void cleanup_class(void)
 		c = next;
 	}
 	total_spells = 0;
+	total_books = 0;
 }
 
 static struct file_parser class_parser = {
@@ -4022,7 +4025,7 @@ static struct file_parser class_parser = {
 
 /**
  * ------------------------------------------------------------------------
- * Intialize flavors
+ * Initialize flavors
  * ------------------------------------------------------------------------ */
 
 static wchar_t flavor_glyph;
