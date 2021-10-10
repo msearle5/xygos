@@ -1749,7 +1749,7 @@ void thrown_explodes(struct command *cmd, struct object *obj, struct loc grid)
 		/* Boost damage effects if skill > difficulty */
 		int boost = MAX((player->state.skills[SKILL_TO_HIT_THROW] - player->lev) / 2, 0);
 
-		effect_do(effect,
+		do_effect_do(effect,
 					source_object_at(obj, grid),
 					obj,
 					&ident,
@@ -1758,7 +1758,8 @@ void thrown_explodes(struct command *cmd, struct object *obj, struct loc grid)
 					false,
 					boost,
 					cmd,
-					0);
+					0,
+					PROJECT_LOL);
 		target_release();
 	}
 }
