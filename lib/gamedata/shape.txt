@@ -111,3 +111,31 @@ blow:punch
 blow:crush
 blow:thump
 blow:strike
+
+name:cow
+combat:-4:0:20
+obj-flags:SUST_STR | SUST_CON | PROT_STUN | PROT_CONF | REGEN
+values:STEALTH[-4] | INT[-2] | WIS[-2] | STR[4] | CON[6] | DEX[-4] | RES_SHARD[1]
+blow:butt
+blow:kick
+
+name:horse
+combat:-2:6:25
+obj-flags:SUST_STR | SUST_CON | PROT_STUN | PROT_CONF | REGEN
+values:STEALTH[-3] | INT[-2] | WIS[-2] | STR[6] | CON[6] | DEX[-1] | SPD[2] | RES_SHARD[1] | MOVES[1]
+blow:bite
+blow:kick
+
+name:elephant
+combat:-6:15:50
+obj-flags:SUST_STR | SUST_CON | PROT_STUN | PROT_CONF | REGEN
+values:STEALTH[-8] | INT[-1] | WIS[-1] | STR[8] | CON[8] | DEX[-4] | SPD[-3] | RES_SHARD[2]
+blow:butt
+blow:trample
+
+name:crocodile
+combat:-2:25:12
+obj-flags:SUST_STR | SUST_CON | PROT_STUN | PROT_FEAR | PROT_CONF
+values:STEALTH[2] | INT[-1] | WIS[-1] | STR[6] | CON[4] | DEX[-2] | RES_SHARD[1] | BLOWS[1]
+blow:bite
+blow:claw
