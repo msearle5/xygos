@@ -1122,6 +1122,32 @@ struct player_shape *player_shape_by_idx(int index)
 	return NULL;
 }
 
+/* Change player shape */
+void shapechange(struct player *p, const char *shapename, bool verbose)
+{
+	/* Change shape */
+	s32b old_mhp = p->mhp;
+	p->shape = lookup_player_shape(shapename);
+	if (verbose) {
+		msg("You assume the shape of a %s!", shapename);
+		msg("Your gear merges into your body.");
+	}
+
+	/* Update */
+	shape_learn_on_assume(p, shapename);
+	p->upkeep->update |= (PU_BONUS);
+	update_stuff(p);
+
+	/* Scale HP */
+	s32b new_mhp = p->mhp;
+	p->chp = (p->chp * new_mhp) / old_mhp;
+
+	/* and redraw */
+	p->upkeep->update |= (PU_BONUS);
+	p->upkeep->redraw |= (PR_TITLE | PR_MISC);
+	handle_stuff(p);
+}
+
 /**
  * Give shapechanged players a choice of returning to normal shape and
  * performing a command, just returning to normal shape without acting, or
@@ -1159,16 +1185,11 @@ bool player_get_resume_normal_shape(struct player *p, struct command *cmd)
  */
 void player_resume_normal_shape(struct player *p)
 {
-	p->shape = lookup_player_shape("normal");
-	msg("You resume your usual shape.");
-
 	/* Kill vampire attack */
 	(void) player_clear_timed(p, TMD_ATT_VAMP, true);
 
-	/* Update */
-	p->upkeep->update |= (PU_BONUS);
-	p->upkeep->redraw |= (PR_TITLE | PR_MISC);
-	handle_stuff(p);
+	shapechange(p, "normal", false);
+	msg("You resume your usual shape.");
 }
 
 /**
