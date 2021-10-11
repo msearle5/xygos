@@ -1608,6 +1608,10 @@ bool do_mon_take_hit(struct monster *mon, struct player *p, int dam, bool *fear,
 			return true;
 		}
 
+		/* Some monsters are intrinsically funny */
+		if (rf_has(mon->race->flags, RF_LOL))
+			funny = true;
+
 		/* It is dead now */
 		player_kill_monster(mon, p, note, funny);
 
