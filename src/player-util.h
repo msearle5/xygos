@@ -65,6 +65,7 @@ enum
  */
 #define REST_REQUIRED_FOR_REGEN 5
 
+void shapechange(struct player *p, const char *shapename, bool verbose);
 bool stat_check(int stat, int mid);
 int dungeon_top_level(const char *dungeon);
 int dungeon_get_next_level(struct player *p, int dlev, int added);
