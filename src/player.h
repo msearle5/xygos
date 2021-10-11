@@ -299,6 +299,8 @@ struct player_shape {
 
 	int sidx;
 
+	int level;
+
 	int to_a;				/**< Plusses to AC */
 	int to_h;				/**< Plusses to hit */
 	int to_d;				/**< Plusses to damage */

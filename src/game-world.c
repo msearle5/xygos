@@ -48,6 +48,8 @@
 #include "world.h"
 #include "z-queue.h"
 
+#include <math.h>
+
 u16b daycount = 0;
 u32b seed_randart;		/* Hack -- consistent random artifacts */
 u32b seed_flavor;		/* Hack -- consistent object colors */
@@ -777,19 +779,23 @@ void process_world(struct chunk *c)
 		}
 	}
 
-	/* Giants return to normal form after a while.
-	 * How long is unpredictable, but strongly dependent on HP.
+	/* Shapechangers return to normal form after a while.
+	 * How long is unpredictable, but strongly dependent on HP
+	 * and character level vs. form level. (Level-0 shapes will
+	 * never revert for any character.)
 	 **/
-	if (streq(p->shape->name, "giant")) {
+	int shapelevel = p->shape->level;
+	if (shapelevel > 0) {
 		int turns;
+		double maxturns = (p->lev * p->lev * p->lev * 256) / (double)(shapelevel * shapelevel * shapelevel);
 		if (player->chp == player->mhp)
-			turns = 256;
+			turns = maxturns;
 		else {
 			/* Scale nonlinearly.
-			 * This reduces to 1/4 of full scale (256) at 1/2 HP,
+			 * This reduces to 1/4 of full scale at 1/2 HP,
 			 * to 1/16 at 1/4 HP input etc.
 			 */
-			double chp = MAX(0, player->chp) * 16; /* sqrt (256) */
+			double chp = MAX(0, player->chp) * sqrt(maxturns);
 			double mhp = player->mhp;
 			double turns_s = chp / mhp;
 			turns = turns_s * turns_s;
