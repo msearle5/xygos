@@ -6,6 +6,7 @@
 
 # Format:
 # name:shape name
+# level:shape level
 # combat:to-h:to-d:to-a
 # skill-disarm-phys:change
 # skill-disarm-magic:change
@@ -25,6 +26,10 @@
 # blow:blow verb
 
 # 'name' is the name of the shape.
+
+# 'level' sets the level of the shape, which affects how long you can stay in
+# that form without reverting to normal. Higher level characters do better,
+# and level 0 forms (the default if this line is not given) have no limit.
 
 # 'combat' is for modifiers to hit, to damage and to armor class.
 
@@ -68,6 +73,7 @@ blow:bite
 blow:claw
 
 name:bear
+level:24
 combat:15:15:5
 skill-disarm-phys:-5
 skill-disarm-magic:-10
@@ -104,6 +110,7 @@ blow:bite
 blow:scratch
 
 name:giant
+level:24
 combat:-4:8:10
 obj-flags:SUST_STR | SUST_CON | PROT_STUN | REGEN
 values:STEALTH[-8] | STR[6] | CON[6] | DEX[-3] | RES_SHARD[1]
@@ -113,6 +120,7 @@ blow:thump
 blow:strike
 
 name:cow
+level:12
 combat:-4:0:20
 obj-flags:SUST_STR | SUST_CON | PROT_STUN | PROT_CONF | REGEN
 values:STEALTH[-4] | INT[-2] | WIS[-2] | STR[4] | CON[6] | DEX[-4] | RES_SHARD[1]
@@ -120,22 +128,26 @@ blow:butt
 blow:kick
 
 name:horse
+level:18
 combat:-2:6:25
 obj-flags:SUST_STR | SUST_CON | PROT_STUN | PROT_CONF | REGEN
 values:STEALTH[-3] | INT[-2] | WIS[-2] | STR[6] | CON[6] | DEX[-1] | SPD[2] | RES_SHARD[1] | MOVES[1]
 blow:bite
 blow:kick
 
+name:crocodile
+level:22
+combat:-2:25:12
+obj-flags:SUST_STR | SUST_CON | PROT_STUN | PROT_FEAR | PROT_CONF
+values:STEALTH[2] | INT[-1] | WIS[-1] | STR[6] | CON[4] | DEX[-2] | RES_SHARD[1] | BLOWS[1]
+blow:bite
+blow:claw
+
 name:elephant
+level:25
 combat:-6:15:50
 obj-flags:SUST_STR | SUST_CON | PROT_STUN | PROT_CONF | REGEN
 values:STEALTH[-8] | INT[-1] | WIS[-1] | STR[8] | CON[8] | DEX[-4] | SPD[-3] | RES_SHARD[2]
 blow:butt
 blow:trample
 
-name:crocodile
-combat:-2:25:12
-obj-flags:SUST_STR | SUST_CON | PROT_STUN | PROT_FEAR | PROT_CONF
-values:STEALTH[2] | INT[-1] | WIS[-1] | STR[6] | CON[4] | DEX[-2] | RES_SHARD[1] | BLOWS[1]
-blow:bite
-blow:claw

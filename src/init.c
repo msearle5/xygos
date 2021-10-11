@@ -2927,6 +2927,14 @@ static enum parser_error parse_shape_name(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_shape_level(struct parser *p) {
+	struct player_shape *shape = parser_priv(p);
+	if (!shape)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	shape->level = parser_getuint(p, "level");
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_shape_combat(struct parser *p) {
 	struct player_shape *shape = parser_priv(p);
 	if (!shape)
@@ -3233,6 +3241,7 @@ static struct parser *init_parse_shape(void) {
 	z_info->shape_max = 0;
 	parser_setpriv(p, NULL);
 	parser_reg(p, "name str name", parse_shape_name);
+	parser_reg(p, "level uint level", parse_shape_level);
 	parser_reg(p, "combat int to-h int to-d int to-a", parse_shape_combat);
 	parser_reg(p, "skill-disarm-phys int disarm", parse_shape_skill_disarm_phys);
 	parser_reg(p, "skill-disarm-magic int disarm", parse_shape_skill_disarm_magic);
