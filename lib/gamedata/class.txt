@@ -325,11 +325,27 @@ sexpr:D:PLAYER_LEVEL:/ 11 + 1
 sexpr:E:PLAYER_LEVEL:/ 16 + 3
 sdesc:Throw a bucket of whitewash. This does a little damage but the main point is to paint the targets, making hidden or invisible creatures show up.
 
-spell:Mass Hypnosis:28:30:250:5:0:3d20
+spell:Pantomime Cow:17:30:30:5:0:3d200
+seffect:SHAPECHANGE:cow
+sdesc:Take the shape of a cow. (Don't ask me how you mimic a cow.) This makes you considerably stronger and tougher, difficult to stun or confuse and resistant to shards. Unfortunately cows are also clumsy, noisy and not very bright.
+
+spell:Mass Hypnosis:23:30:50:5:0:3d20
 seffect:PROJECT_LOS_AWARE:SLEEP_ALL
 sdice:$B
 sexpr:B:PLAYER_LEVEL:* 20
 sdesc:Attempt to put everything in sight into a trance.
+
+spell:Pantomime Horse:28:30:200:5:0:3d400
+seffect:SHAPECHANGE:horse
+sdesc:Take the shape of a horse, and run with it! As well as speed this makes you stronger and tougher, difficult to stun or confuse and resistant to shards. Unfortunately horses are also clumsy, noisy and not very bright.
+
+spell:Pantomime Crocodile:33:30:300:5:0:3d500
+seffect:SHAPECHANGE:crocodile
+sdesc:Take the shape of a crocodile - that's the way to do it! A very effective and stealthy fighter, strong and tough, difficult to stun or confuse and resistant to shards. Without major disadvantages, but you are still a little dumber and clumsier.
+
+spell:Pantomime Elephant:37:30:350:5:0:3d600
+seffect:SHAPECHANGE:elephant
+sdesc:Take the shape of a elephant, and stomp through anything! Stronger, tougher and better protected than any other form and doubly resistant to shards, the elephant can fight well but is clumsy, slow and very noisy.
 
 spell:Deus ex Asinus:40:0:1000:5:0:1000000000
 sdesc:With this technique you can pull something completely unjustified out of your ass. But you can only get away with something so brazen once! This can be complete healing, massive destruction (radius 20), mass genocide (this has a hitpoint cost), a missile strike (1600 damage, radius 5) or altering reality (replacing the level).
