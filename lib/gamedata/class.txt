@@ -327,6 +327,11 @@ sdesc:Throw a bucket of whitewash. This does a little damage but the main point 
 
 spell:Pantomime Cow:17:30:30:5:0:3d200
 seffect:SHAPECHANGE:cow
+sdice:0
+seffect:MESSAGE
+seffect-msg:You put on a cow costume.
+seffect:MESSAGE
+seffect-msg:Your gear is stashed under the costume.
 sdesc:Take the shape of a cow. (Don't ask me how you mimic a cow.) This makes you considerably stronger and tougher, difficult to stun or confuse and resistant to shards. Unfortunately cows are also clumsy, noisy and not very bright.
 
 spell:Mass Hypnosis:23:30:50:5:0:3d20
@@ -337,14 +342,29 @@ sdesc:Attempt to put everything in sight into a trance.
 
 spell:Pantomime Horse:28:30:200:5:0:3d400
 seffect:SHAPECHANGE:horse
+sdice:0
+seffect:MESSAGE
+seffect-msg:You put on a horse costume.
+seffect:MESSAGE
+seffect-msg:Your gear is stashed under the costume.
 sdesc:Take the shape of a horse, and run with it! As well as speed this makes you stronger and tougher, difficult to stun or confuse and resistant to shards. Unfortunately horses are also clumsy, noisy and not very bright.
 
 spell:Pantomime Crocodile:33:30:300:5:0:3d500
 seffect:SHAPECHANGE:crocodile
+sdice:0
+seffect:MESSAGE
+seffect-msg:You put on a crocodile costume.
+seffect:MESSAGE
+seffect-msg:Your gear is stashed under the costume.
 sdesc:Take the shape of a crocodile - that's the way to do it! A very effective and stealthy fighter, strong and tough, difficult to stun or confuse and resistant to shards. Without major disadvantages, but you are still a little dumber and clumsier.
 
 spell:Pantomime Elephant:37:30:350:5:0:3d600
 seffect:SHAPECHANGE:elephant
+sdice:0
+seffect:MESSAGE
+seffect-msg:You put on an elephant costume.
+seffect:MESSAGE
+seffect-msg:Your gear is stashed under the costume.
 sdesc:Take the shape of a elephant, and stomp through anything! Stronger, tougher and better protected than any other form and doubly resistant to shards, the elephant can fight well but is clumsy, slow and very noisy.
 
 spell:Deus ex Asinus:40:0:1000:5:0:1000000000

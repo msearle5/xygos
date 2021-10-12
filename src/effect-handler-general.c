@@ -4042,7 +4042,8 @@ bool effect_handler_SHAPECHANGE(effect_handler_context_t *context)
 	bool ident = false;
 	struct player_shape *shape = player_shape_by_idx(context->subtype);
 	assert(shape);
-	shapechange(player, shape->name, true);
+	int verbose = effect_calculate_value(context, false);
+	shapechange(player, shape->name, verbose);
 
 	/* Do effect */
 	if (shape->effect) {

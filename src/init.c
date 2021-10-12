@@ -3771,14 +3771,22 @@ static enum parser_error parse_class_effect_yx(struct parser *p) {
 
 static enum parser_error parse_class_dice(struct parser *p) {
 	struct class_magic *m = parsing_magic;
+
+	if (!m)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
+	if (!m->num_books)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
 	struct class_book *book = &m->books[m->num_books - 1];
+
+	if (!book->num_spells)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
 	struct class_spell *spell = &book->spells[book->num_spells - 1];
 	struct effect *effect = spell->effect;
 	dice_t *dice = NULL;
 	const char *string = NULL;
-
-	if (!m)
-		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
 	/* If there is no effect, assume that this is human and not parser error. */
 	if (effect == NULL)

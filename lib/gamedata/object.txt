@@ -1352,6 +1352,7 @@ pile:40:1d2
 alloc:1:20 to 100
 power:9
 effect:SHAPECHANGE:giant
+dice:1
 desc:It one-ups the more common snozzcumber by allowing you to assume giant form 
 desc:without any risk of failure.
 
@@ -4364,6 +4365,7 @@ dice:5
 effect:TIMED_INC:SCRAMBLE
 dice:20+1d20
 effect:SHAPECHANGE:bat
+dice:1
 effect:DRAIN_STAT:INT
 effect:DRAIN_STAT:WIS
 effect:TIMED_INC:STONE_SKIN
