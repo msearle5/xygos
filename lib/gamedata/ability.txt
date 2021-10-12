@@ -218,6 +218,7 @@ flag:super
 book:[Super]
 spell:Transform:10:30:0:0:1d2:3d50
 seffect:SHAPECHANGE:giant
+sdice:1
 sdesc:Transform into an awesome giant! Strong, tough, a great fighter who heals rapidly and can ignore shards, stunning and anything that might weaken you.
 
 
@@ -233,6 +234,7 @@ flag:super
 book:[Super]
 spell:Transform:10:30:0:0:1d2:3d50
 seffect:SHAPECHANGE:bear
+sdice:1
 sdesc:Transform into a ferocious bear! Strong, tough and a great fighter who knows no fear and sees well in the dark.
 
 
