@@ -35,6 +35,7 @@
 #include "obj-util.h"
 #include "player-ability.h"
 #include "player-calcs.h"
+#include "player-spell.h"
 #include "player-timed.h"
 #include "player-util.h"
 #include "source.h"
@@ -414,8 +415,42 @@ static void decrease_timeouts(void)
 	/* Technique cooldowns */
 	if (player->spell) {
 		for(int i=0;i<total_spells;i++) {
-			if (player->spell[i].cooldown > 0)
+			if (player->spell[i].cooldown > 0) {
+				/* Usually, cool down the technique.
+				 * Some conditions block cooldown, depending on the controlling stat:
+				 * Shapechange, Afraid : CHR
+				 * Paralyzed, Held: Any
+				 * Confused, Hallu: INT, WIS
+				 * Poisoned, Infected, Cut: CON
+				 * Stun: STR, INT, WIS
+				 * Radiation: STR, CON
+				 */
+				const struct class_spell *spell = spell_by_index(player, i);
+				if (player->timed[TMD_HELD]) continue;
+				if (player->timed[TMD_PARALYZED]) continue;
+				switch(spell->stat) {
+					case STAT_CHR:
+						if (player_is_shapechanged(player)) continue;
+						if (player->timed[TMD_AFRAID]) continue;
+						break;
+					case STAT_INT:
+					case STAT_WIS:
+						if (player->timed[TMD_CONFUSED]) continue;
+						if (player->timed[TMD_IMAGE]) continue;
+						break;
+					case STAT_STR:
+						if (player->timed[TMD_STUN]) continue;
+						if (player->timed[TMD_RAD]) continue;
+						break;
+					case STAT_CON:
+						if (player->timed[TMD_POISONED]) continue;
+						if (player->timed[TMD_INFECTED]) continue;
+						if (player->timed[TMD_CUT]) continue;
+						if (player->timed[TMD_RAD]) continue;
+						break;
+				}
 				player->spell[i].cooldown--;
+			}
 		}
 	}
 
