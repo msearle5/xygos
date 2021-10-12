@@ -4996,12 +4996,15 @@ bool effect_handler_LAND(effect_handler_context_t *context)
 
 bool effect_handler_TAKEOFF(effect_handler_context_t *context)
 {
-	if (levels_in_class(get_class_by_name("Pilot")->cidx))
-		msg("You get in and take off.");
-	else
-		msg("You jump into the air.");
-	player->flying = true;
-	return (true);
+	if (player_get_resume_normal_shape(player, context->cmd)) {
+		if (levels_in_class(get_class_by_name("Pilot")->cidx))
+			msg("You get in and take off.");
+		else
+			msg("You jump into the air.");
+		player->flying = true;
+		return (true);
+	}
+	return (false);
 }
 
 /**

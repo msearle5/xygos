@@ -20,6 +20,7 @@
 #include "cave.h"
 #include "cmd-core.h"
 #include "cmds.h"
+#include "effect-handler.h"
 #include "effects.h"
 #include "game-input.h"
 #include "game-world.h"
@@ -1125,6 +1126,10 @@ struct player_shape *player_shape_by_idx(int index)
 /* Change player shape */
 void shapechange(struct player *p, const char *shapename, bool verbose)
 {
+	if (player->flying) {
+		effect_handler_LAND(NULL);
+	}
+
 	/* Change shape */
 	s32b old_mhp = p->mhp;
 	p->shape = lookup_player_shape(shapename);
