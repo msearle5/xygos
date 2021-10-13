@@ -1263,22 +1263,6 @@ static void melee_effect_handler_HALLU(melee_effect_handler_context_t *context)
 }
 
 /**
- * Melee effect handler: Give the player Black Breath.
- *
- * Note that we don't use melee_effect_timed(), as this is unresistable.
- */
-static void melee_effect_handler_BLACK_BREATH(melee_effect_handler_context_t *context)
-{
-	/* Take damage */
-	if (monster_damage_target(context, true)) return;
-
-	/* Increase Black Breath counter a *small* amount, maybe */
-	if (one_in_(5) && player_inc_timed(context->p, TMD_BLACKBREATH,
-									   context->damage / 10, true, false))
-		context->obvious = true;
-}
-
-/**
  * Melee method handler: Gives one turn held (after the current one).
  */
 static void melee_method_handler_CONSTRICT(melee_effect_handler_context_t *context)
@@ -1336,7 +1320,6 @@ melee_effect_handler_f melee_handler_for_blow_effect(const char *name)
 		{ "EXP_80", melee_effect_handler_EXP_80 },
 		{ "HALLU", melee_effect_handler_HALLU },
 		{ "DESTRUCT", melee_effect_handler_DESTRUCT },
-		{ "BLACK_BREATH", melee_effect_handler_BLACK_BREATH },
 		{ NULL, NULL },
 	};
 	const struct effect_handler_s *current = effect_handlers;

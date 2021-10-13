@@ -850,24 +850,6 @@ void process_world(struct chunk *c)
 		}
 	}
 
-	/* Effects of Black Breath */
-	if (player->timed[TMD_BLACKBREATH]) {
-		if (one_in_(2)) {
-			msg("The Black Breath sickens you.");
-			player_stat_dec(player, STAT_CON, false);
-		}
-		if (one_in_(2)) {
-			msg("The Black Breath saps your strength.");
-			player_stat_dec(player, STAT_STR, false);
-		}
-		if (one_in_(2)) {
-			/* Life draining */
-			int drain = 100 + (player->exp / 100) * z_info->life_drain_percent;
-			msg("The Black Breath dims your life force.");
-			player_exp_lose(player, drain, false);
-		}
-	}
-
 	/*** Check the Food, and Regenerate ***/
 
 	/* Digest */
