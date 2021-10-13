@@ -109,6 +109,7 @@ values:RES_COLD[1] | RES_FIRE[1] | RES_INERTIA[1]
 flags:IGNORE_ACID | DIG_3 | SLOW_DIGEST
 desc:A very long titanium knife, broadening toward the tip. The controls recessed into the hilt indicate that this machete wasn't made for gardening.
 act:LOSSLOW
+time:20+d10
 #material:titanium
 
 ### Blunt Weapons ###
@@ -221,6 +222,7 @@ flags:FEATHER | PROT_FEAR | SLOW_DIGEST | REGEN | SENSE_ANIMAL
 flags:RAND_HI_RES | RAND_SUSTAIN | RAND_POWER | RAND_BASE_RES | RAND_RES_POWER
 values:DAM_RED[3] | RES_WATER[1]
 act:CURE_FULL
+time:80+d60
 desc:A swimsuit made from almost unslicable rip-stop material, and surrounded by a powerful repulsive field - a combination that is supposed to mean that you have nothing to fear from sharks, even if the activation suggests that this is not quite true.
 
 name:!Dark Helmet
