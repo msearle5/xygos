@@ -3247,8 +3247,9 @@ static void shape_lore_append_resistances(textblock *tb,
 {
 	const char* vul[ELEM_MAX];
 	const char* res[ELEM_MAX];
+	const char* xres[ELEM_MAX];
 	const char* imm[ELEM_MAX];
-	int nvul = 0, nres = 0, nimm = 0;
+	int nvul = 0, nres = 0, nimm = 0, nxres = 0;
 	int i;
 
 	for (i = 0; i < ELEM_MAX; ++i) {
@@ -3258,6 +3259,9 @@ static void shape_lore_append_resistances(textblock *tb,
 		} else if (s->el_info[i].res_level >= IMMUNITY) {
 			imm[nimm] = projections[i].name;
 			++nimm;
+		} else if (s->el_info[i].res_level > 1) {
+			xres[nxres] = projections[i].name;
+			++nxres;
 		} else if (s->el_info[i].res_level != 0) {
 			res[nres] = projections[i].name;
 			++nres;
@@ -3273,6 +3277,12 @@ static void shape_lore_append_resistances(textblock *tb,
 	if (nres != 0) {
 		textblock_append(tb, "Makes you resistant to");
 		shape_lore_append_list(tb, res, nres);
+		textblock_append(tb, ".\n");
+	}
+
+	if (nxres != 0) {
+		textblock_append(tb, "Makes you especially resistant to");
+		shape_lore_append_list(tb, xres, nxres);
 		textblock_append(tb, ".\n");
 	}
 
