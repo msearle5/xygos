@@ -445,6 +445,7 @@ static struct store *flatten_stores(struct store *store_list) {
 
 	while (store_list) {
 		s = store_list->next;
+		assert(store_list->sidx < MAX_STORES);
 		/* No need to free the sub-allocated memory, as this is passed on
 		 * to the array of stores */
 		mem_free(store_list);

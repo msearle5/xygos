@@ -95,8 +95,10 @@ void rd_double(double *ip);
 void rd_string(char *str, int max);
 void strip_bytes(int n);
 
-
-
+/* Consistency checks */
+bool do_check_byte(unsigned i);
+#define check_byte(B) if (saving) { assert(do_check_byte(B)); } else { if (!do_check_byte(B)) { return NULL; } } 
+ 
 /* load.c */
 int rd_randomizer(void);
 int rd_options(void);

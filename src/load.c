@@ -155,6 +155,7 @@ static struct object *rd_item(void)
 		}
 	}
 
+	check_byte(MAX_EGOS);
 	for(int i=0;i<MAX_EGOS;i++) {
 		rd_string(buf, sizeof(buf));
 		if (buf[0]) {
@@ -186,15 +187,18 @@ static struct object *rd_item(void)
 	}
 	rd_byte(&obj->notice);
 
+	check_byte(of_size);
 	for (i = 0; i < of_size; i++) {
 		rd_byte(&obj->flags[i]);
 		rd_byte(&obj->carried_flags[i]);
 	}
 
+	check_byte(PF_SIZE);
 	for (i = 0; i < PF_SIZE; i++) {
 		rd_byte(&obj->pflags[i]);
 	}
 
+	check_byte(obj_mod_max);
 	for (i = 0; i < obj_mod_max; i++) {
 		rd_s16b(&obj->modifiers[i]);
 	}
@@ -202,6 +206,7 @@ static struct object *rd_item(void)
 	/* Read brands */
 	rd_byte(&tmp8u);
 	if (tmp8u) {
+		check_byte(brand_max);
 		obj->brands = mem_zalloc(z_info->brand_max * sizeof(bool));
 		for (i = 0; i < brand_max; i++) {
 			rd_byte(&tmp8u);
@@ -212,6 +217,7 @@ static struct object *rd_item(void)
 	/* Read slays */
 	rd_byte(&tmp8u);
 	if (tmp8u) {
+		check_byte(slay_max);
 		obj->slays = mem_zalloc(z_info->slay_max * sizeof(bool));
 		for (i = 0; i < slay_max; i++) {
 			rd_byte(&tmp8u);
@@ -222,6 +228,7 @@ static struct object *rd_item(void)
 	/* Read faults */
 	rd_byte(&tmp8u);
 	if (tmp8u) {
+		check_byte(fault_max);
 		obj->faults = mem_zalloc(z_info->fault_max * sizeof(struct fault_data));
 		for (i = 0; i < fault_max; i++) {
 			rd_byte(&tmp8u);
@@ -231,6 +238,7 @@ static struct object *rd_item(void)
 		}
 	}
 
+	check_byte(elem_max);
 	for (i = 0; i < elem_max; i++) {
 		rd_s16b(&obj->el_info[i].res_level);
 		rd_byte(&obj->el_info[i].flags);

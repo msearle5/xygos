@@ -105,6 +105,7 @@ static void wr_item(const struct object *obj)
 		wr_string("");
 	}
 
+	check_byte(MAX_EGOS);
 	for(int i=0;i<MAX_EGOS;i++) {
 		if (obj->ego[i]) {
 			wr_string(obj->ego[i]->name);
@@ -153,14 +154,17 @@ static void wr_item(const struct object *obj)
 	}
 	wr_byte(obj->notice);
 
+	check_byte(OF_SIZE);
 	for (i = 0; i < OF_SIZE; i++) {
 		wr_byte(obj->flags[i]);
 		wr_byte(obj->carried_flags[i]);
 	}
 
+	check_byte(PF_SIZE);
 	for (i = 0; i < PF_SIZE; i++)
 		wr_byte(obj->pflags[i]);
 
+	check_byte(OBJ_MOD_MAX);
 	for (i = 0; i < OBJ_MOD_MAX; i++) {
 		wr_s16b(obj->modifiers[i]);
 	}
@@ -168,6 +172,7 @@ static void wr_item(const struct object *obj)
 	/* Write brands if any */
 	if (obj->brands) {
 		wr_byte(1);
+		check_byte(z_info->brand_max);
 		for (i = 0; i < z_info->brand_max; i++) {
 			wr_byte(obj->brands[i] ? 1 : 0);
 		}
@@ -178,6 +183,7 @@ static void wr_item(const struct object *obj)
 	/* Write slays if any */
 	if (obj->slays) {
 		wr_byte(1);
+		check_byte(z_info->slay_max);
 		for (i = 0; i < z_info->slay_max; i++) {
 			wr_byte(obj->slays[i] ? 1 : 0);
 		}
@@ -188,6 +194,7 @@ static void wr_item(const struct object *obj)
 	/* Write faults if any */
 	if (obj->faults) {
 		wr_byte(1);
+		check_byte(z_info->fault_max);
 		for (i = 0; i < z_info->fault_max; i++) {
 			wr_byte(obj->faults[i].power);
 			wr_u16b(obj->faults[i].timeout);
@@ -196,6 +203,7 @@ static void wr_item(const struct object *obj)
 		wr_byte(0);
 	}
 
+	check_byte(ELEM_MAX);
 	for (i = 0; i < ELEM_MAX; i++) {
 		wr_s16b(obj->el_info[i].res_level);
 		wr_byte(obj->el_info[i].flags);

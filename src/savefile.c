@@ -220,6 +220,26 @@ static byte sf_get(void)
 	return buffer[buffer_pos++];
 }
 
+/**
+ * Consistency checks.
+ * On saving, returns true if the value fits into a byte.
+ * On loading, returns true if the value fits into a byte and matches the one stored.
+ */
+bool do_check_byte(unsigned i)
+{
+	if (i >= 256)
+		return false;
+
+	if (saving) {
+		wr_byte(i);
+	} else {
+		byte match;
+		rd_byte(&match);
+		return (match == i);
+	}
+
+	return true;
+}
 
 /**
  * ------------------------------------------------------------------------
@@ -752,7 +772,7 @@ bool savefile_load(const char *path, bool cheat_death)
 	}
 
 	ok = try_load(f, loaders);
-	player_hook(loadsave, true);
+	if (ok) player_hook(loadsave, true);
 
 	file_close(f);
 
