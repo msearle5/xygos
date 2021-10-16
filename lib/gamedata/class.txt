@@ -381,7 +381,7 @@ seffect:BALL:SHARD:5
 sdice:1600
 seffect:ALTER_REALITY
 seffect:TIMED_SET:TIME_STOP
-sdice:10
+sdice:1000
 
 ############### MEDIC #################
 
