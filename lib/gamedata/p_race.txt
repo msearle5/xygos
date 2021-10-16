@@ -448,6 +448,12 @@ desc:Time Lords take a human form, which changes when they regenerate. They can 
 
 book:[Time-Lord]
 # spell:name:level:fail:exp:stat:hp:cooldown
+spell:Freeze Time:20:60:30:2:2d3:3d80
+seffect:TIMED_SET:TIME_STOP
+sdice:$B
+sexpr:B:PLAYER_LEVEL:+ 1 * 100 / 7
+sdesc:For a few turns, time is frozen and nothing except yourself can act. However, when the time bubble pops then all these actions catch up with you.
+
 spell:Force Regeneration:25:22:40:2:2d4:1
 seffect:FORCE_REGEN
 sdesc:Forces your body into regeneration by an effort of will. This is just as chancy as regeneration at death is though, and failure means losing a regeneration as well as some brief but nasty side-effects.
@@ -456,6 +462,6 @@ spell:Time Loop:30:40:400:2:3d4:3d40
 seffect:TIME_LOOP
 sdesc:Put history into a strange loop, protected from external influences. This prevents the danger level from increasing for 12 days. This enormous effort comes at the cost of a regeneration, although should you fail to bind the loop you will not lose the regeneration.
 
-# Blink ('warp'), a tp+speed, tp level, gain energy, movement speed, alter-reality?
+# Blink ('warp'), a tp+speed, tp level, gain energy, movement speed, alter-reality 'Alternate Universe'?
 
 

@@ -440,3 +440,8 @@ grade:G:10000:RareCard:You feel tricky!
 on-end:You lose the moment.
 on-increase:You feel trickier!
 
+name:TIME_STOP
+desc:time stop
+grade:G:10000:TimeStop:The world crystallizes around you.
+on-end:You slide back into normal time.
+on-increase:You feel the unnatural stillness intensify.
