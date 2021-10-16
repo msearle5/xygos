@@ -3020,7 +3020,7 @@ effect:IDENTIFY
 effect:NONE
 
 
-### Enchantments ###
+### Enhancements ###
 
 #precision/power?
 name:enhanced precision
@@ -3171,6 +3171,7 @@ effect:NEXT
 effect:REMOVE_FAULT
 dice:85+d15
 
+
 ### Summoning ###
 
 # taming as rare card?
@@ -3250,7 +3251,6 @@ effect:NEXT
 effect:ACQUIRE
 dice:1+1d3
 
-
 name:universal acquisition
 type:card
 graphics:-:Deep Light Blue
@@ -3262,6 +3262,7 @@ power:20000
 effect:WISH
 dice:1
 desc:It's a form of teleportation. You describe an item and if it exists at all (and you don't already own it!) it will be brought to you. There are limits, though. The AI you speak to can be confused by ambiguous requests. There are a few items belonging to Triax and his minions which are protected and can only be obtained by defeating their owner. And while most artifacts can be obtained this way, you need to know their name.
+
 
 ### Killing cards ###
 
@@ -3383,6 +3384,20 @@ effect:NEXT
 effect:DEEP_DESCENT:10
 dice:1
 
+name:time
+type:card
+graphics:-:Deep Light Blue
+level:60
+weight:5g
+cost:4000
+alloc:20:60 to 100
+power:24
+effect:TIMED_SET:TIME_STOP
+dice:500+d200
+effect:NEXT
+effect:TIMED_SET:TIME_STOP
+dice:700
+desc:Stop time: only you can act for the next several turns, after which monsters will take all their paused time at once.
 
 
 ### "Holy" spells ###
@@ -3448,12 +3463,12 @@ cost:5
 alloc:16:0 to 60
 pile:75:1d5
 power:1
-desc:An update on the latest buzz - a hint, although not always a useful one.
 effect:RUMOR
 dice:50
 effect:NEXT
 effect:RUMOR
 dice:100
+desc:An update on the latest buzz - a hint, although not always a useful one.
 
 name:confusion
 type:card
@@ -3499,6 +3514,7 @@ effect:NEXT
 effect:DESTRUCTION:LIGHT:20
 effect:BALL:FIRE:18
 dice:2000
+
 
 ### Bad cards ###
 
