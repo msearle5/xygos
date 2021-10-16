@@ -602,6 +602,7 @@ void wr_player(void)
 	wr_s16b(player->energy);
 	wr_s16b(player->word_recall);
 
+	check_byte(total_spells);
 	for (i = 0; i < total_spells; i++)
 		rdwr_spell_state(&player->spell[i]);
 
@@ -615,6 +616,7 @@ void wr_player(void)
 	rdwr_player();
 
 	/* Player flags */
+	check_byte(PF_SIZE);
 	for(i=0; i < (int)PF_SIZE; i++)
 		wr_byte(player->ability_pflags[i]);
 
@@ -623,6 +625,8 @@ void wr_player(void)
 
 	/* Future use */
 	for (i = 0; i < 8; i++) wr_u32b(0L);
+
+	err: ;
 }
 
 
@@ -742,15 +746,18 @@ void wr_misc(void)
 	//	return;
 
 	/* Flags */
+	check_byte(OF_SIZE);
 	for (i = 0; i < OF_SIZE; i++)
 		wr_byte(player->obj_k->flags[i]);
 
 	/* Modifiers */
+	check_byte(OBJ_MOD_MAX);
 	for (i = 0; i < OBJ_MOD_MAX; i++) {
 		wr_s16b(player->obj_k->modifiers[i]);
 	}
 
 	/* Elements */
+	check_byte(ELEM_MAX);
 	for (i = 0; i < ELEM_MAX; i++) {
 		wr_s16b(player->obj_k->el_info[i].res_level);
 		wr_byte(player->obj_k->el_info[i].flags);
@@ -778,6 +785,8 @@ void wr_misc(void)
 	wr_s16b(player->obj_k->to_d);
 	wr_byte(player->obj_k->dd);
 	wr_byte(player->obj_k->ds);
+
+	err: ;
 }
 
 

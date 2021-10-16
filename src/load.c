@@ -917,6 +917,8 @@ int rd_player(void)
 
 	if (!player->spell)
 		player->spell = mem_zalloc(sizeof(*player->spell) * total_spells);
+
+	check_byte(total_spells);
 	for (i = 0; i < total_spells; i++)
 		rdwr_spell_state(&player->spell[i]);
 
@@ -944,6 +946,7 @@ int rd_player(void)
 	rdwr_player();
 
 	/* Player flags */
+	check_byte(PF_SIZE);
 	for(i=0; i < (int)PF_SIZE; i++)
 		rd_byte(&player->ability_pflags[i]);
 
@@ -954,6 +957,9 @@ int rd_player(void)
 	strip_bytes(32);
 
 	return 0;
+
+	err:
+	return -1;
 }
 
 
@@ -1107,15 +1113,18 @@ int rd_misc(void)
 
 	/* Property knowledge */
 	/* Flags */
+	check_byte(OF_SIZE);
 	for (i = 0; i < OF_SIZE; i++)
 		rd_byte(&player->obj_k->flags[i]);
 
 	/* Modifiers */
+	check_byte(OBJ_MOD_MAX);
 	for (i = 0; i < OBJ_MOD_MAX; i++) {
 		rd_s16b(&player->obj_k->modifiers[i]);
 	}
 
 	/* Elements */
+	check_byte(ELEM_MAX);
 	for (i = 0; i < ELEM_MAX; i++) {
 		rd_s16b(&player->obj_k->el_info[i].res_level);
 		rd_byte(&player->obj_k->el_info[i].flags);
@@ -1147,6 +1156,9 @@ int rd_misc(void)
 	rd_byte(&player->obj_k->dd);
 	rd_byte(&player->obj_k->ds);
 	return 0;
+
+	err:
+	return -1;
 }
 
 int rd_artifacts(void)
