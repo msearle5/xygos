@@ -1,11 +1,12 @@
 master
-wishing		active for 0.2				Wishing cards
+wishing		inactive, merged to clowns	Wishing cards
+new-arts	active for 0.2				New predefined artifacts
 containers	ready for 0.2				Chests etc
 clowns		active for 0.2				Clowns' card tricks
 pets		active						Tame, neutral or monster-monster fights
 youmonster	active						Player race with nonstandard bodyplans
 autofeel	active						Calculating feeling thresholds
-timelord	merged						Timelord's techniques, etc.
+timelord	merged, some outstanding	Timelord's techniques, etc.
 homequests	inactive, merged			Home quests / shared home
 guardians	inactive, merged			The mini-dungeons need an endboss
 supers		merged						Superhero/villains as an extension
@@ -23,3 +24,4 @@ world		inactive, merged			Multi-town world
 ego			inactive, merged			New ego item allocation method
 stores		inactive, merged			New store options
 timelimit	inactive, merged			Danger level increasing with time
+
