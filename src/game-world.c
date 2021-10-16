@@ -1260,7 +1260,20 @@ void process_player(void)
 			break;
 
 		process_player_cleanup();
-	} while (!player->upkeep->energy_use &&
+
+		/* Time stop must be special cased, as timers aren't decremented
+		 * while time is stopped.
+		 */
+		if (player->timed[TMD_TIME_STOP]) {
+			int newstop = player->timed[TMD_TIME_STOP];
+			newstop -= player->upkeep->energy_use;
+			if (newstop > 0) {
+				player->timed[TMD_TIME_STOP] = newstop;
+			} else {
+				player->timed[TMD_TIME_STOP] = 0;
+			}
+		}
+	} while ((!player->upkeep->energy_use || player->timed[TMD_TIME_STOP]) &&
 			 !player->is_dead &&
 			 !player->upkeep->generate_level);
 
