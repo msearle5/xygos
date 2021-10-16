@@ -157,6 +157,7 @@ struct angband_constants
 	u16b food_value;			/**< Number of turns 1% of food lasts */
 	u16b blow_weight_scale;		/**< Divisor of weapon weight when calculating blows */
 	u32b exp_learn_icon;		/**< Experience gained from learning the last icon */
+	u16b saved_history;			/**< Number of saved messages */
 };
 
 struct init_module {

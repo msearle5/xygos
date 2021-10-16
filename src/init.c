@@ -700,6 +700,8 @@ static enum parser_error parse_constants_player(struct parser *p) {
 		z->exp_learn_icon = value;
 	else if (streq(label, "blow-weight-scale"))
 		z->blow_weight_scale = value;
+	else if (streq(label, "saved-history"))
+		z->saved_history = value;
 	else
 		return PARSE_ERROR_UNDEFINED_DIRECTIVE;
 

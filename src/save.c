@@ -388,7 +388,7 @@ void wr_messages(void)
 	u16b num;
 
 	num = messages_num();
-	if (num > 80) num = 80;
+	if (num > z_info->saved_history) num = z_info->saved_history;
 	wr_u16b(num);
 
 	/* Dump the messages (oldest first!) */

@@ -302,3 +302,6 @@ player:exp-learn-icon:5000
 # V used 45 (effectively: 45g ~ 1/10 lb).
 # The smaller the divisor, the heavier weapons effectively are and the less blows you get.
 player:blow-weight-scale:30
+
+# Number of lines of history kept in the save file.
+player:saved-history:240
