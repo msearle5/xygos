@@ -4734,7 +4734,7 @@ bool effect_handler_TIME_LOOP(effect_handler_context_t *context)
 	/* Not possible */
 	if ((!timelord) || (used >= allowed)) {
 		msg("You don't have the ability to regenerate, so can't commit one to a time loop.");
-		return(true);
+		return(false);
 	}
 
 	/* Make sure you know what you are geting into */
@@ -4743,9 +4743,10 @@ bool effect_handler_TIME_LOOP(effect_handler_context_t *context)
 		timelord_change_regenerations(1);
 		/* Return a fortnight */
 		player->danger_reduction += 56; // 14 days
+		return (true);
 	}
 	/* Done */
-	return (true);
+	return (false);
 }
 
 /**
