@@ -1389,8 +1389,18 @@ static bool py_attack_extra(struct player *p, struct loc grid, struct monster *m
  */
 void py_attack(struct player *p, struct loc grid)
 {
-	int avail_energy = MIN(p->energy, z_info->move_energy);
 	int blow_energy = 100 * z_info->move_energy / p->state.num_blows;
+	int timed = 0;
+	/* If time stopped:
+	 * Increase the available energy (without this you would get no blows).
+	 * Try to get at least one blow (if time stop has almost run out) and no more than one round.
+	 */
+	if (player->timed[TMD_TIME_STOP]) {
+		timed = MAX(player->timed[TMD_TIME_STOP], blow_energy);
+	}
+	int energy = MAX(p->energy, timed);
+	int avail_energy = MIN(energy, z_info->move_energy);
+
 	bool slain = false, fear = false, hit = false;
 	struct monster *mon = square_monster(cave, grid);
 

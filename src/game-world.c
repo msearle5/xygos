@@ -426,28 +426,30 @@ static void decrease_timeouts(void)
 				 * Radiation: STR, CON
 				 */
 				const struct class_spell *spell = spell_by_index(player, i);
-				if (player->timed[TMD_HELD]) continue;
-				if (player->timed[TMD_PARALYZED]) continue;
-				switch(spell->stat) {
-					case STAT_CHR:
-						if (player_is_shapechanged(player)) continue;
-						if (player->timed[TMD_AFRAID]) continue;
-						break;
-					case STAT_INT:
-					case STAT_WIS:
-						if (player->timed[TMD_CONFUSED]) continue;
-						if (player->timed[TMD_IMAGE]) continue;
-						break;
-					case STAT_STR:
-						if (player->timed[TMD_STUN]) continue;
-						if (player->timed[TMD_RAD]) continue;
-						break;
-					case STAT_CON:
-						if (player->timed[TMD_POISONED]) continue;
-						if (player->timed[TMD_INFECTED]) continue;
-						if (player->timed[TMD_CUT]) continue;
-						if (player->timed[TMD_RAD]) continue;
-						break;
+				if (spell) {
+					if (player->timed[TMD_HELD]) continue;
+					if (player->timed[TMD_PARALYZED]) continue;
+					switch(spell->stat) {
+						case STAT_CHR:
+							if (player_is_shapechanged(player)) continue;
+							if (player->timed[TMD_AFRAID]) continue;
+							break;
+						case STAT_INT:
+						case STAT_WIS:
+							if (player->timed[TMD_CONFUSED]) continue;
+							if (player->timed[TMD_IMAGE]) continue;
+							break;
+						case STAT_STR:
+							if (player->timed[TMD_STUN]) continue;
+							if (player->timed[TMD_RAD]) continue;
+							break;
+						case STAT_CON:
+							if (player->timed[TMD_POISONED]) continue;
+							if (player->timed[TMD_INFECTED]) continue;
+							if (player->timed[TMD_CUT]) continue;
+							if (player->timed[TMD_RAD]) continue;
+							break;
+					}
 				}
 				player->spell[i].cooldown--;
 			}
@@ -1248,7 +1250,20 @@ void process_player(void)
 			break;
 
 		process_player_cleanup();
-	} while (!player->upkeep->energy_use &&
+
+		/* Time stop must be special cased, as timers aren't decremented
+		 * while time is stopped.
+		 */
+		if (player->timed[TMD_TIME_STOP]) {
+			int newstop = player->timed[TMD_TIME_STOP];
+			newstop -= player->upkeep->energy_use;
+			if (newstop > 0) {
+				player->timed[TMD_TIME_STOP] = newstop;
+			} else {
+				player->timed[TMD_TIME_STOP] = 0;
+			}
+		}
+	} while ((!player->upkeep->energy_use || player->timed[TMD_TIME_STOP]) &&
 			 !player->is_dead &&
 			 !player->upkeep->generate_level);
 
