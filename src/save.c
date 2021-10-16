@@ -228,6 +228,9 @@ static void wr_item(const struct object *obj)
 		wr_string(quark_str(obj->note));
 	else
 		wr_string("");
+
+	/* Failure */
+	err: ;
 }
 
 
@@ -255,15 +258,19 @@ static void wr_monster(const struct monster *mon)
 	wr_byte(mon->energy);
 	wr_byte(MON_TMD_MAX);
 
+	check_byte(MON_TMD_MAX);
 	for (j = 0; j < MON_TMD_MAX; j++)
 		wr_s16b(mon->m_timed[j]);
 
+	check_byte(MFLAG_SIZE);
 	for (j = 0; j < MFLAG_SIZE; j++)
 		wr_byte(mon->mflag[j]);
 
+	check_byte(OF_SIZE);
 	for (j = 0; j < OF_SIZE; j++)
 		wr_byte(mon->known_pstate.flags[j]);
 
+	check_byte(ELEM_MAX);
 	for (j = 0; j < ELEM_MAX; j++)
 		wr_s16b(mon->known_pstate.el_info[j].res_level);
 
@@ -286,6 +293,8 @@ static void wr_monster(const struct monster *mon)
 	wr_byte(mon->group_info[PRIMARY_GROUP].role);
 	wr_u16b(mon->group_info[SUMMON_GROUP].index);
 	wr_byte(mon->group_info[SUMMON_GROUP].role);
+
+	err: ;
 }
 
 /**
@@ -305,8 +314,11 @@ static void wr_trap(struct trap *trap)
 	wr_byte(trap->power);
 	wr_byte(trap->timeout);
 
+	check_byte(TRF_SIZE);
 	for (i = 0; i < TRF_SIZE; i++)
 		wr_byte(trap->flags[i]);
+
+	err: ;
 }
 
 /**

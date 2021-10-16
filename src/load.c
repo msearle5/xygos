@@ -289,6 +289,10 @@ static struct object *rd_item(void)
 
 	/* Success */
 	return obj;
+
+	/* Failure */
+	err:
+	return NULL;
 }
 
 
@@ -333,16 +337,20 @@ static bool rd_monster(struct chunk *c, struct monster *mon)
 	rd_byte(&mon->energy);
 	rd_byte(&tmp8u);
 
+	check_byte(tmp8u);
 	for (j = 0; j < tmp8u; j++)
 		rd_s16b(&mon->m_timed[j]);
 
 	/* Read and extract the flag */
+	check_byte(mflag_size);
 	for (j = 0; j < mflag_size; j++)
 		rd_byte(&mon->mflag[j]);
 
+	check_byte(of_size);
 	for (j = 0; j < of_size; j++)
 		rd_byte(&mon->known_pstate.flags[j]);
 
+	check_byte(elem_max);
 	for (j = 0; j < elem_max; j++)
 		rd_s16b(&mon->known_pstate.el_info[j].res_level);
 
@@ -393,6 +401,9 @@ static bool rd_monster(struct chunk *c, struct monster *mon)
 	}
 
 	return true;
+
+	err:
+	return false;
 }
 
 
@@ -417,6 +428,7 @@ static void rd_trap(struct trap *trap)
 	rd_byte(&trap->power);
 	rd_byte(&trap->timeout);
 
+	check_byte(TRF_SIZE);
 	for (i = 0; i < TRF_SIZE; i++) {
 		if (i >= trf_size) {
 			trap->flags[i] = 0;
@@ -424,6 +436,8 @@ static void rd_trap(struct trap *trap)
 			rd_byte(&trap->flags[i]);
 		}
 	}
+
+	err: ;
 }
 
 /**

@@ -97,7 +97,7 @@ void strip_bytes(int n);
 
 /* Consistency checks */
 bool do_check_byte(unsigned i);
-#define check_byte(B) if (saving) { assert(do_check_byte(B)); } else { if (!do_check_byte(B)) { return NULL; } } 
+#define check_byte(B) if (saving) { assert(do_check_byte(B)); } else { if (!do_check_byte(B)) { goto err; } }
  
 /* load.c */
 int rd_randomizer(void);
