@@ -1487,6 +1487,13 @@ const char *square_apparent_look_prefix(struct chunk *c, struct player *p, struc
 		(is_a_vowel(f_info[f].name[0]) ? "an " : "a ");
 }
 
+const char *square_apparent_look_suffix(struct chunk *c, struct player *p, struct loc grid) {
+	int actual = square(player->cave, grid)->feat;
+	char *mimic_name = f_info[actual].mimic;
+	int f = mimic_name ? lookup_feat(mimic_name) : actual;
+	return f_info[f].look_suffix;
+}
+
 const char *square_apparent_look_in_preposition(struct chunk *c, struct player *p, struct loc grid) {
 	int actual = square(player->cave, grid)->feat;
 	char *mimic_name = f_info[actual].mimic;

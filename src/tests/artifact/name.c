@@ -10,7 +10,9 @@
 void artifact_set_data_free(struct artifact_set_data *data);
 struct artifact_set_data *artifact_set_data_new(void);
 
-int setup_tests(void **state) {
+int setup_tests(void **state)
+{
+	(void)state;
 	k_info = mem_zalloc(2 * sizeof(struct object_kind));
 	k_info[1] = test_torch;
 	z_info = mem_zalloc(sizeof(struct angband_constants));
@@ -18,7 +20,9 @@ int setup_tests(void **state) {
 	return 0;
 }
 
-int teardown_tests(void *state) {
+int teardown_tests(void *state)
+{
+	(void)state;
 	mem_free(k_info);
 	mem_free(z_info);
 	return 0;
@@ -42,7 +46,9 @@ const char *names[] = {
 
 const char **p[] = { names, names };
 
-static int test_names(void *state) {
+static int test_names(void *state)
+{
+	(void)state;
 	struct artifact a;
 	char *n;
 	struct artifact_set_data *data = artifact_set_data_new();

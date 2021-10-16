@@ -277,7 +277,7 @@ static bool set_temporary_brand(struct player *p, int idx)
 	int tmd_idx = brand_index_to_timed_index(idx);
 
 	if (tmd_idx < 0) return false;
-	(void) player_set_timed(player, tmd_idx, 100, false);
+	(void) player_set_timed(p, tmd_idx, 100, false);
 	return true;
 }
 
@@ -286,7 +286,7 @@ static bool clear_temporary_brand(struct player *p, int idx)
 	int tmd_idx = brand_index_to_timed_index(idx);
 
 	if (tmd_idx < 0) return false;
-	(void) player_clear_timed(player, tmd_idx, false);
+	(void) player_clear_timed(p, tmd_idx, false);
 	return true;
 }
 
@@ -306,7 +306,7 @@ static bool set_temporary_slay(struct player *p, int idx)
 	int tmd_idx = slay_index_to_timed_index(idx);
 
 	if (tmd_idx < 0) return false;
-	(void) player_set_timed(player, tmd_idx, 100, false);
+	(void) player_set_timed(p, tmd_idx, 100, false);
 	return true;
 }
 
@@ -315,12 +315,13 @@ static bool clear_temporary_slay(struct player *p, int idx)
 	int tmd_idx = slay_index_to_timed_index(idx);
 
 	if (tmd_idx < 0) return false;
-	(void) player_clear_timed(player, tmd_idx, false);
+	(void) player_clear_timed(p, tmd_idx, false);
 	return true;
 }
 
 static int test_same_monsters_slain(void *state)
 {
+	(void)state;
 	int i1, i2;
 
 	for (i1 = 1; i1 < z_info->slay_max; ++i1) {
@@ -355,6 +356,7 @@ static int test_same_monsters_slain(void *state)
 
 static int test_player_has_temporary_brand(void *state)
 {
+	(void)state;
 	int i1;
 
 	for (i1 = 1; i1 < z_info->brand_max; ++i1) {
@@ -381,6 +383,7 @@ static int test_player_has_temporary_brand(void *state)
 
 static int test_player_has_temporary_slay(void *state)
 {
+	(void)state;
 	int i1;
 
 	for (i1 = 1; i1 < z_info->slay_max; ++i1) {
@@ -407,6 +410,7 @@ static int test_player_has_temporary_slay(void *state)
 
 static int test_get_monster_brand_multiplier(void *state)
 {
+	(void)state;
 	struct monster_base dummy_base;
 	struct monster_race dummy_race;
 	struct monster dummy;
@@ -1097,7 +1101,7 @@ static int test_react_to_slay(void *state)
 
 	memset(ts->slays, 0, z_info->slay_max * sizeof(*ts->slays));
 	for (i1 = 1; i1 < z_info->slay_max; ++i1) {
-		char *old_base;
+		char *old_base = NULL;
 		bool *old_slays;
 
 		if (!slays[i1].base || !slays[i1].race_flag) continue;

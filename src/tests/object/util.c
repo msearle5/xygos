@@ -8,7 +8,9 @@
 #include "obj-pile.h"
 #include "obj-util.h"
 
-int setup_tests(void **state) {
+int setup_tests(void **state)
+{
+	(void)state;
 	player = &test_player;
     player->body = test_player_body;
 	player->body.slots = &test_slot_light;
@@ -18,14 +20,18 @@ int setup_tests(void **state) {
     return 0;
 }
 
-int teardown_tests(void *state) {
+int teardown_tests(void *state)
+{
+	(void)state;
 	quarks_free();
 	mem_free(z_info);
 	return 0;
 }
 
 /* Regression test for #1661 */
-static int test_obj_can_refill(void *state) {
+static int test_obj_can_refill(void *state)
+{
+	(void)state;
     static struct object obj_torch, obj_lantern, obj_candidate;
 
     /* Torches cannot be refilled */
@@ -59,7 +65,9 @@ static int test_obj_can_refill(void *state) {
 }
 
 /* Test basic functionality of check_for_inscrip_with_int(). */
-static int test_basic_check_for_inscrip_with_int(void *state) {
+static int test_basic_check_for_inscrip_with_int(void *state)
+{
+	(void)state;
     struct object obj;
     int dummy = 8974;
     int inarg;

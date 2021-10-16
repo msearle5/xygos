@@ -221,7 +221,6 @@ static s16b art_idx_nonweapon[] = {
 	ART_IDX_NONWEAPON_SHOTS
 };
 static s16b art_idx_melee[] = {
-	ART_IDX_MELEE_BLESS,
 	ART_IDX_MELEE_SINV,
 	ART_IDX_MELEE_BRAND,
 	ART_IDX_MELEE_SLAY,
@@ -3599,8 +3598,7 @@ void do_randart(u32b randart_seed, bool create_file, bool qa_only)
 	path_build(fname, sizeof(fname), ANGBAND_DIR_USER, "randart.log");
 	log_file = file_open(fname, MODE_WRITE, FTYPE_TEXT);
 	if (!log_file) {
-		msg("Error - can't open randart.log for writing.");
-		exit(1);
+		msg("Warning - can't open randart.log for writing.");
 	}
 
 	if (qa_only) {
@@ -3609,9 +3607,8 @@ void do_randart(u32b randart_seed, bool create_file, bool qa_only)
 		create_artifact_set(standarts, qa_only);
 		artifact_set_data_free(standarts);
 		/* Close the log file */
-		if (!file_close(log_file)) {
-			msg("Error - can't close randart.log file.");
-			exit(1);
+		if (log_file && !file_close(log_file)) {
+			msg("Warning - can't close randart.log file.");
 		}
 		log_file = NULL;
 		return;
@@ -3643,9 +3640,8 @@ void do_randart(u32b randart_seed, bool create_file, bool qa_only)
 	artifact_set_data_free(randarts);
 
 	/* Close the log file */
-	if (!file_close(log_file)) {
-		msg("Error - can't close randart.log file.");
-		exit(1);
+	if (log_file && !file_close(log_file)) {
+		msg("Warning - can't close randart.log file.");
 	}
 	log_file = NULL;
 
@@ -3655,21 +3651,25 @@ void do_randart(u32b randart_seed, bool create_file, bool qa_only)
 		/* Open the file, write a header */
 		path_build(fname, sizeof(fname), ANGBAND_DIR_USER, "randart.txt");
 		log_file = file_open(fname, MODE_WRITE, FTYPE_TEXT);
-		file_putf(log_file,
-				  "# Artifact file for random artifacts with seed %08x\n\n\n",
-				  randart_seed);
+		if (!log_file)
+			msg("Warning - can't open randart.txt");
+		else {
+			file_putf(log_file,
+					  "# Artifact file for random artifacts with seed %08x\n\n\n",
+					  randart_seed);
 
-		/* Write individual entries */
-		for (i = first_randart; i < last_randart; i++) {
-			const struct artifact *art = &a_info[i];
-			write_randart_entry(log_file, art);
-		}
+			/* Write individual entries */
+			for (i = first_randart; i < last_randart; i++) {
+				const struct artifact *art = &a_info[i];
+				write_randart_entry(log_file, art);
+			}
 
-		/* Close the file */
-		if (!file_close(log_file)) {
-			quit_fmt("Error - can't close %s.", fname);
+			/* Close the file */
+			if (!file_close(log_file)) {
+				msg("Warning - can't close %s.", fname);
+			}
+			log_file = NULL;
 		}
-		log_file = NULL;
 	}
 
 	/* When done, resume use of the Angband "complex" RNG. */

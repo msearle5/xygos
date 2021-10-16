@@ -21,6 +21,8 @@
 #include "world.h"
 
 static void event_message(game_event_type type, game_event_data *data, void *user) {
+	(void)user;
+	(void)type;
 	printf("Message: %s\n", data->message.msg);
 }
 
@@ -37,6 +39,7 @@ static void reset_before_load(void) {
 }
 
 int setup_tests(void **state) {
+	(void)state;
 	/* Register a basic error handler */
 	plog_aux = println;
 
@@ -52,12 +55,14 @@ int setup_tests(void **state) {
 }
 
 int teardown_tests(void *state) {
+	(void)state;
 	file_delete("Test1");
 	cleanup_angband();
 	return 0;
 }
 
 static int test_newgame(void *state) {
+	(void)state;
 
 	/* Try making a new game */
 	eq(player_make_simple(NULL, NULL, NULL, "Tester"), true);
@@ -80,6 +85,7 @@ static int test_newgame(void *state) {
 }
 
 static int test_loadgame(void *state) {
+	(void)state;
 	reset_before_load();
 
 	/* Try loading the just-saved game */
@@ -93,11 +99,14 @@ static int test_loadgame(void *state) {
 	ok;
 }
 
-static bool test_check_hook(const char *) {
+static bool test_check_hook(const char *prompt) {
+	(void)prompt;
 	return true;
 }
 
-static int test_stairs1(void *state) {
+static int test_stairs1(void *state)
+{
+	(void)state;
 	reset_before_load();
 	bool (*orig_get_check_hook)(const char *) = get_check_hook; 
 	get_check_hook = test_check_hook;
@@ -113,7 +122,9 @@ static int test_stairs1(void *state) {
 	ok;
 }
 
-static int test_stairs2(void *state) {
+static int test_stairs2(void *state)
+{
+	(void)state;
 	reset_before_load();
 	bool (*orig_get_check_hook)(const char *) = get_check_hook; 
 	get_check_hook = test_check_hook;
@@ -135,7 +146,9 @@ static int test_stairs2(void *state) {
 	ok;
 }
 
-static int test_drop_pickup(void *state) {
+static int test_drop_pickup(void *state)
+{
+	(void)state;
 	reset_before_load();
 
 	/* Load the saved game */
@@ -158,7 +171,9 @@ static int test_drop_pickup(void *state) {
 	ok;
 }
 
-static int test_drop_eat(void *state) {
+static int test_drop_eat(void *state)
+{
+	(void)state;
 	int num = 0;
 
 	reset_before_load();

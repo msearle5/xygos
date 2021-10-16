@@ -756,7 +756,7 @@ static bool aux_object(struct chunk *c, struct player *p,
 static bool aux_terrain(struct chunk *c, struct player *p,
 		struct target_aux_state *auxst)
 {
-	const char *name, *lphrase2, *lphrase3;
+	const char *name, *lphrase2, *lphrase3, *lphrase4;
 	char out_val[TARGET_OUT_VAL_SIZE];
 
 	if (!auxst->boring && !square_isinteresting(c, auxst->grid))
@@ -771,17 +771,20 @@ static bool aux_terrain(struct chunk *c, struct player *p,
 	lphrase2 = (*auxst->phrase2) ?
 		square_apparent_look_in_preposition(c, p, auxst->grid) : "";
 
-	/* Pick prefix for the name */
+	/* Pick prefix/suffix for the name */
 	lphrase3 = square_apparent_look_prefix(c, p, auxst->grid);
+	lphrase4 = square_apparent_look_suffix(c, p, auxst->grid);
 
 	/* Display a message */
 	if (p->wizard) {
 		strnfmt(out_val, sizeof(out_val),
-			"%s%s%s%s, %s (%d:%d, noise=%d, scent=%d).",
+			"%s%s%s%s%s%s, %s (%d:%d, noise=%d, scent=%d).",
 			auxst->phrase1,
 			lphrase2,
 			lphrase3,
 			name,
+			lphrase4 ? " " : "",
+			lphrase4 ? lphrase4 : "",
 			auxst->coord_desc,
 			auxst->grid.y,
 			auxst->grid.x,
@@ -789,11 +792,13 @@ static bool aux_terrain(struct chunk *c, struct player *p,
 			(int)c->scent.grids[auxst->grid.y][auxst->grid.x]);
 	} else {
 		strnfmt(out_val, sizeof(out_val),
-			"%s%s%s%s, %s.",
+			"%s%s%s%s%s%s, %s.",
 			auxst->phrase1,
 			lphrase2,
 			lphrase3,
 			name,
+			lphrase4 ? " " : "",
+			lphrase4 ? lphrase4 : "",
 			auxst->coord_desc);
 	}
 

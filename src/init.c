@@ -2027,6 +2027,15 @@ static enum parser_error parse_feat_look_prefix(struct parser *p) {
 	return PARSE_ERROR_NONE;
 }
 
+static enum parser_error parse_feat_look_suffix(struct parser *p) {
+	struct feature *f = parser_priv(p);
+	assert(f);
+
+	f->look_suffix =
+		string_append(f->look_suffix, parser_getstr(p, "text"));
+	return PARSE_ERROR_NONE;
+}
+
 static enum parser_error parse_feat_look_in_preposition(struct parser *p) {
 	struct feature *f = parser_priv(p);
 	assert(f);
@@ -2068,6 +2077,7 @@ struct parser *init_parse_feat(void) {
     parser_reg(p, "die-msg str text", parse_feat_die_msg);
 	parser_reg(p, "confused-msg str text", parse_feat_confused_msg);
 	parser_reg(p, "look-prefix str text", parse_feat_look_prefix);
+	parser_reg(p, "look-suffix str text", parse_feat_look_suffix);
 	parser_reg(p, "look-in-preposition str text", parse_feat_look_in_preposition);
 	parser_reg(p, "resist-flag sym flag", parse_feat_resist_flag);
 	return p;

@@ -8,6 +8,7 @@ NOTEARDOWN
 
 static int test_alloc(void *state)
 {
+	(void)state;
 	dice_t *new = dice_new();
 	require(new != NULL);
 	dice_free(new);
@@ -16,6 +17,7 @@ static int test_alloc(void *state)
 
 static int test_parse_success(void *state)
 {
+	(void)state;
 	dice_t *new = dice_new();
 
 	/* Basic formatting. */
@@ -124,6 +126,7 @@ static int test_parse_success(void *state)
 
 static int test_parse_failure(void *state)
 {
+	(void)state;
 	dice_t *new = dice_new();
 
 	/* Empty string. */
@@ -167,6 +170,7 @@ static s32b test_evaluate_base(void)
 
 static int test_evaluate(void *state)
 {
+	(void)state;
 	int value = 0;
 	expression_t *expression = expression_new();
 	dice_t *new = dice_new();

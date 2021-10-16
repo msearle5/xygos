@@ -27,7 +27,9 @@ struct simple_effect {
 	const char *d_str;
 };
 
-int setup_tests(void **state) {
+int setup_tests(void **state)
+{
+	(void)state;
 	set_file_paths();
 	init_angband();
 	/* Set up the player so there's a target available for the effects. */
@@ -40,7 +42,9 @@ int setup_tests(void **state) {
 	return 0;
 }
 
-int teardown_tests(void *state) {
+int teardown_tests(void *state)
+{
+	(void)state;
 	wipe_mon_list(cave, player);
 	cleanup_angband();
 	return 0;
@@ -84,7 +88,9 @@ static struct effect *build_effect_chain(const struct simple_effect *earr,
 	return prev;
 }
 
-static int test_chain1_execute(void *state) {
+static int test_chain1_execute(void *state)
+{
+	(void)state;
 	struct simple_effect ea[] = {
 		{ EF_DAMAGE, 0, 0, "NONE", "1" },
 	};
@@ -104,7 +110,9 @@ static int test_chain1_execute(void *state) {
 	ok;
 }
 
-static int test_chain2_execute(void *state) {
+static int test_chain2_execute(void *state)
+{
+	(void)state;
 	struct simple_effect ea[] = {
 		{ EF_DAMAGE, 0, 0, "NONE", "2" },
 		{ EF_HEAL_HP, 0, 0, "NONE", "1" },
@@ -125,7 +133,9 @@ static int test_chain2_execute(void *state) {
 	ok;
 }
 
-static int test_chain3_execute(void *state) {
+static int test_chain3_execute(void *state)
+{
+	(void)state;
 	struct simple_effect ea[] = {
 		{ EF_DAMAGE, 0, 0, "NONE", "5" },
 		{ EF_HEAL_HP, 0, 0, "NONE", "4" },
@@ -151,7 +161,9 @@ static int test_chain3_execute(void *state) {
  * A RANDOM effect with a negative number of subeffects should do nothing
  * successfully.
  */
-static int test_randomneg_execute(void *state) {
+static int test_randomneg_execute(void *state)
+{
+	(void)state;
 	struct simple_effect ea[] = {
 		{ EF_RANDOM, 0, 0, "NONE", "-4+1d2" },
 	};
@@ -170,7 +182,9 @@ static int test_randomneg_execute(void *state) {
 }
 
 /* A RANDOM effect with zero subeffects should do nothing successfully.  */
-static int test_random0_execute(void *state) {
+static int test_random0_execute(void *state)
+{
+	(void)state;
 	struct simple_effect ea[] = {
 		{ EF_RANDOM, 0, 0, "NONE", "0" },
 	};
@@ -188,7 +202,9 @@ static int test_random0_execute(void *state) {
 	ok;
 }
 
-static int test_random1_execute(void *state) {
+static int test_random1_execute(void *state)
+{
+	(void)state;
 	struct simple_effect ea[] = {
 		{ EF_RANDOM, 0, 0, "NONE", "1" },
 		{ EF_DAMAGE, 0, 0, "NONE", "1" },
@@ -209,7 +225,9 @@ static int test_random1_execute(void *state) {
 	ok;
 }
 
-static int test_random2_execute(void *state) {
+static int test_random2_execute(void *state)
+{
+	(void)state;
 	struct simple_effect ea[] = {
 		{ EF_RANDOM, 0, 0, "NONE", "2" },
 		{ EF_DAMAGE, 0, 0, "NONE", "1" },
@@ -237,7 +255,9 @@ static int test_random2_execute(void *state) {
  * Check that a RANDOM effect which says it has more subeffects than it does
  * is handled gracefully.
  */
-static int test_randomover_execute(void *state) {
+static int test_randomover_execute(void *state)
+{
+	(void)state;
 	struct simple_effect ea[] = {
 		{ EF_RANDOM, 0, 0, "NONE", "10" },
 	};
@@ -259,7 +279,9 @@ static int test_randomover_execute(void *state) {
  * There's a non-deterministic aspect to this test.  It could fail (about .01%
  * of the time) even if random selection is working correctly.
  */
-static int test_random_stats(void *state) {
+static int test_random_stats(void *state)
+{
+	(void)state;
 	struct simple_effect ea[] = {
 		{ EF_RANDOM, 0, 0, "NONE", "2" },
 		{ EF_DAMAGE, 0, 0, "NONE", "1" },
@@ -308,7 +330,9 @@ static int test_random_stats(void *state) {
  * This test exercises that.  If the implementation changes to allow proper
  * nesting of SELECT effects, this test will have to be changed.
  */
-static int test_nested_random_execute(void *state) {
+static int test_nested_random_execute(void *state)
+{
+	(void)state;
 	struct simple_effect ea[] = {
 		{ EF_RANDOM, 0, 0, "NONE", "3" },
 		{ EF_DAMAGE, 0, 0, "NONE", "1" },
@@ -338,7 +362,9 @@ static int test_nested_random_execute(void *state) {
  * A SELECT effect with a negative number of subeffects should do nothing
  * successfully.
  */
-static int test_selectneg_execute(void *state) {
+static int test_selectneg_execute(void *state)
+{
+	(void)state;
 	struct simple_effect ea[] = {
 		{ EF_SELECT, 0, 0, "NONE", "-4+1d2" },
 	};
@@ -357,7 +383,9 @@ static int test_selectneg_execute(void *state) {
 }
 
 /* A SELECT effect with zero subeffects should do nothing successfully.  */
-static int test_select0_execute(void *state) {
+static int test_select0_execute(void *state)
+{
+	(void)state;
 	struct simple_effect ea[] = {
 		{ EF_SELECT, 0, 0, "NONE", "0" },
 	};
@@ -379,7 +407,9 @@ static int test_select0_execute(void *state) {
  * A SELECT effect with only one choice should not prompt so this test should
  * run without special steps to avoid the prompt.
  */
-static int test_select1_execute(void *state) {
+static int test_select1_execute(void *state)
+{
+	(void)state;
 	struct simple_effect ea[] = {
 		{ EF_SELECT, 0, 0, "NONE", "1" },
 		{ EF_DAMAGE, 0, 0, "NONE", "1" },
@@ -404,7 +434,9 @@ static int test_select1_execute(void *state) {
  * A SELECT with more than one subeffect will prompt so provide a command object
  * with a preselected choice to bypass the prompt.
  */
-static int test_select2_execute(void *state) {
+static int test_select2_execute(void *state)
+{
+	(void)state;
 	struct simple_effect ea[] = {
 		{ EF_SELECT, 0, 0, "NONE", "2" },
 		{ EF_DAMAGE, 0, 0, "NONE", "1" },
@@ -442,7 +474,9 @@ static int test_select2_execute(void *state) {
  * Check that a SELECT effect which says it has more subeffects than it does
  * is handled gracefully.
  */
-static int test_selectover_execute(void *state) {
+static int test_selectover_execute(void *state)
+{
+	(void)state;
 	struct simple_effect ea[] = {
 		{ EF_SELECT, 0, 0, "NONE", "5" },
 	};
@@ -471,7 +505,9 @@ static int test_selectover_execute(void *state) {
  * This test exercises that.  If the implementation changes to allow proper
  * nesting of SELECT effects, this test will have to be changed.
  */
-static int test_nested_select_execute(void *state) {
+static int test_nested_select_execute(void *state)
+{
+	(void)state;
 	struct simple_effect ea[] = {
 		{ EF_RANDOM, 0, 0, "NONE", "3" },
 		{ EF_DAMAGE, 0, 0, "NONE", "1" },
@@ -499,6 +535,7 @@ static int test_nested_select_execute(void *state) {
 
 static int test_random_select_damages(void *state)
 {
+	(void)state;
 	struct simple_effect ea1[] = {
 		{ EF_RANDOM, 0, 0, "NONE", "3" },
 		{ EF_HEAL_HP, 0, 0, "NONE", "5" },
@@ -536,6 +573,7 @@ static int test_random_select_damages(void *state)
 
 static int test_random_select_avg_damage(void *state)
 {
+	(void)state;
 	struct simple_effect ea1[] = {
 		{ EF_RANDOM, 0, 0, "NONE", "3" },
 		{ EF_HEAL_HP, 0, 0, "NONE", "5" },
@@ -572,6 +610,7 @@ static int test_random_select_avg_damage(void *state)
 
 static int test_random_select_projection(void *state)
 {
+	(void)state;
 	struct simple_effect ea1[] = {
 		{ EF_RANDOM, 0, 0, "NONE", "3" },
 		{ EF_BALL, 3, 0, "ACID", "5" },
@@ -612,6 +651,7 @@ static int test_random_select_projection(void *state)
 
 static int test_iterate1(void *state)
 {
+	(void)state;
 	struct simple_effect ea[] = {
 		{ EF_DAMAGE, 0, 0, "NONE", "0" },
 		{ EF_RANDOM, 0, 0, "NONE", "3" },

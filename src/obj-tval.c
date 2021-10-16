@@ -310,7 +310,12 @@ bool tval_has_variable_power(const struct object *obj)
 
 bool tval_is_wearable(const struct object *obj)
 {
-	switch (obj->tval) {
+	return kind_tval_is_wearable(obj->tval);
+}
+
+bool kind_tval_is_wearable(int tval)
+{
+	switch (tval) {
 		case TV_GUN:
 		case TV_DIGGING:
 		case TV_HAFTED:

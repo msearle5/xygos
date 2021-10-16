@@ -1,6 +1,6 @@
 # Makefile for tests - builds unit-test binaries
 
-CFLAGS+=-I../ -I. -g
+CFLAGS+=-I../ -I. -g -W -Wall -Wextra
 LDFLAGS+=-lm
 -include config
 
@@ -18,7 +18,8 @@ TESTOBJS += test-utils.o unit-test.o
 build : $(TESTPROGS)
 
 run : build
-	@./run-tests
+	mkdir -p ~/.angband/Xygos
+	@./run-tests -v
 
 %.o : %.c
 	@$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $^

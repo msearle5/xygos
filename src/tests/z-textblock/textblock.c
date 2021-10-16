@@ -4,15 +4,21 @@
 #include "z-color.h"
 #include "z-textblock.h"
 
-int setup_tests(void **state) {
+int setup_tests(void **state)
+{
+	(void)state;
 	ok;
 }
 
-int teardown_tests(void *state) {
+int teardown_tests(void *state)
+{
+	(void)state;
 	ok;
 }
 
-static int test_alloc(void *state) {
+static int test_alloc(void *state)
+{
+	(void)state;
 	textblock *tb = textblock_new();
 
 	require(tb);
@@ -22,7 +28,9 @@ static int test_alloc(void *state) {
 	ok;
 }
 
-static int test_append(void *state) {
+static int test_append(void *state)
+{
+	(void)state;
 	textblock *tb = textblock_new();
 
 	require(!wcscmp(textblock_text(tb), L""));
@@ -38,7 +46,9 @@ static int test_append(void *state) {
 	ok;
 }
 
-static int test_colour(void *state) {
+static int test_colour(void *state)
+{
+	(void)state;
 	textblock *tb = textblock_new();
 
 	const char text[] = "two";
@@ -53,7 +63,9 @@ static int test_colour(void *state) {
 	ok;
 }
 
-static int test_length(void *state) {
+static int test_length(void *state)
+{
+	(void)state;
 	textblock *tb = textblock_new();
 
 	const char text[] = "1234567";
@@ -81,7 +93,9 @@ static int test_length(void *state) {
 	ok;
 }
 
-static int test_append_textblock(void *state) {
+static int test_append_textblock(void *state)
+{
+	(void)state;
 	const byte attrs[] = { COLOUR_L_BLUE, COLOUR_L_BLUE, COLOUR_L_BLUE,
 		COLOUR_L_GREEN, COLOUR_L_GREEN, COLOUR_L_GREEN, COLOUR_L_GREEN };
 	textblock *tb1 = textblock_new();

@@ -537,8 +537,9 @@ int context_menu_cave(struct chunk *c, int y, int x, int adjacent, int mx,
 		/* Feature (apply mimic) */
 		const char *name = square_apparent_name(c, player, grid);
 		const char *prefix = square_apparent_look_prefix(c, player, grid);
+		const char *suffix = square_apparent_look_suffix(c, player, grid);
 
-		prt(format("(Enter to select command, ESC to cancel) You see %s%s:", prefix, name), 0, 0);
+		prt(format("(Enter to select command, ESC to cancel) You see %s%s%s%s:", prefix, name, suffix ? " " : "", suffix ? suffix : ""), 0, 0);
 	}
 
 	selected = menu_dynamic_select(m);

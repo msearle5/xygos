@@ -3,15 +3,21 @@
 #include "unit-test.h"
 #include "z-quark.h"
 
-int setup_tests(void **state) {
+int setup_tests(void **state)
+{
+	(void)state;
 	return 0;
 }
 
-int teardown_tests(void *state) {
+int teardown_tests(void *state)
+{
+	(void)state;
 	return 0;
 }
 
-static int test_alloc(void *state) {
+static int test_alloc(void *state)
+{
+	(void)state;
 	char buffer[64];
 
 	/* Check it functions at all */
@@ -41,7 +47,9 @@ static int test_alloc(void *state) {
 	ok;
 }
 
-static int test_utf8_fskip(void *state) {
+static int test_utf8_fskip(void *state)
+{
+	(void)state;
 	/*
 	 * dollar sign (U+0024; 1 byte as UTF-8), cent sign (U+00A2; 2 bytes
 	 * as UTF-8)), euro sign (U+20AC; 3 bytes as UTF-8), gothic letter
@@ -83,7 +91,9 @@ static int test_utf8_fskip(void *state) {
 	ok;
 }
 
-static int test_utf8_rskip(void *state) {
+static int test_utf8_rskip(void *state)
+{
+	(void)state;
 	/*
 	 * dollar sign (U+0024; 1 byte as UTF-8), cent sign (U+00A2; 2 bytes
 	 * as UTF-8)), euro sign (U+20AC; 3 bytes as UTF-8), gothic letter
@@ -117,7 +127,9 @@ static int test_utf8_rskip(void *state) {
 	ok;
 }
 
-static int test_utf32_to_utf8(void *state) {
+static int test_utf32_to_utf8(void *state)
+{
+	(void)state;
 	/*
 	 * dollar sign (U+0024; 1 byte as UTF-8), cent sign (U+00A2; 2 bytes
 	 * as UTF-8)), euro sign (U+20AC; 3 bytes as UTF-8), gothic letter
