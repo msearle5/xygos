@@ -368,11 +368,11 @@ seffect-msg:Your gear is stashed under the costume.
 sdesc:Take the shape of a elephant, and stomp through anything! Stronger, tougher and better protected than any other form and doubly resistant to shards, the elephant can fight well but is clumsy, slow and very noisy.
 
 spell:Deus ex Asinus:40:0:1000:5:0:1000000000
-sdesc:With this technique you can pull something completely unjustified out of your ass. But you can only get away with something so brazen once! This can be complete healing, massive destruction (radius 20), mass genocide (this has a hitpoint cost), a missile strike (1600 damage, radius 5) or altering reality (replacing the level).
+sdesc:With this technique you can pull something completely unjustified out of your ass. But you can only get away with something so brazen once! This can be almost any item you can name (including artifacts, but not quest rewards or other things that can't be randomly generated), complete healing, massive destruction (radius 20), mass genocide (this has a hitpoint cost), a missile strike (1600 damage, radius 5), altering reality (replacing the level) or freezing time for 10 turns (monsters can't act, but they get all 10 turns when the timer runs out).
 seffect:LOL
 seffect:SELECT
-sdice:5
-#seffect:WISH
+sdice:7
+seffect:WISH
 seffect:HEAL_HP
 sdice:5000
 seffect:DESTRUCTION:LIGHT:20
@@ -380,6 +380,8 @@ seffect:MASS_BANISH
 seffect:BALL:SHARD:5
 sdice:1600
 seffect:ALTER_REALITY
+seffect:TIMED_SET:TIME_STOP
+sdice:10
 
 ############### MEDIC #################
 
