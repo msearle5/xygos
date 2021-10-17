@@ -3,6 +3,7 @@ BUGS
 
 BUGS: SDL and SDL2 builds are broken (no text for SDL, font cache error for SDL2: related?)
 	Seen at ac0bc1a0eb729b6425c270a41b3ebade7f312284
+	This is probably V issue https://github.com/angband/angband/issues/5079, in which case it is a FreeType library bug and only present in FreeType 2.11.0, with a fix at https://gitlab.freedesktop.org/freetype/freetype/-/issues/1076.
 
 Defer
 =====
