@@ -5394,7 +5394,7 @@ desc:It is a strangely moving puddle of inky slime.
 
 #description?
 name:Rancour
-base:giant
+base:giant humanoid
 depth:45
 rarity:5
 color:BurntUmber
@@ -5413,7 +5413,7 @@ desc:A striding armour-plated alien.
 desc:It looks unfriendly.
 
 name:cyberdemon
-base:giant
+base:giant humanoid
 color:SteelBlue
 depth:89
 rarity:4
@@ -5435,7 +5435,7 @@ desc:Reverberant metal steps announce the arrival of this huge creature,
 desc:half alien half machine. It has an unsurpassable firepower.
 
 name:Oremorj, Cyberdemon Lord
-base:giant
+base:giant humanoid
 color:Violet
 depth:97
 rarity:4

@@ -157,10 +157,10 @@ desc:Feline (Cat)
 # Giants are big, strong humanoids which hit hard and throw boulders.  They
 # may be associated with an element and have some spells, but their focus is
 # powerful melee.
-name:giant
+name:giant humanoid
 glyph:P
 pain:1
-flags:GIANT | EVIL | SPIRIT
+flags:SPIRIT
 flags:BASH_DOOR | CLEAR_WEB
 desc:Giant Humanoid
 
@@ -236,18 +236,6 @@ flags:NO_FEAR | NO_CONF | NO_SLEEP
 flags:CHAR_CLEAR | ATTR_CLEAR
 desc:Lurker
 
-# Demons are evil and tend to be fire-based.  Major demons frequently summon,
-# have a few powerful spells and/or breaths, and often dangerous melee.
-name:major demon
-glyph:U
-pain:1
-flags:DEMON | EVIL | SPIRIT
-flags:ONLY_ITEM
-flags:OPEN_DOOR | BASH_DOOR | CLEAR_WEB
-flags:NO_CONF | NO_SLEEP | NO_HOLD
-flags:FORCE_SLEEP
-desc:Major Demon
-
 # Monsters which pretend to be objects.  They don't move but do cast spells,
 # and attack if the player steps next to them.
 name:mimic
@@ -258,16 +246,6 @@ flags:NEVER_MOVE
 flags:NO_FEAR | NO_CONF | NO_SLEEP
 flags:FORCE_SLEEP | ATTR_CLEAR
 desc:Mimic
-
-# Demons are evil and tend to be fire-based.  Minor demons are mostly
-# annoying rather than dangerous.
-name:minor demon
-glyph:u
-pain:1
-flags:DEMON | EVIL | SPIRIT
-flags:CLEAR_WEB
-flags:IM_FIRE
-desc:Minor Demon
 
 # Non-moving growths which release spores when stepped next to
 name:mold
