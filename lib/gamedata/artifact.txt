@@ -106,6 +106,7 @@ flags:NO_FUEL | PROT_FEAR
 values:RES_RADIATION[-1] | INFRA[4]
 desc:"The world famous Atomic Rock - it really glows!" - an ominous blue. It's mildly radioactive, and while you will not be directly harmed by it you do become more vulnerable to radiation attacks.
 act:MELT_DOWN
+time:25+d12
 
 ### Swords and Daggers ###
 
@@ -114,7 +115,6 @@ base-object:sword:machete
 level:28
 cost:5500
 weight:570g
-cost:90
 alloc:20:15 to 100
 attack:2d9:10:12
 armor:0:0
@@ -123,13 +123,83 @@ values:RES_COLD[1] | RES_FIRE[1] | RES_INERTIA[1]
 flags:IGNORE_ACID | DIG_3 | SLOW_DIGEST
 desc:A very long titanium knife, broadening toward the tip. The controls recessed into the hilt indicate that this machete wasn't made for gardening.
 act:LOSSLOW
+time:15+d10
 #material:titanium
+
+name:of Skywalker
+base-object:sword:lightsaber
+level:48
+alloc:10:35 to 85
+attack:1d14:10:18
+armor:0:15
+slay:EVIL_3
+flags:FREE_ACT | PROT_FEAR
+values:LIGHT[3] | RES_DARK[1] | WIS[3]
+desc:A famous weapon long thought lost, constructed to instil enlightenment and drive off the darkness. Can you live up to its namesake?
+act:PROTEVIL
+time:200+d50
+
+name:of Vader
+base-object:sword:darksaber
+level:53
+alloc:9:40 to 88
+attack:1d14:12:20
+#GOOD_4?
+slay:HUMAN_3
+flags:SUST_STR | SUST_DEX | SUST_CON | PROT_BLIND | IMPAIR_HP
+values:LIGHT[-1] | RES_LIGHT[1] | WIS[-3]
+desc:A infamous weapon of tempting power built for an Evil Dark Lord now long defeated, eager to kill again for you.
+act:DRAIN_LIFE4
+time:330+d80
+
+name:of Binks
+base-object:sword:dimsaber
+level:58
+alloc:8:45 to 91
+attack:1d14:14:22
+slay:SMART_3
+values:INT[-3] | CHR[-3]
+flags:AGGRAVATE | REGEN | PROT_CONF | PROT_STUN | SENSE_ANIMAL
+desc:A dimsaber that once belonged to a Dark Lord who usually relied on more subtle weapons, sowing division and dissent wherever he went. But while his twisted blade was rarely seen in action, it still had extraordinary abilities to protect, sense, heal - and enrage.
+act:LOSRAGE
+time:150+d30
+
+name:of Maul
+base-object:sword:dual darksaber
+level:63
+alloc:7:50 to 94
+attack:2d14:10:18
+slay:HUMAN_3
+values:WIS[-3] | TUNNEL[3]
+flags:SUST_STR | PROT_STUN | TELEPATHY | IMPACT | DRAIN_EXP
+desc:A dual darksaber that strikes with an unstoppable impact and grants knowledge of others' minds - at the cost of your own.
+act:HEAL_FROM_EXP
+time:250+d50
+
 
 ### Blunt Weapons ###
 
 ### Polearms ###
 
 ### Missile Weapons ###
+
+name:'Hate'
+base-object:gun:9mm rifle
+level:15
+cost:4200
+weight:6500g
+alloc:10:12 to 60
+attack:0:15:8
+slay:HOLOGRAM_2
+slay:ANIMAL_2
+slay:MUTANT_2
+slay:MODIFIED_2
+slay:METAL_2
+slay:NONLIVING_2
+values:CHR[-3]
+flags:PROT_FEAR
+desc:A rifle augmented with not so much artificial intelligence as artificial malice.
+
 
 ### Digging Tools ###
 
@@ -161,6 +231,7 @@ armor:8:10
 flags:PROT_STUN | SEE_INVIS
 desc:A combat helmet with a sort of round turret on top, swinging around in response to your thoughts.
 act:SHELL
+time:5+d2
 
 ### Light Armor ###
 
