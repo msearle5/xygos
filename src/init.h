@@ -76,6 +76,9 @@ struct angband_constants
 	u16b town_equalmons_level;	/**< Level when all in-level mons can show in the town */
 	u16b town_delfirst_level;	/**< Level when the first shop disappears */
 	u16b town_delall_level;		/**< Level when all shops disappear */
+	u16b arena_min_monsters;	/**< Minimum number of opponents */
+	u16b arena_max_monsters;	/**< Maximum number of opponents */
+	u16b arena_max_depth;		/**< Maximum depth of Arena */
 	
 	/* Monster gameplay constants, read from constants.txt */
 	u16b glyph_hardness;		/**< How hard for a monster to break a glyph */
