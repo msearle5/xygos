@@ -177,12 +177,23 @@ effect:CURE:CUT
 effect:CURE:STUN
 desc:heals 500 hit points, heals cut damage, and cures stunning
 
-
 name:RESTORE_EXP
 aim:0
 power:8
 effect:RESTORE_EXP
 desc:restores your experience
+
+name:HEAL_FROM_EXP
+aim:0
+power:14
+effect:HEAL_HP
+dice:800
+effect:CURE:CUT
+effect:CURE:POISONED
+effect:CURE:RAD
+effect:LOSE_EXP
+dice:2d2500
+desc:heals poison, disease, radiation, wounds and 800 hit points at the cost of experience
 
 name:BRAWN
 aim:0
@@ -259,7 +270,6 @@ effect:RESTORE_STAT:DEX
 effect:RESTORE_STAT:CON
 desc:restores all your stats
 
-
 name:RESTORE_ST_LEV
 aim:0
 power:17
@@ -301,14 +311,12 @@ effect:TIMED_INC:TELEPATHY
 dice:24+9d9
 desc:cures blindness and gives you telepathy for 9d9+24 turns
 
-
 name:ENLIGHTENMENT
 aim:0
 power:25
 effect:LIGHT_LEVEL
 dice:1
 desc:completely lights up and maps the level, detecting all objects
-
 
 name:HERO
 aim:0
@@ -330,6 +338,16 @@ effect:TIMED_INC:SHERO
 dice:25+1d25
 desc:restores 30 hit points, removes fear and grants you resistance to fear, +24 to-hit, and -10AC for 1d25+25 turns
 
+name:LOSRAGE
+aim:0
+power:9
+effect:HEAL_HP
+dice:45
+effect:CURE:AFRAID
+effect:TIMED_INC:SHERO
+dice:35+1d30
+effect:WAKE
+desc:wakes everyone nearby, restores 45 hit points, removes fear and grants you resistance to fear, +24 to-hit, and -10AC for 1d35+35 turns
 
 name:RESIST_ACID
 aim:0
@@ -537,7 +555,6 @@ power:20
 effect:GLYPH:WARDING
 desc:inscribes a glyph of warding beneath you, which monsters cannot move onto
 
-
 name:DESTROY_DOORS
 aim:0
 power:6
@@ -589,7 +606,6 @@ power:19
 effect:DEEP_DESCENT
 desc:teleports you five levels down
 
-
 name:EARTHQUAKES
 aim:0
 power:5
@@ -601,7 +617,6 @@ aim:0
 power:12
 effect:DESTRUCTION:LIGHT:15
 desc:destroys an area around you in the shape of a circle radius 15, and blinds you for 1d10+10 turns
-
 
 name:LOSSLOW
 aim:0
@@ -678,7 +693,6 @@ msg:The {kind} glow{s} brightly...
 effect:TIMED_INC:FAST:0:5
 dice:75+1d75
 desc:hastens you for d75+75 turns
-
 
 name:DISPEL_EVIL
 aim:0
@@ -908,7 +922,6 @@ effect:BALL:ELEC:3
 dice:250
 desc:creates a large lightning ball with damage 250
 
-
 name:DRAIN_LIFE1
 aim:1
 power:9
@@ -1039,7 +1052,6 @@ power:3
 effect:BOLT_AWARE:TURN_ALL
 dice:10
 desc:attempts to induce fear in a single monster
-
 
 name:LIGHT_LINE
 aim:1

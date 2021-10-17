@@ -1265,6 +1265,48 @@ bool effect_handler_GAIN_EXP(effect_handler_context_t *context)
 	return true;
 }
 
+/* Lose experience.
+ * This is a proportion (/10000) of your exp, which can never be less than 1 or proportion.
+ * Between 25% and 75% of this (but at least 1 or proportion) is permanent.
+ * If hold life is active, the total drain and the share of which are both halved, so
+ * reducing the permanent drain by 4 unless it's under the cap.
+ **/
+bool effect_handler_LOSE_EXP(effect_handler_context_t *context)
+{
+	/* Get the dice value, scale to the experience and produce a random permanent part */
+	int cap = effect_calculate_value(context, false);
+	double prop = cap;
+	prop *= player->exp;
+	double perm = prop * (Rand_double(0.25) + Rand_double(0.25) + 0.25);
+	prop *= 0.0001;
+	perm *= 0.0001;
+
+	/* Print a message and modify values if you have Hold Life */
+	const char *drain = "drain";
+	if (player_of_has(player, OF_HOLD_LIFE)) {
+		drain = "slipp";
+		prop *= 0.5;
+		perm *= 0.5;
+	}
+	msg("You feel your memories %sing away!", drain);
+
+	/* Convert back to exp and cap */
+	if (cap < 1) cap = 1;
+	int perm_exp = MAX(perm, cap);
+	int temp_exp = MAX(prop, cap) - perm_exp;
+
+	/* Lose permanent and temporary exp.
+	 * Sometimes temporary exp may be 0,
+	 * but permanent will always be >= 1
+	 **/
+	player_exp_lose(player, perm_exp, true);
+	if (temp_exp > 0)
+		player_exp_lose(player, temp_exp, false);
+
+	context->ident = true;
+	return true;
+}
+
 /**
  * Drain some light from the player's light source, if possible
  */
