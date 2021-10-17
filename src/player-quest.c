@@ -42,6 +42,8 @@
 #include "ui-store.h"
 #include "world.h"
 
+#include <math.h>
+
 /**
  * Array of quests
  */
@@ -466,6 +468,126 @@ bool is_active_quest(struct player *p, int level)
 	}
 
 	return false;
+}
+
+/**
+ * Choose a worthy opponent for the Arena.
+ * Avoid returning NULL unless it has to - that will prevent any further fights.
+ * Opponents are generated randomly with the given level being a fairly hard (exponential) barrier.
+ * Lower levels are more likely but the bias should still be towards in level monsters.
+ * Some monsters (questors, uniques, maybe breeders?) shouldn't show up in the arena
+ */
+static struct monster_race *arena_opponent(int level)
+{
+	assert(level > 0);
+
+	/* Allocate a table (with sentinel) */
+	double *p = mem_zalloc(sizeof(double) * (z_info->r_max + 1));
+	int nmons = 0;
+
+	/* Fill it with probabilities */
+	for (int i = 0; i < z_info->r_max; i++) {
+		if ((rf_has(r_info[i].flags, RF_UNIQUE)) &&
+			(!rf_has(r_info[i].flags, RF_QUESTOR)) &&
+			(!rf_has(r_info[i].flags, RF_SPECIAL_GEN)) &&
+			(!rf_has(r_info[i].flags, RF_FORCE_DEPTH)) &&
+			(r_info[i].rarity > 0) &&
+			(r_info[i].max_num > 0)) {
+			double prob = 1.0;
+			if (r_info[i].level > level) {
+				/* Limit at 2x out of level */
+				prob = MAX(0.0, pow(0.1, (double)level / (double)r_info[i].level) - 0.01);
+			} else {
+				prob = MAX(0.0, 2.0 - ((double)r_info[i].level / (double)level));
+			}
+			if (prob > 0.0) {
+				p[i] = prob;
+				nmons++;
+			}
+		}
+	}
+
+	/* Bale out if nothing looks good to you */
+	if (!nmons)
+		return NULL;
+
+	/* Select from it */
+	double select = Rand_double(1.0);
+	int selection = 0;
+	for (; selection < z_info->r_max; selection++) {
+		if (select < p[selection]) {
+			break;
+		}
+	}
+	assert(p[selection] > 0.0);
+	mem_free(p);
+	return &r_info[selection];
+}
+
+/* Return arena odds directly and as x-to-y.
+ * Use autolevel?
+ */
+static double arena_odds(int on, int races, struct monster_race* race, int *m, int *d)
+{
+	double monster_power[races];
+	double odds = 1.0;
+
+	for(int i=0;i<races;i++) {
+		monster_power[i] = race[i]->level;
+	}
+
+	
+
+	return odds;
+}
+
+/**
+ * Advance the Arena quest once if possible.
+ * This is called at regular times, independently of when you bet on it (though only
+ * as you enter a Black Market).
+ * Returns true if a change was made.
+ */
+static bool advance_arena(struct player *p)
+{
+	struct quest *q = get_quest_by_name("Arena");
+
+	/* First time? Activate, and skip early levels if you started late  */
+	if (q->level == 0) {
+		q->level = 1;
+		q->flags |= QF_ACTIVE;
+	}
+
+	/* Find some appropriate monsters */
+	q->races = rand_range(z_info->arena_min_monsters, z_info->arena_max_monsters);
+	q->race = mem_realloc(q->race, sizeof(*q->race) * q->races);
+	for(int i=0;i<q->races;i++) {
+		q->race[i] = arena_opponent(q->level);
+		if (!q->race[i]) {
+			/* No more opponents */
+			mem_free(q->race);
+			q->races = 0;
+			q->level = z_info->arena_max_depth;
+		}
+	}
+
+	/* May have already completed all arenas */
+	if (q->level >= z_info->arena_max_depth) {
+		q->flags &= ~QF_ACTIVE;
+		q->intro = string_make("There are no more opponents willing to fight.");
+		return false;
+	}
+
+	/* Build an intro */
+	char banner[1024];
+	strcpy(banner, "We are taking bets now for the next arena fight! Choose ");
+	for(int i=0;i<q->races;i++) {
+		int m, d;
+		arena_odds(i, q->races, q->race, &m, &d);
+		strnfmt(banner + strlen(banner), sizeof(banner) - strlen(banner), "%d for %s at %d/%d, ", i+'A', q->race->name, m, d);
+	}
+
+	q->intro = string_make(banner);
+	return true;
 }
 
 /**

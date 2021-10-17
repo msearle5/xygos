@@ -101,6 +101,12 @@ succeed:Congratulations - here's your reward.
 failure:It appears that someone else got there first, so there's no reward. That doesn't stop you from taking another contract though, if one is available.
 desc:The Black Market maintains a list of contract killings. Accept the job, eliminate your target and you'll get increasingly valuable rewards and the option to take a more challenging target. Successful assassins also command respect in the mob and you'll be able to buy higher level stuff at better prices.
 
+name:Arena
+store:All:Black Market
+succeed:Luck's with you today! Here's your payout. 
+failure:Oh well, you can't win every time. Try again tomorrow maybe?
+desc:The Black Market runs regular 5-way fights. You can bet on them or participate yourself. Come on if you think you're hard enough!
+
 name:Day of the Triffids
 level:35
 race:triffid
