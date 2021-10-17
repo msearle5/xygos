@@ -17,6 +17,8 @@
  */
 #include "angband.h"
 #include "datafile.h"
+#include "game-input.h"
+#include "game-world.h"
 #include "generate.h"
 #include "init.h"
 #include "mon-make.h"
@@ -34,13 +36,17 @@
 #include "player-birth.h"
 #include "player-calcs.h"
 #include "player-quest.h"
+#include "player-timed.h"
 #include "player-util.h"
 #include "store.h"
 #include "trap.h"
 #include "ui-knowledge.h"
 #include "ui-input.h"
+#include "ui-player.h"
 #include "ui-store.h"
 #include "world.h"
+
+#include <math.h>
 
 /**
  * Array of quests
@@ -468,6 +474,479 @@ bool is_active_quest(struct player *p, int level)
 	return false;
 }
 
+/* Return guessed fighting strength (roughly 1..100) of a monster
+ */
+static double arena_monster_power(struct monster_race* r)
+{
+	double power = r->level + 10.0;
+
+	/* More AC, HP, speed etc are good */
+	power *= 1.0 + ((r->speed - 100) / 100.0);
+	// this is wrong power *= 1.0 + ((r->ac - 10) / 10.0);
+
+	/* Visibility */
+	if (rf_has(r->flags, RF_CHAR_CLEAR))
+		power *= 1.05;
+	if (rf_has(r->flags, RF_ATTR_CLEAR))
+		power *= 1.025;
+	if (rf_has(r->flags, RF_MIMIC_INV))
+		power *= 1.03;
+	if (rf_has(r->flags, RF_INVISIBLE))
+		power *= 1.04;
+	if (rf_has(r->flags, RF_COLD_BLOOD))
+		power *= 1.015;
+	if (rf_has(r->flags, RF_EMPTY_MIND))
+		power *= 1.02;
+	if (rf_has(r->flags, RF_WEIRD_MIND))
+		power *= 1.01;
+
+	/* Special cases */
+	if (rf_has(r->flags, RF_MULTIPLY))
+		power *= 1.15;
+	if (rf_has(r->flags, RF_EVASIVE))
+		power *= 1.22;
+
+	/* Toughness */
+	if (rf_has(r->flags, RF_REGENERATE))
+		power *= 1.08;
+	if (rf_has(r->flags, RF_IM_EDGED))
+		power *= 1.1;
+	if (rf_has(r->flags, RF_IM_BLUNT))
+		power *= 1.1;
+	if (rf_has(r->flags, RF_REFLECT))
+		power *= 1.08;
+
+	/* AI */
+	if (rf_has(r->flags, RF_STUPID))
+		power *= 0.95;
+	if (rf_has(r->flags, RF_SMART))
+		power *= 1.05;
+
+	/* Movement */
+	if (rf_has(r->flags, RF_FLYING))
+		power *= 1.005;
+	if (rf_has(r->flags, RF_ALL_TERRAIN))
+		power *= 1.01;
+	if (rf_has(r->flags, RF_ORTHOGONAL))
+		power *= 0.94;
+
+	/* Ranged */
+	if (rf_has(r->flags, RF_POWERFUL))
+		power *= 1.075;
+
+	/* Vulnerabilities */
+	if (rf_has(r->flags, RF_HURT_LIGHT))
+		power *= 0.99;
+	if (rf_has(r->flags, RF_HURT_ROCK))
+		power *= 0.995;
+	if (rf_has(r->flags, RF_HURT_FIRE))
+		power *= 0.98;
+	if (rf_has(r->flags, RF_HURT_COLD))
+		power *= 0.98;
+
+	/* Resistances */
+	if (rf_has(r->flags, RF_IM_ACID))
+		power *= 1.02;
+	if (rf_has(r->flags, RF_IM_ELEC))
+		power *= 1.02;
+	if (rf_has(r->flags, RF_IM_FIRE))
+		power *= 1.02;
+	if (rf_has(r->flags, RF_IM_COLD))
+		power *= 1.02;
+	if (rf_has(r->flags, RF_IM_POIS))
+		power *= 1.03;
+	if (rf_has(r->flags, RF_IM_RADIATION))
+		power *= 1.01;
+	if (rf_has(r->flags, RF_IM_WATER))
+		power *= 1.01;
+	if (rf_has(r->flags, RF_IM_SOUND))
+		power *= 1.01;
+	if (rf_has(r->flags, RF_IM_LIGHT))
+		power *= 1.015;
+	if (rf_has(r->flags, RF_IM_PLASMA))
+		power *= 1.01;
+	if (rf_has(r->flags, RF_IM_NEXUS))
+		power *= 1.005;
+	if (rf_has(r->flags, RF_IM_DISEN))
+		power *= 1.005;
+	if (rf_has(r->flags, RF_IM_CHAOS))
+		power *= 1.005;
+	if (rf_has(r->flags, RF_IM_INERTIA))
+		power *= 1.005;
+	if (rf_has(r->flags, RF_NO_FEAR))
+		power *= 1.02;
+	if (rf_has(r->flags, RF_NO_STUN))
+		power *= 1.02;
+	if (rf_has(r->flags, RF_NO_CONF))
+		power *= 1.02;
+	if (rf_has(r->flags, RF_NO_SLEEP))
+		power *= 1.02;
+	if (rf_has(r->flags, RF_NO_HOLD))
+		power *= 1.02;
+	if (rf_has(r->flags, RF_NO_SLOW))
+		power *= 1.02;
+
+	power -= 10.0;
+	if (power < 0.5)
+		power = 0.5;
+	return power;
+}
+
+/**
+ * Choose a worthy opponent for the Arena.
+ * Avoid returning NULL unless it has to - that will prevent any further fights.
+ * Opponents are generated randomly with the given level being a fairly hard (exponential) barrier.
+ * Lower levels are more likely but the bias should still be towards in level monsters.
+ * Some monsters (questors, uniques, maybe breeders?) shouldn't show up in the arena
+ */
+static struct monster_race *arena_opponent(int level, int existing, struct monster_race **exist)
+{
+	assert(level > 0);
+
+	/* Allocate a table (with sentinel) */
+	double *p = mem_zalloc(sizeof(double) * (z_info->r_max + 1));
+	int nmons = 0;
+	double total = 0.0;
+
+	/* Fill it with probabilities.
+	 * The first time around the loop, cap out of level monsters.
+	 * The second time around - if nothing was found - allow them.
+	 **/
+	for (int cap = 1; cap >= 0; cap--) {
+		for (int i = 0; i < z_info->r_max; i++) {
+			if ((!rf_has(r_info[i].flags, RF_UNIQUE)) &&
+				(!rf_has(r_info[i].flags, RF_QUESTOR)) &&
+				(!rf_has(r_info[i].flags, RF_SPECIAL_GEN)) &&
+				(!rf_has(r_info[i].flags, RF_FORCE_DEPTH)) &&
+				(!rf_has(r_info[i].flags, RF_NEVER_MOVE)) &&
+				(!rf_has(r_info[i].flags, RF_NEVER_BLOW)) &&
+				(!rf_has(r_info[i].flags, RF_FRIGHTENED)) &&
+				(!rf_has(r_info[i].flags, RF_SEASONAL)) &&
+				(!rf_has(r_info[i].flags, RF_MOVE_BODY)) &&
+				(!rf_has(r_info[i].flags, RF_KILL_BODY)) &&
+				(!rf_has(r_info[i].flags, RF_AQUATIC)) &&
+				(r_info[i].rarity > 0) &&
+				(r_info[i].level > 0) &&
+				(r_info[i].max_num > 0)) {
+				double prob = 1.0;
+				double rlevel = arena_monster_power(&r_info[i]);
+				if (rlevel > level) {
+					/* Limit at 2x out of level, for the first pass only */
+					prob = pow(0.1, (double)rlevel / level);
+					if (cap)
+						prob -= 0.0101;
+					prob = MAX(0.0, prob);
+				} else if (rlevel < level) {
+					prob = MAX(0.0, 2.0 - (rlevel / (double)level));
+				}
+				if (prob > 0.0) {
+					for(int j = 0; j < existing; j++) {
+						if (r_info+i == exist[j]) {
+
+							prob = 0.0;
+						}
+					}
+					if (prob > 0.0) {
+
+						p[i] = prob;
+						total += prob;
+						nmons++;
+					}
+				}
+			}
+		}
+		if (nmons)
+			break;
+	}
+
+	/* Bale out if nothing looks good to you */
+	if (!nmons)
+		return NULL;
+
+	/* Select from it */
+	double select = Rand_double(total);
+	int selection = 0;
+	for (; selection < z_info->r_max; selection++) {
+		select -= p[selection];
+		if (select < 0.0) {
+			break;
+		}
+	}
+	assert(p[selection] > 0.0);
+	mem_free(p);
+	return &r_info[selection];
+}
+
+/* Return arena odds directly and as x-to-y.
+ * Use autolevel?
+ */
+static double arena_odds(int on, int races, struct monster_race **race, int *m, int *d)
+{
+	double monster_power[races];
+	double odds_of[races];
+	double payout[races];
+	int mul[races];
+	int div[races];
+	double top = -1e9;
+	int topi = 0;
+	assert(races >= 2);
+
+	/* Obtain power as a 'virtual level' mostly 0..100 (but it can be negative or > 100 for a few) */
+	for(int i=0;i<races;i++) {
+		monster_power[i] = arena_monster_power(race[i]);
+		if (monster_power[i] > top) {
+			top = monster_power[i];
+			topi = i;
+		}
+	}
+
+	/* With equal contenders, odds would be the same (1/races) for all.
+	 * As some are less, reduce them. Top gets all the rest FIXME
+	 */
+	//odds_of[topi] = 1.0;
+	for(int i=0;i<races;i++) {
+		//if (i != topi) {
+			double chance = (monster_power[i] / monster_power[topi]);
+			odds_of[i] = chance / races;
+			//odds_of[topi] -= odds_of[i];
+		//}
+	}
+
+	/* Convert 'chance of winning' to 'payout' */
+	for(int i=0;i<races;i++)
+		payout[i] = 1.0 / odds_of[i];
+
+	/* Scale everything down by a greed factor (1/2 if hated, 1/6 for typical, down to 1/12 for friends) */
+	double faction = MAX(2, player->bm_faction + 4);
+	double greed = (1.0 / faction);
+
+	for(int i=0;i<races;i++)
+		payout[i] *= (1.0 - greed);
+
+	/* Quantize and cap */
+	for(int i=0;i<races;i++) {
+		/* 1.0 = evens, 0.1 = 10/1, 3.0 = 3/1 */
+		if (payout[i] < 0.9) {
+			/* Less than evens */
+			if (payout[i] <= 0.1) {
+				/* Cap to 11/10 */
+				mul[i] = 1;
+				div[i] = 10;
+			} else {
+				mul[i] = 1;
+				div[i] = MIN(2, (1.0 / payout[i]));
+			}
+		} else {
+			/* Evens or longer */
+			if (payout[i] >= 25.0)
+				payout[i] -= (payout[i] - 25.0) / 2.0;
+			if (payout[i] >= 25.0)
+				payout[i] -= (payout[i] - 25.0) / 2.0;
+			if (payout[i] >= 100.0)
+				payout[i] = 100.0;
+			if (payout[i] < 1.5)
+				div[i] = mul[i] = 1;
+			else if (payout[i] <= 2.0) {
+				div[i] = 2;
+				mul[i] = 3;
+			} else {
+				mul[i] = payout[i];
+				div[i] = 1;
+			}
+		}
+	}
+
+	*m = mul[on];
+	*d = div[on];
+	return payout[on];
+}
+
+/**
+ * Advance the Arena quest once if possible.
+ * This is called at regular times, independently of when you bet on it (though only
+ * as you enter a Black Market).
+ * Returns true if a change was made.
+ */
+static bool advance_arena(struct player *p)
+{
+	struct quest *q = get_quest_by_name("Arena");
+
+	/* First time? Activate */
+	if (q->level == 0) {
+		q->flags |= QF_ACTIVE;
+	}
+	q->level++;
+
+	/* Find some appropriate monsters */
+	q->races = rand_range(z_info->arena_min_monsters, z_info->arena_max_monsters);
+	q->race = mem_realloc(q->race, sizeof(*q->race) * q->races);
+	for(int i=0;i<q->races;i++) {
+		q->race[i] = arena_opponent(q->level, i, q->race);
+		if (!q->race[i]) {
+			/* No more opponents */
+			mem_free(q->race);
+			q->races = 0;
+			q->level = z_info->arena_max_depth;
+		}
+	}
+
+	/* May have already completed all arenas */
+	if (q->level >= (int)z_info->arena_max_depth) {
+		q->flags &= ~QF_ACTIVE;
+		q->intro = string_make("There are no more opponents willing to fight.");
+		return false;
+	}
+
+	/* You don't stay famous if you don't keep fighting, unless you are maxed (or there are no more fights)
+	 * But don't go all the way to zero (implying that you had never tried).
+	 **/
+	if ((player->fc_faction > 1) && (player->fc_faction < z_info->arena_max_depth))
+		player->fc_faction--;
+
+	/* Build an intro */
+	char banner[1024];
+	strcpy(banner, "We are taking bets now for the next arena fight! Choose ");
+	for(int i=0;i<q->races;i++) {
+		int m, d;
+		arena_odds(i, q->races, q->race, &m, &d);
+		strnfmt(banner + strlen(banner), sizeof(banner) - strlen(banner), "%c for the %s at %d/%d, ", i+'A', q->race[i]->name, m, d);
+	}
+	strnfmt(banner + strlen(banner), sizeof(banner) - strlen(banner), "ESC to leave or @ to enter yourself.");
+
+	q->intro = string_make(banner);
+	return true;
+}
+
+/**
+ * Set up an arena fight, including yourself if you is true.
+ * Return the winner!
+ */
+int quest_arena_fight(struct player *p, bool you, int betmon, int betcash)
+{
+	struct quest *q = get_quest_by_name("Arena");
+
+	/* For each monster, place it in the new level */
+	assert(q->races);
+	health_untrack_all(p->upkeep);
+
+	for(int i=0;i<q->races;i++) {
+		/* Pick a location */
+		struct loc grid;
+		struct monster_group_info info = { 0, 0 };
+		do {
+			scatter(cave, &grid, player->grid, 100, true);
+		} while (!square_in_bounds(cave, grid) || !square_isempty(cave, grid));
+
+		/* Place it */
+		place_new_monster(cave, grid, q->race[i], true, false, info, ORIGIN_DROP_SHK);
+		struct monster *mon = square_monster(cave, grid);
+		assert(mon);
+
+		/* Swap the targeted monster */
+		int old_idx = mon->midx;
+		if (old_idx == i+1) {
+			/* Do nothing */
+			;
+		} else if (cave_monster(cave, i+1)->race) {
+			monster_index_move(old_idx, cave_monster_max(cave));
+			monster_index_move(i+1, old_idx);
+			monster_index_move(cave_monster_max(cave), i+1);
+		} else {
+			monster_index_move(old_idx, i+1);
+		}
+		target_set_monster(cave_monster(cave, i+1));
+		health_track_add(player->upkeep, square_monster(cave, grid));
+	}
+
+	/* Head to the arena */
+	player->arena_type = you ? arena_player : arena_monster;
+	player->arena_bet = betcash;
+	player->arena_idx = betmon;
+	player->upkeep->arena_level = true;
+	dungeon_change_level(player, MAX(1, player->depth));
+
+	return 0;
+}
+
+/**
+ * Play the arena (either as a spectator or participant).
+ */
+bool quest_play_arena(struct player *p)
+{
+	struct quest *q = get_quest_by_name("Arena");
+	char buf[1024];
+
+	/* Print the intro */
+	screen_save();
+	ui_event ev = ui_text_box(q->intro);
+
+	/* Get an answer */
+	struct keypress ch = ev.key;
+
+	/* Erase the prompt */
+	prt("", 0, 0);
+
+	/* Scaredy cat */
+	if (ch.code == ESCAPE) {
+		screen_load();
+		return (false);
+	}
+
+	char key = tolower(ch.code);
+	if (key == '@') {
+		/* Fight */
+		quest_arena_fight(p, true, -1, 0);
+	} else {
+		/* Bet. First ask how much, allowing exit */
+		int m, d;
+		int betmon = key - 'a';
+		if ((betmon < 0) || (betmon >= q->races)) {
+			screen_load();
+			return (false);
+		}
+		arena_odds(betmon, q->races, q->race, &m, &d);
+		int low = 5 + (q->level * 5);
+		int high = ((stores[q->store].owner->max_cost) * d) / m;
+		high = MIN(p->au, high);
+		high = MAX(low, high);
+		if (low > p->au) {
+			ui_text_box("You can't afford the minimum bet.");
+			return (false);
+		}
+		strnfmt(buf, sizeof(buf), "Bet how much on the %s (min $%d, max $%d?)", q->race[betmon]->name, low, high);
+		int bet = get_quantity(buf, high);
+		if ((bet < low) || (bet > high)) {
+			screen_load();
+			return (false);
+		}
+		/* Popcorn to ensure you don't starve in a long fight */
+		int amount = 90 * z_info->food_value;
+		if (player->timed[TMD_FOOD] < amount)
+			player_set_timed(player, TMD_FOOD, amount, false);
+
+		quest_arena_fight(p, false, betmon, bet);
+	}
+
+	/* Success */
+	screen_load();
+	return (true);
+}
+
+/**
+ * You have entered the Black Market.
+ * Bring the Arena quest up to date.
+ * Return true if there is a fight available.
+ */
+static bool update_arena(struct player *p)
+{
+	struct quest *q = get_quest_by_name("Arena");
+	int turn_level = 1 + (turn / (10 * z_info->arena_wait_time));
+	bool ok = true;
+	while ((q->level < turn_level) && (ok))
+		ok = advance_arena(p);
+	return ok;
+}
+
 /**
  * Advance the Hit List quest.
  * This is called before asking for a new Hit List quest.
@@ -730,16 +1209,85 @@ static void quest_item_at(struct chunk *c, struct loc xy, struct object *obj)
 	floor_carry(c, xy, obj, &dummy);
 }
 
-/** Enter a quest level. This is called after the vault is generated.
- * At this point cave may not be set - so use the passed in chunk.
- **/
-void quest_enter_level(struct chunk *c)
+static void quest_enter_msing_pills(struct chunk *c, struct quest *q)
 {
-	assert(player->active_quest >= 0);
-	struct quest *q = &player->quests[player->active_quest];
-	const char *n = q->name;
 	s32b value;
 
+	/* Traps:
+	 * Place a portal at each side first.
+	 */
+	struct trap_kind *glyph = lookup_trap("portal");
+	if (glyph) {
+		int tidx = glyph->tidx;
+		place_trap(c, loc(1, 9), tidx, 0);
+		place_trap(c, loc(c->width-2, 9), tidx, 0);
+	}
+
+	/* Items:
+	 * Place one piece of fruit next to where you start, and
+	 * one of each other type in random clear positions.
+	 */
+
+	char *fruit[] = {
+		 "apple", "pear", "orange", "satsuma", "banana",
+		 "pineapple", "melon", "pepper", "habanero", "choke-apple",
+		 "snozzcumber"
+	};
+	const int nfruit = sizeof(fruit)/sizeof(fruit[0]);
+
+	shuffle_sized(fruit, nfruit, sizeof(fruit[0]));
+	for(int i=0;i<nfruit;i++) {
+		struct loc xy = loc(13, 14);	// left of the <
+		if (i > 0) {
+			/* Find a space (avoiding the unreachable center) */
+			do {
+				xy = loc(randint1(c->width - 1), randint1(c->height - 1));
+			} while ((xy.y == 9) || (!square_isempty(c, xy)));
+		}
+		struct object *obj = make_object_named(c, 1, false, false, false, &value, TV_FOOD, fruit[i]);
+		bool dummy;
+		obj->origin = ORIGIN_SPECIAL;
+		obj->origin_depth = player->depth;
+		obj->number = 1;
+		floor_carry(c, xy, obj, &dummy);
+	}
+
+	/*
+	 * Fill every other clear position (outside the central area)
+	 * with random non-useless but typically low-level pills - total ~200.
+	 */
+
+	for(int x=1;x<c->width;x++) {
+		for(int y=1;y<c->height;y++) {
+			struct loc xy = loc(x, y);
+			if ((y != 9) || (x == 5) || (x == 22)) {
+				if (square_isempty(c, xy)) {
+					struct object *obj = NULL;
+					do {
+						if (obj)
+							object_delete(cave, player->cave, &obj);
+						obj = make_object_named(c, 1, false, false, false, &value, TV_PILL, NULL);
+					} while ((!obj) || (value <= 5) || (obj->number > 1));	/* not a nasty or sugar */
+					quest_item_at(c, xy, obj);
+				}
+			}
+		}
+	}
+
+	/* Monsters:
+	 * 4 uniques.
+	 * Resurrect centrally when killed? This seems too mean, though.
+	 */
+
+	struct monster_group_info info = { 0, 0 };
+	place_new_monster(c, loc(1, 1), lookup_monster("Inky"), false, false, info, ORIGIN_DROP);
+	place_new_monster(c, loc(c->width-2, 1), lookup_monster("Blinky"), false, false, info, ORIGIN_DROP);
+	place_new_monster(c, loc(1, c->height - 2), lookup_monster("Pinky"), false, false, info, ORIGIN_DROP);
+	place_new_monster(c, loc(c->width-2, c->height - 2), lookup_monster("Clyde"), false, false, info, ORIGIN_DROP);
+}
+
+static void quest_enter_whiskey_cave(struct chunk *c, struct quest *q)
+{
 	/* Find the entry point */
 	struct loc grid;
 	for (grid.y = 0; grid.y < c->height; grid.y++) {
@@ -751,147 +1299,88 @@ void quest_enter_level(struct chunk *c)
 			break;
 	}
 
-	 if (streq(n, "Msing Pills")) {
-		/* Traps:
-		 * Place a portal at each side first.
-		 */
-		struct trap_kind *glyph = lookup_trap("portal");
+	/* Scatter the loot distant from you */
+	for(int i=0;i<q->min_found * 2;i++) {
+		struct loc xy;
+		int dist;
+		int value;
+		struct object *obj = make_object_named(c, 1, false, false, false, &value, TV_FOOD, "bottle of whiskey");
+		if (!obj)
+			obj = make_object_named(c, 1, false, false, false, &value, TV_FOOD, NULL);
+		if (!obj)
+			obj = make_object_named(c, 1, false, false, false, &value, 0, NULL);
+		assert(obj);
+		do {
+			xy = loc(randint0(c->width), randint0(c->height));
+			dist = (abs(grid.x - xy.x) + abs(grid.y - xy.y));
+		} while ((!square_isempty(c, xy)) || (dist < 14));
+		quest_item_at(c, xy, obj);
+	}
+
+	/* Monsters - fire theme */
+	for(int i=0;i<12+randint0(3);i++) {
+		struct loc xy;
+		int dist;
+		struct monster_race *mon;
+		/* Try hard to find thematic monsters, but give up if there aren't any */
+		do {
+			mon = get_mon_num(q->level, q->level);
+			/* Thematic means:
+			 * 	Immune to fire or plasma, or capable of projecting fire or plasma.
+			 */
+			if (rf_has(mon->flags, RF_IM_FIRE)) break;
+			if (rf_has(mon->flags, RF_IM_PLASMA)) break;
+			if (rsf_has(mon->spell_flags, RSF_BR_FIRE)) break;
+			if (rsf_has(mon->spell_flags, RSF_BR_PLAS)) break;
+			if (rsf_has(mon->spell_flags, RSF_BA_FIRE)) break;
+			if (rsf_has(mon->spell_flags, RSF_BO_FIRE)) break;
+			if (rsf_has(mon->spell_flags, RSF_BO_PLAS)) break;
+		} while (randint0(1000) > 0);
+		do {
+			xy = loc(randint0(c->width), randint0(c->height));
+			dist = (abs(grid.x - xy.x) + abs(grid.y - xy.y));
+		} while ((!square_isempty(c, xy)) || (dist < 5));
+		struct monster_group_info info = { 0, 0 };
+		place_new_monster(c, xy, mon, false, false, info, ORIGIN_DROP);
+	}
+
+	/* Traps:
+	 * There should be a number of granite, rubble, pit type of traps.
+	 */
+	struct trap_kind *traps[5];
+	traps[0] = lookup_trap("pit");
+	traps[1] = lookup_trap("fire trap");
+	traps[2] = traps[3] = lookup_trap("rock fall trap");
+	traps[4] = lookup_trap("earthquake trap");
+	for(int i=0;i<5+randint0(3);i++) {
+		struct loc xy;
+		int dist;
+		do {
+			xy = loc(randint0(c->width), randint0(c->height));
+			dist = (abs(grid.x - xy.x) + abs(grid.y - xy.y));
+		} while ((!square_isempty(c, xy)) || (dist < 7));
+		struct trap_kind *glyph = traps[randint0(5)];
 		if (glyph) {
 			int tidx = glyph->tidx;
 			place_trap(c, loc(1, 9), tidx, 0);
 			place_trap(c, loc(c->width-2, 9), tidx, 0);
 		}
-
-		/* Items:
-		 * Place one piece of fruit next to where you start, and
-		 * one of each other type in random clear positions.
-		 */
-
-		char *fruit[] = {
-			 "apple", "pear", "orange", "satsuma", "banana",
-			 "pineapple", "melon", "pepper", "habanero", "choke-apple",
-			 "snozzcumber"
-		};
-		const int nfruit = sizeof(fruit)/sizeof(fruit[0]);
-
-		shuffle_sized(fruit, nfruit, sizeof(fruit[0]));
-		for(int i=0;i<nfruit;i++) {
-			struct loc xy = loc(13, 14);	// left of the <
-			if (i > 0) {
-				/* Find a space (avoiding the unreachable center) */
-				do {
-					xy = loc(randint1(c->width - 1), randint1(c->height - 1));
-				} while ((xy.y == 9) || (!square_isempty(c, xy)));
-			}
-			struct object *obj = make_object_named(c, 1, false, false, false, &value, TV_FOOD, fruit[i]);
-			bool dummy;
-			obj->origin = ORIGIN_SPECIAL;
-			obj->origin_depth = player->depth;
-			obj->number = 1;
-			floor_carry(c, xy, obj, &dummy);
-		}
-
-		/*
-		 * Fill every other clear position (outside the central area)
-		 * with random non-useless but typically low-level pills - total ~200.
-		 */
-
-		for(int x=1;x<c->width;x++) {
-			for(int y=1;y<c->height;y++) {
-				struct loc xy = loc(x, y);
-				if ((y != 9) || (x == 5) || (x == 22)) {
-					if (square_isempty(c, xy)) {
-						struct object *obj = NULL;
-						do {
-							if (obj)
-								object_delete(cave, player->cave, &obj);
-							obj = make_object_named(c, 1, false, false, false, &value, TV_PILL, NULL);
-						} while ((!obj) || (value <= 5) || (obj->number > 1));	/* not a nasty or sugar */
-						quest_item_at(c, xy, obj);
-					}
-				}
-			}
-		}
-
-		/* Monsters:
-		 * 4 uniques.
-		 * Resurrect centrally when killed? This seems too mean, though.
-		 */
-
-		struct monster_group_info info = { 0, 0 };
-		place_new_monster(c, loc(1, 1), lookup_monster("Inky"), false, false, info, ORIGIN_DROP);
-		place_new_monster(c, loc(c->width-2, 1), lookup_monster("Blinky"), false, false, info, ORIGIN_DROP);
-		place_new_monster(c, loc(1, c->height - 2), lookup_monster("Pinky"), false, false, info, ORIGIN_DROP);
-		place_new_monster(c, loc(c->width-2, c->height - 2), lookup_monster("Clyde"), false, false, info, ORIGIN_DROP);
-	} else if (streq(n, "Whiskey Cave")) {
-		/* Scatter the loot distant from you */
-		for(int i=0;i<q->min_found * 2;i++) {
-			struct loc xy;
-			int dist;
-			int value;
-			struct object *obj = make_object_named(c, 1, false, false, false, &value, TV_FOOD, "bottle of whiskey");
-			if (!obj)
-				obj = make_object_named(c, 1, false, false, false, &value, TV_FOOD, NULL);
-			if (!obj)
-				obj = make_object_named(c, 1, false, false, false, &value, 0, NULL);
-			assert(obj);
-			do {
-				xy = loc(randint0(c->width), randint0(c->height));
-				dist = (abs(grid.x - xy.x) + abs(grid.y - xy.y));
-			} while ((!square_isempty(c, xy)) || (dist < 14));
-			quest_item_at(c, xy, obj);
-		}
-
-		/* Monsters - fire theme */
-		for(int i=0;i<12+randint0(3);i++) {
-			struct loc xy;
-			int dist;
-			struct monster_race *mon;
-			/* Try hard to find thematic monsters, but give up if there aren't any */
-			do {
-				mon = get_mon_num(q->level, q->level);
-				/* Thematic means:
-				 * 	Immune to fire or plasma, or capable of projecting fire or plasma.
-				 */
-				if (rf_has(mon->flags, RF_IM_FIRE)) break;
-				if (rf_has(mon->flags, RF_IM_PLASMA)) break;
-				if (rsf_has(mon->spell_flags, RSF_BR_FIRE)) break;
-				if (rsf_has(mon->spell_flags, RSF_BR_PLAS)) break;
-				if (rsf_has(mon->spell_flags, RSF_BA_FIRE)) break;
-				if (rsf_has(mon->spell_flags, RSF_BO_FIRE)) break;
-				if (rsf_has(mon->spell_flags, RSF_BO_PLAS)) break;
-			} while (randint0(1000) > 0);
-			do {
-				xy = loc(randint0(c->width), randint0(c->height));
-				dist = (abs(grid.x - xy.x) + abs(grid.y - xy.y));
-			} while ((!square_isempty(c, xy)) || (dist < 5));
-			struct monster_group_info info = { 0, 0 };
-			place_new_monster(c, xy, mon, false, false, info, ORIGIN_DROP);
-		}
-
-		/* Traps:
-		 * There should be a number of granite, rubble, pit type of traps.
-		 */
-		struct trap_kind *traps[5];
-		traps[0] = lookup_trap("pit");
-		traps[1] = lookup_trap("fire trap");
-		traps[2] = traps[3] = lookup_trap("rock fall trap");
-		traps[4] = lookup_trap("earthquake trap");
-		for(int i=0;i<5+randint0(3);i++) {
-			struct loc xy;
-			int dist;
-			do {
-				xy = loc(randint0(c->width), randint0(c->height));
-				dist = (abs(grid.x - xy.x) + abs(grid.y - xy.y));
-			} while ((!square_isempty(c, xy)) || (dist < 7));
-			struct trap_kind *glyph = traps[randint0(5)];
-			if (glyph) {
-				int tidx = glyph->tidx;
-				place_trap(c, loc(1, 9), tidx, 0);
-				place_trap(c, loc(c->width-2, 9), tidx, 0);
-			}
-		}
 	}
+}
+
+/** Enter a quest level. This is called after the vault is generated.
+ * At this point cave may not be set - so use the passed in chunk.
+ **/
+void quest_enter_level(struct chunk *c)
+{
+	assert(player->active_quest >= 0);
+	struct quest *q = &player->quests[player->active_quest];
+	const char *n = q->name;
+
+	if (streq(n, "Msing Pills"))
+		quest_enter_msing_pills(c, q);
+	else if (streq(n, "Whiskey Cave"))
+		quest_enter_whiskey_cave(c, q);
 }
 
 static struct object *has_special_flag(struct object *obj, void *data)
@@ -1462,6 +1951,72 @@ bool quest_item_check(const struct object *obj) {
 	return false;
 }
 
+
+/** Complete an arena type fight.
+ * This could be a MvM arena, a PvM arena or a shop fight - or possibly
+ * a Single Combat fight if that gets added back in.
+ * Passed the player and the last monster standing.
+ */
+void quest_complete_fight(struct player *p, struct monster *mon) {
+	char buf[256];
+	bool wait = false;
+	struct quest *q = get_quest_by_name("Arena");
+
+	/* Leave the arena level */
+	p->upkeep->was_arena_level = true;
+	p->upkeep->arena_level = false;
+	p->upkeep->generate_level = true;
+	p->depth = 0;
+
+	switch(p->arena_type) {
+		case arena_player: {
+			/* You won the fight - collect a prize, increase faction, take time */
+			int fame = MAX(1, ((q->level - p->fc_faction) / 4));
+			p->fc_faction += fame;
+			if (p->fc_faction > z_info->arena_max_depth)
+				p->fc_faction = z_info->arena_max_depth;
+			int prize = store_roundup(((q->level + p->fc_faction) * 25) + (((q->level * p->fc_faction) / 10) * 10));
+			strnfmt(buf, sizeof(buf), "Congratulations. You win the $%d prize. Come back soon!", prize);
+			ui_text_box(buf);
+			p->au += prize;
+			wait = true;
+			break;
+		}
+		case arena_monster: {
+			/* Monster v monster fight completed - did you win? If so, collect your winnings. Either way, take time. */
+			p->au -= p->arena_bet;
+			if (mon->race == q->race[p->arena_idx]) {
+				/* You win */
+				int m, d;
+				int win = p->arena_bet * arena_odds(p->arena_idx, q->races, q->race, &m, &d);
+				if (win < 1)
+					win = 1;
+				p->au += win;
+				strnfmt(buf, sizeof(buf), "You win $%d on your $%d bet at %d/%d.", win, p->arena_bet, m, d);
+			} else {
+				strnfmt(buf, sizeof(buf), "Too bad, you lose. Try again next time?");
+			}
+			ui_text_box(buf);
+			wait = true;
+			break;
+		}
+		case arena_shop:
+		default:
+		msg("Bug: arena unknown");
+		break;
+	}
+
+	/* Wait until the next match starts */
+	if (wait) {
+		turn += (10 * z_info->arena_wait_time);
+		turn /= (10 * z_info->arena_wait_time);
+		turn *= (10 * z_info->arena_wait_time);
+		increase_danger_level();
+	}
+
+	update_arena(player);
+}
+
 /* Check if entry to a building should be blocked by a quest.
  * Returns true if entry should be blocked.
  *
@@ -1473,6 +2028,10 @@ bool quest_item_check(const struct object *obj) {
  * If there is none, return false and enter the building normally.
  */
 bool quest_enter_building(struct store *store) {
+
+	/* Update the arena when you enter any building */
+	update_arena(player);
+
 	for(int i=0;i<z_info->quest_max;i++) {
 		if ((player->quests[i].flags & QF_HOME) && (!(player->quests[i].flags & QF_SUCCEEDED)) &&
 			(player->quests[i].town == player->town - t_info) && (player->quests[i].store == (int)store->sidx)) {

@@ -18,8 +18,10 @@
 
 #include "datafile.h"
 #include "init.h"
+
 #include "message.h"
 #include "mon-desc.h"
+
 #include "mon-pet.h"
 #include "monster.h"
 #include "parser.h"
@@ -70,14 +72,14 @@ static enum parser_error parse_interact_vs(struct parser *p) {
 	 * vs:ant:!ant
 	 * vs:black ant:red ant
 	 * vs:red ant:black ant
-	 * 
+	 *
 	 * to mean "ants attack everything except other ants, with the exception
 	 * that black and red ants will attack each other."
 	 *
 	 * Limits are added for attacking much more dangerous monsters.
 	 * SMART monsters don't go for anything more than 9/7 their level, while
 	 * non-STUPID ones don't go for anything more than 9/5 their level.
-	 * 
+	 *
 	 * UNIQUE monsters are more aggressive, because they are typically more
 	 * powerful than others of their level (SMART = 11/7, non-STUPID 11/5).
 	 *
@@ -99,6 +101,7 @@ static enum parser_error parse_interact_vs(struct parser *p) {
 	 * They must both have 1+ races, a base, or the all-flag.
 	 * (The combination of all-flag and a race(s) or base is also OK.)
 	 */
+
 	int races_att = 0;
 	struct monster_base *base_att = NULL;
 	bool all_att = parse_interact_vs_mon(&races_att, &base_att, att);
@@ -243,6 +246,10 @@ bool mon_hates_you(const struct monster *mon)
 {
 	if (mflag_has(mon->mflag, MFLAG_FRIENDLY))
 		return false;
+
+	if (player->upkeep->arena_level)
+		return true;
+
 	if (mflag_has(mon->mflag, MFLAG_NEUTRAL))
 		return false;
 	return true;

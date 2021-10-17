@@ -62,6 +62,20 @@ mon-gen:town-destroy-first:60
 # Town level of difficulty at which all stores (home last) are gone
 mon-gen:town-destroy-all:95
 
+# Arena: minimum number of opponents
+mon-gen:arena-min-monsters:3
+
+# Arena: maximum number of opponents
+# Note that making this too high will cause OOD opponents early as there are no other alternatives left
+mon-gen:arena-max-monsters:7
+
+# Arena: maximum depth for arenas to use
+mon-gen:arena-max-depth:85
+
+# Arena: turns to wait between fights
+mon-gen:arena-wait-time:2500
+
+
 #---------------------------------------------------------------------
 # Monster Gameplay
 #---------------------------------------------------------------------

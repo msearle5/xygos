@@ -199,7 +199,7 @@ void grid_data_as_text(struct grid_data *g, int *ap, wchar_t *cp, int *tap,
 		/* If there's an object, deal with that. */
 		if (g->unseen_money) {
 
-			/* $$$ gets an orange star*/
+			/* $$$ gets an orange star */
 			a = object_kind_attr(unknown_gold_kind);
 			c = object_kind_char(unknown_gold_kind);
 

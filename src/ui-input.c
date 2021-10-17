@@ -357,8 +357,11 @@ static void msg_flush(int x)
 	/* Pause for response */
 	Term_putstr(x, 0, -1, a, "-more-");
 
-	if ((!OPT(player, auto_more)) && !keymap_auto_more)
-		anykey();
+	bool arena = (player->upkeep->arena_level && (player->arena_type == arena_monster));
+
+	/* Skip more if disabled or in a spectator arena */
+	if ((!OPT(player, auto_more)) && !keymap_auto_more && !arena)
+		anykey(); 
 
 	/* Clear the line */
 	Term_erase(0, 0, 255);

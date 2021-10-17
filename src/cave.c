@@ -59,6 +59,7 @@ int FEAT_LAVA;
 int FEAT_WATER;
 int FEAT_FALLOUT;
 int FEAT_AIRPORT;
+int FEAT_BLACK_MARKET;
 
 /**
  * Global array for looping through the "keypad directions".
@@ -381,6 +382,7 @@ void set_terrain(void)
 	FEAT_WATER = lookup_feat("water");
 	FEAT_FALLOUT = lookup_feat("fallout");
 	FEAT_AIRPORT = lookup_feat("Airport");
+	FEAT_BLACK_MARKET = lookup_feat("Black Market");
 }
 
 /**

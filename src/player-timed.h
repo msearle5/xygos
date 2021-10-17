@@ -99,6 +99,7 @@ extern struct timed_effect_data timed_effects[TMD_MAX];
 
 int timed_name_to_idx(const char *name);
 bool player_timed_grade_eq(struct player *p, int idx, const char *match);
+bool player_timed_grade_lt(struct player *p, int idx, const char *match);
 bool player_set_timed(struct player *p, int idx, int v, bool notify);
 bool player_inc_check(struct player *p, int idx, bool lore);
 bool player_inc_timed(struct player *p, int idx, int v, bool notify,

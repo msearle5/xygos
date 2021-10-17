@@ -7223,7 +7223,7 @@ rarity:2
 experience:0
 blow:HIT:HURT:2d6
 flags:MALE | FEMALE
-flags:DROP_40
+flags:DROP_40 | FRIENDLY
 flags:RAND_50 | OPEN_DOOR | BASH_DOOR | TAKE_ITEM
 desc:Off duty and looking for a fight.
 

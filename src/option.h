@@ -27,7 +27,8 @@
  */
 enum
 {
-	OP_INTERFACE = 0,
+	OP_MAP = 0,
+	OP_INTERFACE,
 	OP_BIRTH,
 	OP_CHEAT,
 	OP_SCORE,
@@ -54,7 +55,7 @@ enum
  */
 #define OPT_PAGE_MAX				OP_SCORE
 #define OPT_PAGE_PER				21
-#define OPT_PAGE_BIRTH				1
+#define OPT_PAGE_BIRTH				2
 
 /**
  * The option data structures
@@ -63,7 +64,7 @@ struct player_options {
 	bool opt[OPT_MAX];		/**< Options */
 
 	byte hitpoint_warn;		/**< Hitpoint warning (0 to 9) */
-	byte delay_factor;		/**< Delay factor (0 to 9) */
+	byte delay_factor;		/**< Delay factor (ms) */
 	byte name_suffix;		/**< Numeric suffix for player name */
 
 	s32b autosave_delay;	/**< Delay in turns between autosaving */

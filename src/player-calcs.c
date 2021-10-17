@@ -1727,18 +1727,58 @@ static void update_bonuses(struct player *p)
  * Monster and object tracking functions
  * ------------------------------------------------------------------------ */
 
+/** Remove all tracking
+ */
+void health_untrack_all(struct player_upkeep *upkeep)
+{
+	player->upkeep->n_health_who = 0;
+	if (player->upkeep->health_who) {
+		mem_free(player->upkeep->health_who);
+		player->upkeep->health_who = NULL;
+	}
+}
+
 /**
  * Track the given monster (only)
  */
 void health_track(struct player_upkeep *upkeep, struct monster *mon)
 {
 	assert(mon);
+	assert(mon->race);
 	if (upkeep->n_health_who == 0) {
 		upkeep->health_who = mem_alloc(sizeof(upkeep->health_who[0]));
 	}
 	upkeep->health_who[0] = mon;
 	upkeep->n_health_who = 1;
 	upkeep->redraw |= PR_HEALTH;
+}
+
+/**
+ * Track the given monster (additionally)
+ */
+void health_track_add(struct player_upkeep *upkeep, struct monster *mon)
+{
+	assert(mon);
+	assert(mon->race);
+	upkeep->health_who = mem_realloc(upkeep->health_who, sizeof(upkeep->health_who[0]) * (upkeep->n_health_who+1));
+	upkeep->health_who[upkeep->n_health_who] = mon;
+	upkeep->n_health_who++;
+	upkeep->redraw |= PR_HEALTH;
+}
+
+/**
+ * Replace the given monster from health tracking with another
+ */
+void health_track_replace(struct player_upkeep *upkeep, struct monster *from, struct monster *to)
+{
+	for(int i=0;i<upkeep->n_health_who;i++) {
+		if (from == upkeep->health_who[i]) {
+			upkeep->redraw |= PR_HEALTH;
+			upkeep->health_who[i] = to;
+			return;
+		}
+	}
+	return;
 }
 
 /**

@@ -257,6 +257,7 @@ extern int FEAT_WATER;
 
 /* Stores */
 extern int FEAT_AIRPORT;
+extern int FEAT_BLACK_MARKET;
 
 /* Current level */
 extern struct chunk *cave;

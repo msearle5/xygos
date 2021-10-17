@@ -1263,7 +1263,7 @@ static char *store_fullname(struct store_context *ctx)
 	return buf;
 }
 
-/* fight the owner
+/* Fight the owner
  * Returns true if successful (this doesn't imply that the fight was successful - that starts after this has returned)
  * Based on Single Combat (and maybe should be combined?)
  **/
@@ -2106,60 +2106,75 @@ static void store_quest(struct store_context *ctx)
 	// In case of e.g. Pie quest's card
 	quest_changed_level(true);
 
+	int progress = 0;
+	int progi = -1;
 	// Scan the quests looking for a quest which is 'available' and based from this store.
 	for(int i=0;i<z_info->quest_max;i++)
 	{
 		struct quest *q = &player->quests[i];
 		if (((q->town < 0) || (q->town == (player->town - t_info))) && (q->store == (int)store->sidx) && (!(q->flags & QF_LOCKED))) {
-			if (!(q->flags & (QF_ACTIVE | QF_FAILED | QF_SUCCEEDED | QF_UNREWARDED))) {
-				/* Take new quest - ask first */
-				screen_save();
-				int response = store_get_long_check(ctx, quest_get_intro(q));
-				screen_load();
-				if (response) {
-					/* Accepted TODO message */
-					q->flags |= QF_ACTIVE;
-					locate_quest(q);
+			if (streq(q->name, "Arena") && (q->flags & (QF_ACTIVE))) {
+				quest_play_arena(player);
+				return;
+			} else {
+				if (!(q->flags & (QF_ACTIVE | QF_FAILED | QF_SUCCEEDED | QF_UNREWARDED))) {
+					/* Take new quest - ask first */
+					screen_save();
+					int response = store_get_long_check(ctx, quest_get_intro(q));
+					screen_load();
+					if (response) {
+						/* Accepted TODO message */
+						q->flags |= QF_ACTIVE;
+						locate_quest(q);
 
-					/* Create a stairway */
-					if ((!(q->flags & QF_TOWN)) && (!(streq(q->name, "Hit List"))))
-						square_set_feat(cave, loc(q->x,q->y), FEAT_ENTRY);
-				}
-				return;
-			} else if (q->flags & QF_UNREWARDED) {
-				/* Debrief */
-				if (q->flags & QF_SUCCEEDED) {
-					/* There may be an additional check (such as carrying the right object)
-					 * before you can get a reward. This will print messages itself if needed.
-					 **/
-					if (quest_is_rewardable(q)) {
-						ui_text_box(q->succeed);
-						quest_reward(q, true, ctx);
-						/* Unlock quests depending on this */
-						if (q->unlock) {
-							for(int j=0;j<z_info->quest_max;j++)
-							{
-								if (streq(player->quests[j].name, q->unlock))
-									player->quests[j].flags &= ~QF_LOCKED;
-							}
-						}
-						ctx->flags |= STORE_GOLD_CHANGE;
-						ctx->flags |= STORE_FRAME_CHANGE;
-						event_signal(EVENT_STORECHANGED);
+						/* Create a stairway */
+						if ((!(q->flags & QF_TOWN)) && (!(streq(q->name, "Hit List"))))
+							square_set_feat(cave, loc(q->x,q->y), FEAT_ENTRY);
+						return;
 					}
-				} else {
-					ui_text_box(q->failure);
-					quest_reward(q, false, ctx);
+				} else if (q->flags & QF_UNREWARDED) {
+					/* Debrief */
+					if (q->flags & QF_SUCCEEDED) {
+						/* There may be an additional check (such as carrying the right object)
+						 * before you can get a reward. This will print messages itself if needed.
+						 **/
+						if (quest_is_rewardable(q)) {
+							ui_text_box(q->succeed);
+							quest_reward(q, true, ctx);
+							/* Unlock quests depending on this */
+							if (q->unlock) {
+								for(int j=0;j<z_info->quest_max;j++)
+								{
+									if (streq(player->quests[j].name, q->unlock))
+										player->quests[j].flags &= ~QF_LOCKED;
+								}
+							}
+							ctx->flags |= STORE_GOLD_CHANGE;
+							ctx->flags |= STORE_FRAME_CHANGE;
+							event_signal(EVENT_STORECHANGED);
+						}
+					} else {
+						ui_text_box(q->failure);
+						quest_reward(q, false, ctx);
+					}
+					return;
+				} else if (q->flags & QF_ACTIVE) {
+					progi = i;
+					progress++;
 				}
-				return;
-			} else if (q->flags & QF_ACTIVE) {
-				/* Still in progress */
-				msg("Your task '%s' is still in progress.", q->name);
-				return;
 			}
 		}
 	}
 
+	if (progress) {
+		/* Still in progress */
+		if (progress > 1)
+			msg("Your tasks are still in progress.");
+		else
+			msg("Your task '%s' is still in progress.", player->quests[progi]);
+		return;
+	}
+ 
 	/* Special cases */
 	if (quest_special_endings(ctx))
 		return;

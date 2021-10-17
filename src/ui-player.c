@@ -912,6 +912,7 @@ static struct panel *get_panel_farleft(void) {
 	int town = MIN(MAX(player->town_faction + 2, 0), 8);
 	int mob = MIN(MAX(player->bm_faction + 2, 0), 8);
 	int cyber = MIN(MAX((player->cyber_faction / 100) + 2, 0), 8);
+	int fc = (player->fc_faction <= 0) ? 0 : 1+((MIN(player->fc_faction, z_info->arena_max_depth) * 7) / z_info->arena_max_depth);
 
 	/* Descriptions of how much they like you or not. The first entry is for -2 (or less) up to +6 (or more) */
 	static const char *town_name[9] = {
@@ -947,6 +948,17 @@ static struct panel *get_panel_farleft(void) {
 		"Platinum Hand",
 		"Diamond Hand"
 	};
+	static const char *fc_name[9] = {
+		"Spectator",
+		"Brawler",
+		"Scrapper",
+		"Bruiser",
+		"Slugger",
+		"Fighter",
+		"Prizefighter",
+		"Contender",
+		"Champion"
+	};
 	static const int colour_name[9] = {
 		COLOUR_RED,
 		COLOUR_ORANGE,
@@ -958,11 +970,22 @@ static struct panel *get_panel_farleft(void) {
 		COLOUR_BLUE,
 		COLOUR_BLUE
 	};
+	static const int fc_colour_name[9] = {
+		COLOUR_YELLOW,
+		COLOUR_GREEN,
+		COLOUR_GREEN,
+		COLOUR_GREEN,
+		COLOUR_GREEN,
+		COLOUR_GREEN,
+		COLOUR_GREEN,
+		COLOUR_GREEN,
+		COLOUR_BLUE
+	};
 
-	panel_line(p, COLOUR_WHITE, "Faction", "", "");
 	panel_line(p, colour_name[town], "Town", "%s", town_name[town]);
 	panel_line(p, colour_name[mob], "Mob", "%s", mob_name[mob]);
 	panel_line(p, colour_name[cyber], "Cyber", "%s", cyber_name[cyber]);
+	panel_line(p, fc_colour_name[fc], "Arena", "%s", fc_name[fc]);
 
 	/* Show the danger level */
 	if (OPT(player, birth_time_limit)) {
@@ -1222,7 +1245,7 @@ void display_player_xtra_info(bool drop)
 /**
  * Display box text, wait for a key, return to play.
  */
-void ui_text_box(const char *text)
+ui_event ui_text_box(const char *text)
 {
 	/* Save the screen */
 	Term_save();
@@ -1231,7 +1254,10 @@ void ui_text_box(const char *text)
 	clear_from(0);
 
 	/* When not playing, do not display in subwindows */
-	if (Term != angband_term[0] && !player->upkeep->playing) return;
+	if (Term != angband_term[0] && !player->upkeep->playing) {
+		ui_event ev = { 0 };
+		return ev;
+	}
 
 	/* Display the message */
 	int w, h;
@@ -1246,10 +1272,11 @@ void ui_text_box(const char *text)
 
 	/* Wait for a key */
 	Term_flush();
-	inkey_ex();
+	ui_event ev = inkey_ex();
 
 	/* Restore the screen */
 	Term_load();
+	return ev;
 }
 
 /**
@@ -1527,7 +1554,8 @@ void write_character_dump(ang_file *fff)
 		int opt;
 		const char *title = "";
 		switch (i) {
-			case OP_INTERFACE: title = "User interface"; break;
+			case OP_MAP: title = "Overhead map display"; break;
+			case OP_INTERFACE: title = "Other user interface"; break;
 			case OP_BIRTH: title = "Birth"; break;
 		    default: continue;
 		}

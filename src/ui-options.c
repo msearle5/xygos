@@ -1887,8 +1887,9 @@ void do_cmd_options_item(const char *title, int row)
 static struct menu *option_menu;
 static menu_action option_actions[] = 
 {
-	{ 0, 'a', "User interface options", option_toggle_menu },
-	{ 0, 'b', "Birth (difficulty) options", option_toggle_menu },
+	{ 0, 'a', "Overhead map view options", option_toggle_menu },
+	{ 0, 'b', "Other user interface options", option_toggle_menu },
+	{ 0, 'c', "Birth (difficulty) options", option_toggle_menu },
 	{ 0, 'x', "Cheat options", option_toggle_menu },
 	{ 0, 'w', "Subwindow setup", do_cmd_options_win },
 	{ 0, 'i', "Item ignoring setup", do_cmd_options_item },
@@ -1906,7 +1907,7 @@ static menu_action option_actions[] =
 	{ 0, 0, NULL, NULL },
 	{ 0, 'l', "Load a user pref file", options_load_pref_file },
 	{ 0, 'k', "Edit keymaps (advanced)", do_cmd_keymaps },
-	{ 0, 'c', "Edit colours (advanced)", do_cmd_colors },
+	{ 0, 'C', "Edit colours (advanced)", do_cmd_colors },
 	{ 0, 'v', "Save visuals (advanced)", do_cmd_visuals },
 };
 

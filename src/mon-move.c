@@ -449,7 +449,7 @@ static void target_closest_hated(struct chunk *c, struct monster *mon)
  * If neutral or friendly and there is no previous target /monster/:
  *  	This will be the nearest visible hated monster to itself,
  * 		or nothing (0,0) if there is no visible hated monster.
- *
+ * 
  * TODO: attacks on hated even while targeting other
  * TODO: this should not set target! get_move_advance should. And that should know player from position.
  */
@@ -1965,7 +1965,7 @@ static void monster_reduce_sleep(struct chunk *c, struct monster *mon)
 	struct monster_lore *lore = get_lore(mon->race);
 
 	/* Aggravation */
-	if (player_of_has(player, OF_AGGRAVATE)) {
+	if ((player_of_has(player, OF_AGGRAVATE)) || (player->upkeep->arena_level)) {
 		char m_name[80];
 
 		/* Wake the monster, make it aware */
@@ -2074,6 +2074,10 @@ static void regen_monster(struct monster *mon, int num)
 {
 	/* Regenerate (if needed) */
 	if (mon->hp < mon->maxhp) {
+		/* Not in MvM arena */
+		if ((player->upkeep->arena_level) && (player->arena_type == arena_monster))
+			return;
+
 		/* Base regeneration */
 		int frac = mon->maxhp / 100;
 

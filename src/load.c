@@ -1697,7 +1697,7 @@ assert(r->base);
 /**
  * Read monsters
  */
-static int rd_monsters_aux(struct chunk *c)
+static int rd_monsters_aux(struct chunk *c, bool arena)
 {
 	int i;
 	u16b limit;
@@ -1716,6 +1716,11 @@ static int rd_monsters_aux(struct chunk *c)
 	/* Read custom monster(s) */
 	if (rdwr_race(&r_info[1]))
 		return (-1);
+
+	/* Clear for arenas */
+	if (arena && player->upkeep->arena_level) {
+		health_untrack_all(player->upkeep);
+	}
 
 	/* Read the monsters */
 	for (i = 1; i < limit; i++) {
@@ -1736,6 +1741,12 @@ static int rd_monsters_aux(struct chunk *c)
 		if (place_monster(c, mon->grid, mon, 0) != i) {
 			note(format("Cannot place monster %d", i));
 			return (-1);
+		}
+
+		/* Handle arenas */
+		if (arena && player->upkeep->arena_level) {
+			assert(square_monster(c, mon->grid));
+			health_track_add(player->upkeep, square_monster(c, mon->grid));
 		}
 	}
 
@@ -1857,9 +1868,9 @@ int rd_monsters(void)
 	if (player->is_dead)
 		return 0;
 
-	if (rd_monsters_aux(cave))
+	if (rd_monsters_aux(cave, true))
 		return -1;
-	if (rd_monsters_aux(player->cave))
+	if (rd_monsters_aux(player->cave, false))
 		return -1;
 
 #if OBJ_RECOVER
@@ -1918,13 +1929,12 @@ int rd_chunks(void)
 			return -1;
 
 		/* Read the monsters */
-		if (rd_monsters_aux(c))
+		if (rd_monsters_aux(c, false))
 			return -1;
 
 		/* Read traps */
 		if (rd_traps_aux(c))
 			return -1;
-
 
 		/* Read other chunk info */
 		if (OPT(player, birth_levels_persist)) {
