@@ -172,8 +172,8 @@ static void cleanup_stores(void)
 			struct store *store = &t_info[t].stores[i];
 			if (store) {
 				/* Free the store inventory */
-				object_pile_free(NULL, store->stock_k);
-				object_pile_free(NULL, store->stock);
+				object_pile_free(NULL, NULL, store->stock_k);
+				object_pile_free(NULL, NULL, store->stock);
 				if (store->always_table) {
 					mem_free(store->always_table);
 					store->always_table = NULL;
@@ -531,7 +531,7 @@ void store_reset(void) {
 
 			s->max_danger = s->low_danger + randint0(1 + s->high_danger - s->low_danger);
 			store_shuffle(s);
-			object_pile_free(NULL, s->stock);
+			object_pile_free(NULL, NULL, s->stock);
 			s->stock = NULL;
 			if (i == STORE_HOME)
 				continue;

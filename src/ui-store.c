@@ -1740,7 +1740,7 @@ static void store_newstock(struct store_context *ctx)
 	/* Remove old stock */
 	struct store *s = ctx->store;
 	s->stock_num = 0;
-	object_pile_free(NULL, s->stock);
+	object_pile_free(NULL, NULL, s->stock);
 	s->stock = NULL;
 	
 	/* Get new stock */
