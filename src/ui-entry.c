@@ -626,6 +626,8 @@ void compute_ui_entry_values_for_object(const struct ui_entry *entry,
 	const struct fault_data *fault;
 	struct cached_object_data *cache2;
 	bool first, all_unknown, all_aux_unknown, any_aux, all_aux;
+
+	bool any_fault_unknown;
 	int fault_ind;
 
 	if (!obj || !entry->n_obj_prop) {
@@ -651,8 +653,11 @@ void compute_ui_entry_values_for_object(const struct ui_entry *entry,
 		assert(0);
 	}
 	cache2 = *cache;
+
 	fault = obj->faults;
+	any_fault_unknown = false;
 	fault_ind = 0;
+
 	while (obj) {
 		int i;
 
@@ -694,6 +699,8 @@ void compute_ui_entry_values_for_object(const struct ui_entry *entry,
 					} else {
 						(*combiner.accum_func)(v, a, &cst);
 					}
+				} else if (fault_ind > 0) {
+					any_fault_unknown = true;
 				}
 				break;
 
@@ -720,6 +727,8 @@ void compute_ui_entry_values_for_object(const struct ui_entry *entry,
 					} else {
 						(*combiner.accum_func)(v, a, &cst);
 					}
+				} else if (fault_ind > 0) {
+					any_fault_unknown = true;
 				}
 				break;
 
@@ -747,6 +756,8 @@ void compute_ui_entry_values_for_object(const struct ui_entry *entry,
 					} else {
 						(*combiner.accum_func)(v, a, &cst);
 					}
+				} else if (fault_ind > 0) {
+					any_fault_unknown = true;
 				}
 				break;
 
@@ -773,6 +784,8 @@ void compute_ui_entry_values_for_object(const struct ui_entry *entry,
 					} else {
 						(*combiner.accum_func)(v, a, &cst);
 					}
+				} else if (fault_ind > 0) {
+					any_fault_unknown = true;
 				}
 				break;
 
@@ -818,12 +831,13 @@ void compute_ui_entry_values_for_object(const struct ui_entry *entry,
 		*auxval = (any_aux) ? UI_ENTRY_UNKNOWN_VALUE : 0;
 	} else {
 		(*combiner.finish_func)(&cst);
-		if (all_unknown) {
+		if (all_unknown || (cst.accum == 0 && any_fault_unknown)) {
 			*val = (all_aux) ? 0 : UI_ENTRY_UNKNOWN_VALUE;
 		} else {
 			*val = cst.accum;
 		}
-		if (all_aux_unknown) {
+		if (all_aux_unknown
+				|| (cst.accum_aux == 0 && any_fault_unknown)) {
 			*auxval = (any_aux) ? UI_ENTRY_UNKNOWN_VALUE : 0;
 		} else {
 			*auxval = cst.accum_aux;
