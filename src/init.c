@@ -443,6 +443,14 @@ static enum parser_error parse_constants_mon_gen(struct parser *p) {
 		z->town_delfirst_level = value;
 	else if (streq(label, "town-destroy-all"))
 		z->town_delall_level = value;
+	else if (streq(label, "arena-min-monsters"))
+		z->arena_min_monsters = value;
+	else if (streq(label, "arena-max-monsters"))
+		z->arena_max_monsters = value;
+	else if (streq(label, "arena-max-depth"))
+		z->arena_max_depth = value;
+	else if (streq(label, "arena-wait-time"))
+		z->arena_wait_time = value;
 	else
 		return PARSE_ERROR_UNDEFINED_DIRECTIVE;
 

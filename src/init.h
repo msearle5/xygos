@@ -79,6 +79,7 @@ struct angband_constants
 	u16b arena_min_monsters;	/**< Minimum number of opponents */
 	u16b arena_max_monsters;	/**< Maximum number of opponents */
 	u16b arena_max_depth;		/**< Maximum depth of Arena */
+	u16b arena_wait_time;		/**< Time between fights */
 	
 	/* Monster gameplay constants, read from constants.txt */
 	u16b glyph_hardness;		/**< How hard for a monster to break a glyph */
