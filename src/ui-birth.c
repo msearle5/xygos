@@ -854,7 +854,7 @@ static enum birth_stage roller_command(bool first_call)
 		do_cmd_help();
 	} else {
 		/* Nothing handled directly here */
-		bell("Illegal roller command!");
+		bell();
 	}
 
 	return next;
