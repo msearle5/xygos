@@ -1129,6 +1129,9 @@ bool effect_handler_PROJECT_LOS(effect_handler_context_t *context)
 		/* Paranoia -- Skip dead monsters */
 		if (!mon->race) continue;
 
+		/* Don't affect the caster */
+		if (mon->midx == cave->mon_current) continue;
+
 		/* Require line of sight */
 		if (!los(cave, origin, mon->grid)) continue;
 
@@ -1165,6 +1168,9 @@ bool effect_handler_PROJECT_LOS_AWARE(effect_handler_context_t *context)
 
 		/* Paranoia -- Skip dead monsters */
 		if (!mon->race) continue;
+
+		/* Don't affect the caster */
+		if (mon->midx == cave->mon_current) continue;
 
 		/* Location */
 		grid = mon->grid;
