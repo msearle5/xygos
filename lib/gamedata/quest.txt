@@ -105,7 +105,7 @@ name:Arena
 store:All:Black Market
 succeed:Luck's with you today! Here's your payout. 
 failure:Oh well, you can't win every time. Try again tomorrow maybe?
-desc:The Black Market runs regular 5-way fights. You can bet on them or participate yourself. Come on if you think you're hard enough!
+desc:The Black Market runs regular fights. You can bet on them or participate yourself. Come on if you think you're hard enough!
 
 name:Day of the Triffids
 level:35

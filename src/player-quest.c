@@ -471,6 +471,124 @@ bool is_active_quest(struct player *p, int level)
 	return false;
 }
 
+/* Return guessed fighting strength (roughly 1..100) of a monster
+ */
+static double arena_monster_power(struct monster_race* r)
+{
+	double power = r->level + 10.0;
+
+	/* More AC, HP, speed etc are good */
+	power *= 1.0 + ((r->speed - 100) / 100.0);
+	// this is wrong power *= 1.0 + ((r->ac - 10) / 10.0);
+
+	/* Visibility */
+	if (rf_has(r->flags, RF_CHAR_CLEAR))
+		power *= 1.05;
+	if (rf_has(r->flags, RF_ATTR_CLEAR))
+		power *= 1.025;
+	if (rf_has(r->flags, RF_MIMIC_INV))
+		power *= 1.03;
+	if (rf_has(r->flags, RF_INVISIBLE))
+		power *= 1.04;
+	if (rf_has(r->flags, RF_COLD_BLOOD))
+		power *= 1.015;
+	if (rf_has(r->flags, RF_EMPTY_MIND))
+		power *= 1.02;
+	if (rf_has(r->flags, RF_WEIRD_MIND))
+		power *= 1.01;
+
+	/* Special cases */
+	if (rf_has(r->flags, RF_MULTIPLY))
+		power *= 1.15;
+	if (rf_has(r->flags, RF_EVASIVE))
+		power *= 1.22;
+
+	/* Toughness */
+	if (rf_has(r->flags, RF_REGENERATE))
+		power *= 1.08;
+	if (rf_has(r->flags, RF_IM_EDGED))
+		power *= 1.1;
+	if (rf_has(r->flags, RF_IM_BLUNT))
+		power *= 1.1;
+	if (rf_has(r->flags, RF_REFLECT))
+		power *= 1.08;
+
+	/* AI */
+	if (rf_has(r->flags, RF_STUPID))
+		power *= 0.95;
+	if (rf_has(r->flags, RF_SMART))
+		power *= 1.05;
+
+	/* Movement */
+	if (rf_has(r->flags, RF_FLYING))
+		power *= 1.005;
+	if (rf_has(r->flags, RF_ALL_TERRAIN))
+		power *= 1.01;
+	if (rf_has(r->flags, RF_ORTHOGONAL))
+		power *= 0.94;
+
+	/* Ranged */
+	if (rf_has(r->flags, RF_POWERFUL))
+		power *= 1.075;
+
+	/* Vulnerabilities */
+	if (rf_has(r->flags, RF_HURT_LIGHT))
+		power *= 0.99;
+	if (rf_has(r->flags, RF_HURT_ROCK))
+		power *= 0.995;
+	if (rf_has(r->flags, RF_HURT_FIRE))
+		power *= 0.98;
+	if (rf_has(r->flags, RF_HURT_COLD))
+		power *= 0.98;
+
+	/* Resistances */
+	if (rf_has(r->flags, RF_IM_ACID))
+		power *= 1.02;
+	if (rf_has(r->flags, RF_IM_ELEC))
+		power *= 1.02;
+	if (rf_has(r->flags, RF_IM_FIRE))
+		power *= 1.02;
+	if (rf_has(r->flags, RF_IM_COLD))
+		power *= 1.02;
+	if (rf_has(r->flags, RF_IM_POIS))
+		power *= 1.03;
+	if (rf_has(r->flags, RF_IM_RADIATION))
+		power *= 1.01;
+	if (rf_has(r->flags, RF_IM_WATER))
+		power *= 1.01;
+	if (rf_has(r->flags, RF_IM_SOUND))
+		power *= 1.01;
+	if (rf_has(r->flags, RF_IM_LIGHT))
+		power *= 1.015;
+	if (rf_has(r->flags, RF_IM_PLASMA))
+		power *= 1.01;
+	if (rf_has(r->flags, RF_IM_NEXUS))
+		power *= 1.005;
+	if (rf_has(r->flags, RF_IM_DISEN))
+		power *= 1.005;
+	if (rf_has(r->flags, RF_IM_CHAOS))
+		power *= 1.005;
+	if (rf_has(r->flags, RF_IM_INERTIA))
+		power *= 1.005;
+	if (rf_has(r->flags, RF_NO_FEAR))
+		power *= 1.02;
+	if (rf_has(r->flags, RF_NO_STUN))
+		power *= 1.02;
+	if (rf_has(r->flags, RF_NO_CONF))
+		power *= 1.02;
+	if (rf_has(r->flags, RF_NO_SLEEP))
+		power *= 1.02;
+	if (rf_has(r->flags, RF_NO_HOLD))
+		power *= 1.02;
+	if (rf_has(r->flags, RF_NO_SLOW))
+		power *= 1.02;
+
+	power -= 10.0;
+	if (power < 0.5)
+		power = 0.5;
+	return power;
+}
+
 /**
  * Choose a worthy opponent for the Arena.
  * Avoid returning NULL unless it has to - that will prevent any further fights.
@@ -478,32 +596,52 @@ bool is_active_quest(struct player *p, int level)
  * Lower levels are more likely but the bias should still be towards in level monsters.
  * Some monsters (questors, uniques, maybe breeders?) shouldn't show up in the arena
  */
-static struct monster_race *arena_opponent(int level)
+static struct monster_race *arena_opponent(int level, int existing, struct monster_race **exist)
 {
 	assert(level > 0);
 
 	/* Allocate a table (with sentinel) */
 	double *p = mem_zalloc(sizeof(double) * (z_info->r_max + 1));
 	int nmons = 0;
-
+	double total = 0.0;
+fprintf(stderr,"area_oppo level %d\n", level);
 	/* Fill it with probabilities */
 	for (int i = 0; i < z_info->r_max; i++) {
-		if ((rf_has(r_info[i].flags, RF_UNIQUE)) &&
+		if ((!rf_has(r_info[i].flags, RF_UNIQUE)) &&
 			(!rf_has(r_info[i].flags, RF_QUESTOR)) &&
 			(!rf_has(r_info[i].flags, RF_SPECIAL_GEN)) &&
 			(!rf_has(r_info[i].flags, RF_FORCE_DEPTH)) &&
+			(!rf_has(r_info[i].flags, RF_NEVER_MOVE)) &&
+			(!rf_has(r_info[i].flags, RF_NEVER_BLOW)) &&
+			(!rf_has(r_info[i].flags, RF_FRIGHTENED)) &&
+			(!rf_has(r_info[i].flags, RF_SEASONAL)) &&
+			(!rf_has(r_info[i].flags, RF_MOVE_BODY)) &&
+			(!rf_has(r_info[i].flags, RF_KILL_BODY)) &&
+			(!rf_has(r_info[i].flags, RF_AQUATIC)) &&
 			(r_info[i].rarity > 0) &&
+			(r_info[i].level > 0) &&
 			(r_info[i].max_num > 0)) {
 			double prob = 1.0;
-			if (r_info[i].level > level) {
+			double rlevel = arena_monster_power(&r_info[i]);
+			if (rlevel > level) {
 				/* Limit at 2x out of level */
-				prob = MAX(0.0, pow(0.1, (double)level / (double)r_info[i].level) - 0.01);
-			} else {
-				prob = MAX(0.0, 2.0 - ((double)r_info[i].level / (double)level));
+				prob = MAX(0.0, pow(0.1, (double)rlevel / level) - 0.0101);
+			} else if (rlevel < level) {
+				prob = MAX(0.0, 2.0 - (rlevel / (double)level));
 			}
 			if (prob > 0.0) {
-				p[i] = prob;
-				nmons++;
+				for(int j = 0; j < existing; j++) {
+					if (r_info+i == exist[j]) {
+	fprintf(stderr,"area_oppo: disabling %s\n", r_info[i].name);
+						prob = 0.0;
+					}
+				}
+				if (prob > 0.0) {
+	fprintf(stderr,"area_oppo: %.18lf chance of %s\n", prob, r_info[i].name);
+					p[i] = prob;
+					total += prob;
+					nmons++;
+				}
 			}
 		}
 	}
@@ -513,24 +651,18 @@ static struct monster_race *arena_opponent(int level)
 		return NULL;
 
 	/* Select from it */
-	double select = Rand_double(1.0);
+	double select = Rand_double(total);
 	int selection = 0;
 	for (; selection < z_info->r_max; selection++) {
-		if (select < p[selection]) {
+		select -= p[selection];
+		if (select < 0.0) {
+			fprintf(stderr,"area_oppo: selecting %s\n", r_info[selection].name);
 			break;
 		}
 	}
 	assert(p[selection] > 0.0);
 	mem_free(p);
 	return &r_info[selection];
-}
-
-/* Return guessed fighting strength (roughly 0..100) of a monster
- */
-static double arena_monster_power(struct monster_race* r)
-{
-	double power = r->level;
-	return power;
 }
 
 /* Return arena odds directly and as x-to-y.
@@ -557,15 +689,15 @@ static double arena_odds(int on, int races, struct monster_race **race, int *m, 
 	}
 
 	/* With equal contenders, odds would be the same (1/races) for all.
-	 * As some are less, reduce them. Top gets all the rest
+	 * As some are less, reduce them. Top gets all the rest FIXME
 	 */
-	odds_of[topi] = 1.0;
+	//odds_of[topi] = 1.0;
 	for(int i=0;i<races;i++) {
-		if (i != top) {
-			double chance = monster_power[i] / monster_power[topi];
+		//if (i != topi) {
+			double chance = (monster_power[i] / monster_power[topi]);
 			odds_of[i] = chance / races;
-			odds_of[topi] -= odds_of[i];
-		}
+			//odds_of[topi] -= odds_of[i];
+		//}
 	}
 
 	/* Convert 'chance of winning' to 'payout' */
@@ -600,16 +732,17 @@ static double arena_odds(int on, int races, struct monster_race **race, int *m, 
 				payout[i] -= (payout[i] - 25.0) / 2.0;
 			if (payout[i] >= 100.0)
 				payout[i] = 100.0;
-			if (payout[i] < 1.25)
+			if (payout[i] < 1.5)
 				div[i] = mul[i] = 1;
-			else if (payout[i] < 1.67) {
+			else if (payout[i] <= 2.0) {
 				div[i] = 2;
 				mul[i] = 3;
 			} else {
-				mul[i] = payout[i] + 0.5;
+				mul[i] = payout[i];
 				div[i] = 1;
 			}
 		}
+fprintf(stderr,"odds %.17lf, initial payout %.17lf, mul %d, div %d\n", odds_of[i], payout[i], mul[i], div[i]);
 		payout[i] = mul[i] / div[i];
 	}
 
@@ -638,7 +771,7 @@ static bool advance_arena(struct player *p)
 	q->races = rand_range(z_info->arena_min_monsters, z_info->arena_max_monsters);
 	q->race = mem_realloc(q->race, sizeof(*q->race) * q->races);
 	for(int i=0;i<q->races;i++) {
-		q->race[i] = arena_opponent(q->level);
+		q->race[i] = arena_opponent(q->level, i, q->race);
 		if (!q->race[i]) {
 			/* No more opponents */
 			mem_free(q->race);
@@ -660,7 +793,7 @@ static bool advance_arena(struct player *p)
 	for(int i=0;i<q->races;i++) {
 		int m, d;
 		arena_odds(i, q->races, q->race, &m, &d);
-		strnfmt(banner + strlen(banner), sizeof(banner) - strlen(banner), "%d for %s at %d/%d, ", i+'A', q->race[i]->name, m, d);
+		strnfmt(banner + strlen(banner), sizeof(banner) - strlen(banner), "%c for the %s at %d/%d, ", i+'A', q->race[i]->name, m, d);
 	}
 	strnfmt(banner + strlen(banner), sizeof(banner) - strlen(banner), "ESC to leave or @ to enter yourself.");
 
@@ -689,6 +822,44 @@ static bool update_arena(struct player *p)
  */
 int quest_arena_fight(struct player *p, bool you)
 {
+	struct quest *q = get_quest_by_name("Arena");
+
+	/* Ensure there are enough monsters already in the level */
+
+	/* For each monster, place it in the new level */
+	for(int i=0;i<q->races;i++) {
+		/* Pick a location */
+		struct loc grid;
+		struct monster_group_info info = { 0, 0 };
+		do {
+			scatter(cave, &grid, player->grid, 100, true);
+		} while (!square_in_bounds(cave, grid) || !square_isempty(cave, grid));
+
+		/* Place it */
+		place_new_monster(cave, grid, q->race[i], true, false, info, ORIGIN_DROP_SHK);
+		struct monster *mon = square_monster(cave, grid);
+		assert(mon);
+
+		/* Swap the targeted monster with the first in the monster list */
+		int old_idx = mon->midx;
+		if (old_idx == i+1) {
+			/* Do nothing */
+			;
+		} else if (cave_monster(cave, i+1)->race) {
+			monster_index_move(old_idx, cave_monster_max(cave));
+			monster_index_move(i+1, old_idx);
+			monster_index_move(cave_monster_max(cave), i+1);
+		} else {
+			monster_index_move(old_idx, i+1);
+		}
+		target_set_monster(cave_monster(cave, i+1));
+	}
+
+	/* Head to the arena */
+	//player->upkeep->health_who = square_monster(cave, grid);
+	player->upkeep->arena_level = true;
+	dungeon_change_level(player, player->depth);
+
 	return 0;
 }
 
@@ -698,11 +869,10 @@ int quest_arena_fight(struct player *p, bool you)
 bool quest_play_arena(struct player *p)
 {
 	struct quest *q = get_quest_by_name("Arena");
-
+fprintf(stderr,"qpa:entry\n");
 	/* Print the intro */
 	screen_save();
-	prt(q->intro, 0, 0);
-	screen_load();
+	ui_text_box(q->intro);
 
 	/* Get an answer */
 	struct keypress ch = inkey();
@@ -711,8 +881,10 @@ bool quest_play_arena(struct player *p)
 	prt("", 0, 0);
 
 	/* Scaredy cat */
-	if (ch.code == ESCAPE)
+	if (ch.code == ESCAPE) {
+		screen_load();
 		return (false);
+	}
 
 	char key = tolower(ch.code);
 	if (key == '@') {
@@ -723,7 +895,9 @@ bool quest_play_arena(struct player *p)
 		quest_arena_fight(p, false);
 	}
 
+fprintf(stderr,"qpa:exit\n");
 	/* Success */
+	screen_load();
 	return (true);
 }
 
