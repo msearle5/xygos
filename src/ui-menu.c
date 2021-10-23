@@ -979,7 +979,6 @@ void menu_init(struct menu *menu, skin_id skin_id, const menu_iter *iter)
 
 	/* Wipe the struct */
 	memset(menu, 0, sizeof *menu);
-
 	/* Menu-specific initialisation */
 	menu->row_funcs = iter;
 	menu->skin = skin;
