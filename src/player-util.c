@@ -177,24 +177,9 @@ void dungeon_change_level(struct player *p, int dlev)
 
 	/* Save the game when we arrive on the new level. */
 	p->upkeep->autosave = true;
-	
-	/* Handle returning to the town from a quest level */
-	if ((p->active_quest >= 0) && (!dlev)) {
-		struct quest *quest = &player->quests[player->active_quest];
-		
-		/* Fail, or reward */
-		if (!(quest->flags & QF_SUCCEEDED)) {
-			quest->flags |= QF_FAILED;
-		} else {
-			quest->flags |= QF_UNREWARDED;
-		}
-		
-		/* No longer active */
-		quest->flags &= ~QF_ACTIVE;
-		
-		/* Not generating or in a quest any more */
-		p->active_quest = -1;
-	}
+
+	/* Quest specials - before changing level */
+	quest_changing_level();
 }
 
 /* You are below 0 HP, either after taking damage or after a turn has passed
