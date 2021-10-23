@@ -204,6 +204,13 @@ bool special_can_gen(struct monster_race *r)
 			msg("Wot, no rats?");
 		else
 			return (q->flags & QF_SUCCEEDED);
+	} else if (streq(r->name, "Ky, the Pie Spy")) {
+		/* Generate Ky only when the Pie quest has been taken */
+		struct quest *q = get_quest_by_name("Soldier, Sailor, Chef, Pie");
+		if (!q)
+			msg("Wot, no pies?");
+		else
+			return (q->flags & QF_ACTIVE);
 	}
 	return false;
 }
