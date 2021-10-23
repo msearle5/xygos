@@ -68,10 +68,44 @@ void rdwr_s32b(s32b *v);
 void rdwr_double(double *v);
 void rdwr_string(char **str);
 void rdwr_string_null(char **str);
+int rdwr_bitflag(bitflag *flags, int size);
 
 /* Read/Write pointer. Give a pointer to pointer, and the base of the array (it converts it to an offset to this base) */
 #define RDWR_PTR(P, B) if (saving) { if (*(P) == NULL) { wr_s32b(-1); } else { wr_s32b((*(P)) - ((B))); }  } else { s32b offset; rd_s32b(&offset); if (offset < 0) { *(P) = NULL; } else { *(P) = ((B)) + offset; } }
 
+/* Read/Write and allocate pointer to array length N of type T, without base. Calls rdwr_T on each element. */
+#define RDWR_APTR(P, T, N) { int num = (N); if (!saving) { *(P) = mem_zalloc(sizeof(struct T) * num); } for(int i=0; i<num; i++) { rdwr_##T(&((*P)[i])); } }
+
+/* Read/Write and allocate a list of unknown length with next pointers of type T. */
+#define RDWR_LPTR(P, T) { int length = 0; struct T **base = (P); \
+							if (saving) { struct T *elem = *base; while (elem) { length++; elem = elem->next; }; } \
+							rdwr_s32b(&length); \
+							if (saving) { \
+								struct T *elem = *base; \
+								for (int i=0; i<length; i++) { \
+									rdwr_##T(elem); \
+									elem = elem->next; \
+								} \
+							} \
+							else { \
+								if (!length) { *base = NULL; } \
+								else { \
+									struct T *elem = mem_zalloc(sizeof(struct T)); \
+									*base = elem; \
+									for (int i=0; i<length; i++) { \
+										rdwr_##T(elem); \
+										if (i < length-1) { \
+											elem->next = mem_zalloc(sizeof(struct T)); \
+											elem = elem->next; \
+										} else { \
+											elem->next = NULL; \
+										} \
+									} \
+								} \
+							} \
+						}
+/* Type cast - mainly for enums */
+#define RDWR_AS(P, T) { T tmp; if (saving) { tmp = *(P); } rdwr_##T(&tmp); if (!saving) { *(P) = tmp; } }
 
 /* Writing bits */
 void wr_bool(bool v);
@@ -107,6 +141,7 @@ int rd_quests(void);
 int rd_artifacts(void);
 int rd_player(void);
 void rdwr_player_levels(void);
+int rdwr_race(struct monster_race *r);
 int rd_world(void);
 int rd_ignore(void);
 int rd_misc(void);

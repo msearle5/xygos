@@ -1052,6 +1052,10 @@ static void wr_monsters_aux(struct chunk *c)
 	/* Total monsters */
 	wr_u16b(cave_monster_max(c));
 
+	/* Write custom monster(s) */
+	if (rdwr_race(&r_info[1]))
+		return;
+
 	/* Dump the monsters */
 	for (i = 1; i < cave_monster_max(c); i++) {
 		const struct monster *mon = cave_monster(c, i);

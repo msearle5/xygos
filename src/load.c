@@ -1568,6 +1568,130 @@ static int rd_objects_aux(rd_item_t rd_item_version, struct chunk *c)
 	return 0;
 }
 
+int rdwr_bitflag(bitflag *flags, int size)
+{
+	for(int i=0;i<size;i++)
+		rdwr_byte(&flags[i]);
+	return 0;
+}
+
+void rdwr_random(random_value *dice)
+{
+	rdwr_s32b(&dice->base);
+	rdwr_s32b(&dice->dice);
+	rdwr_s32b(&dice->sides);
+	rdwr_s32b(&dice->m_bonus);
+}
+
+void rdwr_monster_blow(struct monster_blow *b)
+{
+	RDWR_PTR(&b->method, blow_methods);
+	RDWR_PTR(&b->effect, blow_effects);
+	rdwr_random(&b->dice);
+	rdwr_s32b(&b->times_seen);
+}
+
+void rdwr_monster_drop(struct monster_drop *d)
+{
+	RDWR_PTR(&d->kind, k_info);
+	rdwr_string_null((char **)(&d->art));
+	rdwr_u32b(&d->tval);
+	rdwr_u32b(&d->percent_chance);
+	rdwr_u32b(&d->min);
+	rdwr_u32b(&d->max);
+}
+
+void rdwr_monster_friends(struct monster_friends *f)
+{
+	rdwr_string(&f->name);
+	RDWR_PTR(&f->race, r_info);
+	RDWR_AS(&f->role, u32b);
+	rdwr_u32b(&f->percent_chance);
+	rdwr_u32b(&f->number_dice);
+	rdwr_u32b(&f->number_side);
+}
+
+void rdwr_monster_friends_base(struct monster_friends_base *f)
+{
+	RDWR_PTR(&f->base, rb_info);
+	RDWR_AS(&f->role, u32b);
+	rdwr_u32b(&f->percent_chance);
+	rdwr_u32b(&f->number_dice);
+	rdwr_u32b(&f->number_side);
+}
+
+void rdwr_monster_mimic(struct monster_mimic *m)
+{
+	RDWR_PTR(&m->kind, k_info);
+}
+
+void rdwr_monster_shape(struct monster_shape *s)
+{
+	rdwr_string(&s->name);
+	RDWR_PTR(&s->race, r_info);
+	RDWR_PTR(&s->base, rb_info);
+}
+
+/**
+ * Read/write a race
+ * Used for custom monsters (shop owner)
+ */
+int rdwr_race(struct monster_race *r)
+{
+	rdwr_u32b(&r->ridx);
+	rdwr_string(&r->name);
+	rdwr_string(&r->text);
+	rdwr_string_null(&r->plural);			/* Optional pluralized name */
+	rdwr_string_null(&r->grow);
+
+	RDWR_PTR(&r->base, rb_info);
+	RDWR_PTR(&r->pain, pain_messages);					/* Pain messages */
+
+	rdwr_s32b(&r->avg_hp);				/* Average HP for this creature */
+
+	rdwr_s32b(&r->ac);					/* Armour Class */
+
+	rdwr_s32b(&r->sleep);				/* Inactive counter (base) */
+	rdwr_s32b(&r->hearing);				/* Monster sense of hearing (1-100, standard 20) */
+	rdwr_s32b(&r->smell);				/* Monster sense of smell (0-50, standard 20) */
+	rdwr_s32b(&r->speed);				/* Speed (normally 110) */
+	rdwr_s32b(&r->light);				/* Light intensity */
+
+	rdwr_s32b(&r->mexp);				/* Exp value for kill */
+
+	rdwr_s32b(&r->freq_innate);			/* Innate spell frequency */
+	rdwr_s32b(&r->freq_spell);			/* Other spell frequency */
+	rdwr_s32b(&r->spell_power);			/* Power of spells */
+
+	rdwr_bitflag(r->flags, RF_SIZE);         		/* Flags */
+	rdwr_bitflag(r->spell_flags, RSF_SIZE);  		/* Spell flags */
+	rdwr_bitflag(r->death_spell_flags, RSF_SIZE);	/* Spell flags (to use on death) */
+
+	rdwr_byte(&r->mut_chance);						/* Chance of mutation */
+
+	RDWR_APTR(&r->blow, monster_blow, z_info->mon_blows_max); 				/* Melee blows */
+	RDWR_APTR(&r->passive, monster_blow, z_info->mon_passive_max); 			/* Melee passive blows */
+
+	rdwr_s32b(&r->level);				/* Level of creature */
+	rdwr_s32b(&r->rarity);				/* Rarity of creature */
+
+	rdwr_byte(&r->d_attr);				/* Default monster attribute */
+	RDWR_AS(&r->d_char, u32b);				/* Default monster character */
+
+	rdwr_byte(&r->max_num);				/* Maximum population allowed per level */
+	rdwr_s32b(&r->cur_num);				/* Monster population on current level */
+
+	RDWR_LPTR(&r->drops, monster_drop);
+    RDWR_LPTR(&r->friends, monster_friends);
+    RDWR_LPTR(&r->friends_base, monster_friends_base);
+	RDWR_LPTR(&r->mimic_kinds, monster_mimic);
+
+	rdwr_s32b(&r->num_shapes);
+	RDWR_APTR(&r->shapes, monster_shape, r->num_shapes);
+
+	return 0;
+}
+
 /**
  * Read monsters
  */
@@ -1586,6 +1710,10 @@ static int rd_monsters_aux(struct chunk *c)
 		note(format("Too many (%d) monster entries!", limit));
 		return (-1);
 	}
+
+	/* Read custom monster(s) */
+	if (rdwr_race(&r_info[1]))
+		return (-1);
 
 	/* Read the monsters */
 	for (i = 1; i < limit; i++) {
