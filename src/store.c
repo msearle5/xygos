@@ -714,9 +714,10 @@ int price_item(struct store *store, const struct object *obj,
 			((3 + player->state.stat_ind[STAT_CHR]) * 10)) + store->owner->greed;
 
 		/* The black market is always a worse deal (for the rest of them) */
-		if (store->sidx == STORE_B_MARKET)
-			adjust = (adjust * 2) + 50;
-		else {
+		if (store->sidx == STORE_B_MARKET) {
+			int bmf = (player->bm_faction >= 0) ? (20 / (player->bm_faction + 1)) : 50;
+			adjust = (adjust * 2) + 30 + bmf;
+		} else {
 			/* Expensive stuff gets a further hike.
 			 * 'Expensive' is based on the max cost.
 			 * It's still always better than the BM, though
@@ -1327,15 +1328,19 @@ static bool store_create_random(struct store *store)
 		max_level = 5 + (title_idx(player->lev) * 6);
 	} else {
 		if (store->sidx == STORE_B_MARKET) {
-			min_level = player->max_depth + 5;
-			max_level = player->max_depth + 20;
+			if (player->bm_faction <= 0) {
+				min_level = MIN(40, player->max_depth / 2);
+				max_level = MIN(55, (player->max_depth / 2) + 15);
+			} else {
+				min_level = MIN(75, player->max_depth + (player->bm_faction * 5));
+				max_level = MIN(90, player->max_depth + 10 + (player->bm_faction * 10));
+			}
 		} else {
 			min_level = 1;
 			max_level = z_info->store_magic_level + MAX(player->max_depth - 20, 0);
+			if (min_level > 55) min_level = 55;
+			if (max_level > 70) max_level = 70;
 		}
-
-		if (min_level > 55) min_level = 55;
-		if (max_level > 70) max_level = 70;
 	}
 
 	/* Consider up to six items */
@@ -1506,6 +1511,12 @@ void store_maint(struct store *s)
 		 */
 		int min = 0;
 		int max = s->normal_stock_max;
+
+		/* More faction gives more items */
+		if ((s->sidx == STORE_B_MARKET) && (player->bm_faction > 0)) {
+			max *= (player->bm_faction + 2);
+			max /= 2;
+		}
 
 		if (stock < min) stock = min;
 		if (stock > max) stock = max;
