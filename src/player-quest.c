@@ -32,11 +32,8 @@
 #include "store.h"
 #include "trap.h"
 #include "ui-knowledge.h"
-<<<<<<< HEAD
-=======
+
 #include "ui-store.h"
-#include "world.h"
->>>>>>> 8a40bb098 (quests (main))
 
 /**
  * Array of quests

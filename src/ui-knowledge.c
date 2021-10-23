@@ -62,7 +62,6 @@
 #include "ui-store.h"
 #include "ui-target.h"
 #include "wizard.h"
-#include "world.h"
 #include "z-textblock.h"
 
 /**

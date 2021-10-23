@@ -53,7 +53,6 @@ struct store_context {
 	unsigned int scr_places_y[LOC_MAX];
 };
 
-
 void textui_store_knowledge(int n);
 void enter_store(game_event_type type, game_event_data *data, void *user);
 void use_store(game_event_type type, game_event_data *data, void *user);
