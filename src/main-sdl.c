@@ -2480,18 +2480,25 @@ static errr sdl_HandleEvent(SDL_Event *event)
 		/* XXX - check for stuck inside menu etc... */
 		case SDL_QUIT:
 		{
+			bool really = true;
+
 			/* We are playing a game with an active character */
 			if (character_generated && inkey_flag) {
 				/* Hack -- Forget messages */
 				msg_flag = false;
 				
 				/* Save the game */
-				save_game(false);
+
+				if (!save_game_checked(false)
+						&& !get_check("Saving failed.  Really quit? ")) {
+					really = false;
+				}
 			}
-			
-			save_prefs();
-			
-			quit(NULL);
+
+			if (really) {
+				save_prefs();
+				quit(NULL);
+			}
 			break;
 		}
 			

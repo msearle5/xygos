@@ -1488,7 +1488,8 @@ void run_game_loop(void)
 
 				/* If autosave is pending, do it now. */
 				if (player->upkeep->autosave) {
-					save_game(true);
+					if (!save_game_checked(true))
+						msg("Timed autosave failed!");
 					player->upkeep->autosave = false;
 				}
 			}

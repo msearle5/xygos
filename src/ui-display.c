@@ -2571,7 +2571,8 @@ static void new_level_display_update(game_event_type type,
 
 	/* If autosave is pending, do it now. */
 	if (player->upkeep->autosave) {
-		save_game(true);
+		if (!save_game_checked(true))
+			msg("Autosave on entering new level failed!");
 		player->upkeep->autosave = false;
 	}
 
