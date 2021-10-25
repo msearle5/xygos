@@ -159,6 +159,7 @@ int fault_menu(struct object *obj, random_value value)
 	menu_iter menu_f = { 0, 0, get_fault_display, get_fault_action, 0 };
 	struct menu *m = menu_new(MN_SKIN_SCROLL, &menu_f);
 	int row;
+	char header[80];
 	unsigned int length = 0;
 	int i, count = 0;
 	size_t array_size = z_info->fault_max * sizeof(struct fault_menu_data);
@@ -188,7 +189,10 @@ int fault_menu(struct object *obj, random_value value)
 
 	/* Set up the menu */
 	menu_setpriv(m, count, available);
-	m->header = format(" Repair which fault (with ability %s)?", dice_string);
+	my_strcpy(header,
+			  format(" Repair which fault (with ability %s)?", dice_string),
+			  sizeof(header));
+	m->header = header;
 	m->selections = lower_case;
 	m->flags = (MN_PVT_TAGS);
 	m->browse_hook = fault_menu_browser;

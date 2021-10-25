@@ -197,13 +197,13 @@ static void remove_object_fault(struct object *obj, int index, bool message)
 {
 	struct fault_data *c = &obj->faults[index];
 	char *name = faults[index].name;
-	char *removed = format("The %s fault is repaired!", name);
+
 	int i;
 
 	c->power = 0;
 	c->timeout = 0;
 	if (message) {
-		msg(removed);
+		msg("The %s fault is repaired!", name);
 	}
 
 	/* Check to see if that was the last one */
