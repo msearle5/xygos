@@ -1039,14 +1039,14 @@ bool store_check_num(struct store *store, const struct object *obj)
 	if (store->sidx == STORE_HOME) {
 		for (stock_obj = store->stock; stock_obj; stock_obj = stock_obj->next) {
 			/* Can the new object be combined with the old one? */
-			if (object_similar(stock_obj, obj, OSTACK_PACK))
+			if (object_mergeable(stock_obj, obj, OSTACK_PACK))
 				return true;
 		}
 	} else {
 		/* Normal stores do special stuff */
 		for (stock_obj = store->stock; stock_obj; stock_obj = stock_obj->next) {
 			/* Can the new object be combined with the old one? */
-			if (object_similar(stock_obj, obj, OSTACK_STORE))
+			if (object_mergeable(stock_obj, obj, OSTACK_STORE))
 				return true;
 		}
 	}
@@ -1069,7 +1069,7 @@ void home_carry(struct store *store, struct object *obj)
 	/* Check each existing object (try to combine) */
 	for (temp_obj = store->stock; temp_obj; temp_obj = temp_obj->next) {
 		/* The home acts just like the player */
-		if (object_similar(temp_obj, obj, OSTACK_PACK)) {
+		if (object_mergeable(temp_obj, obj, OSTACK_PACK)) {
 			/* Save the new number of items */
 			object_absorb(temp_obj, obj);
 			return;
@@ -1160,7 +1160,7 @@ struct object *store_carry(struct store *store, struct object *obj, bool maintai
 
 	for (temp_obj = store->stock; temp_obj; temp_obj = temp_obj->next) {
 		/* Can the existing items be incremented? */
-		if (object_similar(temp_obj, obj, OSTACK_STORE)) {
+		if (object_mergeable(temp_obj, obj, OSTACK_STORE)) {
 
 			/* If this is 'maintenance' (rather than selling an item), discard some duplicates */
 			if (maintain) {
