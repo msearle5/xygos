@@ -368,7 +368,7 @@ static int get_message_type(int msg_code, const struct monster_race *race)
 	if (type == MSG_KILL) {
 		/* Play a special sound if the monster was unique */
 		if (rf_has(race->flags, RF_UNIQUE)) {
-			if (race->base == lookup_monster_base("Morgoth")) {
+			if (rf_has(race->flags, RF_QUESTOR)) {
 				type = MSG_KILL_KING;
 			} else {
 				type = MSG_KILL_UNIQUE;

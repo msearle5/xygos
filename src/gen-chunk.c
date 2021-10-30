@@ -37,6 +37,7 @@
 struct chunk **chunk_list;     /**< list of pointers to saved chunks */
 u16b chunk_list_max = 0;      /**< current max actual chunk index */
 
+
 /**
  * Write the terrain info of a chunk to memory and return a pointer to it
  *
@@ -88,6 +89,7 @@ void chunk_list_add(struct chunk *c)
 bool chunk_list_remove(const char *name)
 {
 	int i;
+	assert(name);
 
 	/* Find the match */
 	for (i = 0; i < chunk_list_max; i++) {

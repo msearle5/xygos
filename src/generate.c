@@ -1026,11 +1026,15 @@ static void cave_store(struct chunk *c, bool known, bool keep_all)
 	} else {
 		stored = chunk_write(c);
 	}
+	char *name = string_make(c->name);
 	if (stored->name) {
 		string_free(stored->name);
 	}
-	assert(c->name);
-	stored->name = string_make(c->name);
+	if (c->name) {
+		stored->name = name;
+	} else {
+		stored->name = string_make("Blank");
+	}
 	if (known) {
 		stored->name = string_append(stored->name, " known");
 	}
@@ -1325,15 +1329,22 @@ static void sanitize_player_loc(struct chunk *c, struct player *p)
 */
 void prepare_next_level(struct player *p)
 {
-	bool persist = OPT(p, birth_levels_persist) || p->upkeep->arena_level;
+	bool persist = OPT(p, birth_levels_persist);// || p->upkeep->arena_level;
+
+	static struct monster health_who;
+	struct monster *health_who_p = NULL;
+	if (player->upkeep->health_who) {
+		memcpy(&health_who, player->upkeep->health_who, sizeof(struct monster));
+		health_who_p = &health_who;
+	}
 
 	/* Deal with any existing current level */
 	if (character_dungeon) {
 		assert (p->cave);
-
+// save restore fixes it (going down and up will still be ok). What changes - flagds or the stack?
 		if (persist) {
 			/* Arenas don't get stored */
-			if (!cave->name || !streq(cave->name, "arena")) {
+			if (cave->name && !streq(cave->name, "arena")) {
 				/* Tidy up */
 				compact_monsters(cave, 0);
 				if (!p->upkeep->arena_level) {
@@ -1354,7 +1365,12 @@ void prepare_next_level(struct player *p)
 					oldname = player->upkeep->last_level = player->town->name;
 				}
 				cave->name = string_make(oldname);
-				cave_store(cave, false, false);
+				if (!player->upkeep->was_arena_level) {
+					//cave_store(cave, false, false);
+					cave_store(cave, false, false);
+					cave_store(p->cave, true, false);
+				}
+				player->upkeep->was_arena_level = false;
 				player->upkeep->last_level  = player->town->name;
 			}
 
@@ -1483,6 +1499,7 @@ void prepare_next_level(struct player *p)
 			chunk_list_remove(known_name);
 		} else if (p->upkeep->arena_level) {
 			/* We're creating a new arena level */
+			//p->upkeep->health_who = health_who;
 			cave = cave_generate(p, 6, 6);
 			event_signal_flag(EVENT_GEN_LEVEL_END, true);
 		} else {
@@ -1514,6 +1531,7 @@ void prepare_next_level(struct player *p)
 		}
 	} else {
 		/* Generate a new level */
+		p->upkeep->health_who = health_who_p;
 		cave = cave_generate(p, 0, 0);
 		event_signal_flag(EVENT_GEN_LEVEL_END, true);
 	}
@@ -1528,7 +1546,7 @@ void prepare_next_level(struct player *p)
 
 	/* The dungeon is ready */
 	character_dungeon = true;
-
+player->upkeep->was_arena_level = false;
 	/* Quest specials - after changing level */
 	quest_changed_level(false);
 }

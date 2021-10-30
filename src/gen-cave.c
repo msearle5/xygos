@@ -1487,7 +1487,7 @@ static struct chunk *labyrinth_chunk(int depth, int h, int w, bool lit, bool sof
 		j = walls[i];
 
 		/* If this cell isn't an adjoining wall, skip it */
-		i_to_grid(j, w, &grid);
+		i_to_grid(j, w, &g rid);
 		if ((grid.x < 1 && grid.y < 1) || (grid.x > w - 2 && grid.y > h - 2))
 			continue;
 		if (grid.x % 2 == grid.y % 2) continue;
@@ -2828,6 +2828,33 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 			}
 		}
 
+		/* If there still isn't anywhere to place the player,
+		 * find somewhere at random
+		 */
+		if (!found) {
+			int grids = 0;
+			for (grid.y = 0; grid.y < c_new->height; grid.y++) {
+				for (grid.x = 0; grid.x < c_new->width; grid.x++) {
+					if (square_isempty(c_new, grid))
+						grids++;
+				}
+			}
+			assert(grids);
+			grids = randint0(grids);
+			for (grid.y = 0; grid.y < c_new->height; grid.y++) {
+				for (grid.x = 0; grid.x < c_new->width; grid.x++) {
+					if (square_isempty(c_new, grid)) {
+						if (!grids) {
+							found = true;
+							break;
+						}
+						grids--;
+					}
+				}
+				if (found) break;
+			}
+		}
+
 		/* Place the player */
 		player_place(c_new, p, grid);
 		c_new->depth = danger_depth(player);
@@ -4134,8 +4161,11 @@ struct chunk *gauntlet_gen(struct player *p, int min_height, int min_width) {
 struct chunk *arena_gen(struct player *p, int min_height, int min_width) {
 	struct chunk *c;
 	struct monster *mon = p->upkeep->health_who;
+	assert(mon);
+	int arena_height = MAX(min_height, 6 + randint0(3) + randint0(3) + randint0(3));
+	int arena_width = MAX(min_width, 8 + randint0(4) + randint0(4) + randint0(4));
 
-	c = cave_new(min_height, min_width);
+	c = cave_new(arena_height, arena_width);
 	c->depth = p->depth;
 	c->name = string_make("arena");
 
@@ -4151,20 +4181,22 @@ struct chunk *arena_gen(struct player *p, int min_height, int min_width) {
 	player_place(c, p, loc(1, c->height - 2));
 
 	/* Place the monster */
-	memcpy(&c->monsters[mon->midx], mon, sizeof(*mon));
-	mon = &c->monsters[mon->midx];
-	mon->grid = loc(c->width - 2, 1);
-	square_set_mon(c, mon->grid, mon->midx);
-	c->mon_max = mon->midx + 1;
-	c->mon_cnt = 1;
-	update_mon(p, mon, c, true);
-	p->upkeep->health_who = mon;
+	if (mon) {
+		memcpy(&c->monsters[mon->midx], mon, sizeof(*mon));
+		mon = &c->monsters[mon->midx];
+		mon->grid = loc(c->width - 2, 1);
+		square_set_mon(c, mon->grid, mon->midx);
+		c->mon_max = mon->midx + 1;
+		c->mon_cnt = 1;
+		update_mon(p, mon, c, true);
+		p->upkeep->health_who = mon;
 
-	/* Ignore its held objects */
-	mon->held_obj = NULL;
+		/* Ignore its held objects */
+		mon->held_obj = NULL;
 
-	/* Give it a group */
-	monster_group_start(c, mon, 0);
+		/* Give it a group */
+		monster_group_start(c, mon, 0);
+	}
 
 	return c;
 }
