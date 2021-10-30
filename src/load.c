@@ -709,7 +709,7 @@ void rdwr_player_levels(void)
 
 	/* Talents */
 	rdwr_u16b(&player->talent_points);
-	
+
 	/* Get an empty array of talent gain counts */
 	int n_classes = 0;
 	for (struct player_class *c = classes; c; c = c->next)
@@ -1644,7 +1644,8 @@ int rdwr_race(struct monster_race *r)
 	rdwr_string_null(&r->plural);			/* Optional pluralized name */
 	rdwr_string_null(&r->grow);
 
-	RDWR_PTR(&r->base, rb_info);
+	RDWR_NPTR(&r->base, rb_info);
+assert(r->base);
 	RDWR_PTR(&r->pain, pain_messages);					/* Pain messages */
 
 	rdwr_s32b(&r->avg_hp);				/* Average HP for this creature */

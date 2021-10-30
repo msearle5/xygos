@@ -14,6 +14,7 @@
 R:" " -- Charlie Chaplin.  " " -- Harpo Marx.  " " -- Marcel Marceau.
 R:"I'm not stupid, I'm not expendable, and I'M NOT GOING!"
 R:"Quit" is a four letter word.
+R:"Scum" is a four letter word.
 R:"So when I die, the first thing I will see in heaven is a score list?"
 R:"So when I die, the first thing I will see is a dessert?"
 R:'Ere, 'oo are you?

@@ -73,6 +73,27 @@ int rdwr_bitflag(bitflag *flags, int size);
 /* Read/Write pointer. Give a pointer to pointer, and the base of the array (it converts it to an offset to this base) */
 #define RDWR_PTR(P, B) if (saving) { if (*(P) == NULL) { wr_s32b(-1); } else { wr_s32b((*(P)) - ((B))); }  } else { s32b offset; rd_s32b(&offset); if (offset < 0) { *(P) = NULL; } else { *(P) = ((B)) + offset; } }
 
+/* Read/Write pointer which is present in a linked list (next) by converting it to an index - may not be null or not in the list */
+#define RDWR_NPTR(P, B) { s32b index = -1; assert(B); assert(*P); \
+							if (saving) { \
+								while (B) { \
+									index++; \
+									if (*(P) == B) \
+										break; \
+									B = B->next; \
+								}; \
+								assert(index >= 0); \
+								wr_s32b(index); \
+							} else { \
+								rd_s32b(&index); assert(index >= 0); \
+								while (index) { \
+									index--; \
+									B = B->next; \
+								}; \
+								*(P) = B; \
+							} \
+						}
+
 /* Read/Write and allocate pointer to array length N of type T, without base. Calls rdwr_T on each element. */
 #define RDWR_APTR(P, T, N) { int num = (N); if (!saving) { *(P) = mem_zalloc(sizeof(struct T) * num); } for(int i=0; i<num; i++) { rdwr_##T(&((*P)[i])); } }
 

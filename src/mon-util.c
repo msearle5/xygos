@@ -377,7 +377,7 @@ void update_mon(struct player *p, struct monster *mon, struct chunk *c,
 	}
 
 	lore = get_lore(mon->race);
-	
+
 	/* Compute distance, or just use the current one */
 	if (full) {
 		/* Distance components */
@@ -1331,7 +1331,7 @@ static void player_kill_monster(struct monster *mon, struct player *p,
 
 	/* Play a special sound if the monster was unique */
 	if (rf_has(mon->race->flags, RF_UNIQUE)) {
-		if (mon->race->base == lookup_monster_base("Morgoth"))
+		if (rf_has(mon->race->flags, RF_QUESTOR))
 			soundfx = MSG_KILL_KING;
 		else
 			soundfx = MSG_KILL_UNIQUE;
@@ -1591,6 +1591,8 @@ bool do_mon_take_hit(struct monster *mon, struct player *p, int dam, bool *fear,
 	if (mon->hp < 0) {
 		/* Deal with arena monsters */
 		if (p->upkeep->arena_level) {
+			p->upkeep->was_arena_level = true;
+			p->upkeep->arena_level = false;
 			p->upkeep->generate_level = true;
 			p->upkeep->health_who = mon;
 			(*fear) = false;
