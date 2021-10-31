@@ -708,6 +708,17 @@ static void melee_effect_handler_DISENCHANT(melee_effect_handler_context_t *cont
 	update_smart_learn(context->mon, context->p, 0, 0, ELEM_DISEN);
 }
 
+bool redraw_health(struct player *p, struct monster *monster)
+{
+	if (p->upkeep->n_health_who)
+		for(int i=0;i<p->upkeep->n_health_who;i++)
+			if (p->upkeep->health_who[i] == monster) {
+				p->upkeep->redraw |= (PR_HEALTH);
+				return true;
+			}
+	return false;
+}
+
 /**
  * Melee effect handler: Drain charges from the player's inventory.
  */
@@ -759,8 +770,7 @@ static void melee_effect_handler_DRAIN_CHARGES(melee_effect_handler_context_t *c
 			monster->hp += heal;
 
 			/* Redraw (later) if needed */
-			if (current_player->upkeep->health_who == monster)
-				current_player->upkeep->redraw |= (PR_HEALTH);
+			redraw_health(player, monster);
 
 			/* Combine the pack */
 			current_player->upkeep->notice |= (PN_COMBINE);

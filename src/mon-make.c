@@ -393,8 +393,7 @@ void delete_monster_idx(int m_idx)
 		target_set_monster(NULL);
 
 	/* Hack -- remove tracked monster */
-	if (player->upkeep->health_who == mon)
-		health_track(player->upkeep, NULL);
+	health_untrack(player->upkeep, mon);
 
 	/* Hack -- remove any command status */
 	if (mon->m_timed[MON_TMD_COMMAND]) {
@@ -511,8 +510,12 @@ void monster_index_move(int i1, int i2)
 		target_set_monster(cave_monster(cave, i2));
 
 	/* Update the health bar */
-	if (player->upkeep->health_who == mon)
-		player->upkeep->health_who = cave_monster(cave, i2);
+	for(int i=0;i<player->upkeep->n_health_who;i++) {
+		if (player->upkeep->health_who[i] == mon) {
+			player->upkeep->health_who[i] = cave_monster(cave, i2);
+			assert(player->upkeep->health_who[i]);
+		}
+	}
 
 	/* Move monster */
 	memcpy(cave_monster(cave, i2),
@@ -686,7 +689,7 @@ void wipe_mon_list(struct chunk *c, struct player *p)
 	target_set_monster(0);
 
 	/* Hack -- no more tracking */
-	health_track(p->upkeep, 0);
+	p->upkeep->n_health_who = 0;
 }
 
 /**

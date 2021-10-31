@@ -212,8 +212,7 @@ static bool mon_set_timed(struct monster *mon,
 
 	/* Update the visuals, as appropriate. */
 	if (update) {
-		if (player->upkeep->health_who == mon)
-			player->upkeep->redraw |= (PR_HEALTH);
+		redraw_health(player, mon);
 
 		player->upkeep->redraw |= (PR_MONLIST);
 	}

@@ -1412,7 +1412,7 @@ static bool store_do_fight(struct store_context *ctx)
 	change_faction(ctx->store, -1);
 
 	/* Head to the arena */
-	player->upkeep->health_who = square_monster(cave, grid);
+	health_track(player->upkeep, square_monster(cave, grid));
 	player->upkeep->arena_level = true;
 	dungeon_change_level(player, player->depth);
 

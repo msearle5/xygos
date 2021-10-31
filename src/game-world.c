@@ -1322,7 +1322,7 @@ void on_new_level(void)
 		target_set_monster(0);
 
 		/* Cancel the health bar */
-		health_track(player->upkeep, NULL);
+		player->upkeep->n_health_who = 0;
 	}
 
 	/* Disturb */
@@ -1518,8 +1518,9 @@ void run_game_loop(void)
 			/* Kill arena monster */
 			if (arena) {
 				player->upkeep->arena_level = false;
-				if (player->upkeep->health_who) {
-					kill_arena_monster(player->upkeep->health_who);
+				for(int i=0;i<player->upkeep->n_health_who;i++) {
+					if (player->upkeep->health_who[i])
+						kill_arena_monster(player->upkeep->health_who[i]);
 				}
 			}
 		}

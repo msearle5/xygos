@@ -533,7 +533,8 @@ struct player_upkeep {
 	int energy_use;			/* Energy use this turn */
 	int new_spells;			/* Number of spells available */
 
-	struct monster *health_who;			/* Health bar trackee */
+	struct monster **health_who;		/* Health bar trackees */
+	int n_health_who;
 	struct monster_race *monster_race;	/* Monster race trackee */
 	struct object *object;				/* Object trackee */
 	struct object_kind *object_kind;	/* Object kind trackee */
