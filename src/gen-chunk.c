@@ -37,20 +37,6 @@
 struct chunk **chunk_list;     /**< list of pointers to saved chunks */
 u16b chunk_list_max = 0;      /**< current max actual chunk index */
 
-void chunk_debug(void)
-{
-	fprintf(stderr,"chunk debug: %d chunks\n", chunk_list_max);
-	for(int i=0;i<chunk_list_max;i++) {
-		char *name = "null";
-		if (chunk_list[i]) {
-			name = "unnamed";
-			if (chunk_list[i]->name) {
-				name = chunk_list[i]->name;
-			}
-		}
-		fprintf(stderr,"%d: %s\n", i, name);
-	}
-}
 
 /**
  * Write the terrain info of a chunk to memory and return a pointer to it
@@ -85,7 +71,6 @@ struct chunk *chunk_write(struct chunk *c)
 void chunk_list_add(struct chunk *c)
 {
 	assert(c->name);
-	fprintf(stderr,"chunk_list_add: %s\n", c->name);
 	int newsize = (chunk_list_max + CHUNK_LIST_INCR) *	sizeof(struct chunk *);
 
 	/* Lengthen the list if necessary */
@@ -94,7 +79,6 @@ void chunk_list_add(struct chunk *c)
 
 	/* Add the new one */
 	chunk_list[chunk_list_max++] = c;
-	chunk_debug();
 }
 
 /**
@@ -106,7 +90,6 @@ bool chunk_list_remove(const char *name)
 {
 	int i;
 	assert(name);
-	fprintf(stderr,"chunk_list_remove: %s\n", name);
 
 	/* Find the match */
 	for (i = 0; i < chunk_list_max; i++) {
@@ -120,13 +103,9 @@ bool chunk_list_remove(const char *name)
 			/* Shorten the list and return */
 			chunk_list_max--;
 			chunk_list[chunk_list_max] = NULL;
-			fprintf(stderr,"chunk_list_remove: %s: not found\n", name);
 			return true;
 		}
 	}
-	
-	fprintf(stderr,"chunk_list_remove: %s: not found\n", name);
-	chunk_debug();
 
 	return false;
 }

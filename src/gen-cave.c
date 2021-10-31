@@ -1487,7 +1487,7 @@ static struct chunk *labyrinth_chunk(int depth, int h, int w, bool lit, bool sof
 		j = walls[i];
 
 		/* If this cell isn't an adjoining wall, skip it */
-		i_to_grid(j, w, &grid);
+		i_to_grid(j, w, &g rid);
 		if ((grid.x < 1 && grid.y < 1) || (grid.x > w - 2 && grid.y > h - 2))
 			continue;
 		if (grid.x % 2 == grid.y % 2) continue;
@@ -4197,6 +4197,6 @@ struct chunk *arena_gen(struct player *p, int min_height, int min_width) {
 		/* Give it a group */
 		monster_group_start(c, mon, 0);
 	}
-	
+
 	return c;
 }
