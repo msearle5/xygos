@@ -72,6 +72,7 @@
 #include "mon-make.h"
 #include "mon-spell.h"
 #include "mon-util.h"
+#include "player-calcs.h"
 #include "player-quest.h"
 #include "player-util.h"
 #include "store.h"
@@ -1487,7 +1488,7 @@ static struct chunk *labyrinth_chunk(int depth, int h, int w, bool lit, bool sof
 		j = walls[i];
 
 		/* If this cell isn't an adjoining wall, skip it */
-		i_to_grid(j, w, &g rid);
+		i_to_grid(j, w, &grid);
 		if ((grid.x < 1 && grid.y < 1) || (grid.x > w - 2 && grid.y > h - 2))
 			continue;
 		if (grid.x % 2 == grid.y % 2) continue;
@@ -4160,7 +4161,9 @@ struct chunk *gauntlet_gen(struct player *p, int min_height, int min_width) {
  */
 struct chunk *arena_gen(struct player *p, int min_height, int min_width) {
 	struct chunk *c;
-	struct monster *mon = p->upkeep->health_who;
+	assert(p->upkeep->n_health_who);
+	assert(p->upkeep->health_who);
+	struct monster *mon = p->upkeep->health_who[0];
 	assert(mon);
 	int arena_height = MAX(min_height, 6 + randint0(3) + randint0(3) + randint0(3));
 	int arena_width = MAX(min_width, 8 + randint0(4) + randint0(4) + randint0(4));
@@ -4189,7 +4192,7 @@ struct chunk *arena_gen(struct player *p, int min_height, int min_width) {
 		c->mon_max = mon->midx + 1;
 		c->mon_cnt = 1;
 		update_mon(p, mon, c, true);
-		p->upkeep->health_who = mon;
+		health_track(p->upkeep, mon);
 
 		/* Ignore its held objects */
 		mon->held_obj = NULL;

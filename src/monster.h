@@ -424,4 +424,6 @@ extern struct monster_base *rb_info;
 extern struct monster_race *r_info;
 extern const struct monster_race *ref_race;
 
+bool redraw_health(struct player *p, struct monster *monster);
+
 #endif /* !MONSTER_MONSTER_H */

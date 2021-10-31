@@ -352,7 +352,12 @@ static void prt_hp(int row, int col)
  */
 byte monster_health_attr(void)
 {
-	struct monster *mon = player->upkeep->health_who;
+	if (player->upkeep->n_health_who == 0) {
+		/* Not tracking */
+		return COLOUR_DARK;
+	}
+
+	struct monster *mon = player->upkeep->health_who[0];
 	byte attr;
 
 	if (!mon) {
@@ -413,7 +418,15 @@ byte monster_health_attr(void)
 static int prt_health_aux(int row, int col)
 {
 	byte attr = monster_health_attr();
-	struct monster *mon = player->upkeep->health_who;
+
+	/* Not tracking */
+	if (player->upkeep->n_health_who == 0) {
+		/* Erase the health bar */
+		Term_erase(col, row, 12);
+		return 0;
+	}
+
+	struct monster *mon = player->upkeep->health_who[0];
 
 	/* Not tracking */
 	if (!mon) {

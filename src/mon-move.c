@@ -1977,8 +1977,7 @@ static void regen_monster(struct monster *mon, int num)
 		if (mon->hp > mon->maxhp) mon->hp = mon->maxhp;
 
 		/* Redraw (later) if needed */
-		if (player->upkeep->health_who == mon)
-			player->upkeep->redraw |= (PR_HEALTH);
+		redraw_health(player, mon);
 	}
 }
 

@@ -919,11 +919,8 @@ static void project_monster_handler_MON_HEAL(project_monster_handler_context_t *
 		context->mon->hp = context->mon->maxhp;
 
 	/* Redraw (later) if needed */
-	if (player->upkeep->health_who == context->mon)
-		player->upkeep->redraw |= (PR_HEALTH);
-
-	/* Message */
-	else context->hurt_msg = MON_MSG_HEALTHIER;
+	if (!redraw_health(player, context->mon))
+		context->hurt_msg = MON_MSG_HEALTHIER;
 
 	/* No "real" damage */
 	context->dam = 0;
@@ -1043,8 +1040,7 @@ static bool project_m_monster_attack(project_monster_handler_context_t *context,
 	}
 
 	/* Redraw (later) if needed */
-	if (player->upkeep->health_who == mon)
-		player->upkeep->redraw |= (PR_HEALTH);
+	redraw_health(player, mon);
 
 	/* Wake the monster up, don't notice the player */
 	monster_wake(mon, false, 0);

@@ -495,8 +495,7 @@ void update_mon(struct player *p, struct monster *mon, struct chunk *c,
 			square_light_spot(c, mon->grid);
 
 			/* Update health bar as needed */
-			if (p->upkeep->health_who == mon)
-				p->upkeep->redraw |= (PR_HEALTH);
+			redraw_health(p, mon);
 
 			/* Hack -- Count "fresh" sightings */
 			if (lore->sights < SHRT_MAX)
@@ -516,8 +515,7 @@ void update_mon(struct player *p, struct monster *mon, struct chunk *c,
 			square_light_spot(c, mon->grid);
 
 			/* Update health bar as needed */
-			if (p->upkeep->health_who == mon)
-				p->upkeep->redraw |= (PR_HEALTH);
+			redraw_health(p, mon);
 
 			/* Window stuff */
 			p->upkeep->redraw |= PR_MONLIST;
@@ -1484,8 +1482,7 @@ bool mon_take_nonplayer_hit(int dam, struct monster *t_mon,
 	}
 
 	/* Redraw (later) if needed */
-	if (player->upkeep->health_who == t_mon)
-		player->upkeep->redraw |= (PR_HEALTH);
+	redraw_health(player, t_mon);
 
 	/* Wake the monster up, doesn't become aware of the player */
 	monster_wake(t_mon, false, 0);
@@ -1567,8 +1564,7 @@ bool do_mon_take_hit(struct monster *mon, struct player *p, int dam, bool *fear,
 		fear = &dummy;
 
 	/* Redraw (later) if needed */
-	if (p->upkeep->health_who == mon)
-		p->upkeep->redraw |= (PR_HEALTH);
+	redraw_health(p, mon);
 
 	/* If the hit doesn't kill, wake it up, make it aware of the player */
 	if (dam <= mon->hp) {
@@ -1594,7 +1590,7 @@ bool do_mon_take_hit(struct monster *mon, struct player *p, int dam, bool *fear,
 			p->upkeep->was_arena_level = true;
 			p->upkeep->arena_level = false;
 			p->upkeep->generate_level = true;
-			p->upkeep->health_who = mon;
+			health_track(p->upkeep, mon);
 			(*fear) = false;
 			return true;
 		}

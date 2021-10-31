@@ -297,8 +297,7 @@ bool effect_handler_MON_HEAL_HP(effect_handler_context_t *context)
 	}
 
 	/* Redraw (later) if needed */
-	if (player->upkeep->health_who == mon)
-		player->upkeep->redraw |= (PR_HEALTH);
+	redraw_health(player, mon);
 
 	/* Cancel fear */
 	if (mon->m_timed[MON_TMD_FEAR]) {
@@ -351,8 +350,7 @@ bool effect_handler_MON_HEAL_KIN(effect_handler_context_t *context)
 	}
 
 	/* Redraw (later) if needed */
-	if (player->upkeep->health_who == mon)
-		player->upkeep->redraw |= (PR_HEALTH);
+	redraw_health(player, mon);
 
 	/* Cancel fear */
 	if (mon->m_timed[MON_TMD_FEAR]) {

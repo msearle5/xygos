@@ -1728,12 +1728,35 @@ static void update_bonuses(struct player *p)
  * ------------------------------------------------------------------------ */
 
 /**
- * Track the given monster
+ * Track the given monster (only)
  */
 void health_track(struct player_upkeep *upkeep, struct monster *mon)
 {
-	upkeep->health_who = mon;
+	assert(mon);
+	if (upkeep->n_health_who == 0) {
+		upkeep->health_who = mem_alloc(sizeof(upkeep->health_who[0]));
+	}
+	upkeep->health_who[0] = mon;
+	upkeep->n_health_who = 1;
 	upkeep->redraw |= PR_HEALTH;
+}
+
+/**
+ * Remove the given monster from health tracking
+ */
+void health_untrack(struct player_upkeep *upkeep, struct monster *mon)
+{
+	for(int i=0;i<upkeep->n_health_who;i++) {
+		if (mon == upkeep->health_who[i]) {
+			upkeep->redraw |= PR_HEALTH;
+			if (i < upkeep->n_health_who-1) {
+				memmove(&upkeep->health_who[i], &upkeep->health_who[i+1], sizeof(upkeep->health_who[0]) * (upkeep->n_health_who - i));
+			}
+			upkeep->n_health_who--;
+			return;
+		}
+	}
+	return;
 }
 
 /**

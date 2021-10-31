@@ -1329,19 +1329,24 @@ static void sanitize_player_loc(struct chunk *c, struct player *p)
 */
 void prepare_next_level(struct player *p)
 {
-	bool persist = OPT(p, birth_levels_persist);// || p->upkeep->arena_level;
+	bool persist = OPT(p, birth_levels_persist);
 
-	static struct monster health_who;
-	struct monster *health_who_p = NULL;
-	if (player->upkeep->health_who) {
-		memcpy(&health_who, player->upkeep->health_who, sizeof(struct monster));
-		health_who_p = &health_who;
+	static struct monster *health_mon;
+	static struct monster **health_who;
+	static int n_health_who;
+	n_health_who = p->upkeep->n_health_who;
+	health_who = mem_realloc(health_who, sizeof(health_who[0]) * n_health_who);
+	health_mon = mem_realloc(health_mon, sizeof(health_mon[0]) * n_health_who);
+	for(int i=0;i<n_health_who;i++) {
+		memcpy(&health_mon[i], p->upkeep->health_who[i], sizeof(health_mon[0]));
+		health_mon[i].grid.x = health_mon[i].grid.y = 0;
+		health_who[i] = &health_mon[i];
 	}
 
 	/* Deal with any existing current level */
 	if (character_dungeon) {
 		assert (p->cave);
-// save restore fixes it (going down and up will still be ok). What changes - flagds or the stack?
+
 		if (persist) {
 			/* Arenas don't get stored */
 			if (cave->name && !streq(cave->name, "arena")) {
@@ -1366,7 +1371,6 @@ void prepare_next_level(struct player *p)
 				}
 				cave->name = string_make(oldname);
 				if (!player->upkeep->was_arena_level) {
-					//cave_store(cave, false, false);
 					cave_store(cave, false, false);
 					cave_store(p->cave, true, false);
 				}
@@ -1499,7 +1503,7 @@ void prepare_next_level(struct player *p)
 			chunk_list_remove(known_name);
 		} else if (p->upkeep->arena_level) {
 			/* We're creating a new arena level */
-			//p->upkeep->health_who = health_who;
+			//p->upkeep->health_who[0] = health_who[0];
 			cave = cave_generate(p, 6, 6);
 			event_signal_flag(EVENT_GEN_LEVEL_END, true);
 		} else {
@@ -1531,7 +1535,9 @@ void prepare_next_level(struct player *p)
 		}
 	} else {
 		/* Generate a new level */
-		p->upkeep->health_who = health_who_p;
+		p->upkeep->n_health_who = n_health_who;
+		p->upkeep->health_who = mem_realloc(p->upkeep->health_who, n_health_who * sizeof(p->upkeep->health_who[0]));
+		memcpy(p->upkeep->health_who, health_who, sizeof(health_who[0]) * n_health_who);
 		cave = cave_generate(p, 0, 0);
 		event_signal_flag(EVENT_GEN_LEVEL_END, true);
 	}
@@ -1546,7 +1552,8 @@ void prepare_next_level(struct player *p)
 
 	/* The dungeon is ready */
 	character_dungeon = true;
-player->upkeep->was_arena_level = false;
+	player->upkeep->was_arena_level = false;
+
 	/* Quest specials - after changing level */
 	quest_changed_level(false);
 }
