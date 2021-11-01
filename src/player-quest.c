@@ -40,6 +40,7 @@
 #include "trap.h"
 #include "ui-knowledge.h"
 #include "ui-input.h"
+#include "ui-player.h"
 #include "ui-store.h"
 #include "world.h"
 
@@ -822,11 +823,14 @@ static bool update_arena(struct player *p)
  */
 int quest_arena_fight(struct player *p, bool you)
 {
+	fprintf(stderr,"qaf:entry (%d)\n", you);
 	struct quest *q = get_quest_by_name("Arena");
 
 	/* Ensure there are enough monsters already in the level */
 
 	/* For each monster, place it in the new level */
+	assert(q->races);
+	p->upkeep->n_health_who = 0;
 	for(int i=0;i<q->races;i++) {
 		/* Pick a location */
 		struct loc grid;
@@ -840,7 +844,7 @@ int quest_arena_fight(struct player *p, bool you)
 		struct monster *mon = square_monster(cave, grid);
 		assert(mon);
 
-		/* Swap the targeted monster with the first in the monster list */
+		/* Swap the targeted monster */
 		int old_idx = mon->midx;
 		if (old_idx == i+1) {
 			/* Do nothing */
@@ -853,10 +857,10 @@ int quest_arena_fight(struct player *p, bool you)
 			monster_index_move(old_idx, i+1);
 		}
 		target_set_monster(cave_monster(cave, i+1));
+		health_track_add(player->upkeep, square_monster(cave, grid));
 	}
 
 	/* Head to the arena */
-	//player->upkeep->health_who = square_monster(cave, grid);
 	player->upkeep->arena_level = true;
 	dungeon_change_level(player, player->depth);
 
@@ -872,10 +876,10 @@ bool quest_play_arena(struct player *p)
 fprintf(stderr,"qpa:entry\n");
 	/* Print the intro */
 	screen_save();
-	ui_text_box(q->intro);
+	ui_event ev = ui_text_box(q->intro);
 
 	/* Get an answer */
-	struct keypress ch = inkey();
+	struct keypress ch = ev.key;
 
 	/* Erase the prompt */
 	prt("", 0, 0);
@@ -883,6 +887,7 @@ fprintf(stderr,"qpa:entry\n");
 	/* Scaredy cat */
 	if (ch.code == ESCAPE) {
 		screen_load();
+fprintf(stderr,"qpa:esc \n");
 		return (false);
 	}
 

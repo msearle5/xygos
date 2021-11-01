@@ -1742,6 +1742,18 @@ void health_track(struct player_upkeep *upkeep, struct monster *mon)
 }
 
 /**
+ * Track the given monster (additionally)
+ */
+void health_track_add(struct player_upkeep *upkeep, struct monster *mon)
+{
+	assert(mon);
+	upkeep->health_who = mem_realloc(upkeep->health_who, sizeof(upkeep->health_who[0]) * (upkeep->n_health_who+1));
+	upkeep->health_who[upkeep->n_health_who] = mon;
+	upkeep->n_health_who++;
+	upkeep->redraw |= PR_HEALTH;
+}
+
+/**
  * Remove the given monster from health tracking
  */
 void health_untrack(struct player_upkeep *upkeep, struct monster *mon)
