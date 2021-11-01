@@ -243,6 +243,8 @@ bool mon_hates_you(const struct monster *mon)
 {
 	if (mflag_has(mon->mflag, MFLAG_FRIENDLY))
 		return false;
+	if (player->upkeep->arena_level)
+		return true;
 	if (mflag_has(mon->mflag, MFLAG_NEUTRAL))
 		return false;
 	return true;
@@ -254,5 +256,7 @@ bool mon_hates_you(const struct monster *mon)
  */
 bool mon_hates_mon(const struct monster *attacker, const struct monster *victim)
 {
+	if (player->upkeep->arena_level)
+		return true;
 	return flag_has(mon_vs_mon[attacker->race - r_info], FLAG_SIZE(z_info->r_max), victim->race - r_info);
 }

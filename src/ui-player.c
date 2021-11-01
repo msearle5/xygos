@@ -1222,7 +1222,7 @@ void display_player_xtra_info(bool drop)
 /**
  * Display box text, wait for a key, return to play.
  */
-void ui_text_box(const char *text)
+ui_event ui_text_box(const char *text)
 {
 	/* Save the screen */
 	Term_save();
@@ -1231,7 +1231,10 @@ void ui_text_box(const char *text)
 	clear_from(0);
 
 	/* When not playing, do not display in subwindows */
-	if (Term != angband_term[0] && !player->upkeep->playing) return;
+	if (Term != angband_term[0] && !player->upkeep->playing) {
+		ui_event ev = { 0 };
+		return ev;
+	}
 
 	/* Display the message */
 	int w, h;
@@ -1246,10 +1249,11 @@ void ui_text_box(const char *text)
 
 	/* Wait for a key */
 	Term_flush();
-	inkey_ex();
+	ui_event ev = inkey_ex();
 
 	/* Restore the screen */
 	Term_load();
+	return ev;
 }
 
 /**

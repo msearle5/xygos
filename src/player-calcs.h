@@ -138,6 +138,7 @@ int calc_blows(struct player *p, const struct object *obj,
 
 void health_track(struct player_upkeep *upkeep, struct monster *mon);
 void health_untrack(struct player_upkeep *upkeep, struct monster *mon);
+void health_track_add(struct player_upkeep *upkeep, struct monster *mon);
 void monster_race_track(struct player_upkeep *upkeep, 
 						struct monster_race *race);
 void track_object(struct player_upkeep *upkeep, struct object *obj);

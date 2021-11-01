@@ -4163,8 +4163,7 @@ struct chunk *arena_gen(struct player *p, int min_height, int min_width) {
 	struct chunk *c;
 	assert(p->upkeep->n_health_who);
 	assert(p->upkeep->health_who);
-	struct monster *mon = p->upkeep->health_who[0];
-	assert(mon);
+
 	int arena_height = MAX(min_height, 6 + randint0(3) + randint0(3) + randint0(3));
 	int arena_width = MAX(min_width, 8 + randint0(4) + randint0(4) + randint0(4));
 
@@ -4183,16 +4182,20 @@ struct chunk *arena_gen(struct player *p, int min_height, int min_width) {
 	/* Place the player */
 	player_place(c, p, loc(1, c->height - 2));
 
-	/* Place the monster */
-	if (mon) {
+	/* Place the monster(s) */
+	for(int i=0;i<p->upkeep->n_health_who; i++) {
+		struct monster *mon = p->upkeep->health_who[i];
+		assert(mon);
+
 		memcpy(&c->monsters[mon->midx], mon, sizeof(*mon));
 		mon = &c->monsters[mon->midx];
-		mon->grid = loc(c->width - 2, 1);
+		do {
+			mon->grid = loc(rand_range(1, c->width - 2), rand_range(1, c->height - 2));
+		} while (!square_isempty(c, mon->grid));
 		square_set_mon(c, mon->grid, mon->midx);
 		c->mon_max = mon->midx + 1;
 		c->mon_cnt = 1;
 		update_mon(p, mon, c, true);
-		health_track(p->upkeep, mon);
 
 		/* Ignore its held objects */
 		mon->held_obj = NULL;

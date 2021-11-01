@@ -1965,7 +1965,7 @@ static void monster_reduce_sleep(struct chunk *c, struct monster *mon)
 	struct monster_lore *lore = get_lore(mon->race);
 
 	/* Aggravation */
-	if (player_of_has(player, OF_AGGRAVATE)) {
+	if ((player_of_has(player, OF_AGGRAVATE)) || (player->upkeep->arena_level)) {
 		char m_name[80];
 
 		/* Wake the monster, make it aware */
