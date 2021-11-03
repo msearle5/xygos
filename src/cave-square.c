@@ -436,6 +436,14 @@ bool square_isnotknown(struct chunk *c, struct loc grid) {
  */
 
 /**
+ * True if the given flag is true
+ */
+bool square_hasflag(struct chunk *c, struct loc grid, unsigned flag) {
+	if (!square_in_bounds(c, grid)) return false;
+	return tf_has(f_info[square(c, grid)->feat].flags, flag);
+}
+
+/**
  * True if the square is marked
  */
 bool square_ismark(struct chunk *c, struct loc grid) {

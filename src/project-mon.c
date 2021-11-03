@@ -1139,6 +1139,7 @@ bool do_tame(struct monster *mon)
 
 	double skill = get_taming_skill(player);
 	bool neutral = mflag_has(mon->mflag, MFLAG_NEUTRAL);
+
 	double difficulty = get_taming_resistance(mon->race, player, neutral);
 	bool success = false;
 	bool critical = false;
