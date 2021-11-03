@@ -288,7 +288,7 @@ flags:WALL | ROCK | NO_SCENT | NO_FLOW | MAGMA | TORCH
 info:0:2
 confused-msg:bashes into a wall
 desc:A seam of soft rock.  It can be removed by digging, and passed 
-desc:through by immaterial monsters.  It stops any spells, missiles or line of 
+desc:through by immaterial monsters.  It stops any attacks, missiles or line of 
 desc:sight.
 
 name:quartz vein
@@ -298,7 +298,7 @@ flags:WALL | ROCK | NO_SCENT | NO_FLOW | QUARTZ | TORCH
 info:0:3
 confused-msg:bashes into a wall
 desc:A seam of hardish rock.  It can be removed by digging, and passed 
-desc:through by immaterial monsters.  It stops any spells, missiles or line of 
+desc:through by immaterial monsters.  It stops any attacks, missiles or line of 
 desc:sight.
 
 name:magma vein with treasure
@@ -308,7 +308,7 @@ flags:WALL | ROCK | INTERESTING | NO_SCENT | NO_FLOW | GOLD | MAGMA
 info:0:2
 confused-msg:bashes into a wall
 desc:A seam of soft rock.  It can be removed by digging, and passed 
-desc:through by immaterial monsters.  It stops any spells, missiles or line of 
+desc:through by immaterial monsters.  It stops any attacks, missiles or line of 
 desc:sight.  It contains visible treasure.
 
 name:quartz vein with treasure
@@ -318,7 +318,7 @@ flags:WALL | ROCK | INTERESTING | NO_SCENT | NO_FLOW | GOLD | QUARTZ
 info:0:3
 confused-msg:bashes into a wall
 desc:A seam of hardish rock.  It can be removed by digging, and passed 
-desc:through by immaterial monsters.  It stops any spells, missiles or line of 
+desc:through by immaterial monsters.  It stops any attacks, missiles or line of 
 desc:sight.  It contains visible treasure.
 
 name:granite wall
@@ -328,7 +328,7 @@ flags:WALL | ROCK | GRANITE | NO_SCENT | NO_FLOW | TORCH
 info:0:4
 confused-msg:bashes into a wall
 desc:A seam of hard rock.  It can be removed by digging through it, and passed 
-desc:through by immaterial monsters.  It stops any spells, missiles or line of 
+desc:through by immaterial monsters.  It stops any attacks, missiles or line of 
 desc:sight. 
 
 name:permanent wall
@@ -336,10 +336,18 @@ graphics:#:z
 priority:10
 flags:WALL | ROCK | PERMANENT | NO_SCENT | NO_FLOW
 confused-msg:bashes into a wall
-desc:You can dig through most walls but these are impenetrable.  The dungeon is 
+desc:You can dig through most walls but these are impenetrable.  The level is 
 desc:surrounded by these kinds of walls and some special rooms are made of them.
 
 ## New terrain
+
+name:permanent glass wall
+graphics:#:w
+priority:10
+flags:WALL | PERMANENT | NO_SCENT | NO_FLOW | LOS | TORCH
+confused-msg:bashes into the glass
+desc:You can dig through most walls but these are impenetrable, despite being
+desc:easily seen through.
 
 name:fallout
 graphics:#:b
@@ -382,7 +390,7 @@ graphics:::u
 priority:13
 flags:ROCK | PASSABLE | INTERESTING | TORCH
 info:0:1
-desc:Ends LOS, stops missiles, bolts, and beams, and reduces the radius of ball 
-desc:spells.  May dissolve or be tunnelled to normal floor, and can be walked 
+desc:Ends LOS, stops missiles, bolts, and beams, and reduces the blast radius of
+desc:attacks.  May dissolve or be tunnelled to normal floor, and can be walked 
 desc:through by the player and monsters.
 
