@@ -54,6 +54,7 @@ int FEAT_MAGMA_K;
 int FEAT_QUARTZ_K;
 int FEAT_GRANITE;
 int FEAT_PERM;
+int FEAT_PERM_GLASS;
 int FEAT_LAVA;
 int FEAT_WATER;
 int FEAT_FALLOUT;
@@ -375,6 +376,7 @@ void set_terrain(void)
 	FEAT_QUARTZ_K = lookup_feat("quartz vein with treasure");
 	FEAT_GRANITE = lookup_feat("granite wall");
 	FEAT_PERM = lookup_feat("permanent wall");
+	FEAT_PERM_GLASS = lookup_feat("permanent glass wall");
 	FEAT_LAVA = lookup_feat("lava");
 	FEAT_WATER = lookup_feat("water");
 	FEAT_FALLOUT = lookup_feat("fallout");

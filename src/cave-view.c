@@ -48,7 +48,6 @@ int distance(struct loc grid1, struct loc grid2)
 	return ay > ax ? ay + (ax >> 1) : ax + (ay >> 1);
 }
 
-
 /**
  * A simple, fast, integer-based line-of-sight algorithm.  By Joseph Hall,
  * 4116 Brewster Drive, Raleigh NC 27606.  Email to jnh@ecemwl.ncsu.edu.
@@ -85,7 +84,7 @@ int distance(struct loc grid1, struct loc grid2)
  * determining which grids are illuminated by the player's torch, and which
  * grids and monsters can be "seen" by the player, etc).
  */
-bool los(struct chunk *c, struct loc grid1, struct loc grid2)
+bool los_flag(struct chunk *c, struct loc grid1, struct loc grid2, unsigned flag)
 {
 	/* Delta */
 	int dx, dy;
@@ -124,10 +123,10 @@ bool los(struct chunk *c, struct loc grid1, struct loc grid2)
 		/* South -- check for walls */
 		if (dy > 0) {
 			for (ty = grid1.y + 1; ty < grid2.y; ty++)
-				if (!square_isprojectable(c, loc(grid1.x, ty))) return (false);
+				if (!square_hasflag(c, loc(grid1.x, ty), flag)) return (false);
 		} else { /* North -- check for walls */
 			for (ty = grid1.y - 1; ty > grid2.y; ty--)
-				if (!square_isprojectable(c, loc(grid1.x, ty))) return (false);
+				if (!square_hasflag(c, loc(grid1.x, ty), flag)) return (false);
 		}
 
 		/* Assume los */
@@ -139,10 +138,10 @@ bool los(struct chunk *c, struct loc grid1, struct loc grid2)
 		/* East -- check for walls */
 		if (dx > 0) {
 			for (tx = grid1.x + 1; tx < grid2.x; tx++)
-				if (!square_isprojectable(c, loc(tx, grid1.y))) return (false);
+				if (!square_hasflag(c, loc(tx, grid1.y), flag)) return (false);
 		} else { /* West -- check for walls */
 			for (tx = grid1.x - 1; tx > grid2.x; tx--)
-				if (!square_isprojectable(c, loc(tx, grid1.y))) return (false);
+				if (!square_hasflag(c, loc(tx, grid1.y), flag)) return (false);
 		}
 
 		/* Assume los */
@@ -156,10 +155,10 @@ bool los(struct chunk *c, struct loc grid1, struct loc grid2)
 
 	/* Vertical and horizontal "knights" */
 	if ((ax == 1) && (ay == 2) &&
-		square_isprojectable(c, loc(grid1.x, grid1.y + sy))) {
+		square_hasflag(c, loc(grid1.x, grid1.y + sy), flag)) {
 		return (true);
 	} else if ((ay == 1) && (ax == 2) &&
-			   square_isprojectable(c, loc(grid1.x + sx, grid1.y))) {
+			   square_hasflag(c, loc(grid1.x + sx, grid1.y), flag)) {
 		return (true);
 	}
 
@@ -189,7 +188,7 @@ bool los(struct chunk *c, struct loc grid1, struct loc grid2)
 		/* Note (below) the case (qy == f2), where */
 		/* the LOS exactly meets the corner of a tile. */
 		while (grid2.x - tx) {
-			if (!square_isprojectable(c, loc(tx, ty)))
+			if (!square_hasflag(c, loc(tx, ty), flag))
 				return (false);
 
 			qy += m;
@@ -198,7 +197,7 @@ bool los(struct chunk *c, struct loc grid1, struct loc grid2)
 				tx += sx;
 			} else if (qy > f2) {
 				ty += sy;
-				if (!square_isprojectable(c, loc(tx, ty)))
+				if (!square_hasflag(c, loc(tx, ty), flag))
 					return (false);
 				qy -= f1;
 				tx += sx;
@@ -225,7 +224,7 @@ bool los(struct chunk *c, struct loc grid1, struct loc grid2)
 		/* Note (below) the case (qx == f2), where */
 		/* the LOS exactly meets the corner of a tile. */
 		while (grid2.y - ty) {
-			if (!square_isprojectable(c, loc(tx, ty)))
+			if (!square_hasflag(c, loc(tx, ty), flag))
 				return (false);
 
 			qx += m;
@@ -234,7 +233,7 @@ bool los(struct chunk *c, struct loc grid1, struct loc grid2)
 				ty += sy;
 			} else if (qx > f2) {
 				tx += sx;
-				if (!square_isprojectable(c, loc(tx, ty)))
+				if (!square_hasflag(c, loc(tx, ty), flag))
 					return (false);
 				qx -= f1;
 				ty += sy;
@@ -248,6 +247,11 @@ bool los(struct chunk *c, struct loc grid1, struct loc grid2)
 
 	/* Assume los */
 	return (true);
+}
+
+bool los(struct chunk *c, struct loc grid1, struct loc grid2)
+{
+	return los_flag(c, grid1, grid2, TF_PROJECT);
 }
 
 /**
@@ -885,7 +889,7 @@ static void update_view_one(struct chunk *c, struct loc grid, struct player *p)
 		}
 	}
 
-	if (los(c, p->grid, loc(xc, yc)))
+	if (los_flag(c, p->grid, loc(xc, yc), TF_LOS))
 		become_viewable(c, grid, p, close);
 }
 

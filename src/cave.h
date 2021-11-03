@@ -248,6 +248,7 @@ extern int FEAT_QUARTZ_K;
 /* Walls */
 extern int FEAT_GRANITE;
 extern int FEAT_PERM;
+extern int FEAT_PERM_GLASS;
 
 /* Hostile terrain */
 extern int FEAT_LAVA;
@@ -312,6 +313,7 @@ bool feat_is_no_scent(int feat);
 bool feat_is_smooth(int feat);
 
 /* SQUARE FEATURE PREDICATES */
+bool square_hasflag(struct chunk *c, struct loc grid, unsigned flag);
 bool square_isfloor(struct chunk *c, struct loc grid);
 bool square_istrappable(struct chunk *c, struct loc grid);
 bool square_isobjectholding(struct chunk *c, struct loc grid);
