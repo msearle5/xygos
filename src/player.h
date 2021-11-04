@@ -516,6 +516,12 @@ struct player_state {
 
 #define player_has(p, flag)       (pf_has(p->state.pflags, (flag)))
 
+enum arena_state {
+	arena_player = 0,
+	arena_monster,
+	arena_shop
+};
+
 /**
  * Temporary, derived, player-related variables used during play but not saved
  *
@@ -661,6 +667,9 @@ struct player {
 	struct quest *quests;				/* Quest history */
 
 	s32b active_quest;					/* Currently active quest */
+	s32b arena_type;					/* Arena: type of fight, bet amount, bet monster index */
+	s32b arena_bet;
+	s32b arena_idx;
 	bool split_p;						/* Split personality */
 	bool flying;						/* Currently flying (using a Pilot ability) */
 	u16b total_winner;					/* Total winner */
@@ -669,6 +678,7 @@ struct player {
 	s32b bm_faction;					/* Faction with the black market */
 	s32b cyber_faction;					/* with the cyber salon */
 	s32b town_faction;					/* and with the rest of town */
+	s32b fc_faction;					/* and with the fight club */
 	s32b last_faction_loss;				/* Turn on which the last loss of faction (BM or town) was */
 	s32b hitlist_wins;					/* Number of hit-list quests completed */
 	char *artifact;						/* Name of the artifact you created */

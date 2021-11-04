@@ -4179,10 +4179,19 @@ struct chunk *arena_gen(struct player *p, int min_height, int min_width) {
 	draw_rectangle(c, 0, 0, c->height - 1, c->width - 1, FEAT_PERM,
 		SQUARE_NONE, true);
 
-	/* Place the player */
-	player_place(c, p, loc(1, c->height - 2));
+	/* Place the player - in one corner for a match, in a seat in the middle if watching */
+	if (p->arena_type == arena_player) {
+		player_place(c, p, loc(1, c->height - 2));
+	} else {
+		struct loc grid;
+		grid.x = c->width / 2;
+		grid.y = c->height / 2;
+		player_place(c, p, grid);
+		draw_rectangle(c, grid.y-1, grid.x-1, grid.y+1, grid.x+1, FEAT_PERM_GLASS, SQUARE_NONE, true);
+	}
 
 	/* Place the monster(s) */
+	c->mon_cnt = 0;
 	for(int i=0;i<p->upkeep->n_health_who; i++) {
 		struct monster *mon = p->upkeep->health_who[i];
 		assert(mon);
@@ -4194,7 +4203,7 @@ struct chunk *arena_gen(struct player *p, int min_height, int min_width) {
 		} while (!square_isempty(c, mon->grid));
 		square_set_mon(c, mon->grid, mon->midx);
 		c->mon_max = mon->midx + 1;
-		c->mon_cnt = 1;
+		c->mon_cnt++;
 		update_mon(p, mon, c, true);
 
 		/* Ignore its held objects */

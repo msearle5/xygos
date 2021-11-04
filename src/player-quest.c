@@ -17,6 +17,7 @@
  */
 #include "angband.h"
 #include "datafile.h"
+#include "game-input.h"
 #include "game-world.h"
 #include "generate.h"
 #include "init.h"
@@ -606,45 +607,55 @@ static struct monster_race *arena_opponent(int level, int existing, struct monst
 	int nmons = 0;
 	double total = 0.0;
 fprintf(stderr,"area_oppo level %d\n", level);
-	/* Fill it with probabilities */
-	for (int i = 0; i < z_info->r_max; i++) {
-		if ((!rf_has(r_info[i].flags, RF_UNIQUE)) &&
-			(!rf_has(r_info[i].flags, RF_QUESTOR)) &&
-			(!rf_has(r_info[i].flags, RF_SPECIAL_GEN)) &&
-			(!rf_has(r_info[i].flags, RF_FORCE_DEPTH)) &&
-			(!rf_has(r_info[i].flags, RF_NEVER_MOVE)) &&
-			(!rf_has(r_info[i].flags, RF_NEVER_BLOW)) &&
-			(!rf_has(r_info[i].flags, RF_FRIGHTENED)) &&
-			(!rf_has(r_info[i].flags, RF_SEASONAL)) &&
-			(!rf_has(r_info[i].flags, RF_MOVE_BODY)) &&
-			(!rf_has(r_info[i].flags, RF_KILL_BODY)) &&
-			(!rf_has(r_info[i].flags, RF_AQUATIC)) &&
-			(r_info[i].rarity > 0) &&
-			(r_info[i].level > 0) &&
-			(r_info[i].max_num > 0)) {
-			double prob = 1.0;
-			double rlevel = arena_monster_power(&r_info[i]);
-			if (rlevel > level) {
-				/* Limit at 2x out of level */
-				prob = MAX(0.0, pow(0.1, (double)rlevel / level) - 0.0101);
-			} else if (rlevel < level) {
-				prob = MAX(0.0, 2.0 - (rlevel / (double)level));
-			}
-			if (prob > 0.0) {
-				for(int j = 0; j < existing; j++) {
-					if (r_info+i == exist[j]) {
-	fprintf(stderr,"area_oppo: disabling %s\n", r_info[i].name);
-						prob = 0.0;
-					}
+	/* Fill it with probabilities.
+	 * The first time around the loop, cap out of level monsters.
+	 * The second time around - if nothing was found - allow them.
+	 **/
+	for (int cap = 1; cap >= 0; cap--) {
+		for (int i = 0; i < z_info->r_max; i++) {
+			if ((!rf_has(r_info[i].flags, RF_UNIQUE)) &&
+				(!rf_has(r_info[i].flags, RF_QUESTOR)) &&
+				(!rf_has(r_info[i].flags, RF_SPECIAL_GEN)) &&
+				(!rf_has(r_info[i].flags, RF_FORCE_DEPTH)) &&
+				(!rf_has(r_info[i].flags, RF_NEVER_MOVE)) &&
+				(!rf_has(r_info[i].flags, RF_NEVER_BLOW)) &&
+				(!rf_has(r_info[i].flags, RF_FRIGHTENED)) &&
+				(!rf_has(r_info[i].flags, RF_SEASONAL)) &&
+				(!rf_has(r_info[i].flags, RF_MOVE_BODY)) &&
+				(!rf_has(r_info[i].flags, RF_KILL_BODY)) &&
+				(!rf_has(r_info[i].flags, RF_AQUATIC)) &&
+				(r_info[i].rarity > 0) &&
+				(r_info[i].level > 0) &&
+				(r_info[i].max_num > 0)) {
+				double prob = 1.0;
+				double rlevel = arena_monster_power(&r_info[i]);
+				if (rlevel > level) {
+					/* Limit at 2x out of level, for the first pass only */
+					prob = pow(0.1, (double)rlevel / level);
+					if (cap)
+						prob -= 0.0101;
+					prob = MAX(0.0, prob);
+				} else if (rlevel < level) {
+					prob = MAX(0.0, 2.0 - (rlevel / (double)level));
 				}
 				if (prob > 0.0) {
-	fprintf(stderr,"area_oppo: %.18lf chance of %s\n", prob, r_info[i].name);
-					p[i] = prob;
-					total += prob;
-					nmons++;
+					for(int j = 0; j < existing; j++) {
+						if (r_info+i == exist[j]) {
+		fprintf(stderr,"area_oppo: disabling %s\n", r_info[i].name);
+							prob = 0.0;
+						}
+					}
+					if (prob > 0.0) {
+		fprintf(stderr,"area_oppo: %.18lf chance of %s\n", prob, r_info[i].name);
+						p[i] = prob;
+						total += prob;
+						nmons++;
+					}
 				}
 			}
 		}
+		if (nmons)
+			break;
 	}
 
 	/* Bale out if nothing looks good to you */
@@ -782,11 +793,17 @@ static bool advance_arena(struct player *p)
 	}
 
 	/* May have already completed all arenas */
-	if (q->level >= z_info->arena_max_depth) {
+	if (q->level >= (int)z_info->arena_max_depth) {
 		q->flags &= ~QF_ACTIVE;
 		q->intro = string_make("There are no more opponents willing to fight.");
 		return false;
 	}
+
+	/* You don't stay famous if you don't keep fighting, unless you are maxed (or there are no more fights)
+	 * But don't go all the way to zero (implying that you had never tried).
+	 **/
+	if ((player->fc_faction > 1) && (player->fc_faction < z_info->arena_max_depth))
+		player->fc_faction--;
 
 	/* Build an intro */
 	char banner[1024];
@@ -810,7 +827,7 @@ static bool advance_arena(struct player *p)
 static bool update_arena(struct player *p)
 {
 	struct quest *q = get_quest_by_name("Arena");
-	int turn_level = 1 + (turn / z_info->arena_wait_time);
+	int turn_level = 1 + (turn / (10 * z_info->arena_wait_time));
 	bool ok = true;
 	while ((q->level < turn_level) && (ok))
 		ok = advance_arena(p);
@@ -821,9 +838,8 @@ static bool update_arena(struct player *p)
  * Set up an arena fight, including yourself if you is true.
  * Return the winner!
  */
-int quest_arena_fight(struct player *p, bool you)
+int quest_arena_fight(struct player *p, bool you, int betmon, int betcash)
 {
-	fprintf(stderr,"qaf:entry (%d)\n", you);
 	struct quest *q = get_quest_by_name("Arena");
 
 	/* Ensure there are enough monsters already in the level */
@@ -861,6 +877,9 @@ int quest_arena_fight(struct player *p, bool you)
 	}
 
 	/* Head to the arena */
+	player->arena_type = you ? arena_player : arena_monster;
+	player->arena_bet = betcash;
+	player->arena_idx = betmon;
 	player->upkeep->arena_level = true;
 	dungeon_change_level(player, player->depth);
 
@@ -873,7 +892,8 @@ int quest_arena_fight(struct player *p, bool you)
 bool quest_play_arena(struct player *p)
 {
 	struct quest *q = get_quest_by_name("Arena");
-fprintf(stderr,"qpa:entry\n");
+	char buf[1024];
+
 	/* Print the intro */
 	screen_save();
 	ui_event ev = ui_text_box(q->intro);
@@ -887,20 +907,36 @@ fprintf(stderr,"qpa:entry\n");
 	/* Scaredy cat */
 	if (ch.code == ESCAPE) {
 		screen_load();
-fprintf(stderr,"qpa:esc \n");
 		return (false);
 	}
 
 	char key = tolower(ch.code);
 	if (key == '@') {
 		/* Fight */
-		quest_arena_fight(p, true);
+		quest_arena_fight(p, true, -1, 0);
 	} else {
-		/* Bet */
-		quest_arena_fight(p, false);
+		/* Bet. First ask how much, allowing exit */
+		int m, d;
+		int betmon = key - 'a';
+		arena_odds(betmon, q->races, q->race, &m, &d);
+		int low = 5 + (q->level * 5);
+		int high = ((stores[q->store].owner->max_cost) * d) / m;
+		high = MIN(p->au, high);
+		high = MAX(low, high);
+		if (low > p->au) {
+			ui_text_box("You can't afford the mimimum bet.");
+			return (false);
+		}
+		strnfmt(buf, sizeof(buf), "Bet how much (min $%d, max $%d?)", low, high);
+		int bet = get_quantity(buf, high);
+		if ((bet < low) || (bet > high)) {
+			screen_load();
+			return (false);
+		}
+
+		quest_arena_fight(p, false, betmon, bet);
 	}
 
-fprintf(stderr,"qpa:exit\n");
 	/* Success */
 	screen_load();
 	return (true);
@@ -1908,6 +1944,68 @@ bool quest_item_check(const struct object *obj) {
 	}
 
 	return false;
+}
+
+
+/** Complete an arena type fight.
+ * This could be a MvM arena, a PvM arena or a shop fight - or possibly
+ * a Single Combat fight if that gets added back in.
+ * Passed the player and the last monster standing.
+ */
+void quest_complete_fight(struct player *p, struct monster *mon) {
+	char buf[256];
+	bool wait = false;
+	struct quest *q = get_quest_by_name("Arena");
+
+	p->upkeep->was_arena_level = true;
+	p->upkeep->arena_level = false;
+	p->upkeep->generate_level = true;
+
+	switch(p->arena_type) {
+		case arena_player: {
+			/* You won the fight - collect a prize, increase faction, take time */
+			int fame = MAX(1, ((q->level - p->fc_faction) / 4));
+			p->fc_faction += fame;
+			if (p->fc_faction > z_info->arena_max_depth)
+				p->fc_faction = z_info->arena_max_depth;
+			int prize = store_roundup(((q->level + p->fc_faction) * 25) + (((q->level * p->fc_faction) / 10) * 10));
+			strnfmt(buf, sizeof(buf), "Congratulations. You win the $%d prize. Come back soon!", prize);
+			ui_text_box(buf);
+			p->au += prize;
+			wait = true;
+			break;
+		}
+		case arena_monster: {
+			/* Monster v monster fight completed - did you win? If so, collect your winnings. Either way, take time. */
+			p->au -= p->arena_bet;
+			if (mon->race == q->race[p->arena_idx]) {
+				/* You win */
+				int m, d;
+				int win = p->arena_bet * arena_odds(p->arena_idx, q->races, q->race, &m, &d);
+				if (win < 1)
+					win = 1;
+				p->au += win;
+				strnfmt(buf, sizeof(buf), "You win $%d on your $%d bet at %d/%d.", win, p->arena_bet, m, d);
+			} else {
+				strnfmt(buf, sizeof(buf), "Too bad, you lose. Try again next time?");
+			}
+			wait = true;
+			break;
+		}
+		case arena_shop:
+		default:
+		msg("Bug: arena unknown");
+		break;
+	}
+
+	/* Wait until the next match starts */
+	if (wait) {
+		turn += (10 * z_info->arena_wait_time);
+		turn %= (10 * z_info->arena_wait_time);
+		increase_danger_level();
+	}
+
+	update_arena(player);
 }
 
 /* Check if entry to a building should be blocked by a quest.

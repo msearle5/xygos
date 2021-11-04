@@ -911,6 +911,10 @@ static void project_monster_handler_MON_POLY(project_monster_handler_context_t *
 /* Heal Monster (use "dam" as amount of healing) */
 static void project_monster_handler_MON_HEAL(project_monster_handler_context_t *context)
 {
+	/* Not in MvM arena */
+	if ((player->upkeep->arena_level) && (player->arena_type == arena_monster))
+		context->dam = 0;
+
 	/* Heal */
 	context->mon->hp += context->dam;
 
