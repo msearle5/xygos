@@ -912,6 +912,7 @@ static struct panel *get_panel_farleft(void) {
 	int town = MIN(MAX(player->town_faction + 2, 0), 8);
 	int mob = MIN(MAX(player->bm_faction + 2, 0), 8);
 	int cyber = MIN(MAX((player->cyber_faction / 100) + 2, 0), 8);
+	int fc = (player->fc_faction <= 0) ? 0 : 1+((MIN(player->fc_faction, z_info->arena_max_depth) * 7) / z_info->arena_max_depth);
 
 	/* Descriptions of how much they like you or not. The first entry is for -2 (or less) up to +6 (or more) */
 	static const char *town_name[9] = {
@@ -947,6 +948,17 @@ static struct panel *get_panel_farleft(void) {
 		"Platinum Hand",
 		"Diamond Hand"
 	};
+	static const char *fc_name[9] = {
+		"Spectator",
+		"Brawler",
+		"Scrapper",
+		"Bruiser",
+		"Slugger",
+		"Fighter",
+		"Prizefighter",
+		"Contender",
+		"Champion"
+	};
 	static const int colour_name[9] = {
 		COLOUR_RED,
 		COLOUR_ORANGE,
@@ -958,11 +970,22 @@ static struct panel *get_panel_farleft(void) {
 		COLOUR_BLUE,
 		COLOUR_BLUE
 	};
+	static const int fc_colour_name[9] = {
+		COLOUR_YELLOW,
+		COLOUR_GREEN,
+		COLOUR_GREEN,
+		COLOUR_GREEN,
+		COLOUR_GREEN,
+		COLOUR_GREEN,
+		COLOUR_GREEN,
+		COLOUR_GREEN,
+		COLOUR_BLUE
+	};
 
-	panel_line(p, COLOUR_WHITE, "Faction", "", "");
 	panel_line(p, colour_name[town], "Town", "%s", town_name[town]);
 	panel_line(p, colour_name[mob], "Mob", "%s", mob_name[mob]);
 	panel_line(p, colour_name[cyber], "Cyber", "%s", cyber_name[cyber]);
+	panel_line(p, fc_colour_name[fc], "Arena", "%s", fc_name[fc]);
 
 	/* Show the danger level */
 	if (OPT(player, birth_time_limit)) {

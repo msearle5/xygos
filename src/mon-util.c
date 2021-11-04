@@ -775,7 +775,7 @@ void monster_swap(struct loc grid1, struct loc grid2)
 					struct monster *mon = square_monster(cave, grid);
 					if (mon) {
 						 for (int i = 0; i < z_info->mon_blows_max; i++) {
-							 if (streq(mon->race->blow[i].method->name, "CONSTRICT")) {
+							 if (mon->race->blow[i].method && streq(mon->race->blow[i].method->name, "CONSTRICT")) {
 								 constrict = true;
 								 x = y = 1;
 								 break;
@@ -1476,7 +1476,7 @@ bool mon_take_nonplayer_hit(int dam, struct monster *t_mon,
 
 	/* "Unique" or arena monsters can only be "killed" by the player */
 	if (rf_has(t_mon->race->flags, RF_UNIQUE)
-			|| player->upkeep->arena_level) {
+			|| (player->upkeep->arena_level && player->arena_type == arena_player)) {
 		/* Reduce monster hp to zero, but don't kill it. */
 		if (dam > t_mon->hp) dam = t_mon->hp;
 	}
@@ -1587,10 +1587,15 @@ bool do_mon_take_hit(struct monster *mon, struct player *p, int dam, bool *fear,
 	if (mon->hp < 0) {
 		/* Deal with arena monsters */
 		if (p->upkeep->arena_level) {
-			p->upkeep->was_arena_level = true;
-			p->upkeep->arena_level = false;
-			p->upkeep->generate_level = true;
-			health_track(p->upkeep, mon);
+			health_untrack(p->upkeep, mon);
+			/* No monsters => player wins */
+			if (p->upkeep->n_health_who == 0) {
+				quest_complete_fight(p, mon);
+			}
+			/* Only one monster => that monster wins */
+			if ((p->arena_type == arena_monster) && (p->upkeep->n_health_who == 1)) {
+				quest_complete_fight(p, p->upkeep->health_who[0]); 
+			}
 			(*fear) = false;
 			return true;
 		}
@@ -1605,7 +1610,9 @@ bool do_mon_take_hit(struct monster *mon, struct player *p, int dam, bool *fear,
 		return true;
 	} else {
 		/* Did it get frightened? */
-		(*fear) = monster_scared_by_damage(mon, dam);
+		if (!p->upkeep->arena_level) {
+			(*fear) = monster_scared_by_damage(mon, dam);
+		}
 
 		/* Not dead yet */
 		return false;

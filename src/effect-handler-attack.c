@@ -271,6 +271,10 @@ bool effect_handler_MON_HEAL_HP(effect_handler_context_t *context)
 
 	if (!mon) return true;
 
+	/* Not in MvM arena */
+	if ((player->upkeep->arena_level) && (player->arena_type == arena_monster))
+		return true;
+
 	/* Get the monster name (or "it") */
 	monster_desc(m_name, sizeof(m_name), mon, MDESC_STANDARD);
 
@@ -329,6 +333,10 @@ bool effect_handler_MON_HEAL_KIN(effect_handler_context_t *context)
 	/* Find a nearby monster */
 	mon = choose_nearby_injured_kin(cave, mon);
 	if (!mon) return true;
+
+	/* Not in MvM arena */
+	if ((player->upkeep->arena_level) && (player->arena_type == arena_monster))
+		return true;
 
 	/* Get the monster name (or "it") */
 	monster_desc(m_name, sizeof(m_name), mon, MDESC_STANDARD);

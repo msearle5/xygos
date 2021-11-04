@@ -463,6 +463,7 @@ void delete_monster_idx(int m_idx)
 	memset(mon, 0, sizeof(struct monster));
 
 	/* Count monsters */
+	assert(cave->mon_cnt);
 	cave->mon_cnt--;
 
 	/* Visual update */

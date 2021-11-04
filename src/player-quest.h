@@ -50,5 +50,6 @@ struct quest *quest_guardian(void);
 struct quest *quest_guardian_of(struct town *town);
 struct quest *quest_guardian_any(struct town *town);
 bool quest_play_arena(struct player *p);
+void quest_complete_fight(struct player *p, struct monster *mon);
 
 #endif /* QUEST_H */

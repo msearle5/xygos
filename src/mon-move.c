@@ -2074,6 +2074,10 @@ static void regen_monster(struct monster *mon, int num)
 {
 	/* Regenerate (if needed) */
 	if (mon->hp < mon->maxhp) {
+		/* Not in MvM arena */
+		if ((player->upkeep->arena_level) && (player->arena_type == arena_monster))
+			return;
+
 		/* Base regeneration */
 		int frac = mon->maxhp / 100;
 

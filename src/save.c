@@ -500,6 +500,11 @@ void rdwr_player(void)
 	/* Quest currently active */
 	rdwr_s32b(&player->active_quest);
 
+	/* Arena: type of fight (MvM/MvP), amount bet, midx bet on */
+	rdwr_s32b(&player->arena_type);
+	rdwr_s32b(&player->arena_bet);
+	rdwr_s32b(&player->arena_idx);
+
 	/* Flying? */
 	rdwr_bool(&player->flying);
 
@@ -514,6 +519,7 @@ void rdwr_player(void)
 	rdwr_s32b(&player->bm_faction);
 	rdwr_s32b(&player->town_faction);
 	rdwr_s32b(&player->cyber_faction);
+	rdwr_s32b(&player->fc_faction);
 	rdwr_s32b(&player->last_faction_loss);
 	rdwr_s32b(&player->hitlist_wins);
 	rdwr_string(&player->artifact);
