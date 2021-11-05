@@ -918,16 +918,20 @@ bool quest_play_arena(struct player *p)
 		/* Bet. First ask how much, allowing exit */
 		int m, d;
 		int betmon = key - 'a';
+		if ((betmon < 0) || (betmon >= q->races)) {
+			screen_load();
+			return (false);
+		}
 		arena_odds(betmon, q->races, q->race, &m, &d);
 		int low = 5 + (q->level * 5);
 		int high = ((stores[q->store].owner->max_cost) * d) / m;
 		high = MIN(p->au, high);
 		high = MAX(low, high);
 		if (low > p->au) {
-			ui_text_box("You can't afford the mimimum bet.");
+			ui_text_box("You can't afford the minimum bet.");
 			return (false);
 		}
-		strnfmt(buf, sizeof(buf), "Bet how much (min $%d, max $%d?)", low, high);
+		strnfmt(buf, sizeof(buf), "Bet how much on the %s (min $%d, max $%d?)", q->race[betmon]->name, low, high);
 		int bet = get_quantity(buf, high);
 		if ((bet < low) || (bet > high)) {
 			screen_load();
