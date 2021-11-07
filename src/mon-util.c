@@ -1493,21 +1493,8 @@ bool mon_take_nonplayer_hit(int dam, struct monster *t_mon,
 	/* Dead or damaged monster */
 	if (t_mon->hp < 0) {
 
-		/* Deal with arena monsters */
-		if (player->upkeep->arena_level) {
-			health_untrack(player->upkeep, t_mon);
-			/* No monsters => player wins */
-			if (player->upkeep->n_health_who == 0) {
-				quest_complete_fight(player, t_mon);
-			}
-			/* Only one monster => that monster wins */
-			if ((player->arena_type == arena_monster) && (player->upkeep->n_health_who == 1)) {
-				quest_complete_fight(player, player->upkeep->health_who[0]); 
-			}
-		}
-
 		/* If the player has levels in Clown and this was done
-		 * within LOS of the player by a 'funny' method (basically
+		 * within LOS of the player by a 'funny' method (such as
 		 * terrain), gain exp.
 		 */
 		if (funny) {
@@ -1524,6 +1511,20 @@ bool mon_take_nonplayer_hit(int dam, struct monster *t_mon,
 
 		/* Generate treasure, etc */
 		monster_death(t_mon, player, false);
+
+		/* Deal with arena monsters */
+		if (player->upkeep->arena_level) {
+			health_xuntrack(player->upkeep, t_mon);
+fprintf(stderr,"dead %s, %d remaining\n", t_mon->race->name, player->upkeep->n_health_who);
+			/* No monsters => player wins */
+			if (player->upkeep->n_health_who == 0) {
+				quest_complete_fight(player, t_mon);
+			}
+			/* Only one monster => that monster wins */
+			if ((player->arena_type == arena_monster) && (player->upkeep->n_health_who == 1)) {
+				quest_complete_fight(player, player->upkeep->health_who[0]); 
+			}
+		}
 
 		/* Delete the monster */
 		delete_monster_idx(t_mon->midx);

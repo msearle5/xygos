@@ -1222,8 +1222,11 @@ void process_player(void)
 				effect_simple(EF_DETECT_GOLD, source_none(), "0", 0, 0, 0, 3, 3, NULL);
 		}
 
-		/* Paralyzed or Knocked Out player gets no turn */
-		if (player->timed[TMD_PARALYZED] ||
+		/* Spectators, Paralyzed or Knocked Out player gets no turn */
+		if ((player->upkeep->arena_level &&
+				player->arena_type == arena_monster &&
+				player_timed_grade_lt(player, TMD_FOOD, "Fed")) ||
+			player->timed[TMD_PARALYZED] ||
 			player_timed_grade_eq(player, TMD_STUN, "Knocked Out")) {
 			cmdq_push(CMD_SLEEP);
 		}
@@ -1322,7 +1325,7 @@ void on_new_level(void)
 		target_set_monster(0);
 
 		/* Cancel the health bar */
-		player->upkeep->n_health_who = 0;
+		health_untrack_all(player->upkeep);
 	}
 
 	/* Disturb */

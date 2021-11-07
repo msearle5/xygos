@@ -36,6 +36,7 @@
 #include "player-birth.h"
 #include "player-calcs.h"
 #include "player-quest.h"
+#include "player-timed.h"
 #include "player-util.h"
 #include "store.h"
 #include "trap.h"
@@ -846,7 +847,8 @@ int quest_arena_fight(struct player *p, bool you, int betmon, int betcash)
 
 	/* For each monster, place it in the new level */
 	assert(q->races);
-	p->upkeep->n_health_who = 0;
+	health_untrack_all(p->upkeep);
+
 	for(int i=0;i<q->races;i++) {
 		/* Pick a location */
 		struct loc grid;
@@ -881,7 +883,7 @@ int quest_arena_fight(struct player *p, bool you, int betmon, int betcash)
 	player->arena_bet = betcash;
 	player->arena_idx = betmon;
 	player->upkeep->arena_level = true;
-	dungeon_change_level(player, player->depth);
+	dungeon_change_level(player, MAX(1, player->depth));
 
 	return 0;
 }
@@ -937,6 +939,10 @@ bool quest_play_arena(struct player *p)
 			screen_load();
 			return (false);
 		}
+		/* Popcorn to ensure you don't starve in a long fight */
+		int amount = 90 * z_info->food_value;
+		if (player->timed[TMD_FOOD] < amount)
+			player_set_timed(player, TMD_FOOD, amount, false);
 
 		quest_arena_fight(p, false, betmon, bet);
 	}
@@ -1961,9 +1967,11 @@ void quest_complete_fight(struct player *p, struct monster *mon) {
 	bool wait = false;
 	struct quest *q = get_quest_by_name("Arena");
 
+	/* Leave the arena level */
 	p->upkeep->was_arena_level = true;
 	p->upkeep->arena_level = false;
 	p->upkeep->generate_level = true;
+	p->depth = 0;
 
 	switch(p->arena_type) {
 		case arena_player: {
@@ -1993,6 +2001,7 @@ void quest_complete_fight(struct player *p, struct monster *mon) {
 			} else {
 				strnfmt(buf, sizeof(buf), "Too bad, you lose. Try again next time?");
 			}
+			ui_text_box(buf);
 			wait = true;
 			break;
 		}

@@ -4188,13 +4188,18 @@ struct chunk *arena_gen(struct player *p, int min_height, int min_width) {
 		grid.y = c->height / 2;
 		player_place(c, p, grid);
 		draw_rectangle(c, grid.y-1, grid.x-1, grid.y+1, grid.x+1, FEAT_PERM_GLASS, SQUARE_NONE, true);
+		square_set_feat(c, grid, FEAT_LESS);
 	}
 
 	/* Place the monster(s) */
 	c->mon_cnt = 0;
-	for(int i=0;i<p->upkeep->n_health_who; i++) {
+//	health_untrack_all(p->upkeep);
+	int who = p->upkeep->n_health_who;
+	for(int i=0; i<who; i++) {
 		struct monster *mon = p->upkeep->health_who[i];
+		struct monster *imon = mon;
 		assert(mon);
+		assert(mon->race);
 
 		memcpy(&c->monsters[mon->midx], mon, sizeof(*mon));
 		mon = &c->monsters[mon->midx];
@@ -4202,7 +4207,6 @@ struct chunk *arena_gen(struct player *p, int min_height, int min_width) {
 			mon->grid = loc(rand_range(1, c->width - 2), rand_range(1, c->height - 2));
 		} while (!square_isempty(c, mon->grid));
 		square_set_mon(c, mon->grid, mon->midx);
-		c->mon_max = mon->midx + 1;
 		c->mon_cnt++;
 		update_mon(p, mon, c, true);
 
@@ -4211,7 +4215,13 @@ struct chunk *arena_gen(struct player *p, int min_height, int min_width) {
 
 		/* Give it a group */
 		monster_group_start(c, mon, 0);
+
+		/* Track it */
+		assert(mon == square_monster(c, mon->grid));
+		assert(mon != imon);
+		health_track_replace(player->upkeep, imon, mon);
 	}
+	c->mon_max = c->mon_cnt+1;
 
 	return c;
 }

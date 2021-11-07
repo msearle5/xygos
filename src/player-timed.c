@@ -480,6 +480,22 @@ bool player_timed_grade_eq(struct player *p, int idx, const char *match)
 	return false;
 }
 
+/**
+ * Return true if the player timed effect is at a lower level (and so is not matching) the given string
+ */
+bool player_timed_grade_lt(struct player *p, int idx, const char *match)
+{
+	if (p->timed[idx]) {
+		struct timed_grade *grade = timed_effects[idx].grade;
+		while (p->timed[idx] > grade->max) {
+			grade = grade->next;
+			if (grade->name && streq(grade->name, match)) return true;
+		}
+	}
+
+	return false;
+}
+
 static bool player_of_has_not_timed(struct player *p, int flag)
 {
     bitflag collect_f[OF_SIZE], f[OF_SIZE];

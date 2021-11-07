@@ -136,9 +136,11 @@ void calc_digging_chances(struct player_state *state, int chances[DIGGING_MAX]);
 int calc_blows(struct player *p, const struct object *obj,
 			   struct player_state *state, int extra_blows);
 
+void health_track_replace(struct player_upkeep *upkeep, struct monster *from, struct monster *to);
 void health_track(struct player_upkeep *upkeep, struct monster *mon);
 void health_untrack(struct player_upkeep *upkeep, struct monster *mon);
 void health_track_add(struct player_upkeep *upkeep, struct monster *mon);
+void health_untrack_all(struct player_upkeep *upkeep);
 void monster_race_track(struct player_upkeep *upkeep, 
 						struct monster_race *race);
 void track_object(struct player_upkeep *upkeep, struct object *obj);
