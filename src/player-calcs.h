@@ -141,6 +141,7 @@ void health_track(struct player_upkeep *upkeep, struct monster *mon);
 void health_untrack(struct player_upkeep *upkeep, struct monster *mon);
 void health_track_add(struct player_upkeep *upkeep, struct monster *mon);
 void health_untrack_all(struct player_upkeep *upkeep);
+
 void monster_race_track(struct player_upkeep *upkeep, 
 						struct monster_race *race);
 void track_object(struct player_upkeep *upkeep, struct object *obj);

@@ -1752,6 +1752,13 @@ static int rd_monsters_aux(struct chunk *c, bool arena)
 		}
 	}
 
+	/* Handle arenas */
+	if (player->upkeep->arena_level) {
+		for (i = 0; i < c->mon_cnt; i++) {
+			health_track_add(player->upkeep, &c->monsters[i]);
+		}
+	}
+
 	return 0;
 }
 

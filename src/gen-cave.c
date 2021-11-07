@@ -4193,6 +4193,7 @@ struct chunk *arena_gen(struct player *p, int min_height, int min_width) {
 
 	/* Place the monster(s) */
 	c->mon_cnt = 0;
+
 //	health_untrack_all(p->upkeep);
 	int who = p->upkeep->n_health_who;
 	for(int i=0; i<who; i++) {
@@ -4207,6 +4208,7 @@ struct chunk *arena_gen(struct player *p, int min_height, int min_width) {
 			mon->grid = loc(rand_range(1, c->width - 2), rand_range(1, c->height - 2));
 		} while (!square_isempty(c, mon->grid));
 		square_set_mon(c, mon->grid, mon->midx);
+
 		c->mon_cnt++;
 		update_mon(p, mon, c, true);
 

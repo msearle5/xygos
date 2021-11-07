@@ -939,6 +939,7 @@ bool quest_play_arena(struct player *p)
 			screen_load();
 			return (false);
 		}
+
 		/* Popcorn to ensure you don't starve in a long fight */
 		int amount = 90 * z_info->food_value;
 		if (player->timed[TMD_FOOD] < amount)
