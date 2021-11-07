@@ -1493,19 +1493,6 @@ bool mon_take_nonplayer_hit(int dam, struct monster *t_mon,
 	/* Dead or damaged monster */
 	if (t_mon->hp < 0) {
 
-		/* Deal with arena monsters */
-		if (player->upkeep->arena_level) {
-			health_untrack(player->upkeep, t_mon);
-			/* No monsters => player wins */
-			if (player->upkeep->n_health_who == 0) {
-				quest_complete_fight(player, t_mon);
-			}
-			/* Only one monster => that monster wins */
-			if ((player->arena_type == arena_monster) && (player->upkeep->n_health_who == 1)) {
-				quest_complete_fight(player, player->upkeep->health_who[0]); 
-			}
-		}
-
 		/* If the player has levels in Clown and this was done
 		 * within LOS of the player by a 'funny' method (such as
 		 * terrain), gain exp.

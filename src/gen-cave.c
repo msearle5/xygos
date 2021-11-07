@@ -4164,24 +4164,35 @@ struct chunk *arena_gen(struct player *p, int min_height, int min_width) {
 	assert(p->upkeep->n_health_who);
 	assert(p->upkeep->health_who);
 
-	int arena_height = MAX(min_height, 6 + randint0(3) + randint0(3) + randint0(3));
-	int arena_width = MAX(min_width, 8 + randint0(4) + randint0(4) + randint0(4));
+	int arena_height = MAX(min_height, 8 + randint0(3) + randint0(3) + randint0(3));
+	int arena_width = MAX(min_width, 10 + randint0(4) + randint0(4) + randint0(4));
 
 	c = cave_new(arena_height, arena_width);
 	c->depth = p->depth;
 	c->name = string_make("arena");
 
-	/* Fill cave area with floors */
-	fill_rectangle(c, 0, 0, c->height - 1, c->width - 1, FEAT_FLOOR,
+	/* Fill cave area with floors and bound with perma-rock */
+	fill_rectangle(c, 0, 0, c->height - 1, c->width - 1, FEAT_PERM,
 		SQUARE_NONE);
 
-	/* Bound with perma-rock */
-	draw_rectangle(c, 0, 0, c->height - 1, c->width - 1, FEAT_PERM,
-		SQUARE_NONE, true);
+	fill_rectangle(c, 2, 2, c->height - 3, c->width - 3, FEAT_FLOOR,
+		SQUARE_NONE);
+
+	/* Light */
+	for(int y=0;y<c->height;y++) {
+		struct loc grid;
+		grid.y = y;
+		for(int x=0;x<c->width;x++) {
+			grid.x = x;
+			if (square_isempty(c, grid))
+				sqinfo_on(square(c, grid)->info, SQUARE_ROOM);
+			sqinfo_on(square(c, grid)->info, SQUARE_GLOW);
+		}
+	}
 
 	/* Place the player - in one corner for a match, in a seat in the middle if watching */
 	if (p->arena_type == arena_player) {
-		player_place(c, p, loc(1, c->height - 2));
+		player_place(c, p, loc(2, c->height - 3));
 	} else {
 		struct loc grid;
 		grid.x = c->width / 2;
