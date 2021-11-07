@@ -25,34 +25,36 @@ OP(pickup_inven,          "Always pickup items matching inventory",
 INTERFACE, true)
 OP(show_flavors,          "Show flavors in object descriptions",
 INTERFACE, false)
-OP(show_target,           "Highlight target with cursor",
-INTERFACE, true)
-OP(highlight_player,      "Highlight player with cursor between turns",
-INTERFACE, false)
 OP(disturb_near,          "Disturb whenever viewable monster moves",
 INTERFACE, true)
-OP(solid_walls,           "Show walls as solid blocks",
-INTERFACE, false)
-OP(hybrid_walls,          "Show walls with shaded background",
-INTERFACE, false)
-OP(view_yellow_light,     "Color: Illuminate torchlight in yellow",
-INTERFACE, true)
-OP(animate_flicker,       "Color: Shimmer multi-colored things",
-INTERFACE, true)
-OP(center_player,         "Center map continuously",
-INTERFACE, false)
-OP(purple_uniques,        "Color: Show unique monsters in purple",
-INTERFACE, false)
 OP(auto_more,             "Automatically clear '-more-' prompts",
-INTERFACE, false)
-OP(hp_changes_color,      "Color: Player color indicates % hit points",
-INTERFACE, true)
-OP(mouse_movement,        "Allow mouse clicks to move the player",
 INTERFACE, false)
 OP(notify_recharge,       "Notify on object recharge",
 INTERFACE, false)
 OP(effective_speed,       "Show effective speed as multiplier",
 INTERFACE, false)
+OP(fast_arena,            "Skip to the result of an arena fight",
+INTERFACE, false)
+OP(show_target,           "Highlight target with cursor",
+MAP, true)
+OP(highlight_player,      "Highlight player with cursor between turns",
+MAP, false)
+OP(center_player,         "Center map continuously",
+MAP, false)
+OP(solid_walls,           "Show walls as solid blocks",
+MAP, false)
+OP(hybrid_walls,          "Show walls with shaded background",
+MAP, false)
+OP(view_yellow_light,     "Color: Illuminate torchlight in yellow",
+MAP, true)
+OP(animate_flicker,       "Color: Shimmer multi-colored things",
+MAP, true)
+OP(purple_uniques,        "Color: Show unique monsters in purple",
+MAP, false)
+OP(hp_changes_color,      "Color: Player color indicates % hit points",
+MAP, true)
+OP(mouse_movement,        "Allow mouse clicks to move the player",
+MAP, false)
 OP(cheat_hear,            "Cheat: Peek into monster creation",
 CHEAT, false)
 OP(score_hear,            "Score: Peek into monster creation",

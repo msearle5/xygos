@@ -843,8 +843,6 @@ int quest_arena_fight(struct player *p, bool you, int betmon, int betcash)
 {
 	struct quest *q = get_quest_by_name("Arena");
 
-	/* Ensure there are enough monsters already in the level */
-
 	/* For each monster, place it in the new level */
 	assert(q->races);
 	health_untrack_all(p->upkeep);
@@ -2015,7 +2013,8 @@ void quest_complete_fight(struct player *p, struct monster *mon) {
 	/* Wait until the next match starts */
 	if (wait) {
 		turn += (10 * z_info->arena_wait_time);
-		turn %= (10 * z_info->arena_wait_time);
+		turn /= (10 * z_info->arena_wait_time);
+		turn *= (10 * z_info->arena_wait_time);
 		increase_danger_level();
 	}
 

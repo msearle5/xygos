@@ -43,6 +43,7 @@
 #include "target.h"
 #include "trap.h"
 #include "ui-game.h"
+#include "ui-term.h"
 #include "world.h"
 #include "z-queue.h"
 
@@ -1222,13 +1223,24 @@ void process_player(void)
 				effect_simple(EF_DETECT_GOLD, source_none(), "0", 0, 0, 0, 3, 3, NULL);
 		}
 
-		/* Spectators, Paralyzed or Knocked Out player gets no turn */
+		/* Spectators (including in transit to the arena - still on level 0 because the level hasn't generated),
+		 * Paralyzed or Knocked Out player gets no turn
+		 **/
 		if ((player->upkeep->arena_level &&
-				player->arena_type == arena_monster &&
-				player_timed_grade_lt(player, TMD_FOOD, "Fed")) ||
+			((player->depth == 0) ||
+				(player->arena_type == arena_monster &&
+				player_timed_grade_lt(player, TMD_FOOD, "Fed")))) ||
 			player->timed[TMD_PARALYZED] ||
 			player_timed_grade_eq(player, TMD_STUN, "Knocked Out")) {
 			cmdq_push(CMD_SLEEP);
+
+			/* Spectators do get a delay */
+			if (player->upkeep->arena_level && (player->depth > 0) && !OPT(player, fast_arena)) {
+				Term_fresh();
+				if (player->upkeep->redraw)
+					redraw_stuff(player);
+				Term_xtra(TERM_XTRA_DELAY, player->opts.delay_factor);
+			}
 		}
 
 		/* Prepare for the next command */

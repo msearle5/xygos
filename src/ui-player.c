@@ -1554,7 +1554,8 @@ void write_character_dump(ang_file *fff)
 		int opt;
 		const char *title = "";
 		switch (i) {
-			case OP_INTERFACE: title = "User interface"; break;
+			case OP_MAP: title = "Overhead map display"; break;
+			case OP_INTERFACE: title = "Other user interface"; break;
 			case OP_BIRTH: title = "Birth"; break;
 		    default: continue;
 		}

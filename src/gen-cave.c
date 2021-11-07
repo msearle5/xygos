@@ -2817,6 +2817,8 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 			if (player->upkeep->flight_level) {
 				feat = FEAT_AIRPORT;
 				player->upkeep->flight_level = false;
+			} else if (player->upkeep->was_arena_level) {
+				feat = FEAT_BLACK_MARKET;
 			}
 			for (grid.y = 0; grid.y < c_new->height; grid.y++) {
 				for (grid.x = 0; grid.x < c_new->width; grid.x++) {
