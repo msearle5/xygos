@@ -1514,8 +1514,8 @@ bool mon_take_nonplayer_hit(int dam, struct monster *t_mon,
 
 		/* Deal with arena monsters */
 		if (player->upkeep->arena_level) {
-			health_xuntrack(player->upkeep, t_mon);
-fprintf(stderr,"dead %s, %d remaining\n", t_mon->race->name, player->upkeep->n_health_who);
+			health_untrack(player->upkeep, t_mon);
+
 			/* No monsters => player wins */
 			if (player->upkeep->n_health_who == 0) {
 				quest_complete_fight(player, t_mon);

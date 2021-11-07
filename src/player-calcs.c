@@ -1731,7 +1731,6 @@ static void update_bonuses(struct player *p)
  */
 void health_untrack_all(struct player_upkeep *upkeep)
 {
-	fprintf(stderr,"health_untrack_all: %d => 0\n", upkeep->n_health_who);
 	player->upkeep->n_health_who = 0;
 	if (player->upkeep->health_who) {
 		mem_free(player->upkeep->health_who);
@@ -1752,7 +1751,6 @@ void health_track(struct player_upkeep *upkeep, struct monster *mon)
 	upkeep->health_who[0] = mon;
 	upkeep->n_health_who = 1;
 	upkeep->redraw |= PR_HEALTH;
-	fprintf(stderr,"health_track: replacing with 1 %s\n", mon->race->name);
 }
 
 /**
@@ -1766,7 +1764,6 @@ void health_track_add(struct player_upkeep *upkeep, struct monster *mon)
 	upkeep->health_who[upkeep->n_health_who] = mon;
 	upkeep->n_health_who++;
 	upkeep->redraw |= PR_HEALTH;
-	fprintf(stderr,"health_track_add: adding %s with %d\n", mon->race->name, upkeep->n_health_who);
 }
 
 /**
@@ -1774,55 +1771,34 @@ void health_track_add(struct player_upkeep *upkeep, struct monster *mon)
  */
 void health_track_replace(struct player_upkeep *upkeep, struct monster *from, struct monster *to)
 {
-	fprintf(stderr,"health_track_replace: looking for %s\n", to->race->name);
 	for(int i=0;i<upkeep->n_health_who;i++) {
 		if (from == upkeep->health_who[i]) {
 			upkeep->redraw |= PR_HEALTH;
-			fprintf(stderr,"health_track_replace: found\n");
 			upkeep->health_who[i] = to;
 			return;
 		}
 	}
-	fprintf(stderr,"health_track_replace: NOT FOUND\n");
 	return;
 }
 
 /**
  * Remove the given monster from health tracking
  */
-void health_zuntrack(struct player_upkeep *upkeep, struct monster *mon, bool stop)
+void health_untrack(struct player_upkeep *upkeep, struct monster *mon)
 {
-	fprintf(stderr,"health_untrack: looking for %s\n", mon->race->name);
 	for(int i=0;i<upkeep->n_health_who;i++) {
 		if (mon == upkeep->health_who[i]) {
 			upkeep->redraw |= PR_HEALTH;
-			fprintf(stderr,"health_untrack: found %s, was %d\n", mon->race->name, upkeep->n_health_who);
 			if (i < upkeep->n_health_who-1) {
-				fprintf(stderr,"health_untrack: shifting down\n");
 				memmove(&upkeep->health_who[i], &upkeep->health_who[i+1], sizeof(upkeep->health_who[0]) * (upkeep->n_health_who - i));
 			}
-			fprintf(stderr,"health_untrack: leaving %s with %d\n", mon->race->name, upkeep->n_health_who);
 			upkeep->n_health_who--;
 			return;
 		}
 	}
-	if (stop) {
-		fprintf(stderr,"health_untrack: NOT FOUND\n");
-	} else {
-		fprintf(stderr,"health_untrack: not found\n");
-	}
 	return;
 }
 
-void health_xuntrack(struct player_upkeep *upkeep, struct monster *mon)
-{
-	health_zuntrack(upkeep, mon, true);
-}
-
-void health_untrack(struct player_upkeep *upkeep, struct monster *mon)
-{
-	health_zuntrack(upkeep, mon, false);
-}
 /**
  * Track the given monster race
  */

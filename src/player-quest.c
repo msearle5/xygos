@@ -607,7 +607,7 @@ static struct monster_race *arena_opponent(int level, int existing, struct monst
 	double *p = mem_zalloc(sizeof(double) * (z_info->r_max + 1));
 	int nmons = 0;
 	double total = 0.0;
-fprintf(stderr,"area_oppo level %d\n", level);
+
 	/* Fill it with probabilities.
 	 * The first time around the loop, cap out of level monsters.
 	 * The second time around - if nothing was found - allow them.
@@ -642,12 +642,12 @@ fprintf(stderr,"area_oppo level %d\n", level);
 				if (prob > 0.0) {
 					for(int j = 0; j < existing; j++) {
 						if (r_info+i == exist[j]) {
-		fprintf(stderr,"area_oppo: disabling %s\n", r_info[i].name);
+
 							prob = 0.0;
 						}
 					}
 					if (prob > 0.0) {
-		fprintf(stderr,"area_oppo: %.18lf chance of %s\n", prob, r_info[i].name);
+
 						p[i] = prob;
 						total += prob;
 						nmons++;
@@ -669,7 +669,6 @@ fprintf(stderr,"area_oppo level %d\n", level);
 	for (; selection < z_info->r_max; selection++) {
 		select -= p[selection];
 		if (select < 0.0) {
-			fprintf(stderr,"area_oppo: selecting %s\n", r_info[selection].name);
 			break;
 		}
 	}
@@ -755,8 +754,6 @@ static double arena_odds(int on, int races, struct monster_race **race, int *m, 
 				div[i] = 1;
 			}
 		}
-fprintf(stderr,"odds %.17lf, initial payout %.17lf, mul %d, div %d\n", odds_of[i], payout[i], mul[i], div[i]);
-		payout[i] = mul[i] / div[i];
 	}
 
 	*m = mul[on];

@@ -1720,7 +1720,6 @@ static int rd_monsters_aux(struct chunk *c, bool arena)
 	/* Clear for arenas */
 	if (arena && player->upkeep->arena_level) {
 		health_untrack_all(player->upkeep);
-		fprintf(stderr,"reloading arena mons\n");
 	}
 
 	/* Read the monsters */
@@ -1748,7 +1747,6 @@ static int rd_monsters_aux(struct chunk *c, bool arena)
 		if (arena && player->upkeep->arena_level) {
 			assert(square_monster(c, mon->grid));
 			health_track_add(player->upkeep, square_monster(c, mon->grid));
-			fprintf(stderr,"added monster %d of %d (%s) total %d\n", i, limit, mon->race->name, player->upkeep->n_health_who);
 		}
 	}
 
