@@ -573,8 +573,6 @@ static double arena_monster_power(struct monster_race* r)
 		power *= 1.005;
 	if (rf_has(r->flags, RF_IM_INERTIA))
 		power *= 1.005;
-	if (rf_has(r->flags, RF_NO_FEAR))
-		power *= 1.02;
 	if (rf_has(r->flags, RF_NO_STUN))
 		power *= 1.02;
 	if (rf_has(r->flags, RF_NO_CONF))
@@ -1988,7 +1986,8 @@ void quest_complete_fight(struct player *p, struct monster *mon) {
 			if (mon->race == q->race[p->arena_idx]) {
 				/* You win */
 				int m, d;
-				int win = p->arena_bet * arena_odds(p->arena_idx, q->races, q->race, &m, &d);
+				arena_odds(p->arena_idx, q->races, q->race, &m, &d);
+				int win = (p->arena_bet * m) / d;
 				if (win < 1)
 					win = 1;
 				p->au += win;

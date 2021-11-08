@@ -99,6 +99,10 @@ static bool does_resist(const struct monster *mon, int effect_type, int timer, i
 	struct mon_timed_effect *effect = &effects[effect_type];
 	struct monster_lore *lore = get_lore(mon->race);
 
+	/* Special case: always resist fear in the arena */
+	if ((player->upkeep->arena_level) && (effect_type == MON_TMD_FEAR))
+		return true;
+
 	/* Sometimes the game can override the monster's innate resistance */
 	if (flag & MON_TMD_FLG_NOFAIL) {
 		return false;

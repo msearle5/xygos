@@ -4233,6 +4233,12 @@ struct chunk *arena_gen(struct player *p, int min_height, int min_width) {
 		assert(mon == square_monster(c, mon->grid));
 		assert(mon != imon);
 		health_track_replace(player->upkeep, imon, mon);
+
+		/* Wake it up, make it attack */
+		monster_wake(mon, false, 100);
+		if (p->arena_type == arena_monster)
+			mflag_on(mon->mflag, MFLAG_NEUTRAL);
+		mflag_off(mon->mflag, MFLAG_FRIENDLY);
 	}
 	c->mon_max = c->mon_cnt+1;
 
