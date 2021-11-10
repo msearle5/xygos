@@ -91,6 +91,12 @@ void do_cmd_go_up(struct command *cmd)
 
 	ascend_to = dungeon_get_next_level(player, player->depth, -1);
 
+	/* Getting out of an arena fight (that hasn't completed quickly) */
+	if ((ascend_to == 0) && (player->upkeep->arena_level) && (player->arena_type == arena_monster)) {
+		quest_complete_fight(player, NULL);
+		return;
+	}
+
 	/* Exit a quest */
 	if (exit) {
 		/* Paranoia */

@@ -670,6 +670,9 @@ struct player {
 	s32b arena_type;					/* Arena: type of fight, bet amount, bet monster index */
 	s32b arena_bet;
 	s32b arena_idx;
+	s32b arena_lost;					/* total lost (bet) and won */
+	s32b arena_won;
+	s32b arena_entered_turn;
 	bool split_p;						/* Split personality */
 	bool flying;						/* Currently flying (using a Pilot ability) */
 	u16b total_winner;					/* Total winner */

@@ -500,10 +500,13 @@ void rdwr_player(void)
 	/* Quest currently active */
 	rdwr_s32b(&player->active_quest);
 
-	/* Arena: type of fight (MvM/MvP), amount bet, midx bet on */
+	/* Arena: type of fight (MvM/MvP), amount bet, midx bet on, total lost/won */
 	rdwr_s32b(&player->arena_type);
 	rdwr_s32b(&player->arena_bet);
 	rdwr_s32b(&player->arena_idx);
+	rdwr_s32b(&player->arena_lost);
+	rdwr_s32b(&player->arena_won);
+	rdwr_s32b(&player->arena_entered_turn);
 
 	/* Flying? */
 	rdwr_bool(&player->flying);

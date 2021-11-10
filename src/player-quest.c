@@ -699,15 +699,11 @@ static double arena_odds(int on, int races, struct monster_race **race, int *m, 
 	}
 
 	/* With equal contenders, odds would be the same (1/races) for all.
-	 * As some are less, reduce them. Top gets all the rest FIXME
+	 * As some are less, reduce them.
 	 */
-	//odds_of[topi] = 1.0;
 	for(int i=0;i<races;i++) {
-		//if (i != topi) {
-			double chance = (monster_power[i] / monster_power[topi]);
-			odds_of[i] = chance / races;
-			//odds_of[topi] -= odds_of[i];
-		//}
+		double chance = (monster_power[i] / monster_power[topi]);
+		odds_of[i] = chance / races;
 	}
 
 	/* Convert 'chance of winning' to 'payout' */
@@ -717,6 +713,21 @@ static double arena_odds(int on, int races, struct monster_race **race, int *m, 
 	/* Scale everything down by a greed factor (1/2 if hated, 1/6 for typical, down to 1/12 for friends) */
 	double faction = MAX(2, player->bm_faction + 4);
 	double greed = (1.0 / faction);
+
+	/* Modify greed if you haven't played before, or if you have won more than you have lost */
+	if (player->arena_lost == 0) {
+		greed = 0.0;
+	} else {
+		double winnings = player->arena_won - player->arena_lost;
+		greed -= 0.05;
+		if (winnings > 100.0) {
+			greed = greed + (log(winnings) - 2.0) * 0.1;
+		}
+	}
+	if (greed < 0.0)
+		greed = 0.0;
+	if (greed > 0.8)
+		greed = 0.8;
 
 	for(int i=0;i<races;i++)
 		payout[i] *= (1.0 - greed);
@@ -912,7 +923,7 @@ bool quest_play_arena(struct player *p)
 			return (false);
 		}
 		strnfmt(buf, sizeof(buf), "Bet how much on the %s (min $%d, max $%d?)", q->race[betmon]->name, low, high);
-		int bet = get_quantity(buf, high);
+		int bet = get_quantity_default(buf, high, low);
 		if ((bet < low) || (bet > high)) {
 			screen_load();
 			return (false);
@@ -1582,6 +1593,8 @@ void quest_changed_level(bool store)
 						fail_quest(q);
 					}
 				}
+			} else if (strstr(q->name, "Arena")) {
+				player->arena_entered_turn = turn;
 			} else {
 				/* Create quest monsters, if possible.
 				 * It must be the right level, and the right dungeon.
@@ -1982,21 +1995,29 @@ void quest_complete_fight(struct player *p, struct monster *mon) {
 		}
 		case arena_monster: {
 			/* Monster v monster fight completed - did you win? If so, collect your winnings. Either way, take time. */
-			p->au -= p->arena_bet;
-			if (mon->race == q->race[p->arena_idx]) {
-				/* You win */
-				int m, d;
-				arena_odds(p->arena_idx, q->races, q->race, &m, &d);
-				int win = (p->arena_bet * m) / d;
-				if (win < 1)
-					win = 1;
-				p->au += win;
-				strnfmt(buf, sizeof(buf), "You win $%d on your $%d bet at %d/%d.", win, p->arena_bet, m, d);
+			if (!mon) {
+				/* No monster means that the result was inconclusive, so return all bets */
+				strnfmt(buf, sizeof(buf), "It seems that our contestants ran down the clock without there being a clear winner... chickens! You'll have your stake returned to you. Let's hope the next match goes better!"); 
 			} else {
-				strnfmt(buf, sizeof(buf), "Too bad, you lose. Try again next time?");
+				p->au -= p->arena_bet;
+				p->arena_lost += p->arena_bet;
+				if (mon->race == q->race[p->arena_idx]) {
+					/* You win */
+					int m, d;
+					arena_odds(p->arena_idx, q->races, q->race, &m, &d);
+					int win = (p->arena_bet * m) / d;
+					if (win < 1)
+						win = 1;
+					p->au += win;
+					p->arena_won += win;
+					strnfmt(buf, sizeof(buf), "You win $%d on your $%d bet at %d/%d.", win, p->arena_bet, m, d);
+				} else {
+					strnfmt(buf, sizeof(buf), "Too bad, you lose. Try again next time?");
+				}
 			}
 			ui_text_box(buf);
 			wait = true;
+
 			break;
 		}
 		case arena_shop:

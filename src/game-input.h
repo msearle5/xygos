@@ -40,6 +40,7 @@
 
 extern bool (*get_string_hook)(const char *prompt, char *buf, size_t len);
 extern int (*get_quantity_hook)(const char *prompt, int max);
+extern int (*get_quantity_default_hook)(const char *prompt, int max, int amt);
 extern bool (*get_check_hook)(const char *prompt);
 extern bool (*get_com_hook)(const char *prompt, char *command);
 extern bool (*get_rep_dir_hook)(int *dir, bool allow_none);
@@ -63,6 +64,7 @@ extern bool (*map_is_visible_hook)(void);
 
 bool get_string(const char *prompt, char *buf, size_t len);
 int get_quantity(const char *prompt, int max);
+int get_quantity_default(const char *prompt, int max, int amt);
 bool get_check(const char *prompt);
 bool get_com(const char *prompt, char *command);
 bool get_rep_dir(int *dir, bool allow_none);

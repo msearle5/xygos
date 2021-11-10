@@ -401,8 +401,6 @@ static void target_closest_hated(struct chunk *c, struct monster *mon)
 	int distance = 1e9;
 	struct monster *best = NULL;
 
-	fprintf(stderr,"target_closest_hated(%s at %d,%d)\n", mon->race->name, mon->grid.x, mon->grid.y);
-
 	for (int m_idx = 1; m_idx < cave_monster_max(c); m_idx++) {
 		struct monster *target = cave_monster(c, m_idx);
 
@@ -429,10 +427,6 @@ static void target_closest_hated(struct chunk *c, struct monster *mon)
 	if (best) {
 		mon->target.midx = best->midx;
 		mon->target.grid = best->grid;
-
-		fprintf(stderr,"target_closest_hated: found %s at %d,%d\n", cave_monster(c, best->midx)->race->name, 
-			best->grid.x, best->grid.y);
-
 	} else {
 		mon->target.midx = 0;
 		mon->target.grid.x = mon->target.grid.y = 0;
@@ -460,7 +454,6 @@ static struct loc get_target(struct chunk *c, struct monster *mon)
 		return monster_is_decoyed(mon) ? cave_find_decoy(c) :
 			player->grid;
 	} else {
-		fprintf(stderr,"mon nonhostile (%s)\n", mon->race->name);
 		if (!mon->target.midx) {
 			target_closest_hated(c, mon);
 		}
@@ -1039,7 +1032,6 @@ static bool get_move(struct chunk *c, struct monster *mon, int *dir, bool *good,
 		// loc(0,0) => random wandering, biting you only if you get in the way
 		// but if afraid, doesnt move at all?
 		grid = loc(0, 0);
-		fprintf(stderr,"AI: loc is zero\n");
 	} else {
 		/* Normal animal packs try to get the player out of corridors. */
 		if (!done && group_ai && !monster_passes_walls(mon)) {

@@ -893,12 +893,10 @@ static bool textui_get_string(const char *prompt, char *buf, size_t len)
 /**
  * Request a "quantity" from the user
  */
-static int textui_get_quantity(const char *prompt, int max)
+static int textui_get_quantity_default(const char *prompt, int max, int amt)
 {
-	int amt = 1;
-
 	/* Prompt if needed */
-	if (max != 1) {
+	if (max != amt) {
 		char tmp[80];
 		char buf[80];
 
@@ -934,6 +932,13 @@ static int textui_get_quantity(const char *prompt, int max)
 	return (amt);
 }
 
+/**
+ * Request a "quantity" from the user with a default
+ */
+static int textui_get_quantity(const char *prompt, int max)
+{
+	return textui_get_quantity_default(prompt, max, 1);
+}
 
 /**
  * Verify something with the user
@@ -1377,6 +1382,7 @@ void textui_input_init(void)
 {
 	get_string_hook = textui_get_string;
 	get_quantity_hook = textui_get_quantity;
+	get_quantity_default_hook = textui_get_quantity_default;
 	get_check_hook = textui_get_check;
 	get_com_hook = textui_get_com;
 	get_rep_dir_hook = textui_get_rep_dir;

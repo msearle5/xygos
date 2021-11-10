@@ -1232,16 +1232,24 @@ void process_player(void)
 				player_timed_grade_lt(player, TMD_FOOD, "Fed")))) ||
 			player->timed[TMD_PARALYZED] ||
 			player_timed_grade_eq(player, TMD_STUN, "Knocked Out")) {
-			cmdq_push(CMD_SLEEP);
+			bool timeout = (player->arena_type == arena_monster &&
+			((turn - player->arena_entered_turn) >= (8 * z_info->arena_wait_time)));
+			if (timeout) {
+				/* Complete without a winner if you are out of time */
+				quest_complete_fight(player, NULL);
+			} else {
+				cmdq_push(CMD_SLEEP);
 
-			/* Spectators do get a delay */
-			if (player->upkeep->arena_level && (player->depth > 0) && !OPT(player, fast_arena)) {
-				Term_fresh();
-				if (player->upkeep->redraw)
-					redraw_stuff(player);
-				Term_xtra(TERM_XTRA_DELAY, player->opts.delay_factor);
+				/* Spectators do get a delay */
+				if (player->upkeep->arena_level && (player->depth > 0) && !OPT(player, fast_arena)) {
+					Term_fresh();
+					if (player->upkeep->redraw)
+						redraw_stuff(player);
+					Term_xtra(TERM_XTRA_DELAY, player->opts.delay_factor);
+				}
 			}
 		}
+
 
 		/* Prepare for the next command */
 		if (cmd_get_nrepeats() > 0) {
