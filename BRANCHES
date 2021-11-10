@@ -3,7 +3,7 @@ wishing		inactive, merged to clowns	Wishing cards
 new-arts	active for 0.2				New predefined artifacts
 containers	ready for 0.2				Chests etc
 clowns		active for 0.2				Clowns' card tricks
-pets		active						Tame, neutral or monster-monster fights
+pets		merged						Tame, neutral or monster-monster fights
 youmonster	active						Player race with nonstandard bodyplans
 autofeel	active						Calculating feeling thresholds
 timelord	merged, some outstanding	Timelord's techniques, etc.
