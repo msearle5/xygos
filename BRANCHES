@@ -4,7 +4,7 @@ new-arts	merged						New predefined artifacts
 containers	merged						Chests etc
 clowns		merged (outstanding?)		Clowns' card tricks
 pets		merged						Tame, neutral or monster-monster fights
-youmonster	active						Player race with nonstandard bodyplans
+youmonster	merged						Player race with nonstandard bodyplans
 autofeel	active						Calculating feeling thresholds
 timelord	merged, some outstanding	Timelord's techniques, etc.
 homequests	inactive, merged			Home quests / shared home
