@@ -102,9 +102,12 @@ N:Han
 N:Haplo
 N:Harold
 N:Harry
+N:Hector
 N:Heinrich
 N:Henry
+N:Herb
 N:Herbert
+N:Hiro
 N:Homer
 N:Horace
 N:Hugh
@@ -143,6 +146,7 @@ N:Lloyd
 N:Louis
 N:Luke
 N:Lytton
+N:Magnus
 N:Malcolm
 N:Manjeet
 N:Manuel
@@ -222,6 +226,7 @@ N:Tony
 N:Tristan
 N:Vincent
 N:Vuilleumier
+N:Wally
 N:Walt
 N:Walter
 N:Warren

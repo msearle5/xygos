@@ -74,6 +74,8 @@ N:Elaine
 N:Eleanor
 N:Eliza
 N:Elly
+N:Elvira
+N:Elyssia
 N:Emily
 N:Emma
 N:Esei
@@ -101,8 +103,10 @@ N:Jessica
 N:Joanne
 N:Jodie
 N:Joy
+N:Judith
 N:Julia
 N:Justine
+N:Karen
 N:Kat
 N:Kim
 N:Kimmy
@@ -123,6 +127,7 @@ N:Mary
 N:Mavis
 N:Maxine
 N:Meena
+N:Meg
 N:Melanie
 N:Michelle
 N:Mina
@@ -161,6 +166,7 @@ N:Sarah
 N:Sharon
 N:Shauna
 N:Sigourney
+N:Sophie
 N:Sue
 N:Susan
 N:Suzanna

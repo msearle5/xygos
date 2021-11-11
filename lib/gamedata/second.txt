@@ -177,6 +177,7 @@ N:Dimaer
 N:Dingle
 N:Distortal
 N:Dizietsma
+N:Doe
 N:Dogstar
 N:Dorfl
 N:Dorian
@@ -213,6 +214,8 @@ N:Estalsesy
 N:Eteseeallox
 N:Fabriano
 N:Fardell
+N:Faulkner
+N:Fawlty
 N:Felka
 N:Fenton
 N:Feodoric
@@ -301,6 +304,7 @@ N:Ishii
 N:Iskander
 N:Jads
 N:Jameson
+N:Janeway
 N:Jarnoid
 N:Jarvis
 N:Jasey
@@ -333,6 +337,7 @@ N:Kennedy
 N:Kerr-Avon
 N:Keyes
 N:Kiekelly
+N:Kirk
 N:Kirran
 N:Klementelold
 N:Kleptoid
@@ -347,6 +352,7 @@ N:Kriken
 N:Krombart
 N:Kryten
 N:Kubrick
+N:Laffer
 N:Laggsy
 N:Lanx
 N:Laruldan
@@ -450,6 +456,7 @@ N:MtKlima
 N:Mubaryus
 N:Mumakiltwinly
 N:Munkster
+N:Muster
 N:Muzzman
 N:Myrmidon
 N:Nalder
@@ -566,6 +573,7 @@ N:Rollen
 N:Romero
 N:Roombor
 N:Roydon
+N:Rubin
 N:Rubinstein
 N:Rxke
 N:Ryder
@@ -655,6 +663,7 @@ N:Traken
 N:Travis
 N:Trexate
 N:Trezker
+N:Troon
 N:Troy
 N:Trubelmacher
 N:Turanga
@@ -707,6 +716,7 @@ N:Wolfenstein
 N:Wolfspirit
 N:Wolfwood
 N:Wombat
+N:Wooster
 N:Wotschi
 N:Wyvern
 N:Xaotik
@@ -716,6 +726,7 @@ N:Xexedi
 N:Xocite
 N:Yankisona
 N:Yann
+N:Yeager
 N:Yutani
 N:Zanasj
 N:Zandan
