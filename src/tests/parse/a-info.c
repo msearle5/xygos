@@ -37,7 +37,7 @@ int teardown_tests(void *state) {
 		string_free(kind->vis_msg);
 		mem_free(kind->brands);
 		mem_free(kind->slays);
-		mem_free(kind->curses);
+		mem_free(kind->faults);
 		free_effect(kind->effect);
 	}
 	mem_free(k_info);

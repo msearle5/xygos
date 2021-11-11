@@ -17,6 +17,7 @@
 #include "player-util.h"
 
 int setup_tests(void **state) {
+	(void)state;
 	set_file_paths();
 	if (!init_angband()) {
 		return 1;
@@ -25,7 +26,7 @@ int setup_tests(void **state) {
 	create_needed_dirs();
 #endif
 
-	if (!player_make_simple(NULL, NULL, "Tester")) {
+	if (!player_make_simple(NULL, NULL, NULL, "Tester")) {
 		cleanup_angband();
 		return 1;
 	}
@@ -34,6 +35,7 @@ int setup_tests(void **state) {
 }
 
 int teardown_tests(void *state) {
+	(void)state;
 	cleanup_angband();
 	return 0;
 }
@@ -91,7 +93,7 @@ static struct object *setup_object(int tval, int sval, int num) {
 }
 
 static void generate_piles(struct chunk *c, struct player *p) {
-	const int allowed_tvals[] = { TV_BOOTS, TV_LIGHT, TV_SCROLL };
+	const int allowed_tvals[] = { TV_BOOTS, TV_LIGHT, TV_CARD };
 	struct loc grid;
 
 	for (grid.y = 1; grid.y < c->height - 1; ++grid.y) {
@@ -133,6 +135,7 @@ static void orphan_piles(struct chunk *c) {
 }
 
 static int test_obj_pile_simple(void *state) {
+	(void)state;
 	character_dungeon = false;
 	player->depth = 1;
 	cave = create_empty_cave(11, 15);
@@ -153,6 +156,7 @@ static int test_obj_pile_simple(void *state) {
 }
 
 static int test_obj_pile_orphan(void *state) {
+	(void)state;
 	character_dungeon = false;
 	player->depth = 1;
 	cave = create_empty_cave(11, 15);

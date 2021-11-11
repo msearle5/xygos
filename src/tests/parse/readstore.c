@@ -1,6 +1,7 @@
 /* parse/readstore */
 
 #include "unit-test.h"
+#include "obj-tval.h"
 #include "object.h"
 #include "store.h"
 #include "init.h"
@@ -72,14 +73,15 @@ static int test_owner0(void *state) {
 }
 
 static int test_i0(void *state) {
-	enum parser_error r = parser_parse(state, "normal:3:5");
+	enum parser_error r = parser_parse(state, "normal:block:0:456");
 	struct store *s;
 
 	eq(r, PARSE_ERROR_NONE);
 	s = parser_priv(state);
 	require(s);
-	require(s->normal_table[0] && s->normal_table[0]->tval == 3
-		&& s->normal_table[0]->sval == 5);
+	require(s->normal_table);
+	require(s->normal_table[0].tval == tval_find_idx("block"));
+	require(s->normal_table[0].rarity.base == 456);
 	ok;
 }
 
