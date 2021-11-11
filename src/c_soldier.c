@@ -237,7 +237,7 @@ static void soldier_building(int store, bool entering, bool *do_default)
 			/* Build it. Avoid faulty objects. */
 			do {
 				if (obj)
-					object_delete(&obj);
+					object_delete(cave, player->cave, &obj);
 				obj = make_object_named(cave, lev, good, great, extra, &value, tval, name);
 				if (!obj) {
 					message = "Seems we can't find your item.";
@@ -247,7 +247,7 @@ static void soldier_building(int store, bool entering, bool *do_default)
 				if (obj && (tval_is_armor(obj)) && (!obj_can_wear(obj))) {
 					obj2 = make_object_named(cave, lev, good, great, extra, &value, 0, name2);
 					if (obj2) {
-						object_delete(&obj);
+						object_delete(cave, player->cave, &obj);
 						obj = obj2;
 					}
 				}
