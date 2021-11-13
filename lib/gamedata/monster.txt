@@ -4920,6 +4920,27 @@ blow:BITE:HURT:2d20
 flags:WEIRD_MIND
 desc:A large crocodile, several meters of drab scales and several hundred sharp teeth yawning at you.
 
+# This is a cyborg
+name:monitor lizard
+base:reptile
+color:Violet
+depth:23
+rarity:4
+speed:110
+hit-points:80
+hearing:4
+armor-class:40
+sleepiness:50
+deathspells:EXPLODE
+blow:GAZE:PARALYZE
+blow:TOUCH:ELEC:2d8
+#flags:HURT_WATER
+flags:ATTR_MULTI | IM_COLD | METAL | WEIRD_MIND
+spell-power:30
+spells:SLOW | HOLD | TELE_TO
+desc:A heavily-built 21-inch lizard. The lizard's strange, squarish eyes 
+desc:shimmer in thousands of glowing colours, and you can't seem to look away...
+
 name:deinonychus
 base:reptile
 color:LimeGreen
@@ -6548,6 +6569,24 @@ spell-freq:2
 spells:BA_WATE
 flags:SMART | METAL | IM_WATER | DEATH_SPECIAL
 desc:The Talky Washer has extraordinary intelligence, but is handicapped by a complete obsession with water and washing. Unfortunately that has resulted in it seeing you as a chunk of dirt that needs wiping away.
+
+name:talky blender
+base:robot
+color:White
+speed:120
+hit-points:30
+hearing:10
+armor-class:10
+sleepiness:10
+depth:29
+rarity:3
+blow:HIT:WOUND:1d20
+blow:HIT:WOUND:1d20
+spell-power:15
+spell-freq:2
+spells:BA_SHAR
+flags:SMART | METAL | IM_WATER | DEATH_SPECIAL
+desc:The Talky Blender has extraordinary intelligence, but is handicapped by a complete obsession with slicing and blending. Unfortunately that has resulted in it wanting to make a You Smoothie.
 
 name:Miniac, the Crusher
 base:robot

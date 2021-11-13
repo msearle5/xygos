@@ -1361,6 +1361,9 @@ static void player_kill_monster(struct monster *mon, struct player *p,
 		if (!monster_is_visible(mon))
 			/* Death by physical attack -- invisible monster */
 			msgt(soundfx, "You have killed %s.", m_name);
+		else if (strstr(mon->race->name, "monitor") || rf_has(mon->race->flags, RF_HOLOGRAM))
+			/* Death by Physical attack -- de-rez monster */
+			msgt(soundfx, "%s de-rezzes.", m_name);
 		else if (monster_is_destroyed(mon))
 			/* Death by Physical attack -- non-living monster */
 			msgt(soundfx, "You have destroyed %s.", m_name);
