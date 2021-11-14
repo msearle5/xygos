@@ -798,7 +798,7 @@ bool make_attack_normal(struct monster *mon, struct player *p)
 	struct monster_lore *lore = get_lore(mon->race);
 	assert(lore);
 	bool blinked = false;
-fprintf(stderr,"make_att_normal(%s)\n", mon->race->name);
+
 	/* Not allowed to attack */
 	if (rf_has(mon->race->flags, RF_NEVER_BLOW)) return (false);
 

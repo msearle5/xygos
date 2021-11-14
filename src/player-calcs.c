@@ -1732,12 +1732,16 @@ void health_untrack_all(struct player_upkeep *upkeep)
 }
 
 /**
- * Track the given monster (only)
+ * Track the given monster (only - and not if more than one are already around,
+ * to avoid interfering with arena combat)
  */
 void health_track(struct player_upkeep *upkeep, struct monster *mon)
 {
 	assert(mon);
 	assert(mon->race);
+	if (upkeep->n_health_who > 1) {
+		return;
+	}
 	if (upkeep->n_health_who == 0) {
 		upkeep->health_who = mem_alloc(sizeof(upkeep->health_who[0]));
 	}

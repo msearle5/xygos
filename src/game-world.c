@@ -107,11 +107,12 @@ struct level *level_by_depth(int depth)
 		if (lev->depth == depth) {
 			if (lev->depth == 0)
 				break;
-			if ((player->town->downto) && (!streq(player->town->downto, lev->name)))
+			if ((player->town->downto) && (streq(player->town->downto, lev->name)))
 				break;
 		}
 		lev = lev->next;
 	}
+
 	return lev;
 }
 
@@ -187,15 +188,16 @@ static void recharged_notice(const struct object *obj, bool all)
 {
 	char o_name[120];
 
-	const char *s;
-
 	bool notify = false;
 
 	if (OPT(player, notify_recharge)) {
 		notify = true;
 	} else if (obj->note) {
+		const char *note = quark_str(obj->note);
 		/* Find a '!' */
-		s = strchr(quark_str(obj->note), '!');
+		const char *s = NULL;
+		if (note)
+			s = strchr(note, '!');
 
 		/* Process notification request */
 		while (s) {
@@ -556,7 +558,7 @@ static void make_noise(struct player *p)
 static void update_scent(void)
 {
 	int y, x;
-	byte scent_strength[5][5] = {
+	static const byte scent_strength[5][5] = {
 		{2, 2, 2, 2, 2},
 		{2, 1, 1, 1, 2},
 		{2, 1, 0, 1, 2},
@@ -1218,7 +1220,7 @@ void process_player(void)
 		 * Paralyzed or Knocked Out player gets no turn
 		 **/
 		if ((player->upkeep->arena_level &&
-			((player->depth == 0) ||
+			(((player->arena_type != arena_single) && (player->depth == 0)) ||
 				(player->arena_type == arena_monster &&
 				player_timed_grade_lt(player, TMD_FOOD, "Fed")))) ||
 			player->timed[TMD_PARALYZED] ||

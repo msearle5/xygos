@@ -32,7 +32,7 @@
 # level-from:level
 # obj-flags:object property flags
 # player-flags:player property flags
-# magic:spell_first:num_books
+# magic:spell_first
 # book:name
 # spell:name:level:fail:exp:stat:hp:cooldown:[fail msg]
 # seffect:seffect:subtype (if needed):radius (if needed):parameter (if needed)
@@ -485,7 +485,7 @@ equip:digger:shovel:1:1:none
 # FF clothes?
 # spikes have disappeared
 
-magic:1:300
+magic:1:350
 book:[Spelunker]
 spell:Climb:5:80:4:0:1:10
 seffect:CLIMBING
@@ -496,7 +496,7 @@ cdesc:You are trained and equipped for underground exploration, can avoid falls 
 
 ############### JEDI #####################
 name:Jedi
-stats:1:1:4:3:1:1:0
+stats:1:4:1:3:0:2:0
 title:Aspirant
 title:Padawan
 title:Initiate
@@ -504,9 +504,33 @@ title:Adept
 title:Knight
 title:Master
 title:Grand Master
-exp:20
+skill-disarm-phys:25:20
+skill-disarm-magic:10:10
+skill-device:10:7
+skill-save:30:30
+skill-stealth:5:10
+skill-search:20:35
+skill-martial:35:45
+skill-melee:45:55
+skill-shoot:5:5
+skill-throw:10:15
+hitdie:160
+exp:10
 talents:0:1
+max-attacks:5
+min-weight:30
+strength-multiplier:3
 cdesc:Jedi are famous for skill with a lightsaber - you'll excel with melee energy weapons and do well with other melee weapons. Eventually you'll even be able to construct your own. Ranged weapons are not you, but you'll be supported by a number of subtle powers as you advance. There are also Dark Jedi... who are powerful, yes, but at a cost!
+
+magic:1:450
+book:[Jedi]
+spell:Single Combat:36:30:500:2:0:3d200
+seffect:SINGLE_COMBAT
+sdesc:Challenge your opponent to a duel. "I choose lightsabers." "Good, I choose blasters! <ZAP>" 
+sdesc:The effect is to transport yourself and your opponent into a sealed arena from which only 
+sdesc:the winner can emerge.
+
+
 
 ############### ENGINEER #####################
 name:Engineer

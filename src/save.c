@@ -488,7 +488,7 @@ void rdwr_spell_state(struct spell_state *spell)
 	rdwr_s32b(&spell->uses);
 }
 
-void rdwr_player(void)
+bool rdwr_player(void)
 {
 	/* Total energy used so far */
 	rdwr_u32b(&player->total_energy);
@@ -499,6 +499,10 @@ void rdwr_player(void)
 
 	/* Quest currently active */
 	rdwr_s32b(&player->active_quest);
+	if ((player->active_quest < -1) || (player->active_quest >= z_info->quest_max)) {
+		note(format("Wrong (%u, max %u) active quest!", player->active_quest, z_info->quest_max - 1));
+		return false;
+	}
 
 	/* Arena: type of fight (MvM/MvP), amount bet, midx bet on, total lost/won */
 	rdwr_s32b(&player->arena_type);
@@ -526,6 +530,8 @@ void rdwr_player(void)
 	rdwr_s32b(&player->last_faction_loss);
 	rdwr_s32b(&player->hitlist_wins);
 	rdwr_string(&player->artifact);
+
+	return true;
 }
 
 void wr_player(void)

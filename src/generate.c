@@ -1329,7 +1329,7 @@ static void sanitize_player_loc(struct chunk *c, struct player *p)
 */
 void prepare_next_level(struct player *p)
 {
-	bool persist = OPT(p, birth_levels_persist);
+	bool persist = OPT(p, birth_levels_persist) || p->upkeep->arena_level;
 
 	static struct monster *health_mon;
 	static struct monster **health_who;
@@ -1356,7 +1356,6 @@ void prepare_next_level(struct player *p)
 					/* Leave the player marker if going to an arena */
 					square_set_mon(cave, p->grid, 0);
 				}
-
 				/* Save level and known level */
 				cave_store(cave, false, true);
 				cave_store(p->cave, true, true);
@@ -1489,7 +1488,7 @@ void prepare_next_level(struct player *p)
 					sanitize_player_loc(cave, p);
 				}
 
-				square_set_mon(cave, p->grid, -1);;
+				square_set_mon(cave, p->grid, -1);
 			} else {
 				/* Map boundary changes may not cooperate with level teleport */
 				sanitize_player_loc(cave, p);
@@ -1504,7 +1503,6 @@ void prepare_next_level(struct player *p)
 			string_free(known_name);
 		} else if (p->upkeep->arena_level) {
 			/* We're creating a new arena level */
-			//p->upkeep->health_who[0] = health_who[0];
 			cave = cave_generate(p, 6, 6);
 			event_signal_flag(EVENT_GEN_LEVEL_END, true);
 		} else {

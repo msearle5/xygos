@@ -3891,7 +3891,13 @@ static enum parser_error parse_class_expr(struct parser *p) {
 
 static enum parser_error parse_class_effect_msg(struct parser *p) {
 	struct class_magic *m = parsing_magic;
+	if (!m || (m->num_books == 0))
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
 	struct class_book *book = &m->books[m->num_books - 1];
+
+	if (book->num_spells == 0)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
 	struct class_spell *spell = &book->spells[book->num_spells - 1];
 	struct effect *effect = spell->effect;
 
@@ -3910,11 +3916,14 @@ static enum parser_error parse_class_effect_msg(struct parser *p) {
 
 static enum parser_error parse_class_desc(struct parser *p) {
 	struct class_magic *m = parsing_magic;
-	struct class_book *book = &m->books[m->num_books - 1];
-	struct class_spell *spell = &book->spells[book->num_spells - 1];
-
-	if (!m)
+	if (!m || (m->num_books == 0))
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
+
+	struct class_book *book = &m->books[m->num_books - 1];
+
+	if (book->num_spells == 0)
+		return PARSE_ERROR_MISSING_RECORD_HEADER;
+	struct class_spell *spell = &book->spells[book->num_spells - 1];
 
 	spell->text = string_append(spell->text, parser_getstr(p, "desc"));
 	return PARSE_ERROR_NONE;

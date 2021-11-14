@@ -920,7 +920,8 @@ int rd_player(void)
 		note("Discarded unsupported timed effects");
 	}
 
-	rdwr_player();
+	if (rdwr_player() == false)
+		return -1;
 
 	/* Player flags */
 	for(i=0; i < (int)PF_SIZE; i++)

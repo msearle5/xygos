@@ -4192,16 +4192,18 @@ struct chunk *arena_gen(struct player *p, int min_height, int min_width) {
 		}
 	}
 
-	/* Place the player - in one corner for a match, in a seat in the middle if watching */
-	if (p->arena_type == arena_player) {
-		player_place(c, p, loc(2, c->height - 3));
-	} else {
+	/* Place the player - in a seat in the middle if watching, otherwise
+	 * in one corner
+	 **/
+	if (p->arena_type == arena_monster) {
 		struct loc grid;
 		grid.x = c->width / 2;
 		grid.y = c->height / 2;
 		player_place(c, p, grid);
 		draw_rectangle(c, grid.y-1, grid.x-1, grid.y+1, grid.x+1, FEAT_PERM_GLASS, SQUARE_NONE, true);
 		square_set_feat(c, grid, FEAT_LESS);
+	} else {
+		player_place(c, p, loc(2, c->height - 3));
 	}
 
 	/* Place the monster(s) */

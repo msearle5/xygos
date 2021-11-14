@@ -1964,8 +1964,7 @@ bool quest_item_check(const struct object *obj) {
 
 
 /** Complete an arena type fight.
- * This could be a MvM arena, a PvM arena or a shop fight - or possibly
- * a Single Combat fight if that gets added back in.
+ * This could be a MvM arena, a PvM arena, a shop fight or a Single Combat fight.
  * Passed the player and the last monster standing.
  */
 void quest_complete_fight(struct player *p, struct monster *mon) {
@@ -1977,7 +1976,6 @@ void quest_complete_fight(struct player *p, struct monster *mon) {
 	p->upkeep->was_arena_level = true;
 	p->upkeep->arena_level = false;
 	p->upkeep->generate_level = true;
-	p->depth = 0;
 
 	switch(p->arena_type) {
 		case arena_player: {
@@ -1991,8 +1989,10 @@ void quest_complete_fight(struct player *p, struct monster *mon) {
 			ui_text_box(buf);
 			p->au += prize;
 			wait = true;
+			p->depth = 0;
 			break;
 		}
+
 		case arena_monster: {
 			/* Monster v monster fight completed - did you win? If so, collect your winnings. Either way, take time. */
 			if (!mon) {
@@ -2017,13 +2017,20 @@ void quest_complete_fight(struct player *p, struct monster *mon) {
 			}
 			ui_text_box(buf);
 			wait = true;
-
+			p->depth = 0;
 			break;
 		}
+
+		case arena_single:
+			break;
+
 		case arena_shop:
+			p->depth = 0;
+			break;
+
 		default:
-		msg("Bug: arena unknown");
-		break;
+			msg("Bug: arena unknown");
+			break;
 	}
 
 	/* Wait until the next match starts */

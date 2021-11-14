@@ -522,6 +522,7 @@ struct player_state {
 enum arena_state {
 	arena_player = 0,
 	arena_monster,
+	arena_single,
 	arena_shop
 };
 

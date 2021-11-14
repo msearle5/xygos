@@ -197,7 +197,7 @@ void wr_player(void);
 void wr_ignore(void);
 void wr_misc(void);
 void rdwr_spell_state(struct spell_state *spell);
-void rdwr_player(void);
+bool rdwr_player(void);
 void wr_player_hp(void);
 void wr_player_spells(void);
 void wr_randarts(void);

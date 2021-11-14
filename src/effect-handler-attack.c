@@ -1792,7 +1792,10 @@ bool effect_handler_SINGLE_COMBAT(effect_handler_context_t *context)
 
 	/* Already in an arena */
 	if (player->upkeep->arena_level) {
-		msg("You are already in single combat!");
+		const char *type = "in the arena";
+		if (player->arena_type == arena_single)
+			type = "in single combat";
+		msg("You are already %s!", type);
 		return false;
 	}
 
@@ -1804,7 +1807,7 @@ bool effect_handler_SINGLE_COMBAT(effect_handler_context_t *context)
 		if (randint0(mon->race->spell_power) > player->lev) {
 			char m_name[80];
 			monster_desc(m_name, sizeof(m_name), mon, MDESC_CAPITAL);
-			msg("%s resists!", m_name);
+			msg("%s refuses!", m_name);
 			return true;
 		}
 
@@ -1828,6 +1831,7 @@ bool effect_handler_SINGLE_COMBAT(effect_handler_context_t *context)
 
 	/* Head to the arena */
 	player->upkeep->arena_level = true;
+	player->arena_type = arena_single;
 	dungeon_change_level(player, player->depth);
 	return true;
 }
