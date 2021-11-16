@@ -1843,6 +1843,7 @@ void steal_monster_item(struct monster *mon, int midx)
 			if (tval_is_money(obj)) {
 				msg("You steal $%d worth of valuables.", obj->pval);
 				player->au += obj->pval;
+				player->upkeep->redraw |= (PR_GOLD);
 				delist_object(cave, obj);
 				object_delete(cave, player->cave, &obj);
 			} else {
