@@ -1289,7 +1289,7 @@ static bool store_do_fight(struct store_context *ctx)
 	race->freq_spell = 12;
 	race->freq_innate = 12;
 	rf_off(race->flags, RF_IM_ACID);
-	
+
 	/* Evil (BM) from description? */
 
 	rf_off(race->flags, RF_FEMALE);
@@ -1302,7 +1302,7 @@ static bool store_do_fight(struct store_context *ctx)
 	int i = level;
 	int spells = 0;
 	int innate = 0;
-	
+
 	/* Increase them */
 	do {
 		switch(randint0(8)) {
@@ -1380,7 +1380,6 @@ static bool store_do_fight(struct store_context *ctx)
 				quit_fmt("bug in random unique");
 		}
 	} while (i > 0);
-	
 
 	/* Pick a location */
 	struct loc grid;
@@ -1414,7 +1413,8 @@ static bool store_do_fight(struct store_context *ctx)
 	/* Head to the arena */
 	health_track(player->upkeep, square_monster(cave, grid));
 	player->upkeep->arena_level = true;
-	dungeon_change_level(player, player->depth);
+	player->arena_type = arena_shop;
+	dungeon_change_level(player, 1);
 
 	return true;
 }
@@ -2922,3 +2922,17 @@ void leave_store(game_event_type type, game_event_data *data, void *user)
 	/* Redraw map */
 	player->upkeep->redraw |= (PR_MAP);
 }
+
+/** Fight complete
+ * Determine the current store, make you the owner
+ **/
+void store_complete_fight(void)
+{
+	char buf[256];
+	struct store *store = get_store_by_idx(player->current_store);
+	strnfmt(buf, sizeof(buf), "You kick out %s! You are now the owner of this store.", store->owner->name);
+	store_do_buy(store);
+	ui_text_box(buf);
+	dungeon_change_level(player, 0);
+}
+

@@ -511,6 +511,7 @@ bool rdwr_player(void)
 	rdwr_s32b(&player->arena_lost);
 	rdwr_s32b(&player->arena_won);
 	rdwr_s32b(&player->arena_entered_turn);
+	rdwr_s32b(&player->current_store);
 
 	/* Flying? */
 	rdwr_bool(&player->flying);

@@ -66,5 +66,6 @@ void store_long_text(struct store_context *ctx, const char *text);
 bool random_shk_name(char *buf, int len);
 const char *random_line_multi(struct hint **hints_p);
 const char *random_line(struct hint *hints);
+void store_complete_fight(void);
 
 #endif /* INCLUDED_UI_STORE_H */

@@ -2025,7 +2025,7 @@ void quest_complete_fight(struct player *p, struct monster *mon) {
 			break;
 
 		case arena_shop:
-			p->depth = 0;
+			store_complete_fight();
 			break;
 
 		default:

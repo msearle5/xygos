@@ -677,6 +677,7 @@ struct player {
 	s32b arena_lost;					/* total lost (bet) and won */
 	s32b arena_won;
 	s32b arena_entered_turn;
+	s32b current_store;
 	bool split_p;						/* Split personality */
 	bool flying;						/* Currently flying (using a Pilot ability) */
 	u16b total_winner;					/* Total winner */
