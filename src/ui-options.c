@@ -126,12 +126,13 @@ static bool option_toggle_handle(struct menu *m, const ui_event *event,
 		int oid, bool *exit)
 {
 	bool next = false;
+	int page = option_type(oid);
 
 	if (event->type == EVT_SELECT) {
 		/* Hack -- birth options can not be toggled after birth */
 		/* At birth, m->flags == MN_DBL_TAP. */
 		/* After birth, m->flags == MN_NO_TAGS */
-		if (!((option_type(oid) == OP_BIRTH) && (m->flags == MN_NO_TAGS))) {
+		if (!((page == OP_BIRTH) && (m->flags == MN_NO_TAGS))) {
 			option_set(option_name(oid), !player->opts.opt[oid]);
 		}
 	} else if (event->type == EVT_KBRD) {
@@ -147,17 +148,20 @@ static bool option_toggle_handle(struct menu *m, const ui_event *event,
 			char dummy;
 
 			screen_save();
-			if (options_save_custom_birth(&player->opts)) {
+			if (options_save_custom(&player->opts, page)) {
 				get_com("Successfully saved.  Press any key to continue.", &dummy);
 			} else {
 				get_com("Save failed.  Press any key to continue.", &dummy);
 			}
 			screen_load();
-		/* Only allow restore from custom defaults at birth. */
+		/*
+		 * For birth options, only allow restore from custom defaults
+		 * at birth.
+		 */
 		} else if ((event->key.code == 'r' || event->key.code == 'R') &&
-				m->flags == MN_DBL_TAP) {
+				(page != OP_BIRTH || m->flags == MN_DBL_TAP)) {
 			screen_save();
-			if (options_restore_custom_birth(&player->opts)) {
+			if (options_restore_custom(&player->opts, page)) {
 				screen_load();
 				menu_refresh(m, false);
 			} else {
@@ -166,10 +170,13 @@ static bool option_toggle_handle(struct menu *m, const ui_event *event,
 				get_com("Restore failed.  Press any key to continue.", &dummy);
 				screen_load();
 			}
-		/* Only allow reset to maintainer's defaults at birth. */
+		/*
+		 * For birth options, only allow restore to the maintainer's
+		 * defaults at birth.
+		 */
 		} else if ((event->key.code == 'x' || event->key.code == 'X') &&
-				m->flags == MN_DBL_TAP) {
-			options_reset_birth(&player->opts);
+				(page != OP_BIRTH || m->flags == MN_DBL_TAP)) {
+			options_restore_maintainer(&player->opts, page);
 			menu_refresh(m, false);
 		} else {
 			return false;
@@ -185,6 +192,100 @@ static bool option_toggle_handle(struct menu *m, const ui_event *event,
 
 	return true;
 }
+
+/**
+ * Present a context menu for the birth or interface options so what's
+ * accessible via the keyboard can also be done if only using a mouse.
+ *
+ * \param m is the structure describing the menu for the options.
+ * \param in is the event triggering the context menu.  in->type must be
+ * EVT_MOUSE.
+ * \param out is the event to be passed upstream (to internal handling in
+ * menu_select() or, potentially, menu_select()'s caller).
+ * \return true if the event was handled; otherwise, return false.
+ *
+ * Logic here overlaps with what's done in option_toggle_handle().
+ */
+static bool use_option_context_menu(struct menu *m, const ui_event *in,
+		ui_event *out)
+{
+	enum {
+		ACT_CTX_OPT_SAVE,
+		ACT_CTX_OPT_RESTORE,
+		ACT_CTX_OPT_RESET
+	};
+	/*
+	 * As a bit of a hack, get the type of options involved from the first
+	 * option selected by the menu's filter.
+	 */
+	int page = option_type(m->filter_list[0]);
+	char *labels = string_make(lower_case);
+	struct menu *cm = menu_dynamic_new();
+	bool refresh = false;
+	char save_label[40];
+	int selected;
+	char dummy;
+
+	cm->selections = labels;
+	strnfmt(save_label, sizeof(save_label), "Save as default %s options",
+		option_type_name(page));
+	menu_dynamic_add_label(cm, save_label, 's', ACT_CTX_OPT_SAVE, labels);
+	if (m->flags == MN_DBL_TAP) {
+		menu_dynamic_add_label(cm, "Restore from saved defaults", 'r',
+			ACT_CTX_OPT_RESTORE, labels);
+		menu_dynamic_add_label(cm, "Reset to factory defaults", 'x',
+			ACT_CTX_OPT_RESET, labels);
+	}
+
+	screen_save();
+
+	assert(in->type == EVT_MOUSE);
+	menu_dynamic_calc_location(cm, in->mouse.x, in->mouse.y);
+	region_erase_bordered(&cm->boundary);
+
+	selected = menu_dynamic_select(cm);
+
+	menu_dynamic_free(cm);
+	string_free(labels);
+
+	switch (selected) {
+	case ACT_CTX_OPT_SAVE:
+		if (options_save_custom(&player->opts, page)) {
+			get_com("Successfully saved.  Press any key to "
+				"continue.", &dummy);
+		} else {
+			get_com("Save failed.  Press any key to continue.",
+				&dummy);
+		}
+		break;
+
+	case ACT_CTX_OPT_RESTORE:
+		if (options_restore_custom(&player->opts, page)) {
+			refresh = true;
+		} else {
+			get_com("Restore failed.  Press any key to continue.",
+				&dummy);
+		}
+		break;
+
+	case ACT_CTX_OPT_RESET:
+		options_restore_maintainer(&player->opts, page);
+		refresh = true;
+		break;
+
+	default:
+		/* There's nothing to do. */
+		break;
+	}
+
+	screen_load();
+	if (refresh) {
+		menu_refresh(m, false);
+	}
+
+	return true;
+}
+
 
 /**
  * Toggle option menu display and handling functions
@@ -218,10 +319,15 @@ static void option_toggle_menu(const char *name, int page)
 		m->prompt = "You can only modify these options at character birth.";
 		m->cmd_keys = "";
 		m->flags = MN_NO_TAGS;
-	} else if (page == OPT_PAGE_BIRTH + 10) {
+	} else if (page == OPT_PAGE_BIRTH + 10 || page == OP_INTERFACE) {
 		m->prompt = "Set option (y/n/t), 's' to save, 'r' to restore, 'x' to reset";
 		m->cmd_keys = "YyNnTtSsRrXx";
-		page -= 10;
+		m->selections = "abcdefghijklmopquvwzABC";
+		/* Provide a context menu for equivalents to 's', 'r', .... */
+		m->context_hook = use_option_context_menu;
+		if (page == OPT_PAGE_BIRTH + 10) {
+			page -= 10;
+		}
 	}
 
 	/* for this particular menu */
