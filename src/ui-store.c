@@ -2819,11 +2819,15 @@ static void refresh_stock(game_event_type type, game_event_data *unused, void *u
  */
 void enter_store(game_event_type type, game_event_data *data, void *user)
 {
+	struct store *store = store_at(cave, player->grid);
+
 	/* Check that we're on a store */
-	if (!square_isshop(cave, player->grid)) {
+	if (!store) {
 		msg("You see no store here.");
 		return;
 	}
+
+	sound((store->sidx == STORE_HOME) ? MSG_STORE_HOME : MSG_STORE_ENTER);
 
 	/* Shut down the normal game view */
 	event_signal(EVENT_LEAVE_WORLD);
@@ -2909,6 +2913,8 @@ void leave_store(game_event_type type, game_event_data *data, void *user)
 {
 	/* Disable repeats */
 	cmd_disable_repeat();
+
+	sound(MSG_STORE_LEAVE);
 
 	/* Switch back to the normal game view. */
 	event_signal(EVENT_ENTER_WORLD);
