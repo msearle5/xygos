@@ -555,7 +555,6 @@ xcopy $(MSBuildProjectDirectory)\lib\* $(OutDir)lib\ /DESY /exclude:$(MSBuildPro
     <Text Include="lib\gamedata\monster_base.txt" />
     <Text Include="lib\gamedata\monster_spell.txt" />
     <Text Include="lib\gamedata\names.txt" />
-    <Text Include="lib\gamedata\negativity.txt" />
     <Text Include="lib\gamedata\object.txt" />
     <Text Include="lib\gamedata\object_base.txt" />
     <Text Include="lib\gamedata\object_property.txt" />
@@ -582,7 +581,6 @@ xcopy $(MSBuildProjectDirectory)\lib\* $(OutDir)lib\ /DESY /exclude:$(MSBuildPro
     <Text Include="lib\gamedata\visuals.txt" />
     <Text Include="lib\gamedata\world.txt" />
     <Text Include="lib\help\commands.txt" />
-    <Text Include="lib\help\debug.txt" />
     <Text Include="lib\help\index.txt" />
     <Text Include="lib\help\symbols.txt" />
     <Text Include="lib\screens\crown.txt" />

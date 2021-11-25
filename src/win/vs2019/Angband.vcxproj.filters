@@ -1192,9 +1192,6 @@
     <Text Include="lib\gamedata\names.txt">
       <Filter>Resource Files\gamedata</Filter>
     </Text>
-    <Text Include="lib\gamedata\negativity.txt">
-      <Filter>Resource Files\gamedata</Filter>
-    </Text>
     <Text Include="lib\gamedata\object.txt">
       <Filter>Resource Files\gamedata</Filter>
     </Text>
@@ -1271,9 +1268,6 @@
       <Filter>Resource Files\gamedata</Filter>
     </Text>
     <Text Include="lib\help\commands.txt">
-      <Filter>Resource Files\help</Filter>
-    </Text>
-    <Text Include="lib\help\debug.txt">
       <Filter>Resource Files\help</Filter>
     </Text>
     <Text Include="lib\help\index.txt">
