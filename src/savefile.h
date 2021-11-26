@@ -50,6 +50,12 @@ const char *savefile_get_description(const char *path);
 extern bool saving;
 
 /**
+ * Fill the given buffer with the panic save equivalent for a savefile.
+ */
+void savefile_get_panic_name(char *buffer, size_t len, const char *path);
+
+
+/**
  * ------------------------------------------------------------------------
  * Detailed saving and loading functions
  * ------------------------------------------------------------------------ */
