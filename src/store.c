@@ -530,8 +530,11 @@ void store_reset(void) {
 			}
 
 			s->max_danger = s->low_danger + randint0(1 + s->high_danger - s->low_danger);
+			s->stock_num = 0;
 			store_shuffle(s);
+			object_pile_free(NULL, NULL, s->stock_k);
 			object_pile_free(NULL, NULL, s->stock);
+			s->stock_k = NULL;
 			s->stock = NULL;
 			if (i == STORE_HOME)
 				continue;
