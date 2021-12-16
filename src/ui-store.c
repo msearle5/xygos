@@ -437,12 +437,12 @@ static void store_display_entry(struct menu *menu, int oid, bool cursor, int row
 								int col, int width)
 {
 	struct object *obj;
-	s32b x;
+	int32_t x;
 	int desc = ODESC_PREFIX;
 
 	char o_name[80];
 	char out_val[160];
-	byte colour;
+	uint8_t colour;
 
 	struct store_context *ctx = menu_priv(menu);
 	struct store *store = ctx->store;

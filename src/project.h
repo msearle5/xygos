@@ -102,7 +102,7 @@ enum
 };
 
 /* Display attrs and chars */
-extern byte proj_to_attr[PROJ_MAX][BOLT_MAX];
+extern uint8_t proj_to_attr[PROJ_MAX][BOLT_MAX];
 extern wchar_t proj_to_char[PROJ_MAX][BOLT_MAX];
 extern double adj_chr_taming[STAT_RANGE];
 
@@ -137,7 +137,7 @@ struct loc bounce_target(struct loc source, struct loc target);
 struct loc origin_get_loc(struct source origin);
 
 bool project(struct source origin, int rad, struct loc finish, int dam, int typ,
-			 int flg, int degrees_of_arc, byte diameter_of_source,
+			 int flg, int degrees_of_arc, uint8_t diameter_of_source,
 			 const struct object *obj);
 int resist_to_percent(int resist, int type);
 

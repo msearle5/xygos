@@ -245,7 +245,7 @@ typedef struct project_monster_handler_context_s {
 	bool charm;
 	bool obvious;
 	bool skipped;
-	u16b flag;
+	uint16_t flag;
 	int do_poly;
 	bool do_grow;
 	int teleport_distance;

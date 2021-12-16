@@ -515,7 +515,7 @@ struct file_parser chest_parser = {
  */
 const char *chest_trap_name(const struct object *obj)
 {
-	s32b trap_value = obj->pval;
+	int32_t trap_value = obj->pval;
 
 	/* Non-zero value means there either were or are still traps */
 	if (trap_value < 0) {

@@ -1943,7 +1943,7 @@ void update_stuff(struct player *p)
 
 struct flag_event_trigger
 {
-	u32b flag;
+	uint32_t flag;
 	game_event_type event;
 };
 
@@ -1986,7 +1986,7 @@ static const struct flag_event_trigger redraw_events[] =
 void redraw_stuff(struct player *p)
 {
 	size_t i;
-	u32b redraw = p->upkeep->redraw;
+	uint32_t redraw = p->upkeep->redraw;
 
 	/* Redraw stuff */
 	if (!redraw) return;

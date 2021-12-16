@@ -52,7 +52,7 @@ static int test_colour(void *state)
 	textblock *tb = textblock_new();
 
 	const char text[] = "two";
-	const byte attrs[] = { COLOUR_L_GREEN, COLOUR_L_GREEN, COLOUR_L_GREEN };	
+	const uint8_t attrs[] = { COLOUR_L_GREEN, COLOUR_L_GREEN, COLOUR_L_GREEN };
 
 	textblock_append_c(tb, COLOUR_L_GREEN, text);
 
@@ -93,10 +93,15 @@ static int test_length(void *state)
 	ok;
 }
 
+<<<<<<< HEAD
 static int test_append_textblock(void *state)
 {
 	(void)state;
 	const byte attrs[] = { COLOUR_L_BLUE, COLOUR_L_BLUE, COLOUR_L_BLUE,
+=======
+static int test_append_textblock(void *state) {
+	const uint8_t attrs[] = { COLOUR_L_BLUE, COLOUR_L_BLUE, COLOUR_L_BLUE,
+>>>>>>> 0a2b0b841 (Use C99 types for the fixed size integers (#5117))
 		COLOUR_L_GREEN, COLOUR_L_GREEN, COLOUR_L_GREEN, COLOUR_L_GREEN };
 	textblock *tb1 = textblock_new();
 	textblock *tb2 = textblock_new();

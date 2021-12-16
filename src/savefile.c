@@ -82,22 +82,22 @@ bool character_saved;
 /**
  * Magic bits at beginning of savefile
  */
-static const byte savefile_magic[4] = { 83, 97, 118, 101 };	/* 'Save' */
-static const byte savefile_name[4] = "XyGs";
+static const uint8_t savefile_magic[4] = { 83, 97, 118, 101 };	/* 'Save' */
+static const uint8_t savefile_name[4] = "XyGs";
 
 /* Some useful types */
 typedef int (*loader_t)(void);
 
 struct blockheader {
 	char name[16];
-	u32b version;
-	u32b size;
+	uint32_t version;
+	uint32_t size;
 };
 
 struct blockinfo {
 	char name[16];
 	loader_t loader;
-	u32b version;
+	uint32_t version;
 };
 
 /**
@@ -106,7 +106,7 @@ struct blockinfo {
 static const struct {
 	char name[16];
 	void (*save)(void);
-	u32b version;	
+	uint32_t version;
 } savers[] = {
 	{ "description", wr_description, 1 },
 	{ "rng", wr_randomizer, 1 },
@@ -162,10 +162,10 @@ static const struct blockinfo loaders[] = {
 
 
 /* Buffer bits */
-static byte *buffer;
-static u32b buffer_size;
-static u32b buffer_pos;
-static u32b buffer_check;
+static uint8_t *buffer;
+static uint32_t buffer_size;
+static uint32_t buffer_pos;
+static uint32_t buffer_check;
 
 #define BUFFER_INITIAL_SIZE		1024
 #define BUFFER_BLOCK_INCREMENT	1024
@@ -193,7 +193,7 @@ void note(const char *message)
  * Base put/get
  * ------------------------------------------------------------------------ */
 
-static void sf_put(byte v)
+static void sf_put(uint8_t v)
 {
 	assert(buffer != NULL);
 	assert(buffer_size > 0);
@@ -210,7 +210,7 @@ static void sf_put(byte v)
 	buffer_check += v;
 }
 
-static byte sf_get(void)
+static uint8_t sf_get(void)
 {
 	if ((buffer == NULL) || (buffer_size <= 0) || (buffer_pos >= buffer_size))
 		quit("Broken savefile - probably from a development version");
@@ -231,33 +231,33 @@ void wr_bool(bool v)
 	sf_put(v);
 }
 
-void wr_byte(byte v)
+void wr_byte(uint8_t v)
 {
 	sf_put(v);
 }
 
-void wr_u16b(u16b v)
+void wr_u16b(uint16_t v)
 {
-	sf_put((byte)(v & 0xFF));
-	sf_put((byte)((v >> 8) & 0xFF));
+	sf_put((uint8_t)(v & 0xFF));
+	sf_put((uint8_t)((v >> 8) & 0xFF));
 }
 
-void wr_s16b(s16b v)
+void wr_s16b(int16_t v)
 {
-	wr_u16b((u16b)v);
+	wr_u16b((uint16_t)v);
 }
 
-void wr_u32b(u32b v)
+void wr_u32b(uint32_t v)
 {
-	sf_put((byte)(v & 0xFF));
-	sf_put((byte)((v >> 8) & 0xFF));
-	sf_put((byte)((v >> 16) & 0xFF));
-	sf_put((byte)((v >> 24) & 0xFF));
+	sf_put((uint8_t)(v & 0xFF));
+	sf_put((uint8_t)((v >> 8) & 0xFF));
+	sf_put((uint8_t)((v >> 16) & 0xFF));
+	sf_put((uint8_t)((v >> 24) & 0xFF));
 }
 
-void wr_s32b(s32b v)
+void wr_s32b(int32_t v)
 {
-	wr_u32b((u32b)v);
+	wr_u32b((uint32_t)v);
 }
 
 void wr_double(double v)
@@ -287,33 +287,33 @@ void rd_bool(bool *ip)
 	*ip = sf_get();
 }
 
-void rd_byte(byte *ip)
+void rd_byte(uint8_t *ip)
 {
 	*ip = sf_get();
 }
 
-void rd_u16b(u16b *ip)
+void rd_u16b(uint16_t *ip)
 {
 	(*ip) = sf_get();
-	(*ip) |= ((u16b)(sf_get()) << 8);
+	(*ip) |= ((uint16_t)(sf_get()) << 8);
 }
 
-void rd_s16b(s16b *ip)
+void rd_s16b(int16_t *ip)
 {
-	rd_u16b((u16b*)ip);
+	rd_u16b((uint16_t*)ip);
 }
 
-void rd_u32b(u32b *ip)
+void rd_u32b(uint32_t *ip)
 {
 	(*ip) = sf_get();
-	(*ip) |= ((u32b)(sf_get()) << 8);
-	(*ip) |= ((u32b)(sf_get()) << 16);
-	(*ip) |= ((u32b)(sf_get()) << 24);
+	(*ip) |= ((uint32_t)(sf_get()) << 8);
+	(*ip) |= ((uint32_t)(sf_get()) << 16);
+	(*ip) |= ((uint32_t)(sf_get()) << 24);
 }
 
-void rd_s32b(s32b *ip)
+void rd_s32b(int32_t *ip)
 {
-	rd_u32b((u32b*)ip);
+	rd_u32b((uint32_t*)ip);
 }
 
 void rd_double(double *ip)
@@ -326,7 +326,7 @@ void rd_double(double *ip)
 
 void rd_string(char *str, int max)
 {
-	byte tmp8u;
+	uint8_t tmp8u;
 	int i = 0;
 
 	do {
@@ -341,7 +341,7 @@ void rd_string(char *str, int max)
 
 void strip_bytes(int n)
 {
-	byte tmp8u;
+	uint8_t tmp8u;
 	while (n--) rd_byte(&tmp8u);
 }
 
@@ -437,7 +437,7 @@ void rdwr_string_null(char **str)
 
 static bool try_save(ang_file *file)
 {
-	byte savefile_head[SAVEFILE_HEAD_SIZE];
+	uint8_t savefile_head[SAVEFILE_HEAD_SIZE];
 	size_t i, pos;
 	bool success = true;
 
@@ -583,7 +583,7 @@ bool savefile_save(const char *path)
  * Check the savefile header file clearly indicates that it's a savefile
  */
 static bool check_header(ang_file *f) {
-	byte head[8];
+	uint8_t head[8];
 
 	if (file_read(f, (char *) &head, 8) == 8 &&
 			memcmp(&head[0], savefile_magic, 4) == 0 &&
@@ -597,7 +597,7 @@ static bool check_header(ang_file *f) {
  * Get the next block header from the savefile
  */
 static errr next_blockheader(ang_file *f, struct blockheader *b) {
-	byte savefile_head[SAVEFILE_HEAD_SIZE];
+	uint8_t savefile_head[SAVEFILE_HEAD_SIZE];
 	size_t len;
 
 	len = file_read(f, (char *)savefile_head, SAVEFILE_HEAD_SIZE);
@@ -609,10 +609,10 @@ static errr next_blockheader(ang_file *f, struct blockheader *b) {
 	}
 
 #define RECONSTRUCT_U32B(from) \
-	((u32b) savefile_head[from]) | \
-	((u32b) savefile_head[from+1] << 8) | \
-	((u32b) savefile_head[from+2] << 16) | \
-	((u32b) savefile_head[from+3] << 24);
+	((uint32_t) savefile_head[from]) | \
+	((uint32_t) savefile_head[from+1] << 8) | \
+	((uint32_t) savefile_head[from+2] << 16) | \
+	((uint32_t) savefile_head[from+3] << 24);
 
 	my_strcpy(b->name, (char *)&savefile_head, sizeof b->name);
 	b->version = RECONSTRUCT_U32B(16);

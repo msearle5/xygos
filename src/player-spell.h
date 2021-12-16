@@ -28,7 +28,7 @@ bool spell_okay_list(const struct player *p, bool (*spell_test)(const struct pla
 					 int n_spells);
 bool spell_okay_to_cast(const struct player *p, int spell_index);
 bool spell_okay_to_browse(const struct player *p, int spell_index);
-s16b spell_chance(int spell_index);
+int16_t spell_chance(int spell_index);
 
 bool spell_cast(int spell_index, int dir, struct command *cmd, int *energy);
 struct class_spell *combine_books(const struct player *p, int *count, int *spells, int *maxidx, struct class_spell **spellps, int *books, struct class_book ***book);

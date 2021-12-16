@@ -1171,7 +1171,7 @@ static int apply_fault(struct object *obj, int lev)
 int apply_magic(struct object *obj, int lev, bool allow_artifacts, bool good,
 				bool great, bool extra_roll)
 {
-	s16b power = 0;
+	int16_t power = 0;
 
 	/* It's "good" */
 	if (good) {
@@ -1254,8 +1254,9 @@ static bool kind_is_good(const struct object_kind *kind, int level)
 static struct object_kind *get_obj_num_by_kind(int level, bool good, int tval)
 {
 	const double *objects;
-	u32b total = 0;
-	u32b value;
+	uint32_t total = 0;
+	uint32_t value;
+
 	int item;
 
 	assert(level >= 0 && level <= z_info->max_obj_depth);
@@ -1648,7 +1649,7 @@ static struct multiego_entry *multiego_table(int genlevel, int tval, double *pto
  * \return a pointer to the newly allocated object, or NULL on failure.
  */
 struct object *make_object_named(struct chunk *c, int lev, bool good, bool great,
-						   bool extra_roll, s32b *value, int tval, const char *name)
+						   bool extra_roll, int32_t *value, int tval, const char *name)
 {
 	int base, tries = 3;
 	struct object_kind *kind = NULL;

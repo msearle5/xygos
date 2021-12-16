@@ -72,6 +72,7 @@ struct store {
 	struct owner *owner;
 	unsigned int sidx;
 	const char *name;
+
 	unsigned int bandays;
 	const char *banreason;
 	s32b layaway_idx;
@@ -86,8 +87,9 @@ struct store {
 	u16b x;						/* Position in the level, this should be valid even if closed or destroyed */
 	u16b y;
 
-	u16b stock_num;				/* Stock -- Number of entries */
-	s16b stock_size;			/* Stock -- Total Size of Array */
+	uint16_t stock_num;				/* Stock -- Number of entries */
+	int16_t stock_size;			/* Stock -- Total Size of Array */
+
 	struct object *stock;		/* Stock -- Actual stock items */
 	struct object *stock_k;		/* Stock -- Stock as known by the character */
 

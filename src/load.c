@@ -64,32 +64,32 @@
 /**
  * Dungeon constants
  */
-static byte square_size = 0;
+static uint8_t square_size = 0;
 
 /**
  * Player constants
  */
-static byte hist_size = 0;
+static uint8_t hist_size = 0;
 
 /**
  * Object constants
  */
-static byte obj_mod_max = 0;
-static byte of_size = 0;
-static byte elem_max = 0;
-static byte brand_max;
-static byte slay_max;
-static byte fault_max;
+static uint8_t obj_mod_max = 0;
+static uint8_t of_size = 0;
+static uint8_t elem_max = 0;
+static uint8_t brand_max;
+static uint8_t slay_max;
+static uint8_t fault_max;
 
 /**
  * Monster constants
  */
-static byte mflag_size = 0;
+static uint8_t mflag_size = 0;
 
 /**
  * Trap constants
  */
-static byte trf_size = 0;
+static uint8_t trf_size = 0;
 
 /**
  * Shorthand function pointer for rd_item version
@@ -103,12 +103,13 @@ static struct object *rd_item(void)
 {
 	struct object *obj = object_new();
 
-	byte tmp8u;
-	u16b tmp16u;
-	s16b effect;
+	uint8_t tmp8u;
+	uint16_t tmp16u;
+	int16_t effect;
+
 	size_t i;
 	char buf[128];
-	byte ver = 1;
+	uint8_t ver = 1;
 
 	rd_u16b(&tmp16u);
 	rd_byte(&ver);
@@ -289,8 +290,8 @@ static struct object *rd_item(void)
  */
 static bool rd_monster(struct chunk *c, struct monster *mon)
 {
-	byte tmp8u;
-	u16b tmp16u;
+	uint8_t tmp8u;
+	uint16_t tmp16u;
 	char race_name[80];
 	size_t j;
 	bool delete = false;
@@ -395,7 +396,7 @@ static bool rd_monster(struct chunk *c, struct monster *mon)
 static void rd_trap(struct trap *trap)
 {
 	unsigned i;
-	byte tmp8u;
+	uint8_t tmp8u;
 	char buf[80];
 
 	rd_string(buf, sizeof(buf));
@@ -429,7 +430,7 @@ static void rd_trap(struct trap *trap)
 int rd_randomizer(void)
 {
 	int i;
-	u32b noop;
+	uint32_t noop;
 
 	/* current value for the simple RNG */
 	rd_u32b(&Rand_value);
@@ -464,7 +465,7 @@ int rd_randomizer(void)
  */
 int rd_options(void)
 {
-	byte b;
+	uint8_t b;
 
 	/*** Special info */
 
@@ -495,7 +496,7 @@ int rd_options(void)
 
 	/* Read options */
 	while (1) {
-		byte value;
+		uint8_t value;
 		char name[40];
 		rd_string(name, sizeof name);
 
@@ -516,9 +517,9 @@ int rd_messages(void)
 {
 	int i;
 	char buf[128];
-	u16b tmp16u;
+	uint16_t tmp16u;
 
-	s16b num;
+	int16_t num;
 
 	/* Total */
 	rd_s16b(&num);
@@ -543,7 +544,7 @@ int rd_messages(void)
  */
 int rd_monster_memory(void)
 {
-	u16b nkill, ntheft;
+	uint16_t nkill, ntheft;
 	char buf[128];
 	int i;
 
@@ -592,7 +593,7 @@ int rd_monster_memory(void)
 int rd_object_memory(void)
 {
 	size_t i;
-	u16b tmp16u;
+	uint16_t tmp16u;
 
 	/* Object Memory */
 	rd_u16b(&tmp16u);
@@ -646,7 +647,7 @@ int rd_object_memory(void)
 
 	/* Read the kind knowledge */
 	for (i = 0; i < tmp16u; i++) {
-		byte tmp8u;
+		uint8_t tmp8u;
 		struct object_kind *kind = &k_info[i];
 
 		rd_byte(&tmp8u);
@@ -666,7 +667,7 @@ int rd_object_memory(void)
 
 int rd_quests(void)
 {
-	u16b tmp16u;
+	uint16_t tmp16u;
 
 	/* Load the Quests */
 	rd_u16b(&tmp16u);
@@ -740,8 +741,8 @@ void rdwr_player_levels(void)
 int rd_player(void)
 {
 	int i;
-	byte num;
-	byte stat_max = 0;
+	uint8_t num;
+	uint8_t stat_max = 0;
 	char buf[80];
 	struct player_shape *s;
 	struct player_class *c;
@@ -909,7 +910,7 @@ int rd_player(void)
 
 		/* Initialize any entries not read */
 		if (num < TMD_MAX)
-			memset(player->timed + num, 0, (TMD_MAX - num) * sizeof(s16b));
+			memset(player->timed + num, 0, (TMD_MAX - num) * sizeof(int16_t));
 	} else {
 		/* Probably in trouble anyway */
 		for (i = 0; i < TMD_MAX; i++)
@@ -943,10 +944,10 @@ int rd_player(void)
 int rd_ignore(void)
 {
 	size_t i, j;
-	byte tmp8u = 24;
-	u16b file_e_max;
-	u16b itype_size;
-	u16b inscriptions;
+	uint8_t tmp8u = 24;
+	uint16_t file_e_max;
+	uint16_t itype_size;
+	uint16_t inscriptions;
 
 	/* Read how many ignore bytes we have */
 	rd_byte(&tmp8u);
@@ -994,7 +995,7 @@ int rd_ignore(void)
 	/* Read the aware object autoinscriptions array */
 	for (i = 0; i < inscriptions; i++) {
 		char tmp[80];
-		byte tval, sval;
+		uint8_t tval, sval;
 		struct object_kind *k;
 
 		rd_string(tmp, sizeof(tmp));
@@ -1014,7 +1015,7 @@ int rd_ignore(void)
 	/* Read the unaware object autoinscriptions array */
 	for (i = 0; i < inscriptions; i++) {
 		char tmp[80];
-		byte tval, sval;
+		uint8_t tval, sval;
 		struct object_kind *k;
 
 		rd_string(tmp, sizeof(tmp));
@@ -1034,7 +1035,7 @@ int rd_ignore(void)
 	/* Read the icon autoinscriptions array */
 	for (i = 0; i < inscriptions; i++) {
 		char tmp[80];
-		s16b iconid;
+		int16_t iconid;
 
 		rd_s16b(&iconid);
 		rd_string(tmp, sizeof(tmp));
@@ -1048,7 +1049,7 @@ int rd_ignore(void)
 int rd_misc(void)
 {
 	size_t i;
-	byte tmp8u;
+	uint8_t tmp8u;
 	
 	/* Read the randart seed */
 	rd_u32b(&seed_randart);
@@ -1132,7 +1133,7 @@ int rd_misc(void)
 int rd_artifacts(void)
 {
 	int i;
-	u16b tmp16u;
+	uint16_t tmp16u;
 
 	/* Load the Artifacts */
 	rd_u16b(&tmp16u);
@@ -1143,7 +1144,7 @@ int rd_artifacts(void)
 
 	/* Read the artifact flags */
 	for (i = 0; i < tmp16u; i++) {
-		byte tmp8u;
+		uint8_t tmp8u;
 
 		rd_byte(&tmp8u);
 		aup_info[i].created = tmp8u ? true : false;
@@ -1167,7 +1168,7 @@ int rd_artifacts(void)
 int rd_player_hp(void)
 {
 	int i;
-	u16b tmp16u;
+	uint16_t tmp16u;
 
 	/* Read the player_hp array */
 	rd_u16b(&tmp16u);
@@ -1192,7 +1193,7 @@ int rd_player_hp(void)
 int rd_player_spells(void)
 {
 	int i;
-	u16b tmp16u;
+	uint16_t tmp16u;
 	
 	int cnt;
 	
@@ -1226,7 +1227,7 @@ int rd_player_spells(void)
  */
 static int rd_gear_aux(rd_item_t rd_item_version, struct object **gear)
 {
-	byte code;
+	uint8_t code;
 	struct object *last_gear_obj = NULL;
 
 	/* Get the first item code */
@@ -1298,7 +1299,7 @@ int rd_gear(void)
 static int rd_stores_aux(rd_item_t rd_item_version)
 {
 	int i;
-	u16b tmp16u;
+	uint16_t tmp16u;
 
 	/* Read the stores */
 	rd_u16b(&tmp16u);
@@ -1321,9 +1322,9 @@ static int rd_stores_aux(rd_item_t rd_item_version)
 		for (i = 0; i < tmp16u; i++) {
 			struct store *store = &t_info[t].stores[i];
 
-			byte own;
-			u16b num;
-			byte n_owners;
+			uint8_t own;
+			uint16_t num;
+			uint8_t n_owners;
 
 			/* Read the basic info */
 			rd_byte(&own);
@@ -1433,11 +1434,11 @@ static int rd_dungeon_aux(struct chunk **c)
 	struct chunk *c1;
 	int i, n, y, x;
 
-	u16b height, width;
+	uint16_t height, width;
 
-	byte count;
-	byte tmp8u;
-	u16b tmp16u;
+	uint8_t count;
+	uint8_t tmp8u;
+	uint16_t tmp16u;
 	char name[100];
 
 	/* Header info */
@@ -1701,7 +1702,7 @@ assert(r->base);
 static int rd_monsters_aux(struct chunk *c, bool arena)
 {
 	int i;
-	u16b limit;
+	uint16_t limit;
 
 	/* Only if the player's alive */
 	if (player->is_dead)
@@ -1791,8 +1792,8 @@ static int rd_traps_aux(struct chunk *c)
 
 int rd_dungeon(void)
 {
-	u16b depth;
-	u16b py, px;
+	uint16_t depth;
+	uint16_t py, px;
 
 	/* Header info */
 	rd_u16b(&depth);
@@ -1912,7 +1913,7 @@ int rd_traps(void)
 int rd_chunks(void)
 {
 	int j;
-	u16b chunk_max;
+	uint16_t chunk_max;
 
 	if (player->is_dead)
 		return 0;
@@ -1941,8 +1942,8 @@ int rd_chunks(void)
 		if (OPT(player, birth_levels_persist)) {
 			char buf[80];
 			int i;
-			byte tmp8u;
-			u16b tmp16u;
+			uint8_t tmp8u;
+			uint16_t tmp16u;
 
 			rd_string(buf, sizeof(buf));
 			string_free(c->name);
@@ -2002,7 +2003,7 @@ int rd_chunks(void)
 
 int rd_history(void)
 {
-	u32b tmp32u;
+	uint32_t tmp32u;
 	size_t i, j;
 	
 	history_clear(player);
@@ -2016,8 +2017,8 @@ int rd_history(void)
 
 	rd_u32b(&tmp32u);
 	for (i = 0; i < tmp32u; i++) {
-		s32b turnno;
-		s16b dlev, clev;
+		int32_t turnno;
+		int16_t dlev, clev;
 		bitflag type[HIST_SIZE];
 		const struct artifact *art = NULL;
 		int aidx = 0;

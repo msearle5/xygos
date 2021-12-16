@@ -651,7 +651,7 @@ bool make_wish(const char *prompt, int level, bool limited)
 	return false;
 }
 
-static void flavor_assign_random(byte tval)
+static void flavor_assign_random(uint8_t tval)
 {
 	int i;
 	int flavor_count = 0;

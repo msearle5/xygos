@@ -27,7 +27,7 @@ struct attack_result {
     bool success;
     bool breaks;
     int dmg;
-    u32b msg_type;
+    uint32_t msg_type;
     char *hit_verb;
 };
 
@@ -35,7 +35,7 @@ struct attack_result {
  * A list of the different hit types and their associated special message
  */
 struct hit_types {
-	u32b msg_type;
+	uint32_t msg_type;
 	const char *text;
 };
 

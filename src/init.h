@@ -27,140 +27,140 @@
 struct angband_constants
 {
 	/* Array bounds etc, set on parsing edit files */
-	u16b f_max;				/**< Maximum number of terrain features */
-	u16b trap_max;			/**< Maximum number of trap kinds */
-	u16b k_max;				/**< Maximum number of object base kinds */
-	u16b a_max;				/**< Maximum number of artifact kinds */
-	u16b a_base;			/**< Maximum number of artifact kinds (directly defined, not random) */
-	u16b a_quest;			/**< Maximum number of quest artifact (so always present, even with standarts off) kinds */
-	u16b e_max;				/**< Maximum number of ego-item kinds */
-	u16b r_max;				/**< Maximum number of monster races */
-	u16b mm_max;			/**< Maximum number of monster mutations */
-	u16b mp_max;			/**< Maximum number of monster pain message sets */
-	u16b s_max;				/**< Maximum number of magic spells */
-	u16b pit_max;			/**< Maximum number of monster pit types */
-	u16b act_max;			/**< Maximum number of activations for randarts */
-	u16b fault_max;			/**< Maximum number of faults */
-	u16b slay_max;			/**< Maximum number of slays */
-	u16b brand_max;			/**< Maximum number of brands */
-	u16b mon_blows_max;		/**< Maximum number of monster blows */
-	u16b mon_passive_max;	/**< Maximum number of monster blows */
-	u16b blow_methods_max;	/**< Maximum number of monster blow methods */
-	u16b blow_effects_max;	/**< Maximum number of monster blow effects */
-	u16b equip_slots_max;	/**< Maximum number of player equipment slots */
-	u16b profile_max;		/**< Maximum number of cave_profiles */
-	u16b quest_max;			/**< Maximum number of quests */
-	u16b projection_max;	/**< Maximum number of projection types */
-	u16b calculation_max;	/**< Maximum number of object power calculations */
-	u16b property_max;		/**< Maximum number of object properties */
-	u16b ordinary_kind_max;	/**< Maximum number of objects in object.txt */
-	u16b shape_max;			/**< Maximum number of player shapes */
+	uint16_t f_max;				/**< Maximum number of terrain features */
+	uint16_t trap_max;			/**< Maximum number of trap kinds */
+	uint16_t k_max;				/**< Maximum number of object base kinds */
+	uint16_t a_max;				/**< Maximum number of artifact kinds */
+	uint16_t a_base;			/**< Maximum number of artifact kinds (directly defined, not random) */
+	uint16_t a_quest;			/**< Maximum number of quest artifact (so always present, even with standarts off) kinds */
+	uint16_t e_max;				/**< Maximum number of ego-item kinds */
+	uint16_t r_max;				/**< Maximum number of monster races */
+	uint16_t mm_max;			/**< Maximum number of monster mutations */
+	uint16_t mp_max;			/**< Maximum number of monster pain message sets */
+	uint16_t s_max;				/**< Maximum number of magic spells */
+	uint16_t pit_max;			/**< Maximum number of monster pit types */
+	uint16_t act_max;			/**< Maximum number of activations for randarts */
+	uint16_t fault_max;			/**< Maximum number of faults */
+	uint16_t slay_max;			/**< Maximum number of slays */
+	uint16_t brand_max;			/**< Maximum number of brands */
+	uint16_t mon_blows_max;		/**< Maximum number of monster blows */
+	uint16_t mon_passive_max;	/**< Maximum number of monster blows */
+	uint16_t blow_methods_max;	/**< Maximum number of monster blow methods */
+	uint16_t blow_effects_max;	/**< Maximum number of monster blow effects */
+	uint16_t equip_slots_max;	/**< Maximum number of player equipment slots */
+	uint16_t profile_max;		/**< Maximum number of cave_profiles */
+	uint16_t quest_max;			/**< Maximum number of quests */
+	uint16_t projection_max;	/**< Maximum number of projection types */
+	uint16_t calculation_max;	/**< Maximum number of object power calculations */
+	uint16_t property_max;		/**< Maximum number of object properties */
+	uint16_t ordinary_kind_max;	/**< Maximum number of objects in object.txt */
+	uint16_t shape_max;			/**< Maximum number of player shapes */
 
 	/* Maxima of things on a given level, read from constants.txt */
-	u16b level_monster_max;	/**< Maximum number of monsters on a given level */
+	uint16_t level_monster_max;	/**< Maximum number of monsters on a given level */
 
 	/* Monster generation constants, read from constants.txt */
-	u16b alloc_monster_chance;	/**< 1/per-turn-chance of generation */
-	u16b level_monster_min;		/**< Minimum number generated */
-	u16b town_monsters_day;		/**< Townsfolk generated - day */
-	u16b town_monsters_night;	/**< Townsfolk generated  - night */
-	u16b repro_monster_max;		/**< Maximum breeders on a level */
-	u16b ood_monster_chance;	/**< Chance of OoD monster is 1 in this */
-	u16b ood_monster_amount;	/**< Max number of levels OoD */
-	u16b monster_group_max;		/**< Maximum size of a group */
-	u16b mutant_chance;			/**< Chance to try for a mutation */
-	u16b monster_group_dist;	/**< Max dist of a group from a related group */
-	u32b town_easy_turns;		/**< Number of turns before difficulty increases */
-	u32b town_levelup_turns;	/**< Number of turns between difficulty increases */
-	u16b town_allmons_level;	/**< Level when level-1 non-p/h can show in the town */
-	u16b town_equalmons_level;	/**< Level when all in-level mons can show in the town */
-	u16b town_delfirst_level;	/**< Level when the first shop disappears */
-	u16b town_delall_level;		/**< Level when all shops disappear */
-	u16b arena_min_monsters;	/**< Minimum number of opponents */
-	u16b arena_max_monsters;	/**< Maximum number of opponents */
-	u16b arena_max_depth;		/**< Maximum depth of Arena */
-	u16b arena_wait_time;		/**< Time between fights */
+	uint16_t alloc_monster_chance;	/**< 1/per-turn-chance of generation */
+	uint16_t level_monster_min;		/**< Minimum number generated */
+	uint16_t town_monsters_day;		/**< Townsfolk generated - day */
+	uint16_t town_monsters_night;	/**< Townsfolk generated  - night */
+	uint16_t repro_monster_max;		/**< Maximum breeders on a level */
+	uint16_t ood_monster_chance;	/**< Chance of OoD monster is 1 in this */
+	uint16_t ood_monster_amount;	/**< Max number of levels OoD */
+	uint16_t monster_group_max;		/**< Maximum size of a group */
+	uint16_t mutant_chance;			/**< Chance to try for a mutation */
+	uint16_t monster_group_dist;	/**< Max dist of a group from a related group */
+	uint32_t town_easy_turns;		/**< Number of turns before difficulty increases */
+	uint32_t town_levelup_turns;	/**< Number of turns between difficulty increases */
+	uint16_t town_allmons_level;	/**< Level when level-1 non-p/h can show in the town */
+	uint16_t town_equalmons_level;	/**< Level when all in-level mons can show in the town */
+	uint16_t town_delfirst_level;	/**< Level when the first shop disappears */
+	uint16_t town_delall_level;		/**< Level when all shops disappear */
+	uint16_t arena_min_monsters;	/**< Minimum number of opponents */
+	uint16_t arena_max_monsters;	/**< Maximum number of opponents */
+	uint16_t arena_max_depth;		/**< Maximum depth of Arena */
+	uint16_t arena_wait_time;		/**< Time between fights */
 	
 	/* Monster gameplay constants, read from constants.txt */
-	u16b glyph_hardness;		/**< How hard for a monster to break a glyph */
-	u16b repro_monster_rate;	/**< Monster reproduction rate-slower */
-	u16b life_drain_percent;	/**< Percent of player life drained */
-	u16b flee_range;			/**< Monsters run this many grids out of view */
-	u16b turn_range;			/**< Monsters turn to fight closer than this */
-	u16b drop_random;			/**< Monsters drop an item 1 in this many turns */
+	uint16_t glyph_hardness;		/**< How hard for a monster to break a glyph */
+	uint16_t repro_monster_rate;	/**< Monster reproduction rate-slower */
+	uint16_t life_drain_percent;	/**< Percent of player life drained */
+	uint16_t flee_range;			/**< Monsters run this many grids out of view */
+	uint16_t turn_range;			/**< Monsters turn to fight closer than this */
+	uint16_t drop_random;			/**< Monsters drop an item 1 in this many turns */
 
 	/* Dungeon generation constants, read from constants.txt */
-	u16b level_room_max;	/**< Maximum number of rooms on a level */
-	u16b level_door_max;	/**< Maximum number of potential doors on a level */
-	u16b wall_pierce_max;	/**< Maximum number of potential wall piercings */
-	u16b tunn_grid_max;		/**< Maximum number of tunnel grids */
-	u16b room_item_av;		/**< Average number of items in rooms */
-	u16b both_item_av;		/**< Average number of items in random places */
-	u16b both_gold_av;		/**< Average number of money items */
-	u16b level_pit_max;		/**< Maximum number of pits on a level */
+	uint16_t level_room_max;	/**< Maximum number of rooms on a level */
+	uint16_t level_door_max;	/**< Maximum number of potential doors on a level */
+	uint16_t wall_pierce_max;	/**< Maximum number of potential wall piercings */
+	uint16_t tunn_grid_max;		/**< Maximum number of tunnel grids */
+	uint16_t room_item_av;		/**< Average number of items in rooms */
+	uint16_t both_item_av;		/**< Average number of items in random places */
+	uint16_t both_gold_av;		/**< Average number of money items */
+	uint16_t level_pit_max;		/**< Maximum number of pits on a level */
 
 	/* World shape constants, read from constants.txt */
-	u16b max_depth;		/**< Maximum dungeon level */
-	u16b day_length;	/**< Number of turns from dawn to dawn */
-	u16b dungeon_hgt;	/**< Maximum number of vertical grids on a level */
-	u16b dungeon_wid;	/**< Maximum number of horizontical grids on a level */
-	u16b town_hgt;		/**< Maximum number of vertical grids in the town */
-	u16b town_wid;		/**< Maximu number of horizontical grids in the town */
-	u16b feeling_total;	/**< Total number of feeling squares per level */
-	u16b feeling_need;	/**< Squares needed to see to get first feeling */
-    u16b stair_skip;    /**< Number of levels to skip for each down stair */
-	u16b move_energy;	/**< Energy the player or monster needs to move */
-	u16b town_max;		/**< Total number of towns in t_info[], set by world_init_towns */
+	uint16_t max_depth;		/**< Maximum dungeon level */
+	uint16_t day_length;	/**< Number of turns from dawn to dawn */
+	uint16_t dungeon_hgt;	/**< Maximum number of vertical grids on a level */
+	uint16_t dungeon_wid;	/**< Maximum number of horizontical grids on a level */
+	uint16_t town_hgt;		/**< Maximum number of vertical grids in the town */
+	uint16_t town_wid;		/**< Maximu number of horizontical grids in the town */
+	uint16_t feeling_total;	/**< Total number of feeling squares per level */
+	uint16_t feeling_need;	/**< Squares needed to see to get first feeling */
+    uint16_t stair_skip;    /**< Number of levels to skip for each down stair */
+	uint16_t move_energy;	/**< Energy the player or monster needs to move */
+	uint16_t town_max;		/**< Total number of towns in t_info[], set by world_init_towns */
 
 	/* Carrying capacity constants, read from constants.txt */
-	u16b pack_size;		/**< Maximum number of pack slots */
-	u16b quiver_size;	/**< Maximum number of quiver slots */
-	u16b quiver_slot_size;	/**< Maximum number of missiles per quiver slot */
-	u16b thrown_quiver_mult;/**< Size multiplier for non-ammo in quiver */
-	u16b floor_size;	/**< Maximum number of items per floor grid */
+	uint16_t pack_size;				/**< Maximum number of pack slots */
+	uint16_t quiver_size;			/**< Maximum number of quiver slots */
+	uint16_t quiver_slot_size;		/**< Maximum number of missiles per quiver slot */
+	uint16_t thrown_quiver_mult;	/**< Size multiplier for non-ammo in quiver */
+	uint16_t floor_size;			/**< Maximum number of items per floor grid */
 
 	/* Store parameters, read from constants.txt */
-	u16b store_inven_max;	/**< Maximum number of objects in store inventory */
-	u16b store_turns;		/**< Number of turns between turnovers */
-	u16b store_shuffle;		/**< 1/per-day-chance of owner changing */
-	u16b store_magic_level;	/**< Level for apply_magic() in normal stores */
-	u16b theft_dex;		/**< Scale for difficulty of stealing, vs. dexterity */
-	u16b theft_chr;		/**< Scale for difficulty of stealing, vs. charisma */
-	u32b faction_turns;		/**< Number of turns before -ve faction starts to increase */
-	u16b install_turns;		/**< Time taken to install or remove cyberware */
+	uint16_t store_inven_max;	/**< Maximum number of objects in store inventory */
+	uint16_t store_turns;		/**< Number of turns between turnovers */
+	uint16_t store_shuffle;		/**< 1/per-day-chance of owner changing */
+	uint16_t store_magic_level;	/**< Level for apply_magic() in normal stores */
+	uint16_t theft_dex;			/**< Scale for difficulty of stealing, vs. dexterity */
+	uint16_t theft_chr;			/**< Scale for difficulty of stealing, vs. charisma */
+	uint32_t faction_turns;		/**< Number of turns before -ve faction starts to increase */
+	uint16_t install_turns;		/**< Time taken to install or remove cyberware */
 
 	/* Object creation constants, read from constants.txt */
-	u16b max_obj_depth;	/**< Maximum depth used in object allocation */
-	u16b great_obj;		/**< 1/chance of inflating the requested object level */
-	u16b great_ego;		/**< 1/chance of inflating the requested ego item level */
-	u16b rand_art;		/**< Number of random artifacts */
-	u16b cash_max;		/**< Largest pile of cash generated */
-	u16b aggr_power;	/**< Power rating below which only faulty randarts can aggravate */
-	u16b inhibit_strong; /**< Percentage of items allowed for strong inhibition */
-	u16b inhibit_weak;	/**< Percentage of items allowed for weak inhibition */
-	u16b max_blows;		/**< Maximum blows */
-	u16b inhibit_blows;	/**< Limit blows above this */
-	u16b inhibit_ac;	/**< No AC above this */
-	u16b veryhigh_ac;	/**< AC above this is rare */
-	u16b high_ac;		/**< AC above this is unusual */
-	u16b veryhigh_hit;	/**< To-hit above this is rare */
-	u16b high_hit;		/**< To-hit above this is unusual */
-	u16b veryhigh_dam;	/**< To-dam above this is rare */
-	u16b high_dam;		/**< To-dam above this is unusual */
-	u16b inhibit_might;	/**< Inhibit extra might above this */
-	u16b inhibit_shots;	/**< Inhibit extra shots above this */
-	u16b damage_power;	/**< Power rating: power from damage */
-	u16b to_hit_power;	/**< Power rating: power from to-hit */
-	u16b nonweap_damage; /**< Power rating: power from damage on nonweapons */
+	uint16_t max_obj_depth;	/**< Maximum depth used in object allocation */
+	uint16_t great_obj;		/**< 1/chance of inflating the requested object level */
+	uint16_t great_ego;		/**< 1/chance of inflating the requested ego item level */
+	uint16_t rand_art;		/**< Number of random artifacts */
+	uint16_t cash_max;		/**< Largest pile of cash generated */
+	uint16_t aggr_power;	/**< Power rating below which only faulty randarts can aggravate */
+	uint16_t inhibit_strong; /**< Percentage of items allowed for strong inhibition */
+	uint16_t inhibit_weak;	/**< Percentage of items allowed for weak inhibition */
+	uint16_t max_blows;		/**< Maximum blows */
+	uint16_t inhibit_blows;	/**< Limit blows above this */
+	uint16_t inhibit_ac;	/**< No AC above this */
+	uint16_t veryhigh_ac;	/**< AC above this is rare */
+	uint16_t high_ac;		/**< AC above this is unusual */
+	uint16_t veryhigh_hit;	/**< To-hit above this is rare */
+	uint16_t high_hit;		/**< To-hit above this is unusual */
+	uint16_t veryhigh_dam;	/**< To-dam above this is rare */
+	uint16_t high_dam;		/**< To-dam above this is unusual */
+	uint16_t inhibit_might;	/**< Inhibit extra might above this */
+	uint16_t inhibit_shots;	/**< Inhibit extra shots above this */
+	uint16_t damage_power;	/**< Power rating: power from damage */
+	uint16_t to_hit_power;	/**< Power rating: power from to-hit */
+	uint16_t nonweap_damage; /**< Power rating: power from damage on nonweapons */
 
 	/* Player constants, read from constants.txt */
-	u16b max_sight;				/**< Maximum visual range */
-	u16b max_range;				/**< Maximum missile and spell range */
-	u16b start_gold;			/**< Amount of gold the player starts with */
-	u16b start_gold_spread;		/**< Variation in the amount of gold the player starts with */
-	u16b food_value;			/**< Number of turns 1% of food lasts */
-	u16b blow_weight_scale;		/**< Divisor of weapon weight when calculating blows */
-	u32b exp_learn_icon;		/**< Experience gained from learning the last icon */
+	uint16_t max_sight;				/**< Maximum visual range */
+	uint16_t max_range;				/**< Maximum missile and spell range */
+	uint16_t start_gold;			/**< Amount of gold the player starts with */
+	uint16_t start_gold_spread;		/**< Variation in the amount of gold the player starts with */
+	uint16_t food_value;			/**< Number of turns 1% of food lasts */
+	uint16_t blow_weight_scale;		/**< Divisor of weapon weight when calculating blows */
+	uint32_t exp_learn_icon;		/**< Experience gained from learning the last icon */
 };
 
 struct init_module {

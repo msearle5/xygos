@@ -43,15 +43,15 @@ int arg_graphics;			/* Command arg -- Request graphics mode */
 bool arg_graphics_nice;		/* Command arg -- Request nice graphics mode */
 int use_graphics;			/* The "graphics" mode is enabled */
 
-byte *monster_x_attr;
+uint8_t *monster_x_attr;
 wchar_t *monster_x_char;
-byte *kind_x_attr;
+uint8_t *kind_x_attr;
 wchar_t *kind_x_char;
-byte *feat_x_attr[LIGHTING_MAX];
+uint8_t *feat_x_attr[LIGHTING_MAX];
 wchar_t *feat_x_char[LIGHTING_MAX];
-byte *trap_x_attr[LIGHTING_MAX];
+uint8_t *trap_x_attr[LIGHTING_MAX];
 wchar_t *trap_x_char[LIGHTING_MAX];
-byte *flavor_x_attr;
+uint8_t *flavor_x_attr;
 wchar_t *flavor_x_char;
 static size_t flavor_max = 0;
 
@@ -180,7 +180,7 @@ void dump_monsters(ang_file *fff)
 
 	for (i = 0; i < z_info->r_max; i++) {
 		struct monster_race *race = &r_info[i];
-		byte attr = monster_x_attr[i];
+		uint8_t attr = monster_x_attr[i];
 		wint_t chr = monster_x_char[i];
 
 		/* Skip non-entries */
@@ -251,7 +251,7 @@ void dump_features(ang_file *fff)
 
 		file_putf(fff, "# Terrain: %s\n", feat->name);
 		for (j = 0; j < LIGHTING_MAX; j++) {
-			byte attr = feat_x_attr[j][i];
+			uint8_t attr = feat_x_attr[j][i];
 			wint_t chr = feat_x_char[j][i];
 
 			const char *light = NULL;
@@ -279,7 +279,7 @@ void dump_flavors(ang_file *fff)
 	struct flavor *f;
 
 	for (f = flavors; f; f = f->next) {
-		byte attr = flavor_x_attr[f->fidx];
+		uint8_t attr = flavor_x_attr[f->fidx];
 		wint_t chr = flavor_x_char[f->fidx];
 
 		file_putf(fff, "# Item flavor: %s\n", f->text);
@@ -664,7 +664,7 @@ static enum parser_error parse_prefs_object(struct parser *p)
 	sval = parser_getsym(p, "sval");
 	if (streq(tval, "*")) {
 		/* object:*:* means handle all objects and flavors */
-		byte attr = parser_getint(p, "attr");
+		uint8_t attr = parser_getint(p, "attr");
 		wchar_t chr = parser_getint(p, "char");
 		size_t i;
 		struct flavor *flavor;
@@ -690,7 +690,7 @@ static enum parser_error parse_prefs_object(struct parser *p)
 
 		/* object:tval:* means handle all objects and flavors with this tval */
 		if (streq(sval, "*")) {
-			byte attr = parser_getint(p, "attr");
+			uint8_t attr = parser_getint(p, "attr");
 			wchar_t chr = parser_getint(p, "char");
 			size_t i;
 			struct flavor *flavor;
@@ -722,7 +722,7 @@ static enum parser_error parse_prefs_object(struct parser *p)
 			if (!kind)
 				return PARSE_ERROR_NONE;
 
-			kind_x_attr[kind->kidx] = (byte)parser_getint(p, "attr");
+			kind_x_attr[kind->kidx] = (uint8_t)parser_getint(p, "attr");
 			kind_x_char[kind->kidx] = (wchar_t)parser_getint(p, "char");
 		}
 	}
@@ -744,7 +744,7 @@ static enum parser_error parse_prefs_monster(struct parser *p)
 	if (!monster)
 		return PARSE_ERROR_NO_KIND_FOUND;
 
-	monster_x_attr[monster->ridx] = (byte)parser_getint(p, "attr");
+	monster_x_attr[monster->ridx] = (uint8_t)parser_getint(p, "attr");
 	monster_x_char[monster->ridx] = (wchar_t)parser_getint(p, "char");
 
 	return PARSE_ERROR_NONE;
@@ -755,7 +755,7 @@ static enum parser_error parse_prefs_monster_base(struct parser *p)
 	const char *name;
 	struct monster_base *mb;
 	size_t i;
-	byte a;
+	uint8_t a;
 	wchar_t c;
 
 	struct prefs_data *d = parser_priv(p);
@@ -766,7 +766,7 @@ static enum parser_error parse_prefs_monster_base(struct parser *p)
 	mb = lookup_monster_base(name);
 	if (!mb)
 		return PARSE_ERROR_NO_KIND_FOUND;
-	a = (byte)parser_getint(p, "attr");
+	a = (uint8_t)parser_getint(p, "attr");
 	c = (wchar_t)parser_getint(p, "char");
 
 	for (i = 0; i < z_info->r_max; i++) {
@@ -781,7 +781,7 @@ static enum parser_error parse_prefs_monster_base(struct parser *p)
 	return PARSE_ERROR_NONE;
 }
 
-static void set_trap_graphic(int trap_idx, int light_idx, byte attr, char ch) {
+static void set_trap_graphic(int trap_idx, int light_idx, uint8_t attr, char ch) {
 	if (light_idx < LIGHTING_MAX) {
 		trap_x_attr[light_idx][trap_idx] = attr;
 		trap_x_char[light_idx][trap_idx] = ch;
@@ -875,11 +875,11 @@ static enum parser_error parse_prefs_feat(struct parser *p)
 		return PARSE_ERROR_INVALID_LIGHTING;
 
 	if (light_idx < LIGHTING_MAX) {
-		feat_x_attr[light_idx][idx] = (byte)parser_getint(p, "attr");
+		feat_x_attr[light_idx][idx] = (uint8_t)parser_getint(p, "attr");
 		feat_x_char[light_idx][idx] = (wchar_t)parser_getint(p, "char");
 	} else {
 		for (light_idx = 0; light_idx < LIGHTING_MAX; light_idx++) {
-			feat_x_attr[light_idx][idx] = (byte)parser_getint(p, "attr");
+			feat_x_attr[light_idx][idx] = (uint8_t)parser_getint(p, "attr");
 			feat_x_char[light_idx][idx] = (wchar_t)parser_getint(p, "char");
 		}
 	}
@@ -937,7 +937,7 @@ static enum parser_error parse_prefs_gf(struct parser *p)
 	for (i = 0; i < PROJ_MAX; i++) {
 		if (!types[i]) continue;
 
-		proj_to_attr[i][motion] = (byte)parser_getuint(p, "attr");
+		proj_to_attr[i][motion] = (uint8_t)parser_getuint(p, "attr");
 		proj_to_char[i][motion] = (wchar_t)parser_getuint(p, "char");
 	}
 
@@ -959,7 +959,7 @@ static enum parser_error parse_prefs_flavor(struct parser *p)
 			break;
 
 	if (flavor) {
-		flavor_x_attr[idx] = (byte)parser_getint(p, "attr");
+		flavor_x_attr[idx] = (uint8_t)parser_getint(p, "attr");
 		flavor_x_char[idx] = (wchar_t)parser_getint(p, "char");
 	}
 
@@ -1056,7 +1056,7 @@ static enum parser_error parse_prefs_message(struct parser *p)
 	if (a < 0)
 		return PARSE_ERROR_INVALID_COLOR;
 
-	message_color_define(msg_index, (byte)a);
+	message_color_define(msg_index, (uint8_t)a);
 
 	return PARSE_ERROR_NONE;
 }
@@ -1458,22 +1458,24 @@ void textui_prefs_init(void)
 	int i;
 	struct flavor *f;
 
-	monster_x_attr = mem_zalloc(z_info->r_max * sizeof(byte));
+	monster_x_attr = mem_zalloc(z_info->r_max * sizeof(uint8_t));
 	monster_x_char = mem_zalloc(z_info->r_max * sizeof(wchar_t));
-	kind_x_attr = mem_zalloc((z_info->k_max + 1) * sizeof(byte));
+
+	kind_x_attr = mem_zalloc((z_info->k_max + 1) * sizeof(uint8_t));
 	kind_x_char = mem_zalloc((z_info->k_max + 1) * sizeof(wchar_t));
+
 	for (i = 0; i < LIGHTING_MAX; i++) {
-		feat_x_attr[i] = mem_zalloc(z_info->f_max * sizeof(byte));
+		feat_x_attr[i] = mem_zalloc(z_info->f_max * sizeof(uint8_t));
 		feat_x_char[i] = mem_zalloc(z_info->f_max * sizeof(wchar_t));
 	}
 	for (i = 0; i < LIGHTING_MAX; i++) {
-		trap_x_attr[i] = mem_zalloc(z_info->trap_max * sizeof(byte));
+		trap_x_attr[i] = mem_zalloc(z_info->trap_max * sizeof(uint8_t));
 		trap_x_char[i] = mem_zalloc(z_info->trap_max * sizeof(wchar_t));
 	}
 	for (f = flavors; f; f = f->next)
 		if (flavor_max < f->fidx)
 			flavor_max = f->fidx;
-	flavor_x_attr = mem_zalloc((flavor_max + 1) * sizeof(byte));
+	flavor_x_attr = mem_zalloc((flavor_max + 1) * sizeof(uint8_t));
 	flavor_x_char = mem_zalloc((flavor_max + 1) * sizeof(wchar_t));
 
 	reset_visuals(false);

@@ -142,6 +142,18 @@ if test "$GCC" = "yes"; then
 	fi
 fi
 
+AC_ARG_ENABLE(skip-old-int-typedefs,
+	[AS_HELP_STRING([--enable-skip-old-int-typedefs], [do not generate the u32b, s32b, ... typedefs in Angband's headers])],
+	[AS_CASE(${enableval},
+		[yes], [skip_old_int_typedefs=yes],
+		[no], [skip_old_int_typedefs=no],
+		[AC_MSG_ERROR([bad value ${enableval} for --enable-skip-old-int-typedefs])])],
+	[skip_old_int_typedefs=no])
+
+if test x"$skip_old_int_typedefs" = xyes ; then
+	AC_DEFINE(SKIP_ANGBAND_OLD_INT_TYPEDEFS, 1, [Define to skip generating the u32b, s32b, ... typedefs])
+fi
+
 MY_PROG_MAKE_SYSVINC
 MY_PROG_MAKE_SINCLUDE
 
@@ -441,61 +453,6 @@ if test "$enable_win" = "yes"; then
 dnl Note complete replacement of all main files
 	MAINFILES="\$(WINMAINFILES)"
 fi
-
-<<<<<<< HEAD
-dnl SDL2 mixer checking
-if test "$enable_sdl2_mixer" = "yes"; then
-	if test "$enable_sdl_mixer" = "yes"; then
-		AC_MSG_ERROR(both --enable-sdl-mixer and --enable-sdl2-mixer set, 1)
-	fi
-	hold_CPPFLAGS="${CPPFLAGS}"
-	hold_LIBS="${LIBS}"
-	if test "$with_sdl2" != "yes"; then
-		AM_PATH_SDL2(2.0.0,,)
-		SDL2_CFLAGS=`${SDL2_CONFIG} --cflags`
-		SDL2_LIBS=`${SDL2_CONFIG} --libs`
-		CPPFLAGS="${CPPFLAGS} ${SDL2_CFLAGS}"
-		LIBS="${LIBS} ${SDL2_LIBS}"
-	fi
-	AC_CHECK_LIB(SDL2_mixer, Mix_OpenAudio, found_sdl2_mixer=yes, found_sdl2_mixer=no)
-
-	if test "$found_sdl2_mixer" = "yes"; then
-		AC_DEFINE(SOUND_SDL2, 1, [Define to 1 if using SDL2_mixer sound support and it's found.])
-		AC_DEFINE(SOUND, 1, [Define to 1 if including sound support.])
-		LIBS="${LIBS} -lSDL2_mixer"
-		MAINFILES="${MAINFILES} \$(SNDSDLFILES)"
-	else
-		CPPFLAGS="${hold_CPPFLAGS}"
-		LIBS="${hold_LIBS}"
-	fi
-fi
-
-dnl SDL mixer checking
-if test "$enable_sdl_mixer" = "yes"; then
-	hold_CPPFLAGS="${CPPFLAGS}"
-	hold_LIBS="${LIBS}"
-	if test "$with_sdl" != "yes"; then
-		AM_PATH_SDL(1.2.10,,)
-		SDL_CFLAGS=`${SDL_CONFIG} --cflags`
-		CPPFLAGS="${CPPFLAGS} ${SDL_CFLAGS}"
-		SDL_LIBS=`sdl-config --libs`
-		LIBS="${LIBS} ${SDL_LIBS}"
-	fi
-	AC_CHECK_LIB(SDL_mixer, Mix_OpenAudio, found_sdl_mixer=yes, found_sdl_mixer=no)
-
-	if test "$found_sdl_mixer" = "yes"; then
-		AC_DEFINE(SOUND_SDL, 1, [Define to 1 if using SDL_mixer sound support and it's found.])
-		AC_DEFINE(SOUND, 1, [Define to 1 if including sound support.])
-		LIBS="${LIBS} -lSDL_mixer"
-		MAINFILES="${MAINFILES} \$(SNDSDLFILES)"
-	else
-		CPPFLAGS="${hold_CPPFLAGS}"
-		LIBS="${hold_LIBS}"
-	fi
-fi
-
-=======
->>>>>>> c4432ac53 (configure:  consolidate SDL handling)
 
 LIBS="${LIBS} -lm"
 

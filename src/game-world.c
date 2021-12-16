@@ -50,10 +50,11 @@
 
 #include <math.h>
 
-u16b daycount = 0;
-u32b seed_randart;		/* Hack -- consistent random artifacts */
-u32b seed_flavor;		/* Hack -- consistent object colors */
-s32b turn;				/* Current game turn */
+uint16_t daycount = 0;
+uint32_t seed_randart;		/* Hack -- consistent random artifacts */
+uint32_t seed_flavor;		/* Hack -- consistent object colors */
+int32_t turn;				/* Current game turn */
+
 bool character_generated;	/* The character exists */
 bool character_dungeon;		/* The character has a dungeon */
 struct level *world;
@@ -76,7 +77,7 @@ struct level *world;
  *
  * Note that currently the fastest monster is "Fast (+30)".
  */
-byte *extract_energy;
+uint8_t *extract_energy;
 int n_extract_energy;
 
 /**
@@ -988,7 +989,7 @@ void process_world(struct chunk *c)
 	/* Handle experience draining */
 	if (player_of_has(player, OF_DRAIN_EXP)) {
 		if ((player->exp > 0) && one_in_(10)) {
-			s32b d = damroll(10, 6) +
+			int32_t d = damroll(10, 6) +
 				(player->exp / 100) * z_info->life_drain_percent;
 			player_exp_lose(player, d / 10, false);
 		}

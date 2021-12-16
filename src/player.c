@@ -52,7 +52,7 @@ struct player_ability *player_abilities;
 /**
  * Base experience levels, may be adjusted up or down for race, class, etc.
  */
-s32b player_exp[PY_MAX_LEVEL];
+int32_t player_exp[PY_MAX_LEVEL];
 
 
 static const char *stat_name_list[] = {
@@ -402,7 +402,7 @@ s32b player_exp_scale(s32b amount)
 	return sum + remainder;
 }
 
-void player_exp_gain(struct player *p, s32b amount)
+void player_exp_gain(struct player *p, int32_t amount)
 {
 	p->exp += amount;
 	if (p->exp < p->max_exp)
@@ -410,7 +410,7 @@ void player_exp_gain(struct player *p, s32b amount)
 	adjust_level(p, true);
 }
 
-void player_exp_gain_scaled(struct player *p, s32b amount)
+void player_exp_gain_scaled(struct player *p, int32_t amount)
 {
 	amount = player_exp_scale(amount);
 	if (p->exp + amount < p->max_exp) {
@@ -422,7 +422,7 @@ void player_exp_gain_scaled(struct player *p, s32b amount)
 	adjust_level(p, true);
 }
 
-void player_exp_lose(struct player *p, s32b amount, bool permanent)
+void player_exp_lose(struct player *p, int32_t amount, bool permanent)
 {
 	if (p->exp < amount)
 		amount = p->exp;
@@ -482,9 +482,9 @@ void player_flags_timed(struct player *p, bitflag f[OF_SIZE])
 }
 
 
-byte player_hp_attr(struct player *p)
+uint8_t player_hp_attr(struct player *p)
 {
-	byte attr;
+	uint8_t attr;
 	
 	if (p->chp >= p->mhp)
 		attr = COLOUR_L_GREEN;
@@ -618,7 +618,7 @@ static void init_player(void) {
 	player->upkeep = mem_zalloc(sizeof(struct player_upkeep));
 	player->upkeep->inven = mem_zalloc((z_info->pack_size + 1) * sizeof(struct object *));
 	player->upkeep->quiver = mem_zalloc(z_info->quiver_size * sizeof(struct object *));
-	player->timed = mem_zalloc(TMD_MAX * sizeof(s16b));
+	player->timed = mem_zalloc(TMD_MAX * sizeof(int16_t));
 	player->obj_k = object_new();
 	player->obj_k->brands = mem_zalloc(z_info->brand_max * sizeof(bool));
 	player->obj_k->slays = mem_zalloc(z_info->slay_max * sizeof(bool));

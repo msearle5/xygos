@@ -239,7 +239,7 @@ void hit_chance(random_chance *chance, int to_hit, int ac)
  * Much of this table is not intended ever to be used, and is included
  * only to handle possible inflation elsewhere. -LM-
  */
-byte *deadliness_conversion;
+uint8_t *deadliness_conversion;
 int n_deadliness_conversion;
 
 /**
@@ -300,7 +300,7 @@ static bool is_debuffed(const struct monster *monster)
 static int critical_shot(const struct player *p,
 		const struct monster *monster,
 		int weight, int plus,
-		int dam, u32b *msg_type)
+		int dam, uint32_t *msg_type)
 {
 	int debuff_to_hit = 0;
 	if ((monster) && (is_debuffed(monster)))
@@ -331,10 +331,10 @@ static int critical_shot(const struct player *p,
  * Factor in item weight, total plusses, and player level.
  */
 static int o_critical_shot(const struct player *p,
-						   const struct monster *monster,
-						   const struct object *missile,
-						   const struct object *launcher,
-						   u32b *msg_type)
+		const struct monster *monster,
+		const struct object *missile,
+		const struct object *launcher,
+		uint32_t *msg_type)
 {
 	int debuff_to_hit = is_debuffed(monster) ? DEBUFF_CRITICAL_HIT : 0;
 	int power = chance_of_missile_hit_base(p, missile, launcher)
@@ -375,7 +375,7 @@ static int critical_melee(const struct player *p,
 		struct monster *monster,
 		const struct object *obj,
 		int weight, int plus,
-		int dam, u32b *msg_type)
+		int dam, uint32_t *msg_type)
 {
 	int debuff_to_hit = is_debuffed(monster) ? DEBUFF_CRITICAL_HIT : 0;
 	int power = (weight / 30) + randint1(650);
@@ -417,8 +417,8 @@ static int critical_melee(const struct player *p,
  * Factor in weapon weight, total plusses, player level.
  */
 static int o_critical_melee(const struct player *p,
-							const struct monster *monster,
-							const struct object *obj, u32b *msg_type)
+		const struct monster *monster,
+		const struct object *obj, uint32_t *msg_type)
 {
 	int debuff_to_hit = is_debuffed(monster) ? DEBUFF_CRITICAL_HIT : 0;
 	int power = (chance_of_melee_hit_base(p, obj) + debuff_to_hit) / 3;
@@ -535,7 +535,7 @@ static int o_melee_average_damage(struct player *p, const struct monster *mon,
  * criticals add extra dice.
  */
 static int o_melee_damage(struct player *p, const struct monster *mon,
-		struct object *obj, int b, int s, u32b *msg_type, int deflate)
+		struct object *obj, int b, int s, uint32_t *msg_type, int deflate)
 {
 	int dice = obj->dd;
 	int sides, dmg, add = 0;
@@ -635,8 +635,8 @@ static int ranged_damage(struct player *p, const struct monster *mon,
  * damage dice, criticals add extra dice.
  */
 static int o_ranged_damage(struct player *p, const struct monster *mon,
-						   struct object *missile, struct object *launcher,
-						   int b, int s, u32b *msg_type)
+		struct object *missile, struct object *launcher,
+		int b, int s, uint32_t *msg_type)
 {
 	int mult = (launcher ? p->state.ammo_mult : 1);
 	int dice = missile->dd;
@@ -950,7 +950,8 @@ bool py_attack_real(struct player *p, struct loc grid, bool *fear, bool *hit)
 	char verb[32];
 	char after[64];
 	strcpy(after, ".");
-	u32b msg_type = MSG_HIT;
+	uint32_t msg_type = MSG_HIT;
+
 	int j, b, s, weight, dmg;
 
 	/* Default to punching */
@@ -1587,8 +1588,10 @@ static void ranged_helper(struct command *cmd, struct player *p,	struct object *
 			struct attack_result result = attack(cmd, p, obj, grid);
 			breaks = result.breaks;
 			int dmg = result.dmg;
-			u32b msg_type = result.msg_type;
+
+			uint32_t msg_type = result.msg_type;
 			char hit_verb[32];
+
 			my_strcpy(hit_verb, result.hit_verb, sizeof(hit_verb));
 			mem_free(result.hit_verb);
 
