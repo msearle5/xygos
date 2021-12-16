@@ -4223,7 +4223,7 @@ struct chunk *arena_gen(struct player *p, int min_height, int min_width) {
 		} while (!square_isempty(c, mon->grid));
 		square_set_mon(c, mon->grid, mon->midx);
 		c->mon_cnt++;
-		update_mon(p, mon, c, true);
+		update_mon(mon, c, true);
 
 		/* Ignore its held objects */
 		mon->held_obj = NULL;

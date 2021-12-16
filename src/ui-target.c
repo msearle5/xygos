@@ -34,6 +34,7 @@
 #include "target.h"
 #include "trap.h"
 #include "ui-display.h"
+#include "ui-game.h"
 #include "ui-input.h"
 #include "ui-keymap.h"
 #include "ui-map.h"
