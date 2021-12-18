@@ -38,7 +38,11 @@ enum {
 
 	ODESC_CAPITAL = 0x80,	/*!< Capitalise object name */
 	ODESC_TERSE = 0x100,  	/*!< Make terse names */
-	ODESC_NOEGO = 0x200  	/*!< Don't show ego names */
+	ODESC_NOEGO = 0x200,  	/*!< Don't show ego names */
+	ODESC_ALTNUM = 0x400	/*!< Use the high 16 bits of mode rather
+					than obj->number as the number
+					of objects; not fully compatible
+					with ODESC_EXTRA */
 };
 
 
@@ -51,8 +55,9 @@ size_t obj_desc_name_format(char *buf, size_t max, size_t end, const char *fmt,
 							const char *modstr, bool pluralise);
 
 const char *kind_desc_basename(const struct object_kind *kind, bool aware, bool show_flavor, const struct player *p);
-size_t object_desc(char *buf, size_t max, const struct object *obj, int mode,
+size_t object_desc(char *buf, size_t max, const struct object *obj, uint32_t mode,
 		const struct player *p);
 const char *obj_desc_basename(const struct object *obj, bool aware,
 										 bool terse, bool show_flavor, const struct player *p);
+
 #endif /* OBJECT_DESC_H */

@@ -146,12 +146,12 @@ static const char *obj_desc_get_basename(const struct object *obj, bool aware,
  */
 static size_t obj_desc_name_prefix(char *buf, size_t max, size_t end,
 		const struct object *obj, const char *basename,
-		const char *modstr, bool terse)
+		const char *modstr, bool terse, uint16_t number)
 {
-	if (obj->number == 0) {
+	if (number == 0) {
 		strnfcat(buf, max, &end, "no more ");
-	} else if (obj->number > 1) {
-		strnfcat(buf, max, &end, "%d ", obj->number);
+	} else if (number > 1) {
+		strnfcat(buf, max, &end, "%u ", number);
 	} else if (object_is_known_artifact(obj)) {
 		strnfcat(buf, max, &end, "the ");
 	} else if (*basename == '&' || *basename == '$') {
@@ -261,13 +261,15 @@ size_t obj_desc_name_format(char *buf, size_t max, size_t end,
  * Format object obj's name into 'buf'.
  */
 static size_t obj_desc_name(char *buf, size_t max, size_t end,
-		const struct object *obj, bool prefix, int mode, bool terse,
-		const struct player *p)
+		const struct object *obj, bool prefix, uint32_t mode,
+		bool terse, const struct player *p)
 {
 	bool store = mode & ODESC_STORE ? true : false;
 	bool spoil = mode & ODESC_SPOIL ? true : false;
 	bool capital = mode & ODESC_CAPITAL ? true : false;
-	
+	uint16_t number = (mode & ODESC_ALTNUM) ?
+		(mode & 0xFFFF0000) >> 16 : obj->number;
+
 	/* Actual name for flavoured objects if aware, or in store, or spoiled */
 	bool aware = object_flavor_is_aware(obj) || store || spoil;
 	bool mimic = (obj->kind->flavor && kf_has(obj->kind->kind_flags, KF_MIMIC_KNOW) );
@@ -308,7 +310,7 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 
 		/* Quantity prefix */
 		if (prefix)
-			end = obj_desc_name_prefix(buf, max, end, obj, name, modstr, terse);
+			end = obj_desc_name_prefix(buf, max, end, obj, name, modstr, terse, number);
 
 		end = obj_desc_name_format(buf, max, end, name, modstr, plural);
 	} else {
@@ -325,7 +327,7 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 				size_t end3 = 0;
 				*buf3 = 0;
 				strnfcat(buf3, sizeof(buf3), &end3, "&%s", obj->kind->name);
-				obj_desc_name_prefix(buf2, sizeof(buf2), end2, obj, buf3, modstr, terse);
+				obj_desc_name_prefix(buf2, sizeof(buf2), end2, obj, buf3, modstr, terse, number);
 			}
 
 			/* Contract "foo- pill" into "foo-pill", and don't put a space between an item name
@@ -340,7 +342,7 @@ static size_t obj_desc_name(char *buf, size_t max, size_t end,
 			if ((object_is_known_artifact(obj)) && (obj->artifact->name) && (obj->artifact->name[0] == '<') && (isupper(obj->artifact->name[1])))
 				prefix = false;
 			if (prefix)
-				end = obj_desc_name_prefix(buf, max, end, obj, basename, modstr, terse);
+				end = obj_desc_name_prefix(buf, max, end, obj, basename, modstr, terse, number);
 		}
 
 		/* Use the artifact name only */
@@ -422,7 +424,7 @@ static size_t obj_desc_chest(const struct object *obj, char *buf, size_t max,
  * class, missile multipler
  */
 static size_t obj_desc_combat(const struct object *obj, char *buf, size_t max, 
-		size_t end, int mode, const struct player *p)
+		size_t end, uint32_t mode, const struct player *p)
 {
 	bool spoil = mode & ODESC_SPOIL ? true : false;
 
@@ -535,7 +537,7 @@ static size_t obj_desc_mods(const struct object *obj, char *buf, size_t max,
  * Describe charges or charging status for re-usable items with magic effects
  */
 static size_t obj_desc_charges(const struct object *obj, char *buf, size_t max,
-							   size_t end, int mode)
+		size_t end, uint32_t mode)
 {
 	bool aware = object_flavor_is_aware(obj) || (mode & ODESC_STORE);
 
@@ -663,13 +665,20 @@ static size_t obj_desc_aware(const struct object *obj, char *buf, size_t max,
  * ODESC_PLURAL will pluralise regardless of the number in the stack.
  * ODESC_STORE turns off ignore markers, for in-store display.
  * ODESC_SPOIL treats the object as fully identified.
+ * ODESC_CAPITAL capitalises the object name.
+ * ODESC_TERSE causes a terse name to be used.
+ * ODESC_NOEGO omits ego names.
+ * ODESC_ALTNUM causes the high 16 bits of mode to be used as the number
+ * of objects instead of using obj->number.  Note that using ODESC_ALTNUM
+ * is not fully compatible with ODESC_EXTRA:  the display of number of rods
+ * charging does not account for the alternate number.
  * \param p is the player whose knowledge is factored into the description.
  * If p is NULL, the description is for an omniscient observer.
  *
  * \returns The number of bytes used of the buffer.
  */
-size_t object_desc(char *buf, size_t max, const struct object *obj, int mode,
-		const struct player *p)
+size_t object_desc(char *buf, size_t max, const struct object *obj,
+		uint32_t mode, const struct player *p)
 {
 	bool prefix = mode & ODESC_PREFIX ? true : false;
 	bool spoil = mode & ODESC_SPOIL ? true : false;
