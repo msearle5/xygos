@@ -44,7 +44,7 @@ struct town *t_info;
 static int *world_distance;
 
 /* Seeds the RNG to produce town distance arrays */
-u32b world_town_seed;
+uint32_t world_town_seed;
 
 /* Arrays of names from town-names.txt */
 static char **town_full_name;
@@ -122,9 +122,9 @@ int world_departure_time(struct town *from, struct town *to)
 		return timeofday;
 	} else {
 		// In a flight to Soviet Russia, you seed the timer from the RNG
-		u32b fi = from - t_info;
-		u32b ti = to - t_info;
-		u32b shook = (ti + (fi * z_info->town_max));
+		uint32_t fi = from - t_info;
+		uint32_t ti = to - t_info;
+		uint32_t shook = (ti + (fi * z_info->town_max));
 		shook = LCRNG(shook);
 		shook %= ((60 * 24) / z_info->town_max);
 
@@ -299,12 +299,12 @@ char *world_describe_town(struct town *t)
 
 	rng_state state;
 	Rand_extract_state(&state);
-	u32b seed1, seed2 = 0;
+	uint32_t seed1, seed2 = 0;
 	assert(strlen(t->name) >= 3);
 	memcpy(&seed1, t->name, 4);
 	if (strlen(t->name) > 4)
 		memcpy(&seed2, t->name + strlen(t->name) - 4, 4);
-	u32b seed = seed1 ^ seed2 ^ world_town_seed;
+	uint32_t seed = seed1 ^ seed2 ^ world_town_seed;
 	Rand_state_init(seed);
 
 	#define GUFF(N) guff_##N[randint0(sizeof(guff_##N) / sizeof(const char *))]
@@ -447,7 +447,7 @@ void world_build_distances(void)
 		do {
 			if (world_town_seed == 0)
 				world_town_seed = Rand_u32b() | 1;
-			u32b rng = world_town_seed;
+			uint32_t rng = world_town_seed;
 
 			for(int i=0;i<z_info->town_max;i++) {
 				rng = LCRNG(rng);
@@ -459,7 +459,7 @@ void world_build_distances(void)
 			for(int i=0;i<z_info->town_max;i++) {
 				for(int j=0;j<z_info->town_max;j++) {
 					if (i != j) {
-						u32b dist = ((abs(tx[i] - tx[j])) + (abs(ty[i] - ty[j])));
+						uint32_t dist = ((abs(tx[i] - tx[j])) + (abs(ty[i] - ty[j])));
 						if (dist < 80000) {
 							ok = false;
 							break;
@@ -517,7 +517,7 @@ static void add_level(int depth, const char *name, const char *up, const char *d
 void world_init_dungeons(void)
 {
 	Rand_quick = true;
-	u32b randval = Rand_value;
+	uint32_t randval = Rand_value;
 	Rand_value = world_town_seed;
 
 	/* Start with a clear world */

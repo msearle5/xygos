@@ -148,7 +148,7 @@ bool player_stat_dec(struct player *p, int stat, bool permanent)
 /* Experience needed to gain the given level.
  * (The -2 is because the first entry in the table, player_exp[0], is the requirement to gain level 2.)
  */ 
-s32b exp_to_gain(s32b level)
+int32_t exp_to_gain(int32_t  level)
 {
 	/* Base exp to advance, ignoring exp factors */
 	double exp = player_exp[level-2];
@@ -158,7 +158,7 @@ s32b exp_to_gain(s32b level)
 		return 0;
 
 	/* Class exp factor - average of all levels' classes' exp factors */
-	s32b c_exp = 0;
+	int32_t c_exp = 0;
 	for(int l=1; l<level; l++) {
 		c_exp += get_class_by_idx(player->lev_class[l])->c_exp;
 	}
@@ -191,9 +191,9 @@ s32b exp_to_gain(s32b level)
 
 /* Convert experience to level
  */ 
-static s32b exp_to_lev(s32b exp)
+static int32_t exp_to_lev(int32_t  exp)
 {
-	s32b lev = 1;
+	int32_t lev = 1;
 	while ((lev < PY_MAX_LEVEL) &&
 	       (exp >= exp_to_gain(lev))) {
 		lev++;
@@ -367,7 +367,7 @@ static void adjust_level(struct player *p, bool verbose)
  * At level 49-50, this doesn't apply.
  * Still need to take care of gaining levels into 50 from below.
  */
-s32b player_exp_scale(s32b amount)
+int32_t player_exp_scale(int32_t  amount)
 {
 	struct player *p = player;
 
@@ -378,19 +378,19 @@ s32b player_exp_scale(s32b amount)
 		return amount;
 
 	/* This much exp is free */
-	s32b free_gain = exp_to_gain(p->max_lev + 2) - p->exp;
+	int32_t free_gain = exp_to_gain(p->max_lev + 2) - p->exp;
 	if (amount <= free_gain)
 		return amount;
 
-	s32b sum = free_gain;
-	s32b remainder = amount - sum;
-	s32b level = 1;
+	int32_t sum = free_gain;
+	int32_t remainder = amount - sum;
+	int32_t level = 1;
 	while ((exp_to_lev(p->exp + sum) != exp_to_lev(p->exp + sum + remainder)) && (level < PY_MAX_LEVEL)) { 
 		/* Divide the rest by 2, until no longer gaining levels */
 		level = exp_to_lev(p->exp + sum);
-		s32b thislevel = exp_to_gain(level);
-		s32b nextlevel = exp_to_gain(level+1);
-		s32b gain = nextlevel - thislevel;
+		int32_t thislevel = exp_to_gain(level);
+		int32_t nextlevel = exp_to_gain(level+1);
+		int32_t gain = nextlevel - thislevel;
 		if (gain > remainder) {
 			gain = remainder;
 		}

@@ -338,7 +338,7 @@ struct monster_race {
 	bitflag spell_flags[RSF_SIZE];  /* Spell flags */
 	bitflag death_spell_flags[RSF_SIZE];  /* Spell flags (to use on death) */
 
-	byte mut_chance;		/* Chance of mutation */
+	uint8_t mut_chance;		/* Chance of mutation */
 
 	struct monster_blow *blow; /* Melee blows */
 	struct monster_blow *passive; /* Melee passive blows */

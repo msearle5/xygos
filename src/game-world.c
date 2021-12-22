@@ -559,7 +559,7 @@ static void make_noise(struct player *p)
 static void update_scent(void)
 {
 	int y, x;
-	static const byte scent_strength[5][5] = {
+	static const uint8_t scent_strength[5][5] = {
 		{2, 2, 2, 2, 2},
 		{2, 1, 1, 1, 2},
 		{2, 1, 0, 1, 2},

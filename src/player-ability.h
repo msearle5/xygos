@@ -31,10 +31,10 @@ struct ability {
 	char *desc;
 	char *desc_future;
 	char *class;
-	u32b flags;
-	s16b minlevel;
-	s16b maxlevel;
-	s16b cost;
+	uint32_t flags;
+	int16_t minlevel;
+	int16_t maxlevel;
+	int16_t  cost;
 	int ac;
 	int tohit;
 	int todam;
@@ -47,12 +47,12 @@ struct ability {
 	bool require[PF_MAX];
 	bool cancel[PF_MAX];
 	int a_adj[STAT_MAX];
-	s16b mom_speed[MOM_SPEED_MAX];			/**< Momentum - to - speed */
+	int16_t mom_speed[MOM_SPEED_MAX];			/**< Momentum - to - speed */
 	bitflag oflags[OF_SIZE];				/**< Racial (object) flags */
 	bitflag oflags_off[OF_SIZE];			/**< Racial (object) flags (turn off) */
 	bitflag pflags[PF_SIZE];				/**< Racial (player) flags */
 	struct element_info el_info[ELEM_MAX];	/**< Resists */
-	s16b modifiers[OBJ_MOD_MAX];
+	int16_t  modifiers[OBJ_MOD_MAX];
 };
 
 /* Ability flags */

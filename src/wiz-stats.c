@@ -1382,7 +1382,7 @@ static void revive_uniques(void)
  */
 static void artifact_stats(void)
 {
-	static const byte levels[] = {
+	static const uint8_t levels[] = {
 		1, 2, 3, 4, 5, 6,
 		8, 10, 12, 14, 16, 18, 20,
 		25, 30, 35, 40, 45, 50,
@@ -1464,7 +1464,7 @@ static void artifact_stats(void)
  */
 static void ego_stats(void)
 {
-	static const byte levels[] = {
+	static const uint8_t levels[] = {
 		1, 2, 3, 4, 5, 6,
 		8, 10, 12, 14, 16, 18, 20,
 		25, 30, 35, 40, 45, 50,
@@ -1494,7 +1494,7 @@ static void ego_stats(void)
 		do_cmd_redraw();
 		int *levcount = count + (z_info->e_max * i);
 		do {
-			s32b value;
+			int32_t value;
 			objects[i]++;
 			/* Make a (normal) object */
 			obj = make_object(cave, lev, false, false, false, &value, 0);

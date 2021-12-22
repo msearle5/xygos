@@ -2715,12 +2715,12 @@ void destroy_store(struct chunk *c, int store)
 	for (grid.y = 0; grid.y < c->height; grid.y++) {
 		for (grid.x = 0; grid.x < c->width; grid.x++) {
 			if (square_tag(c, grid) == store+1) {
-				static byte features[4];
+				static uint8_t features[4];
 				features[0] = FEAT_RUBBLE;
 				features[1] = FEAT_GRANITE;
 				features[2] = FEAT_PASS_RUBBLE;
 				features[3] = FEAT_FLOOR;
-				byte feature = features[randint0(4)];
+				uint8_t feature = features[randint0(4)];
 				square_set_feat(c, grid, feature);
 			}
 		}
@@ -2874,8 +2874,8 @@ struct chunk *town_gen(struct player *p, int min_height, int min_width)
 		} else {
 			assert(grid.x > 0);
 			assert(grid.y > 0);
-			byte feature = square(c_new, grid)->feat;
-			byte entrance = entrance_feature(i+1);
+			uint8_t feature = square(c_new, grid)->feat;
+			uint8_t entrance = entrance_feature(i+1);
 			/* Otherwise destroyed, so ignore */
 			if ((feature == entrance) || (feature == FEAT_PERM)) {
 				feature = FEAT_PERM;

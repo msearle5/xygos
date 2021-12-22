@@ -29,16 +29,16 @@ struct town {
 	char *geography;			/* "an active volcano" */
 	char *descend;				/* "You enter a maze of down stairs" */
 	char *climb;				/* "You enter a maze of up stairs" */
-	u32b connections;			/* Total number of connected towns */
-	s16b recall_depth;			/* Recall depth into this town's dungeon */
+	uint32_t connections;		/* Total number of connected towns */
+	int16_t recall_depth;		/* Recall depth into this town's dungeon */
 	bool lake;					/* generate a lake */
-	byte lava_num;				/* and this many streamers of lava */
+	uint8_t lava_num;			/* and this many streamers of lava */
 };
 
 /* The world contains z->town_max towns, in this array */
 extern struct town *t_info;
 
-extern u32b world_town_seed;
+extern uint32_t world_town_seed;
 
 extern struct file_parser world_parser;
 extern struct file_parser town_names_parser;

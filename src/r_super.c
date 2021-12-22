@@ -10,8 +10,8 @@
 
 /* Persistent state for the super extension */
 struct super_state {
-	s32b weakness;
-	s32b power[SUPER_POWERS];
+	int32_t weakness;
+	int32_t power[SUPER_POWERS];
 };
 
 static void super_loadsave(bool complete) {
@@ -42,7 +42,7 @@ static void super_init(void)
 	 * OTOH, shards is high damage enough and difficult enough to find a resistance to
 	 * that it would be too nasty even though it is not particularly common.
 	 */
-	static const byte weak_elem[] = {
+	static const uint8_t weak_elem[] = {
 		ELEM_ACID, ELEM_ELEC, ELEM_COLD, ELEM_FIRE,
 		ELEM_POIS,
 		ELEM_LIGHT, ELEM_SOUND,
@@ -145,7 +145,7 @@ static void super_levelup(int from, int to)
 	int lev = player->lev;
 	for(int level=from; level<=to; level++) {
 		if ((level > 0) && ((level % SUPER_EVERY) == 0)) {
-			s32b power = state->power[(level / SUPER_EVERY)-1];
+			int32_t power = state->power[(level / SUPER_EVERY)-1];
 
 			player->lev = level;
 			if (!gain_ability(power, false)) {

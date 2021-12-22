@@ -54,13 +54,13 @@ struct store_context {
 };
 
 
-const char *random_saying(s32b real, s32b min, s32b max);
+const char *random_saying(int32_t  real, int32_t min, int32_t max);
 void textui_store_knowledge(int n);
 void enter_store(game_event_type type, game_event_data *data, void *user);
 void use_store(game_event_type type, game_event_data *data, void *user);
 void leave_store(game_event_type type, game_event_data *data, void *user);
 void store_your_name(struct store *store);
-const char *random_rumor(s32b real);
+const char *random_rumor(int32_t  real);
 bool store_get_long_check(struct store_context *ctx, const char *prompt);
 void store_long_text(struct store_context *ctx, const char *text);
 bool random_shk_name(char *buf, int len);

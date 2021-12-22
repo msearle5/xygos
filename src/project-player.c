@@ -35,11 +35,11 @@
 #include "trap.h"
 
 /* Vulnerability: % extra damage from 1 or more levels of vulnerability */
-byte *dam_inc_vuln;
+uint8_t *dam_inc_vuln;
 int n_dam_inc_vuln;
 
 /* Resistance: % damage reduction from 1 or more levels of resistance */
-byte *dam_dec_resist;
+uint8_t *dam_dec_resist;
 int n_dam_dec_resist;
 
 int resist_to_percent(int resist, int type)

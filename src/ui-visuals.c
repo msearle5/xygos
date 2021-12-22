@@ -839,9 +839,9 @@ static enum parser_error visuals_parse_rgb(struct parser *parser)
 		return PARSE_ERROR_INTERNAL;
 	}
 
-	u32b r = parser_getint(parser, "red");
-	u32b g = parser_getint(parser, "green");
-	u32b b = parser_getint(parser, "blue");
+	uint32_t r = parser_getint(parser, "red");
+	uint32_t g = parser_getint(parser, "green");
+	uint32_t b = parser_getint(parser, "blue");
 
 	const char *name = parser_getsym(parser, "name");
 	if (name == NULL) {
@@ -859,7 +859,7 @@ static enum parser_error visuals_parse_rgb(struct parser *parser)
 	}
 	
 	/* Add a new entry to the angband_color_table */
-	u32b entry = context->entry;
+	uint32_t entry = context->entry;
 	
 	/* MAX_COLORS may be >128 but 0x80 is magic (used in the map display) */
 	if (entry == 128) {

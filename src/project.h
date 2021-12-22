@@ -106,9 +106,9 @@ extern uint8_t proj_to_attr[PROJ_MAX][BOLT_MAX];
 extern wchar_t proj_to_char[PROJ_MAX][BOLT_MAX];
 extern double adj_chr_taming[STAT_RANGE];
 
-extern byte *dam_dec_resist;
+extern uint8_t *dam_dec_resist;
 extern int n_dam_dec_resist;
-extern byte *dam_inc_vuln;
+extern uint8_t *dam_inc_vuln;
 extern int n_dam_inc_vuln;
 
 bool do_tame(struct monster *mon);

@@ -38,12 +38,12 @@
 /**
  * Stat Table (Casting Stat) -- Minimum failure rate (percentage)
  */
-byte adj_mag_fail[STAT_RANGE];
+uint8_t adj_mag_fail[STAT_RANGE];
 
 /**
  * Stat Table (Casting Stat) -- failure rate adjustment
  */
-s16b adj_mag_stat[STAT_RANGE];
+int16_t adj_mag_stat[STAT_RANGE];
 
 /**
  * Initialise player spells

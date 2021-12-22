@@ -141,8 +141,8 @@ enum {
 
 struct quest_location
 {
-	s32b town;					/* Town the quest is given from; can be none (-1) */
-	s32b store;					/* Store the quest is given from; can be STORE_NONE (-1) */
+	int32_t town;					/* Town the quest is given from; can be none (-1) */
+	int32_t store;					/* Store the quest is given from; can be STORE_NONE (-1) */
 	char *location;				/* Town or quest name */
 	char *storename;			/* In this town */
 };
@@ -155,23 +155,23 @@ struct quest
 	struct quest *next;
 	char *name;
 	struct monster_race **race;	/* Monster race */
-	s32b races;					/* Number of monster races */
+	int32_t races;					/* Number of monster races */
 	uint8_t index;
 	uint8_t level;				/* Dungeon level */
-	u16b x;						/* Position of the entrance */
-	u16b y;
-	s16b entry_min;				/* Minimum questgiver-to-entrance distance */
-	s16b entry_max;				/* Maximum questgiver-to-entrance distance */
-	s16b entry_feature;			/* Nearby feature to the entrance */
-	u16b min_found;				/* The minimum number of items found to complete the quest */
-	u16b max_remaining;			/* The maximum number of items remaining to complete the quest */
-	s32b cur_num;				/* Number killed (unused) */
-	s32b max_num;				/* Number required (unused) */
-	s32b town;					/* Town the quest is given from; can be none (-1) */
-	s32b store;					/* Store the quest is given from; can be STORE_NONE (-1) */
+	uint16_t x;						/* Position of the entrance */
+	uint16_t y;
+	int16_t entry_min;				/* Minimum questgiver-to-entrance distance */
+	int16_t entry_max;				/* Maximum questgiver-to-entrance distance */
+	int16_t entry_feature;			/* Nearby feature to the entrance */
+	uint16_t min_found;				/* The minimum number of items found to complete the quest */
+	uint16_t max_remaining;			/* The maximum number of items remaining to complete the quest */
+	int32_t cur_num;				/* Number killed (unused) */
+	int32_t max_num;				/* Number required (unused) */
+	int32_t town;					/* Town the quest is given from; can be none (-1) */
+	int32_t store;					/* Store the quest is given from; can be STORE_NONE (-1) */
 	struct quest_location *loc;	/* List of locations to start a quest from */
-	s32b quests;				/* Number of quests */
-	u32b flags;
+	int32_t quests;				/* Number of quests */
+	uint32_t flags;
 	char *target_item;			/* Item (or item class) considered a target of the quest */
 	char *intro;				/* Description given when you choose whether to take it */
 	char *desc;					/* Description given in a list of known quests */
@@ -585,9 +585,9 @@ struct player_upkeep {
 
 /* Modifiable spell state */
 struct spell_state {
-	s32b cooldown;
-	s32b turn;
-	s32b uses;
+	int32_t cooldown;
+	int32_t turn;
+	int32_t uses;
 };
 
 /**
@@ -611,8 +611,8 @@ struct player {
 	struct loc grid_last_1;/* Player previous location */
 	struct loc grid_last_2;/* Player second previous location */
 
-	u16b expfact_low;	/* Experience factor (low and high level) */
-	u16b expfact_high;
+	uint16_t expfact_low;	/* Experience factor (low and high level) */
+	uint16_t expfact_high;
 
 	int16_t age;		/* Characters age */
 	int16_t ht;		/* Height */
@@ -623,8 +623,8 @@ struct player {
 	struct town *town;	/* Current town */
 	int16_t max_depth;	/* Max depth */
 	int16_t depth;		/* Cur depth */
-	s16b danger;	/* Additional danger level */
-	s16b danger_reduction;	/* Reduction of danger level */
+	int16_t danger;	/* Additional danger level */
+	int16_t danger_reduction;	/* Reduction of danger level */
 
 	int16_t max_lev;	/* Max level */
 	int16_t lev;		/* Cur level */
@@ -637,11 +637,11 @@ struct player {
 	int16_t chp;		/* Cur hit pts */
 	uint16_t chp_frac;	/* Cur hit frac (times 2^16) */
 
-	u16b talent_points;			/* Current talent points */
-	byte *talent_gain;			/* TP to gain per level */
+	uint16_t talent_points;			/* Current talent points */
+	uint8_t *talent_gain;			/* TP to gain per level */
 
-	byte lev_class[PY_MAX_LEVEL+1];	/* Class gained per level */
-	byte switch_class;				/* Class to switch to at next level up */
+	uint8_t lev_class[PY_MAX_LEVEL+1];	/* Class gained per level */
+	uint8_t switch_class;				/* Class to switch to at next level up */
 
 	int16_t stat_max[STAT_MAX];	/* Current "maximal" stat values */
 	int16_t stat_cur[STAT_MAX];	/* Current "natural" stat values */
@@ -651,7 +651,7 @@ struct player {
 
 	int16_t word_recall;			/* Word of recall counter */
 	int16_t deep_descent;			/* Deep Descent counter */
-	u16b momentum;				/* Number of turns spent moving in the same direction */
+	uint16_t momentum;				/* Number of turns spent moving in the same direction */
 
 	int16_t energy;				/* Current energy */
 	uint32_t total_energy;			/* Total energy used (including resting) */
@@ -670,25 +670,25 @@ struct player {
 	char *history;						/* Player history */
 	struct quest *quests;				/* Quest history */
 
-	s32b active_quest;					/* Currently active quest */
-	s32b arena_type;					/* Arena: type of fight, bet amount, bet monster index */
-	s32b arena_bet;
-	s32b arena_idx;
-	s32b arena_lost;					/* total lost (bet) and won */
-	s32b arena_won;
-	s32b arena_entered_turn;
-	s32b current_store;
+	int32_t active_quest;					/* Currently active quest */
+	int32_t arena_type;					/* Arena: type of fight, bet amount, bet monster index */
+	int32_t arena_bet;
+	int32_t arena_idx;
+	int32_t arena_lost;					/* total lost (bet) and won */
+	int32_t arena_won;
+	int32_t arena_entered_turn;
+	int32_t current_store;
 	bool split_p;						/* Split personality */
 	bool flying;						/* Currently flying (using a Pilot ability) */
 	uint16_t total_winner;					/* Total winner */
 	bool orbitable;						/* Ready to go to the orbital station */
-	s16b stores_owned;					/* Number of owned stores */
-	s32b bm_faction;					/* Faction with the black market */
-	s32b cyber_faction;					/* with the cyber salon */
-	s32b town_faction;					/* and with the rest of town */
-	s32b fc_faction;					/* and with the fight club */
-	s32b last_faction_loss;				/* Turn on which the last loss of faction (BM or town) was */
-	s32b hitlist_wins;					/* Number of hit-list quests completed */
+	int16_t stores_owned;					/* Number of owned stores */
+	int32_t bm_faction;					/* Faction with the black market */
+	int32_t cyber_faction;					/* with the cyber salon */
+	int32_t town_faction;					/* and with the rest of town */
+	int32_t fc_faction;					/* and with the fight club */
+	int32_t last_faction_loss;				/* Turn on which the last loss of faction (BM or town) was */
+	int32_t hitlist_wins;					/* Number of hit-list quests completed */
 	char *artifact;						/* Name of the artifact you created */
 
 	uint16_t noscore;			/* Cheating flags */
@@ -705,7 +705,7 @@ struct player {
 	int16_t ht_birth;						/* Birth Height */
 	int32_t wt_birth;						/* Birth Weight */
 
-	byte ability_pflags[PF_MAX];		/* Player flags from abilities */
+	uint8_t ability_pflags[PF_MAX];		/* Player flags from abilities */
 
 	struct spell_state *spell;			/* Modifiable spell state, by spell index */
 
@@ -757,19 +757,19 @@ const char *stat_idx_to_name(int type);
 bool player_stat_inc(struct player *p, int stat);
 bool player_stat_dec(struct player *p, int stat, bool permanent);
 
-s32b player_exp_scale(s32b amount);
+int32_t player_exp_scale(int32_t amount);
 void player_exp_gain(struct player *p, int32_t amount);
-void player_exp_gain_scaled(struct player *p, s32b amount);
+void player_exp_gain_scaled(struct player *p, int32_t amount);
 void player_exp_lose(struct player *p, int32_t amount, bool permanent);
 void player_flags(struct player *p, bitflag f[OF_SIZE]);
 void player_flags_timed(struct player *p, bitflag f[OF_SIZE]);
-byte player_hp_attr(struct player *p);
-byte player_sp_attr(struct player *p);
+uint8_t player_hp_attr(struct player *p);
+uint8_t player_sp_attr(struct player *p);
 
 size_t player_random_name(char *buf, size_t buflen);
 void player_safe_name(char *safe, size_t safelen, const char *name, bool strip_suffix);
 void player_cleanup_members(struct player *p);
-s32b exp_to_gain(s32b level);
+int32_t exp_to_gain(int32_t  level);
 
 /* player-race.c */
 struct player_race *player_id2race(guid id);
@@ -783,7 +783,7 @@ void player_set_body(struct player *p, struct player_body *bod);
 
 /* r_timelord.c */
 void timelord_force_regen(void);
-bool get_regens(s32b *allowed, s32b *used);
+bool get_regens(int32_t  *allowed, int32_t *used);
 void timelord_change_regenerations(int change);
 
 #endif /* !PLAYER_H */

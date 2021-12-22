@@ -1244,7 +1244,7 @@ double mon_exp_value(const struct monster_race *race)
 
 double apply_funny_factor(double offset, double new_exp)
 {
-	static s32b msgturn;
+	static int32_t msgturn;
 	int lev = levels_in_class(get_class_by_name("Clown")->cidx);
 	if (lev > 0) {
 		/* +50% at level 1, +100% at level 10, +150% at level 50 */
@@ -1287,17 +1287,17 @@ static void gain_mon_exp(const struct monster *mon, bool funny)
 static void exp_gain_unscaled(double new_exp)
 {
 	/* Convert back to integer and fractional components */
-	s32b int_exp = new_exp;
+	int32_t int_exp = new_exp;
 	assert(int_exp >= 0);
 	double rem_exp = new_exp;
 	rem_exp -= int_exp;
 	rem_exp *= 65536.0;
 	assert(rem_exp < 65536.0);
-	u32b frac_exp = rem_exp;
+	uint32_t frac_exp = rem_exp;
 
 	/* Gain experience (fractional) */
-	u32b old_exp_frac = player->exp_frac;
-	u32b new_exp_frac = frac_exp + old_exp_frac;
+	uint32_t old_exp_frac = player->exp_frac;
+	uint32_t new_exp_frac = frac_exp + old_exp_frac;
 	if (new_exp_frac >= 0x10000L) {
 		int_exp++;
 		new_exp_frac -= 0x10000L;

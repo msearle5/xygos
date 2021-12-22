@@ -54,7 +54,7 @@ void ReadFileFunc(png_structp png_ptr, png_bytep data, png_size_t length) {
 bool ReadDIB2_PNG(HWND hWnd, LPSTR lpFileName, DIBINIT *pInfo, DIBINIT *pMask, bool premultiply) {
 	png_structp png_ptr;
 	png_infop info_ptr;
-	byte header[8];
+	uint8_t header[8];
 	png_bytep *row_pointers;
 	
 	bool noerror = true;
@@ -286,7 +286,7 @@ bool ReadDIB2_PNG(HWND hWnd, LPSTR lpFileName, DIBINIT *pInfo, DIBINIT *pMask, b
 	
 	if (pMask && (color_type == PNG_COLOR_TYPE_RGB_ALPHA))
 	{
-		byte *pBits, v;
+		uint8_t *pBits, v;
 		int x;
 		DWORD *srcrow;
 		HBITMAP hBitmap2 = NULL;
@@ -298,7 +298,7 @@ bool ReadDIB2_PNG(HWND hWnd, LPSTR lpFileName, DIBINIT *pInfo, DIBINIT *pMask, b
 		RealizePalette(hDC);
 		
 		/* allocate the storage space */
-		pBits = (byte*)malloc(sizeof(byte)*width*height*3);
+		pBits = (uint8_t *)malloc(sizeof(uint8_t)*width*height*3);
 		if (!pBits)
 		{
 			noerror = false;

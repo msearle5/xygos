@@ -125,11 +125,11 @@ extern uint32_t z2;
  * A structure holding stored state from the complex RNG
  */
 typedef struct rng_state {
-	u32b state[RAND_DEG];
-	u32b z0;
-	u32b z1;
-	u32b z2;
-	u32b state_i;
+	uint32_t state[RAND_DEG];
+	uint32_t z0;
+	uint32_t z1;
+	uint32_t z2;
+	uint32_t state_i;
 } rng_state;
 
 /**
@@ -155,7 +155,7 @@ void Rand_init(void);
 /**
  * Generates a random unsigned 32-bit integer X, 0 <= X < 2^32
  */
-u32b Rand_u32b(void);
+uint32_t Rand_u32b(void);
 
 /**
  * Generates a random unsigned long integer X where "0 <= X < M" holds.

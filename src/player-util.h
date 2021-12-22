@@ -139,11 +139,11 @@ void disturb(struct player *p);
 void search(struct player *p);
 
 /* 0 to maximum moves */
-extern u16b *energy_move_pos;
+extern uint16_t *energy_move_pos;
 extern int n_energy_move_pos;
 
 /* -1 to most negative moves */
-extern u16b *energy_move_neg;
+extern uint16_t *energy_move_neg;
 extern int n_energy_move_neg;
 
 #endif /* !PLAYER_UTIL_H */

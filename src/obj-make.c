@@ -77,7 +77,7 @@ struct money {
 struct multiego_entry
 {
 	double prob;
-	u16b ego[MAX_EGOS];
+	uint16_t ego[MAX_EGOS];
 };
 
 static struct money *money_type;
@@ -339,7 +339,7 @@ struct ego_item *select_ego_base(int level, struct object *obj)
 	double *prob = mem_zalloc(sizeof(*prob) * z_info->e_max);
 	double total = 0.0;
 	struct object_kind *kind = obj->kind;
-	u16b egoi[MAX_EGOS+1];
+	uint16_t egoi[MAX_EGOS+1];
 	int negos = 0;
 	for(int i=0;i<MAX_EGOS;i++) {
 		if (obj->ego[i]) {
@@ -360,6 +360,8 @@ struct ego_item *select_ego_base(int level, struct object *obj)
 					ok = true;
 					for(int j=0;j<negos;j++)
 						if (egoi[j] == i)
+						
+						
 							ok = false;
 					if (ok)
 						break;
@@ -1528,7 +1530,7 @@ static struct multiego_entry *multiego_find(struct multiego_entry *table, double
  * as forbid:all or forbid:<name>|<name> - and this persists to all following names?
  * 	would then needforbid:none 
  */
-bool multiego_allow(u16b *ego)
+bool multiego_allow(uint16_t *ego)
 {
 	for(int i=0;i<MAX_EGOS;i++) {
 		for(int j=0;j<MAX_EGOS;j++) {
@@ -1867,7 +1869,7 @@ struct object *make_object_named(struct chunk *c, int lev, bool good, bool great
  * \return a pointer to the newly allocated object, or NULL on failure.
  */
 struct object *make_object(struct chunk *c, int lev, bool good, bool great,
-						   bool extra_roll, s32b *value, int tval)
+						   bool extra_roll, int32_t *value, int tval)
 {
 	return make_object_named(c, lev, good, great, extra_roll, value, tval, NULL);
 }

@@ -48,7 +48,7 @@ enum {
  * Element info type
  */
 struct element_info {
-	s16b res_level;
+	int16_t res_level;
 	bitflag flags;
 };
 
@@ -191,7 +191,7 @@ struct object_base {
 	int break_perc;
 	int max_stack;
 	int num_svals;
-	byte material;	/** Material */
+	uint8_t material;	/** Material */
 };
 
 extern struct object_base *kb_info;
@@ -236,7 +236,7 @@ struct object_kind {
 
 	int dd;					/**< Damage dice */
 	int ds;					/**< Damage sides */
-	s32b weight;				/**< Weight, in grams */
+	int32_t weight;				/**< Weight, in grams */
 
 	int cost;					/**< Object base cost */
 
@@ -286,7 +286,7 @@ struct object_kind {
 
 	uint8_t ignore;  	/**< Ignore settings */
 	bool everseen; 	/**< Kind has been seen (to despoilify ignore menus) */
-	byte material;	/** Material */
+	uint8_t material;	/** Material */
 };
 
 extern struct object_kind *k_info;
@@ -317,7 +317,7 @@ struct artifact {
 	int dd;			/**< Base damage dice */
 	int ds;			/**< Base damage sides */
 
-	s32b weight;	/**< Weight in grams */
+	int32_t weight;	/**< Weight in grams */
 
 	int cost;		/**< Artifact (pseudo-)worth */
 

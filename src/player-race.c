@@ -116,7 +116,7 @@ void personality_split_level(int from, int to)
 	}
 
 	/* Chance of skipping */
-	static const byte skip[16] = {
+	static const uint8_t skip[16] = {
 		0,   0,  50, 41,   35, 30,  26, 22,
 		18, 15,  12, 10,   8,  6,   4,  2,
 	};

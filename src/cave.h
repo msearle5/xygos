@@ -405,7 +405,7 @@ bool square_allows_summon(struct chunk *c, struct loc grid);
 
 const struct square *square(struct chunk *c, struct loc grid);
 struct feature *square_feat(struct chunk *c, struct loc grid);
-byte square_tag(struct chunk *c, struct loc grid);
+uint8_t square_tag(struct chunk *c, struct loc grid);
 int square_light(struct chunk *c, struct loc grid);
 struct monster *square_monster(struct chunk *c, struct loc grid);
 struct object *square_object(struct chunk *c, struct loc grid);
@@ -430,7 +430,7 @@ void square_add_glyph(struct chunk *c, struct loc grid, int type);
 void square_add_web(struct chunk *c, struct loc grid);
 void square_add_stairs(struct chunk *c, struct loc grid, int depth);
 void square_add_door(struct chunk *c, struct loc grid, bool closed);
-void square_set_tag(struct chunk *c, struct loc grid, byte tag);
+void square_set_tag(struct chunk *c, struct loc grid, uint8_t tag);
 
 /* Feature modifiers */
 void square_open_door(struct chunk *c, struct loc grid);

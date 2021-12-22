@@ -1028,7 +1028,7 @@ static struct panel *get_panel_farleft(void) {
 	}
 
 	/* Per-class */
-	s32b allowed, used;
+	int32_t allowed, used;
 	bool timelord = get_regens(&allowed, &used);
 	if (timelord) {
 		panel_space(p);

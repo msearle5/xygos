@@ -42,7 +42,7 @@ errr grab_rand_value(random_value *value, const char **value_type,
 					 const char *name_and_value);
 errr grab_int_value(int *value, const char **value_type,
 					const char *name_and_value);
-errr grab_short_value(s16b *value, const char **value_type,
+errr grab_short_value(int16_t  *value, const char **value_type,
 					const char *name_and_value);
 errr grab_index(int *index, const char **value_type,
 						const char *prefix, const char *name);

@@ -394,7 +394,7 @@ void delete_monster_idx(int m_idx)
 		target_set_monster(NULL);
 
 	/* Stop any other monsters targeting it */
-	s16b me = mon->midx;
+	int16_t me = mon->midx;
 	for (int m_idx = 1; m_idx < cave_monster_max(cave); m_idx++) {
 		struct monster *mon = cave_monster(cave, m_idx);
 
@@ -1530,7 +1530,7 @@ bool place_race_friends(struct chunk *c, struct loc grid,
  */
 bool place_new_monster(struct chunk *c, struct loc grid,
 					   struct monster_race *race, bool sleep, bool group_ok,
-					   struct monster_group_info group_info, byte origin)
+					   struct monster_group_info group_info, uint8_t origin)
 {
 	assert(c);
 	assert(race);

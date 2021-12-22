@@ -633,7 +633,7 @@ bool make_wish(const char *prompt, int level, bool limited)
 			msg("You see $%d worth of %s appear!", obj->pval, obj->kind->name);
 
 			/* Increment total value */
-			p->au += (s32b)obj->pval;
+			p->au += (int32_t )obj->pval;
 
 			/* Redraw gold */
 			p->upkeep->redraw |= (PR_GOLD);
@@ -1437,7 +1437,7 @@ const struct ego_item *lookup_ego_name_fuzzy(const char *name, const struct obje
 	}
 	*inp = 0;
 
-	u16b mego[MAX_EGOS] = { 0 };
+	uint16_t mego[MAX_EGOS] = { 0 };
 	bool megocheck = false;
 	int negos = 0;
 	if (kind && ego && *ego) {
@@ -2229,7 +2229,7 @@ char *format_custom_message(const struct object *obj, const char *string, char *
 			switch(msg_tag_lookup(tag)) {
 			case MSG_TAG_NAME:
 				if (obj) {
-					u32b flags = ODESC_PREFIX | ODESC_BASE;
+					uint32_t flags = ODESC_PREFIX | ODESC_BASE;
 					/* First character of the string, so capitalize */
 					if (next == orig)
 						flags |= ODESC_CAPITAL;
@@ -2240,7 +2240,7 @@ char *format_custom_message(const struct object *obj, const char *string, char *
 				break;
 			case MSG_TAG_BRIEFNAME:
 				if (obj) {
-					u32b flags = ODESC_BASE;
+					uint32_t flags = ODESC_BASE;
 					/* First character of the string, so capitalize */
 					if (next == orig)
 						flags |= ODESC_CAPITAL;

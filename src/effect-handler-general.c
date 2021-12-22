@@ -398,7 +398,7 @@ static bool item_tester_fragile(const struct object *obj)
 /**
  * Used by the enchant() function (chance of failure)
  */
-s16b *enchant_table;
+int16_t *enchant_table;
 int n_enchant_table;
 
 /**
@@ -4437,7 +4437,7 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
 				 * 
 				 * The table below maps difficulty to chance-per-10K.
 				 */
-				 static const u16b difftab[] = {
+				 static const uint16_t difftab[] = {
 					 /* -100 */
 					 500,	505,	510,	515,	520,	525,	530,	535,	540,	545,
 					 /* -90 */
@@ -4781,8 +4781,8 @@ bool effect_handler_PRINT(effect_handler_context_t *context)
  */
 bool effect_handler_TIME_LOOP(effect_handler_context_t *context)
 {
-	s32b allowed;
-	s32b used;
+	int32_t allowed;
+	int32_t used;
 	bool timelord = get_regens(&allowed, &used);
 
 	/* Not possible */

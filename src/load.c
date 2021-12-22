@@ -1177,7 +1177,7 @@ int rd_player_hp(void)
 		return (-1);
 	}
 	if (!player->player_hp)
-		player->player_hp = mem_alloc(sizeof(s16b) * tmp16u);
+		player->player_hp = mem_alloc(sizeof(int16_t ) * tmp16u);
 
 	/* Read the player_hp array */
 	for (i = 0; i < tmp16u; i++)
@@ -1608,7 +1608,7 @@ void rdwr_monster_friends(struct monster_friends *f)
 {
 	rdwr_string(&f->name);
 	RDWR_PTR(&f->race, r_info);
-	RDWR_AS(&f->role, u32b);
+	RDWR_AS(&f->role, uint32_t);
 	rdwr_u32b(&f->percent_chance);
 	rdwr_u32b(&f->number_dice);
 	rdwr_u32b(&f->number_side);
@@ -1617,7 +1617,7 @@ void rdwr_monster_friends(struct monster_friends *f)
 void rdwr_monster_friends_base(struct monster_friends_base *f)
 {
 	RDWR_PTR(&f->base, rb_info);
-	RDWR_AS(&f->role, u32b);
+	RDWR_AS(&f->role, uint32_t);
 	rdwr_u32b(&f->percent_chance);
 	rdwr_u32b(&f->number_dice);
 	rdwr_u32b(&f->number_side);
@@ -1648,7 +1648,7 @@ int rdwr_race(struct monster_race *r)
 	rdwr_string_null(&r->grow);
 
 	RDWR_NPTR(&r->base, rb_info);
-assert(r->base);
+	assert(r->base);
 	RDWR_PTR(&r->pain, pain_messages);					/* Pain messages */
 
 	rdwr_s32b(&r->avg_hp);				/* Average HP for this creature */
@@ -1680,7 +1680,7 @@ assert(r->base);
 	rdwr_s32b(&r->rarity);				/* Rarity of creature */
 
 	rdwr_byte(&r->d_attr);				/* Default monster attribute */
-	RDWR_AS(&r->d_char, u32b);				/* Default monster character */
+	RDWR_AS(&r->d_char, uint32_t);				/* Default monster character */
 
 	rdwr_byte(&r->max_num);				/* Maximum population allowed per level */
 	rdwr_s32b(&r->cur_num);				/* Monster population on current level */

@@ -1228,7 +1228,7 @@ static int stats_write_db_level_data(const char *table, int max_idx)
 			 * level_data[level].<table>[i] */
 			uint32_t count;
 			if (streq(table, "cash"))
-				count = *((long long *)((byte *)&level_data[level] + offset) + i);
+				count = *((long long *)((uint8_t *)&level_data[level] + offset) + i);
 			else
 				count = *((uint32_t *)((uint8_t *)&level_data[level] + offset) + i);
 

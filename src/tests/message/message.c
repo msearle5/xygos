@@ -302,15 +302,10 @@ static int test_many_repeat(void *state)
 	ok;
 }
 
-<<<<<<< HEAD
 static int test_color(void *state)
 {
 	(void)state;
-	byte color;
-=======
-static int test_color(void *state) {
 	uint8_t color;
->>>>>>> 0a2b0b841 (Use C99 types for the fixed size integers (#5117))
 
 	messages_free();
 	messages_init();

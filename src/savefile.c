@@ -358,7 +358,7 @@ void rdwr_bool(bool *v)
 		rd_bool(v);
 }
 
-void rdwr_byte(byte *v)
+void rdwr_byte(uint8_t *v)
 {
 	if (saving)
 		wr_byte(*v);
@@ -366,7 +366,7 @@ void rdwr_byte(byte *v)
 		rd_byte(v);
 }
 
-void rdwr_u16b(u16b *v)
+void rdwr_u16b(uint16_t *v)
 {
 	if (saving)
 		wr_u16b(*v);
@@ -374,7 +374,7 @@ void rdwr_u16b(u16b *v)
 		rd_u16b(v);
 }
 
-void rdwr_s16b(s16b *v)
+void rdwr_s16b(int16_t  *v)
 {
 	if (saving)
 		wr_s16b(*v);
@@ -382,7 +382,7 @@ void rdwr_s16b(s16b *v)
 		rd_s16b(v);
 }
 
-void rdwr_u32b(u32b *v)
+void rdwr_u32b(uint32_t *v)
 {
 	if (saving)
 		wr_u32b(*v);
@@ -390,7 +390,7 @@ void rdwr_u32b(u32b *v)
 		rd_u32b(v);
 }
 
-void rdwr_s32b(s32b *v)
+void rdwr_s32b(int32_t  *v)
 {
 	if (saving)
 		wr_s32b(*v);

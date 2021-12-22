@@ -160,7 +160,7 @@ const char *random_line_multi(struct hint **hints_p)
 /* Return a random hint from the global hints or lies lists
  * <real>% of ths time, it's a hint.
  **/
-const char *random_rumor(s32b real)
+const char *random_rumor(int32_t  real)
 {
 	struct hint *h = lies;
 	if (randint0(100) < real)
@@ -174,7 +174,7 @@ const char *random_rumor(s32b real)
  * (The minimum length is for the same reason, while the max is to
  * ensure it fits on screen.)
  **/
-const char *random_saying(s32b real, s32b min, s32b max)
+const char *random_saying(int32_t  real, int32_t min, int32_t max)
 {
 	const char *ret;
 	int length;
@@ -257,7 +257,7 @@ static void prt_welcome(struct store *store)
 	 * (or this is the first time you visited) print a suitable message.
 	 */
 	const char *quest_msg = NULL;
-	byte quest_status = store_quest_status(store);
+	uint32_t quest_status = store_quest_status(store);
 	if (quest_status != store->quest_status) {
 		store->quest_status = quest_status;
 		if (quest_status == 3) {
@@ -925,7 +925,7 @@ static bool store_sell(struct store_context *ctx)
 			int cmd = CMD_SELL;
 
 			/* Extract the value of the items */
-			u32b price = price_item(store, temp_obj, true, amt);
+			uint32_t price = price_item(store, temp_obj, true, amt);
 
 			object_wipe(temp_obj);
 			screen_save();
@@ -1003,7 +1003,7 @@ static bool store_purchase(struct store_context *ctx, int item, bool single, boo
 
 	int amt, num;
 
-	s32b price;
+	int32_t price;
 
 	/* Clear all current messages */
 	msg_flag = false;
@@ -1133,7 +1133,7 @@ static bool store_purchase(struct store_context *ctx, int item, bool single, boo
 				price = price_item(store, obj, false, 1);
 
 				/* Check if the player can afford any at all */
-				if ((u32b)player->au < (u32b)price) {
+				if ((uint32_t)player->au < (uint32_t)price) {
 					msg("You do not have enough money for this item.");
 					return false;
 				}
@@ -1341,11 +1341,11 @@ static bool store_do_fight(struct store_context *ctx)
 				}
 				break;
 			case 5: {
-					u32b flag[] = {
+					uint32_t flag[] = {
 						RF_IM_ACID, RF_IM_ELEC, RF_IM_FIRE, RF_IM_COLD,
 						RF_IM_POIS
 					};
-					u32b f = flag[randint0(sizeof(flag)/sizeof(flag[0]))];
+					uint32_t f = flag[randint0(sizeof(flag)/sizeof(flag[0]))];
 					if (!rf_has(race->flags, f)) {
 						rf_on(race->flags, f);
 						i--;
@@ -1353,10 +1353,10 @@ static bool store_do_fight(struct store_context *ctx)
 					break;
 				}
 			case 6: {
-					u32b sflag[] = {
+					uint32_t sflag[] = {
 						RSF_BOULDER, RSF_BOLT
 					};
-					u32b f = sflag[randint0(sizeof(sflag)/sizeof(sflag[0]))];
+					uint32_t f = sflag[randint0(sizeof(sflag)/sizeof(sflag[0]))];
 					if (!rsf_has(race->spell_flags, f)) {
 						rsf_on(race->spell_flags, f);
 						i--;
@@ -1365,10 +1365,10 @@ static bool store_do_fight(struct store_context *ctx)
 					break;
 				}
 			case 7: {
-					u32b sflag[] = {
+					uint32_t sflag[] = {
 						RSF_BA_ACID, RSF_BO_POIS, RSF_STORM, RSF_BLIND, RSF_CONF
 					};
-					u32b f = sflag[randint0(sizeof(sflag)/sizeof(sflag[0]))];
+					uint32_t f = sflag[randint0(sizeof(sflag)/sizeof(sflag[0]))];
 					if (!rsf_has(race->spell_flags, f)) {
 						rsf_on(race->spell_flags, f);
 						i--;
@@ -2235,7 +2235,7 @@ static void store_hold(struct store_context *ctx)
 
 	/* Selected this item from stock */
 	struct object *obj = &store->stock[o_idx];
-	s32b price = (int)price_item(store, obj, false, obj->number);	/* assume that all are wanted */
+	int32_t price = (int)price_item(store, obj, false, obj->number);	/* assume that all are wanted */
 	price = (price + 9) / 10;
 	if (price <= 0) {
 		msg("It's already free, and you want it cheaper?!");

@@ -66,21 +66,21 @@ void note(const char *msg);
 
 /* Read/Writing bits */
 void rdwr_bool(bool *v);
-void rdwr_byte(byte *v);
-void rdwr_u16b(u16b *v);
-void rdwr_s16b(s16b *v);
-void rdwr_u32b(u32b *v);
-void rdwr_s32b(s32b *v);
+void rdwr_byte(uint8_t *v);
+void rdwr_u16b(uint16_t *v);
+void rdwr_s16b(int16_t  *v);
+void rdwr_u32b(uint32_t *v);
+void rdwr_s32b(int32_t  *v);
 void rdwr_double(double *v);
 void rdwr_string(char **str);
 void rdwr_string_null(char **str);
 int rdwr_bitflag(bitflag *flags, int size);
 
 /* Read/Write pointer. Give a pointer to pointer, and the base of the array (it converts it to an offset to this base) */
-#define RDWR_PTR(P, B) if (saving) { if (*(P) == NULL) { wr_s32b(-1); } else { wr_s32b((*(P)) - ((B))); }  } else { s32b offset; rd_s32b(&offset); if (offset < 0) { *(P) = NULL; } else { *(P) = ((B)) + offset; } }
+#define RDWR_PTR(P, B) if (saving) { if (*(P) == NULL) { wr_s32b(-1); } else { wr_s32b((*(P)) - ((B))); }  } else { int32_t offset; rd_s32b(&offset); if (offset < 0) { *(P) = NULL; } else { *(P) = ((B)) + offset; } }
 
 /* Read/Write pointer which is present in a linked list (next) by converting it to an index - may not be null or not in the list */
-#define RDWR_NPTR(P, B) { s32b index = -1; assert(B); assert(*P); \
+#define RDWR_NPTR(P, B) { int32_t index = -1; assert(B); assert(*P); \
 							if (saving) { \
 								while (B) { \
 									index++; \
@@ -132,6 +132,11 @@ int rdwr_bitflag(bitflag *flags, int size);
 							} \
 						}
 /* Type cast - mainly for enums */
+#define rdwr_uint32_t rdwr_u32b
+#define rdwr_int32_t rdwr_s32b
+#define rdwr_uint16_t rdwr_u16b
+#define rdwr_int16_t rdwr_s16b
+#define rdwr_uint8_t rdwr_byte
 #define RDWR_AS(P, T) { T tmp; if (saving) { tmp = *(P); } rdwr_##T(&tmp); if (!saving) { *(P) = tmp; } }
 
 /* Writing bits */

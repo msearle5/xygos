@@ -325,7 +325,7 @@ int hp_roll_score(int hitdie, int *level)
  * It should also not deviate too far from the average at any other
  * level.
  */
-static void roll_hp_class(int hitdie, s16b *player_hp)
+static void roll_hp_class(int hitdie, int16_t *player_hp)
 {
 	/* Average expected HP - ignoring the first level */
 	int target = hitdie;
@@ -1211,13 +1211,13 @@ void player_generate(struct player *p, struct player_race *r, struct player_race
 
 	/* HP array */
 	if (!(p->player_hp))
-		p->player_hp = mem_alloc(sizeof(s16b) * PY_MAX_LEVEL * (1 + classes->cidx));
+		p->player_hp = mem_alloc(sizeof(int16_t ) * PY_MAX_LEVEL * (1 + classes->cidx));
 
 	/* For each class... */
 	for (struct player_class *c = classes; c; c = c->next) {
 		/* Hitdice */
 		int hitdie = hitdie_class(c);
-		s16b *player_hp = player->player_hp + (PY_MAX_LEVEL * c->cidx);
+		int16_t *player_hp = player->player_hp + (PY_MAX_LEVEL * c->cidx);
 
 		/* Pre-calculate level 1 hitdice */
 		player_hp[0] = (hitdie * 2) / PY_MAX_LEVEL;

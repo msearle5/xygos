@@ -30,7 +30,7 @@ int setup_tests(void **state)
 	bodies = &test_player_body;
 	/* HP array */
 	if (!(player->player_hp))
-		player->player_hp = mem_zalloc(sizeof(s16b) * PY_MAX_LEVEL * (1 + classes->cidx));
+		player->player_hp = mem_zalloc(sizeof(int16_t ) * PY_MAX_LEVEL * (1 + classes->cidx));
 	player->obj_k->slays = mem_zalloc(z_info->slay_max * sizeof(*(player->obj_k->slays)));
 	player->obj_k->brands = mem_zalloc(z_info->brand_max * sizeof(*(player->obj_k->brands)));
 	player->obj_k->faults = mem_zalloc(z_info->fault_max * sizeof(*(player->obj_k->faults)));

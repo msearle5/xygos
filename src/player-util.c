@@ -493,17 +493,17 @@ void death_knowledge(struct player *p)
 }
 
 /* 0 to maximum moves */
-u16b *energy_move_pos;
+uint16_t *energy_move_pos;
 int n_energy_move_pos;
 
 /* -1 to most negative moves */
-u16b *energy_move_neg;
+uint16_t *energy_move_neg;
 int n_energy_move_neg;
 
 /* Return the energy scale (x1000) for the given number of levels of movement speed bonus */
-u32b energy_move_scale(int moves)
+uint32_t energy_move_scale(int moves)
 {
-	u32b scale;
+	uint32_t scale;
 	if (moves >= 0) {
 		if (moves >= n_energy_move_pos)
 			moves = n_energy_move_pos-1;
@@ -682,7 +682,7 @@ void player_regen_hp(struct player *p)
 }
 
 
-void player_adjust_hp_precise(struct player *p, s32b hp_gain)
+void player_adjust_hp_precise(struct player *p, int32_t hp_gain)
 {
 	int32_t new_chp;
 	int num, old_chp = p->chp;
@@ -1131,7 +1131,7 @@ void shapechange(struct player *p, const char *shapename, bool verbose)
 	}
 
 	/* Change shape */
-	s32b old_mhp = p->mhp;
+	int32_t old_mhp = p->mhp;
 	p->shape = lookup_player_shape(shapename);
 	if (verbose) {
 		msg("You assume the shape of a %s!", shapename);
@@ -1144,7 +1144,7 @@ void shapechange(struct player *p, const char *shapename, bool verbose)
 	update_stuff(p);
 
 	/* Scale HP */
-	s32b new_mhp = p->mhp;
+	int32_t new_mhp = p->mhp;
 	p->chp = (p->chp * new_mhp) / old_mhp;
 
 	/* and redraw */

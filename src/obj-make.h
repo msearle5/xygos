@@ -50,6 +50,6 @@ bool special_item_can_gen(struct object_kind *kind);
 struct ego_item *select_ego_base(int level, struct object *obj);
 struct object_kind *select_poss_kind(struct poss_item *poss, int level, int tval);
 struct object_kind *select_ego_kind(const struct ego_item *ego, int level, int tval);
-bool multiego_allow(u16b *ego);
+bool multiego_allow(uint16_t *ego);
 
 #endif /* OBJECT_MAKE_H */

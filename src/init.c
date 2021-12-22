@@ -1121,7 +1121,7 @@ static bool tables_reader_u8(void *tab, int index, const char *s)
 		return false;
 	if ((value < 0) || (value > 255))
 		return false;
-	((byte *)tab)[index] = value;
+	((uint8_t *)tab)[index] = value;
 	return true;
 }
 
@@ -1133,7 +1133,7 @@ static bool tables_reader_s16(void *tab, int index, const char *s)
 		return false;
 	if ((value < -32768) || (value > 32767))
 		return false;
-	((s16b *)tab)[index] = value;
+	((int16_t  *)tab)[index] = value;
 	return true;
 }
 
@@ -1145,7 +1145,7 @@ static bool tables_reader_u16(void *tab, int index, const char *s)
 		return false;
 	if ((value < 0) || (value > 65535))
 		return false;
-	((s16b *)tab)[index] = value;
+	((int16_t  *)tab)[index] = value;
 	return true;
 }
 
@@ -1157,7 +1157,7 @@ static bool tables_reader_s32(void *tab, int index, const char *s)
 		return false;
 	if ((value < -2147483648L) || (value > 2147483647L))
 		return false;
-	((s32b *)tab)[index] = value;
+	((int32_t  *)tab)[index] = value;
 	return true;
 }
 
@@ -1195,12 +1195,12 @@ static bool (* const tables_reader[])(void *, int, const char *) = {
 	tables_reader_string,
 };
 
-static const byte tables_length[] = {
+static const uint8_t tables_length[] = {
 	0,
-	sizeof(byte),
-	sizeof(s16b),
-	sizeof(u16b),
-	sizeof(s32b),
+	sizeof(uint8_t),
+	sizeof(int16_t),
+	sizeof(uint16_t),
+	sizeof(int32_t),
 	sizeof(double),
 	sizeof(char *),
 };

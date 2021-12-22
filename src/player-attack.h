@@ -39,7 +39,7 @@ struct hit_types {
 	const char *text;
 };
 
-extern byte *deadliness_conversion;
+extern uint8_t *deadliness_conversion;
 extern int n_deadliness_conversion;
 
 /**

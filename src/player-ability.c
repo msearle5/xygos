@@ -267,7 +267,7 @@ static enum parser_error parse_ability_flag(struct parser *p) {
 		return PARSE_ERROR_MISSING_RECORD_HEADER;
 
 	const char *text = parser_getstr(p, "flag");
-	u32b flag = 0;
+	uint32_t flag = 0;
 
 	if (!my_stricmp(text, "birth"))
 		flag = AF_BIRTH;

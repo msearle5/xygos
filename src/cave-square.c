@@ -999,7 +999,7 @@ const struct square *square(struct chunk *c, struct loc grid)
 	return &c->squares[grid.y][grid.x];
 }
 
-byte square_tag(struct chunk *c, struct loc grid)
+uint8_t square_tag(struct chunk *c, struct loc grid)
 {
 	assert(square_in_bounds(c, grid));
 	return square(c, grid)->tag;
@@ -1259,7 +1259,7 @@ void square_set_mon(struct chunk *c, struct loc grid, int midx)
 /**
  * Set the tag square.
  */
-void square_set_tag(struct chunk *c, struct loc grid, byte tag)
+void square_set_tag(struct chunk *c, struct loc grid, uint8_t tag)
 {
 	c->squares[grid.y][grid.x].tag = tag;
 }

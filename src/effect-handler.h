@@ -70,7 +70,7 @@ struct effect_kind {
 int effect_calculate_value(effect_handler_context_t *context, bool use_boost);
 struct monster *monster_target_monster(effect_handler_context_t *context);
 
-extern s16b *enchant_table;
+extern int16_t *enchant_table;
 extern int n_enchant_table;
 
 #endif /* INCLUDED_EFFECT_HANDLER_H */

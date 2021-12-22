@@ -2453,11 +2453,11 @@ int store_cyber_install_price(struct object *obj)
 	struct store *store = store_at(cave, player->grid);
 
 	/* It's based on the item price */
-	u32b price = price_item(store, obj, true, 1);
+	uint32_t price = price_item(store, obj, true, 1);
 
 	/* and your faction */
 	int rank = store_cyber_rank();
-	static const byte scale[8] = {
+	static const uint8_t scale[8] = {
 		4,	// hater
 		8,	// non-member
 		12,	// member

@@ -120,7 +120,7 @@ static void wr_item(const struct object *obj)
 	 * +ve for other effects
 	 */
 	if (obj->effect) {
-		s16b effect = 1;
+		int16_t effect = 1;
 		if (obj->effect == obj->kind->effect) {
 			effect = SHRT_MIN;
 		} else {

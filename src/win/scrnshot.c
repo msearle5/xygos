@@ -134,7 +134,7 @@ bool SaveWindow_PNG(HWND hWnd, LPSTR lpFileName)
 	/* Copy the data to it */
 	if (noerror) {
 		COLORREF bgr;
-		byte b[3], *data;
+		uint8_t b[3], *data;
 		HDC hDC, hdcWnd;
     		HBITMAP hbmScreen, hbmOld;
 

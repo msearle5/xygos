@@ -12,7 +12,7 @@
 /* Persistent state for the Time-Lord race */
 struct timelord_state {
 	/* Total number of regenerations so far */
-	s32b regenerations;
+	uint32_t regenerations;
 };
 
 /* Load/save Time-Lord specific state */
@@ -22,7 +22,7 @@ static void timelord_loadsave(bool complete) {
 			player->race->state = mem_zalloc(sizeof(struct timelord_state));
 
 		struct timelord_state *state = (struct timelord_state *)player->race->state;
-		rdwr_s32b(&state->regenerations);
+		rdwr_u32b(&state->regenerations);
 	}
 }
 
@@ -33,7 +33,7 @@ static void timelord_init(void)
 	player->race->state = mem_zalloc(sizeof(struct timelord_state));
 }
 
-static const byte regens[PY_MAX_LEVEL + 1] = {
+static const uint8_t regens[PY_MAX_LEVEL + 1] = {
 	0,	0,	0,	0,	0,
 	0,	0,	0,	0,	0,
 	// 10
@@ -68,7 +68,7 @@ static void timelord_regen_status(void)
 	player_inc_timed(p, TMD_SCRAMBLE, damroll(3, 16), false, false);
 }
 
-bool get_regens(s32b *allowed, s32b *used)
+bool get_regens(int32_t  *allowed, int32_t *used)
 {
 	if (player && player->race && player->race->name && player->race->state && streq(player->race->name, "Time-Lord")) {
 		*allowed = regens[player->max_lev];
@@ -98,7 +98,7 @@ static void timelord_do_regen(bool *success, bool *tried)
 	struct timelord_state *state = (struct timelord_state *)player->race->state;
 
 	*tried = false;
-	s32b allowed_regens = regens[player->max_lev];
+	uint32_t allowed_regens = regens[player->max_lev];
 	if (state->regenerations >= allowed_regens) {
 		// explain
 		if (allowed_regens == 0)
@@ -116,7 +116,7 @@ static void timelord_do_regen(bool *success, bool *tried)
 		 * 12 regenerations (pow(0.85, 12)).
 		 * This is a chance per 10000 of success.
 		 */
-		s32b chance = ((player->max_lev * 9375) / PY_MAX_LEVEL) - 875;
+		int32_t chance = ((player->max_lev * 9375) / PY_MAX_LEVEL) - 875;
 		if (randint0(10000) > chance) {
 			// explain
 			msgt(MSG_DEATH, "You attempt to regenerate into a new form, but are unsuccessful.");
@@ -223,8 +223,8 @@ void timelord_force_regen(void)
 bool timelord_effect(effect_handler_context_t *e)
 {
 	struct timelord_state *state = (struct timelord_state *)player->race->state;
-	s32b allowed_regens = regens[player->max_lev];
-	s32b remaining_regens = allowed_regens - state->regenerations;
+	uint32_t allowed_regens = regens[player->max_lev];
+	uint32_t remaining_regens = allowed_regens - state->regenerations;
 
 	if ((e->effect == EF_BANISH) || (e->effect == EF_MASS_BANISH)) {
 		/* Check that you really want to do this */

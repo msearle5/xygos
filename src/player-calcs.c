@@ -44,47 +44,47 @@
 /**
  * Stat Table (INT) -- Devices
  */
-byte adj_int_dev[STAT_RANGE];
+uint8_t adj_int_dev[STAT_RANGE];
 
 /**
  * Stat Table (WIS) -- Saving throw
  */
-byte adj_wis_sav[STAT_RANGE];
+uint8_t adj_wis_sav[STAT_RANGE];
 
 /**
  * Stat Table (DEX) -- disarming
  */
-byte adj_dex_dis[STAT_RANGE];
+uint8_t adj_dex_dis[STAT_RANGE];
 
 /**
  * Stat Table (INT) -- disarming
  */
-byte adj_int_dis[STAT_RANGE];
+uint8_t adj_int_dis[STAT_RANGE];
 
 /**
  * Stat Table (DEX) -- bonus to ac
  */
-s16b adj_dex_ta[STAT_RANGE];
+int16_t adj_dex_ta[STAT_RANGE];
 
 /**
  * Stat Table (STR) -- bonus to dam
  */
-s16b adj_str_td[STAT_RANGE];
+int16_t adj_str_td[STAT_RANGE];
 
 /**
  * Stat Table (DEX) -- bonus to hit
  */
-s16b adj_dex_th[STAT_RANGE];
+int16_t adj_dex_th[STAT_RANGE];
 
 /**
  * Stat Table (STR) -- bonus to hit
  */
-s16b adj_str_th[STAT_RANGE];
+int16_t adj_str_th[STAT_RANGE];
 
 /**
  * Stat Table (STR) -- weight limit (point at which burdening starts) in grams
  */
-s32b adj_str_wgt[STAT_RANGE];
+int32_t adj_str_wgt[STAT_RANGE];
 
 /**
  * Burden Table -- penalty to speed against burden as a proportion of weight limit.
@@ -94,7 +94,7 @@ s32b adj_str_wgt[STAT_RANGE];
  * 10, 20, 40,80, 160), to not have these round numbers used on earlier entries, to
  * have 20 entries for -1, and to never decrease the length of run down the table.
  */
-static const byte adj_wgt_speed[1 + (BURDEN_RANGE * (BURDEN_LIMIT - 1))] = {
+static const uint8_t adj_wgt_speed[1 + (BURDEN_RANGE * (BURDEN_LIMIT - 1))] = {
 	/* Limit x 1.0 */
 	1,      1,      1,      1,      1,              1,      1,      1,      1,      1,
 	1,      1,      1,      1,      1,              1,      1,      1,      1,      1,
@@ -144,37 +144,37 @@ static const byte adj_wgt_speed[1 + (BURDEN_RANGE * (BURDEN_LIMIT - 1))] = {
 /**
  * Stat Table (STR) -- weapon weight limit in pounds
  */
-byte adj_str_hold[STAT_RANGE];
+uint8_t adj_str_hold[STAT_RANGE];
 
 
 /**
  * Stat Table (STR) -- digging value
  */
-byte adj_str_dig[STAT_RANGE];
+uint8_t adj_str_dig[STAT_RANGE];
 
 
 
 /**
  * Stat Table (DEX) -- chance of avoiding "theft" and "falling"
  */
-byte adj_dex_safe[STAT_RANGE];
+uint8_t adj_dex_safe[STAT_RANGE];
 
 
 /**
  * Stat Table (CON) -- base regeneration rate
  */
-byte adj_con_fix[STAT_RANGE];
+uint8_t adj_con_fix[STAT_RANGE];
 
 
 /**
  * Stat Table (CON) -- extra 1/100th hitpoints per level
  */
-s16b adj_con_mhp[STAT_RANGE];
+int16_t adj_con_mhp[STAT_RANGE];
 
 /**
  * Stat Table (STR) -- lookup to convert raw STR values into something suitable for blows calculation - see blow.
  */
-byte adj_str_blow[STAT_RANGE];
+uint8_t adj_str_blow[STAT_RANGE];
 
 /**
  * This table is used to help calculate the number of blows the player can
@@ -204,7 +204,7 @@ byte adj_str_blow[STAT_RANGE];
  * The player gets blows/round equal to 100/this number, up to a maximum of
  * "num" blows/round, plus any "bonus" blows/round.
  */
-byte blows_table[BLOWS_ROWS][STAT_RANGE];
+uint8_t blows_table[BLOWS_ROWS][STAT_RANGE];
 
 /**
  * Decide which object comes earlier in the standard inventory listing,
@@ -811,7 +811,7 @@ static void calc_shapechange(struct player_state *state,
 
 }
 
-static void apply_modifiers(struct player *p, struct player_state *state, s16b *modifiers, int *extra_blows, int *extra_shots, int *extra_might, int *extra_moves)
+static void apply_modifiers(struct player *p, struct player_state *state, int16_t *modifiers, int *extra_blows, int *extra_shots, int *extra_might, int *extra_moves)
 {
 	for(int i=0;i<STAT_MAX;i++)
 		state->stat_add[i] += modifiers[OBJ_MOD_STR + i]

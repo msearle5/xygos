@@ -1220,7 +1220,7 @@ static void quest_item_at(struct chunk *c, struct loc xy, struct object *obj)
 
 static void quest_enter_msing_pills(struct chunk *c, struct quest *q)
 {
-	s32b value;
+	int32_t value;
 
 	/* Traps:
 	 * Place a portal at each side first.

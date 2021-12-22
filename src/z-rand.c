@@ -187,7 +187,7 @@ void Rand_init(void)
 }
 
 /* Random 32-bit unsigned */
-u32b Rand_u32b(void)
+uint32_t Rand_u32b(void)
 {
 	return WELLRNG1024a();
 }
@@ -199,8 +199,8 @@ u32b Rand_u32b(void)
 #define M_RAN_INVM32    2.32830643653869628906e-010
 double Rand_double(double r)
 {
-	u32b low = WELLRNG1024a();
-	u32b high = WELLRNG1024a();
+	uint32_t low = WELLRNG1024a();
+	uint32_t high = WELLRNG1024a();
 	double dh = high;
 	dh *= (M_RAN_INVM32 * r);
 	double dl = low;

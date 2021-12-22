@@ -28,8 +28,8 @@
 
 /* Persistent state for the soldier class */
 struct soldier_state {
-	s32b gift_waiting;
-	s32b gift_given;
+	int32_t gift_waiting;
+	int32_t gift_given;
 	char *storename;
 };
 
@@ -156,7 +156,7 @@ static void soldier_building(int store, bool entering, bool *do_default)
 			const char *name2 = NULL;
 			struct object *obj = NULL;
 			struct object *obj2 = NULL;
-			s32b value;
+			int32_t value;
 			int bonus = 0;
 
 			const char *message = "Here's your new equipment.";

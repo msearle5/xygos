@@ -759,7 +759,7 @@ static const struct hit_types melee_hit_types[] = {
 	{ MSG_HIT_HI_SUPERB, "It was a *SUPERB* hit!" },
 };
 
-static bool py_attack_hit(struct player *p, struct loc grid, struct monster *mon, int dmg, char *verb, int verbsize, const char *after, u32b msg_type, int splash, bool do_quake, bool *fear, struct object *obj)
+static bool py_attack_hit(struct player *p, struct loc grid, struct monster *mon, int dmg, char *verb, int verbsize, const char *after, uint32_t msg_type, int splash, bool do_quake, bool *fear, struct object *obj)
 {
 	int drain = 0;
 	bool stop = false;

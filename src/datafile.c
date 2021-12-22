@@ -221,14 +221,14 @@ errr grab_rand_value(random_value *value, const char **value_type,
 }
 
 /**
- * Get the s16b argument from a value expression and put it into the
+ * Get the int16_t argument from a value expression and put it into the
  * appropriate place in an array
  * \param value the target array of integers
  * \param value_type the possible value strings
  * \param name_and_value the value expression being matched
  * \return 0 if successful, otherwise an error value
  */
-errr grab_short_value(s16b *value, const char **value_type,
+errr grab_short_value(int16_t  *value, const char **value_type,
 					const char *name_and_value)
 {
 	int val, i = 0;

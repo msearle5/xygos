@@ -1293,7 +1293,7 @@ void lore_append_exp(textblock *tb, const struct monster_race *race,
 
 	double exp_value = mon_exp_value(race);
 	long exp_int = exp_value;
-	s32b exp_scaled = player_exp_scale(exp_int);
+	int32_t exp_scaled = player_exp_scale(exp_int);
 
 	/* Calculate textual representation */
 	if (exp_scaled != exp_int)
