@@ -1858,11 +1858,6 @@ void do_cmd_fire(struct command *cmd) {
 		!= CMD_OK)
 		return;
 
-	if (cmd_get_target(cmd, "target", &dir) == CMD_OK)
-		player_confuse_dir(player, &dir, false);
-	else
-		return;
-
 	/* Require a usable launcher */
 	if (!gun || !player->state.ammo_tval) {
 		msg("You have nothing to fire with.");
@@ -1880,6 +1875,11 @@ void do_cmd_fire(struct command *cmd) {
 		msg("That ammo cannot be fired by your current weapon.");
 		return;
 	}
+
+	if (cmd_get_target(cmd, "target", &dir) == CMD_OK)
+		player_confuse_dir(player, &dir, false);
+	else
+		return;
 
 	ranged_helper(cmd, player, obj, dir, range, shots, attack, ranged_hit_types,
 				  (int) N_ELEMENTS(ranged_hit_types), "Fire", true);

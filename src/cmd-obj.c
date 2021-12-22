@@ -358,14 +358,14 @@ void do_cmd_drop(struct command *cmd)
 			/* Choice */ USE_EQUIP | USE_INVEN | USE_QUIVER) != CMD_OK)
 		return;
 
-	if (cmd_get_quantity(cmd, "quantity", &amt, obj->number) != CMD_OK)
-		return;
-
 	/* Cannot remove stickied items */
 	if (object_is_equipped(player->body, obj) && !obj_can_takeoff(obj)) {
 		msg("Hmmm, it seems to be stuck.");
 		return;
 	}
+
+	if (cmd_get_quantity(cmd, "quantity", &amt, obj->number) != CMD_OK)
+		return;
 
 	inven_drop(obj, amt);
 	player->upkeep->energy_use = z_info->move_energy / 2;
@@ -1039,6 +1039,16 @@ void do_cmd_refill(struct command *cmd)
 		return;
 	}
 
+	/* Check what we're wielding. */
+	if (!light || !tval_is_light(light)) {
+		msg("You are not using a light.");
+		return;
+	} else if (of_has(light->flags, OF_NO_FUEL)
+			|| (of_has(light->flags, OF_TAKES_FUEL))) {
+		msg("Your light cannot be recharged.");
+		return;
+	}
+
 	/* Get an item */
 	if (cmd_get_item(cmd, "item", &obj,
 			"Recharge from which battery? ",
@@ -1046,25 +1056,11 @@ void do_cmd_refill(struct command *cmd)
 			obj_can_refill,
 			USE_INVEN | USE_FLOOR | USE_QUIVER) != CMD_OK) return;
 
-	/* Check what we're wielding. */
-	if (!light || !tval_is_light(light)) {
-		msg("You are not using a light.");
-		return;
-	} else if (of_has(light->flags, OF_NO_FUEL)) {
-		msg("Your light cannot be recharged.");
-		return;
-	} else if (of_has(light->flags, OF_TAKES_FUEL)) {
-		bool was_removable = obj_can_takeoff(light);
-
-		refill_lamp(light, obj);
-
-		bool is_removable = obj_can_takeoff(light);
-		if ((!is_removable) && (was_removable)) {
-			msgt(MSG_FAULTY, "As you recharge it, your light clamps itself firmly to you!");
-		}
-	} else {
-		msg("Your light cannot be recharged.");
-		return;
+	bool was_removable = obj_can_takeoff(light);
+	refill_lamp(light, obj);
+	bool is_removable = obj_can_takeoff(light);
+	if ((!is_removable) && (was_removable)) {
+		msgt(MSG_FAULTY, "As you recharge it, your light clamps itself firmly to you!");
 	}
 
 	player->upkeep->energy_use = z_info->move_energy / 2;
