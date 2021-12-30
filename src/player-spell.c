@@ -485,7 +485,7 @@ static int beam_chance(void)
 bool spell_cast(int spell_index, int dir, struct command *cmd, int *energy)
 {
 	int chance;
-	bool *ident = mem_zalloc(sizeof(*ident));
+	bool ident = false;
 	int beam  = beam_chance();
 
 	/* Get the spell */
@@ -516,9 +516,8 @@ bool spell_cast(int spell_index, int dir, struct command *cmd, int *energy)
 		msg(failmsg);
 	} else {
 		/* Cast the spell */
-		if (!effect_do(spell->effect, source_player(), NULL, ident, true, dir,
+		if (!effect_do(spell->effect, source_player(), NULL, &ident, true, dir,
 					   beam, 0, cmd, 0)) {
-			mem_free(ident);
 			return false;
 		}
 
@@ -558,7 +557,6 @@ bool spell_cast(int spell_index, int dir, struct command *cmd, int *energy)
 		player->spell[spell_index].turn = turn;
 	}
 
-	mem_free(ident);
 	return true;
 }
 
