@@ -3103,7 +3103,7 @@ bool effect_handler_PORTAL(effect_handler_context_t *context)
  * The grid is as close to distance 'dis' from 'start' as possible, but can be anywhere on the level
  * if this isn't available.
  */
-static bool find_teleportable(struct loc start, int dis, struct loc *result, bool is_player, bool is_trap, bool fixed_dis, bool in_los)
+static bool find_teleportable(effect_handler_context_t *context, struct loc start, int dis, struct loc *result, bool is_player, bool is_trap, bool fixed_dis, bool in_los)
 {
 	struct loc grid;
 	bool only_vault_grids_possible = true;
@@ -3183,8 +3183,22 @@ static bool find_teleportable(struct loc start, int dis, struct loc *result, boo
 
 	/* Report failure (very unlikely) */
 	if (!num_spots) {
-		msg("Failed to find teleport destination!");
-		return false;
+		if (is_player) {
+			msg("Failed to find teleport destination!");
+		} else {
+			/*
+			 * With either teleport self or teleport other, it'll
+			 * be the caster that is puzzled.
+			 */
+			struct monster *mon = cave_monster(cave,
+				context->origin.which.monster);
+
+			if (square_isseen(cave, mon->grid)) {
+				add_monster_message(mon, MON_MSG_BRIEF_PUZZLE,
+					true);
+			}
+		}
+		return true;
 	}
 
 	/* Pick a spot */
@@ -3221,7 +3235,7 @@ bool effect_handler_CREATE_PORTAL(effect_handler_context_t *context)
 		start = player->grid;
 
 	/* Find a target position */
-	if (!find_teleportable(start, dis, &result, true, true, false, false)) {
+	if (!find_teleportable(context, start, dis, &result, true, true, false, false)) {
 		msg("Failed to find portal destination!");
 		return true;
 	}
@@ -3284,7 +3298,7 @@ bool effect_handler_HOP(effect_handler_context_t *context)
 	}
 
 	struct loc result;
-	if (!find_teleportable(start, dis, &result, is_player, false, true, true)) {
+	if (!find_teleportable(context, start, dis, &result, is_player, false, true, true)) {
 		/* Hop failed - this is common, no message */
 		return true;
 	}
@@ -3383,7 +3397,7 @@ bool effect_handler_TELEPORT(effect_handler_context_t *context)
 	}
 
 	struct loc result;
-	if (!find_teleportable(start, dis, &result, is_player, false, false, false)) {
+	if (!find_teleportable(context, start, dis, &result, is_player, false, false, false)) {
 		msg("Failed to find teleport destination!");
 		return true;
 	}
