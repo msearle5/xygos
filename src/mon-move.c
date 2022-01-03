@@ -1726,7 +1726,8 @@ static void monster_turn(struct chunk *c, struct monster *mon)
 	char m_name[80];
 
 	/* Get the monster name */
-	monster_desc(m_name, sizeof(m_name), mon, MDESC_CAPITAL | MDESC_IND_HID);
+	monster_desc(m_name, sizeof(m_name), mon,
+		MDESC_CAPITAL | MDESC_IND_HID | MDESC_COMMA);
 
 	/* If we're in a web, deal with that */
 	if (square_iswebbed(c, mon->grid)) {
@@ -1876,10 +1877,10 @@ static void monster_turn(struct chunk *c, struct monster *mon)
 		}
 
 		/* Scan all objects in the grid, if we reached it */
-		if (mon == square_monster(c, new)) {
+		if (mon == square_monster(cave, new)) {
 			monster_desc(m_name, sizeof(m_name), mon,
 						 MDESC_CAPITAL | MDESC_IND_HID);
-			monster_turn_grab_objects(c, mon, m_name, new);
+			monster_turn_grab_objects(cave, mon, m_name, new);
 		}
 	}
 
@@ -1967,7 +1968,7 @@ static void monster_reduce_sleep(struct chunk *c, struct monster *mon)
 
 		/* Get the monster name */
 		monster_desc(m_name, sizeof(m_name), mon,
-					 MDESC_CAPITAL | MDESC_IND_HID);
+			MDESC_CAPITAL | MDESC_IND_HID | MDESC_COMMA);
 
 		/* Notify the player if aware */
 		if (monster_is_obvious(mon)) {
