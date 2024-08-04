@@ -8,8 +8,15 @@ key N
 key b
 key enter
 
-# Tourist
+# None
+key b
+
+# Sneaky
 key c
+key enter
+
+# Tourist
+key f
 key enter
 
 # Point based
@@ -33,5 +40,6 @@ key enter
 # Character birthed.
 player-race?
 player-ext?
+player-per?
 player-class?
 quit

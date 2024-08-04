@@ -6,15 +6,16 @@ key N
 
 # Human
 key a
-key enter
 
 # Cyborg
-key c
+key b
 key enter
 
+# Ordinary
+key a
+
 # Engineer
-key f
-key enter
+key i
 
 # Point based
 key a
@@ -37,5 +38,6 @@ key enter
 # Character birthed.
 player-race?
 player-ext?
+player-per?
 player-class?
 quit
