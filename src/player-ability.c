@@ -883,6 +883,8 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 		int w, h;
 		Term_get_size(&w, &h);
 		int top = textblock_calculate_lines(tb, &line_starts, &line_lengths, w) + 2;
+		mem_free(line_starts);
+		mem_free(line_lengths);
 		textui_textblock_place(tb, SCREEN_REGION, NULL);
 		textblock_free(tb);
 
@@ -1037,6 +1039,8 @@ int cmd_abilities(struct player *p, bool birth, int selected, bool *flip) {
 			int lines = textblock_calculate_lines(tb, &line_starts, &line_lengths, w);
 			region bottom_region = SCREEN_REGION;
 			bottom_region.row = h - lines;
+			mem_free(line_starts);
+			mem_free(line_lengths);
 			textui_textblock_place(tb, bottom_region, NULL);
 			textblock_free(tb);
 		}
